@@ -5,6 +5,7 @@ module.exports = {
     'plugin:compat/recommended',
     'plugin:react/recommended',
     'plugin:import/typescript',
+    'plugin:@next/next/recommended',
   ],
   env: {
     browser: true,
