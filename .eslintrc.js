@@ -85,7 +85,7 @@ module.exports = {
     // https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/label-has-for.md
     'jsx-a11y/label-has-for': 0,
 
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': ['error', 'only-multiline'],
     'no-underscore-dangle': 0,
     // for (let i = 0; i < len; i++)
     'no-plusplus': 0,
