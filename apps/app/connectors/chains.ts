@@ -25,7 +25,7 @@ export const CHAINS: {
         ? `https://mainnet.infura.io/v3/${process.env.infuraKey}`
         : undefined,
       process.env.alchemyKey
-        ? `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`
+        ? `https://eth-mainnet.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`
         : undefined,
       'https://cloudflare-eth.com',
     ].filter((url) => typeof url === 'string') as string[],

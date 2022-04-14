@@ -1,0 +1,6 @@
+{
+    "extends": "tsconfig/next.json",
+    "exclude": [
+        "node_modules"
+    ]
+}

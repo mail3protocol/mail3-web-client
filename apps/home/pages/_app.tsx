@@ -5,6 +5,7 @@ import { Provider as JotaiProvider } from 'jotai'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ChakraProvider } from '@chakra-ui/react'
 import { useMemo } from 'react'
+import { theme } from 'ui'
 import '../styles/globals.css'
 
 function Mail3({ Component, pageProps }: AppProps) {
@@ -41,7 +42,7 @@ function Mail3({ Component, pageProps }: AppProps) {
       </Head>
       <QueryClientProvider client={queryClient}>
         <JotaiProvider>
-          <ChakraProvider>
+          <ChakraProvider theme={theme}>
             <Component {...pageProps} />
           </ChakraProvider>
         </JotaiProvider>

@@ -5,9 +5,9 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalContent,
-  Button,
   VStack,
 } from '@chakra-ui/react'
+import { Button } from 'ui'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { SupportedConnectors } from '../../connectors'
