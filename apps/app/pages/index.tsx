@@ -1,17 +1,16 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ConnectWallet } from '../components/ConnectWallet'
-import styles from '../styles/Home.module.css'
+import { Navbar } from '../components/Navbar'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale as string, ['connect'])),
+    ...(await serverSideTranslations(locale as string, ['connect', 'common'])),
   },
 })
 
 const Home: NextPage = () => (
-  <div className={styles.container}>
-    <ConnectWallet />
+  <div>
+    <Navbar />
   </div>
 )
 

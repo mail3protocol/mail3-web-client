@@ -1,1 +1,10 @@
-{}
+{
+    "navbar": {
+        "inbox": "Inbox",
+        "sent": "Sent",
+        "drafts": "Drafts",
+        "trash": "Trash",
+        "subscriptions": "Subscriptions",
+        "other-stuff": "Other Stuff"
+    }
+}

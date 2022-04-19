@@ -31,7 +31,8 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-query": "^3.34.16",
-        "ui": "*"
+        "ui": "*",
+        "assets": "*"
     },
     "devDependencies": {
         "@types/node": "17.0.4",
@@ -42,6 +43,7 @@
         "next-transpile-modules": "^9.0.0",
         "scripts": "*",
         "tsconfig": "*",
-        "typescript": "4.6.3"
+        "typescript": "4.6.3",
+        "@svgr/webpack": "6.2.1"
     }
 }
