@@ -4,8 +4,14 @@ const withTM = require('next-transpile-modules')(['ui'])
 const runtimeCaching = require('next-pwa/cache')
 const { i18n } = require('./next-i18next.config')
 
+const plugins = [withTM]
+
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(withPWA)
+}
+
 /** @type {import('next').NextConfig} */
-module.exports = withPlugins([withTM, withPWA], {
+module.exports = withPlugins(plugins, {
   pwa: {
     dest: 'public',
     runtimeCaching,

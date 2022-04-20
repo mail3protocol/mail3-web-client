@@ -5,6 +5,11 @@
         "drafts": "Drafts",
         "trash": "Trash",
         "subscriptions": "Subscriptions",
-        "other-stuff": "Other Stuff"
+        "other-stuff": "Other Stuff",
+        "settings": "Settings",
+        "profile": "Web3 Profile",
+        "copy-address": "Copy Address",
+        "change-wallet": "Change Wallet",
+        "copied": "Copied"
     }
 }

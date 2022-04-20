@@ -11,4 +11,16 @@ export const theme = extendTheme({
   fonts: {
     body: 'Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
   },
+  components: {
+    Button: {
+      variant: {
+        empty: {
+          bg: 'transparent',
+          _hover: { bg: 'transparent' },
+          _focus: { outline: 'none', bg: 'transparent', boxShadow: 'none' },
+          padding: '0',
+        },
+      },
+    },
+  },
 })

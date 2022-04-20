@@ -1,4 +1,4 @@
-import { Button, Stack, Text } from '@chakra-ui/react'
+import { Button, Stack, Text, Link as ChakraLink } from '@chakra-ui/react'
 import Link from 'next/link'
 
 export interface ButtonListItemProps {
@@ -6,6 +6,7 @@ export interface ButtonListItemProps {
   href?: string
   icon: React.ReactNode
   label: string
+  isExternal?: boolean
 }
 
 export const ButtonListItem: React.FC<ButtonListItemProps> = ({
@@ -13,6 +14,7 @@ export const ButtonListItem: React.FC<ButtonListItemProps> = ({
   href,
   icon,
   label,
+  isExternal,
 }) => {
   const item = (
     <Button
@@ -24,6 +26,8 @@ export const ButtonListItem: React.FC<ButtonListItemProps> = ({
       _hover={{
         bg: 'rgba(78, 97, 245, 0.1)',
       }}
+      as={isExternal ? undefined : 'a'}
+      cursor="pointer"
     >
       {icon}
       <Text ml="12px" fontWeight={500}>
@@ -32,7 +36,27 @@ export const ButtonListItem: React.FC<ButtonListItemProps> = ({
     </Button>
   )
 
-  return href ? <Link href={href}>{item}</Link> : item
+  if (isExternal && href) {
+    return (
+      <ChakraLink
+        isExternal
+        href={href}
+        _hover={{
+          textDecoration: 'none',
+        }}
+      >
+        {item}
+      </ChakraLink>
+    )
+  }
+
+  return href ? (
+    <Link href={href} passHref>
+      {item}
+    </Link>
+  ) : (
+    item
+  )
 }
 
 export interface ButtonListProps {

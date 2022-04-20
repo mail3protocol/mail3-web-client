@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   Center,
   Grid,
@@ -49,11 +49,14 @@ const Logo = () => {
       icon: <SubscrptionSvg />,
     },
   ]
+  const popoverRef = useRef<HTMLDivElement>(null)
   return (
-    <Popover arrowSize={18} autoFocus offset={[0, 20]} closeOnBlur>
+    <Popover arrowSize={18} autoFocus offset={[0, 10]} closeOnBlur>
       <PopoverTrigger>
-        <Box cursor="pointer">
-          <LogoSvg />
+        <Box>
+          <Button variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
+            <LogoSvg />
+          </Button>
         </Box>
       </PopoverTrigger>
       <PopoverContent
@@ -63,6 +66,7 @@ const Logo = () => {
         }}
         border="none"
         borderRadius="12px"
+        ref={popoverRef}
         boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25)"
       >
         <PopoverArrow />
@@ -77,6 +81,7 @@ const Logo = () => {
                 _hover={{
                   bg: 'brand.50',
                 }}
+                as="a"
               >
                 <Center flexDirection="column">
                   <InboxWhiteSvg />
@@ -94,6 +99,7 @@ const Logo = () => {
                 _hover={{
                   bg: 'rgba(78, 97, 245, 0.1)',
                 }}
+                as="a"
               >
                 <Center flexDirection="column">
                   <SentSvg />
@@ -126,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({ showInbox = true }) => {
       <Flex alignItems="center" justifyContent="flex-start">
         {showInbox ? (
           <Link href={RoutePath.Inbox} passHref>
-            <LinkButton fontWeight="bold" fontSize="24px">
+            <LinkButton fontWeight="bold" fontSize="20px">
               <InboxSvg />
               <Text ml="4px">{t('navbar.inbox')}</Text>
             </LinkButton>
