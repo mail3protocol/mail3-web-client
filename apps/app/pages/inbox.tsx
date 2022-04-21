@@ -14,7 +14,7 @@ const Inbox: NextPage = () => {
   console.log('inbox')
 
   return (
-    <Box h="100" w="1280px">
+    <Box>
       <InboxComponent />
     </Box>
   )
