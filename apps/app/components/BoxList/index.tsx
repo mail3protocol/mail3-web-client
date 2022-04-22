@@ -43,7 +43,7 @@ const Item = ({ subject, desc, date }: BoxItemProps) => (
       <Text
         fontWeight="600"
         fontSize="16px"
-        lineHeight="1"
+        lineHeight={1.2}
         maxW="100%"
         w="100%"
         noOfLines={1}
@@ -54,7 +54,7 @@ const Item = ({ subject, desc, date }: BoxItemProps) => (
         fontWeight="400"
         fontSize="14px"
         mt="8px"
-        lineHeight={1}
+        lineHeight={1.2}
         maxW="100%"
         w="100%"
         noOfLines={1}
