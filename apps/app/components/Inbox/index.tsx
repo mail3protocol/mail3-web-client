@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
-import { Box, Center, Container } from '@chakra-ui/react'
+import { Box, Center } from '@chakra-ui/react'
+import { atom, useAtom } from 'jotai'
 import { useDidMount } from '../../hooks/useDidMount'
 import { BoxList } from '../BoxList'
 import { InboxNav } from './Nav'
@@ -26,13 +27,22 @@ data = [...data, ...data]
 data = [...data, ...data]
 data = [...data, ...data]
 
+export enum PageType {
+  inbox,
+  Subscrption,
+}
+
+export const pageTypeAtom = atom<PageType>(PageType.inbox)
+
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
   const [messages, setMessages] = useState([])
+  const [pageType] = useAtom(pageTypeAtom)
 
   useDidMount(() => {
+    console.log('InboxComponent useDidMount')
+    console.log('pageType:', pageType)
     setMessages(data)
-    console.log('useDidMount')
   })
 
   return (
@@ -48,15 +58,27 @@ export const InboxComponent: React.FC = () => {
               boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
               borderRadius="24px"
             >
-              <Box padding="20px 64px">
-                <Box>NEW</Box>
-                <BoxList data={messages} />
-              </Box>
+              {pageType === PageType.inbox && (
+                <Box>
+                  <Box padding="20px 64px">
+                    <Box>NEW</Box>
+                    <BoxList data={messages} />
+                  </Box>
 
-              <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
-                <Box>SEEM</Box>
-                <BoxList data={messages} />
-              </Box>
+                  <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
+                    <Box>SEEM</Box>
+                    <BoxList data={messages} />
+                  </Box>
+                </Box>
+              )}
+
+              {pageType === PageType.Subscrption && (
+                <Box>
+                  <Box padding="20px 64px">
+                    <Box>Subscrption</Box>
+                  </Box>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>

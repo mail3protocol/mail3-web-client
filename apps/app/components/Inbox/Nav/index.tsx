@@ -1,10 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, HStack, Wrap, WrapItem } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
 import SVGInbox from '../../../assets/inbox.svg'
 import SVGSub from '../../../assets/subscrption.svg'
+import { pageTypeAtom } from '..'
+
+const navList = [
+  {
+    icon: <SVGInbox />,
+    title: 'Inbox',
+  },
+  {
+    icon: <SVGSub />,
+    title: 'Subscrption',
+  },
+]
 
 export const InboxNav: React.FC = () => {
-  const [index, setIndex] = useState(0)
+  const [pageType, setPageType] = useAtom(pageTypeAtom)
 
   const initStyles = {
     fontWeight: 700,
@@ -34,33 +47,21 @@ export const InboxNav: React.FC = () => {
     },
   }
 
-  const list = [
-    {
-      icon: <SVGInbox />,
-      title: 'Inbox',
-    },
-    {
-      icon: <SVGSub />,
-      title: 'Subscrption',
-    },
-  ]
-
   return (
     <HStack spacing="80px">
-      {list.map((item, i) => {
+      {navList.map((item, i) => {
         const { icon, title } = item
         return (
           <Wrap
             key={title}
-            {...(i === index ? curStyleItem : initStyles)}
+            {...(i === pageType ? curStyleItem : initStyles)}
             onClick={() => {
-              setIndex(i)
-              console.log('title', title)
+              setPageType(i)
             }}
           >
             <WrapItem>{icon}</WrapItem>
             <WrapItem>
-              <Box {...(i === index ? curStyleWord : {})}>{title}</Box>
+              <Box {...(i === pageType ? curStyleWord : {})}>{title}</Box>
             </WrapItem>
           </Wrap>
         )
