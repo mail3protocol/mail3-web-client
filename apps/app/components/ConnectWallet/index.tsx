@@ -12,7 +12,7 @@ import {
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
-import { useDidMount, useToast } from 'hooks/src/index'
+import { useDidMount, useToast, ConfirmDialog } from 'hooks'
 import { CurrentConnector } from '../../connectors'
 import { ConenctModal } from './ConnectModal'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
@@ -129,6 +129,7 @@ export const ConnectWallet: React.FC = () => {
           {t('connect-wallet')}
         </Button>
       )}
+      <ConfirmDialog />
       <ConenctModal isOpen={isOpen} onClose={onClose} />
     </>
   )
