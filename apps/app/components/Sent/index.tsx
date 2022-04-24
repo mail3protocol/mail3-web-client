@@ -26,12 +26,12 @@ data = [...data, ...data]
 data = [...data, ...data]
 data = [...data, ...data]
 
-export const SentboxComponent: React.FC = () => {
+export const SentComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
   const [messages, setMessages] = useState([])
 
   useDidMount(() => {
-    console.log('SentboxComponent useDidMount')
+    console.log('SentComponent useDidMount')
     setMessages(data)
   })
 
