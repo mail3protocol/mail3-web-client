@@ -78,8 +78,7 @@ export const InboxComponent: React.FC = () => {
 
               {pageType === PageType.Subscrption && (
                 <Box>
-                  <Box padding="20px 64px">
-                    <Box>Subscrption</Box>
+                  <Box padding="40px 64px">
                     <Subscription />
                   </Box>
                 </Box>

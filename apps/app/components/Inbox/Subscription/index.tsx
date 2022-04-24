@@ -63,6 +63,9 @@ const Item = (props: {
         border="1px solid #6F6F6F"
         boxShadow="none"
         color="#6F6F6F"
+        _hover={{
+          bg: '#f2f2f2',
+        }}
         leftIcon={<SVGBellCur />}
       >
         Cancel
