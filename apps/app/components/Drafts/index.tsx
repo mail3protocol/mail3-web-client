@@ -49,7 +49,7 @@ export const DraftsComponent: React.FC = () => {
             >
               <Box>
                 <Box padding="20px 64px">
-                  <Box>Sent</Box>
+                  <Box>Drafts</Box>
                   <BoxList data={messages} />
                 </Box>
               </Box>
