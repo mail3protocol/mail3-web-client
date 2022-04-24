@@ -6,6 +6,7 @@ import { useDidMount } from '../../hooks/useDidMount'
 import { BoxList } from '../BoxList'
 import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
+import { Subscription } from './Subscription'
 
 const mockList = {
   message: [
@@ -32,7 +33,7 @@ export enum PageType {
   Subscrption,
 }
 
-export const pageTypeAtom = atom<PageType>(PageType.inbox)
+export const pageTypeAtom = atom<PageType>(PageType.Subscrption)
 
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
@@ -79,6 +80,7 @@ export const InboxComponent: React.FC = () => {
                 <Box>
                   <Box padding="20px 64px">
                     <Box>Subscrption</Box>
+                    <Subscription />
                   </Box>
                 </Box>
               )}
