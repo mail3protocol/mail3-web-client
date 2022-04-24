@@ -1,8 +1,10 @@
 import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, Center, Container } from '@chakra-ui/react'
 import { useDidMount } from '../../hooks/useDidMount'
 import { BoxList } from '../BoxList'
+import { InboxNav } from './Nav'
+import { Navbar } from '../Navbar'
 
 const mockList = {
   message: [
@@ -34,22 +36,31 @@ export const InboxComponent: React.FC = () => {
   })
 
   return (
-    <Box
-      margin="200px auto"
-      w="1280px"
-      bgColor="#FFFFFF"
-      boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-      borderRadius="24px"
-    >
-      <Box padding="20px 64px">
-        <Box>NEW</Box>
-        <BoxList data={messages} />
-      </Box>
+    <Box>
+      <Navbar />
+      <Center>
+        <Box w="1280px">
+          <Box paddingTop="60px">
+            <InboxNav />
+            <Box
+              margin="25px auto"
+              bgColor="#FFFFFF"
+              boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
+              borderRadius="24px"
+            >
+              <Box padding="20px 64px">
+                <Box>NEW</Box>
+                <BoxList data={messages} />
+              </Box>
 
-      <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
-        <Box>SEEM</Box>
-        <BoxList data={messages} />
-      </Box>
+              <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
+                <Box>SEEM</Box>
+                <BoxList data={messages} />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Center>
     </Box>
   )
 }
