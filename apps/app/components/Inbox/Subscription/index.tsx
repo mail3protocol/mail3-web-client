@@ -57,7 +57,14 @@ const Item = (props: {
 
   if (isSub) {
     _button = (
-      <Button w="100px" variant="empty" leftIcon={<SVGBellCur />}>
+      <Button
+        w="100px"
+        bg="transparent"
+        border="1px solid #6F6F6F"
+        boxShadow="none"
+        color="#6F6F6F"
+        leftIcon={<SVGBellCur />}
+      >
         Cancel
       </Button>
     )
