@@ -4,6 +4,7 @@
         "node_modules"
     ],
     "include": [
+        "@types/gtag.js",
         "src/*.ts",
         "src/*.tsx"
     ]

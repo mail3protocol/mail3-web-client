@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { appWithTranslation } from 'next-i18next'
+import Script from 'next/script'
 import type { AppProps } from 'next/app'
 import { Provider as JotaiProvider } from 'jotai'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -40,6 +41,19 @@ function Mail3({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/apple-icon.png" />
         <meta name="theme-color" content="#317EFB" />
       </Head>
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-1PW4LM5ETS"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-1PW4LM5ETS', { debug_mode: true });
+        `}
+      </Script>
       <QueryClientProvider client={queryClient}>
         <JotaiProvider>
           <ChakraProvider theme={theme}>

@@ -12,8 +12,8 @@ import {
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
+import { useDidMount, useToast } from 'hooks/src/index'
 import { CurrentConnector } from '../../connectors'
-import { useDidMount } from '../../hooks/useDidMount'
 import { ConenctModal } from './ConnectModal'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
@@ -23,7 +23,6 @@ import ProfileSvg from '../../assets/profile.svg'
 import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
 import { copyText } from '../../utils'
-import { useToast } from '../../hooks/useToast'
 
 const { usePriorityConnector, usePriorityIsActivating, usePriorityAccount } =
   CurrentConnector

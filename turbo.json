@@ -24,6 +24,15 @@
             "outputs": [
                 ".next/**"
             ]
+        },
+        "home#build": {
+            "dependsOn": [
+                "^build",
+                "$NEXT_PUBLIC_ALCHEMY_KEY"
+            ],
+            "outputs": [
+                ".next/**"
+            ]
         }
     }
 }

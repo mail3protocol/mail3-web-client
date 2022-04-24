@@ -1,6 +1,6 @@
 const withPWA = require('next-pwa')
 const withPlugins = require('next-compose-plugins')
-const withTM = require('next-transpile-modules')(['ui'])
+const withTM = require('next-transpile-modules')(['ui', 'assets', 'hooks'])
 const runtimeCaching = require('next-pwa/cache')
 const { i18n } = require('./next-i18next.config')
 

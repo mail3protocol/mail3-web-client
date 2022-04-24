@@ -28,7 +28,6 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
   const [t] = useTranslation('connect')
   const isConnectingMetamask = useSelectedIsActivating(metaMask)
   const isConnectingWalletConnect = useSelectedIsActivating(walletConnect)
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
       <ModalOverlay />
@@ -40,7 +39,12 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
             <Button
               isDisabled={isConnectingMetamask}
               isLoading={isConnectingMetamask}
-              onClick={() => metaMask.activate().then(() => onClose())}
+              onClick={() => {
+                gtag('event', 'desired_wallet', {
+                  wallet_name: 'Phantom',
+                })
+                metaMask.activate().then(() => onClose())
+              }}
             >
               {t('metamask')}
             </Button>

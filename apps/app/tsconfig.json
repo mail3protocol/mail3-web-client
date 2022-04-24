@@ -3,7 +3,8 @@
     "include": [
         "next-env.d.ts",
         "**/*.ts",
-        "**/*.tsx"
+        "**/*.tsx",
+        "@types/gtag.js"
     ],
     "exclude": [
         "node_modules"

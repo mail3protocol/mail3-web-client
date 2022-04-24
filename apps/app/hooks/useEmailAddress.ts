@@ -8,7 +8,10 @@ export const useEmailAddress = () => {
   const account = usePriorityAccount()
 
   return useMemo(
-    () => (account ? `${truncateMiddle(`0x${account}`, 6, 4)}@mail3.me` : ''),
+    () =>
+      account
+        ? `${truncateMiddle(`0x${account}`, 6, 4).toLowerCase()}@mail3.me`
+        : '',
     [account]
   )
 }
