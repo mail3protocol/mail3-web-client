@@ -21,7 +21,12 @@ export const useToast = () => {
         duration: 1500,
         ...rest,
         render: () => (
-          <Center position="relative" bottom={`${window.innerHeight / 2}px`}>
+          <Center
+            position="relative"
+            bottom={
+              options?.position ? undefined : `${window.innerHeight / 2}px`
+            }
+          >
             <Text
               borderRadius="16px"
               px="40px"

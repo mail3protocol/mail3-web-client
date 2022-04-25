@@ -1,11 +1,9 @@
 import { useMemo } from 'react'
-import { CurrentConnector } from '../connectors'
+import { useAccount } from 'hooks'
 import { truncateMiddle } from '../utils'
 
-const { usePriorityAccount } = CurrentConnector
-
 export const useEmailAddress = () => {
-  const account = usePriorityAccount()
+  const account = useAccount()
 
   return useMemo(
     () =>

@@ -1,5 +1,4 @@
 import {
-  useDisclosure,
   Text,
   Popover,
   PopoverTrigger,
@@ -12,9 +11,7 @@ import {
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
-import { useDidMount, useToast, ConfirmDialog } from 'hooks'
-import { CurrentConnector } from '../../connectors'
-import { ConenctModal } from './ConnectModal'
+import { useConnectWalletDialog, useToast } from 'hooks'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { RoutePath } from '../../route/path'
@@ -24,21 +21,12 @@ import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
 import { copyText } from '../../utils'
 
-const { usePriorityConnector, usePriorityIsActivating, usePriorityAccount } =
-  CurrentConnector
-interface ConnectedButtonProps {
-  address: string
-  onOpenConnectWallet: () => void
-}
-
-const ConnectedButton: React.FC<ConnectedButtonProps> = ({
-  address,
-  onOpenConnectWallet,
-}) => {
+export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
   const [t] = useTranslation('common')
   const toast = useToast()
   const popoverRef = useRef<HTMLElement>(null)
+  const { onOpen } = useConnectWalletDialog()
   const btns: ButtonListItemProps[] = [
     {
       href: RoutePath.Settings,
@@ -64,7 +52,7 @@ const ConnectedButton: React.FC<ConnectedButtonProps> = ({
       label: t('navbar.change-wallet'),
       icon: <ChangeWalletSvg />,
       onClick() {
-        onOpenConnectWallet()
+        onOpen()
       },
     },
   ]
@@ -102,35 +90,5 @@ const ConnectedButton: React.FC<ConnectedButtonProps> = ({
         </PopoverBody>
       </PopoverContent>
     </Popover>
-  )
-}
-
-export const ConnectWallet: React.FC = () => {
-  const [t] = useTranslation('connect')
-  const connector = usePriorityConnector()
-  const IsActivating = usePriorityIsActivating()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const account = usePriorityAccount()
-  useDidMount(() => {
-    connector.connectEagerly?.()
-  })
-
-  return (
-    <>
-      {account ? (
-        <ConnectedButton address={account} onOpenConnectWallet={onOpen} />
-      ) : (
-        <Button
-          onClick={onOpen}
-          isDisabled={IsActivating}
-          isLoading={IsActivating}
-          loadingText={t('connecting')}
-        >
-          {t('connect-wallet')}
-        </Button>
-      )}
-      <ConfirmDialog />
-      <ConenctModal isOpen={isOpen} onClose={onClose} />
-    </>
   )
 }

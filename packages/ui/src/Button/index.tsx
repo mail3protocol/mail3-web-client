@@ -15,7 +15,7 @@ export const Button: React.FC<ButtonProps> = ({
       borderColor="brand.500"
       borderRadius="40px"
       _hover={{
-        bg: isOutline ? '' : 'brand.500',
+        bg: isOutline ? '#f5f5f5' : 'brand.500',
       }}
       {...props}
     >

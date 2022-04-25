@@ -15,14 +15,15 @@ import {
 import Link from 'next/link'
 import LogoSvg from 'assets/svg/logo.svg'
 import { useTranslation } from 'next-i18next'
+import { ConnectWallet } from 'ui'
 import InboxWhiteSvg from '../../assets/inbox-white.svg'
 import DraftSvg from '../../assets/drafts.svg'
 import TrashSvg from '../../assets/trash.svg'
 import SentSvg from '../../assets/sent.svg'
 import SubscrptionSvg from '../../assets/subscrption.svg'
 import { RoutePath } from '../../route/path'
-import { ConnectWallet } from '../ConnectWallet'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
+import { ConnectedButton } from '../ConnectedButton'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -130,7 +131,9 @@ export const Navbar: React.FC<NavbarProps> = () => {
         <Logo />
       </Flex>
       <Flex alignItems="center" position="absolute" right={0}>
-        <ConnectWallet />
+        <ConnectWallet
+          renderConnected={(address) => <ConnectedButton address={address} />}
+        />
       </Flex>
     </Flex>
   )

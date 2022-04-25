@@ -41,7 +41,7 @@ export const avatarQuery = (
 }`
 
 const defaultAvatarUrl = (address: string) =>
-  `https://source.boringavatars.com/marble/300/${address}`
+  `https://source.boringavatars.com/marble/300/${address.toLowerCase()}`
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
