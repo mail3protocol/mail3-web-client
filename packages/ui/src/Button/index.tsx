@@ -1,19 +1,27 @@
 import { Button as RawButton, ButtonProps } from '@chakra-ui/react'
 
-export const Button: React.FC<ButtonProps> = ({ children, ...props }) => (
-  <RawButton
-    variant="primary"
-    bg="brand.500"
-    color="white"
-    borderRadius="40px"
-    _hover={{
-      bg: 'brand.50',
-    }}
-    boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
-    {...props}
-  >
-    {children}
-  </RawButton>
-)
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  variant,
+  ...props
+}) => {
+  const isOutline = variant === 'outline'
+  return (
+    <RawButton
+      variant={variant}
+      colorScheme="primary"
+      bg={isOutline ? 'transparent' : 'brand.500'}
+      color={isOutline ? 'brand.500' : 'white'}
+      borderColor="brand.500"
+      borderRadius="40px"
+      _hover={{
+        bg: isOutline ? '' : 'brand.500',
+      }}
+      {...props}
+    >
+      {children}
+    </RawButton>
+  )
+}
 
 export type { ButtonProps }

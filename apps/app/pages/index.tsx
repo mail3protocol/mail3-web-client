@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Button } from 'ui'
+import { Button, PageContainer } from 'ui'
 import { useDialog } from 'hooks'
 import { Navbar } from '../components/Navbar'
 
@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
 const Home: NextPage = () => {
   const dialog = useDialog()
   return (
-    <div>
+    <PageContainer>
       <Navbar />
       <Button
         onClick={() => {
@@ -41,7 +41,7 @@ const Home: NextPage = () => {
       >
         Open text dialog
       </Button>
-    </div>
+    </PageContainer>
   )
 }
 

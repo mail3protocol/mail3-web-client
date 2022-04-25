@@ -24,7 +24,7 @@ export const ButtonListItem: React.FC<ButtonListItemProps> = ({
       height="40px"
       onClick={onClick}
       _hover={{
-        bg: 'rgba(78, 97, 245, 0.1)',
+        bg: '#E7E7E7',
       }}
       as={isExternal ? undefined : 'a'}
       cursor="pointer"
