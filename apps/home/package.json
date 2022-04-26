@@ -27,6 +27,7 @@
         "react-query": "^3.34.16"
     },
     "devDependencies": {
+        "@svgr/webpack": "6.2.1",
         "@types/node": "17.0.4",
         "@types/react": "17.0.38",
         "@types/react-dom": "^17.0.0",

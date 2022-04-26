@@ -20,7 +20,14 @@ module.exports = withPlugins(plugins, {
   reactStrictMode: true,
   webpack(config) {
     config.module.rules.push({
+      test: /\.svg$/i,
+      type: 'asset',
+      resourceQuery: /url/, // *.svg?url
+    })
+
+    config.module.rules.push({
       test: /\.svg$/,
+      resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
       use: ['@svgr/webpack'],
     })
 
