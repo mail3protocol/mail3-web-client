@@ -3,6 +3,7 @@ import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { Button } from 'ui'
 import { useDidMount } from 'hooks'
 import AvatarTemp from '../../../assets/sub-avatar-temp.png'
+import SubTop from '../../../assets/subscrption-top.png'
 import SVGVector from '../../../assets/sub-icon-vector.svg'
 import SVGBell from '../../../assets/sub-icon-bell.svg'
 import SVGBellCur from '../../../assets/sub-icon-bell-cur.svg'
@@ -42,12 +43,13 @@ data = [...data, ...data]
 data = [...data, ...data]
 
 const Item = (props: {
+  isNew: boolean
   name: any
   avatarSrc: any
   desc: any
   isSub: boolean
 }) => {
-  const { name, avatarSrc, desc, isSub } = props
+  const { name, avatarSrc, desc, isSub, isNew } = props
 
   let _button = (
     <Button w="100px">
@@ -75,6 +77,13 @@ const Item = (props: {
 
   return (
     <>
+      {isNew && (
+        <Box position="absolute" top="-2px" left="-7px">
+          <Center w="75px" h="29px" bg={`url(${SubTop.src})`}>
+            News
+          </Center>
+        </Box>
+      )}
       <Avatar src={avatarSrc.src} />
       <Box>
         <Center>
@@ -132,6 +141,7 @@ export const Subscription: React.FC = () => {
               flexDirection="column"
               alignItems="center"
               justifyContent="space-evenly"
+              position="relative"
             >
               <Item {...item} />
             </WrapItem>
