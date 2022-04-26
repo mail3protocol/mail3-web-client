@@ -20,6 +20,7 @@
         "framer-motion": "^6",
         "jotai": "^1.6.1",
         "ui": "*",
+        "assets": "*",
         "next": "12.1.4",
         "next-i18next": "^11.0.0",
         "react": "^17.0.2",
@@ -34,6 +35,7 @@
         "tsconfig": "*",
         "eslint": "8.13.0",
         "typescript": "4.6.3",
-        "next-transpile-modules": "^9.0.0"
+        "next-transpile-modules": "^9.0.0",
+        "@svgr/webpack": "6.2.1"
     }
 }
