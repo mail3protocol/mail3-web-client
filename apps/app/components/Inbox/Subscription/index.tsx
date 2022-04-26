@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { Button } from 'ui'
 import { useDidMount } from 'hooks'
@@ -38,21 +38,36 @@ let data = [
     isNew: false,
   },
 ]
-data = [...data, ...data]
-data = [...data, ...data]
-data = [...data, ...data]
 
-const Item = (props: {
+data = [...data, ...data]
+// data = [...data, ...data]
+// data = [...data, ...data]
+
+interface ListItem {
   isNew: boolean
   name: any
   avatarSrc: any
   desc: any
   isSub: boolean
-}) => {
-  const { name, avatarSrc, desc, isSub, isNew } = props
+}
+
+type HandleClick = (index: number, type: string) => void
+
+interface ItemProps extends ListItem {
+  index: number
+  handleClick: HandleClick
+}
+
+const Item = (props: ItemProps) => {
+  const { name, avatarSrc, desc, isSub, isNew, index, handleClick } = props
 
   let _button = (
-    <Button w="100px">
+    <Button
+      w="100px"
+      onClick={() => {
+        handleClick(index, 'follow')
+      }}
+    >
       <SVGBell />
     </Button>
   )
@@ -65,6 +80,9 @@ const Item = (props: {
         border="1px solid #6F6F6F"
         boxShadow="none"
         color="#6F6F6F"
+        onClick={() => {
+          handleClick(index, 'unfollow')
+        }}
         _hover={{
           bg: '#f2f2f2',
         }}
@@ -112,9 +130,28 @@ const Item = (props: {
 }
 
 export const Subscription: React.FC = () => {
+  const [list, setList] = useState<Array<ListItem>>([])
+
   useDidMount(() => {
     console.log('subscription')
+    setList(data)
   })
+
+  const handleClick: HandleClick = (index, type) => {
+    const newList = [...list]
+    const newElement = {
+      ...newList[index],
+    }
+    if (type === 'follow') {
+      // doing follow
+      newElement.isSub = true
+    } else {
+      // doing unfollow
+      newElement.isSub = false
+    }
+    newList[index] = newElement
+    setList(newList)
+  }
 
   return (
     <Box color="#000">
@@ -130,7 +167,7 @@ export const Subscription: React.FC = () => {
 
       <Box marginTop="20px">
         <Wrap spacing="20px" justify="center">
-          {data.map((item) => (
+          {list.map((item, index) => (
             <WrapItem
               key={item.name}
               w="259px"
@@ -143,7 +180,7 @@ export const Subscription: React.FC = () => {
               justifyContent="space-evenly"
               position="relative"
             >
-              <Item {...item} />
+              <Item {...item} index={index} handleClick={handleClick} />
             </WrapItem>
           ))}
         </Wrap>
