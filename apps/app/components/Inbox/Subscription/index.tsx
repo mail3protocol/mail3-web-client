@@ -1,7 +1,7 @@
 import React from 'react'
 import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { Button } from 'ui'
-import { useDidMount } from '../../../hooks/useDidMount'
+import { useDidMount } from 'hooks'
 import AvatarTemp from '../../../assets/sub-avatar-temp.png'
 import SVGVector from '../../../assets/sub-icon-vector.svg'
 import SVGBell from '../../../assets/sub-icon-bell.svg'
