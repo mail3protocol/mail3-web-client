@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { Button } from 'ui'
 import { useDidMount } from 'hooks'
+import update from 'immutability-helper'
 import AvatarTemp from '../../../assets/sub-avatar-temp.png'
 import SubTop from '../../../assets/subscrption-top.png'
 import SVGVector from '../../../assets/sub-icon-vector.svg'
@@ -138,18 +139,27 @@ export const Subscription: React.FC = () => {
   })
 
   const handleClick: HandleClick = (index, type) => {
-    const newList = [...list]
-    const newElement = {
-      ...newList[index],
-    }
+    let newList: Array<ListItem> = []
+
     if (type === 'follow') {
       // doing follow
-      newElement.isSub = true
+      newList = update(list, {
+        [index]: {
+          isSub: {
+            $set: true,
+          },
+        },
+      })
     } else {
       // doing unfollow
-      newElement.isSub = false
+      newList = update(list, {
+        [index]: {
+          isSub: {
+            $set: false,
+          },
+        },
+      })
     }
-    newList[index] = newElement
     setList(newList)
   }
 
