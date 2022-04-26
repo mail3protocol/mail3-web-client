@@ -17,7 +17,7 @@ export const theme = extendTheme({
   },
   components: {
     Button: {
-      variant: {
+      colorScheme: {
         empty: {
           bg: 'transparent',
           _hover: { bg: 'transparent' },

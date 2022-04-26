@@ -1,14 +1,15 @@
 import { useMemo } from 'react'
-import { CurrentConnector } from '../connectors'
+import { useAccount } from 'hooks'
 import { truncateMiddle } from '../utils'
 
-const { usePriorityAccount } = CurrentConnector
-
 export const useEmailAddress = () => {
-  const account = usePriorityAccount()
+  const account = useAccount()
 
   return useMemo(
-    () => (account ? `${truncateMiddle(`0x${account}`, 6, 4)}@mail3.me` : ''),
+    () =>
+      account
+        ? `${truncateMiddle(`0x${account}`, 6, 4).toLowerCase()}@mail3.me`
+        : '',
     [account]
   )
 }

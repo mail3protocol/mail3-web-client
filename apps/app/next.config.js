@@ -1,6 +1,6 @@
 const withPWA = require('next-pwa')
 const withPlugins = require('next-compose-plugins')
-const withTM = require('next-transpile-modules')(['ui'])
+const withTM = require('next-transpile-modules')(['ui', 'assets', 'hooks'])
 const runtimeCaching = require('next-pwa/cache')
 const { i18n } = require('./next-i18next.config')
 
@@ -20,7 +20,14 @@ module.exports = withPlugins(plugins, {
   reactStrictMode: true,
   webpack(config) {
     config.module.rules.push({
+      test: /\.svg$/i,
+      type: 'asset',
+      resourceQuery: /url/, // *.svg?url
+    })
+
+    config.module.rules.push({
       test: /\.svg$/,
+      resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
       use: ['@svgr/webpack'],
     })
 

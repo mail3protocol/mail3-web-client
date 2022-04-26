@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import {
   Center,
-  Grid,
   Text,
   Flex,
   Popover,
@@ -11,20 +10,20 @@ import {
   Box,
   PopoverArrow,
   Button,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import LogoSvg from 'assets/svg/logo.svg'
-import { LinkButton } from 'ui'
 import { useTranslation } from 'next-i18next'
-import InboxSvg from '../../assets/inbox.svg'
+import { ConnectWallet } from 'ui'
 import InboxWhiteSvg from '../../assets/inbox-white.svg'
 import DraftSvg from '../../assets/drafts.svg'
 import TrashSvg from '../../assets/trash.svg'
 import SentSvg from '../../assets/sent.svg'
 import SubscrptionSvg from '../../assets/subscrption.svg'
 import { RoutePath } from '../../route/path'
-import { ConnectWallet } from '../ConnectWallet'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
+import { ConnectedButton } from '../ConnectedButton'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -97,7 +96,7 @@ const Logo = () => {
                 height="66px"
                 border="1px solid black"
                 _hover={{
-                  bg: 'rgba(78, 97, 245, 0.1)',
+                  bg: '#E7E7E7',
                 }}
                 as="a"
               >
@@ -118,33 +117,24 @@ const Logo = () => {
   )
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ showInbox = true }) => {
-  const [t] = useTranslation('common')
+export const Navbar: React.FC<NavbarProps> = () => {
+  const [isMobile] = useMediaQuery('(max-width: 600px)')
   return (
-    <Grid
+    <Flex
+      alignItems="center"
+      justifyContent={isMobile ? 'flex-start' : 'center'}
       height="60px"
       w="100%"
       position="relative"
-      templateColumns="200px calc(100% - 400px) 200px"
-      boxSizing="border-box"
-      padding="0 30px"
     >
-      <Flex alignItems="center" justifyContent="flex-start">
-        {showInbox ? (
-          <Link href={RoutePath.Inbox} passHref>
-            <LinkButton fontWeight="bold" fontSize="20px">
-              <InboxSvg />
-              <Text ml="4px">{t('navbar.inbox')}</Text>
-            </LinkButton>
-          </Link>
-        ) : null}
-      </Flex>
-      <Center>
+      <Flex alignItems="center">
         <Logo />
-      </Center>
-      <Flex alignItems="center" justifyContent="flex-end">
-        <ConnectWallet />
       </Flex>
-    </Grid>
+      <Flex alignItems="center" position="absolute" right={0}>
+        <ConnectWallet
+          renderConnected={(address) => <ConnectedButton address={address} />}
+        />
+      </Flex>
+    </Flex>
   )
 }

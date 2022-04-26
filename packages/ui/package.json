@@ -7,6 +7,10 @@
         "lint": "eslint ./src"
     },
     "license": "MIT",
+    "dependencies": {
+        "assets": "*",
+        "hooks": "*"
+    },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",
         "@emotion/react": "^11",
@@ -21,6 +25,7 @@
         "eslint": "8.13.0",
         "typescript": "4.6.3",
         "jotai": "^1.6.1",
-        "react-query": "^3.34.16"
+        "react-query": "^3.34.16",
+        "next": "12.1.4"
     }
 }

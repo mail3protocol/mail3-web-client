@@ -1,5 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { Button, PageContainer } from 'ui'
+import { useDialog } from 'hooks'
 import { Navbar } from '../components/Navbar'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
@@ -8,10 +10,39 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Home: NextPage = () => (
-  <div>
-    <Navbar />
-  </div>
-)
+const Home: NextPage = () => {
+  const dialog = useDialog()
+  return (
+    <PageContainer>
+      <Navbar />
+      <Button
+        onClick={() => {
+          dialog({
+            type: 'warning',
+            title: 'Warning',
+            description: 'Are you sure you want to do this?',
+          })
+        }}
+      >
+        Open warning dialog
+      </Button>
+      <Button
+        onClick={() => {
+          dialog({
+            type: 'text',
+            description: 'Are you sure you want to do this?',
+            showCloseButton: true,
+            okText: 'OK',
+            cancelText: 'cancel',
+            onConfirm() {},
+            onCancel() {},
+          })
+        }}
+      >
+        Open text dialog
+      </Button>
+    </PageContainer>
+  )
+}
 
 export default Home
