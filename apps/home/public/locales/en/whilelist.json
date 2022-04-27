@@ -1,0 +1,20 @@
+{
+    "launch-app": "Launch App",
+    "whitelist": "Whitelist",
+    "apply_for_beta_access_to": "Apply for beta access to",
+    "connect_wallet_to_see_if_you_are_eligible_to_join_the_whitelist":  "Connect wallet to see\nif you are eligible to join the whitelist",
+    "application_period": "Application Period: {{date}}",
+    "beta_period": "Beta Period: {{date}}",
+    "eligibility": "Eligibility: ",
+    "details": "Details >>",
+    "spots": "Spots: {{value}}",
+    "qualified-text": "Congratulations! \uD83C\uDF89\nyou are qualify for beta access to Mail3.",
+    "launch-date": "launch date: {{date}}",
+    "not-qualified-text": {
+        "0": "You could not qualify for early access to Mail3 for now.\nThere are few spots left, join our ",
+        "1": "Discord",
+        "2": " and follow us on ",
+        "3": "Twitter",
+        "4": " to get."
+    }
+}

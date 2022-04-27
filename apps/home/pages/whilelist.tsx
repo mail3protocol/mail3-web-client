@@ -5,7 +5,11 @@ import { WhileList } from '../components/WhileList'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale as string, ['connect', 'common'])),
+    ...(await serverSideTranslations(locale as string, [
+      'connect',
+      'common',
+      'whilelist',
+    ])),
   },
 })
 

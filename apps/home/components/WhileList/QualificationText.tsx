@@ -1,42 +1,51 @@
 import { Box, Text, Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import { useTranslation } from 'next-i18next'
+import {
+  WHILE_LIST_DISCORD_URL,
+  WHITE_LIST_TWITTER_URL,
+} from '../../constants/env'
 
 export const QualificationText: React.FC<{
   isQualified?: boolean
-}> = ({ isQualified }) => (
-  <Box
-    lineHeight="30px"
-    fontSize="20px"
-    mt="40px"
-    mb="38px"
-    textAlign="center"
-    position="relative"
-    h="150px"
-  >
-    {isQualified ? (
-      <>
-        <Text>
-          Congratulations! 🎉 you are qualify for beta access to Mail3.
-        </Text>
-        <Text fontSize="16px">launch date: March 8</Text>
-      </>
-    ) : (
-      <>
-        You could not qualify for early access to Mail3 for now. <br />
-        There are few spots left, join our{' '}
-        <NextLink href="#" passHref>
-          <Link textDecoration="underline" fontWeight="bold">
-            Discord
-          </Link>
-        </NextLink>{' '}
-        and follow us on{' '}
-        <NextLink href="#" passHref>
-          <Link textDecoration="underline" fontWeight="bold">
-            Twitter
-          </Link>
-        </NextLink>{' '}
-        to get.
-      </>
-    )}
-  </Box>
-)
+}> = ({ isQualified }) => {
+  const { t } = useTranslation('whilelist')
+  return (
+    <Box
+      lineHeight="30px"
+      fontSize="20px"
+      mt="40px"
+      mb="38px"
+      textAlign="center"
+      position="relative"
+      whiteSpace="pre-line"
+    >
+      {isQualified ? (
+        <>
+          <Text fontWeight="medium">{t('qualified-text')}</Text>
+          <Text fontSize="16px">
+            {t('launch-date', {
+              date: 'March 8',
+            })}
+          </Text>
+        </>
+      ) : (
+        <>
+          {t('not-qualified-text.0')}
+          <NextLink href={WHITE_LIST_TWITTER_URL} passHref>
+            <Link textDecoration="underline" fontWeight="bold">
+              {t('not-qualified-text.1')}
+            </Link>
+          </NextLink>
+          {t('not-qualified-text.2')}
+          <NextLink href={WHILE_LIST_DISCORD_URL} passHref>
+            <Link textDecoration="underline" fontWeight="bold">
+              {t('not-qualified-text.3')}
+            </Link>
+          </NextLink>{' '}
+          {t('not-qualified-text.4')}
+        </>
+      )}
+    </Box>
+  )
+}
