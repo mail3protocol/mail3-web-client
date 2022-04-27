@@ -63,6 +63,7 @@ module.exports = {
     'import/extensions': 0,
     'import/no-cycle': 0,
     'import/no-extraneous-dependencies': 0,
+    'import/no-unresolved': [2, { ignore: ['\\.svg\\?url'] }],
     'jsx-a11y/no-static-element-interactions': 0,
     'jsx-a11y/anchor-has-content': 0,
     'jsx-a11y/click-events-have-key-events': 0,

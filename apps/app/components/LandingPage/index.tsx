@@ -2,8 +2,6 @@ import React from 'react'
 import { Center, Heading, Text } from '@chakra-ui/react'
 import Logo from 'assets/svg/logo-big.svg'
 import Image from 'next/image'
-// @ts-ignore
-// eslint-disable-next-line import/no-unresolved
 import landingBg from 'assets/svg/landing-bg.svg?url'
 import { useTranslation } from 'next-i18next'
 import { Button } from 'ui'
