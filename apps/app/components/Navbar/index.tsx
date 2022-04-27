@@ -24,6 +24,7 @@ import SubscrptionSvg from '../../assets/subscrption.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
+import { NAVBAR_HEIGHT } from '../../constants'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -119,7 +120,7 @@ const Logo = () => {
 
 const NavbarContainer = styled(Flex)`
   justify-content: center;
-  height: 60px;
+  height: ${NAVBAR_HEIGHT}px;
   width: 100%;
   align-items: center;
   position: relative;
