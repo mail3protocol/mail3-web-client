@@ -1,6 +1,7 @@
 import React from 'react'
 import { Center, Heading, Text } from '@chakra-ui/react'
 import Logo from 'assets/svg/logo-big.svg'
+import Image from 'next/image'
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import landingBg from 'assets/svg/landing-bg.svg?url'
@@ -9,7 +10,6 @@ import { Button } from 'ui'
 import { useConnectWalletDialog } from 'hooks'
 import styled from '@emotion/styled'
 import landingCat from '../../assets/landing-cat.png'
-import Image from 'next/image'
 
 const Container = styled(Center)`
   height: calc(100vh - 60px);
@@ -42,7 +42,12 @@ export const LandingPage = () => {
         <Button onClick={onOpen}>{t('connect')}</Button>
       </Center>
       <footer className="footer">
-        <Image src={landingCat} width="118px" height="130px" alt="landing-cat" />
+        <Image
+          src={landingCat}
+          width="118px"
+          height="130px"
+          alt="landing-cat"
+        />
       </footer>
     </Container>
   )
