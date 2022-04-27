@@ -10,9 +10,9 @@ import {
   Box,
   PopoverArrow,
   Button,
-  useMediaQuery,
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import styled from '@emotion/styled'
 import LogoSvg from 'assets/svg/logo.svg'
 import { useTranslation } from 'next-i18next'
 import { ConnectWallet } from 'ui'
@@ -117,24 +117,27 @@ const Logo = () => {
   )
 }
 
-export const Navbar: React.FC<NavbarProps> = () => {
-  const [isMobile] = useMediaQuery('(max-width: 600px)')
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent={isMobile ? 'flex-start' : 'center'}
-      height="60px"
-      w="100%"
-      position="relative"
-    >
-      <Flex alignItems="center">
-        <Logo />
-      </Flex>
-      <Flex alignItems="center" position="absolute" right={0}>
-        <ConnectWallet
-          renderConnected={(address) => <ConnectedButton address={address} />}
-        />
-      </Flex>
+const NavbarContainer = styled(Flex)`
+  justify-content: center;
+  height: 60px;
+  width: 100%;
+  align-items: center;
+  position: relative;
+
+  @media (max-width: 600px) {
+    justify-content: flex-start;
+  }
+`
+
+export const Navbar: React.FC<NavbarProps> = () => (
+  <NavbarContainer>
+    <Flex alignItems="center">
+      <Logo />
     </Flex>
-  )
-}
+    <Flex alignItems="center" position="absolute" right={0}>
+      <ConnectWallet
+        renderConnected={(address) => <ConnectedButton address={address} />}
+      />
+    </Flex>
+  </NavbarContainer>
+)
