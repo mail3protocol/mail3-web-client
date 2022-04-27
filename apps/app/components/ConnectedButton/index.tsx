@@ -61,7 +61,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
     <Popover arrowSize={18} autoFocus offset={[0, 20]} closeOnBlur>
       <PopoverTrigger>
         <Box cursor="pointer">
-          <Button variant="outline">
+          <Button variant="outline" w="200px">
             <PopoverAnchor>
               <Box>
                 <Avatar w="32px" h="32px" address={address} />
