@@ -29,11 +29,11 @@ data = [...data, ...data]
 data = [...data, ...data]
 
 export enum PageType {
-  inbox,
+  Inbox,
   Subscrption,
 }
 
-export const pageTypeAtom = atom<PageType>(PageType.Subscrption)
+export const pageTypeAtom = atom<PageType>(PageType.Inbox)
 
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
@@ -62,7 +62,7 @@ export const InboxComponent: React.FC = () => {
               boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
               borderRadius="24px"
             >
-              {pageType === PageType.inbox && (
+              {pageType === PageType.Inbox && (
                 <Box>
                   <Box padding="20px 64px">
                     <Box>NEW</Box>

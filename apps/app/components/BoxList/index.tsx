@@ -32,7 +32,7 @@ const Item = ({ subject, desc, date }: BoxItemProps) => (
       <Avatar size="md" showBorder>
         <AvatarBadge
           boxSize="10px"
-          bg="#F0871A"
+          bg="#9093F9"
           top="0"
           bottom="auto"
           border="none"
