@@ -14,17 +14,14 @@ const Mascot1 = styled(Mascot1Svg)`
   transition: 200ms;
   @media (max-width: 950px) {
     width: 15%;
-    left: 50px;
+    right: 50px;
   }
 
   @media (max-width: 600px) {
     width: auto;
-    height: 10vh;
-    position: sticky;
     left: 0;
-    margin-top: auto;
-    margin-right: auto;
-    bottom: 0;
+    height: calc(100% - 10px);
+    max-width: 100%;
   }
 `
 
@@ -44,11 +41,11 @@ const Mascot2 = styled(Mascot2Svg)`
 
   @media (max-width: 600px) {
     width: auto;
-    height: 10vh;
-    position: sticky;
-    margin-top: auto;
-    margin-left: auto;
+    height: calc(100% - 20px);
     bottom: 10px;
+    right: 10px;
+    max-width: calc(100% - 20px);
+    margin-bottom: 0;
   }
 `
 
@@ -60,7 +57,6 @@ const Mascot3 = styled(Mascot3Svg)`
   height: auto;
   max-width: 190px;
   transition: 200ms;
-  margin-bottom: 10px;
   @media (max-width: 950px) {
     width: 15%;
     right: 50px;
@@ -68,11 +64,9 @@ const Mascot3 = styled(Mascot3Svg)`
 
   @media (max-width: 600px) {
     width: auto;
-    height: 10vh;
-    position: sticky;
-    margin-top: auto;
-    margin-left: auto;
-    bottom: 0;
+    height: calc(100% - 40px);
+    bottom: 10px;
+    right: 0;
   }
 `
 

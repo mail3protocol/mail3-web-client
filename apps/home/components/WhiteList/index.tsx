@@ -22,7 +22,7 @@ import WhileListLogoSvg from '../../assets/svg/whileListLogo.svg'
 import { Mascot } from './Mascot'
 import { APP_URL } from '../../constants/env'
 
-export const WhileList: React.FC = () => {
+export const WhiteList: React.FC = () => {
   const account = useAccount()
   const { t } = useTranslation('whilelist')
   const applicationPeriod = t('application_period', {
@@ -79,6 +79,7 @@ export const WhileList: React.FC = () => {
             md: '30px',
           }}
           w="full"
+          h="calc(100% - 60px)"
           flex={{
             base: 1,
             md: 0,
@@ -97,11 +98,11 @@ export const WhileList: React.FC = () => {
             maxW="1220px"
             w="full"
             mt={{
-              base: '30px',
+              base: '0',
               md: '22px',
             }}
             pt={{
-              base: '0',
+              base: '30px',
               md: '56px',
             }}
             flex={{
@@ -111,14 +112,19 @@ export const WhileList: React.FC = () => {
             position="relative"
             transition="200ms"
             px="20px"
-            minH="700px"
+            minH={{
+              base: '607px',
+              md: '700px',
+            }}
           >
             <Flex
               direction="column"
               justify="space-between"
               align="center"
+              flexShrink={0}
               flex={1}
-              maxH="567px"
+              h="567px"
+              maxH="500px"
               w="full"
             >
               <Flex direction="column" align="center" w="full">
@@ -223,16 +229,12 @@ export const WhileList: React.FC = () => {
             <Flex
               position="relative"
               w="full"
-              flex={{
-                base: 1,
-                md: 0,
-              }}
-              pt="20px"
               h={{
-                base: 'auto',
+                base: 'calc(100% - 500px)',
                 md: '56px',
               }}
-              mt="auto"
+              transition="200ms"
+              flex={1}
             >
               <Mascot imageIndex={mascotIndex} />
             </Flex>

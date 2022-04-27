@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React from 'react'
-import { WhileList } from '../components/WhileList'
+import { WhiteList } from '../components/WhiteList'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
@@ -13,6 +13,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const WhileListPage: NextPage = () => <WhileList />
+const WhiteListPage: NextPage = () => <WhiteList />
 
-export default WhileListPage
+export default WhiteListPage
