@@ -17,7 +17,7 @@ export interface ConnectWalletProps {
 export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   renderConnected,
 }) => {
-  const [t] = useTranslation('connect')
+  const [t] = useTranslation('common')
   const IsActivating = useAccountIsActivating()
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
@@ -33,9 +33,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
           onClick={onOpen}
           isDisabled={IsActivating}
           isLoading={IsActivating}
-          loadingText={t('connecting')}
+          w="200px"
+          loadingText={t('connect.connecting')}
         >
-          {t('connect-wallet')}
+          {t('connect.connect-wallet')}
         </Button>
       )}
       <ConfirmDialog />
