@@ -34,7 +34,6 @@ const Mascot2 = styled(Mascot2Svg)`
   @media (max-width: 767px) {
     width: auto;
     height: 100%;
-    bottom: 10px;
     right: 10px;
     max-width: calc(100% - 20px);
     margin-bottom: 0;
@@ -53,7 +52,6 @@ const Mascot3 = styled(Mascot3Svg)`
   @media (max-width: 767px) {
     width: auto;
     height: 100%;
-    bottom: 10px;
     right: 0;
   }
 `
