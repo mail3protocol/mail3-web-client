@@ -12,10 +12,11 @@ const Mascot1 = styled(Mascot1Svg)`
   height: auto;
   max-width: 190px;
   transition: 200ms;
+  padding-top: 10px;
   @media (max-width: 767px) {
     width: auto;
     left: 0;
-    height: calc(100% - 10px);
+    height: 100%;
     max-width: 100%;
   }
 `
@@ -29,9 +30,10 @@ const Mascot2 = styled(Mascot2Svg)`
   max-width: 190px;
   transition: 200ms;
   margin-bottom: 10px;
+  padding: 10px 0;
   @media (max-width: 767px) {
     width: auto;
-    height: calc(100% - 20px);
+    height: 100%;
     bottom: 10px;
     right: 10px;
     max-width: calc(100% - 20px);
@@ -47,9 +49,10 @@ const Mascot3 = styled(Mascot3Svg)`
   height: auto;
   max-width: 190px;
   transition: 200ms;
+  padding: 10px 0;
   @media (max-width: 767px) {
     width: auto;
-    height: calc(100% - 20px);
+    height: 100%;
     bottom: 10px;
     right: 0;
   }
