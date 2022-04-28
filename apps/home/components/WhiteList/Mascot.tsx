@@ -7,17 +7,12 @@ import Mascot3Svg from '../../assets/svg/mascot/3.svg'
 const Mascot1 = styled(Mascot1Svg)`
   position: absolute;
   bottom: 0;
-  left: 100px;
+  left: 5%;
   width: 20%;
   height: auto;
   max-width: 190px;
   transition: 200ms;
-  @media (max-width: 950px) {
-    width: 15%;
-    right: 50px;
-  }
-
-  @media (max-width: 600px) {
+  @media (max-width: 767px) {
     width: auto;
     left: 0;
     height: calc(100% - 10px);
@@ -28,18 +23,13 @@ const Mascot1 = styled(Mascot1Svg)`
 const Mascot2 = styled(Mascot2Svg)`
   position: absolute;
   bottom: 0;
-  right: 100px;
+  right: 5%;
   width: 20%;
   height: auto;
   max-width: 190px;
   transition: 200ms;
   margin-bottom: 10px;
-  @media (max-width: 950px) {
-    width: 15%;
-    right: 50px;
-  }
-
-  @media (max-width: 600px) {
+  @media (max-width: 767px) {
     width: auto;
     height: calc(100% - 20px);
     bottom: 10px;
@@ -52,19 +42,14 @@ const Mascot2 = styled(Mascot2Svg)`
 const Mascot3 = styled(Mascot3Svg)`
   position: absolute;
   bottom: 0;
-  right: 100px;
+  right: 5%;
   width: 20%;
   height: auto;
   max-width: 190px;
   transition: 200ms;
-  @media (max-width: 950px) {
-    width: 15%;
-    right: 50px;
-  }
-
-  @media (max-width: 600px) {
+  @media (max-width: 767px) {
     width: auto;
-    height: calc(100% - 40px);
+    height: calc(100% - 20px);
     bottom: 10px;
     right: 0;
   }

@@ -1,4 +1,4 @@
-import { Box, Text, Link } from '@chakra-ui/react'
+import { Text, Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useTranslation } from 'next-i18next'
 import {
@@ -10,42 +10,30 @@ export const QualificationText: React.FC<{
   isQualified?: boolean
 }> = ({ isQualified }) => {
   const { t } = useTranslation('whilelist')
-  return (
-    <Box
-      lineHeight="30px"
-      fontSize="20px"
-      mt="40px"
-      mb="38px"
-      textAlign="center"
-      position="relative"
-      whiteSpace="pre-line"
-    >
-      {isQualified ? (
-        <>
-          <Text fontWeight="medium">{t('qualified-text')}</Text>
-          <Text fontSize="16px">
-            {t('launch-date', {
-              date: 'March 8',
-            })}
-          </Text>
-        </>
-      ) : (
-        <>
-          {t('not-qualified-text.0')}
-          <NextLink href={WHITE_LIST_TWITTER_URL} passHref>
-            <Link textDecoration="underline" fontWeight="bold">
-              {t('not-qualified-text.1')}
-            </Link>
-          </NextLink>
-          {t('not-qualified-text.2')}
-          <NextLink href={WHILE_LIST_DISCORD_URL} passHref>
-            <Link textDecoration="underline" fontWeight="bold">
-              {t('not-qualified-text.3')}
-            </Link>
-          </NextLink>{' '}
-          {t('not-qualified-text.4')}
-        </>
-      )}
-    </Box>
+  return isQualified ? (
+    <>
+      <Text>{t('qualified-text')}</Text>
+      <Text fontSize="16px" fontWeight="normal">
+        {t('launch-date', {
+          date: 'March 8',
+        })}
+      </Text>
+    </>
+  ) : (
+    <>
+      {t('not-qualified-text.0')}
+      <NextLink href={WHITE_LIST_TWITTER_URL} passHref>
+        <Link textDecoration="underline" fontWeight="bold">
+          {t('not-qualified-text.1')}
+        </Link>
+      </NextLink>
+      {t('not-qualified-text.2')}
+      <NextLink href={WHILE_LIST_DISCORD_URL} passHref>
+        <Link textDecoration="underline" fontWeight="bold">
+          {t('not-qualified-text.3')}
+        </Link>
+      </NextLink>{' '}
+      {t('not-qualified-text.4')}
+    </>
   )
 }

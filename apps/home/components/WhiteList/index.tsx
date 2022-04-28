@@ -97,7 +97,7 @@ export const WhiteList: React.FC = () => {
             rounded="24px"
             maxW="1220px"
             w="full"
-            mt={{
+            my={{
               base: '0',
               md: '22px',
             }}
@@ -124,7 +124,10 @@ export const WhiteList: React.FC = () => {
               flexShrink={0}
               flex={1}
               h="567px"
-              maxH="500px"
+              maxH={{
+                base: '500px',
+                md: 'unset',
+              }}
               w="full"
             >
               <Flex direction="column" align="center" w="full">
@@ -160,18 +163,24 @@ export const WhiteList: React.FC = () => {
                     zIndex="-2"
                   />
                 </Center>
-                {account ? (
-                  <QualificationText isQualified={isQualified} />
-                ) : (
-                  <Text
-                    w="full"
-                    textAlign="center"
-                    mt="40px"
-                    whiteSpace="pre-line"
-                  >
-                    {applicationPeriod}
-                  </Text>
-                )}
+                <Box
+                  lineHeight="30px"
+                  fontSize="20px"
+                  mt={{
+                    base: '20px',
+                    md: '40px',
+                  }}
+                  textAlign="center"
+                  position="relative"
+                  whiteSpace="pre-line"
+                  fontWeight="medium"
+                >
+                  {account ? (
+                    <QualificationText isQualified={isQualified} />
+                  ) : (
+                    <Text fontWeight="normal">{applicationPeriod}</Text>
+                  )}
+                </Box>
               </Flex>
               <Box
                 my="auto"
@@ -201,7 +210,15 @@ export const WhiteList: React.FC = () => {
                   )}
                 </Text>
               ) : (
-                <Text w="full" textAlign="center">
+                <Text
+                  w="full"
+                  textAlign="center"
+                  my="auto"
+                  fontSize={{
+                    base: '14px',
+                    md: '20px',
+                  }}
+                >
                   {applicationPeriod}
                 </Text>
               )}
@@ -231,7 +248,7 @@ export const WhiteList: React.FC = () => {
               w="full"
               h={{
                 base: 'calc(100% - 500px)',
-                md: '56px',
+                md: '36px',
               }}
               transition="200ms"
               flex={1}
