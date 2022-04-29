@@ -9,7 +9,8 @@ import { Container } from '../Container'
 import { Mascot } from './Mascot'
 import { FooterText } from './FooterText'
 import { QualificationText } from './QualificationText'
-import { getWhitelistTestingRangeFormat } from '../../utils/whitelist'
+import { getDateRangeFormat } from '../../utils/whitelist'
+import { BETA_TESTING_DATE_RANGE } from '../../constants/env'
 
 export const Testing: React.FC = () => {
   const { t } = useTranslation('testing')
@@ -108,7 +109,7 @@ export const Testing: React.FC = () => {
           ) : (
             <>
               {t('testing-period', {
-                date: getWhitelistTestingRangeFormat(),
+                date: getDateRangeFormat(BETA_TESTING_DATE_RANGE),
               })}
             </>
           )}

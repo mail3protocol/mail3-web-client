@@ -21,13 +21,17 @@ import WhileListLogoSvg from '../../assets/svg/whileListLogo.svg'
 import { Mascot } from './Mascot'
 import { Navbar } from '../Navbar'
 import { Container } from '../Container'
-import { getWhitelistTestingRangeFormat } from '../../utils/whitelist'
+import { getDateRangeFormat } from '../../utils/whitelist'
+import {
+  APPLICATION_PERIOD_DATE_RANGE,
+  BETA_TESTING_DATE_RANGE,
+} from '../../constants/env'
 
 export const WhiteList: React.FC = () => {
   const account = useAccount()
   const { t } = useTranslation('whilelist')
   const applicationPeriod = t('application_period', {
-    date: getWhitelistTestingRangeFormat(),
+    date: getDateRangeFormat(APPLICATION_PERIOD_DATE_RANGE),
   })
   const isQualified = false
   const mascotIndex = useMemo(() => {
@@ -160,7 +164,7 @@ export const WhiteList: React.FC = () => {
               >
                 <ListItem>
                   {t('beta_period', {
-                    date: '2022.6.7~2022.6.30',
+                    date: getDateRangeFormat(BETA_TESTING_DATE_RANGE),
                   })}
                 </ListItem>
                 <ListItem>
