@@ -51,7 +51,7 @@ export const useAccount = () => {
     return account
   }
 
-  return undefined
+  return ''
 }
 
 export const useAccountIsActivating = () => {

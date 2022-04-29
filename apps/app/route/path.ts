@@ -4,7 +4,9 @@ export enum RoutePath {
   Sent = '/messages/sent',
   Drafts = '/messages/drafts',
   Trash = '/messages/trash',
-  Settings = '/settings',
-  Setup = '/setup',
+  Settings = '/settings/address',
+  SettingSignature = '/settings/signature',
+  Setup = '/setup/address',
+  SetupSignature = '/setup/signature',
   NewMessage = '/message/new',
 }

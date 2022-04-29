@@ -7,6 +7,11 @@ export const theme = extendTheme({
       100: 'rgba(0, 0, 0, 0.80)',
       500: 'rgba(0, 0, 0, 0.92)',
     },
+    deepBlue: {
+      50: '#4E52F5',
+      100: '#4E52F5',
+      500: '#4E52F5',
+    },
   },
   fonts: {
     body: 'Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',

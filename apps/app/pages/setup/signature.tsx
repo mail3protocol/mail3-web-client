@@ -4,10 +4,10 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale as string, ['connect'])),
+    ...(await serverSideTranslations(locale as string, ['settings', 'common'])),
   },
 })
 
-const Settings: NextPage = () => <div>Settings</div>
+const SetupSignature: NextPage = () => <div>Settings</div>
 
-export default Settings
+export default SetupSignature

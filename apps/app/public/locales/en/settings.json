@@ -1,0 +1,31 @@
+{
+    "setup": {
+        "address": {
+            "title": "Your email address"
+        },
+        "signature": {
+            "title": "Show your own signature"
+        },
+        "next": "Next"
+    },
+    "address": {
+        "title": "Your wallet address and the domain names",
+        "desc": "you owned all can be used as mail3 address to send and receive emails.",
+        "wallet-address": "Wallet Address",
+        "ens-name": "ENS Name",
+        "default": "Default",
+        "default-hover": "This address will be the default address for sending emails.",
+        "registe-ens": "Register <a>new</a> ENS name",
+        "request-failed": "Request change default address failed, please try again later."
+    },
+    "signature": {
+        "desc": "Your signature will be automatically inserted when you write a new email.",
+        "text": "Add Text",
+        "card": "Add Card",
+        "edit": "Edit",
+        "edit-dialog": {
+            "title": "Edit Card",
+            "desc": "Please go to <a>CyberConnect</a> to edit your avatar."
+        }
+    }
+}
