@@ -1,6 +1,7 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SERVER_URL } from '../constants/env'
 import { mockENSNames } from '../mocks/ens'
+import { mockSignatures } from '../mocks/signature'
 
 export class API {
   private account: string
@@ -22,6 +23,30 @@ export class API {
 
   public async getENSNames(): Promise<AxiosResponse<typeof mockENSNames>> {
     return this.axios.get(`/ens-names?address=${this.account}`)
+  }
+
+  public async getSignatures(): Promise<AxiosResponse<typeof mockSignatures>> {
+    return this.axios.get(`/signatures?address=${this.account}`)
+  }
+
+  public async setTextSignature(
+    enable: boolean,
+    text: string
+  ): Promise<AxiosResponse<void>> {
+    return this.axios.post(`/signatures`, {
+      address: this.account,
+      enable,
+      type: 'text',
+      text,
+    })
+  }
+
+  public async setCardSignature(enable: boolean): Promise<AxiosResponse<void>> {
+    return this.axios.post(`/signatures`, {
+      address: this.account,
+      enable,
+      type: 'card',
+    })
   }
 
   public async setDefaultSentAddress(

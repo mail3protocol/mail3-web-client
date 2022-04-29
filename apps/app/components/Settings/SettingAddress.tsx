@@ -92,7 +92,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
     padding="10px 16px 10px 16px"
     w="100%"
   >
-    <Text>{emailAddress}</Text>
+    <Text fontSize="14px">{emailAddress}</Text>
     {isLoading ? (
       <Spinner />
     ) : (
@@ -107,6 +107,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
         <Checkbox
           colorScheme="deepBlue"
           isReadOnly={isChecked}
+          top="2px"
           isChecked={isChecked}
           onChange={onChange(account)}
           display={['block', 'block', 'none']}
@@ -166,8 +167,10 @@ export const SettingAddress: React.FC = () => {
   return (
     <Container>
       <header className="header">
-        <Heading fontSize="18px">{t('address.title')}</Heading>
-        <Text fontSize="14px">{t('address.desc')}</Text>
+        <Heading fontSize={['14px', '14px', '18px']}>
+          {t('address.title')}
+        </Heading>
+        <Text fontSize={['14px', '14px', '18px']}>{t('address.desc')}</Text>
       </header>
       <FormControl maxW="480px">
         <FormLabel fontSize="16px" mb="8px">

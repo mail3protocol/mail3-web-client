@@ -23,8 +23,15 @@ const SetupAddressPage: NextPage = () => {
     <PageContainer>
       <Navbar />
       <SettingContainer>
-        <Center position="relative" w="100%" mb="20px" mt="40px">
-          <Heading>{t('setup.address.title')}</Heading>
+        <Center
+          position="relative"
+          w="100%"
+          mb="20px"
+          mt={['20px', '20px', '40px']}
+        >
+          <Heading fontSize={['20px', '20px', '28px']}>
+            {t('setup.address.title')}
+          </Heading>
           <Link href={RoutePath.SetupSignature} passHref>
             <Button
               bg="black"
