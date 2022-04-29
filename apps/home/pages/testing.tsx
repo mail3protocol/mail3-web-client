@@ -1,19 +1,19 @@
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React from 'react'
-import { WhiteList } from '../components/WhiteList'
+import { Testing } from '../components/Testing'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
     ...(await serverSideTranslations(locale as string, [
       'connect',
       'common',
-      'whilelist',
       'navbar',
+      'testing',
     ])),
   },
 })
 
-const WhiteListPage: NextPage = () => <WhiteList />
+const TestingPage: NextPage = () => <Testing />
 
-export default WhiteListPage
+export default TestingPage

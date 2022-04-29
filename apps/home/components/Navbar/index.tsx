@@ -16,7 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   button,
   ...props
 }) => {
-  const { t } = useTranslation('whilelist')
+  const { t } = useTranslation('navbar')
   return (
     <Flex
       justify="space-between"

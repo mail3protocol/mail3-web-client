@@ -18,6 +18,7 @@ const Mascot1 = styled(Mascot1Svg)`
     left: 0;
     height: 100%;
     max-width: 100%;
+    max-height: 100vw;
   }
 `
 
