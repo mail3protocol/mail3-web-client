@@ -1,5 +1,5 @@
 import { Flex, Heading, Text, Center, Box, Icon } from '@chakra-ui/react'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'next-i18next'
 import { Button, ConnectWallet } from 'ui'
 import { useAccount } from 'hooks'
@@ -9,16 +9,17 @@ import { Container } from '../Container'
 import { Mascot } from './Mascot'
 import { FooterText } from './FooterText'
 import { QualificationText } from './QualificationText'
+import { getWhitelistTestingRangeFormat } from '../../utils/whitelist'
 
 export const Testing: React.FC = () => {
   const { t } = useTranslation('testing')
   const account = useAccount()
-  const isQualified = false
-  const mascotIndex = (() => {
+  const isQualified = true
+  const mascotIndex = useMemo(() => {
     if (!account) return 1
     if (isQualified) return 2
     return 3
-  })()
+  }, [account, isQualified])
   return (
     <Flex direction="column" align="center" minH="100vh">
       <Navbar headingText={t('beta-testing')} />
@@ -107,7 +108,7 @@ export const Testing: React.FC = () => {
           ) : (
             <>
               {t('testing-period', {
-                date: '2022.6.7~2022.6.30',
+                date: getWhitelistTestingRangeFormat(),
               })}
             </>
           )}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   Flex,
   Heading,
@@ -21,19 +21,20 @@ import WhileListLogoSvg from '../../assets/svg/whileListLogo.svg'
 import { Mascot } from './Mascot'
 import { Navbar } from '../Navbar'
 import { Container } from '../Container'
+import { getWhitelistTestingRangeFormat } from '../../utils/whitelist'
 
 export const WhiteList: React.FC = () => {
   const account = useAccount()
   const { t } = useTranslation('whilelist')
   const applicationPeriod = t('application_period', {
-    date: '2022.6.1~2022.6.7',
+    date: getWhitelistTestingRangeFormat(),
   })
   const isQualified = false
-  const mascotIndex = (() => {
+  const mascotIndex = useMemo(() => {
     if (!account) return 1
     if (isQualified) return 2
     return 3
-  })()
+  }, [account, isQualified])
   return (
     <>
       <Head>
