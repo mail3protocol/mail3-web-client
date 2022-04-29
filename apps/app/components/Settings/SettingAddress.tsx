@@ -1,5 +1,6 @@
 import {
   Center,
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -14,14 +15,23 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { CheckCircleIcon, QuestionIcon } from '@chakra-ui/icons'
+import NextLink from 'next/link'
+import {
+  ChevronRightIcon,
+  CheckCircleIcon,
+  QuestionIcon,
+} from '@chakra-ui/icons'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useState } from 'react'
+import { Button } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
+import happySetupMascot from '../../assets/happy-setup-mascot.png'
+import { RoutePath } from '../../route/path'
+import { Mascot } from './Mascot'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -30,6 +40,29 @@ const Container = styled(Center)`
   .header {
     margin-bottom: 32px;
     text-align: center;
+  }
+
+  .mascot {
+    bottom: 0;
+    // 240 = content width / 2
+    // 164 = mascot width
+    // 20 = gutter
+    right: calc(50% - 240px - 164px - 20px);
+    z-index: 1;
+    position: absolute;
+
+    @media (max-width: 930px) {
+      position: static;
+      bottom: 50px;
+    }
+  }
+
+  .footer {
+    display: none;
+    @media (max-width: 930px) {
+      display: flex;
+      margin-top: 10px;
+    }
   }
 `
 
@@ -63,12 +96,22 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
     {isLoading ? (
       <Spinner />
     ) : (
-      <Switch
-        colorScheme="deepBlue"
-        isReadOnly={isChecked}
-        isChecked={isChecked}
-        onChange={onChange(account)}
-      />
+      <>
+        <Switch
+          colorScheme="deepBlue"
+          isReadOnly={isChecked}
+          isChecked={isChecked}
+          onChange={onChange(account)}
+          display={['none', 'none', 'block']}
+        />
+        <Checkbox
+          colorScheme="deepBlue"
+          isReadOnly={isChecked}
+          isChecked={isChecked}
+          onChange={onChange(account)}
+          display={['block', 'block', 'none']}
+        />
+      </>
     )}
   </Flex>
 )
@@ -182,6 +225,28 @@ export const SettingAddress: React.FC = () => {
           />
         </Text>
       </FormControl>
+      <Flex className="mascot">
+        <Mascot src={happySetupMascot.src} />
+      </Flex>
+      <Center className="footer" w="full">
+        <NextLink href={RoutePath.SetupSignature} passHref>
+          <Button
+            bg="black"
+            color="white"
+            w="250px"
+            height="50px"
+            _hover={{
+              bg: 'brand.50',
+            }}
+            as="a"
+            rightIcon={<ChevronRightIcon color="white" />}
+          >
+            <Center flexDirection="column">
+              <Text>{t('setup.next')}</Text>
+            </Center>
+          </Button>
+        </NextLink>
+      </Center>
     </Container>
   )
 }
