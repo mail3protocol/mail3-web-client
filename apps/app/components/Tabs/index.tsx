@@ -31,12 +31,16 @@ export interface TabProps extends CenterProps {
   isActive: boolean
 }
 
-export const Tab: React.FC<TabProps> = ({ isActive, children, ...props }) => (
+export const Tab: React.ForwardRefExoticComponent<TabProps> = React.forwardRef<
+  any,
+  TabProps
+>(({ isActive, children, ...props }, ref) => (
   <Center
     flexDirection="column"
     cursor="pointer"
     fontWeight={isActive ? 700 : undefined}
     fontSize={['14px', '14px', '20px']}
+    ref={ref}
     {...props}
   >
     <Text mb="10px">{children}</Text>
@@ -48,4 +52,4 @@ export const Tab: React.FC<TabProps> = ({ isActive, children, ...props }) => (
       bg="black"
     />
   </Center>
-)
+))
