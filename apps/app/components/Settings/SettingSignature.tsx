@@ -16,7 +16,7 @@ import NextLink from 'next/link'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useCallback, useState } from 'react'
-import { Button } from 'ui'
+import { Button, CardSignature } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
 import { useObservableCallback, useSubscription } from 'observable-hooks'
@@ -215,6 +215,7 @@ export const SettingSignature: React.FC = () => {
             position="relative"
             w="100%"
           >
+            <CardSignature account={account} />
             <HStack
               spacing="6px"
               className="edit-button"

@@ -10,7 +10,8 @@
     "dependencies": {
         "assets": "*",
         "boring-avatars": "^1.6.3",
-        "hooks": "*"
+        "hooks": "*",
+        "qrcode.react": "^3.0.1"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",
