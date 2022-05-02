@@ -19,6 +19,8 @@ import React, { useCallback, useState } from 'react'
 import { Button } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
+import { useObservableCallback, useSubscription } from 'observable-hooks'
+import { pluck, debounceTime, tap } from 'rxjs/operators'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -113,17 +115,29 @@ export const SettingSignature: React.FC = () => {
     [textSignature, isTextEnable]
   )
 
+  const [onTextareaChange, onTextareaChange$] = useObservableCallback<
+    string,
+    React.ChangeEvent<HTMLTextAreaElement>
+  >((event$) =>
+    event$.pipe(
+      pluck('currentTarget', 'value'),
+      tap((v) => setTextSignature(v)),
+      debounceTime(1500)
+    )
+  )
+
   const onTextSignatureChange = useCallback(
-    async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setTextSignature(e.target.value)
+    async (v: string) => {
       try {
-        await api.setTextSignature(isTextEnable, e.target.value)
+        await api.setTextSignature(isTextEnable, v)
       } catch (error) {
         //
       }
     },
     [isTextEnable]
   )
+
+  useSubscription(onTextareaChange$, onTextSignatureChange)
 
   const onCardEnableChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +182,7 @@ export const SettingSignature: React.FC = () => {
           <Textarea
             placeholder="Here is a sample placeholder"
             value={textSignature}
-            onChange={onTextSignatureChange}
+            onChange={onTextareaChange}
           />
         </VStack>
         <VStack spacing="8px" w="100%">

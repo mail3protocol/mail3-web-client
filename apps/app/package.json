@@ -19,7 +19,6 @@
         "@emotion/styled": "^11",
         "assets": "*",
         "axios": "^0.26.1",
-        "boring-avatars": "^1.6.3",
         "framer-motion": "^6",
         "hooks": "*",
         "jotai": "^1.6.1",
