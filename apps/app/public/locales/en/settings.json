@@ -8,6 +8,13 @@
         },
         "next": "Next"
     },
+    "settings": {
+        "title": "Settings",
+        "tabs": {
+            "address": "Mail3 Address",
+            "signature": "Signature setup"
+        }
+    },
     "address": {
         "title": "Your wallet address and the domain names",
         "desc": "you owned all can be used as mail3 address to send and receive emails.",
