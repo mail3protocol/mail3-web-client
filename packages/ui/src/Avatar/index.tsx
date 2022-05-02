@@ -4,6 +4,7 @@ import {
   SkeletonCircle,
   SkeletonProps,
   LayoutProps,
+  WrapItem,
 } from '@chakra-ui/react'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
@@ -15,6 +16,7 @@ export interface AvatarProps extends RawAvatarProps {
   skeletonProps?: SkeletonProps
   w: LayoutProps['w']
   h: LayoutProps['h']
+  isSquare?: boolean
 }
 
 const isEthAddress = (address?: string) =>
@@ -50,10 +52,12 @@ export const Avatar: React.FC<AvatarProps> = ({
   address,
   size,
   skeletonProps,
+  isSquare,
   ...props
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
   const avatar = avatars?.[address]
+  const width = props?.w as string
   const { isLoading } = useQuery(
     ['avatar', address],
     async () =>
@@ -89,19 +93,40 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   if (avatar === EMPTY_PLACE_HOLDER_SRC) {
     return isEthAddress(address) ? (
-      <BoringAvatar
-        name={address}
-        variant="marble"
-        size={props?.w! as string}
-      />
+      <WrapItem
+        w={width}
+        h={width}
+        borderRadius={isSquare ? undefined : '50%'}
+        overflow="hidden"
+      >
+        <BoringAvatar name={address} variant="marble" square size={width} />
+      </WrapItem>
     ) : (
-      <RawAvatar src="" size={size} ignoreFallback {...props} />
+      <RawAvatar
+        src=""
+        borderRadius={isSquare ? 2 : 0}
+        size={size}
+        ignoreFallback
+        {...props}
+      />
     )
   }
 
-  return isLoading ? (
-    <SkeletonCircle w={props.w} h={props.h} size={size} {...skeletonProps} />
+  return isLoading || !address ? (
+    <SkeletonCircle
+      borderRadius={isSquare ? 2 : 0}
+      w={props.w}
+      h={props.h}
+      size={size}
+      {...skeletonProps}
+    />
   ) : (
-    <RawAvatar src={avatar} size={size} ignoreFallback {...props} />
+    <RawAvatar
+      borderRadius={isSquare ? 2 : 0}
+      src={avatar}
+      size={size}
+      ignoreFallback
+      {...props}
+    />
   )
 }

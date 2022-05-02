@@ -22,7 +22,7 @@ export const CardSignature: React.FC<SignatureCardProps> = ({ account }) => (
       padding="10px"
       alignItems="center"
     >
-      <Avatar w="100px" h="100px" address={account} />
+      <Avatar isSquare w="100px" h="100px" address={account} />
     </Flex>
     <Flex position="absolute" bottom="0" left="-10px">
       <Image src={StampPng} width="163px" height="144px" />
