@@ -39,7 +39,7 @@ function BottonWrap() {
   `
 
   return (
-    <Box position="fixed" left="50%" bottom="20px">
+    <Box position="fixed" left="50%" bottom="20px" transform="translateX(-50%)">
       <HStack
         borderRadius="32px"
         background="#000"
