@@ -116,6 +116,24 @@ export const InboxComponent: React.FC = () => {
     setSeenMessages(newDate)
   }
 
+  const updateItem = (type) => (index) => {
+    console.log('update item index', index)
+
+    const newDate: any = update(type === 'seen' ? seenMessages : newMessages, {
+      [index]: {
+        isChoose: {
+          $set: true,
+        },
+      },
+    })
+
+    if (type === 'seen') {
+      setSeenMessages(newDate)
+    } else {
+      setNewMessages(newDate)
+    }
+  }
+
   return (
     <Box>
       <Navbar />
@@ -133,7 +151,7 @@ export const InboxComponent: React.FC = () => {
                 <Box>
                   <Box padding="20px 64px">
                     <Box>NEW</Box>
-                    <BoxList data={newMessages} />
+                    <BoxList data={newMessages} update={updateItem('new')} />
                     {newPageIndex < 10 && (
                       <Center>
                         <Button
