@@ -14,8 +14,10 @@ import {
 import Link from 'next/link'
 import styled from '@emotion/styled'
 import LogoSvg from 'assets/svg/logo.svg'
+import DownTriangleSvg from 'assets/svg/triangle-down.svg'
 import { useTranslation } from 'next-i18next'
 import { ConnectWallet } from 'ui'
+import { useAccount } from 'hooks'
 import InboxWhiteSvg from '../../assets/inbox-white.svg'
 import DraftSvg from '../../assets/drafts.svg'
 import TrashSvg from '../../assets/trash.svg'
@@ -29,6 +31,12 @@ import { NAVBAR_HEIGHT } from '../../constants'
 export interface NavbarProps {
   showInbox?: boolean
 }
+
+const LogoButton = styled(Button)`
+  .triangle {
+    margin-left: 3px;
+  }
+`
 
 const Logo = () => {
   const [t] = useTranslation('common')
@@ -50,15 +58,22 @@ const Logo = () => {
     },
   ]
   const popoverRef = useRef<HTMLDivElement>(null)
+  const isConnected = !!useAccount()
+  const popoverTragger = isConnected ? (
+    <PopoverTrigger>
+      <Box>
+        <LogoButton variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
+          <LogoSvg />
+          <DownTriangleSvg className="triangle" />
+        </LogoButton>
+      </Box>
+    </PopoverTrigger>
+  ) : (
+    <LogoSvg />
+  )
   return (
     <Popover arrowSize={18} autoFocus offset={[0, 10]} closeOnBlur>
-      <PopoverTrigger>
-        <Box>
-          <Button variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
-            <LogoSvg />
-          </Button>
-        </Box>
-      </PopoverTrigger>
+      {popoverTragger}
       <PopoverContent
         _focus={{
           boxShadow: '0px 0px 16px 12px rgba(192, 192, 192, 0.25)',
