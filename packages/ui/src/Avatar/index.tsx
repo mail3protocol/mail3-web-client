@@ -114,7 +114,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   return isLoading || !address ? (
     <SkeletonCircle
-      borderRadius={isSquare ? 2 : 0}
+      borderRadius={isSquare ? '4px' : '50%'}
       w={props.w}
       h={props.h}
       size={size}
