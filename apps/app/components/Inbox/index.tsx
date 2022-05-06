@@ -116,13 +116,15 @@ export const InboxComponent: React.FC = () => {
     setSeenMessages(newDate)
   }
 
-  const updateItem = (type) => (index) => {
+  const updateItem = (type: string) => (index: number) => {
     console.log('update item index', index)
 
-    const newDate: any = update(type === 'seen' ? seenMessages : newMessages, {
+    const oldDate = type === 'seen' ? seenMessages : newMessages
+
+    const newDate: any = update(oldDate, {
       [index]: {
         isChoose: {
-          $set: true,
+          $set: !oldDate[index].isChoose,
         },
       },
     })
@@ -176,7 +178,7 @@ export const InboxComponent: React.FC = () => {
 
                   <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
                     <Box>SEEM</Box>
-                    <BoxList data={seenMessages} />
+                    <BoxList data={seenMessages} update={updateItem('seen')} />
                     {seenPageIndex < 10 && (
                       <Center>
                         <Button

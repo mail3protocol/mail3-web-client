@@ -12,6 +12,11 @@ import styled from '@emotion/styled'
 import { atom, useAtom } from 'jotai'
 import ChooseSVG from '../../assets/choose.svg'
 
+export interface BoxListProps {
+  data: Array<BoxItemProps>
+  update?: (index: number) => void
+}
+
 export interface BoxItemProps {
   id: string | number
   index: number
@@ -19,11 +24,8 @@ export interface BoxItemProps {
   desc: string
   date: string
   isChoose: boolean
-}
-
-export interface BoxListProps {
-  data: Array<BoxItemProps>
   update?: (index: number) => void
+  onClick?: () => void
 }
 
 const CircleE = styled(Circle)`
@@ -34,7 +36,16 @@ const CircleE = styled(Circle)`
 
 export const isChooseModeAtom = atom<boolean>(false)
 
-const Item = ({ subject, desc, date, isChoose, id, index }: BoxItemProps) => {
+const Item = ({
+  subject,
+  desc,
+  date,
+  isChoose,
+  id,
+  index,
+  update,
+  onClick,
+}: BoxItemProps) => {
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
   return (
     <Flex
@@ -51,13 +62,17 @@ const Item = ({ subject, desc, date, isChoose, id, index }: BoxItemProps) => {
         color: '#6F6F6F',
         bg: '#E5E5E5',
       }}
+      onClick={onClick}
     >
       <Box w="48px">
         {isChooseMode && (
           <CircleE
             size="48px"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
+              if (update) update(index)
               console.log(id, index)
+              return false
             }}
           >
             {isChoose && <ChooseSVG />}
@@ -67,8 +82,11 @@ const Item = ({ subject, desc, date, isChoose, id, index }: BoxItemProps) => {
           <Avatar
             size="md"
             showBorder
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
+              if (update) update(index)
               setIsChooseMode(true)
+              return false
             }}
           >
             <AvatarBadge
@@ -111,11 +129,21 @@ const Item = ({ subject, desc, date, isChoose, id, index }: BoxItemProps) => {
   )
 }
 
-export const BoxList: React.FC<BoxListProps> = ({ data }) => (
+export const BoxList: React.FC<BoxListProps> = ({ data, update }) => (
   <Box>
     {data.map((item, index) => {
       const { id } = item
-      return <Item key={id} {...item} index={index} />
+      return (
+        <Item
+          key={id}
+          {...item}
+          index={index}
+          update={update}
+          onClick={() => {
+            console.log('jump', id)
+          }}
+        />
+      )
     })}
   </Box>
 )
