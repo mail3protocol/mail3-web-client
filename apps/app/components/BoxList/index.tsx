@@ -2,6 +2,7 @@ import React from 'react'
 import {
   Avatar,
   AvatarBadge,
+  AvatarGroup,
   Box,
   Center,
   Circle,
@@ -94,6 +95,24 @@ const Item = ({
     ),
   }[avatarBadgeType]
 
+  const AvatarBox = (
+    <AvatarGroup max={1}>
+      <Avatar
+        size="md"
+        showBorder
+        onClick={(e) => {
+          e.stopPropagation()
+          if (update) update(index)
+          setIsChooseMode(true)
+          return false
+        }}
+      >
+        {AvatarBadgeE}
+      </Avatar>
+      {/* <Avatar /> */}
+    </AvatarGroup>
+  )
+
   return (
     <Flex
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
@@ -113,7 +132,7 @@ const Item = ({
       onClick={onClick}
     >
       <Box w="48px">
-        {isChooseMode && (
+        {isChooseMode ? (
           <CircleE
             size="48px"
             onClick={(e) => {
@@ -125,20 +144,8 @@ const Item = ({
           >
             {isChoose && <ChooseSVG />}
           </CircleE>
-        )}
-        {!isChooseMode && (
-          <Avatar
-            size="md"
-            showBorder
-            onClick={(e) => {
-              e.stopPropagation()
-              if (update) update(index)
-              setIsChooseMode(true)
-              return false
-            }}
-          >
-            {AvatarBadgeE}
-          </Avatar>
+        ) : (
+          AvatarBox
         )}
       </Box>
       <Flex flex="1" padding="0px 20px" wrap="wrap" alignContent="center">
