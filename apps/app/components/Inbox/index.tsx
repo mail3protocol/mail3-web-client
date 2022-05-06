@@ -5,7 +5,7 @@ import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import { Button } from 'ui'
 import update from 'immutability-helper'
-import { BoxList } from '../BoxList'
+import { BoxList, AvatarBadgeType, ItemType } from '../BoxList'
 import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
@@ -41,10 +41,44 @@ const mockList = {
       id: 123,
       emailId: 123,
       messageId: 123,
-      unseen: true,
+      unseen: false,
       date: '2022-02-01 / 12:01 am',
       subject: 'subject subject subject',
       desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
+
+      // other state props
+      isChoose: false,
+      avatarBadgeType: AvatarBadgeType.None,
+    },
+    {
+      avatar: '',
+      id: 123,
+      emailId: 123,
+      messageId: 123,
+      unseen: false,
+      date: '2022-02-01 / 12:01 am',
+      subject: 'subject subject subject',
+      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
+
+      // other state props
+      isChoose: false,
+      avatarBadgeType: AvatarBadgeType.SentOK,
+      itemType: ItemType.None,
+    },
+    {
+      avatar: '',
+      id: 123,
+      emailId: 123,
+      messageId: 123,
+      unseen: false,
+      date: '2022-02-01 / 12:01 am',
+      subject: 'subject subject subject',
+      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
+
+      // other state props
+      isChoose: false,
+      avatarBadgeType: AvatarBadgeType.SentFail,
+      itemType: ItemType.Fail,
     },
   ],
   newMessages: [
@@ -57,6 +91,10 @@ const mockList = {
       date: '2022-02-01 / 12:01 am',
       subject: 'subject subject subject',
       desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
+
+      // other state props
+      isChoose: false,
+      avatarBadgeType: AvatarBadgeType.New,
     },
   ],
 }

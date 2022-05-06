@@ -10,7 +10,22 @@ import {
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { atom, useAtom } from 'jotai'
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import ChooseSVG from '../../assets/choose.svg'
+
+export const isChooseModeAtom = atom<boolean>(false)
+
+export enum AvatarBadgeType {
+  None,
+  New,
+  SentOK,
+  SentFail,
+}
+
+export enum ItemType {
+  None,
+  Fail,
+}
 
 export interface BoxListProps {
   data: Array<BoxItemProps>
@@ -24,6 +39,8 @@ export interface BoxItemProps {
   desc: string
   date: string
   isChoose: boolean
+  avatarBadgeType: AvatarBadgeType
+  itemType: ItemType
   update?: (index: number) => void
   onClick?: () => void
 }
@@ -34,8 +51,6 @@ const CircleE = styled(Circle)`
   border-radius: 50px;
 `
 
-export const isChooseModeAtom = atom<boolean>(false)
-
 const Item = ({
   subject,
   desc,
@@ -45,10 +60,43 @@ const Item = ({
   index,
   update,
   onClick,
+  avatarBadgeType,
+  itemType,
 }: BoxItemProps) => {
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
+
+  const AvatarBadgeE = {
+    [AvatarBadgeType.None]: <Box />,
+    [AvatarBadgeType.New]: (
+      <AvatarBadge
+        boxSize="10px"
+        bg="#9093F9"
+        top="0"
+        bottom="auto"
+        border="none"
+      />
+    ),
+    [AvatarBadgeType.SentOK]: (
+      <AvatarBadge boxSize="10px" bg="#000" top="0" bottom="auto" border="none">
+        <CheckIcon color="#fff" w="5px" h="5px" />
+      </AvatarBadge>
+    ),
+    [AvatarBadgeType.SentFail]: (
+      <AvatarBadge
+        boxSize="10px"
+        bg="#FF5F57"
+        top="0"
+        bottom="auto"
+        border="none"
+      >
+        <CloseIcon color="#fff" w="5px" h="5px" />
+      </AvatarBadge>
+    ),
+  }[avatarBadgeType]
+
   return (
     <Flex
+      bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
       margin="20px 0"
       p="5px"
       borderRadius="8px"
@@ -89,13 +137,7 @@ const Item = ({
               return false
             }}
           >
-            <AvatarBadge
-              boxSize="10px"
-              bg="#9093F9"
-              top="0"
-              bottom="auto"
-              border="none"
-            />
+            {AvatarBadgeE}
           </Avatar>
         )}
       </Box>
