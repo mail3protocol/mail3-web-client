@@ -10,14 +10,13 @@ import {
   Link,
   Center,
 } from '@chakra-ui/react'
-import { Button, ConnectWallet } from 'ui'
+import { Button, ConnectWallet, LogoAnimation } from 'ui'
 import NextLink from 'next/link'
 import { useAccount } from 'hooks'
 import Mail3BackgroundSvg from 'assets/svg/mail3Background.svg'
 import Head from 'next/head'
 import { useTranslation } from 'next-i18next'
 import { QualificationText } from './QualificationText'
-import WhileListLogoSvg from '../../assets/svg/whileListLogo.svg'
 import { Mascot } from './Mascot'
 import { Navbar } from '../Navbar'
 import { Container } from '../Container'
@@ -79,14 +78,7 @@ export const WhiteList: React.FC = () => {
                 {t('apply_for_beta_access_to')}
               </Heading>
               <Center position="relative" w="full">
-                <Icon
-                  as={WhileListLogoSvg}
-                  w={{
-                    base: '183px',
-                    md: '245px',
-                  }}
-                  h="auto"
-                />
+                <LogoAnimation w="270px" />
                 <Icon
                   as={Mail3BackgroundSvg}
                   position="absolute"
