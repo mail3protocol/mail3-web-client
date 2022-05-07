@@ -47,11 +47,11 @@ export const useAccount = () => {
     Connectors.get(lastConectorName) ?? metaMask
   )
 
-  if (lastConectorName) {
+  if (lastConectorName && account) {
     return account
   }
 
-  return undefined
+  return ''
 }
 
 export const useAccountIsActivating = () => {

@@ -47,6 +47,16 @@ module.exports = withPlugins(plugins, {
         ],
         permanent: true,
       },
+      {
+        source: '/settings',
+        destination: '/settings/address',
+        permanent: true,
+      },
+      {
+        source: '/setup',
+        destination: '/setup/address',
+        permanent: true,
+      },
     ]
   },
 })
