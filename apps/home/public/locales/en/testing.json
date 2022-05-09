@@ -1,0 +1,18 @@
+{
+    "beta-testing": "BetaTesting",
+    "testing-period": "Testing Period: {{date}}",
+    "heading": "Mail3 Beta testing now \uD83D\uDD25",
+    "connect_wallet": "Connect wallet",
+    "connect_wallet_tips": "to see if you are on the whitelist and eligible to access the Beta",
+    "launch-app-link": "Launch APP >>",
+    "discord-link": "Join Mail3 Discord >>",
+    "join_whitelist_tips": {
+        "0": "Come to ",
+        "1": "Mail3 discord",
+        "2": " and ",
+        "3": "Mail3 Twitter",
+        "4": ".\nThere will be additional opportunity to join the whitelist."
+    },
+    "qualified-text": "\uD83C\uDF89 You are on the whitelist. \nGo to join the testing and earn all kinds of rewards.",
+    "not-qualified-text": "\uD83D\uDE14 You are not on the whitelist. "
+}

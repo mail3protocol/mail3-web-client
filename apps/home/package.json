@@ -20,6 +20,7 @@
         "framer-motion": "^6",
         "jotai": "^1.6.1",
         "ui": "*",
+        "assets": "*",
         "next": "12.1.4",
         "next-i18next": "^11.0.0",
         "react": "^17.0.2",

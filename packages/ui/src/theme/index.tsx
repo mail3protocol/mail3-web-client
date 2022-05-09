@@ -1,5 +1,8 @@
 import { extendTheme } from '@chakra-ui/react'
 
+const font =
+  'Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
+
 export const theme = extendTheme({
   colors: {
     brand: {
@@ -14,7 +17,8 @@ export const theme = extendTheme({
     },
   },
   fonts: {
-    body: 'Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
+    body: font,
+    heading: font,
   },
   breakpoints: {
     base: '0',
