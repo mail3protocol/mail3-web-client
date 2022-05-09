@@ -1,6 +1,7 @@
 import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { TrashComponent } from '../../components/Trash'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
@@ -8,6 +9,10 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Trash: NextPage = () => <div>Trash</div>
+const Trash: NextPage = () => {
+  console.log('Trash')
+
+  return <TrashComponent />
+}
 
 export default Trash
