@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { Box, Center } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
-import { BoxList } from '../BoxList'
+import styled from '@emotion/styled'
+import { AvatarBadgeType, BoxList, ItemType } from '../BoxList'
 import { Navbar } from '../Navbar'
 
 const mockList = {
@@ -17,6 +18,10 @@ const mockList = {
       date: '2022-02-01 / 12:01 am',
       subject: 'subject subject subject',
       desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
+
+      isChoose: false,
+      avatarBadgeType: AvatarBadgeType.SentFail,
+      itemType: ItemType.Fail,
     },
   ],
 }
@@ -35,28 +40,27 @@ export const SentComponent: React.FC = () => {
     setMessages(data)
   })
 
+  const TitleBox = styled(Box)`
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+  `
+
   return (
     <Box>
-      <Navbar />
-      <Center>
-        <Box w="1280px">
-          <Box paddingTop="60px">
-            <Box
-              margin="25px auto"
-              bgColor="#FFFFFF"
-              boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-              borderRadius="24px"
-            >
-              <Box>
-                <Box padding="20px 64px">
-                  <Box>Sent</Box>
-                  <BoxList data={messages} />
-                </Box>
-              </Box>
-            </Box>
+      <Box
+        margin="25px auto"
+        bgColor="#FFFFFF"
+        boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
+        borderRadius="24px"
+      >
+        <Box>
+          <Box padding="20px 64px">
+            <TitleBox>Sent</TitleBox>
+            <BoxList data={messages} />
           </Box>
         </Box>
-      </Center>
+      </Box>
     </Box>
   )
 }

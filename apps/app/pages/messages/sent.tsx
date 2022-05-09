@@ -1,8 +1,9 @@
 import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Box } from '@chakra-ui/react'
+import { PageContainer } from 'ui'
 import { SentComponent } from '../../components/Sent'
+import { Navbar } from '../../components/Navbar'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
@@ -10,14 +11,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Sent: NextPage = () => {
-  console.log('Sentbox')
-
-  return (
-    <Box>
-      <SentComponent />
-    </Box>
-  )
-}
+const Sent: NextPage = () => (
+  <PageContainer>
+    <Navbar />
+    <SentComponent />
+  </PageContainer>
+)
 
 export default Sent
