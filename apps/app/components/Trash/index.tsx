@@ -1,10 +1,13 @@
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-import { Box, Center } from '@chakra-ui/react'
+import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
+import { Button } from 'ui'
+import styled from '@emotion/styled'
 import { BoxList } from '../BoxList'
-import { Navbar } from '../Navbar'
+import SVGTrash from '../../assets/trash.svg'
+import SVGIconEmpty from '../../assets/icon-empty.svg'
 
 const mockList = {
   message: [
@@ -35,28 +38,56 @@ export const TrashComponent: React.FC = () => {
     setMessages(data)
   })
 
+  const TextBox = styled(Box)`
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    text-align: center;
+  `
+
   return (
-    <Box>
-      <Navbar />
-      <Center>
-        <Box w="1280px">
-          <Box paddingTop="60px">
-            <Box
-              margin="25px auto"
-              bgColor="#FFFFFF"
-              boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-              borderRadius="24px"
-            >
-              <Box>
-                <Box padding="20px 64px">
-                  <Box>Trash</Box>
-                  <BoxList data={messages} />
-                </Box>
-              </Box>
-            </Box>
+    <>
+      <Flex alignItems="center">
+        <Wrap>
+          <WrapItem alignItems="center">
+            <SVGTrash />
+          </WrapItem>
+          <WrapItem
+            alignItems="center"
+            fontStyle="normal"
+            fontWeight="700"
+            fontSize="24px"
+            lineHeight="30px"
+          >
+            Trash
+          </WrapItem>
+        </Wrap>
+
+        <Spacer />
+        <Button>
+          <SVGIconEmpty />
+          <Box marginLeft="10px">Empty</Box>
+        </Button>
+      </Flex>
+      <Box
+        margin="25px auto"
+        bgColor="#FFFFFF"
+        boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
+        borderRadius="24px"
+      >
+        <Box>
+          <Box padding="20px 64px">
+            <TextBox>
+              <Text>
+                Messages that have been in Trash more than 30 days will be
+                automatically deleted.
+              </Text>
+            </TextBox>
+            <BoxList data={messages} />
           </Box>
         </Box>
-      </Center>
-    </Box>
+      </Box>
+    </>
   )
 }
