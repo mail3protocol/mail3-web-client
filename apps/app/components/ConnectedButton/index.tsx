@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useConnectWalletDialog, useToast } from 'hooks'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
@@ -27,35 +27,38 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const toast = useToast()
   const popoverRef = useRef<HTMLElement>(null)
   const { onOpen } = useConnectWalletDialog()
-  const btns: ButtonListItemProps[] = [
-    {
-      href: RoutePath.Settings,
-      label: t('navbar.settings'),
-      icon: <SetupSvg />,
-    },
-    {
-      href: `https://mail3.me/${address}`,
-      label: t('navbar.profile'),
-      icon: <ProfileSvg />,
-      isExternal: true,
-    },
-    {
-      label: t('navbar.copy-address'),
-      icon: <CopySvg />,
-      async onClick() {
-        await copyText(address)
-        toast(t('navbar.copied'))
-        popoverRef?.current?.blur()
+  const btns: ButtonListItemProps[] = useMemo(
+    () => [
+      {
+        href: RoutePath.Settings,
+        label: t('navbar.settings'),
+        icon: <SetupSvg />,
       },
-    },
-    {
-      label: t('navbar.change-wallet'),
-      icon: <ChangeWalletSvg />,
-      onClick() {
-        onOpen()
+      {
+        href: `https://mail3.me/${address}`,
+        label: t('navbar.profile'),
+        icon: <ProfileSvg />,
+        isExternal: true,
       },
-    },
-  ]
+      {
+        label: t('navbar.copy-address'),
+        icon: <CopySvg />,
+        async onClick() {
+          await copyText(`${address.toLowerCase()}@mail3.me`)
+          toast(t('navbar.copied'))
+          popoverRef?.current?.blur()
+        },
+      },
+      {
+        label: t('navbar.change-wallet'),
+        icon: <ChangeWalletSvg />,
+        onClick() {
+          onOpen()
+        },
+      },
+    ],
+    [address]
+  )
 
   return (
     <Popover arrowSize={18} autoFocus offset={[0, 20]} closeOnBlur>
