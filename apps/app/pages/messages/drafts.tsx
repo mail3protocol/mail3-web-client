@@ -1,8 +1,9 @@
 import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Box } from '@chakra-ui/react'
+import { PageContainer } from 'ui'
 import { DraftsComponent } from '../../components/Drafts'
+import { Navbar } from '../../components/Navbar'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
@@ -14,9 +15,10 @@ const Drafts: NextPage = () => {
   console.log('Drafts')
 
   return (
-    <Box>
+    <PageContainer>
+      <Navbar />
       <DraftsComponent />
-    </Box>
+    </PageContainer>
   )
 }
 
