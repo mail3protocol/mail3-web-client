@@ -14,9 +14,14 @@ import {
   Spacer,
   Spinner,
   Flex,
+  HStack,
+  Box,
+  SlideFade,
+  useDisclosure,
+  WrapItem,
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import MetamaskSvg from 'assets/svg/metamask.svg'
 import WalletConnectSvg from 'assets/svg/wallet-connect.svg'
 import PhantomSvg from 'assets/svg/phantom.svg'
@@ -30,6 +35,8 @@ import {
   walletConnectStore,
   useSetLastConnector,
   ConnectorName,
+  useLastConectorName,
+  useAccount,
 } from 'hooks'
 import { Button } from '../Button'
 
@@ -43,24 +50,76 @@ const { useSelectedIsActivating } = SupportedConnectors
 interface ConnectButtonProps extends ButtonProps {
   text: string
   icon: React.ReactNode
+  isConnected?: boolean
 }
 
 const ConnectButton: React.FC<ConnectButtonProps> = ({
   text,
   icon,
   isLoading,
+  isConnected,
+  onClick,
   ...props
 }) => (
-  <Button variant="outline" w="250px" paddingRight="6px" {...props}>
+  <Button
+    variant="outline"
+    w="250px"
+    paddingRight="6px"
+    {...props}
+    onClick={isConnected ? undefined : onClick}
+  >
     <Flex w="100%" alignItems="center">
-      <Text fontSize="16px" fontWeight={700}>
-        {text}
-      </Text>
+      <HStack spacing="6px" alignItems="center">
+        {isConnected ? (
+          <Box w="8px" h="8px" bg="rgb(39, 174, 96)" borderRadius="50%" />
+        ) : null}
+        <Text fontSize="16px" fontWeight={700}>
+          {text}
+        </Text>
+      </HStack>
       <Spacer />
       {isLoading ? <Spinner /> : icon}
     </Flex>
   </Button>
 )
+
+const PlaceholderButton: React.FC<ConnectButtonProps> = ({
+  text,
+  icon,
+  onClick,
+  ...props
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const timeoutRef = useRef<NodeJS.Timeout>()
+
+  return (
+    <WrapItem alignItems="center" position="relative">
+      <ConnectButton
+        text={text}
+        icon={icon}
+        onClick={(e) => {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+          }
+          onClose()
+          onOpen()
+          timeoutRef.current = setTimeout(() => {
+            onClose()
+          }, 1000)
+          onClick?.(e)
+        }}
+        {...props}
+      />
+      <SlideFade
+        offsetY="20px"
+        in={isOpen}
+        style={{ position: 'absolute', right: '-10px', top: '8px' }}
+      >
+        <Text position="absolute">+1</Text>
+      </SlideFade>
+    </WrapItem>
+  )
+}
 
 export const ConenctModal: React.FC<ConnectModalProps> = ({
   isOpen,
@@ -71,6 +130,8 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
   const isConnectingWalletConnect = useSelectedIsActivating(walletConnect)
   const dialog = useDialog()
   const setLastConnector = useSetLastConnector()
+  const connectorName = useLastConectorName()
+  const isLogin = !!useAccount()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
@@ -87,10 +148,14 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
         >
           <VStack spacing="10px">
             <ConnectButton
-              isDisabled={isConnectingMetamask}
+              isDisabled={
+                isConnectingMetamask ||
+                (connectorName === ConnectorName.MetaMask && isLogin)
+              }
               isLoading={isConnectingMetamask}
               text={t('connect.metamask')}
               icon={<MetamaskSvg />}
+              isConnected={connectorName === ConnectorName.MetaMask && isLogin}
               onClick={async () => {
                 setIsConnectingMetamask(true)
                 try {
@@ -119,8 +184,14 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
             <ConnectButton
               text={t('connect.wallet-connect')}
               icon={<WalletConnectSvg />}
-              isDisabled={isConnectingWalletConnect}
+              isDisabled={
+                isConnectingWalletConnect ||
+                (connectorName === ConnectorName.WalletConnect && isLogin)
+              }
               isLoading={isConnectingWalletConnect}
+              isConnected={
+                connectorName === ConnectorName.WalletConnect && isLogin
+              }
               onClick={async () => {
                 await walletConnect.activate()
                 const { error } = walletConnectStore.getState()
@@ -153,11 +224,11 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
               {t('connect.desired-wallet')}
             </Text>
             <VStack spacing="10px">
-              <ConnectButton
+              <PlaceholderButton
                 text={t('connect.phantom')}
                 icon={<PhantomSvg />}
               />
-              <ConnectButton text={t('connect.blocto')} icon={<Blocto />} />
+              <PlaceholderButton text={t('connect.blocto')} icon={<Blocto />} />
             </VStack>
           </Center>
           <ModalFooter fontSize="12px" pb="24px" pt="16px">
