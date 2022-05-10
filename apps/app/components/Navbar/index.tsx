@@ -63,13 +63,13 @@ const Logo = () => {
     <PopoverTrigger>
       <Box>
         <LogoButton variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
-          <LogoSvg />
+          <LogoSvg w="113px" h="auto" />
           <DownTriangleSvg className="triangle" />
         </LogoButton>
       </Box>
     </PopoverTrigger>
   ) : (
-    <LogoSvg />
+    <LogoSvg w="113px" h="auto" />
   )
   return (
     <Popover arrowSize={18} autoFocus offset={[0, 10]} closeOnBlur>
