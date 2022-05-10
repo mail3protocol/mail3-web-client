@@ -1,76 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  AvatarGroup,
-  Box,
-  Center,
-  Avatar,
-  Text,
-  Flex,
-  HStack,
-} from '@chakra-ui/react'
+import { AvatarGroup, Box, Center, Avatar, Text, Flex } from '@chakra-ui/react'
 import { useDidMount } from 'hooks'
 import { useRouter } from 'next/router'
-import styled from '@emotion/styled'
-
-import BackSVG from '../../assets/back-white.svg'
-import ForwardSVG from '../../assets/forward-white.svg'
-import TrashSVG from '../../assets/trash-white.svg'
-
-function BottonWrap() {
-  const LineDiv = styled(Box)`
-    position: absolute;
-    width: 1px;
-    height: 70%;
-    top: 50%;
-    left: 0;
-    background-color: #c4c4c4;
-    transform: translateY(-50%);
-  `
-
-  const ButtonItem = styled(Center)`
-    flex-direction: column;
-    padding: 15px;
-    :hover {
-      background: #c4c4c4;
-    }
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  `
-
-  return (
-    <Box position="fixed" left="50%" bottom="20px" transform="translateX(-50%)">
-      <HStack
-        borderRadius="32px"
-        background="#000"
-        fontSize="18px"
-        spacing="0px"
-        color="#fff"
-        overflow="hidden"
-      >
-        <ButtonItem>
-          <Box>
-            <BackSVG />
-          </Box>
-          <Box>Reply</Box>
-        </ButtonItem>
-        <ButtonItem>
-          <Box>
-            <ForwardSVG />
-          </Box>
-          <Box>Forward</Box>
-        </ButtonItem>
-        <ButtonItem>
-          <LineDiv />
-          <Box>
-            <TrashSVG />
-          </Box>
-          <Box>Trash</Box>
-        </ButtonItem>
-      </HStack>
-    </Box>
-  )
-}
+import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 
 const mockData = {}
 
@@ -129,7 +61,28 @@ export const PreviewComponent: React.FC = () => {
 
   return (
     <>
-      <BottonWrap />
+      <SuspendButton
+        list={[
+          {
+            type: SuspendButtonType.Reply,
+            onClick: () => {
+              console.log('replay')
+            },
+          },
+          {
+            type: SuspendButtonType.Forward,
+            onClick: () => {
+              console.log('Forward')
+            },
+          },
+          {
+            type: SuspendButtonType.Delete,
+            onClick: () => {
+              console.log('Delete')
+            },
+          },
+        ]}
+      />
       <Center>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={2}>
