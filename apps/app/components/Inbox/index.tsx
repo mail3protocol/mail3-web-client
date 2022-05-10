@@ -4,6 +4,7 @@ import { Box, Center, Circle } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import { Button } from 'ui'
+import styled from '@emotion/styled'
 import update from 'immutability-helper'
 import {
   BoxList,
@@ -118,6 +119,12 @@ export enum PageType {
 
 export const pageTypeAtom = atom<PageType>(PageType.Inbox)
 
+const TitleBox = styled(Box)`
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+`
+
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
   const [newPageIndex, setNewPageIndex] = useState(1)
@@ -212,8 +219,8 @@ export const InboxComponent: React.FC = () => {
             >
               {pageType === PageType.Inbox && (
                 <Box>
-                  <Box padding="20px 64px">
-                    <Box>NEW</Box>
+                  <Box padding="30px 64px">
+                    <TitleBox>New</TitleBox>
                     <BoxList data={newMessages} update={updateItem('new')} />
                     {newPageIndex < 10 && (
                       <Center>
@@ -238,7 +245,7 @@ export const InboxComponent: React.FC = () => {
                   </Box>
 
                   <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
-                    <Box>SEEM</Box>
+                    <TitleBox>Seem</TitleBox>
                     <BoxList data={seenMessages} update={updateItem('seen')} />
                     {seenPageIndex < 10 && (
                       <Center>

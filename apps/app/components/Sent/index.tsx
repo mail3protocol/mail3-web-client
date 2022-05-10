@@ -31,6 +31,13 @@ data = [...data, ...data]
 data = [...data, ...data]
 data = [...data, ...data]
 
+const TitleBox = styled(Box)`
+font-weight: 700;
+font-size: 20px;
+line-height: 30px;
+`
+
+
 export const SentComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
   const [messages, setMessages] = useState([])
@@ -39,12 +46,6 @@ export const SentComponent: React.FC = () => {
     console.log('SentComponent useDidMount')
     setMessages(data)
   })
-
-  const TitleBox = styled(Box)`
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 30px;
-  `
 
   return (
     <Box>
