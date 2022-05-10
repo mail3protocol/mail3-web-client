@@ -69,7 +69,13 @@ export const SuspendButton: React.FC<Props> = (props) => {
   `
 
   return (
-    <Box position="fixed" left="50%" bottom="20px" transform="translateX(-50%)">
+    <Box
+      position="fixed"
+      left="50%"
+      bottom="20px"
+      transform="translateX(-50%)"
+      zIndex={99}
+    >
       <HStack
         borderRadius="32px"
         background="#000"

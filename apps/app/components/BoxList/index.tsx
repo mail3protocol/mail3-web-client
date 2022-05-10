@@ -142,10 +142,10 @@ const Item = ({
         color: '#fff',
         bg: '#000000',
       }}
-      _active={{
-        color: '#6F6F6F',
-        bg: '#E5E5E5',
-      }}
+      // _active={{
+      //   color: '#6F6F6F',
+      //   bg: '#E5E5E5',
+      // }}
       onClick={onClick}
     >
       <Box w="48px">

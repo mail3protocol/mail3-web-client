@@ -5,10 +5,16 @@ import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import { Button } from 'ui'
 import update from 'immutability-helper'
-import { BoxList, AvatarBadgeType, ItemType } from '../BoxList'
+import {
+  BoxList,
+  AvatarBadgeType,
+  ItemType,
+  isChooseModeAtom,
+} from '../BoxList'
 import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
+import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 
 const mockItem = {
   avatar: '',
@@ -119,6 +125,7 @@ export const InboxComponent: React.FC = () => {
   const [newMessages, setNewMessages] = useState<any>([])
   const [seenMessages, setSeenMessages] = useState<any>([])
   const [pageType] = useAtom(pageTypeAtom)
+  const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
 
   useDidMount(() => {
     console.log('InboxComponent useDidMount')
@@ -167,6 +174,10 @@ export const InboxComponent: React.FC = () => {
       },
     })
 
+    if (newDate.every((item: { isChoose: boolean }) => !item.isChoose)) {
+      setIsChooseMode(false)
+    }
+
     if (type === 'seen') {
       setSeenMessages(newDate)
     } else {
@@ -177,6 +188,18 @@ export const InboxComponent: React.FC = () => {
   return (
     <Box>
       <Navbar />
+      {isChooseMode && (
+        <SuspendButton
+          list={[
+            {
+              type: SuspendButtonType.Delete,
+              onClick: () => {
+                console.log('del')
+              },
+            },
+          ]}
+        />
+      )}
       <Center>
         <Box w="1280px">
           <Box paddingTop="60px">
