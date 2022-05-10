@@ -2,7 +2,7 @@ import { Box, Center, HStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 
-import ReplySVG from '../../assets/back-white.svg'
+import ReplySVG from '../../assets/reply-white.svg'
 import ForwardSVG from '../../assets/forward-white.svg'
 import TrashSVG from '../../assets/trash-white.svg'
 
@@ -23,23 +23,23 @@ export enum SuspendButtonType {
 }
 
 interface buttonItemConfig {
-  icon: React.FC
+  Icon: React.FC
   name: string
   useLine?: boolean
 }
 
 const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
   [SuspendButtonType.Reply]: {
-    icon: ReplySVG,
+    Icon: ReplySVG,
     name: 'Reply',
   },
   [SuspendButtonType.Forward]: {
-    icon: ForwardSVG,
+    Icon: ForwardSVG,
     name: 'Forward',
   },
   [SuspendButtonType.Delete]: {
     useLine: true,
-    icon: TrashSVG,
+    Icon: TrashSVG,
     name: 'Trash',
   },
 }
@@ -81,12 +81,14 @@ export const SuspendButton: React.FC<Props> = (props) => {
         {list.map((item) => {
           const { onClick, type } = item
           const config = buttonConfig[type]
-          const { icon, name, useLine } = config
+          const { Icon, name, useLine } = config
 
           return (
             <ButtonItem key={type} onClick={onClick}>
               {useLine && <LineDiv />}
-              <Box>{icon}</Box>
+              <Box>
+                <Icon />
+              </Box>
               <Box>{name}</Box>
             </ButtonItem>
           )
