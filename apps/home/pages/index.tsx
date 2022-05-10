@@ -17,6 +17,7 @@ import { Button, ConnectWallet, CONTAINER_MAX_WIDTH, LogoAnimation } from 'ui'
 import React from 'react'
 import styled from '@emotion/styled'
 import LogoWithWhiteFontColorSvg from 'assets/svg/logo-with-white-font.svg'
+import LogoSvg from 'assets/svg/logo.svg'
 import { BETA_TESTING_DATE_RANGE } from '../constants/env'
 import HomeGridBgSvgPath from '../assets/svg/home-grid-bg.svg?url'
 import HomeGridBgBottomSvgPath from '../assets/svg/home-grid-bg-bottom.svg?url'
@@ -67,7 +68,7 @@ const Home: NextPage = () => {
     new Date().getTime() < BETA_TESTING_DATE_RANGE[0].getTime()
   const text1 = "Mail3 is the world's first web3 email protocol."
   return (
-    <Flex direction="column">
+    <Flex direction="column" position="relative">
       <Center
         bg="linear-gradient(90.02deg, #FFBEBE 0.01%, #FFDC81 31.73%, #D9FF89 58.81%, #C6B2FF 99.99%)"
         minH="44px"
@@ -105,10 +106,28 @@ const Home: NextPage = () => {
           )}
         </Box>
       </Center>
+      <Center w="full" h="60px" position="sticky" top="0" bg="#fff" zIndex={99}>
+        <Flex
+          w="full"
+          maxW={`${CONTAINER_MAX_WIDTH}px`}
+          justify="space-between"
+        >
+          <Icon as={LogoSvg} w="112px" h="auto" />
+          <Stack direction="row" spacing="24px">
+            <Button px="40px">Whitelist</Button>
+            <Button variant="outline" px="40px">
+              Lightpaper
+            </Button>
+            <Button variant="outline" px="40px">
+              Launch App
+            </Button>
+          </Stack>
+        </Flex>
+      </Center>
       <Flex
         direction="column"
         align="center"
-        h="calc(100vh - 44px)"
+        h="calc(100vh - 44px - 60px)"
         position="relative"
       >
         <Image
