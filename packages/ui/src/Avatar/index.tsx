@@ -99,7 +99,12 @@ export const Avatar: React.FC<AvatarProps> = ({
         borderRadius={isSquare ? undefined : '50%'}
         overflow="hidden"
       >
-        <BoringAvatar name={address} variant="marble" square size={width} />
+        <BoringAvatar
+          name={address.toLowerCase()}
+          variant="marble"
+          square
+          size={width}
+        />
       </WrapItem>
     ) : (
       <RawAvatar
