@@ -1,0 +1,93 @@
+import {
+  Box,
+  Center,
+  Flex,
+  FlexProps,
+  Heading,
+  Icon,
+  Image,
+  Text,
+} from '@chakra-ui/react'
+import { Button, CONTAINER_MAX_WIDTH } from 'ui'
+import React from 'react'
+import HomeGridBgSvgPath from '../../assets/svg/home-grid-bg.svg?url'
+import Illustration1Svg from '../../assets/svg/illustration/1.svg'
+import ArrowRightSvg from '../../assets/svg/illustration/arrow-right.svg'
+import ArrowLeftSvg from '../../assets/svg/illustration/arrow-left.svg'
+import { isWhiteListStage } from '../../utils/whitelist'
+
+export const Banner: React.FC<FlexProps> = ({ ...props }) => {
+  const inWhiteListStage = isWhiteListStage()
+  const text1 = "Mail3 is the world's first web3 email protocol."
+  return (
+    <Flex
+      direction="column"
+      align="center"
+      h="calc(100vh - 60px)"
+      position="relative"
+      {...props}
+    >
+      <Image
+        src={HomeGridBgSvgPath}
+        objectFit="cover"
+        objectPosition="center bottom"
+        w="full"
+        h="full"
+        position="absolute"
+      />
+      <Center
+        h="full"
+        w="full"
+        maxW={`${CONTAINER_MAX_WIDTH}px`}
+        position="relative"
+      >
+        <Icon
+          w="150px"
+          as={Illustration1Svg}
+          h="auto"
+          position="absolute"
+          top="98px"
+          left="64px"
+        />
+        <Box position="relative" w="full" my="auto">
+          <Heading
+            fontSize={{ base: '24px', md: '48px' }}
+            textAlign="center"
+            lineHeight={{ base: '30px', md: '60px' }}
+          >
+            Communicate everyone <br /> in web3.0
+          </Heading>
+          <Heading
+            mt="16px"
+            fontSize={{ base: '16px', md: '24px' }}
+            textAlign="center"
+            fontWeight="normal"
+            mb="57px"
+          >
+            {text1}
+            <br />
+            Primitive communication beyond the blockchain.
+          </Heading>
+          <Flex justify="center" align="center">
+            <Icon
+              as={ArrowRightSvg}
+              w={{ base: '52px', md: '83px' }}
+              h="auto"
+            />
+            <Box mx={{ base: '21px', md: '34px' }} transition="200ms">
+              {inWhiteListStage ? (
+                <Button>Whitelist</Button>
+              ) : (
+                <Button>Connect Wallet</Button>
+              )}
+            </Box>
+            <Icon as={ArrowLeftSvg} w={{ base: '52px', md: '83px' }} h="auto" />
+          </Flex>
+          <Text textAlign="center" mt="15px" fontSize="14px">
+            Connect your wallet to use @mail3.me
+          </Text>
+        </Box>
+      </Center>
+    </Flex>
+  )
+}
