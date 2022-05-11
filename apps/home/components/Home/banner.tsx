@@ -14,6 +14,8 @@ import HomeGridBgSvgPath from '../../assets/svg/home-grid-bg.svg?url'
 import Illustration1Svg from '../../assets/svg/illustration/1.svg'
 import ArrowRightSvg from '../../assets/svg/illustration/arrow-right.svg'
 import ArrowLeftSvg from '../../assets/svg/illustration/arrow-left.svg'
+import Illustration1Png from '../../assets/png/illustration/1.png'
+import Illustration3Png from '../../assets/png/illustration/3.png'
 import { isWhiteListStage } from '../../utils/whitelist'
 
 export const Banner: React.FC<FlexProps> = ({ ...props }) => {
@@ -24,6 +26,7 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => {
       align="center"
       h="calc(100vh - 60px)"
       position="relative"
+      px="20px"
       {...props}
     >
       <Image
@@ -34,21 +37,40 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => {
         h="full"
         position="absolute"
       />
-      <Center
+      <Flex
+        direction="column"
         h="full"
         w="full"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         position="relative"
       >
-        <Icon
-          w="150px"
-          as={Illustration1Svg}
-          h="auto"
-          position="absolute"
-          top="98px"
-          left="64px"
-        />
-        <Box position="relative" w="full" my="auto">
+        <Box flex={1} position="relative" mt="28px">
+          <Icon
+            w="150px"
+            as={Illustration1Svg}
+            h="auto"
+            position="absolute"
+            top="0"
+            left="0"
+            transform={{
+              base: 'unset',
+              md: 'translateY(70px)',
+            }}
+          />
+          <Image
+            src={Illustration1Png.src}
+            w={{ base: 'auto', md: '181px' }}
+            h={{ base: 'full', md: 'auto' }}
+            position="absolute"
+            top="0"
+            right="0"
+            transform={{
+              base: 'unset',
+              md: 'translateY(70px)',
+            }}
+          />
+        </Box>
+        <Box position="relative" w="full" my="auto" flex={1}>
           <Heading
             fontSize={{ base: '24px', md: '48px' }}
             textAlign="center"
@@ -84,7 +106,16 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => {
             Connect your wallet to use @mail3.me
           </Text>
         </Box>
-      </Center>
+        <Box flex={1} position="relative">
+          <Image
+            src={Illustration3Png.src}
+            position="absolute"
+            w="162px"
+            bottom="40px"
+            left="-30px"
+          />
+        </Box>
+      </Flex>
     </Flex>
   )
 }

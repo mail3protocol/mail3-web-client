@@ -1,10 +1,15 @@
-import { Box, Flex, Heading, Icon, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Icon, Text, Image } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
 import { useInnerSize } from 'hooks/src/useInnerSize'
 import styled from '@emotion/styled'
 import EnvelopeBgSvg from '../../assets/svg/envelope-bg.svg'
 import EnvelopeBottomCoverSvg from '../../assets/svg/envelope-bottom-cover.svg'
+import Illustration2Png from '../../assets/png/illustration/2.png'
+import Illustration4Png from '../../assets/png/illustration/4.png'
+import Illustration5Png from '../../assets/png/illustration/5.png'
+import Illustration6Png from '../../assets/png/illustration/6.png'
+import Illustration7Png from '../../assets/png/illustration/7.png'
 
 export const LetterContentContainer = styled(Box)`
   font-size: 20px;
@@ -161,6 +166,20 @@ export const Letter: React.FC = () => {
         >
           <LetterContent />
         </Box>
+        <Image
+          src={Illustration2Png.src}
+          position="absolute"
+          top="0"
+          right="0"
+          w={{
+            base: '126px',
+            md: '20%',
+          }}
+          transform={{
+            base: 'translate(-20px, 20px)',
+            lg: 'translate(-66px, 49px)',
+          }}
+        />
         <Flex
           overflow="hidden"
           position="relative"
@@ -176,6 +195,40 @@ export const Letter: React.FC = () => {
             h="auto"
             mt="auto"
             transform="scale(1.035)"
+          />
+
+          <Image
+            src={Illustration4Png.src}
+            w="20%"
+            h="auto"
+            position="absolute"
+            top="40%"
+            right="5%"
+            transform="rotate(31deg)"
+          />
+          <Image
+            src={Illustration5Png.src}
+            w="30%"
+            h="auto"
+            position="absolute"
+            bottom="5%"
+            left="0"
+          />
+          <Image
+            src={Illustration6Png.src}
+            w="25%"
+            h="auto"
+            position="absolute"
+            bottom="5%"
+            left="50%"
+          />
+          <Image
+            src={Illustration7Png.src}
+            w="30%"
+            h="auto"
+            position="absolute"
+            top="25%"
+            left="0"
           />
         </Flex>
       </LetterContentContainer>
