@@ -1,9 +1,82 @@
-import { Box, Flex, Icon } from '@chakra-ui/react'
+import { Box, Flex, Heading, Icon, Text } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
 import { useInnerSize } from 'hooks/src/useInnerSize'
+import styled from '@emotion/styled'
 import EnvelopeBgSvg from '../../assets/svg/envelope-bg.svg'
 import EnvelopeBottomCoverSvg from '../../assets/svg/envelope-bottom-cover.svg'
+
+export const LetterContentContainer = styled(Box)`
+  font-size: 20px;
+
+  h1 {
+    font-size: 48px;
+    margin-bottom: 62px;
+    margin-top: 54px;
+  }
+  h2 {
+    font-size: 28px;
+    margin-bottom: 16px;
+    margin-top: 32px;
+  }
+  p {
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 767px) {
+    font-size: 12px;
+    h1 {
+      font-size: 24px;
+      margin-bottom: 32px;
+      margin-top: 32px;
+    }
+    h2 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      margin-top: 24px;
+    }
+  }
+`
+
+const LetterContent = () => (
+  <>
+    <Heading as="h1">What is Mail3?</Heading>
+    <Heading as="h2">The web3 native communication protocol</Heading>
+    <Text as="p">
+      Traditional Email services are controlled by centralized companies.
+    </Text>
+    <Text as="p">
+      We need a self-sovereign communication protocol to guarantee the
+      anonymity, the content security, the privacy preservation, and the data
+      persistance.
+    </Text>
+    <Heading as="h2">The blockchain agnostic DID network</Heading>
+    <Text as="p">
+      Mail3 adopts blockchain address and decentralized domain name as the mail
+      alias.
+    </Text>
+    <Text as="p">
+      Users connect with each other to form a global DID network and shape their
+      decentralized reputation with onchain data.
+    </Text>
+    <Heading as="h2">The reaching out platform for crypto communities</Heading>
+    <Text as="p">
+      Mail3 supports community mail to reach out a group of users with specific
+      crypto traits, such as holding the same NFT/POAPs, the same ERC20 tokens,
+      or sharing the samilar DeFi activities.
+    </Text>
+    <Text as="p">
+      Users would be glad to receive such mails since every community mail will
+      attach some tokens as reading incentive.{' '}
+    </Text>
+    <Heading as="h2">The Lego base for productivity and SNS dApps</Heading>
+    <Text>
+      Mail3 users share their social connections, identities, and encryption
+      exchange keys onchain so that any dApp could take adventage of these data
+      to provide new services.
+    </Text>
+  </>
+)
 
 export const Letter: React.FC = () => {
   const envelopePaddingX = 60
@@ -19,11 +92,11 @@ export const Letter: React.FC = () => {
       align="center"
       pt={{
         base: '48px',
-        md: '64px',
+        lg: '64px',
       }}
       pb={{
-        base: '0',
-        md: '64px',
+        base: '48px',
+        lg: '64px',
       }}
       minH="calc(100vh - 44px - 60px)"
     >
@@ -33,14 +106,14 @@ export const Letter: React.FC = () => {
         top="16px"
         left={{
           base: 0,
-          md: `${envelopePaddingX}px`,
+          lg: `${envelopePaddingX}px`,
         }}
         w={{
           base: 'full',
-          md: `calc(100% - ${envelopePaddingX * 2}px)`,
+          lg: `calc(100% - ${envelopePaddingX * 2}px)`,
         }}
-        h="calc(100% - 64px - 64px)"
-        pb="2%"
+        h={{ base: '100%', md: 'calc(100% - 64px)' }}
+        pb="3%"
       >
         <Icon
           as={EnvelopeBgSvg}
@@ -56,14 +129,13 @@ export const Letter: React.FC = () => {
           mx="auto"
           position="relative"
           bg="#e7e7e7"
-          rounded="6px"
         />
       </Flex>
-      <Box
+      <LetterContentContainer
         bg="#fff"
         w={{
           base: 'calc(100% - 40px)',
-          md: `calc(100% - 90px - ${envelopePaddingX * 2}px)`,
+          lg: `calc(100% - 90px - ${envelopePaddingX * 2}px)`,
         }}
         h="auto"
         shadow="0 0 20px rgba(0, 0, 0, 0.15)"
@@ -71,30 +143,38 @@ export const Letter: React.FC = () => {
         position="relative"
         mx="auto"
         flex={1}
-        minH={`${Math.min(width, CONTAINER_MAX_WIDTH)}px`}
-      />
-      <Flex
-        overflow="hidden"
-        bottom={{ base: 0, md: '32px' }}
-        left={{
-          base: 0,
-          md: `${envelopePaddingX}px`,
+        style={{
+          minHeight: `${Math.min(width, CONTAINER_MAX_WIDTH)}px`,
         }}
-        position="absolute"
-        w={{
-          base: 'full',
-          md: `calc(100% - ${envelopePaddingX * 2}px)`,
-        }}
-        h="auto"
+        transition="200ms"
       >
-        <Icon
-          as={EnvelopeBottomCoverSvg}
-          w="full"
+        <Box
+          px={{
+            base: '20px',
+            md: '10%',
+            lg: '140px',
+          }}
+        >
+          <LetterContent />
+        </Box>
+        <Flex
+          overflow="hidden"
+          position="relative"
+          w={{ base: 'calc(100% + 40px)', lg: 'calc(100% + 90px)' }}
+          left={{ base: '-20px', lg: '-45px' }}
           h="auto"
-          mt="auto"
-          transform="scale(1.035)"
-        />
-      </Flex>
+          transform={{ base: 'translateY(48px)', lg: 'translateY(2%)' }}
+          mt="-10%"
+        >
+          <Icon
+            as={EnvelopeBottomCoverSvg}
+            w="full"
+            h="auto"
+            mt="auto"
+            transform="scale(1.035)"
+          />
+        </Flex>
+      </LetterContentContainer>
     </Flex>
   )
 }

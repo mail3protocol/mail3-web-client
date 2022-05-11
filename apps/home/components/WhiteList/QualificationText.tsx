@@ -1,10 +1,7 @@
 import { Text, Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useTranslation } from 'next-i18next'
-import {
-  WHILE_LIST_DISCORD_URL,
-  WHITE_LIST_TWITTER_URL,
-} from '../../constants/env'
+import { DISCORD_URL, TWITTER_URL } from '../../constants/env'
 
 export const QualificationText: React.FC<{
   isQualified?: boolean
@@ -22,13 +19,13 @@ export const QualificationText: React.FC<{
   ) : (
     <>
       {t('not-qualified-text.0')}
-      <NextLink href={WHITE_LIST_TWITTER_URL} passHref>
+      <NextLink href={TWITTER_URL} passHref>
         <Link textDecoration="underline" fontWeight="bold">
           {t('not-qualified-text.1')}
         </Link>
       </NextLink>
       {t('not-qualified-text.2')}
-      <NextLink href={WHILE_LIST_DISCORD_URL} passHref>
+      <NextLink href={DISCORD_URL} passHref>
         <Link textDecoration="underline" fontWeight="bold">
           {t('not-qualified-text.3')}
         </Link>
