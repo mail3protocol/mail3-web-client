@@ -24,14 +24,14 @@ export const LetterContentContainer = styled(Box)`
   }
 
   @media (max-width: 767px) {
-    font-size: 12px;
+    font-size: 14px;
     h1 {
       font-size: 24px;
       margin-bottom: 32px;
       margin-top: 32px;
     }
     h2 {
-      font-size: 14px;
+      font-size: 18px;
       margin-bottom: 8px;
       margin-top: 24px;
     }
@@ -113,7 +113,7 @@ export const Letter: React.FC = () => {
           lg: `calc(100% - ${envelopePaddingX * 2}px)`,
         }}
         h={{ base: '100%', md: 'calc(100% - 64px)' }}
-        pb="3%"
+        pb={{ base: '5%', md: '3%' }}
       >
         <Icon
           as={EnvelopeBgSvg}
@@ -129,6 +129,7 @@ export const Letter: React.FC = () => {
           mx="auto"
           position="relative"
           bg="#e7e7e7"
+          borderBottomRadius="20px"
         />
       </Flex>
       <LetterContentContainer
@@ -147,6 +148,8 @@ export const Letter: React.FC = () => {
           minHeight: `${Math.min(width, CONTAINER_MAX_WIDTH)}px`,
         }}
         transition="200ms"
+        display="flex"
+        flexDirection="column"
       >
         <Box
           px={{
@@ -154,6 +157,7 @@ export const Letter: React.FC = () => {
             md: '10%',
             lg: '140px',
           }}
+          mb="auto"
         >
           <LetterContent />
         </Box>

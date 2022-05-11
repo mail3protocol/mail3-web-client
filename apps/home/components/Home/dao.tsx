@@ -7,6 +7,7 @@ import {
   Stack,
   Text,
   VStack,
+  Flex,
 } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
@@ -19,14 +20,11 @@ import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
 export const Dao = () => (
   <Center
     w="full"
-    h={{
-      base: 'calc(100vh - 60px - 174px)',
-      md: '472px',
-    }}
-    minH={{ base: '607px', md: 'unset' }}
+    h="auto"
+    minH={{ base: '667px', md: 'unset' }}
     bg="#000"
     color="#fff"
-    px="20px"
+    px={{ base: '20px', md: '30px' }}
   >
     <Grid
       w="full"
@@ -37,38 +35,41 @@ export const Dao = () => (
         md: '60% 40%',
       }}
       templateRows={{
-        base: 'auto calc(100% - 264px) auto',
+        base: 'auto auto auto',
         md: '60% 40%',
       }}
+      gap={{ base: '20px', md: 0 }}
       textAlign={{
         base: 'center',
         md: 'left',
       }}
+      py="64px"
     >
-      <VStack pb={{ base: 0, md: '32px' }} pt={{ base: '20px', md: '26px' }}>
+      <Flex
+        direction="column"
+        pb={{ base: 0, md: '32px' }}
+        pt={{ base: '20px', md: '26px' }}
+      >
         <Heading
-          fontSize={{
-            base: '48px',
-            md: '96px',
-          }}
-          mb="8px"
-          h={{ base: '48px', md: '100px' }}
-          whiteSpace="nowrap"
+          fontSize="56px"
+          lineHeight="56px"
+          mb={{ base: '24px', md: '8px' }}
           w="full"
         >
-          Mail3 DAO
+          Mail3 Postoffice
         </Heading>
         <Text
-          fontSize={{ base: '14px', md: '32px' }}
-          lineHeight={{ base: '20px', md: '36px' }}
+          fontSize={{ base: '18px', md: '24px' }}
+          lineHeight={{ base: '24px', md: '30px' }}
           mb="32px"
           fontWeight="300"
           w="full"
         >
-          We are creating Mail3 DAO <br />
-          for everyone rocket 🚀🚀🚀
+          Mail3 Postoffice is the decentralized autonomous organization owned by
+          the community to govern the protocol development, the collaboration
+          between interested parties, and so on.
         </Text>
-      </VStack>
+      </Flex>
       <Center
         gridRowEnd={{
           base: 'unset',

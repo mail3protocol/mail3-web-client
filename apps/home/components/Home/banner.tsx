@@ -18,7 +18,6 @@ import { isWhiteListStage } from '../../utils/whitelist'
 
 export const Banner: React.FC<FlexProps> = ({ ...props }) => {
   const inWhiteListStage = isWhiteListStage()
-  const text1 = "Mail3 is the world's first web3 email protocol."
   return (
     <Flex
       direction="column"
@@ -64,9 +63,7 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => {
             fontWeight="normal"
             mb="57px"
           >
-            {text1}
-            <br />
-            Primitive communication beyond the blockchain.
+            Crypto native generation deserve a better mail protocol
           </Heading>
           <Flex justify="center" align="center">
             <Icon
