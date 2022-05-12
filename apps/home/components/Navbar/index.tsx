@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { APP_URL } from '../../constants/env'
 
 export interface NavbarProps extends FlexProps {
-  headingText?: string
+  headingText?: ReactNode | string
   button?: ReactNode
 }
 
@@ -47,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </Heading>
         {button || (
           <NextLink href={APP_URL}>
-            <Button shadow="0 4px 4px rgba(0, 0, 0, 0.25)">
+            <Button shadow="0 4px 4px rgba(0, 0, 0, 0.25)" px="40px">
               {t('launch-app')}
             </Button>
           </NextLink>

@@ -24,6 +24,7 @@ import { getDateRangeFormat } from '../../utils/whitelist'
 import {
   APPLICATION_PERIOD_DATE_RANGE,
   BETA_TESTING_DATE_RANGE,
+  LIGHT_PAPER_URL,
 } from '../../constants/env'
 
 export const WhiteList: React.FC = () => {
@@ -43,15 +44,27 @@ export const WhiteList: React.FC = () => {
       <Head>
         <meta name="theme-color" content="#fff" />
       </Head>
-      <Flex direction="column" align="center" minH="100vh">
-        <Navbar headingText={t('whitelist')} />
-        <Container
-          h="calc(100% - 60px)"
-          w={{
-            base: 'full',
-            md: 'calc(100% - 80px)',
-          }}
-        >
+      <Flex
+        direction="column"
+        align="center"
+        minH="100vh"
+        px={{ base: 0, md: '40px' }}
+      >
+        <Navbar
+          headingText={
+            <NextLink href={LIGHT_PAPER_URL}>
+              <Button
+                variant="outline"
+                shadow="0 4px 4px rgba(0, 0, 0, 0.25)"
+                px="40px"
+              >
+                {t('light_pager')}
+              </Button>
+            </NextLink>
+          }
+        />
+        <Container>
+          <Box flex={1} minH={{ base: '30px', md: '56px' }} />
           <Flex
             direction="column"
             justify="space-between"
