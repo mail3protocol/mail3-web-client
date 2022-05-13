@@ -2,9 +2,10 @@ import { Flex, Heading, Text, Center, Box, Icon } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'next-i18next'
 import { Button, ConnectWallet } from 'ui'
-import { useAccount } from 'hooks'
+import { SignupResponseCode, useAccount, useSignup } from 'hooks'
 import Mail3BackgroundSvg from 'assets/svg/mail3Background.svg'
-import { Navbar } from '../Navbar'
+import { useQuery } from 'react-query'
+import { Navbar } from './Navbar'
 import { Container } from '../Container'
 import { Mascot } from './Mascot'
 import { FooterText } from './FooterText'
@@ -15,7 +16,24 @@ import { BETA_TESTING_DATE_RANGE } from '../../constants/env'
 export const Testing: React.FC = () => {
   const { t } = useTranslation('testing')
   const account = useAccount()
-  const isQualified = true
+  const onSignup = useSignup(t('check_the_white_list'))
+  const { data } = useQuery(
+    [account],
+    async () => {
+      if (!account) return null
+      return onSignup()
+    },
+    {
+      retry: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  )
+  const isQualified = [
+    SignupResponseCode.Success,
+    SignupResponseCode.Registered,
+  ].includes(data?.code || 0)
   const mascotIndex = useMemo(() => {
     if (!account) return 1
     if (isQualified) return 2

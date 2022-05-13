@@ -14,5 +14,6 @@
         "4": ".\nThere will be additional opportunity to join the whitelist."
     },
     "qualified-text": "\uD83C\uDF89 You are on the whitelist. \nGo to join the testing and earn all kinds of rewards.",
-    "not-qualified-text": "\uD83D\uDE14 You are not on the whitelist. "
+    "not-qualified-text": "\uD83D\uDE14 You are not on the whitelist. ",
+    "check_the_white_list": "Check the white list"
 }

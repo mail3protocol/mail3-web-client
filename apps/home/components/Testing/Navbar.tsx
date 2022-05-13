@@ -1,4 +1,4 @@
-import { Flex, Heading, FlexProps } from '@chakra-ui/react'
+import { Flex, Heading, FlexProps, Icon, Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { Button } from 'ui'
 import React, { ReactNode } from 'react'
@@ -14,6 +14,7 @@ export interface NavbarProps extends FlexProps {
 export const Navbar: React.FC<NavbarProps> = ({
   headingText,
   button,
+  children,
   ...props
 }) => {
   const { t } = useTranslation('navbar')
@@ -29,9 +30,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       w="full"
       maxW="1300px"
       transition="200ms"
+      bg="#fff"
       {...props}
     >
-      <LogoSvg />
+      <NextLink href="/">
+        <Link my="auto" display="inline-flex" alignItems="center">
+          <Icon w="113px" h="auto" as={LogoSvg} />
+        </Link>
+      </NextLink>
       <Flex>
         <Heading
           fontSize="28px"
@@ -47,7 +53,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         </Heading>
         {button || (
           <NextLink href={APP_URL}>
-            <Button shadow="0 4px 4px rgba(0, 0, 0, 0.25)" px="40px">
+            <Button
+              shadow="0 4px 4px rgba(0, 0, 0, 0.25)"
+              px={{ base: '14px', md: '40px' }}
+              fontSize="14px"
+            >
               {t('launch-app')}
             </Button>
           </NextLink>
