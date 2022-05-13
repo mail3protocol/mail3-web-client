@@ -140,7 +140,7 @@ export const WhiteList: React.FC = () => {
               </Box>
             </Flex>
             <Box
-              mt={{ base: '10px', md: 'auto' }}
+              mt={{ base: !account ? 'auto' : '10px', md: 'auto' }}
               mb="auto"
               shadow={!account ? '0px 5px 10px rgba(0, 0, 0, 0.15)' : undefined}
               borderRadius="40px"
