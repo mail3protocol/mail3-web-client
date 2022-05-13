@@ -196,7 +196,6 @@ export const Letter: React.FC = () => {
             mt="auto"
             transform="scale(1.035)"
           />
-
           <Image
             src={Illustration4Png.src}
             w="20%"

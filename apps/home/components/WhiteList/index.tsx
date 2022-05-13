@@ -21,7 +21,7 @@ import { QualificationText } from './QualificationText'
 import { Mascot } from './Mascot'
 import { Navbar } from './Navbar'
 import { Container } from '../Container'
-import { getDateRangeFormat } from '../../utils/whitelist'
+import { getDateRangeFormat } from '../../utils'
 import {
   APPLICATION_PERIOD_DATE_RANGE,
   BETA_TESTING_DATE_RANGE,

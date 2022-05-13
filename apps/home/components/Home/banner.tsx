@@ -16,7 +16,7 @@ import ArrowRightSvg from '../../assets/svg/illustration/arrow-right.svg'
 import ArrowLeftSvg from '../../assets/svg/illustration/arrow-left.svg'
 import Illustration1Png from '../../assets/png/illustration/1.png'
 import Illustration3Png from '../../assets/png/illustration/3.png'
-import { isWhiteListStage } from '../../utils/whitelist'
+import { isWhiteListStage } from '../../utils'
 
 export const Banner: React.FC<FlexProps> = ({ ...props }) => {
   const inWhiteListStage = isWhiteListStage()

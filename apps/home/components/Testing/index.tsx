@@ -10,7 +10,7 @@ import { Container } from '../Container'
 import { Mascot } from './Mascot'
 import { FooterText } from './FooterText'
 import { QualificationText } from './QualificationText'
-import { getDateRangeFormat } from '../../utils/whitelist'
+import { getDateRangeFormat } from '../../utils'
 import { BETA_TESTING_DATE_RANGE } from '../../constants/env'
 
 export const Testing: React.FC = () => {

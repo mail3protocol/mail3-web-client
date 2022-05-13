@@ -18,7 +18,7 @@ import React from 'react'
 import LogoSvg from 'assets/svg/logo.svg'
 import LogoWithoutFontSvg from 'assets/svg/logo-without-font.svg'
 import HomeNavbarSvg from '../../../assets/svg/home-navbar-menu.svg'
-import { isWhiteListStage } from '../../../utils/whitelist'
+import { isWhiteListStage } from '../../../utils'
 import {
   NormalButtons,
   NormalMenus,
