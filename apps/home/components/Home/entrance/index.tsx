@@ -2,7 +2,7 @@ import { Flex, Box, Grid, Heading } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
-import { useInnerSize } from 'hooks/src/useInnerSize'
+import { useInnerSize } from 'hooks'
 import { sleep } from '../../../utils'
 
 const MOBILE_SIZE = 960

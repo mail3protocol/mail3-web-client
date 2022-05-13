@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Icon, Text, Image } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
-import { useInnerSize } from 'hooks/src/useInnerSize'
+import { useInnerSize } from 'hooks'
 import styled from '@emotion/styled'
 import EnvelopeBgSvg from '../../assets/svg/envelope-bg.svg'
 import EnvelopeBottomCoverSvg from '../../assets/svg/envelope-bottom-cover.svg'
