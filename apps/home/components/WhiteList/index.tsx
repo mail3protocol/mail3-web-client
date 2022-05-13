@@ -12,18 +12,20 @@ import {
 } from '@chakra-ui/react'
 import { Button, ConnectWallet, LogoAnimation } from 'ui'
 import NextLink from 'next/link'
-import { useAccount } from 'hooks'
+import { SignupResponseCode, useAccount, useSignup } from 'hooks'
 import Mail3BackgroundSvg from 'assets/svg/mail3Background.svg'
 import Head from 'next/head'
 import { useTranslation } from 'next-i18next'
+import { useQuery } from 'react-query'
 import { QualificationText } from './QualificationText'
 import { Mascot } from './Mascot'
-import { Navbar } from '../Navbar'
+import { Navbar } from './Navbar'
 import { Container } from '../Container'
 import { getDateRangeFormat } from '../../utils/whitelist'
 import {
   APPLICATION_PERIOD_DATE_RANGE,
   BETA_TESTING_DATE_RANGE,
+  LIGHT_PAPER_URL,
 } from '../../constants/env'
 
 export const WhiteList: React.FC = () => {
@@ -32,26 +34,57 @@ export const WhiteList: React.FC = () => {
   const applicationPeriod = t('application_period', {
     date: getDateRangeFormat(APPLICATION_PERIOD_DATE_RANGE),
   })
-  const isQualified = false
+
+  const onSignup = useSignup(t('join_white_list_signature_description'))
+  const { data } = useQuery(
+    [account],
+    async () => {
+      if (!account) return null
+      return onSignup()
+    },
+    {
+      retry: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  )
+  const isQualified = [
+    SignupResponseCode.Success,
+    SignupResponseCode.Registered,
+  ].includes(data?.code || 0)
   const mascotIndex = useMemo(() => {
     if (!account) return 1
     if (isQualified) return 2
     return 3
   }, [account, isQualified])
+
   return (
     <>
       <Head>
         <meta name="theme-color" content="#fff" />
       </Head>
-      <Flex direction="column" align="center" minH="100vh">
-        <Navbar headingText={t('whitelist')} />
-        <Container
-          h="calc(100% - 60px)"
-          w={{
-            base: 'full',
-            md: 'calc(100% - 80px)',
-          }}
-        >
+      <Flex
+        direction="column"
+        align="center"
+        minH="100vh"
+        px={{ base: 0, md: '40px' }}
+      >
+        <Navbar>
+          <NextLink href={LIGHT_PAPER_URL}>
+            <Button
+              variant="outline"
+              shadow="0 4px 4px rgba(0, 0, 0, 0.25)"
+              px={{ base: '14px', md: '40px' }}
+              mr={{ base: '6px', md: '24px' }}
+              fontSize="14px"
+            >
+              {t('light_pager')}
+            </Button>
+          </NextLink>
+        </Navbar>
+        <Container>
+          <Box flex={1} minH={{ base: '30px', md: '56px' }} />
           <Flex
             direction="column"
             justify="space-between"
@@ -59,10 +92,6 @@ export const WhiteList: React.FC = () => {
             flexShrink={0}
             flex={1}
             h="567px"
-            maxH={{
-              base: '500px',
-              md: 'unset',
-            }}
             w="full"
           >
             <Flex direction="column" align="center" w="full">
@@ -92,7 +121,7 @@ export const WhiteList: React.FC = () => {
                 />
               </Center>
               <Box
-                lineHeight="30px"
+                lineHeight={{ base: '24px', md: '30px' }}
                 fontSize="20px"
                 mt={{
                   base: '20px',
@@ -111,13 +140,14 @@ export const WhiteList: React.FC = () => {
               </Box>
             </Flex>
             <Box
-              my="auto"
+              mt={{ base: !account ? 'auto' : '10px', md: 'auto' }}
+              mb="auto"
               shadow={!account ? '0px 5px 10px rgba(0, 0, 0, 0.15)' : undefined}
               borderRadius="40px"
             >
               <ConnectWallet
                 renderConnected={(address) => (
-                  <Button variant="outline">
+                  <Button variant="outline" px="40px">
                     {address.substring(0, 6)}…
                     {address.substring(address.length - 4)}
                   </Button>

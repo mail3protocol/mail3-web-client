@@ -9,7 +9,7 @@ export const QualificationText: React.FC<{
   const { t } = useTranslation('whilelist')
   return isQualified ? (
     <>
-      <Text>{t('qualified-text')}</Text>
+      <Text mb={{ base: '20px', md: 0 }}>{t('qualified-text')}</Text>
       <Text fontSize="16px" fontWeight="normal">
         {t('launch-date', {
           date: 'March 8',

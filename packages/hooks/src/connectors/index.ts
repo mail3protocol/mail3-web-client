@@ -68,6 +68,20 @@ export const useAccountIsActivating = () => {
   return false
 }
 
+export const useProvider = () => {
+  const lastConectorName = useAtomValue(lastConectorNameAtom)
+
+  const provider = SupportedConnectors.useSelectedProvider(
+    Connectors.get(lastConectorName) ?? metaMask
+  )
+
+  if (lastConectorName && provider) {
+    return provider
+  }
+
+  return undefined
+}
+
 export const useConnector = () => {
   const lastConectorName = useAtomValue(lastConectorNameAtom)
 
