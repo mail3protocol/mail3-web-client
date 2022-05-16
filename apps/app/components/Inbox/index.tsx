@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-import { Box, Center, Circle } from '@chakra-ui/react'
+import { Box, Center, Circle, Flex } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import { Button } from 'ui'
@@ -16,6 +16,7 @@ import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
+import SVGWrite from '../../assets/icon-write.svg'
 
 const mockItem = {
   avatar: '',
@@ -210,7 +211,17 @@ export const InboxComponent: React.FC = () => {
       <Center>
         <Box w="1280px">
           <Box paddingTop="60px">
-            <InboxNav />
+            <Flex justifyContent="space-between">
+              <InboxNav />
+              <Button
+                onClick={() => {
+                  console.log('write')
+                }}
+              >
+                <SVGWrite /> <Box ml="10px">Write</Box>
+              </Button>
+            </Flex>
+
             <Box
               margin="25px auto"
               bgColor="#FFFFFF"
