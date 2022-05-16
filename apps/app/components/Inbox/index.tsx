@@ -15,7 +15,7 @@ import {
 import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
-import { SuspendButton, SuspendButtonType } from '../SuspendButton'
+import { StickyButtonBox, SuspendButton, SuspendButtonType } from '../SuspendButton'
 import SVGWrite from '../../assets/icon-write.svg'
 
 const mockItem = {
@@ -197,7 +197,7 @@ export const InboxComponent: React.FC = () => {
     <Box>
       <Navbar />
       {isChooseMode && (
-        <SuspendButton
+        <StickyButtonBox
           list={[
             {
               type: SuspendButtonType.Delete,

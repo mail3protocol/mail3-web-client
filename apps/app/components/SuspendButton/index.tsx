@@ -1,4 +1,4 @@
-import { Box, Center, HStack } from '@chakra-ui/react'
+import { Box, Center, Flex, HStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 
@@ -44,29 +44,85 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
   },
 }
 
-export const SuspendButton: React.FC<Props> = (props) => {
+const ButtonItem = styled(Center)`
+  flex-direction: column;
+  padding: 15px;
+  :hover {
+    background: #1f1f1f;
+  }
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+`
+
+const LineDiv = styled(Box)`
+  position: absolute;
+  width: 1px;
+  height: 70%;
+  top: 50%;
+  left: 0;
+  background-color: #c4c4c4;
+  transform: translateY(-50%);
+`
+
+export const StickyButtonBox: React.FC<Props> = (props) => {
   const { list } = props
 
-  const LineDiv = styled(Box)`
-    position: absolute;
-    width: 1px;
-    height: 70%;
-    top: 50%;
-    left: 0;
-    background-color: #c4c4c4;
-    transform: translateY(-50%);
+  const BoxWrap = styled(Center)`
+    top: 10px;
+    left: 5%;
+    width: calc(100% - 10%);
+    position: sticky;
+    z-index: 9;
   `
 
-  const ButtonItem = styled(Center)`
-    flex-direction: column;
-    padding: 15px;
-    :hover {
-      background: #1f1f1f;
-    }
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  const BoxContent = styled(Box)`
+    top: 0;
+    position: absolute;
   `
+
+  const BoxContentSticky = styled(Box)`
+    top: 0;
+    position: sticky;
+  `
+
+  return (
+    <BoxWrap>
+      <BoxContent>
+        <BoxContentSticky>
+          <Box>
+            <HStack
+              borderRadius="32px"
+              background="#000"
+              fontSize="18px"
+              spacing="0px"
+              color="#fff"
+              overflow="hidden"
+            >
+              {list.map((item) => {
+                const { onClick, type } = item
+                const config = buttonConfig[type]
+                const { Icon, name } = config
+
+                return (
+                  <ButtonItem key={type} onClick={onClick}>
+                    <Box>
+                      <Icon />
+                    </Box>
+                    <Box>{name}</Box>
+                  </ButtonItem>
+                )
+              })}
+            </HStack>
+          </Box>
+        </BoxContentSticky>
+      </BoxContent>
+    </BoxWrap>
+  )
+}
+
+export const SuspendButton: React.FC<Props> = (props) => {
+  const { list } = props
 
   return (
     <Box
@@ -99,25 +155,6 @@ export const SuspendButton: React.FC<Props> = (props) => {
             </ButtonItem>
           )
         })}
-        {/* <ButtonItem>
-          <Box>
-            <ReplySVG />
-          </Box>
-          <Box>Reply</Box>
-        </ButtonItem>
-        <ButtonItem>
-          <Box>
-            <ForwardSVG />
-          </Box>
-          <Box>Forward</Box>
-        </ButtonItem>
-        <ButtonItem>
-          <LineDiv />
-          <Box>
-            <TrashSVG />
-          </Box>
-          <Box>Trash</Box>
-        </ButtonItem> */}
       </HStack>
     </Box>
   )
