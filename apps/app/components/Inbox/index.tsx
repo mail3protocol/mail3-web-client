@@ -15,8 +15,13 @@ import {
 import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
-import { StickyButtonBox, SuspendButton, SuspendButtonType } from '../SuspendButton'
+import {
+  StickyButtonBox,
+  SuspendButton,
+  SuspendButtonType,
+} from '../SuspendButton'
 import SVGWrite from '../../assets/icon-write.svg'
+import { useAPI } from '../../hooks/useAPI'
 
 const mockItem = {
   avatar: '',
@@ -134,11 +139,15 @@ export const InboxComponent: React.FC = () => {
   const [seenMessages, setSeenMessages] = useState<any>([])
   const [pageType] = useAtom(pageTypeAtom)
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
+  const api = useAPI()
 
-  useDidMount(() => {
+  useDidMount(async () => {
     console.log('InboxComponent useDidMount')
     setNewMessages(mockList.newMessages)
     setSeenMessages(mockList.seenMessages)
+
+    // await api.getMailboxes()
+    await api.getMailboxesMessages('INBOX', 0)
   })
 
   useEffect(() => {

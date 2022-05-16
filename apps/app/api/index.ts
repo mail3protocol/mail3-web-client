@@ -86,4 +86,22 @@ export class API {
       current_address: this.account,
     })
   }
+
+  public async getMailboxes(): Promise<AxiosResponse<void>> {
+    return this.axios.get('/mailbox/account/mailboxes')
+  }
+
+  public async getMailboxesMessages(
+    path: string,
+    page: number,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<void>> {
+    return this.axios.get('/mailbox/account/messages', {
+      params: {
+        path,
+        pageSize,
+        page,
+      },
+    })
+  }
 }
