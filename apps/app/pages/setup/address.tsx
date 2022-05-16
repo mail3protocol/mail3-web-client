@@ -10,12 +10,18 @@ import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingAddress } from '../../components/Settings/SettingAddress'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
+import { getAuthenticateProps } from '../../hooks/useLogin'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale as string, ['settings', 'common'])),
-  },
-})
+export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
+  async ({ locale }) => ({
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        'settings',
+        'common',
+      ])),
+    },
+  })
+)
 
 const SetupAddressPage: NextPage = () => {
   const [t] = useTranslation('settings')

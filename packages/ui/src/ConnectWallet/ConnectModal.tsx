@@ -131,7 +131,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
   const dialog = useDialog()
   const setLastConnector = useSetLastConnector()
   const connectorName = useLastConectorName()
-  const isLogin = !!useAccount()
+  const isConnected = !!useAccount()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
@@ -150,12 +150,14 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
             <ConnectButton
               isDisabled={
                 isConnectingMetamask ||
-                (connectorName === ConnectorName.MetaMask && isLogin)
+                (connectorName === ConnectorName.MetaMask && isConnected)
               }
               isLoading={isConnectingMetamask}
               text={t('connect.metamask')}
               icon={<MetamaskSvg />}
-              isConnected={connectorName === ConnectorName.MetaMask && isLogin}
+              isConnected={
+                connectorName === ConnectorName.MetaMask && isConnected
+              }
               onClick={async () => {
                 setIsConnectingMetamask(true)
                 try {
@@ -186,11 +188,11 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
               icon={<WalletConnectSvg />}
               isDisabled={
                 isConnectingWalletConnect ||
-                (connectorName === ConnectorName.WalletConnect && isLogin)
+                (connectorName === ConnectorName.WalletConnect && isConnected)
               }
               isLoading={isConnectingWalletConnect}
               isConnected={
-                connectorName === ConnectorName.WalletConnect && isLogin
+                connectorName === ConnectorName.WalletConnect && isConnected
               }
               onClick={async () => {
                 await walletConnect.activate()

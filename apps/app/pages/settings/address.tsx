@@ -10,12 +10,18 @@ import { RoutePath } from '../../route/path'
 import { SettingAddress } from '../../components/Settings/SettingAddress'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { Tabs, Tab } from '../../components/Tabs'
+import { getAuthenticateProps } from '../../hooks/useLogin'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale as string, ['settings', 'common'])),
-  },
-})
+export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
+  async ({ locale }) => ({
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        'settings',
+        'common',
+      ])),
+    },
+  })
+)
 
 const SettingsAddressPage: NextPage = () => {
   const [t] = useTranslation('settings')

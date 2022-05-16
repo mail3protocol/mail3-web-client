@@ -27,6 +27,7 @@ import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
 import { NAVBAR_HEIGHT } from '../../constants'
+import { Auth, AuthModal } from '../Auth'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -155,5 +156,7 @@ export const Navbar: React.FC<NavbarProps> = () => (
         renderConnected={(address) => <ConnectedButton address={address} />}
       />
     </Flex>
+    <AuthModal />
+    <Auth />
   </NavbarContainer>
 )

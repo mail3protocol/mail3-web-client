@@ -3,6 +3,11 @@ import { SERVER_URL } from '../constants/env'
 import { mockENSNames } from '../mocks/ens'
 import { mockSignatures } from '../mocks/signature'
 
+export interface LoginResponse {
+  uuid: string
+  jwt: string
+}
+
 export class API {
   private account: string
 
@@ -21,12 +26,27 @@ export class API {
     })
   }
 
+  public getAddress() {
+    return this.account
+  }
+
   public async getENSNames(): Promise<AxiosResponse<typeof mockENSNames>> {
     return this.axios.get(`/ens-names?address=${this.account}`)
   }
 
   public async getSignatures(): Promise<AxiosResponse<typeof mockSignatures>> {
     return this.axios.get(`/signatures?address=${this.account}`)
+  }
+
+  public async login(
+    message: string,
+    signature: string
+  ): Promise<AxiosResponse<LoginResponse>> {
+    return this.axios.post('/sessions', {
+      message,
+      signature,
+      address: this.account,
+    })
   }
 
   public async setTextSignature(
