@@ -92,7 +92,7 @@ export const SettingSignature: React.FC = () => {
     },
     {
       enabled: !!account,
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {

@@ -16,7 +16,6 @@ function Mail3({
   cookies,
 }: AppProps & { cookies: Cookies }) {
   const queryClient = useMemo(() => new QueryClient(), [])
-  const isBrowser = typeof window !== 'undefined'
 
   return (
     <>
@@ -57,10 +56,10 @@ function Mail3({
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-WH0BKBPFWP', { debug_mode: true });
+          gtag('config', 'G-WH0BKBPFWP', { debug_mode: false });
         `}
       </Script>
-      <CookiesProvider cookies={isBrowser ? undefined : new Cookies(cookies)}>
+      <CookiesProvider cookies={new Cookies(cookies)}>
         <QueryClientProvider client={queryClient}>
           <JotaiProvider>
             <ChakraProvider theme={theme}>
@@ -72,6 +71,14 @@ function Mail3({
     </>
   )
 }
+
+// export async function getServerSideProps(appContext: AppContext) {
+//   return {
+//     props: {
+//       cookies: appContext.ctx.req?.headers?.cookie,
+//     }, // will be passed to the page component as props
+//   }
+// }
 
 Mail3.getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext)

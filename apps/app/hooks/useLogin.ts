@@ -92,6 +92,9 @@ export const useAuth = () => {
     if (!isAuth && account) {
       openAuthModal()
     }
+    if (!account) {
+      closeAuthModal()
+    }
   }, [isAuth, account])
 
   useEffect(() => {
