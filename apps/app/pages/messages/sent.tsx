@@ -1,6 +1,9 @@
 import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { PageContainer } from 'ui'
+import { SentComponent } from '../../components/Sent'
+import { Navbar } from '../../components/Navbar'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
@@ -8,6 +11,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Sent: NextPage = () => <div>Sent</div>
+const Sent: NextPage = () => (
+  <PageContainer>
+    <Navbar />
+    <SentComponent />
+  </PageContainer>
+)
 
 export default Sent
