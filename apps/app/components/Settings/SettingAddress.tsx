@@ -26,12 +26,12 @@ import React, { useState } from 'react'
 import { Button } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
-import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
+import { truncateMiddle } from '../../utils'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -70,6 +70,7 @@ interface EmailSwitchProps {
   emailAddress: string
   account: string
   isLoading?: boolean
+  uuid: string
   isChecked: boolean
   // eslint-disable-next-line prettier/prettier
   onChange: (account: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -77,10 +78,10 @@ interface EmailSwitchProps {
 
 const EmailSwitch: React.FC<EmailSwitchProps> = ({
   emailAddress,
-  account,
   onChange,
   isLoading = false,
   isChecked,
+  uuid,
 }) => (
   <Flex
     justifyContent="space-between"
@@ -101,7 +102,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
           colorScheme="deepBlue"
           isReadOnly={isChecked}
           isChecked={isChecked}
-          onChange={onChange(account)}
+          onChange={onChange(uuid)}
           display={['none', 'none', 'block']}
         />
         <Checkbox
@@ -109,7 +110,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
           isReadOnly={isChecked}
           top="2px"
           isChecked={isChecked}
-          onChange={onChange(account)}
+          onChange={onChange(uuid)}
           display={['block', 'block', 'none']}
         />
       </>
@@ -117,13 +118,19 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
   </Flex>
 )
 
-const generateEmailAddress = (s: string) => `${s}@mail.me`
+const generateEmailAddress = (s: string) => {
+  const [, domain] = s.split('.eth')
+  if (domain) {
+    return s
+  }
+  const [address, rest] = s.split('@')
+  return `${truncateMiddle(address, 6, 4)}@${rest}`.toLowerCase()
+}
 
 const ENS_DOMAIN = 'https://app.ens.domains'
 
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
-  const emailAddress = useEmailAddress()
   const account = useAccount()
   const api = useAPI()
   const [activeAcount, setActiveAccount] = useState(account)
@@ -132,7 +139,7 @@ export const SettingAddress: React.FC = () => {
   const { data: ensNames, isLoading } = useQuery(
     [Query.ENS_NAMES, account],
     async () => {
-      const { data } = await api.getENSNames()
+      const { data } = await api.getAliaes()
       return data
     },
     {
@@ -141,10 +148,9 @@ export const SettingAddress: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        if (d.active_account) {
-          setActiveAccount(d.active_account)
-        } else {
-          setActiveAccount(account)
+        for (let i = 0; i < d.aliases.length; i++) {
+          const alias = d.aliases[i]
+          setActiveAccount(alias.uuid)
         }
       },
     }
@@ -192,26 +198,20 @@ export const SettingAddress: React.FC = () => {
             </Tooltip>
           </Stack>
         </FormLabel>
-        <EmailSwitch
-          emailAddress={emailAddress}
-          account={account!}
-          isLoading={isLoading}
-          onChange={onDefaultAccountChange}
-          isChecked={account === activeAcount}
-        />
-        {ensNames?.ens_names?.length && !isLoading ? (
+        {ensNames?.aliases?.length && !isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
               {t('address.ens-name')}
             </FormLabel>
             <VStack spacing="10px">
-              {ensNames.ens_names.map((addr) => (
+              {ensNames.aliases.map((a) => (
                 <EmailSwitch
-                  emailAddress={generateEmailAddress(addr)}
-                  account={addr}
+                  uuid={a.uuid}
+                  emailAddress={generateEmailAddress(a.address)}
+                  account={a.address}
                   onChange={onDefaultAccountChange}
-                  key={addr}
-                  isChecked={addr === activeAcount}
+                  key={a.address}
+                  isChecked={a.uuid === activeAcount}
                 />
               ))}
             </VStack>

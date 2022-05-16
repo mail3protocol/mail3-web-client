@@ -1,11 +1,20 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SERVER_URL } from '../constants/env'
-import { mockENSNames } from '../mocks/ens'
 import { mockSignatures } from '../mocks/signature'
 
 export interface LoginResponse {
   uuid: string
   jwt: string
+}
+
+export interface Alias {
+  uuid: string
+  address: string
+  is_default: string
+}
+
+export interface AliasResponse {
+  aliases: Alias[]
 }
 
 export class API {
@@ -30,8 +39,8 @@ export class API {
     return this.account
   }
 
-  public async getENSNames(): Promise<AxiosResponse<typeof mockENSNames>> {
-    return this.axios.get(`/ens-names?address=${this.account}`)
+  public async getAliaes(): Promise<AxiosResponse<AliasResponse>> {
+    return this.axios.get(`/account/aliases`)
   }
 
   public async getSignatures(): Promise<AxiosResponse<typeof mockSignatures>> {
