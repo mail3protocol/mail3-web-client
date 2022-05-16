@@ -22,7 +22,7 @@ import {
   QuestionIcon,
 } from '@chakra-ui/icons'
 import { useTranslation, Trans } from 'next-i18next'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
@@ -32,6 +32,7 @@ import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { truncateMiddle } from '../../utils'
+import { MAIL_SERVER_URL } from '../../constants'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -118,13 +119,15 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
   </Flex>
 )
 
-const generateEmailAddress = (s: string) => {
+const generateEmailAddress = (s = '') => {
   const [, domain] = s.split('.eth')
   if (domain) {
     return s
   }
   const [address, rest] = s.split('@')
-  return `${truncateMiddle(address, 6, 4)}@${rest}`.toLowerCase()
+  return `${truncateMiddle(address, 6, 4)}@${
+    rest || MAIL_SERVER_URL
+  }`.toLowerCase()
 }
 
 const ENS_DOMAIN = 'https://app.ens.domains'
@@ -170,6 +173,15 @@ export const SettingAddress: React.FC = () => {
     }
   }
 
+  const aliases = useMemo(() => {
+    if (ensNames?.aliases) {
+      return ensNames?.aliases
+    }
+    return []
+  }, [ensNames])
+
+  const [firstAlias, ...restAliases] = aliases
+
   return (
     <Container>
       <header className="header">
@@ -187,7 +199,7 @@ export const SettingAddress: React.FC = () => {
             alignItems="center"
           >
             <Text fontWeight={600} as="span">
-              {generateEmailAddress(t('address.wallet-address'))}
+              {`${t('address.wallet-address')}@${MAIL_SERVER_URL}`}
             </Text>
             <HStack spacing="4px">
               <CheckCircleIcon color="#4E52F5" w="12px" />
@@ -198,13 +210,22 @@ export const SettingAddress: React.FC = () => {
             </Tooltip>
           </Stack>
         </FormLabel>
-        {ensNames?.aliases?.length && !isLoading ? (
+        <EmailSwitch
+          uuid={firstAlias?.uuid ?? 'first_alias'}
+          emailAddress={generateEmailAddress(firstAlias?.address ?? account)}
+          account={firstAlias?.address}
+          onChange={onDefaultAccountChange}
+          key={firstAlias?.address}
+          isLoading={isLoading}
+          isChecked={firstAlias?.uuid === activeAcount || aliases.length === 1}
+        />
+        {restAliases.length && !isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
               {t('address.ens-name')}
             </FormLabel>
             <VStack spacing="10px">
-              {ensNames.aliases.map((a) => (
+              {restAliases.map((a) => (
                 <EmailSwitch
                   uuid={a.uuid}
                   emailAddress={generateEmailAddress(a.address)}

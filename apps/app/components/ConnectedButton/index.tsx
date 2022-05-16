@@ -10,8 +10,8 @@ import {
 } from '@chakra-ui/react'
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
-import React, { useMemo, useRef } from 'react'
-import { useConnectWalletDialog, useToast } from 'hooks'
+import React, { useMemo, useRef, useState } from 'react'
+import { useConnectWalletDialog, useDidMount, useToast } from 'hooks'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { RoutePath } from '../../route/path'
@@ -20,6 +20,7 @@ import ProfileSvg from '../../assets/profile.svg'
 import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
 import { copyText } from '../../utils'
+import { MAIL_SERVER_URL } from '../../constants'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
@@ -44,7 +45,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
-          await copyText(`${address.toLowerCase()}@mail3.me`)
+          await copyText(`${address.toLowerCase()}@${MAIL_SERVER_URL}`)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
         },
@@ -59,6 +60,16 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
     ],
     [address]
   )
+
+  const [mounted, setMounted] = useState(false)
+
+  useDidMount(() => {
+    setMounted(true)
+  })
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <Popover arrowSize={18} autoFocus offset={[0, 20]} closeOnBlur>

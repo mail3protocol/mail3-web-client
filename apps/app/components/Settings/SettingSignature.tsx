@@ -10,6 +10,7 @@ import {
   Textarea,
   Spinner,
   Checkbox,
+  useToast,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import NextLink from 'next/link'
@@ -86,7 +87,7 @@ export const SettingSignature: React.FC = () => {
   const { isLoading } = useQuery(
     [Query.Signatures, account],
     async () => {
-      const { data } = await api.getSignatures()
+      const { data } = await api.getUserInfo()
       return data
     },
     {
@@ -95,25 +96,63 @@ export const SettingSignature: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        setIsCardEnable(d.card.enable)
-        setIsTextEnable(d.text.enable)
-        setTextSignature(d.text.message)
+        setIsCardEnable(d.card_sig_state === 'enabled')
+        setIsTextEnable(d.text_sig_state === 'enabled')
+        setTextSignature(d.text_signature)
       },
     }
   )
+  const toast = useToast()
 
-  const onTextEnableChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const prevValue = isTextEnable
-      setIsTextEnable(e.target.checked)
-      try {
-        await api.setTextSignature(e.target.checked, textSignature)
-      } catch (error) {
-        setIsTextEnable(prevValue)
-      }
-    },
-    [textSignature, isTextEnable]
+  const onTextEnableSubscription = useCallback(async () => {
+    const prevValue = isTextEnable
+    try {
+      await api.toggleTextSignature()
+    } catch (error: any) {
+      toast(error?.message)
+      setIsTextEnable(prevValue)
+    }
+  }, [isTextEnable])
+
+  const [onTextEnableChange, onTextEnableChange$] = useObservableCallback<
+    boolean,
+    React.ChangeEvent<HTMLInputElement>
+  >((ev$) =>
+    ev$.pipe(
+      pluck('target', 'checked'),
+      tap((b) => {
+        setIsTextEnable(b)
+      }),
+      debounceTime(500)
+    )
   )
+
+  useSubscription(onTextEnableChange$, onTextEnableSubscription)
+
+  const onCardEnableSubscription = useCallback(async () => {
+    const prevValue = isCardEnable
+    try {
+      await api.toggleCardSignature()
+    } catch (error: any) {
+      toast(error?.message)
+      setIsCardEnable(prevValue)
+    }
+  }, [isCardEnable])
+
+  const [onCardEnableChange, onCardEnableChange$] = useObservableCallback<
+    boolean,
+    React.ChangeEvent<HTMLInputElement>
+  >((ev$) =>
+    ev$.pipe(
+      pluck('target', 'checked'),
+      tap((b) => {
+        setIsCardEnable(b)
+      }),
+      debounceTime(500)
+    )
+  )
+
+  useSubscription(onCardEnableChange$, onCardEnableSubscription)
 
   const [onTextareaChange, onTextareaChange$] = useObservableCallback<
     string,
@@ -122,35 +161,22 @@ export const SettingSignature: React.FC = () => {
     event$.pipe(
       pluck('currentTarget', 'value'),
       tap((v) => setTextSignature(v)),
-      debounceTime(1500)
+      debounceTime(1000)
     )
   )
 
   const onTextSignatureChange = useCallback(
     async (v: string) => {
       try {
-        await api.setTextSignature(isTextEnable, v)
-      } catch (error) {
-        //
+        await api.setTextSignature(v)
+      } catch (error: any) {
+        toast(error?.message)
       }
     },
     [isTextEnable]
   )
 
   useSubscription(onTextareaChange$, onTextSignatureChange)
-
-  const onCardEnableChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const prevValue = isCardEnable
-      setIsCardEnable(e.target.checked)
-      try {
-        await api.setCardSignature(e.target.checked)
-      } catch (error) {
-        setIsCardEnable(prevValue)
-      }
-    },
-    [textSignature, isCardEnable]
-  )
 
   return (
     <Container>

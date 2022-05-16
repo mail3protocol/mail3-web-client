@@ -10,6 +10,7 @@ import { atom, useAtom } from 'jotai'
 import { useDidMount } from '../useDidMount'
 import { metaMask, metaMaskhooks } from './MetaMask'
 import { walletConnect, walletConnectHooks } from './WalletConnect'
+import { useLoginAccount } from '../useLoginInfo'
 
 export const SupportedConnectors = getSelectedConnector(
   [metaMask, metaMaskhooks],
@@ -42,10 +43,14 @@ export const useLastConectorName = () => useAtomValue(lastConectorNameAtom)
 
 export const useAccount = () => {
   const lastConectorName = useAtomValue(lastConectorNameAtom)
-
+  const loginAccount = useLoginAccount()
   const account = SupportedConnectors.useSelectedAccount(
     Connectors.get(lastConectorName) ?? metaMask
   )
+
+  if (loginAccount) {
+    return loginAccount
+  }
 
   if (lastConectorName && account) {
     return account
@@ -56,10 +61,14 @@ export const useAccount = () => {
 
 export const useAccountIsActivating = () => {
   const lastConectorName = useAtomValue(lastConectorNameAtom)
-
+  const conector = Connectors.get(lastConectorName)
   const status = SupportedConnectors.useSelectedIsActivating(
-    Connectors.get(lastConectorName) ?? metaMask
+    conector ?? metaMask
   )
+
+  if (!conector) {
+    return false
+  }
 
   if (lastConectorName) {
     return status
