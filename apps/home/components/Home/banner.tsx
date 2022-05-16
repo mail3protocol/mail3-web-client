@@ -17,6 +17,8 @@ import Illustration1Png from '../../assets/png/illustration/1.png'
 import Illustration3Png from '../../assets/png/illustration/3.png'
 import { isWhiteListStage } from '../../utils'
 
+export const HIDDEN_SCROLL_Y = 382
+
 export const Banner: React.FC<FlexProps> = ({ ...props }) => {
   const inWhiteListStage = isWhiteListStage()
   return (
@@ -26,6 +28,8 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => {
       h="calc(100vh - 60px)"
       position="relative"
       px="20px"
+      zIndex={0}
+      bg="#fff"
       {...props}
     >
       <Image

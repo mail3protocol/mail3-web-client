@@ -1,8 +1,7 @@
 import { Flex } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navbar } from './navbar'
 import { RainbowBar } from './rainbowBar'
-import { RollingSubtitles } from './rollingSubtitles'
 import { isBetaTestingStage, isWhiteListStage } from '../../utils'
 import { Letter } from './letter'
 import { Dao } from './dao'
@@ -10,18 +9,27 @@ import { Ecosystem } from './ecosystem'
 import { WhitelistGuide } from './whitelistGuide'
 import { Footer } from './footer'
 import { Banner } from './banner'
-import { Entrance } from './entrance'
+import { Entrance, EntranceStatus } from './entrance'
+import { ScrollAnimation } from './scrollAnimation'
 
 export const Home: React.FC = () => {
   const inWhiteListStage = isWhiteListStage()
   const isShowRainbowBar = inWhiteListStage || isBetaTestingStage()
+  const [status, setStatus] = useState<EntranceStatus>('opened')
+  useEffect(() => {
+    document.body.style.overflowX = 'hidden'
+    return () => {
+      document.body.style.overflowX = ''
+    }
+  })
   return (
     <Flex direction="column" position="relative">
-      <Entrance />
+      {status !== 'closed' ? <Entrance onChangeStatus={setStatus} /> : null}
       {isShowRainbowBar ? <RainbowBar /> : null}
       <Navbar />
-      <Banner h={`calc(100vh${isShowRainbowBar ? '- 44px' : ''} - 60px)`} />
-      <RollingSubtitles />
+      <ScrollAnimation>
+        <Banner />
+      </ScrollAnimation>
       <Letter />
       <Dao />
       <Ecosystem />

@@ -103,7 +103,7 @@ export const Letter: React.FC = () => {
         base: '48px',
         lg: '64px',
       }}
-      minH="calc(100vh - 44px - 60px)"
+      minH="calc(100vh - 60px)"
     >
       <Flex
         direction="column"
