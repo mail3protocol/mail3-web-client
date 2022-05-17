@@ -1,11 +1,11 @@
-import { Flex, Box, Grid, Heading } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import { Flex, Box, Grid, Heading, FlexProps } from '@chakra-ui/react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
 import { useInnerSize } from 'hooks'
 import { sleep } from '../../../utils'
 
-const MOBILE_SIZE = 960
+const MOBILE_SIZE = 768
 
 const BoxStyled = styled(Box)`
   width: 100%;
@@ -58,10 +58,15 @@ const BoxStyled = styled(Box)`
   }
 `
 
-export const Entrance: React.FC<{
-  onOpen?: () => void
-}> = ({ onOpen }) => {
+export type EntranceStatus = 'opened' | 'closing' | 'closed'
+
+export const Entrance: React.FC<
+  FlexProps & {
+    onChangeStatus?: (status: EntranceStatus) => void
+  }
+> = ({ onChangeStatus, ...props }) => {
   const { width, height } = useInnerSize()
+  const [status, setStatus] = useState<EntranceStatus>('opened')
   const isMobile = width <= MOBILE_SIZE
   const boxSize = isMobile ? '45px' : '60px'
   useEffect(() => {
@@ -70,6 +75,9 @@ export const Entrance: React.FC<{
       document.body.style.overflow = ''
     }
   }, [])
+  useEffect(() => {
+    onChangeStatus?.(status)
+  }, [status])
   const [coverInfo, setCoverInfo] = useState<{
     clientX: number
     clientY: number
@@ -79,6 +87,16 @@ export const Entrance: React.FC<{
     clientY: -1,
     isOpen: false,
   })
+  const columnLen = useMemo(() => {
+    if (isMobile) return 8
+    if (width <= 1280) return 14
+    return 19
+  }, [width])
+  const rowLen = isMobile ? 9 : 8
+
+  if (status === 'closed') {
+    return null
+  }
 
   return (
     <Flex
@@ -95,11 +113,14 @@ export const Entrance: React.FC<{
       overflowX="hidden"
       overflowY="auto"
       py="30px"
+      opacity={status === 'closing' ? 0 : 1}
+      transition="500ms"
+      {...props}
     >
       <Flex direction="column" justify="center" align="center">
         <Grid
-          templateColumns={`repeat(${isMobile ? 8 : 16}, ${boxSize})`}
-          templateRows={`repeat(${isMobile ? 9 : 8}, ${boxSize})`}
+          templateColumns={`repeat(${columnLen}, ${boxSize})`}
+          templateRows={`repeat(${rowLen}, ${boxSize})`}
           onClick={async (e) => {
             await setCoverInfo({
               clientX: e.clientX,
@@ -107,10 +128,12 @@ export const Entrance: React.FC<{
               isOpen: true,
             })
             await sleep(500)
-            onOpen?.()
+            await setStatus('closing')
+            await sleep(500)
+            await setStatus('closed')
           }}
         >
-          {new Array(16 * 8)
+          {new Array(columnLen * rowLen)
             .fill(0)
             .map((_, i) => i)
             .map((i) => (
@@ -143,9 +166,15 @@ export const Entrance: React.FC<{
             }}
           />
         </Box>
-        <Heading pl="20px" w="full" fontSize="24px" lineHeight="36px">
-          Communicate with everyone <br />
-          in web3
+        <Heading
+          pl="20px"
+          w="full"
+          fontSize={{ base: '24px', md: '36px', lg: '48px' }}
+          lineHeight={{ base: '24px', md: '36px', lg: '64px' }}
+          transition="200ms"
+        >
+          <Box whiteSpace="nowrap">Communicate with everyone</Box>
+          <Box whiteSpace="nowrap">in web3</Box>
         </Heading>
       </Flex>
     </Flex>

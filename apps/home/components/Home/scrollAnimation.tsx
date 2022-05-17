@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { fromEvent, map } from 'rxjs'
-import { Box, Flex, Icon } from '@chakra-ui/react'
+import { Box, Center, Flex, Icon } from '@chakra-ui/react'
 import { useInnerSize } from 'hooks'
+import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Banner, HIDDEN_SCROLL_Y } from './banner'
 import EnvelopeBottomCoverSvg from '../../assets/svg/envelope-bottom-cover.svg'
 
@@ -25,13 +26,22 @@ export const ScrollAnimation: React.FC = () => {
     return [scale, rotateX].join(' ')
   }, [scrollY])
   const letterTransform = useMemo(() => {
-    const rotateX = `rotateX(${
+    const rotateXValue =
       scrollY > 382 ? Math.min((scrollY - 382) / 2, 90) + 270 : 270
-    }deg)`
+    const rotateX = `rotateX(${rotateXValue}deg)`
+    const scaleBase = 0.8
     if (scrollY < 570) {
-      return `scale(0.8) ${rotateX}`
+      return `scale(${scaleBase}) ${rotateX}`
     }
-    return `scale(${0.8}) ${rotateX}`
+    const maxW = Math.min(width, CONTAINER_MAX_WIDTH) - 40
+    const targetScale = maxW / width
+    const scaleDiff = Math.abs(scaleBase - targetScale)
+    const changedScale = Math.min((scrollY - 570) / 400, scaleDiff, scaleDiff)
+    const s =
+      scaleBase <= targetScale
+        ? scaleBase + changedScale
+        : scaleBase - changedScale
+    return `scale(${s}) ${rotateX}`
   }, [scrollY, width])
 
   return (
@@ -89,22 +99,22 @@ export const ScrollAnimation: React.FC = () => {
             perspective: 2000,
           }}
         >
-          <Flex
+          <Center
             transition="50ms"
             style={{
               transform: letterTransform,
             }}
             w="full"
             h="full"
+            position="relative"
           >
             <Icon
               as={EnvelopeBottomCoverSvg}
               w="full"
               h="auto"
-              mt="auto"
               transform="scale(1.035) translateY(1%)"
             />
-          </Flex>
+          </Center>
         </Box>
       </Flex>
     </Box>
