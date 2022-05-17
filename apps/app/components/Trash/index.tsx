@@ -30,7 +30,6 @@ export const TrashComponent: React.FC = () => {
     if (!hasNext) return
 
     const _pageIndex = page === undefined ? pageIndex + 1 : 0
-
     setIsFetching(true)
     const { data } = await api.getMailboxesMessages('INBOX', _pageIndex)
 
@@ -38,7 +37,6 @@ export const TrashComponent: React.FC = () => {
       const newDate: any = update(messages, {
         $push: data.messages,
       })
-
       setMessages(newDate)
       setIsFetching(false)
       setPageIndex(_pageIndex)

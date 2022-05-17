@@ -24,6 +24,13 @@ export interface MailboxesMessagesResponse {
   total: number
 }
 
+export interface AddressResponse {
+  name: string
+  address: string
+}
+
+export type AddressListResponse = Array<AddressResponse>
+
 export class API {
   private account: string
 

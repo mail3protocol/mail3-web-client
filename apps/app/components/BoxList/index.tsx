@@ -12,7 +12,9 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom } from 'jotai'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
+import dayjs from 'dayjs'
 import ChooseSVG from '../../assets/choose.svg'
+import { AddressListResponse, AddressResponse } from '../../api'
 
 export const isChooseModeAtom = atom<boolean>(false)
 
@@ -37,7 +39,9 @@ export interface BoxItemProps {
   id: string | number
   index: number
   subject: string
-  desc: string
+  // desc: string
+  to: AddressListResponse
+  from: AddressResponse
   date: string
   isChoose: boolean
   avatarBadgeType: AvatarBadgeType
@@ -54,7 +58,7 @@ const CircleE = styled(Circle)`
 
 const Item = ({
   subject,
-  desc,
+  // desc,
   date,
   isChoose,
   id,
@@ -63,6 +67,8 @@ const Item = ({
   onClick,
   avatarBadgeType,
   itemType,
+  to,
+  from,
 }: BoxItemProps) => {
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
 
@@ -130,6 +136,12 @@ const Item = ({
     </Flex>
   )
 
+  const desc = `${from?.address} - ${to
+    ?.map((item) => `${item?.address}`)
+    ?.join(';')}`
+
+  const dateText = dayjs(date).format('YYYY-MM-DD / h:mm A')
+
   return (
     <Flex
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
@@ -189,7 +201,7 @@ const Item = ({
         </Text>
       </Flex>
       <Center w="170px" fontSize="14px" color="#6F6F6F">
-        {date}
+        {dateText}
       </Center>
     </Flex>
   )
