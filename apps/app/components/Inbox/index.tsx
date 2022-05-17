@@ -7,6 +7,7 @@ import { useDidMount } from 'hooks'
 import { Button } from 'ui'
 import styled from '@emotion/styled'
 import update from 'immutability-helper'
+import { useQuery } from 'react-query'
 import {
   BoxList,
   AvatarBadgeType,
@@ -135,7 +136,7 @@ const TitleBox = styled(Box)`
   line-height: 30px;
 `
 
-const formatState = (data: any) => {
+const formatState = (data: any, avatarBadgeType) => {
   if (!data.length) return []
 
   const newData = data.map((item: any) => {
@@ -153,7 +154,7 @@ const formatState = (data: any) => {
       avatar: '',
       // ui need state
       isChoose: false,
-      avatarBadgeType: AvatarBadgeType.None,
+      avatarBadgeType,
       itemType: ItemType.None,
     }
   })
@@ -177,10 +178,34 @@ export const InboxComponent: React.FC = () => {
 
   const [, setIsFetching] = useInfiniteScroll(fetchDateSeen)
 
+  useQuery(
+    ['getNewMessages', 0],
+    async () => {
+      const { data } = await api.getMessagesNew(0)
+      return data
+    },
+    {
+      refetchInterval: 1000,
+      onSuccess(d) {
+        if (d.messages.length) {
+          const newItem = d.messages.filter((i) =>
+            newMessages.every((i2: { id: any }) => i2.id !== i.id)
+          )
+          const newState = formatState(newItem, AvatarBadgeType.None)
+          const newDate: any = update(newMessages, {
+            $unshift: newState,
+          })
+
+          setNewMessages(newDate)
+        }
+      },
+    }
+  )
+
   useDidMount(async () => {
-    console.log('InboxComponent useDidMount')
-    setNewMessages(mockList.newMessages)
-    setSeenMessages(mockList.seenMessages)
+    // console.log('InboxComponent useDidMount')
+    // setNewMessages(mockList.newMessages)
+    // setSeenMessages(mockList.seenMessages)
 
     fetchDateSeen(0)
   })
@@ -209,7 +234,7 @@ export const InboxComponent: React.FC = () => {
     const { data } = await api.getMessagesSeen(pageIndex)
 
     if (data?.messages?.length) {
-      const newState = formatState(data.messages)
+      const newState = formatState(data.messages, AvatarBadgeType.None)
       const newDate: any = update(seenMessages, {
         $push: newState,
       })
