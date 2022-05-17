@@ -20,8 +20,10 @@ import {
   SuspendButton,
   SuspendButtonType,
 } from '../SuspendButton'
-import SVGWrite from '../../assets/icon-write.svg'
 import { useAPI } from '../../hooks/useAPI'
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
+
+import SVGWrite from '../../assets/icon-write.svg'
 
 const mockItem = {
   avatar: '',
@@ -141,6 +143,9 @@ export const InboxComponent: React.FC = () => {
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
   const api = useAPI()
 
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  const [isFetching, setIsFetching] = useInfiniteScroll(fetchMore)
+
   useDidMount(async () => {
     console.log('InboxComponent useDidMount')
     setNewMessages(mockList.newMessages)
@@ -166,7 +171,7 @@ export const InboxComponent: React.FC = () => {
     setNewMessages(newDate)
   }
 
-  const seenLoadMore = () => {
+  function seenLoadMore() {
     console.log('seenPageIndex', seenPageIndex)
     const index = seenPageIndex + 1
     // page + 1, get new date
@@ -176,6 +181,14 @@ export const InboxComponent: React.FC = () => {
 
     setSeenPageIndex(index)
     setSeenMessages(newDate)
+  }
+
+  function fetchMore() {
+    console.log('fetch more')
+    setTimeout(() => {
+      seenLoadMore()
+      setIsFetching(false)
+    }, 1000)
   }
 
   const updateItem = (type: string) => (index: number) => {
@@ -267,26 +280,6 @@ export const InboxComponent: React.FC = () => {
                   <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
                     <TitleBox>Seem</TitleBox>
                     <BoxList data={seenMessages} update={updateItem('seen')} />
-                    {seenPageIndex < 10 && (
-                      <Center>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            seenLoadMore()
-                          }}
-                        >
-                          load more +10
-                        </Button>
-                        <Circle
-                          size="40px"
-                          bg="black"
-                          color="white"
-                          marginLeft="10px"
-                        >
-                          100
-                        </Circle>
-                      </Center>
-                    )}
                   </Box>
                 </Box>
               )}
