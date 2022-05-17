@@ -77,6 +77,7 @@ export const AuthModal: React.FC = () => {
         }
         case SignupResponseCode.Success: {
           await login(message!, signature!)
+          closeAuthModal()
           router.push(RoutePath.Setup)
           break
         }

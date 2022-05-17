@@ -157,13 +157,7 @@ export const SettingSignature: React.FC = () => {
   const [onTextareaChange, onTextareaChange$] = useObservableCallback<
     string,
     React.ChangeEvent<HTMLTextAreaElement>
-  >((event$) =>
-    event$.pipe(
-      pluck('currentTarget', 'value'),
-      tap((v) => setTextSignature(v)),
-      debounceTime(1000)
-    )
-  )
+  >((event$) => event$.pipe(pluck('target', 'innerHTML'), debounceTime(1000)))
 
   const onTextSignatureChange = useCallback(
     async (v: string) => {
@@ -206,9 +200,14 @@ export const SettingSignature: React.FC = () => {
             )}
           </Flex>
           <Textarea
+            as="div"
+            contentEditable
             placeholder="Here is a sample placeholder"
+            dangerouslySetInnerHTML={{
+              __html: textSignature,
+            }}
             value={textSignature}
-            onChange={onTextareaChange}
+            onInput={onTextareaChange}
           />
         </VStack>
         <VStack spacing="8px" w="100%">
