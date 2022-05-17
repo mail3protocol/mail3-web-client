@@ -16,12 +16,6 @@ export const Home: React.FC = () => {
   const inWhiteListStage = isWhiteListStage()
   const isShowRainbowBar = inWhiteListStage || isBetaTestingStage()
   const [status, setStatus] = useState<EntranceStatus>('opened')
-  useEffect(() => {
-    document.body.style.overflowX = 'hidden'
-    return () => {
-      document.body.style.overflowX = ''
-    }
-  })
   return (
     <Flex direction="column" position="relative">
       {status !== 'closed' ? <Entrance onChangeStatus={setStatus} /> : null}

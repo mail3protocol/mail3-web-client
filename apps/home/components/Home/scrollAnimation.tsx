@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { fromEvent, map } from 'rxjs'
-import { Box, Center, Flex, Icon } from '@chakra-ui/react'
+import { Box, Center, Flex, Image } from '@chakra-ui/react'
 import { useInnerSize } from 'hooks'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Banner, HIDDEN_SCROLL_Y } from './banner'
-import EnvelopeBottomCoverSvg from '../../assets/svg/envelope-bottom-cover.svg'
+import EnvelopeBgPath from '../../assets/png/envelope/bg.png'
+import EnvelopeCoverClosePath from '../../assets/png/envelope/cover-close.png'
+import EnvelopeCoverOpenPath from '../../assets/png/envelope/cover-open.png'
+
+const ENVELOPE_RADIO = 8 / 11
 
 export const ScrollAnimation: React.FC = () => {
   const [scrollY, setScrollY] = useState(0)
@@ -25,6 +29,16 @@ export const ScrollAnimation: React.FC = () => {
     const rotateX = `rotateX(${Math.min((scrollY - 200) / 2, 90)}deg)`
     return [scale, rotateX].join(' ')
   }, [scrollY])
+  const bannerHeight = useMemo(() => {
+    const currentHeight = height - 60
+    if (width > height) {
+      return `${currentHeight}px`
+    }
+    const p = Math.max(Math.min(scrollY / 200, 1), 0)
+    const targetHeight = ENVELOPE_RADIO * width
+    const diff = currentHeight - targetHeight
+    return `${Math.floor(currentHeight - diff * p)}px`
+  }, [scrollY, width, height])
   const letterTransform = useMemo(() => {
     const rotateXValue =
       scrollY > 382 ? Math.min((scrollY - 382) / 2, 90) + 270 : 270
@@ -50,52 +64,59 @@ export const ScrollAnimation: React.FC = () => {
       h={`${height - 60 + HIDDEN_SCROLL_Y + 3000}px`}
       w="full"
     >
-      <Flex w="200%" position="sticky" top="60px" zIndex={2}>
-        <Box
-          style={{
-            transformStyle: 'preserve-3d',
-            perspective: 2000,
-          }}
-          position="relative"
-          zIndex={1}
-        >
+      <Flex w="100%" position="sticky" top="60px" zIndex={2}>
+        <Center position="relative" zIndex={1} h="calc(100vh - 60px)" w="100vw">
           <Box
-            w="100vw"
-            transition="50ms"
+            position="absolute"
+            top="0"
+            left="0"
+            w="full"
+            h="full"
+            overflow="hidden"
             style={{
-              transform: bannerTransform,
+              perspective: 2000,
             }}
           >
             <Box
-              position="absolute"
-              top="-8px"
-              left="-8px"
-              w="calc(100% + 16px)"
-              h="calc(100% + 16px)"
-              zIndex={-1}
-              rounded="10px"
-              bgSize="80px"
-              transformOrigin="center"
-              border="8px solid transparent"
+              w="full"
+              transition="50ms"
               style={{
-                borderImage:
-                  '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
+                transform: bannerTransform,
               }}
-            />
-            <Banner />
+            >
+              <Box
+                position="absolute"
+                top="-8px"
+                left="-8px"
+                w="calc(100% + 16px)"
+                h="calc(100% + 16px)"
+                zIndex={-1}
+                rounded="10px"
+                bgSize="80px"
+                transformOrigin="center"
+                border="8px solid transparent"
+                style={{
+                  borderImage:
+                    '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
+                }}
+              />
+              <Banner />
+            </Box>
           </Box>
-        </Box>
+        </Center>
 
         {/* 👇 Letter */}
         <Box
           w="100vw"
           h="calc(100vh - 60px)"
-          position="relative"
+          position="absolute"
           px="20px"
-          zIndex={0}
+          zIndex={2}
           bg="#fff"
-          transform="translateX(-100%)"
+          top={0}
+          left={0}
           style={{
+            opacity: scrollY > 382 ? 1 : 0,
             perspective: 2000,
           }}
         >
@@ -108,12 +129,13 @@ export const ScrollAnimation: React.FC = () => {
             h="full"
             position="relative"
           >
-            <Icon
-              as={EnvelopeBottomCoverSvg}
-              w="full"
-              h="auto"
-              transform="scale(1.035) translateY(1%)"
-            />
+            {/* <Icon */}
+            {/*  as={EnvelopeBottomCoverSvg} */}
+            {/*  w="full" */}
+            {/*  h="auto" */}
+            {/*  transform="scale(1.035) translateY(1%)" */}
+            {/* /> */}
+            <Image src={EnvelopeBgPath.src} w="full" h="auto" />
           </Center>
         </Box>
       </Flex>
