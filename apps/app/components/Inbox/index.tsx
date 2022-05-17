@@ -213,7 +213,7 @@ export const InboxComponent: React.FC = () => {
       const newDate: any = update(seenMessages, {
         $push: newState,
       })
-      console.log('newDate', newDate)
+
       setSeenMessages(newDate)
       setIsFetching(false)
       setPageIndexSeen(pageIndex)

@@ -1,42 +1,51 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
-import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import { Button } from 'ui'
 import styled from '@emotion/styled'
+import update from 'immutability-helper'
 import { BoxList } from '../BoxList'
 import SVGTrash from '../../assets/trash.svg'
 import SVGIconEmpty from '../../assets/icon-empty.svg'
-
-const mockList = {
-  message: [
-    {
-      avatar: '',
-      id: 123,
-      emailId: 123,
-      messageId: 123,
-      unseen: true,
-      date: '2022-02-01 / 12:01 am',
-      subject: 'subject subject subject',
-      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
-    },
-  ],
-}
-
-let data: any = mockList.message
-data = [...data, ...data]
-data = [...data, ...data]
-data = [...data, ...data]
+import { useAPI } from '../../hooks/useAPI'
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<any>([])
+  const [pageIndex, setPageIndex] = useState(0)
+  const [hasNext, setHasNext] = useState(true)
+
+  const api = useAPI()
+  const [, setIsFetching] = useInfiniteScroll(fetchDate)
 
   useDidMount(() => {
     console.log('TrashComponent useDidMount')
-    setMessages(data)
+    fetchDate(0)
   })
+
+  async function fetchDate(page: number | undefined) {
+    if (!hasNext) return
+
+    const _pageIndex = page === undefined ? pageIndex + 1 : 0
+
+    setIsFetching(true)
+    const { data } = await api.getMailboxesMessages('INBOX', _pageIndex)
+
+    if (data?.messages?.length) {
+      const newDate: any = update(messages, {
+        $push: data.messages,
+      })
+
+      setMessages(newDate)
+      setIsFetching(false)
+      setPageIndex(_pageIndex)
+    } else {
+      setHasNext(false)
+    }
+  }
 
   const TextBox = styled(Box)`
     margin-top: 10px;
@@ -65,7 +74,11 @@ export const TrashComponent: React.FC = () => {
         </Wrap>
 
         <Spacer />
-        <Button>
+        <Button
+          onClick={() => {
+            console.log('empty')
+          }}
+        >
           <SVGIconEmpty />
           <Box marginLeft="10px">Empty</Box>
         </Button>
