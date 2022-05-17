@@ -167,11 +167,11 @@ export const InboxComponent: React.FC = () => {
   const api = useAPI()
 
   const [newPageIndex, setNewPageIndex] = useState(0)
-  const [pageIndexSeen, setPageIndexSeen] = useState(0)
-  const [seenHasNext, setSeenHasNext] = useState(true)
-
   const [newMessages, setNewMessages] = useState<any>([])
+
+  const [pageIndexSeen, setPageIndexSeen] = useState(0)
   const [seenMessages, setSeenMessages] = useState<any>([])
+  const [seenHasNext, setSeenHasNext] = useState(true)
 
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
 
@@ -206,7 +206,7 @@ export const InboxComponent: React.FC = () => {
 
     const pageIndex = page === undefined ? pageIndexSeen + 1 : 0
     setIsFetching(true)
-    const { data } = await api.getMailboxesMessages('INBOX', pageIndex)
+    const { data } = await api.getMessagesSeen(pageIndex)
 
     if (data?.messages?.length) {
       const newState = formatState(data.messages)

@@ -1,6 +1,7 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SERVER_URL } from '../constants/env'
 import { mockSignatures } from '../mocks/signature'
+import { Mailboxes } from './mailboxes'
 
 export interface LoginResponse {
   uuid: string
@@ -115,6 +116,48 @@ export class API {
         path,
         pageSize,
         page,
+      },
+    })
+  }
+
+  public async getMessagesSearch(
+    path: string,
+    page: number,
+    search: Object,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.post('/mailbox/account/search', {
+      path,
+      pageSize,
+      page,
+      search,
+    })
+  }
+
+  public async getMessagesNew(
+    page: number,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.post('/mailbox/account/search', {
+      path: Mailboxes.INBOX,
+      pageSize,
+      page,
+      search: {
+        unseen: true,
+      },
+    })
+  }
+
+  public async getMessagesSeen(
+    page: number,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.post('/mailbox/account/search', {
+      path: Mailboxes.INBOX,
+      pageSize,
+      page,
+      search: {
+        seen: true,
       },
     })
   }
