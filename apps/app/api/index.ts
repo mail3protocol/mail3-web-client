@@ -17,6 +17,13 @@ export interface AliasResponse {
   aliases: Alias[]
 }
 
+export interface MailboxesMessagesResponse {
+  messages: Array<any>
+  page: number
+  pages: number
+  total: number
+}
+
 export class API {
   private account: string
 
@@ -95,7 +102,7 @@ export class API {
     path: string,
     page: number,
     pageSize: number = 20
-  ): Promise<AxiosResponse<void>> {
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
     return this.axios.get('/mailbox/account/messages', {
       params: {
         path,

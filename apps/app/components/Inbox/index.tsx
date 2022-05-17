@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 import { Box, Center, Circle, Flex } from '@chakra-ui/react'
@@ -120,6 +121,7 @@ mockList.newMessages = [...mockList.newMessages, ...mockList.newMessages]
 mockList.seenMessages = [...mockList.seenMessages, ...mockList.seenMessages]
 mockList.seenMessages = [...mockList.seenMessages, ...mockList.seenMessages]
 
+const PAGE_SIZE = 20
 export enum PageType {
   Inbox,
   Subscrption,
@@ -133,26 +135,54 @@ const TitleBox = styled(Box)`
   line-height: 30px;
 `
 
+const formatState = (data: any) => {
+  if (!data.length) return []
+
+  const newData = data.map((item: any) => {
+    const { subject, unseen, messageId, date, from, to, id, uid, text } = item
+    return {
+      id,
+      uid,
+      subject,
+      unseen,
+      messageId,
+      date,
+      from,
+      to,
+      text,
+      avatar: '',
+      // ui need state
+      isChoose: false,
+      avatarBadgeType: AvatarBadgeType.None,
+      itemType: ItemType.None,
+    }
+  })
+
+  return newData
+}
+
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
-  const [newPageIndex, setNewPageIndex] = useState(1)
-  const [seenPageIndex, setSeenPageIndex] = useState(1)
-  const [newMessages, setNewMessages] = useState<any>([])
-  const [seenMessages, setSeenMessages] = useState<any>([])
   const [pageType] = useAtom(pageTypeAtom)
-  const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
   const api = useAPI()
 
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  const [isFetching, setIsFetching] = useInfiniteScroll(fetchMore)
+  const [newPageIndex, setNewPageIndex] = useState(0)
+  const [pageIndexSeen, setPageIndexSeen] = useState(0)
+  const [seenHasNext, setSeenHasNext] = useState(true)
+
+  const [newMessages, setNewMessages] = useState<any>([])
+  const [seenMessages, setSeenMessages] = useState<any>([])
+
+  const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
+
+  const [, setIsFetching] = useInfiniteScroll(fetchDateSeen)
 
   useDidMount(async () => {
     console.log('InboxComponent useDidMount')
     setNewMessages(mockList.newMessages)
     setSeenMessages(mockList.seenMessages)
 
-    // await api.getMailboxes()
-    await api.getMailboxesMessages('INBOX', 0)
+    fetchDateSeen(0)
   })
 
   useEffect(() => {
@@ -171,24 +201,25 @@ export const InboxComponent: React.FC = () => {
     setNewMessages(newDate)
   }
 
-  function seenLoadMore() {
-    console.log('seenPageIndex', seenPageIndex)
-    const index = seenPageIndex + 1
-    // page + 1, get new date
-    const newDate: any = update(seenMessages, {
-      $push: [mockItem, mockItem, mockItem, mockItem, mockItem, mockItem],
-    })
+  async function fetchDateSeen(page: number | undefined) {
+    if (!seenHasNext) return
 
-    setSeenPageIndex(index)
-    setSeenMessages(newDate)
-  }
+    const pageIndex = page === undefined ? pageIndexSeen + 1 : 0
+    setIsFetching(true)
+    const { data } = await api.getMailboxesMessages('INBOX', pageIndex)
 
-  function fetchMore() {
-    console.log('fetch more')
-    setTimeout(() => {
-      seenLoadMore()
+    if (data?.messages?.length) {
+      const newState = formatState(data.messages)
+      const newDate: any = update(seenMessages, {
+        $push: newState,
+      })
+      console.log('newDate', newDate)
+      setSeenMessages(newDate)
       setIsFetching(false)
-    }, 1000)
+      setPageIndexSeen(pageIndex)
+    } else {
+      setSeenHasNext(false)
+    }
   }
 
   const updateItem = (type: string) => (index: number) => {
