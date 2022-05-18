@@ -27,102 +27,8 @@ import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 
 import SVGWrite from '../../assets/icon-write.svg'
 
-const mockItem = {
-  avatar: '',
-  id: 123,
-  emailId: 123,
-  messageId: 123,
-  unseen: true,
-  date: '2022-02-01 / 12:01 am',
-  subject: 'subject subject subject',
-  desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
-}
-
-const mockList = {
-  new: {
-    total: 100,
-    page: 1,
-    size: 20,
-  },
-  seen: {
-    total: 100,
-    page: 1,
-    size: 20,
-  },
-  total: 100,
-  page: 1,
-  size: 20,
-  seenMessages: [
-    {
-      avatar: '',
-      id: 123,
-      emailId: 123,
-      messageId: 123,
-      unseen: false,
-      date: '2022-02-01 / 12:01 am',
-      subject: 'subject subject subject',
-      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
-
-      // other state props
-      isChoose: false,
-      avatarBadgeType: AvatarBadgeType.None,
-    },
-    {
-      avatar: '',
-      id: 123,
-      emailId: 123,
-      messageId: 123,
-      unseen: false,
-      date: '2022-02-01 / 12:01 am',
-      subject: 'subject subject subject',
-      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
-
-      // other state props
-      isChoose: false,
-      avatarBadgeType: AvatarBadgeType.SentOK,
-      itemType: ItemType.None,
-    },
-    {
-      avatar: '',
-      id: 123,
-      emailId: 123,
-      messageId: 123,
-      unseen: false,
-      date: '2022-02-01 / 12:01 am',
-      subject: 'subject subject subject',
-      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
-
-      // other state props
-      isChoose: false,
-      avatarBadgeType: AvatarBadgeType.SentFail,
-      itemType: ItemType.Fail,
-    },
-  ],
-  newMessages: [
-    {
-      avatar: '',
-      id: 123,
-      emailId: 123,
-      messageId: 123,
-      unseen: true,
-      date: '2022-02-01 / 12:01 am',
-      subject: 'subject subject subject',
-      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
-
-      // other state props
-      isChoose: false,
-      avatarBadgeType: AvatarBadgeType.New,
-    },
-  ],
-}
-
-mockList.newMessages = [...mockList.newMessages, ...mockList.newMessages]
-mockList.newMessages = [...mockList.newMessages, ...mockList.newMessages]
-
-mockList.seenMessages = [...mockList.seenMessages, ...mockList.seenMessages]
-mockList.seenMessages = [...mockList.seenMessages, ...mockList.seenMessages]
-
 const PAGE_SIZE = 20
+
 export enum PageType {
   Inbox,
   Subscrption,
@@ -169,6 +75,7 @@ export const InboxComponent: React.FC = () => {
 
   const [newPageIndex, setNewPageIndex] = useState(0)
   const [newMessages, setNewMessages] = useState<any>([])
+  const [surplus, setSurplus] = useState(0)
 
   const [pageIndexSeen, setPageIndexSeen] = useState(0)
   const [seenMessages, setSeenMessages] = useState<any>([])
@@ -185,7 +92,7 @@ export const InboxComponent: React.FC = () => {
       return data
     },
     {
-      refetchInterval: 1000,
+      refetchInterval: 10000,
       onSuccess(d) {
         if (d.messages.length) {
           const newItem = d.messages.filter((i) =>
@@ -196,6 +103,34 @@ export const InboxComponent: React.FC = () => {
             $unshift: newState,
           })
 
+          setSurplus(d.total - newDate.length)
+          setNewMessages(newDate)
+        }
+      },
+    }
+  )
+
+  useQuery(
+    ['getNewMessages', newPageIndex],
+    async () => {
+      const { data } = await api.getMessagesNew(newPageIndex)
+      return data
+    },
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess(d) {
+        if (d.messages.length) {
+          const newItem = d.messages.filter((i) =>
+            newMessages.every((i2: { id: any }) => i2.id !== i.id)
+          )
+          const newState = formatState(newItem, AvatarBadgeType.None)
+          const newDate: any = update(newMessages, {
+            $push: newState,
+          })
+
+          setSurplus(d.total - newDate.length)
           setNewMessages(newDate)
         }
       },
@@ -203,28 +138,12 @@ export const InboxComponent: React.FC = () => {
   )
 
   useDidMount(async () => {
-    // console.log('InboxComponent useDidMount')
-    // setNewMessages(mockList.newMessages)
-    // setSeenMessages(mockList.seenMessages)
-
     fetchDateSeen(0)
   })
 
   useEffect(() => {
     console.log('pageType:', pageType)
   }, [pageType])
-
-  const newLoadMore = () => {
-    console.log('newPageIndex', newPageIndex)
-    const index = newPageIndex + 1
-    // page + 1, get new date
-    const newDate: any = update(newMessages, {
-      $push: [mockItem, mockItem, mockItem, mockItem, mockItem, mockItem],
-    })
-
-    setNewPageIndex(index)
-    setNewMessages(newDate)
-  }
 
   async function fetchDateSeen(page: number | undefined) {
     if (!seenHasNext) return
@@ -311,15 +230,15 @@ export const InboxComponent: React.FC = () => {
                   <Box padding="30px 64px">
                     <TitleBox>New</TitleBox>
                     <BoxList data={newMessages} update={updateItem('new')} />
-                    {newPageIndex < 10 && (
+                    {surplus > 0 && (
                       <Center>
                         <Button
                           variant="outline"
                           onClick={() => {
-                            newLoadMore()
+                            setNewPageIndex(newPageIndex + 1)
                           }}
                         >
-                          load more +10
+                          load more +{PAGE_SIZE}
                         </Button>
                         <Circle
                           size="40px"
@@ -327,7 +246,7 @@ export const InboxComponent: React.FC = () => {
                           color="white"
                           marginLeft="10px"
                         >
-                          100
+                          {surplus}
                         </Circle>
                       </Center>
                     )}
