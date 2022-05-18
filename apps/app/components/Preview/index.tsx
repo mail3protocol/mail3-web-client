@@ -15,6 +15,7 @@ import { useQuery } from 'react-query'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import { AddressListResponse, AddressResponse } from '../../api'
+import { truncateMiddle } from '../../utils'
 
 interface MeesageDetail {
   date: string
@@ -164,8 +165,9 @@ export const PreviewComponent: React.FC = () => {
                 to{' '}
                 {detail?.to
                   .map((item) => {
-                    if (item.name) return `${item.name} <${item.address}>`
-                    return `<${item.address}>`
+                    const address = truncateMiddle(item.address, 6, 6)
+                    if (item.name) return `${item.name} <${address}>`
+                    return `<${address}>`
                   })
                   .join(';')}
               </Box>
