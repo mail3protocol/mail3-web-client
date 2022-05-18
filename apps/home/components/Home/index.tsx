@@ -1,9 +1,8 @@
 import { Flex } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Navbar } from './navbar'
 import { RainbowBar } from './rainbowBar'
 import { isBetaTestingStage, isWhiteListStage } from '../../utils'
-import { Letter } from './letter'
 import { Dao } from './dao'
 import { Ecosystem } from './ecosystem'
 import { WhitelistGuide } from './whitelistGuide'
@@ -24,7 +23,6 @@ export const Home: React.FC = () => {
       <ScrollAnimation>
         <Banner />
       </ScrollAnimation>
-      <Letter />
       <Dao />
       <Ecosystem />
       {inWhiteListStage ? <WhitelistGuide /> : null}

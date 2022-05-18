@@ -7,6 +7,7 @@ import { Banner, HIDDEN_SCROLL_Y } from './banner'
 import EnvelopeBgPath from '../../assets/png/envelope/bg.png'
 import EnvelopeCoverClosePath from '../../assets/png/envelope/cover-close.png'
 import EnvelopeCoverOpenPath from '../../assets/png/envelope/cover-open.png'
+import { LetterContent, LetterContentContainer } from './letter'
 
 const ENVELOPE_RADIO = 95 / 157
 
@@ -68,7 +69,7 @@ export const ScrollAnimation: React.FC = () => {
     hiddenCoverClose,
   } = useMemo(() => {
     const coverCloseRotateX =
-      scrollY > 970 ? Math.floor(Math.min((scrollY - 970) / 200, 1) * 82) : 0
+      scrollY > 970 ? Math.floor(Math.min((scrollY - 970) / 200, 1) * 80) : 0
     const coverOpenRotateX =
       scrollY > 1170
         ? 90 - Math.floor(Math.min((scrollY - 1170) / 200, 1) * 90)
@@ -77,14 +78,14 @@ export const ScrollAnimation: React.FC = () => {
     return {
       envelopeCoverCloseRotateX: coverCloseRotateX,
       envelopeCoverOpenRotateX: coverOpenRotateX,
-      hiddenCoverClose: coverCloseRotateX >= 82,
+      hiddenCoverClose: coverCloseRotateX >= 80,
     }
   }, [scrollY])
 
   return (
     <Box
       position="relative"
-      h={`${height - 60 + HIDDEN_SCROLL_Y + 3000}px`}
+      h={`${height - 60 + HIDDEN_SCROLL_Y + 2000}px`}
       w="full"
     >
       <Flex w="100%" position="sticky" top="60px" zIndex={2}>
@@ -133,14 +134,14 @@ export const ScrollAnimation: React.FC = () => {
           w="100vw"
           h="calc(100vh - 60px)"
           position="absolute"
-          zIndex={2}
-          bg="#fff"
+          zIndex={4}
           top={0}
           left={0}
           style={{
             opacity: scrollY > 382 ? 1 : 0,
             perspective: 2000,
           }}
+          overflow="hidden"
         >
           <Center
             transition="50ms"
@@ -153,9 +154,7 @@ export const ScrollAnimation: React.FC = () => {
           >
             <Box
               position="relative"
-              bg="#e7e7e7"
-              shadow="0 0 20px rgba(0, 0, 0, 0.1)"
-              borderBottomRadius="12px"
+              // shadow="0 0 20px rgba(0, 0, 0, 0.1)"
               w="full"
             >
               <Image src={EnvelopeBgPath.src} w="full" h="auto" />
@@ -180,6 +179,40 @@ export const ScrollAnimation: React.FC = () => {
                   }}
                 />
               </Box>
+            </Box>
+          </Center>
+        </Box>
+        {/* 👇 LetterBackground */}
+        <Box
+          w="100vw"
+          h="calc(100vh - 60px)"
+          position="absolute"
+          zIndex={2}
+          top={0}
+          left={0}
+          style={{
+            opacity: scrollY > 382 ? 1 : 0,
+            perspective: 2000,
+          }}
+          overflow="hidden"
+        >
+          <Center
+            transition="50ms"
+            style={{
+              transform: letterTransform,
+            }}
+            w="full"
+            h="full"
+            position="relative"
+          >
+            <Box
+              position="relative"
+              bg="#e7e7e7"
+              shadow="0 0 20px rgba(0, 0, 0, 0.1)"
+              borderBottomRadius="12px"
+              w="full"
+            >
+              <Image src={EnvelopeBgPath.src} w="full" h="auto" opacity={0} />
               <Box
                 w="full"
                 h="auto"
@@ -207,7 +240,39 @@ export const ScrollAnimation: React.FC = () => {
             </Box>
           </Center>
         </Box>
-        {/* TODO: 👇 LetterBackground */}
+        {/* 👇 LetterContent */}
+        <Flex
+          direction="column"
+          justify="center"
+          align="center"
+          w="100vw"
+          position="absolute"
+          left="0"
+          top="90%"
+          zIndex={3}
+          style={{
+            opacity: scrollY > 1000 ? 1 : 0,
+          }}
+        >
+          <LetterContentContainer
+            maxW={`${CONTAINER_MAX_WIDTH - 90}px`}
+            w="full"
+            rounded="40px"
+            px={{
+              base: '20px',
+              md: '10%',
+              lg: '140px',
+            }}
+            pb="300px"
+            shadow="0 0 20px rgba(0, 0, 0, 0.15)"
+            bg="#fff"
+            style={{
+              transform: `translateY(-${Math.min(scrollY, 2100) - 800}px)`,
+            }}
+          >
+            <LetterContent />
+          </LetterContentContainer>
+        </Flex>
       </Flex>
     </Box>
   )

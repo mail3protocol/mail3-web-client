@@ -43,7 +43,7 @@ export const LetterContentContainer = styled(Box)`
   }
 `
 
-const LetterContent = () => (
+export const LetterContent = () => (
   <>
     <Heading as="h1">What is Mail3?</Heading>
     <Heading as="h2">The web3 native communication protocol</Heading>
