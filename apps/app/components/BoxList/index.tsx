@@ -13,8 +13,10 @@ import styled from '@emotion/styled'
 import { atom, useAtom } from 'jotai'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
 import ChooseSVG from '../../assets/choose.svg'
 import { AddressListResponse, AddressResponse } from '../../api'
+import { RoutePath } from '../../route/path'
 
 export const isChooseModeAtom = atom<boolean>(false)
 
@@ -208,21 +210,25 @@ const Item = ({
   )
 }
 
-export const BoxList: React.FC<BoxListProps> = ({ data, update }) => (
-  <Box>
-    {data.map((item, index) => {
-      const { id } = item
-      return (
-        <Item
-          key={id}
-          {...item}
-          index={index}
-          update={update}
-          onClick={() => {
-            console.log('jump', id)
-          }}
-        />
-      )
-    })}
-  </Box>
-)
+export const BoxList: React.FC<BoxListProps> = ({ data, update }) => {
+  const router = useRouter()
+
+  return (
+    <Box>
+      {data.map((item, index) => {
+        const { id } = item
+        return (
+          <Item
+            key={id}
+            {...item}
+            index={index}
+            update={update}
+            onClick={() => {
+              router.push(`${RoutePath.Meesage}/${id}`)
+            }}
+          />
+        )
+      })}
+    </Box>
+  )
+}
