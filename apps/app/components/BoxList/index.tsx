@@ -43,6 +43,7 @@ export interface BoxItemProps {
   to: AddressListResponse
   from: AddressResponse
   date: string
+
   isChoose: boolean
   avatarBadgeType: AvatarBadgeType
   itemType: ItemType

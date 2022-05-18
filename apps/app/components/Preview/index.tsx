@@ -2,62 +2,61 @@ import React, { useEffect, useRef, useState } from 'react'
 import { AvatarGroup, Box, Center, Avatar, Text, Flex } from '@chakra-ui/react'
 import { useDidMount } from 'hooks'
 import { useRouter } from 'next/router'
+import { useQuery } from 'react-query'
+import dayjs from 'dayjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
+import { useAPI } from '../../hooks/useAPI'
+import { AddressListResponse, AddressResponse } from '../../api'
 
-const mockData = {}
-
-function createMarkup() {
-  return {
-    __html: `Things you can do on a contact’s page
-  Decide if their email should go to The Imbox, The Feed, or The Paper Trail. Just click the “Delivering to...” button under their name. If you change the destination, all existing and future email will be moved automatically.
-
-  Automatically label their email. Always want someone’s emails to go into a specific label? Easy, just click the “Autofile...” button and pick the label.
-
-  Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-
-  Kick off a new email to that contact. Just click the "+ Write" button from a contact’s page, and a new email will be automatically addressed to that person.
-
-  Pretty powerful stuff.
-  Things you can do on a contact’s page
-  Decide if their email should go to The Imbox, The Feed, or The Paper Trail. Just click the “Delivering to...” button under their name. If you change the destination, all existing and future email will be moved automatically.
-
-  Automatically label their email. Always want someone’s emails to go into a specific label? Easy, just click the “Autofile...” button and pick the label.
-
-  Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-
-  Kick off a new email to that contact. Just click the "+ Write" button from a contact’s page, and a new email will be automatically addressed to that person.
-
-  Pretty powerful stuff.Things you can do on a contact’s page
-  Decide if their email should go to The Imbox, The Feed, or The Paper Trail. Just click the “Delivering to...” button under their name. If you change the destination, all existing and future email will be moved automatically.
-
-  Automatically label their email. Always want someone’s emails to go into a specific label? Easy, just click the “Autofile...” button and pick the label.
-
-  Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-
-  Kick off a new email to that contact. Just click the "+ Write" button from a contact’s page, and a new email will be automatically addressed to that person.
-
-  Pretty powerful stuff.Things you can do on a contact’s page
-  Decide if their email should go to The Imbox, The Feed, or The Paper Trail. Just click the “Delivering to...” button under their name. If you change the destination, all existing and future email will be moved automatically.
-
-  Automatically label their email. Always want someone’s emails to go into a specific label? Easy, just click the “Autofile...” button and pick the label.
-
-  Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-
-  Kick off a new email to that contact. Just click the "+ Write" button from a contact’s page, and a new email will be automatically addressed to that person.
-
-  Pretty powerf`,
-  }
+interface MeesageDetail {
+  date: string
+  subject: string
+  to: AddressListResponse
+  from: AddressResponse
 }
 
 export const PreviewComponent: React.FC = () => {
-  const [data, setData] = useState(mockData)
+  // const [data, setData] = useState(mockData)
   const router = useRouter()
   const { id } = router.query
   const contentRef = useRef<HTMLDivElement>(null)
+  const [content, setContent] = useState('')
+  const [detail, setDetail] = useState<MeesageDetail>()
+  const api = useAPI()
 
   useDidMount(() => {
     console.log('PreviewComponent useDidMount', id)
   })
+
+  useQuery(
+    ['preview', id],
+    async () => {
+      if (typeof id !== 'string') return {}
+      const { data: messageData } = await api.getMessageData(id)
+      const { data: textData } = await api.getTextData(messageData.text.id)
+
+      return {
+        messageData,
+        html: textData.html,
+      }
+    },
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess(d) {
+        console.log(d)
+        const { messageData, html } = d
+        setDetail({
+          date: dayjs(messageData.date).format('YYYY-MM-DD h:mm A'),
+          subject: messageData.subject,
+          to: messageData.to,
+          from: messageData.from,
+        })
+        setContent(html)
+      },
+    }
+  )
 
   return (
     <>
@@ -111,7 +110,7 @@ export const PreviewComponent: React.FC = () => {
             fontSize="28px"
             lineHeight={1.2}
           >
-            Getting around with the Mail3 Menu
+            {detail?.subject}
           </Text>
         </Box>
         <Box>
@@ -126,28 +125,49 @@ export const PreviewComponent: React.FC = () => {
                 justify="space-between"
               >
                 <Box>
-                  <Box fontWeight={500} fontSize="24px" display="inline-block">
-                    Sender name
+                  <Box
+                    fontWeight={500}
+                    fontSize="24px"
+                    display="inline-block"
+                    verticalAlign="middle"
+                  >
+                    {detail?.from.name}
                   </Box>
-                  <Box fontWeight={400} fontSize="12px" display="inline-block">
-                    {'<0x956...b256@mail3.me>'}
+                  <Box
+                    color="#6F6F6F"
+                    fontWeight={400}
+                    fontSize="14px"
+                    display="inline-block"
+                    verticalAlign="middle"
+                    marginLeft="5px"
+                  >
+                    {detail?.from.address}
                   </Box>
                 </Box>
                 <Box />
                 <Box fontWeight={500} fontSize="16px" color="#6F6F6F">
-                  Mar 2, 12:01 am
+                  {detail?.date}
                 </Box>
               </Flex>
               <Box fontWeight={500} fontSize="16px" color="#6F6F6F">
-                {
-                  'to satoshi.eth <satoshi.eth@mail3.me>; nakamoto.eth <nakamoto.eth@mail3.me> to satoshi.eth <satoshi.eth@mail3.me>; nakamoto.eth <nakamoto.eth@mail3.me>'
-                }
+                to{' '}
+                {detail?.to
+                  .map((item) => {
+                    if (item.name) return `${item.name} <${item.address}>`
+                    return `<${item.address}>`
+                  })
+                  .join(';')}
               </Box>
             </Box>
           </Flex>
         </Box>
         <Box paddingTop="24px" paddingLeft="65px">
-          <div ref={contentRef} dangerouslySetInnerHTML={createMarkup()} />
+          <div
+            ref={contentRef}
+            dangerouslySetInnerHTML={{
+              __html: content,
+            }}
+          />
         </Box>
       </Box>
     </>
