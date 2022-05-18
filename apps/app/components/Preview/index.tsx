@@ -1,9 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { AvatarGroup, Box, Center, Avatar, Text, Flex } from '@chakra-ui/react'
+import dayjs from 'dayjs'
+import { Avatar } from 'ui'
+import {
+  AvatarGroup,
+  Avatar as RawAvatar,
+  Box,
+  Center,
+  Text,
+  Flex,
+} from '@chakra-ui/react'
 import { useDidMount } from 'hooks'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
-import dayjs from 'dayjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import { AddressListResponse, AddressResponse } from '../../api'
@@ -45,7 +53,6 @@ export const PreviewComponent: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        console.log(d)
         const { messageData, html } = d
         setDetail({
           date: dayjs(messageData.date).format('YYYY-MM-DD h:mm A'),
@@ -85,9 +92,15 @@ export const PreviewComponent: React.FC = () => {
       <Center>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={10}>
-            {detail?.from && <Avatar name={detail?.from.name} />}
+            {detail?.from && (
+              <Avatar address={detail.from.address} borderRadius="50%" />
+            )}
             {detail?.to.map((item) => (
-              <Avatar name={item.name} key={item.address} />
+              <Avatar
+                key={item.address}
+                address={item.address}
+                borderRadius="50%"
+              />
             ))}
           </AvatarGroup>
         </Box>
@@ -112,7 +125,9 @@ export const PreviewComponent: React.FC = () => {
         <Box>
           <Flex>
             <Box w="48px">
-              <Avatar />
+              {detail?.from && (
+                <Avatar address={detail.from.address} borderRadius="50%" />
+              )}
             </Box>
             <Box borderBottom="1px solid #E7E7E7;" flex={1} marginLeft="17px">
               <Flex
