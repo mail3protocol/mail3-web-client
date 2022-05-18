@@ -32,11 +32,10 @@ data = [...data, ...data]
 data = [...data, ...data]
 
 const TitleBox = styled(Box)`
-font-weight: 700;
-font-size: 20px;
-line-height: 30px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
 `
-
 
 export const SentComponent: React.FC = () => {
   const [t] = useTranslation('inbox')

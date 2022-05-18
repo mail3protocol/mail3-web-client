@@ -136,7 +136,7 @@ const TitleBox = styled(Box)`
   line-height: 30px;
 `
 
-const formatState = (data: any, avatarBadgeType) => {
+const formatState = (data: any, avatarBadgeType: AvatarBadgeType) => {
   if (!data.length) return []
 
   const newData = data.map((item: any) => {
