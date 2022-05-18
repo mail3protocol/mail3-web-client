@@ -11,6 +11,7 @@ import SVGTrash from '../../assets/trash.svg'
 import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
+import { Mailboxes } from '../../api/mailboxes'
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
@@ -31,7 +32,7 @@ export const TrashComponent: React.FC = () => {
 
     const _pageIndex = page === undefined ? pageIndex + 1 : 0
     setIsFetching(true)
-    const { data } = await api.getMailboxesMessages('INBOX', _pageIndex)
+    const { data } = await api.getMailboxesMessages(Mailboxes.Trash, _pageIndex)
 
     if (data?.messages?.length) {
       const newDate: any = update(messages, {
