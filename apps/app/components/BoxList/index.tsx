@@ -7,6 +7,7 @@ import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import dayjs from 'dayjs'
 import ChooseSVG from '../../assets/choose.svg'
 import { AddressListResponse, AddressResponse } from '../../api'
+import { MessageItem } from '../Inbox'
 
 export const isChooseModeAtom = atom<boolean>(false)
 
@@ -23,7 +24,7 @@ export enum ItemType {
 }
 
 export interface BoxListProps {
-  data: Array<BoxItemProps>
+  data: Array<MessageItem>
   update?: (index: number) => void
   onBodyClick: (id: string) => void
 }

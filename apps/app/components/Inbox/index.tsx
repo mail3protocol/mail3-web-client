@@ -18,22 +18,36 @@ import {
 import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
-import {
-  StickyButtonBox,
-  SuspendButton,
-  SuspendButtonType,
-} from '../SuspendButton'
+import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 
 import SVGWrite from '../../assets/icon-write.svg'
 import { RoutePath } from '../../route/path'
+import { AddressListResponse, AddressResponse } from '../../api'
 
 const PAGE_SIZE = 20
 
 export enum PageType {
   Inbox,
   Subscrption,
+}
+
+export interface MessageItem {
+  id: string
+  uid: string
+  subject: string
+  unseen: boolean
+  messageId: string
+  date: string
+  from: AddressResponse
+  to: AddressListResponse
+  // text:
+  avatar: ''
+  // ui need state
+  isChoose: false
+  avatarBadgeType: AvatarBadgeType
+  itemType: ItemType
 }
 
 export const pageTypeAtom = atom<PageType>(PageType.Inbox)
@@ -77,11 +91,11 @@ export const InboxComponent: React.FC = () => {
   const router = useRouter()
 
   const [newPageIndex, setNewPageIndex] = useState(0)
-  const [newMessages, setNewMessages] = useState<any>([])
+  const [newMessages, setNewMessages] = useState<Array<MessageItem>>([])
   const [surplus, setSurplus] = useState(0)
 
   const [pageIndexSeen, setPageIndexSeen] = useState(0)
-  const [seenMessages, setSeenMessages] = useState<any>([])
+  const [seenMessages, setSeenMessages] = useState<Array<MessageItem>>([])
   const [seenHasNext, setSeenHasNext] = useState(true)
 
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
@@ -176,28 +190,33 @@ export const InboxComponent: React.FC = () => {
   }
 
   const setNewToSeen = (ids: Array<string>) => {
-
     const targetMgs = ids.map((id) => {
-      let ret = {}
-      newMessages.some((_item: { id: string }) => {
+      let retIndex = -1
+      newMessages.some((_item, i) => {
         if (_item.id === id) {
-          ret = _item
+          retIndex = i
           return true
         }
         return false
       })
-      return ret
+      return retIndex
     })
 
-    console.log(targetMgs)
+    if (targetMgs.length) {
+      const newState = [...newMessages]
+      targetMgs.forEach((i) => {
+        newState[i].avatarBadgeType = AvatarBadgeType.None
+      })
+      setNewMessages(newState)
+    }
   }
 
   const updateItem = (type: string) => (index: number) => {
     console.log('update item index', index)
 
-    const oldDate = type === 'seen' ? seenMessages : newMessages
+    const oldDate: any = type === 'seen' ? seenMessages : newMessages
 
-    const newDate: any = update(oldDate, {
+    const newDate = update(oldDate, {
       [index]: {
         isChoose: {
           $set: !oldDate[index].isChoose,
@@ -215,8 +234,6 @@ export const InboxComponent: React.FC = () => {
       setNewMessages(newDate)
     }
   }
-
-  console.log('newMessages', newMessages)
 
   return (
     <Box>
