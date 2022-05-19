@@ -8,6 +8,7 @@ import { Button } from 'ui'
 import styled from '@emotion/styled'
 import update from 'immutability-helper'
 import { useQuery } from 'react-query'
+import { useRouter } from 'next/router'
 import {
   BoxList,
   AvatarBadgeType,
@@ -26,6 +27,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 
 import SVGWrite from '../../assets/icon-write.svg'
+import { RoutePath } from '../../route/path'
 
 const PAGE_SIZE = 20
 
@@ -72,6 +74,7 @@ export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
   const [pageType] = useAtom(pageTypeAtom)
   const api = useAPI()
+  const router = useRouter()
 
   const [newPageIndex, setNewPageIndex] = useState(0)
   const [newMessages, setNewMessages] = useState<any>([])
@@ -172,6 +175,23 @@ export const InboxComponent: React.FC = () => {
     }
   }
 
+  const setNewToSeen = (ids: Array<string>) => {
+
+    const targetMgs = ids.map((id) => {
+      let ret = {}
+      newMessages.some((_item: { id: string }) => {
+        if (_item.id === id) {
+          ret = _item
+          return true
+        }
+        return false
+      })
+      return ret
+    })
+
+    console.log(targetMgs)
+  }
+
   const updateItem = (type: string) => (index: number) => {
     console.log('update item index', index)
 
@@ -237,7 +257,14 @@ export const InboxComponent: React.FC = () => {
                 <Box>
                   <Box padding="30px 64px">
                     <TitleBox>New</TitleBox>
-                    <BoxList data={newMessages} update={updateItem('new')} />
+                    <BoxList
+                      data={newMessages}
+                      update={updateItem('new')}
+                      onBodyClick={(id) => {
+                        setNewToSeen([id])
+                        // router.push(`${RoutePath.Meesage}/${id}`)
+                      }}
+                    />
                     {surplus > 0 && (
                       <Center>
                         <Button
@@ -261,8 +288,14 @@ export const InboxComponent: React.FC = () => {
                   </Box>
 
                   <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
-                    <TitleBox>Seem</TitleBox>
-                    <BoxList data={seenMessages} update={updateItem('seen')} />
+                    <TitleBox>Seen</TitleBox>
+                    <BoxList
+                      data={seenMessages}
+                      update={updateItem('seen')}
+                      onBodyClick={(id) => {
+                        router.push(`${RoutePath.Meesage}/${id}`)
+                      }}
+                    />
                   </Box>
                 </Box>
               )}

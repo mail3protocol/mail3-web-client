@@ -1,22 +1,12 @@
 import React from 'react'
-import {
-  Avatar,
-  AvatarBadge,
-  AvatarGroup,
-  Box,
-  Center,
-  Circle,
-  Flex,
-  Text,
-} from '@chakra-ui/react'
+import { Avatar } from 'ui'
+import { AvatarBadge, Box, Center, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { atom, useAtom } from 'jotai'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import dayjs from 'dayjs'
-import { useRouter } from 'next/router'
 import ChooseSVG from '../../assets/choose.svg'
 import { AddressListResponse, AddressResponse } from '../../api'
-import { RoutePath } from '../../route/path'
 
 export const isChooseModeAtom = atom<boolean>(false)
 
@@ -35,10 +25,11 @@ export enum ItemType {
 export interface BoxListProps {
   data: Array<BoxItemProps>
   update?: (index: number) => void
+  onBodyClick: (id: string) => void
 }
 
 export interface BoxItemProps {
-  id: string | number
+  id: string
   index: number
   subject: string
   // desc: string
@@ -107,7 +98,9 @@ const Item = ({
   const AvatarBox = (
     <Flex w="96px">
       <Avatar
-        size="md"
+        address={from.address}
+        w="44px"
+        h="44px"
         showBorder
         onClick={(e) => {
           e.stopPropagation()
@@ -115,6 +108,7 @@ const Item = ({
           setIsChooseMode(true)
           return false
         }}
+        borderRadius="50%"
       >
         {AvatarBadgeE}
       </Avatar>
@@ -210,25 +204,25 @@ const Item = ({
   )
 }
 
-export const BoxList: React.FC<BoxListProps> = ({ data, update }) => {
-  const router = useRouter()
-
-  return (
-    <Box>
-      {data.map((item, index) => {
-        const { id } = item
-        return (
-          <Item
-            key={id}
-            {...item}
-            index={index}
-            update={update}
-            onClick={() => {
-              router.push(`${RoutePath.Meesage}/${id}`)
-            }}
-          />
-        )
-      })}
-    </Box>
-  )
-}
+export const BoxList: React.FC<BoxListProps> = ({
+  data,
+  update,
+  onBodyClick,
+}) => (
+  <Box>
+    {data.map((item, index) => {
+      const { id } = item
+      return (
+        <Item
+          key={id}
+          {...item}
+          index={index}
+          update={update}
+          onClick={() => {
+            onBodyClick(id)
+          }}
+        />
+      )
+    })}
+  </Box>
+)
