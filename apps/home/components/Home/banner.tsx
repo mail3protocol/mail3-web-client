@@ -14,8 +14,6 @@ import Illustration1Svg from '../../assets/svg/illustration/1.svg'
 import Illustration1Png from '../../assets/png/illustration/1.png'
 import Illustration3Png from '../../assets/png/illustration/3.png'
 
-export const HIDDEN_SCROLL_Y = 382
-
 export const Banner: React.FC<FlexProps> = ({ ...props }) => (
   <Flex
     direction="column"
