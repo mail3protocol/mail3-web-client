@@ -14,6 +14,8 @@ import { useAPI } from '../../hooks/useAPI'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
+import SVGNone from '../../assets/none.svg'
+import SVGIsBottom from '../../assets/is-bottom.svg'
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
@@ -88,6 +90,7 @@ export const TrashComponent: React.FC = () => {
         bgColor="#FFFFFF"
         boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
         borderRadius="24px"
+        minH="500px"
       >
         <Box>
           <Box padding="20px 64px">
@@ -103,6 +106,38 @@ export const TrashComponent: React.FC = () => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}
             />
+            {messages.length && (
+              <Flex h="200px" justifyContent="center" alignItems="center">
+                <Box>
+                  <Box
+                    fontSize="12px"
+                    fontWeight={400}
+                    lineHeight="18px"
+                    marginBottom="20px"
+                    textAlign="center"
+                  >
+                    This is bottom！
+                  </Box>
+                  <SVGIsBottom />
+                </Box>
+              </Flex>
+            )}
+            {!messages.length && (
+              <Flex h="200px" justifyContent="center" alignItems="center">
+                <Box>
+                  <Box
+                    fontSize="16px"
+                    fontWeight={400}
+                    lineHeight="18px"
+                    marginBottom="20px"
+                    textAlign="center"
+                  >
+                    Clean Trash!
+                  </Box>
+                  <SVGNone />
+                </Box>
+              </Flex>
+            )}
           </Box>
         </Box>
       </Box>

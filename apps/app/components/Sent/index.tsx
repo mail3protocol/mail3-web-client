@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { useDidMount } from 'hooks'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import { AvatarBadgeType, BoxList, ItemType } from '../BoxList'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { useAPI } from '../../hooks/useAPI'
+import SVGBottom from '../../assets/is-bottom.svg'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -64,6 +66,21 @@ export const SentComponent: React.FC = () => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}
             />
+
+            <Flex h="200px" justifyContent="center" alignItems="center">
+              <Box>
+                <Box
+                  fontSize="12px"
+                  fontWeight={400}
+                  lineHeight="18px"
+                  marginBottom="20px"
+                  textAlign="center"
+                >
+                  This is bottom！
+                </Box>
+                <SVGBottom />
+              </Box>
+            </Flex>
           </Box>
         </Box>
       </Box>

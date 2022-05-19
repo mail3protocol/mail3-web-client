@@ -7,12 +7,13 @@ import { useDidMount } from 'hooks'
 import update from 'immutability-helper'
 import { useRouter } from 'next/router'
 import { BoxList, isChooseModeAtom } from '../BoxList'
-import SVGDrafts from '../../assets/drafts.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
+import SVGDrafts from '../../assets/drafts.svg'
+import SVGNone from '../../assets/none.svg'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
@@ -33,7 +34,10 @@ export const DraftsComponent: React.FC = () => {
 
     const _pageIndex = page === undefined ? pageIndex + 1 : 0
     setIsFetching(true)
-    const { data } = await api.getMailboxesMessages(Mailboxes.Sent, _pageIndex)
+    const { data } = await api.getMailboxesMessages(
+      Mailboxes.Drafts,
+      _pageIndex
+    )
 
     if (data?.messages?.length) {
       const newDate: any = update(messages, {
@@ -110,6 +114,30 @@ export const DraftsComponent: React.FC = () => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}
             />
+
+            {!messages.length && (
+              <Flex
+                h="200px"
+                justifyContent="center"
+                alignItems="center"
+                direction="column"
+              >
+                <Box
+                  fontSize="16px"
+                  fontWeight={500}
+                  lineHeight="24px"
+                  marginBottom="20px"
+                  textAlign="center"
+                >
+                  <p>Any time you start writing a new Email, </p>
+                  <p>
+                    Mail3 will automatically save it as a draft along the way.
+                  </p>
+                  <p>Come here to find all your works in progress.</p>
+                </Box>
+                <SVGNone />
+              </Flex>
+            )}
           </Box>
         </Box>
       </Box>
