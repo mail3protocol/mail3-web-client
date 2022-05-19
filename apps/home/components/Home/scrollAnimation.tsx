@@ -88,7 +88,6 @@ export const ScrollAnimation: React.FC = () => {
       hiddenCoverClose: coverCloseRotateX >= 80,
     }
   }, [scrollY])
-  console.log(letterSize)
 
   return (
     <Box
@@ -272,7 +271,7 @@ export const ScrollAnimation: React.FC = () => {
         align="center"
         w="100vw"
         position="relative"
-        mt="1850px"
+        mt="1950px"
         zIndex={2}
         style={{
           opacity: scrollY > 1000 ? 1 : 0,
