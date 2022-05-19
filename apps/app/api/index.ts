@@ -46,6 +46,14 @@ export enum FlagAction {
 
 export type AddressListResponse = Array<AddressResponse>
 
+export interface UserResponse {
+  user_uuid: string
+  avatar: string
+  text_signature: string
+  text_sig_state: 'enabled' | 'disabled'
+  card_sig_state: 'enabled' | 'disabled'
+}
+
 export class API {
   private account: string
 
@@ -72,8 +80,8 @@ export class API {
     return this.axios.get(`/account/aliases`)
   }
 
-  public async getSignatures(): Promise<AxiosResponse<typeof mockSignatures>> {
-    return this.axios.get(`/signatures?address=${this.account}`)
+  public async getUserInfo(): Promise<AxiosResponse<UserResponse>> {
+    return this.axios.get(`/account/settings/info`)
   }
 
   public async login(
@@ -87,33 +95,24 @@ export class API {
     })
   }
 
-  public async setTextSignature(
-    enable: boolean,
-    text: string
-  ): Promise<AxiosResponse<void>> {
-    return this.axios.post(`/signatures`, {
-      address: this.account,
-      enable,
-      type: 'text',
-      text,
+  public async setTextSignature(text: string): Promise<AxiosResponse<void>> {
+    return this.axios.put(`/account/settings/text_signatures`, {
+      text_signature: text,
     })
   }
 
-  public async setCardSignature(enable: boolean): Promise<AxiosResponse<void>> {
-    return this.axios.post(`/signatures`, {
-      address: this.account,
-      enable,
-      type: 'card',
-    })
+  public async toggleTextSignature(): Promise<AxiosResponse<void>> {
+    return this.axios.put('/account/settings/text_sig_state_switches')
+  }
+
+  public async toggleCardSignature(): Promise<AxiosResponse<void>> {
+    return this.axios.put(`/account/settings/card_sig_state_switches`)
   }
 
   public async setDefaultSentAddress(
-    account: string
+    uuid: string
   ): Promise<AxiosResponse<void>> {
-    return this.axios.post('/ens-names', {
-      default_address: account,
-      current_address: this.account,
-    })
+    return this.axios.post(`/account/default_aliases/${uuid}`)
   }
 
   public async getMailboxes(): Promise<AxiosResponse<void>> {

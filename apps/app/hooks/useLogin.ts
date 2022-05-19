@@ -5,22 +5,19 @@ import type { GetServerSidePropsContext, GetServerSideProps } from 'next'
 import type { IncomingMessage } from 'http'
 import universalCookie from 'cookie'
 import {
+  COOKIE_KEY,
   useAccount,
   useConnector,
   useConnectWalletDialog,
   useProvider,
+  LoginInfo,
+  useJWT,
 } from 'hooks'
+import { useRouter } from 'next/router'
 import { atom, useAtomValue } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAPI } from './useAPI'
-
-const COOKIE_KEY = '__MAIL3__'
-
-export interface LoginInfo {
-  address: string
-  jwt: string
-  uuid: string
-}
+import { RoutePath } from '../route/path'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -31,11 +28,6 @@ export const useSetLoginCookie = () => {
       expires: now.add(14, 'day').toDate(),
     })
   }, [])
-}
-
-export const useJWT = () => {
-  const [cookie] = useCookies([COOKIE_KEY])
-  return cookie?.[COOKIE_KEY]?.jwt
 }
 
 export const useIsAuthenticated = () => {
@@ -85,40 +77,59 @@ export const useCloseAuthModal = () => {
 
 export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 
+export const allowWithoutAuthPaths = new Set<string>([RoutePath.Home])
+
 export const useAuth = () => {
   const isAuth = useIsAuthenticated()
   const account = useAccount()
   const openAuthModal = useOpenAuthModal()
+  const closeAuthModal = useCloseAuthModal()
   const [, , removeCookie] = useCookies([COOKIE_KEY])
+  const { onOpen: openConnectWalletModal } = useConnectWalletDialog()
   const provider = useProvider()
+  const router = useRouter()
   useEffect(() => {
     if (!isAuth && account) {
       openAuthModal()
     }
+    if (!account) {
+      closeAuthModal()
+    }
   }, [isAuth, account])
 
   useEffect(() => {
-    const clearCookie = () => {
+    if (!isAuth && !allowWithoutAuthPaths.has(router.pathname)) {
+      router.replace(RoutePath.Home)
+    }
+  }, [isAuth, router.pathname])
+
+  useEffect(() => {
+    const handleAccountChanged = () => {
       removeCookie(COOKIE_KEY, { path: '/' })
+    }
+    const handleDisconnect = () => {
+      removeCookie(COOKIE_KEY, { path: '/' })
+      closeAuthModal()
+      openConnectWalletModal()
     }
     const w = window as any
     const { ethereum } = w
     if (ethereum && ethereum.on) {
-      ethereum.on('disconnect', clearCookie)
-      ethereum.on('accountsChanged', clearCookie)
+      ethereum.on('disconnect', handleDisconnect)
+      ethereum.on('accountsChanged', handleAccountChanged)
     }
     if (provider && provider.on) {
-      provider.on('disconnect', clearCookie)
-      provider.on('accountsChanged', clearCookie)
+      provider.on('disconnect', handleDisconnect)
+      provider.on('accountsChanged', handleAccountChanged)
     }
     return () => {
       if (ethereum && ethereum.off) {
-        ethereum.off('disconnect', clearCookie)
-        ethereum.off('accountsChanged', clearCookie)
+        ethereum.off('disconnect', handleDisconnect)
+        ethereum.off('accountsChanged', handleAccountChanged)
       }
       if (provider && provider.off) {
-        provider.off('disconnect', clearCookie)
-        provider.off('accountsChanged', clearCookie)
+        provider.off('disconnect', handleDisconnect)
+        provider.off('accountsChanged', handleAccountChanged)
       }
     }
   }, [provider])
