@@ -92,16 +92,22 @@ export const InboxComponent: React.FC = () => {
       return data
     },
     {
-      refetchInterval: 10000,
+      refetchInterval: 1000,
       onSuccess(d) {
         if (d.messages.length) {
           const newItem = d.messages.filter((i) =>
             newMessages.every((i2: { id: any }) => i2.id !== i.id)
           )
-          const newState = formatState(newItem, AvatarBadgeType.None)
+          // console.log('newItem', newItem)
+
+          if (!newItem.length) return
+          // TODO
+          // BUG unshift not work
+          const newState = formatState(newItem, AvatarBadgeType.New)
           const newDate: any = update(newMessages, {
             $unshift: newState,
           })
+          // console.log('newDate', newDate)
 
           setSurplus(d.total - newDate.length)
           setNewMessages(newDate)
@@ -125,7 +131,7 @@ export const InboxComponent: React.FC = () => {
           const newItem = d.messages.filter((i) =>
             newMessages.every((i2: { id: any }) => i2.id !== i.id)
           )
-          const newState = formatState(newItem, AvatarBadgeType.None)
+          const newState = formatState(newItem, AvatarBadgeType.New)
           const newDate: any = update(newMessages, {
             $push: newState,
           })
@@ -189,6 +195,8 @@ export const InboxComponent: React.FC = () => {
       setNewMessages(newDate)
     }
   }
+
+  console.log('newMessages', newMessages)
 
   return (
     <Box>
