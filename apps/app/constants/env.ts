@@ -3,3 +3,12 @@ export const SERVER_URL =
 
 export const MAIL_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
+
+export const DISCORD_URL =
+  process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/'
+
+export const TWITTER_URL =
+  process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com/'
+
+export const WHITE_LIST_DOC_URL =
+  process.env.NEXT_PUBLIC_WHITE_LIST_DOC_URL || '#'

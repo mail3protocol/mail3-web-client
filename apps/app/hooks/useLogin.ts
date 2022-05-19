@@ -77,26 +77,18 @@ export const useCloseAuthModal = () => {
 
 export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 
-export const allowWithoutAuthPaths = new Set<string>([RoutePath.Home])
+export const allowWithoutAuthPaths = new Set<string>([
+  RoutePath.Home,
+  RoutePath.WhiteList,
+])
 
-export const useAuth = () => {
+export const useWalletChange = () => {
   const isAuth = useIsAuthenticated()
-  const account = useAccount()
-  const openAuthModal = useOpenAuthModal()
   const closeAuthModal = useCloseAuthModal()
   const [, , removeCookie] = useCookies([COOKIE_KEY])
   const { onOpen: openConnectWalletModal } = useConnectWalletDialog()
   const provider = useProvider()
   const router = useRouter()
-  useEffect(() => {
-    if (!isAuth && account) {
-      openAuthModal()
-    }
-    if (!account) {
-      closeAuthModal()
-    }
-  }, [isAuth, account])
-
   useEffect(() => {
     if (!isAuth && !allowWithoutAuthPaths.has(router.pathname)) {
       router.replace(RoutePath.Home)
@@ -133,6 +125,30 @@ export const useAuth = () => {
       }
     }
   }, [provider])
+}
+
+export const useAuth = () => {
+  const isAuth = useIsAuthenticated()
+  const account = useAccount()
+  const openAuthModal = useOpenAuthModal()
+  const closeAuthModal = useCloseAuthModal()
+  const router = useRouter()
+  useEffect(() => {
+    if (!isAuth && account) {
+      openAuthModal()
+    }
+    if (!account) {
+      closeAuthModal()
+    }
+  }, [isAuth, account])
+
+  useEffect(() => {
+    if (!isAuth && !allowWithoutAuthPaths.has(router.pathname)) {
+      router.replace(RoutePath.Home)
+    }
+  }, [isAuth, router.pathname])
+
+  useWalletChange()
 }
 
 export const useAuthModalOnBack = () => {

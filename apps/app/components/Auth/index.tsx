@@ -82,7 +82,11 @@ export const AuthModal: React.FC = () => {
           break
         }
         case SignupResponseCode.ConditionNotMeet:
-          toast(t('auth.errors.condition-not-meet'))
+          if (router.pathname === RoutePath.WhiteList) {
+            closeAuthModal()
+          } else {
+            toast(t('auth.errors.condition-not-meet'))
+          }
           break
         default:
           toast(
