@@ -76,7 +76,6 @@ export const PreviewComponent: React.FC = () => {
           {
             type: SuspendButtonType.Reply,
             onClick: () => {
-              console.log('replay')
               router.push({
                 pathname: '/message/new',
                 query: {
@@ -89,7 +88,6 @@ export const PreviewComponent: React.FC = () => {
           {
             type: SuspendButtonType.Forward,
             onClick: () => {
-              console.log('Forward')
               router.push({
                 pathname: '/message/new',
                 query: {

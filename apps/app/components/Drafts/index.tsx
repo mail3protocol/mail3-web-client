@@ -5,11 +5,14 @@ import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import update from 'immutability-helper'
+import { useRouter } from 'next/router'
 import { BoxList, isChooseModeAtom } from '../BoxList'
 import SVGDrafts from '../../assets/drafts.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
+import { RoutePath } from '../../route/path'
+import { Mailboxes } from '../../api/mailboxes'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
@@ -17,7 +20,7 @@ export const DraftsComponent: React.FC = () => {
   const [pageIndex, setPageIndex] = useState(0)
   const [hasNext, setHasNext] = useState(true)
   const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
-
+  const router = useRouter()
   const api = useAPI()
   const [, setIsFetching] = useInfiniteScroll(fetchDate)
 
@@ -30,7 +33,7 @@ export const DraftsComponent: React.FC = () => {
 
     const _pageIndex = page === undefined ? pageIndex + 1 : 0
     setIsFetching(true)
-    const { data } = await api.getMailboxesMessages('INBOX', _pageIndex)
+    const { data } = await api.getMailboxesMessages(Mailboxes.Sent, _pageIndex)
 
     if (data?.messages?.length) {
       const newDate: any = update(messages, {
@@ -100,7 +103,13 @@ export const DraftsComponent: React.FC = () => {
       >
         <Box>
           <Box padding="20px 64px">
-            <BoxList data={messages} update={updateItem} />
+            <BoxList
+              data={messages}
+              update={updateItem}
+              onBodyClick={(id) => {
+                router.push(`${RoutePath.Meesage}/${id}`)
+              }}
+            />
           </Box>
         </Box>
       </Box>

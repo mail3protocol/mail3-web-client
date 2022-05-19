@@ -257,7 +257,7 @@ export const InboxComponent: React.FC = () => {
               <InboxNav />
               <Button
                 onClick={() => {
-                  console.log('write')
+                  router.push(RoutePath.NewMessage)
                 }}
               >
                 <SVGWrite /> <Box ml="10px">Write</Box>
@@ -279,7 +279,7 @@ export const InboxComponent: React.FC = () => {
                       update={updateItem('new')}
                       onBodyClick={(id) => {
                         setNewToSeen([id])
-                        // router.push(`${RoutePath.Meesage}/${id}`)
+                        router.push(`${RoutePath.Meesage}/${id}`)
                       }}
                     />
                     {surplus > 0 && (

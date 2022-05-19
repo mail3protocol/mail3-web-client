@@ -1,4 +1,4 @@
-import { Box, Center, Flex, HStack } from '@chakra-ui/react'
+import { Box, Center, HStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 

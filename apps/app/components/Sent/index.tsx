@@ -1,35 +1,15 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useState } from 'react'
-import { Box, Center } from '@chakra-ui/react'
-import { atom, useAtom } from 'jotai'
+import React, { useState } from 'react'
+import { Box } from '@chakra-ui/react'
 import { useDidMount } from 'hooks'
 import styled from '@emotion/styled'
+import { useRouter } from 'next/router'
 import { AvatarBadgeType, BoxList, ItemType } from '../BoxList'
-import { Navbar } from '../Navbar'
-
-const mockList = {
-  message: [
-    {
-      avatar: '',
-      id: 123,
-      emailId: 123,
-      messageId: 123,
-      unseen: true,
-      date: '2022-02-01 / 12:01 am',
-      subject: 'subject subject subject',
-      desc: 'The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications. The HEY Team It’s like Mission Control for a contact. See all emails, set up delivery, toggle notifications.',
-
-      isChoose: false,
-      avatarBadgeType: AvatarBadgeType.SentFail,
-      itemType: ItemType.Fail,
-    },
-  ],
-}
-
-let data: any = mockList.message
-data = [...data, ...data]
-data = [...data, ...data]
-data = [...data, ...data]
+import { RoutePath } from '../../route/path'
+import { Mailboxes } from '../../api/mailboxes'
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
+import { useAPI } from '../../hooks/useAPI'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -39,12 +19,33 @@ const TitleBox = styled(Box)`
 
 export const SentComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<any>([])
+  const [pageIndex, setPageIndex] = useState(0)
+  const [hasNext, setHasNext] = useState(true)
+  const router = useRouter()
+  const api = useAPI()
+  const [, setIsFetching] = useInfiniteScroll(fetchDate)
 
   useDidMount(() => {
-    console.log('SentComponent useDidMount')
-    setMessages(data)
+    fetchDate(0)
   })
+
+  async function fetchDate(page: number | undefined) {
+    if (!hasNext) return
+
+    const _pageIndex = page === undefined ? pageIndex + 1 : 0
+    setIsFetching(true)
+    const { data } = await api.getMailboxesMessages(Mailboxes.Sent, _pageIndex)
+
+    if (data?.messages?.length) {
+      const newDate = [...messages, ...data.messages]
+      setMessages(newDate)
+      setIsFetching(false)
+      setPageIndex(_pageIndex)
+    } else {
+      setHasNext(false)
+    }
+  }
 
   return (
     <Box>
@@ -57,7 +58,12 @@ export const SentComponent: React.FC = () => {
         <Box>
           <Box padding="20px 64px">
             <TitleBox>Sent</TitleBox>
-            <BoxList data={messages} />
+            <BoxList
+              data={messages}
+              onBodyClick={(id) => {
+                router.push(`${RoutePath.Meesage}/${id}`)
+              }}
+            />
           </Box>
         </Box>
       </Box>
