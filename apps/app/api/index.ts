@@ -30,6 +30,20 @@ export interface AddressResponse {
   address: string
 }
 
+export enum FlagType {
+  Answered = '\\Answered ',
+  Flagged = '\\Flagged',
+  Deleted = '\\Deleted',
+  Seen = '\\Seen',
+  Draft = '\\Draft',
+}
+
+export enum FlagAction {
+  add = 'add',
+  del = 'del',
+  set = 'set',
+}
+
 export type AddressListResponse = Array<AddressResponse>
 
 export class API {
@@ -172,5 +186,17 @@ export class API {
 
   public async deleteMessage(messageId: string): Promise<AxiosResponse<any>> {
     return this.axios.delete(`/mailbox/account/message/${messageId}`)
+  }
+
+  public async putMessage(
+    messageId: string,
+    action: FlagAction,
+    flagType: FlagType
+  ): Promise<AxiosResponse<any>> {
+    return this.axios.put(`/mailbox/account/message/${messageId}`, {
+      flags: {
+        [action]: [flagType],
+      },
+    })
   }
 }

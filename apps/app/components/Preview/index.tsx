@@ -14,7 +14,7 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
-import { AddressListResponse, AddressResponse } from '../../api'
+import { AddressListResponse, AddressResponse, FlagAction, FlagType } from '../../api'
 import { truncateMiddle } from '../../utils'
 
 interface MeesageDetail {
@@ -62,6 +62,9 @@ export const PreviewComponent: React.FC = () => {
           from: messageData.from,
         })
         setContent(html)
+
+        if (typeof id !== 'string') return
+        api.putMessage(id, FlagAction.add, FlagType.Seen)
       },
     }
   )
