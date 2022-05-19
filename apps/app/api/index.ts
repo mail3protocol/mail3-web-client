@@ -169,4 +169,8 @@ export class API {
   public async getTextData(textId: string): Promise<AxiosResponse<any>> {
     return this.axios.get(`/mailbox/account/text/${textId}`)
   }
+
+  public async deleteMessage(messageId: string): Promise<AxiosResponse<any>> {
+    return this.axios.delete(`/mailbox/account/meesage/${messageId}`)
+  }
 }

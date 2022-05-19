@@ -50,7 +50,7 @@ export const PreviewComponent: React.FC = () => {
       }
     },
     {
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
@@ -84,8 +84,12 @@ export const PreviewComponent: React.FC = () => {
           },
           {
             type: SuspendButtonType.Delete,
-            onClick: () => {
-              console.log('Delete')
+            onClick: async () => {
+              if (typeof id !== 'string') {
+                return
+              }
+              await api.deleteMessage(id)
+              router.back()
             },
           },
         ]}
