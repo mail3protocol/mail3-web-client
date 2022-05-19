@@ -9,5 +9,5 @@ export enum RoutePath {
   Setup = '/setup/address',
   SetupSignature = '/setup/signature',
   NewMessage = '/message/new',
-  Meesage = '/message/',
+  Message = '/message/',
 }

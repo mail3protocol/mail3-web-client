@@ -61,7 +61,7 @@ export const SentComponent: React.FC = () => {
             <BoxList
               data={messages}
               onBodyClick={(id) => {
-                router.push(`${RoutePath.Meesage}/${id}`)
+                router.push(`${RoutePath.Message}/${id}`)
               }}
             />
           </Box>

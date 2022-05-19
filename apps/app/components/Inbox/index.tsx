@@ -279,7 +279,7 @@ export const InboxComponent: React.FC = () => {
                       update={updateItem('new')}
                       onBodyClick={(id) => {
                         setNewToSeen([id])
-                        router.push(`${RoutePath.Meesage}/${id}`)
+                        router.push(`${RoutePath.Message}/${id}`)
                       }}
                     />
                     {surplus > 0 && (
@@ -310,7 +310,7 @@ export const InboxComponent: React.FC = () => {
                       data={seenMessages}
                       update={updateItem('seen')}
                       onBodyClick={(id) => {
-                        router.push(`${RoutePath.Meesage}/${id}`)
+                        router.push(`${RoutePath.Message}/${id}`)
                       }}
                     />
                   </Box>

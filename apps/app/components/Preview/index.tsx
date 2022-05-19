@@ -14,7 +14,12 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
-import { AddressListResponse, AddressResponse, FlagAction, FlagType } from '../../api'
+import {
+  AddressListResponse,
+  AddressResponse,
+  FlagAction,
+  FlagType,
+} from '../../api'
 import { truncateMiddle } from '../../utils'
 
 interface MeesageDetail {
