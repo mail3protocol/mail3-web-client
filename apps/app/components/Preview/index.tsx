@@ -74,12 +74,26 @@ export const PreviewComponent: React.FC = () => {
             type: SuspendButtonType.Reply,
             onClick: () => {
               console.log('replay')
+              router.push({
+                pathname: '/message/new',
+                query: {
+                  id,
+                  action: 'replay',
+                },
+              })
             },
           },
           {
             type: SuspendButtonType.Forward,
             onClick: () => {
               console.log('Forward')
+              router.push({
+                pathname: '/message/new',
+                query: {
+                  id,
+                  action: 'forward',
+                },
+              })
             },
           },
           {

@@ -171,6 +171,6 @@ export class API {
   }
 
   public async deleteMessage(messageId: string): Promise<AxiosResponse<any>> {
-    return this.axios.delete(`/mailbox/account/meesage/${messageId}`)
+    return this.axios.delete(`/mailbox/account/message/${messageId}`)
   }
 }
