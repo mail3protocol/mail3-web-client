@@ -106,7 +106,7 @@ export const TrashComponent: React.FC = () => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}
             />
-            {messages.length && (
+            {!!messages.length && (
               <Flex h="200px" justifyContent="center" alignItems="center">
                 <Box>
                   <Box
