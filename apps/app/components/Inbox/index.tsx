@@ -9,6 +9,7 @@ import styled from '@emotion/styled'
 import update from 'immutability-helper'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import {
   BoxList,
   AvatarBadgeType,
@@ -25,6 +26,8 @@ import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import SVGWrite from '../../assets/icon-write.svg'
 import { RoutePath } from '../../route/path'
 import { AddressListResponse, AddressResponse } from '../../api'
+import IMGClear from '../../assets/clear.png'
+import IMGNewNone from '../../assets/new-none.png'
 
 const PAGE_SIZE = 20
 
@@ -235,6 +238,9 @@ export const InboxComponent: React.FC = () => {
     }
   }
 
+  const isClear = !newMessages.length && !seenMessages.length
+  const isNoNew = !newMessages.length && seenMessages.length
+
   return (
     <Box>
       <Navbar />
@@ -269,11 +275,51 @@ export const InboxComponent: React.FC = () => {
               bgColor="#FFFFFF"
               boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
               borderRadius="24px"
+              minH="700px"
             >
               {pageType === PageType.Inbox && (
                 <Box>
                   <Box padding="30px 64px">
                     <TitleBox>New</TitleBox>
+                    {isClear && (
+                      <Flex
+                        h="500px"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <Box>
+                          <Box
+                            fontSize="20px"
+                            fontWeight={500}
+                            lineHeight="30px"
+                            marginBottom="30px"
+                          >
+                            You’re all clear
+                          </Box>
+                          <Image src={IMGClear} />
+                        </Box>
+                      </Flex>
+                    )}
+
+                    {isNoNew && (
+                      <Flex
+                        h="300px"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <Box>
+                          <Box
+                            fontSize="20px"
+                            fontWeight={500}
+                            lineHeight="30px"
+                            marginBottom="30px"
+                          >
+                            Nothing New！
+                          </Box>
+                          <Image src={IMGNewNone} />
+                        </Box>
+                      </Flex>
+                    )}
                     <BoxList
                       data={newMessages}
                       update={updateItem('new')}
@@ -304,16 +350,18 @@ export const InboxComponent: React.FC = () => {
                     )}
                   </Box>
 
-                  <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
-                    <TitleBox>Seen</TitleBox>
-                    <BoxList
-                      data={seenMessages}
-                      update={updateItem('seen')}
-                      onBodyClick={(id) => {
-                        router.push(`${RoutePath.Message}/${id}`)
-                      }}
-                    />
-                  </Box>
+                  {!!seenMessages.length && (
+                    <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
+                      <TitleBox>Seen</TitleBox>
+                      <BoxList
+                        data={seenMessages}
+                        update={updateItem('seen')}
+                        onBodyClick={(id) => {
+                          router.push(`${RoutePath.Message}/${id}`)
+                        }}
+                      />
+                    </Box>
+                  )}
                 </Box>
               )}
 

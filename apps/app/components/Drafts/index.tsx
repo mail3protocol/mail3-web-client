@@ -2,7 +2,7 @@
 import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
 import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
-import { atom, useAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import update from 'immutability-helper'
 import { useRouter } from 'next/router'
@@ -107,7 +107,7 @@ export const DraftsComponent: React.FC = () => {
               data={messages}
               update={updateItem}
               onBodyClick={(id) => {
-                router.push(`${RoutePath.Meesage}/${id}`)
+                router.push(`${RoutePath.Message}/${id}`)
               }}
             />
           </Box>
