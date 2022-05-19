@@ -1,15 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import dayjs from 'dayjs'
 import { Avatar } from 'ui'
-import {
-  AvatarGroup,
-  Avatar as RawAvatar,
-  Box,
-  Center,
-  Text,
-  Flex,
-} from '@chakra-ui/react'
-import { useDidMount } from 'hooks'
+import { AvatarGroup, Box, Center, Text, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
@@ -30,17 +22,11 @@ interface MeesageDetail {
 }
 
 export const PreviewComponent: React.FC = () => {
-  // const [data, setData] = useState(mockData)
   const router = useRouter()
   const { id } = router.query
-  const contentRef = useRef<HTMLDivElement>(null)
   const [content, setContent] = useState('')
   const [detail, setDetail] = useState<MeesageDetail>()
   const api = useAPI()
-
-  useDidMount(() => {
-    console.log('PreviewComponent useDidMount', id)
-  })
 
   useQuery(
     ['preview', id],
@@ -131,7 +117,7 @@ export const PreviewComponent: React.FC = () => {
         </Box>
       </Center>
       <Box
-        margin="25px auto"
+        margin="25px auto 150px"
         bgColor="#FFFFFF"
         boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
         borderRadius="24px"
@@ -143,6 +129,7 @@ export const PreviewComponent: React.FC = () => {
             fontWeight="700"
             fontSize="28px"
             lineHeight={1.2}
+            marginBottom="30px"
           >
             {detail?.subject}
           </Text>
@@ -164,6 +151,7 @@ export const PreviewComponent: React.FC = () => {
                   <Box
                     fontWeight={500}
                     fontSize="24px"
+                    lineHeight="36px"
                     display="inline-block"
                     verticalAlign="middle"
                   >
@@ -177,7 +165,7 @@ export const PreviewComponent: React.FC = () => {
                     verticalAlign="middle"
                     marginLeft="5px"
                   >
-                    {detail?.from.address}
+                    {`<${detail?.from.address}>`}
                   </Box>
                 </Box>
                 <Box />
@@ -185,7 +173,12 @@ export const PreviewComponent: React.FC = () => {
                   {detail?.date}
                 </Box>
               </Flex>
-              <Box fontWeight={500} fontSize="16px" color="#6F6F6F">
+              <Box
+                fontWeight={400}
+                fontSize="16px"
+                color="#6F6F6F"
+                lineHeight="24px"
+              >
                 to{' '}
                 {detail?.to
                   .map((item) => {
@@ -200,7 +193,7 @@ export const PreviewComponent: React.FC = () => {
         </Box>
         <Box paddingTop="24px" paddingLeft="65px">
           <div
-            ref={contentRef}
+            // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
               __html: content,
             }}
