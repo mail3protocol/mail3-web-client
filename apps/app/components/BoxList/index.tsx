@@ -10,6 +10,7 @@ import {
   AddressResponse,
   MessageItemResponse,
 } from '../../api'
+import { dynamicDateString } from '../../utils'
 
 export enum AvatarBadgeType {
   None,
@@ -148,8 +149,6 @@ const Item = ({
     ?.map((item) => `${item?.address}`)
     ?.join(';')}`
 
-  const dateText = dayjs(date).format('YYYY-MM-DD / h:mm A')
-
   return (
     <Flex
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
@@ -209,7 +208,7 @@ const Item = ({
         </Text>
       </Flex>
       <Center w="170px" fontSize="14px" color="#6F6F6F">
-        {dateText}
+        {dynamicDateString(date)}
       </Center>
     </Flex>
   )

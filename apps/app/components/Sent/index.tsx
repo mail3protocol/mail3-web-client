@@ -19,6 +19,20 @@ const TitleBox = styled(Box)`
   line-height: 30px;
 `
 
+const Container = styled(Box)`
+  margin: 25px auto;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
+  border-radius: 24px;
+
+  @media (max-width: 600px) {
+    background-size: 100%;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    box-shadow: none;
+  }
+`
+
 export const SentComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<Array<MessageItem>>([])
@@ -63,43 +77,34 @@ export const SentComponent: React.FC = () => {
   }
 
   return (
-    <Box>
-      <Box
-        margin="25px auto"
-        bgColor="#FFFFFF"
-        boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-        borderRadius="24px"
-      >
-        <Box>
-          <Box padding="20px 64px">
-            <TitleBox>{t('sent.title')}</TitleBox>
-            <BoxList
-              data={messages}
-              isChooseMode={isChooseMode}
-              setIsChooseMode={setIsChooseMode}
-              onClickAvatar={onUpdate}
-              onClickBody={(id) => {
-                router.push(`${RoutePath.Message}/${id}`)
-              }}
-            />
+    <Container>
+      <Box padding={{ md: '20px 64px', sm: '10px' }}>
+        <TitleBox>{t('sent.title')}</TitleBox>
+        <BoxList
+          data={messages}
+          isChooseMode={isChooseMode}
+          setIsChooseMode={setIsChooseMode}
+          onClickAvatar={onUpdate}
+          onClickBody={(id) => {
+            router.push(`${RoutePath.Message}/${id}`)
+          }}
+        />
 
-            <Flex h="200px" justifyContent="center" alignItems="center">
-              <Box>
-                <Box
-                  fontSize="12px"
-                  fontWeight={400}
-                  lineHeight="18px"
-                  marginBottom="20px"
-                  textAlign="center"
-                >
-                  {t('this-is-bottom')}
-                </Box>
-                <SVGBottom />
-              </Box>
-            </Flex>
+        <Flex h="200px" justifyContent="center" alignItems="center">
+          <Box>
+            <Box
+              fontSize="12px"
+              fontWeight={400}
+              lineHeight="18px"
+              marginBottom="20px"
+              textAlign="center"
+            >
+              {t('this-is-bottom')}
+            </Box>
+            <SVGBottom />
           </Box>
-        </Box>
+        </Flex>
       </Box>
-    </Box>
+    </Container>
   )
 }
