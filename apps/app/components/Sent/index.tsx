@@ -20,7 +20,7 @@ const TitleBox = styled(Box)`
 `
 
 export const SentComponent: React.FC = () => {
-  const [t] = useTranslation('inbox')
+  const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<Array<MessageItem>>([])
   const [pageIndex, setPageIndex] = useState(0)
   const [hasNext, setHasNext] = useState(true)
@@ -72,7 +72,7 @@ export const SentComponent: React.FC = () => {
       >
         <Box>
           <Box padding="20px 64px">
-            <TitleBox>Sent</TitleBox>
+            <TitleBox>{t('sent.title')}</TitleBox>
             <BoxList
               data={messages}
               isChooseMode={isChooseMode}
@@ -92,7 +92,7 @@ export const SentComponent: React.FC = () => {
                   marginBottom="20px"
                   textAlign="center"
                 >
-                  This is bottom！
+                  {t('this-is-bottom')}
                 </Box>
                 <SVGBottom />
               </Box>

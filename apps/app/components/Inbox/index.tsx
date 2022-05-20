@@ -62,7 +62,7 @@ export const formatState = (
   })
 
 export const InboxComponent: React.FC = () => {
-  const [t] = useTranslation('inbox')
+  const [t] = useTranslation('mailboxes')
   const [pageType] = useAtom(pageTypeAtom)
   const api = useAPI()
   const router = useRouter()
@@ -252,7 +252,7 @@ export const InboxComponent: React.FC = () => {
               {pageType === PageType.Inbox && (
                 <Box>
                   <Box padding="30px 64px">
-                    <TitleBox>New</TitleBox>
+                    <TitleBox>{t('inbox.title.new')}</TitleBox>
                     {isClear && (
                       <Flex
                         h="500px"
@@ -266,7 +266,7 @@ export const InboxComponent: React.FC = () => {
                             lineHeight="30px"
                             marginBottom="30px"
                           >
-                            You’re all clear
+                            {t('inbox.all-clear')}
                           </Box>
                           <Image src={IMGClear} />
                         </Box>
@@ -286,7 +286,7 @@ export const InboxComponent: React.FC = () => {
                             lineHeight="30px"
                             marginBottom="30px"
                           >
-                            Nothing New！
+                            {t('inbox.no-new')}
                           </Box>
                           <Image src={IMGNewNone} />
                         </Box>
@@ -310,7 +310,7 @@ export const InboxComponent: React.FC = () => {
                             setNewPageIndex(newPageIndex + 1)
                           }}
                         >
-                          load more +{PAGE_SIZE}
+                          {t('inbox.load-more')} +{PAGE_SIZE}
                         </Button>
                         <Circle
                           size="40px"
@@ -326,7 +326,7 @@ export const InboxComponent: React.FC = () => {
 
                   {!!seenMessages.length && (
                     <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
-                      <TitleBox>Seen</TitleBox>
+                      <TitleBox>{t('inbox.title.seen')}</TitleBox>
                       <BoxList
                         data={seenMessages}
                         isChooseMode={isChooseMode}

@@ -16,7 +16,7 @@ import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/none.svg'
 
 export const DraftsComponent: React.FC = () => {
-  const [t] = useTranslation('inbox')
+  const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<MessageItem[]>([])
   const [pageIndex, setPageIndex] = useState(0)
   const [hasNext, setHasNext] = useState(true)
@@ -87,7 +87,7 @@ export const DraftsComponent: React.FC = () => {
             fontSize="24px"
             lineHeight="30px"
           >
-            Drafts
+            {t('drafts.title')}
           </WrapItem>
         </Wrap>
       </Flex>
@@ -123,11 +123,9 @@ export const DraftsComponent: React.FC = () => {
                   marginBottom="20px"
                   textAlign="center"
                 >
-                  <p>Any time you start writing a new Email, </p>
-                  <p>
-                    Mail3 will automatically save it as a draft along the way.
-                  </p>
-                  <p>Come here to find all your works in progress.</p>
+                  <p>{t('drafts.no-content-w1')}</p>
+                  <p>{t('drafts.no-content-w2')}</p>
+                  <p>{t('drafts.no-content-w3')}</p>
                 </Box>
                 <SVGNone />
               </Flex>

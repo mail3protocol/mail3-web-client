@@ -18,7 +18,7 @@ import SVGIsBottom from '../../assets/is-bottom.svg'
 import { formatState } from '../Inbox'
 
 export const TrashComponent: React.FC = () => {
-  const [t] = useTranslation('inbox')
+  const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<MessageItem[]>([])
   const [pageIndex, setPageIndex] = useState(0)
   const [hasNext, setHasNext] = useState(true)
@@ -72,7 +72,7 @@ export const TrashComponent: React.FC = () => {
             fontSize="24px"
             lineHeight="30px"
           >
-            Trash
+            {t('trash.title')}
           </WrapItem>
         </Wrap>
 
@@ -83,7 +83,7 @@ export const TrashComponent: React.FC = () => {
           }}
         >
           <SVGIconEmpty />
-          <Box marginLeft="10px">Empty</Box>
+          <Box marginLeft="10px">{t('trash.empty')}</Box>
         </Button>
       </Flex>
       <Box
@@ -96,10 +96,7 @@ export const TrashComponent: React.FC = () => {
         <Box>
           <Box padding="20px 64px">
             <TextBox>
-              <Text>
-                Messages that have been in Trash more than 30 days will be
-                automatically deleted.
-              </Text>
+              <Text>{t('trash.auto-delete')}</Text>
             </TextBox>
             <BoxList
               data={messages}
@@ -117,7 +114,7 @@ export const TrashComponent: React.FC = () => {
                     marginBottom="20px"
                     textAlign="center"
                   >
-                    This is bottom！
+                    {t('this-is-bottom')}
                   </Box>
                   <SVGIsBottom />
                 </Box>
@@ -133,7 +130,7 @@ export const TrashComponent: React.FC = () => {
                     marginBottom="20px"
                     textAlign="center"
                   >
-                    Clean Trash!
+                    {t('trash.clear')}
                   </Box>
                   <SVGNone />
                 </Box>

@@ -6,7 +6,7 @@ import { InboxComponent } from '../components/Inbox/index'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale as string, ['inbox'])),
+    ...(await serverSideTranslations(locale as string, ['mailboxes'])),
   },
 })
 
