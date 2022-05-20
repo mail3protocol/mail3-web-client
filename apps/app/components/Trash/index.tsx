@@ -15,7 +15,7 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import SVGNone from '../../assets/none.svg'
 import SVGIsBottom from '../../assets/is-bottom.svg'
-import { formatState } from '../Inbox'
+import { formatState, MailboxContainer } from '../Inbox'
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
@@ -60,7 +60,7 @@ export const TrashComponent: React.FC = () => {
 
   return (
     <>
-      <Flex alignItems="center">
+      <Flex alignItems="center" paddingTop="30px">
         <Wrap>
           <WrapItem alignItems="center">
             <SVGTrash />
@@ -86,59 +86,51 @@ export const TrashComponent: React.FC = () => {
           <Box marginLeft="10px">{t('trash.empty')}</Box>
         </Button>
       </Flex>
-      <Box
-        margin="25px auto"
-        bgColor="#FFFFFF"
-        boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-        borderRadius="24px"
-        minH="500px"
-      >
-        <Box>
-          <Box padding="20px 64px">
-            <TextBox>
-              <Text>{t('trash.auto-delete')}</Text>
-            </TextBox>
-            <BoxList
-              data={messages}
-              onClickBody={(id) => {
-                router.push(`${RoutePath.Message}/${id}`)
-              }}
-            />
-            {!!messages.length && (
-              <Flex h="200px" justifyContent="center" alignItems="center">
-                <Box>
-                  <Box
-                    fontSize="12px"
-                    fontWeight={400}
-                    lineHeight="18px"
-                    marginBottom="20px"
-                    textAlign="center"
-                  >
-                    {t('this-is-bottom')}
-                  </Box>
-                  <SVGIsBottom />
+      <MailboxContainer>
+        <Box padding={{ md: '20px 64px', sm: '10px' }}>
+          <TextBox>
+            <Text>{t('trash.auto-delete')}</Text>
+          </TextBox>
+          <BoxList
+            data={messages}
+            onClickBody={(id) => {
+              router.push(`${RoutePath.Message}/${id}`)
+            }}
+          />
+          {!!messages.length && (
+            <Flex h="200px" justifyContent="center" alignItems="center">
+              <Box>
+                <Box
+                  fontSize="12px"
+                  fontWeight={400}
+                  lineHeight="18px"
+                  marginBottom="20px"
+                  textAlign="center"
+                >
+                  {t('this-is-bottom')}
                 </Box>
-              </Flex>
-            )}
-            {!messages.length && (
-              <Flex h="200px" justifyContent="center" alignItems="center">
-                <Box>
-                  <Box
-                    fontSize="16px"
-                    fontWeight={400}
-                    lineHeight="18px"
-                    marginBottom="20px"
-                    textAlign="center"
-                  >
-                    {t('trash.clear')}
-                  </Box>
-                  <SVGNone />
+                <SVGIsBottom />
+              </Box>
+            </Flex>
+          )}
+          {!messages.length && (
+            <Flex h="200px" justifyContent="center" alignItems="center">
+              <Box>
+                <Box
+                  fontSize="16px"
+                  fontWeight={400}
+                  lineHeight="18px"
+                  marginBottom="20px"
+                  textAlign="center"
+                >
+                  {t('trash.clear')}
                 </Box>
-              </Flex>
-            )}
-          </Box>
+                <SVGNone />
+              </Box>
+            </Flex>
+          )}
         </Box>
-      </Box>
+      </MailboxContainer>
     </>
   )
 }

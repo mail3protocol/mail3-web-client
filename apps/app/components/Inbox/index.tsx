@@ -38,6 +38,20 @@ const TitleBox = styled(Box)`
   line-height: 30px;
 `
 
+export const MailboxContainer = styled(Box)`
+  margin: 25px auto;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
+  border-radius: 24px;
+
+  @media (max-width: 600px) {
+    background-size: 100%;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    box-shadow: none;
+  }
+`
+
 export const formatState = (
   data: Array<MessageItemResponse>,
   avatarBadgeType: AvatarBadgeType

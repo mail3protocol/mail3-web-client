@@ -10,7 +10,7 @@ import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
-import { formatState } from '../Inbox'
+import { formatState, MailboxContainer } from '../Inbox'
 
 import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/none.svg'
@@ -75,7 +75,7 @@ export const DraftsComponent: React.FC = () => {
           ]}
         />
       )}
-      <Flex alignItems="center">
+      <Flex alignItems="center" paddingTop="30px">
         <Wrap>
           <WrapItem alignItems="center">
             <SVGDrafts />
@@ -91,48 +91,41 @@ export const DraftsComponent: React.FC = () => {
           </WrapItem>
         </Wrap>
       </Flex>
-      <Box
-        margin="25px auto"
-        bgColor="#FFFFFF"
-        boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-        borderRadius="24px"
-      >
-        <Box>
-          <Box padding="20px 64px">
-            <BoxList
-              data={messages}
-              isChooseMode={isChooseMode}
-              setIsChooseMode={setIsChooseMode}
-              onClickAvatar={onUpdate}
-              onClickBody={(id) => {
-                router.push(`${RoutePath.Message}/${id}`)
-              }}
-            />
+      <MailboxContainer>
+        <Box padding={{ md: '20px 64px', sm: '10px' }}>
+          <BoxList
+            data={messages}
+            isChooseMode={isChooseMode}
+            setIsChooseMode={setIsChooseMode}
+            onClickAvatar={onUpdate}
+            onClickBody={(id) => {
+              router.push(`${RoutePath.Message}/${id}`)
+            }}
+          />
 
-            {!messages.length && (
-              <Flex
-                h="200px"
-                justifyContent="center"
-                alignItems="center"
-                direction="column"
+          {!messages.length && (
+            <Flex
+              h="400px"
+              justifyContent="center"
+              alignItems="center"
+              direction="column"
+            >
+              <Box
+                fontSize="16px"
+                fontWeight={500}
+                lineHeight="24px"
+                marginBottom="20px"
+                textAlign="center"
               >
-                <Box
-                  fontSize="16px"
-                  fontWeight={500}
-                  lineHeight="24px"
-                  marginBottom="20px"
-                  textAlign="center"
-                >
-                  <p>{t('drafts.no-content-w1')}</p>
-                  <p>{t('drafts.no-content-w2')}</p>
-                  <p>{t('drafts.no-content-w3')}</p>
-                </Box>
-                <SVGNone />
-              </Flex>
-            )}
-          </Box>
+                <p>{t('drafts.no-content-w1')}</p>
+                <p>{t('drafts.no-content-w2')}</p>
+                <p>{t('drafts.no-content-w3')}</p>
+              </Box>
+              <SVGNone />
+            </Flex>
+          )}
         </Box>
-      </Box>
+      </MailboxContainer>
     </>
   )
 }

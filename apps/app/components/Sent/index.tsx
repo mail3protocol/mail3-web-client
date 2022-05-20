@@ -11,26 +11,12 @@ import { Mailboxes } from '../../api/mailboxes'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { useAPI } from '../../hooks/useAPI'
 import SVGBottom from '../../assets/is-bottom.svg'
-import { formatState } from '../Inbox'
+import { MailboxContainer, formatState } from '../Inbox'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
   font-size: 20px;
   line-height: 30px;
-`
-
-const Container = styled(Box)`
-  margin: 25px auto;
-  background-color: #ffffff;
-  box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
-  border-radius: 24px;
-
-  @media (max-width: 600px) {
-    background-size: 100%;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    box-shadow: none;
-  }
 `
 
 export const SentComponent: React.FC = () => {
@@ -77,7 +63,7 @@ export const SentComponent: React.FC = () => {
   }
 
   return (
-    <Container>
+    <MailboxContainer>
       <Box padding={{ md: '20px 64px', sm: '10px' }}>
         <TitleBox>{t('sent.title')}</TitleBox>
         <BoxList
@@ -105,6 +91,6 @@ export const SentComponent: React.FC = () => {
           </Box>
         </Flex>
       </Box>
-    </Container>
+    </MailboxContainer>
   )
 }
