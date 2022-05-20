@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
 import { useInnerSize } from 'hooks'
 import { isWhiteListStage, sleep } from '../../../utils'
+import { HEADER_BAR_HEIGHT } from '../navbar'
 
 const MOBILE_SIZE = 768
 
@@ -101,7 +102,7 @@ export const Entrance: React.FC<
   return (
     <Flex
       position="fixed"
-      h="calc(100vh - 60px)"
+      h={`calc(100vh - ${HEADER_BAR_HEIGHT}px)`}
       w="full"
       top={`${60 + (isWhiteListStage() ? 44 : 0)}px`}
       left="0"

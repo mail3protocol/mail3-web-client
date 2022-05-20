@@ -4,6 +4,7 @@ import NextLink from 'next/link'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { isBetaTestingStage, isWhiteListStage } from '../../utils'
+import { WHITE_LIST_URL } from '../../constants/env'
 
 export const RainbowBarContainer = styled(Center)`
   background: linear-gradient(
@@ -61,7 +62,7 @@ export const RainbowBar: React.FC = () => {
         {isBetaTestingStage() ? (
           <>
             {t('heading-banner-text.white-list')}
-            <NextLink href="/whitelist">
+            <NextLink href={WHITE_LIST_URL}>
               <Link
                 fontWeight="bold"
                 textDecoration="underline"

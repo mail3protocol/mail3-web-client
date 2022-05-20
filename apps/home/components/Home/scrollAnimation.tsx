@@ -33,8 +33,13 @@ export const ScrollAnimation: React.FC = () => {
   useEffect(() => {
     const subscriber = fromEvent(window, 'scroll')
       .pipe(map(() => window.scrollY))
-      .subscribe(setScrollY)
-    document.body.style.overflowX = 'hidden'
+      .subscribe((y) => {
+        setScrollY(y)
+        document.body.style.overflowX = 'hidden'
+        if (window.scrollX !== 0) {
+          window.scroll(0, y)
+        }
+      })
     return () => {
       document.body.style.overflowX = ''
       subscriber.unsubscribe()

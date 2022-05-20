@@ -13,12 +13,13 @@ import HomeGridBgSvgPath from '../../assets/svg/home-grid-bg.svg?url'
 import Illustration1Svg from '../../assets/svg/illustration/1.svg'
 import Illustration1Png from '../../assets/png/illustration/1.png'
 import Illustration3Png from '../../assets/png/illustration/3.png'
+import { HEADER_BAR_HEIGHT } from './navbar'
 
 export const Banner: React.FC<FlexProps> = ({ ...props }) => (
   <Flex
     direction="column"
     align="center"
-    h="calc(100vh - 60px)"
+    h={`calc(100vh - ${HEADER_BAR_HEIGHT}px)`}
     position="relative"
     px="20px"
     zIndex={0}

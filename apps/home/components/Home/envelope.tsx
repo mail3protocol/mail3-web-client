@@ -13,7 +13,7 @@ export const EnvelopeContainer: React.FC<
   <Box position="absolute" w="full" h="full" top="0" left="0" {...props}>
     <Box
       w="full"
-      h={fullScreenHeight ?? 'calc(100vh - 60px)'}
+      h={fullScreenHeight ?? `calc(100vh - ${HEADER_BAR_HEIGHT}px)`}
       position="sticky"
       top={`${HEADER_BAR_HEIGHT}px`}
       left={0}

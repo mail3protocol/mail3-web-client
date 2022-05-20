@@ -15,6 +15,13 @@ import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
 import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
 import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
 import MediumIconSvg from '../../assets/svg/socialMedia/medium.svg'
+import {
+  CONTACT_US_URL,
+  DISCORD_URL,
+  MEDIUM_URL,
+  MIRROR_URL,
+  TWITTER_URL,
+} from '../../constants/env'
 
 export const Footer = () => (
   <Center
@@ -60,13 +67,13 @@ export const Footer = () => (
             color="#F3F3F3"
             fontSize="16px"
           >
-            <Link href="#" display="flex" alignItems="center">
+            <Link href={TWITTER_URL} display="flex" alignItems="center">
               <Icon as={TwitterIconSvg} w="20px" h="auto" mr="10px" />
               <Box as="span" display={{ base: 'none', md: 'inline' }}>
                 Twitter
               </Box>
             </Link>
-            <Link href="#" display="flex" alignItems="center">
+            <Link href={DISCORD_URL} display="flex" alignItems="center">
               <Icon as={DiscordIconSvg} w="20px" h="auto" mr="10px" />
               <Box as="span" display={{ base: 'none', md: 'inline' }}>
                 Discord
@@ -85,13 +92,13 @@ export const Footer = () => (
             color="#F3F3F3"
             fontSize="16px"
           >
-            <Link href="#" display="flex" alignItems="center">
+            <Link href={MIRROR_URL} display="flex" alignItems="center">
               <Icon as={MirrorIconSvg} w="20px" h="auto" mr="10px" />
               <Box as="span" display={{ base: 'none', md: 'inline' }}>
                 Mirror
               </Box>
             </Link>
-            <Link href="#" display="flex" alignItems="center">
+            <Link href={MEDIUM_URL} display="flex" alignItems="center">
               <Icon as={MediumIconSvg} w="20px" h="auto" mr="10px" />
               <Box as="span" display={{ base: 'none', md: 'inline' }}>
                 Medium
@@ -108,7 +115,9 @@ export const Footer = () => (
             color="#F3F3F3"
             fontSize="16px"
           >
-            <Box>Contact US</Box>
+            <Link href={CONTACT_US_URL}>
+              <Box>Contact US</Box>
+            </Link>
           </Stack>
         </Box>
       </Grid>
