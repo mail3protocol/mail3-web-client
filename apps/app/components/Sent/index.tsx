@@ -64,7 +64,7 @@ export const SentComponent: React.FC = () => {
 
   return (
     <MailboxContainer>
-      <Box padding={{ md: '20px 64px', sm: '10px' }}>
+      <Box padding={{ md: '20px 64px' }}>
         <TitleBox>{t('sent.title')}</TitleBox>
         <BoxList
           data={messages}

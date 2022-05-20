@@ -92,7 +92,7 @@ export const DraftsComponent: React.FC = () => {
         </Wrap>
       </Flex>
       <MailboxContainer>
-        <Box padding={{ md: '20px 64px', sm: '10px' }}>
+        <Box padding={{ md: '20px 64px' }}>
           <BoxList
             data={messages}
             isChooseMode={isChooseMode}

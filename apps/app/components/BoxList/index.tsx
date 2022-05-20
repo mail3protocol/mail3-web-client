@@ -1,9 +1,8 @@
 import React from 'react'
 import { Avatar } from 'ui'
-import { AvatarBadge, Box, Center, Circle, Flex, Text } from '@chakra-ui/react'
+import { AvatarBadge, Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
-import dayjs from 'dayjs'
 import ChooseSVG from '../../assets/choose.svg'
 import {
   AddressListResponse,

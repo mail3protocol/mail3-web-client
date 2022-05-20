@@ -11,7 +11,6 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { BoxList, AvatarBadgeType, ItemType, MessageItem } from '../BoxList'
 import { InboxNav } from './Nav'
-import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
@@ -216,7 +215,6 @@ export const InboxComponent: React.FC = () => {
 
   return (
     <Box>
-      <Navbar />
       {isChooseMode && (
         <StickyButtonBox
           list={[
@@ -229,130 +227,114 @@ export const InboxComponent: React.FC = () => {
           ]}
         />
       )}
-      <Center>
-        <Box w="1280px">
-          <Box paddingTop="60px">
-            <Flex justifyContent="space-between">
-              <InboxNav />
-              <Button
-                onClick={() => {
-                  router.push(RoutePath.NewMessage)
-                }}
-              >
-                <SVGWrite /> <Box ml="10px">Write</Box>
-              </Button>
-            </Flex>
 
-            <Box
-              margin="25px auto"
-              bgColor="#FFFFFF"
-              boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-              borderRadius="24px"
-              minH="700px"
-            >
-              {pageType === PageType.Inbox && (
-                <Box>
-                  <Box padding="30px 64px">
-                    <TitleBox>{t('inbox.title.new')}</TitleBox>
-                    {isClear && (
-                      <Flex
-                        h="500px"
-                        justifyContent="center"
-                        alignItems="center"
+      <Box paddingTop="35px">
+        <Flex justifyContent="space-between">
+          <InboxNav />
+          <Button
+            onClick={() => {
+              router.push(RoutePath.NewMessage)
+            }}
+          >
+            <SVGWrite /> <Box ml="10px">Write</Box>
+          </Button>
+        </Flex>
+
+        <MailboxContainer minH="700px">
+          {pageType === PageType.Inbox && (
+            <>
+              <Box padding={{ md: '30px 64px', base: '20px' }}>
+                <TitleBox>{t('inbox.title.new')}</TitleBox>
+                {isClear && (
+                  <Flex h="500px" justifyContent="center" alignItems="center">
+                    <Box>
+                      <Box
+                        fontSize="20px"
+                        fontWeight={500}
+                        lineHeight="30px"
+                        marginBottom="30px"
                       >
-                        <Box>
-                          <Box
-                            fontSize="20px"
-                            fontWeight={500}
-                            lineHeight="30px"
-                            marginBottom="30px"
-                          >
-                            {t('inbox.all-clear')}
-                          </Box>
-                          <Image src={IMGClear} />
-                        </Box>
-                      </Flex>
-                    )}
-
-                    {isNoNew && (
-                      <Flex
-                        h="300px"
-                        justifyContent="center"
-                        alignItems="center"
-                      >
-                        <Box>
-                          <Box
-                            fontSize="20px"
-                            fontWeight={500}
-                            lineHeight="30px"
-                            marginBottom="30px"
-                          >
-                            {t('inbox.no-new')}
-                          </Box>
-                          <Image src={IMGNewNone} />
-                        </Box>
-                      </Flex>
-                    )}
-                    <BoxList
-                      data={newMessages}
-                      isChooseMode={isChooseMode}
-                      setIsChooseMode={setIsChooseMode}
-                      onClickAvatar={updateItem('new')}
-                      onClickBody={(id) => {
-                        setNewToSeen([id])
-                        router.push(`${RoutePath.Message}/${id}`)
-                      }}
-                    />
-                    {surplus > 0 && (
-                      <Center>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setNewPageIndex(newPageIndex + 1)
-                          }}
-                        >
-                          {t('inbox.load-more')} +{PAGE_SIZE}
-                        </Button>
-                        <Circle
-                          size="40px"
-                          bg="black"
-                          color="white"
-                          marginLeft="10px"
-                        >
-                          {surplus}
-                        </Circle>
-                      </Center>
-                    )}
-                  </Box>
-
-                  {!!seenMessages.length && (
-                    <Box padding="20px 64px" bg="rgba(243, 243, 243, 0.4);">
-                      <TitleBox>{t('inbox.title.seen')}</TitleBox>
-                      <BoxList
-                        data={seenMessages}
-                        isChooseMode={isChooseMode}
-                        setIsChooseMode={setIsChooseMode}
-                        onClickAvatar={updateItem('seen')}
-                        onClickBody={(id) => {
-                          router.push(`${RoutePath.Message}/${id}`)
-                        }}
-                      />
+                        {t('inbox.all-clear')}
+                      </Box>
+                      <Image src={IMGClear} />
                     </Box>
-                  )}
-                </Box>
-              )}
+                  </Flex>
+                )}
 
-              {pageType === PageType.Subscrption && (
-                <Box>
-                  <Box padding="40px 64px">
-                    <Subscription />
-                  </Box>
+                {isNoNew && (
+                  <Flex h="300px" justifyContent="center" alignItems="center">
+                    <Box>
+                      <Box
+                        fontSize="20px"
+                        fontWeight={500}
+                        lineHeight="30px"
+                        marginBottom="30px"
+                      >
+                        {t('inbox.no-new')}
+                      </Box>
+                      <Image src={IMGNewNone} />
+                    </Box>
+                  </Flex>
+                )}
+                <BoxList
+                  data={newMessages}
+                  isChooseMode={isChooseMode}
+                  setIsChooseMode={setIsChooseMode}
+                  onClickAvatar={updateItem('new')}
+                  onClickBody={(id) => {
+                    setNewToSeen([id])
+                    router.push(`${RoutePath.Message}/${id}`)
+                  }}
+                />
+                {surplus > 0 && (
+                  <Center>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setNewPageIndex(newPageIndex + 1)
+                      }}
+                    >
+                      {t('inbox.load-more')} +{PAGE_SIZE}
+                    </Button>
+                    <Circle
+                      size="40px"
+                      bg="black"
+                      color="white"
+                      marginLeft="10px"
+                    >
+                      {surplus}
+                    </Circle>
+                  </Center>
+                )}
+              </Box>
+
+              {!!seenMessages.length && (
+                <Box
+                  padding={{ base: '20px', md: '20px 64px' }}
+                  bg="rgba(243, 243, 243, 0.4);"
+                >
+                  <TitleBox>{t('inbox.title.seen')}</TitleBox>
+                  <BoxList
+                    data={seenMessages}
+                    isChooseMode={isChooseMode}
+                    setIsChooseMode={setIsChooseMode}
+                    onClickAvatar={updateItem('seen')}
+                    onClickBody={(id) => {
+                      router.push(`${RoutePath.Message}/${id}`)
+                    }}
+                  />
                 </Box>
               )}
+            </>
+          )}
+
+          {pageType === PageType.Subscrption && (
+            <Box padding="40px 64px">
+              <Subscription />
             </Box>
-          </Box>
-        </Box>
-      </Center>
+          )}
+        </MailboxContainer>
+      </Box>
     </Box>
   )
 }

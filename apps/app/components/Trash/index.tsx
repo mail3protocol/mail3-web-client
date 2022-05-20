@@ -87,7 +87,7 @@ export const TrashComponent: React.FC = () => {
         </Button>
       </Flex>
       <MailboxContainer>
-        <Box padding={{ md: '20px 64px', sm: '10px' }}>
+        <Box padding={{ md: '20px 64px' }}>
           <TextBox>
             <Text>{t('trash.auto-delete')}</Text>
           </TextBox>
