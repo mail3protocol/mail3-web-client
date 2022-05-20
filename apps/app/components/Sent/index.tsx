@@ -5,13 +5,13 @@ import { Box, Flex } from '@chakra-ui/react'
 import { useDidMount } from 'hooks'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
-import { AvatarBadgeType, BoxList, ItemType } from '../BoxList'
+import { AvatarBadgeType, BoxList, MessageItem } from '../BoxList'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { useAPI } from '../../hooks/useAPI'
 import SVGBottom from '../../assets/is-bottom.svg'
+import { formatState } from '../Inbox'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -21,12 +21,13 @@ const TitleBox = styled(Box)`
 
 export const SentComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
-  const [messages, setMessages] = useState<any>([])
+  const [messages, setMessages] = useState<Array<MessageItem>>([])
   const [pageIndex, setPageIndex] = useState(0)
   const [hasNext, setHasNext] = useState(true)
   const router = useRouter()
   const api = useAPI()
   const [, setIsFetching] = useInfiniteScroll(fetchDate)
+  const [isChooseMode, setIsChooseMode] = useState(false)
 
   useDidMount(() => {
     fetchDate(0)
@@ -40,12 +41,24 @@ export const SentComponent: React.FC = () => {
     const { data } = await api.getMailboxesMessages(Mailboxes.Sent, _pageIndex)
 
     if (data?.messages?.length) {
-      const newDate = [...messages, ...data.messages]
-      setMessages(newDate)
+      const newState = [
+        ...messages,
+        ...formatState(data.messages, AvatarBadgeType.SentOK),
+      ]
+      setMessages(newState)
       setIsFetching(false)
       setPageIndex(_pageIndex)
     } else {
       setHasNext(false)
+    }
+  }
+
+  const onUpdate = (index: number) => {
+    const newDate = [...messages]
+    newDate[index].isChoose = !newDate[index].isChoose
+    setMessages(newDate)
+    if (newDate.every((item) => !item.isChoose)) {
+      setIsChooseMode(false)
     }
   }
 
@@ -62,7 +75,10 @@ export const SentComponent: React.FC = () => {
             <TitleBox>Sent</TitleBox>
             <BoxList
               data={messages}
-              onBodyClick={(id) => {
+              isChooseMode={isChooseMode}
+              setIsChooseMode={setIsChooseMode}
+              onClickAvatar={onUpdate}
+              onClickBody={(id) => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}
             />

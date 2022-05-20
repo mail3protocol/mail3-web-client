@@ -2,14 +2,14 @@ import React from 'react'
 import { Avatar } from 'ui'
 import { AvatarBadge, Box, Center, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { atom, useAtom } from 'jotai'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import dayjs from 'dayjs'
 import ChooseSVG from '../../assets/choose.svg'
-import { AddressListResponse, AddressResponse } from '../../api'
-import { MessageItem } from '../Inbox'
-
-export const isChooseModeAtom = atom<boolean>(false)
+import {
+  AddressListResponse,
+  AddressResponse,
+  MessageItemResponse,
+} from '../../api'
 
 export enum AvatarBadgeType {
   None,
@@ -23,10 +23,19 @@ export enum ItemType {
   Fail,
 }
 
+export interface MessageItem extends MessageItemResponse {
+  // ui need state
+  isChoose: boolean
+  avatarBadgeType: AvatarBadgeType
+  itemType: ItemType
+}
+
 export interface BoxListProps {
   data: Array<MessageItem>
-  update?: (index: number) => void
-  onBodyClick: (id: string) => void
+  onClickAvatar?: (index: number) => void
+  onClickBody: (id: string) => void
+  isChooseMode: boolean
+  setIsChooseMode: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface BoxItemProps {
@@ -37,12 +46,13 @@ export interface BoxItemProps {
   to: AddressListResponse
   from: AddressResponse
   date: string
-
   isChoose: boolean
   avatarBadgeType: AvatarBadgeType
   itemType: ItemType
-  update?: (index: number) => void
+  onClickAvatar?: (index: number) => void
   onClick?: () => void
+  isChooseMode: boolean
+  setIsChooseMode: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CircleE = styled(Circle)`
@@ -58,15 +68,15 @@ const Item = ({
   isChoose,
   id,
   index,
-  update,
+  onClickAvatar,
   onClick,
   avatarBadgeType,
   itemType,
   to,
   from,
+  isChooseMode,
+  setIsChooseMode,
 }: BoxItemProps) => {
-  const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
-
   const AvatarBadgeE = {
     [AvatarBadgeType.None]: <Box />,
     [AvatarBadgeType.New]: (
@@ -105,7 +115,7 @@ const Item = ({
         showBorder
         onClick={(e) => {
           e.stopPropagation()
-          if (update) update(index)
+          if (onClickAvatar) onClickAvatar(index)
           setIsChooseMode(true)
           return false
         }}
@@ -164,7 +174,7 @@ const Item = ({
             size="48px"
             onClick={(e) => {
               e.stopPropagation()
-              if (update) update(index)
+              if (onClickAvatar) onClickAvatar(index)
               console.log(id, index)
               return false
             }}
@@ -207,8 +217,10 @@ const Item = ({
 
 export const BoxList: React.FC<BoxListProps> = ({
   data,
-  update,
-  onBodyClick,
+  onClickAvatar,
+  onClickBody,
+  isChooseMode,
+  setIsChooseMode,
 }) => (
   <Box>
     {data.map((item, index) => {
@@ -218,9 +230,11 @@ export const BoxList: React.FC<BoxListProps> = ({
           key={id}
           {...item}
           index={index}
-          update={update}
+          onClickAvatar={onClickAvatar}
+          isChooseMode={isChooseMode}
+          setIsChooseMode={setIsChooseMode}
           onClick={() => {
-            onBodyClick(id)
+            onClickBody(id)
           }}
         />
       )

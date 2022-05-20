@@ -18,8 +18,18 @@ export interface AliasResponse {
   aliases: Alias[]
 }
 
+export interface MessageItemResponse {
+  id: string
+  uid: string
+  subject: string
+  unseen: boolean
+  messageId: string
+  date: string
+  from: AddressResponse
+  to: AddressListResponse
+}
 export interface MailboxesMessagesResponse {
-  messages: Array<any>
+  messages: Array<MessageItemResponse>
   page: number
   pages: number
   total: number

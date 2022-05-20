@@ -10,12 +10,7 @@ import update from 'immutability-helper'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import {
-  BoxList,
-  AvatarBadgeType,
-  ItemType,
-  isChooseModeAtom,
-} from '../BoxList'
+import { BoxList, AvatarBadgeType, ItemType, MessageItem } from '../BoxList'
 import { InboxNav } from './Nav'
 import { Navbar } from '../Navbar'
 import { Subscription } from './Subscription'
@@ -25,32 +20,15 @@ import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 
 import SVGWrite from '../../assets/icon-write.svg'
 import { RoutePath } from '../../route/path'
-import { AddressListResponse, AddressResponse } from '../../api'
 import IMGClear from '../../assets/clear.png'
 import IMGNewNone from '../../assets/new-none.png'
+import { MessageItemResponse } from '../../api'
 
 const PAGE_SIZE = 20
 
 export enum PageType {
   Inbox,
   Subscrption,
-}
-
-export interface MessageItem {
-  id: string
-  uid: string
-  subject: string
-  unseen: boolean
-  messageId: string
-  date: string
-  from: AddressResponse
-  to: AddressListResponse
-  // text:
-  avatar: ''
-  // ui need state
-  isChoose: false
-  avatarBadgeType: AvatarBadgeType
-  itemType: ItemType
 }
 
 export const pageTypeAtom = atom<PageType>(PageType.Inbox)
@@ -61,11 +39,12 @@ const TitleBox = styled(Box)`
   line-height: 30px;
 `
 
-const formatState = (data: any, avatarBadgeType: AvatarBadgeType) => {
-  if (!data.length) return []
-
-  const newData = data.map((item: any) => {
-    const { subject, unseen, messageId, date, from, to, id, uid, text } = item
+export const formatState = (
+  data: Array<MessageItemResponse>,
+  avatarBadgeType: AvatarBadgeType
+): Array<MessageItem> =>
+  data.map((item) => {
+    const { subject, unseen, messageId, date, from, to, id, uid } = item
     return {
       id,
       uid,
@@ -75,17 +54,12 @@ const formatState = (data: any, avatarBadgeType: AvatarBadgeType) => {
       date,
       from,
       to,
-      text,
-      avatar: '',
       // ui need state
       isChoose: false,
       avatarBadgeType,
       itemType: ItemType.None,
     }
   })
-
-  return newData
-}
 
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
@@ -101,7 +75,7 @@ export const InboxComponent: React.FC = () => {
   const [seenMessages, setSeenMessages] = useState<Array<MessageItem>>([])
   const [seenHasNext, setSeenHasNext] = useState(true)
 
-  const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
+  const [isChooseMode, setIsChooseMode] = useState(false)
 
   const [, setIsFetching] = useInfiniteScroll(fetchDateSeen)
 
@@ -215,8 +189,6 @@ export const InboxComponent: React.FC = () => {
   }
 
   const updateItem = (type: string) => (index: number) => {
-    console.log('update item index', index)
-
     const oldDate: any = type === 'seen' ? seenMessages : newMessages
 
     const newDate = update(oldDate, {
@@ -322,8 +294,10 @@ export const InboxComponent: React.FC = () => {
                     )}
                     <BoxList
                       data={newMessages}
-                      update={updateItem('new')}
-                      onBodyClick={(id) => {
+                      isChooseMode={isChooseMode}
+                      setIsChooseMode={setIsChooseMode}
+                      onClickAvatar={updateItem('new')}
+                      onClickBody={(id) => {
                         setNewToSeen([id])
                         router.push(`${RoutePath.Message}/${id}`)
                       }}
@@ -355,8 +329,10 @@ export const InboxComponent: React.FC = () => {
                       <TitleBox>Seen</TitleBox>
                       <BoxList
                         data={seenMessages}
-                        update={updateItem('seen')}
-                        onBodyClick={(id) => {
+                        isChooseMode={isChooseMode}
+                        setIsChooseMode={setIsChooseMode}
+                        onClickAvatar={updateItem('seen')}
+                        onClickBody={(id) => {
                           router.push(`${RoutePath.Message}/${id}`)
                         }}
                       />
