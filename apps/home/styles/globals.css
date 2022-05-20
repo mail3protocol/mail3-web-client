@@ -20,3 +20,9 @@ a {
   src: local(Poppins-Regular), url(/fonts/Poppins-Regular.ttf) format('truetype');
   font-display: fallback;
 }
+
+@font-face {
+  font-family: NanumPenScript-Regular;
+  src: local(NanumPenScript-Regular), url(/fonts/NanumPenScript-Regular.ttf) format('truetype');
+  font-display: fallback;
+}
