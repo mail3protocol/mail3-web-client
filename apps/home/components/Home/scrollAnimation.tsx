@@ -6,10 +6,10 @@ import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Banner } from './banner'
 import { Letter } from './letterContent'
 import { Envelope } from './envelope'
+import { HEADER_BAR_HEIGHT } from './navbar'
 
 const ENVELOPE_RADIO = 95 / 157
 const SCROLL_STEPS = [200, 200, 200, 400, 400]
-const HEADER_BAR_HEIGHT = 60
 
 export const ScrollAnimation: React.FC = () => {
   const [scrollY, setScrollY] = useState(0)
@@ -41,10 +41,14 @@ export const ScrollAnimation: React.FC = () => {
     }
   }, [])
 
-  const bannerTransform = useMemo(() => {
+  const { bannerTransform, isHiddenBanner } = useMemo(() => {
+    const scrollProgressStep1 = getScrollProgress(1)
     const scale = `scale(${1 - getScrollProgress(0) * 0.2})`
-    const rotateX = `rotateX(${getScrollProgress(1) * 90}deg)`
-    return [scale, rotateX].join(' ')
+    const rotateX = `rotateX(${scrollProgressStep1 * 90}deg)`
+    return {
+      bannerTransform: [scale, rotateX].join(' '),
+      isHiddenBanner: scrollProgressStep1 === 1,
+    }
   }, [scrollY])
 
   const letterSize = useMemo(() => {
@@ -87,7 +91,7 @@ export const ScrollAnimation: React.FC = () => {
       }}
     >
       <Box position="absolute" top="0" left="0" w="full" h="full" zIndex={3}>
-        <Flex w="100%" position="sticky" top="60px">
+        <Flex w="100%" position="sticky" top={`${HEADER_BAR_HEIGHT}px`}>
           <Center
             position="relative"
             zIndex={1}
@@ -111,6 +115,7 @@ export const ScrollAnimation: React.FC = () => {
                 transition="50ms"
                 style={{
                   transform: bannerTransform,
+                  opacity: isHiddenBanner ? 0 : 1,
                 }}
               >
                 <Box

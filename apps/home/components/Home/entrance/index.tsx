@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
 import { useInnerSize } from 'hooks'
-import { sleep } from '../../../utils'
+import { isWhiteListStage, sleep } from '../../../utils'
 
 const MOBILE_SIZE = 768
 
@@ -103,7 +103,7 @@ export const Entrance: React.FC<
       position="fixed"
       h="calc(100vh - 60px)"
       w="full"
-      top="60px"
+      top={`${60 + (isWhiteListStage() ? 44 : 0)}px`}
       left="0"
       bg="rgba(255, 255, 255, 1)"
       zIndex={999}

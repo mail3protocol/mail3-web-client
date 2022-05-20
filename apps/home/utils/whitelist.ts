@@ -1,5 +1,6 @@
 import {
   BETA_TESTING_DATE_RANGE,
+  IS_FORCE_WHITELIST,
   WHITE_LIST_APPLY_DATE_RANGE,
 } from '../constants/env'
 
@@ -10,6 +11,9 @@ export function getDateRangeFormat(range: [Date, Date]) {
 }
 
 export function isWhiteListStage() {
+  if (IS_FORCE_WHITELIST) {
+    return true
+  }
   const now = new Date()
   return (
     now.getTime() >= WHITE_LIST_APPLY_DATE_RANGE[0].getTime() &&

@@ -9,7 +9,9 @@ export const WhitelistGuide = () => (
     justify="center"
     maxW={`${CONTAINER_MAX_WIDTH}px`}
     w="full"
-    h="358px"
+    h="auto"
+    pt="102px"
+    pb={{ base: '102px', md: '130px' }}
     mx="auto"
     textAlign={{ base: 'center', md: 'left' }}
   >

@@ -18,13 +18,16 @@ import React from 'react'
 import LogoSvg from 'assets/svg/logo.svg'
 import LogoWithoutFontSvg from 'assets/svg/logo-without-font.svg'
 import HomeNavbarSvg from '../../../assets/svg/home-navbar-menu.svg'
-import { isWhiteListStage } from '../../../utils'
+import { isBetaTestingStage, isWhiteListStage } from '../../../utils'
 import {
   NormalButtons,
   NormalMenus,
   WhiteListButtons,
   WhiteListMenus,
 } from './menu'
+import { RainbowBar } from '../rainbowBar'
+
+export const HEADER_BAR_HEIGHT = 60 + (isWhiteListStage() ? 44 : 0)
 
 export const Navbar: React.FC = () => {
   const isShowWhiteListStage = isWhiteListStage()
@@ -33,17 +36,18 @@ export const Navbar: React.FC = () => {
     onClose: onCloseMenuDrawer,
     onOpen: onOpenMenuDrawer,
   } = useDisclosure()
+  const isShowRainbowBar = isShowWhiteListStage || isBetaTestingStage()
   return (
-    <>
-      <Center
-        w="full"
-        h="60px"
-        position="sticky"
-        top="0"
-        bg="#fff"
-        zIndex={99}
-        px="20px"
-      >
+    <Flex
+      h={`${HEADER_BAR_HEIGHT}px`}
+      w="full"
+      position="sticky"
+      top="0"
+      zIndex={99}
+      direction="column"
+    >
+      {isShowRainbowBar ? <RainbowBar /> : null}
+      <Center bg="#fff" px="20px" h="60px">
         <Flex
           w="full"
           maxW={`${CONTAINER_MAX_WIDTH}px`}
@@ -113,6 +117,6 @@ export const Navbar: React.FC = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-    </>
+    </Flex>
   )
 }

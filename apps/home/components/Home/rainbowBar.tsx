@@ -2,17 +2,46 @@ import React from 'react'
 import { Box, Center, Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useTranslation } from 'next-i18next'
+import styled from '@emotion/styled'
 import { isBetaTestingStage, isWhiteListStage } from '../../utils'
+
+export const RainbowBarContainer = styled(Center)`
+  background: linear-gradient(
+    90deg,
+    #ffb1b1,
+    #ffcd4b,
+    #916bff,
+    #ffb1b1,
+    #ffdc81,
+    #d9ff89,
+    #c6b2ff,
+    #ffb1b1
+  );
+  background-size: 400% 400%;
+  animation: run-text-bg 20s linear infinite;
+  @keyframes run-text-bg {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+`
 
 export const RainbowBar: React.FC = () => {
   const { t } = useTranslation('index')
   return (
-    <Center
-      bg="linear-gradient(90.02deg, #FFBEBE 0.01%, #FFDC81 31.73%, #D9FF89 58.81%, #C6B2FF 99.99%)"
+    <RainbowBarContainer
+      position="sticky"
       minH="44px"
       textAlign="center"
       py="6px"
       px="20px"
+      top="0"
     >
       <Box>
         {isWhiteListStage() ? (
@@ -44,6 +73,6 @@ export const RainbowBar: React.FC = () => {
           </>
         ) : null}
       </Box>
-    </Center>
+    </RainbowBarContainer>
   )
 }

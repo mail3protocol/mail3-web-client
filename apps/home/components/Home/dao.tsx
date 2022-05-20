@@ -55,8 +55,10 @@ export const Dao = () => {
   const illustrationContainerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const onChangeIllustrationTextScale = () => {
-      console.log(illustrationContainerRef.current?.offsetWidth)
-      const v = (illustrationContainerRef.current?.offsetWidth || 488) / 488
+      const v = Math.min(
+        (illustrationContainerRef.current?.offsetWidth || 488) / 488,
+        1
+      )
       setIllustrationTextScale(v)
     }
     const subscriber = fromEvent(window, 'resize').subscribe(
@@ -134,6 +136,7 @@ export const Dao = () => {
             w="full"
             h="full"
             position="relative"
+            transformOrigin="top right"
             style={{
               transform: `scale(${illustrationTextScale})`,
               height: `${402 * illustrationTextScale}px`,

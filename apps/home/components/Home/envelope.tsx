@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import EnvelopeBgPath from '../../assets/png/envelope/bg.png'
 import EnvelopeCoverClosePath from '../../assets/png/envelope/cover-close.png'
 import EnvelopeCoverOpenPath from '../../assets/png/envelope/cover-open.png'
+import { HEADER_BAR_HEIGHT } from './navbar'
 
 export const EnvelopeContainer: React.FC<
   BoxProps & {
@@ -14,7 +15,7 @@ export const EnvelopeContainer: React.FC<
       w="full"
       h={fullScreenHeight ?? 'calc(100vh - 60px)'}
       position="sticky"
-      top="60px"
+      top={`${HEADER_BAR_HEIGHT}px`}
       left={0}
     >
       <Center
