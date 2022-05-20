@@ -38,7 +38,7 @@ const TitleBox = styled(Box)`
 `
 
 export const MailboxContainer = styled(Box)`
-  margin: 25px auto;
+  margin: 20px auto;
   background-color: #ffffff;
   box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
   border-radius: 24px;
@@ -48,6 +48,22 @@ export const MailboxContainer = styled(Box)`
     border-top-right-radius: 0;
     border-top-left-radius: 0;
     box-shadow: none;
+  }
+`
+const FlexButtonBox = styled(Flex)`
+  justify-content: space-between;
+
+  @media (max-width: 600px) {
+    flex-direction: column-reverse;
+    justify-content: normal;
+    align-items: center;
+  }
+`
+const ButtonWrite = styled(Button)`
+  @media (max-width: 600px) {
+    margin-bottom: 20px;
+    margin-right: 20px;
+    align-self: flex-end;
   }
 `
 
@@ -228,17 +244,17 @@ export const InboxComponent: React.FC = () => {
         />
       )}
 
-      <Box paddingTop="35px">
-        <Flex justifyContent="space-between">
+      <Box paddingTop={{ base: '25px', md: '35px' }}>
+        <FlexButtonBox>
           <InboxNav />
-          <Button
+          <ButtonWrite
             onClick={() => {
               router.push(RoutePath.NewMessage)
             }}
           >
             <SVGWrite /> <Box ml="10px">Write</Box>
-          </Button>
-        </Flex>
+          </ButtonWrite>
+        </FlexButtonBox>
 
         <MailboxContainer minH="700px">
           {pageType === PageType.Inbox && (

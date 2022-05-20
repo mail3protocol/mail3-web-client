@@ -48,7 +48,7 @@ export const InboxNav: React.FC = () => {
   }
 
   return (
-    <HStack spacing="80px">
+    <HStack spacing={{ md: '80px', base: '40px' }}>
       {navList.map((item, i) => {
         const { icon, title } = item
         return (
