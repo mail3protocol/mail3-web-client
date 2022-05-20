@@ -6,7 +6,6 @@ import { atom, useAtom } from 'jotai'
 import { useDidMount } from 'hooks'
 import { Button } from 'ui'
 import styled from '@emotion/styled'
-import update from 'immutability-helper'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
@@ -89,22 +88,20 @@ export const InboxComponent: React.FC = () => {
       refetchInterval: 1000,
       onSuccess(d) {
         if (d.messages.length) {
+          // TODO will be have bug when new mail to exceed page size
+          // so, should be request alone api to get all new mails
           const newItem = d.messages.filter((i) =>
             newMessages.every((i2: { id: any }) => i2.id !== i.id)
           )
-          // console.log('newItem', newItem)
-
           if (!newItem.length) return
           // TODO
           // BUG unshift not work
-          const newState = formatState(newItem, AvatarBadgeType.New)
-          const newDate: any = update(newMessages, {
-            $unshift: newState,
-          })
-          // console.log('newDate', newDate)
-
-          setSurplus(d.total - newDate.length)
-          setNewMessages(newDate)
+          const newDate = formatState(newItem, AvatarBadgeType.New)
+          const newState = [...newDate, ...newMessages]
+          console.log('newDate', newDate)
+          console.log('newState', newState)
+          setSurplus(d.total - newState.length)
+          setNewMessages(newState)
         }
       },
     }
@@ -125,13 +122,11 @@ export const InboxComponent: React.FC = () => {
           const newItem = d.messages.filter((i) =>
             newMessages.every((i2: { id: any }) => i2.id !== i.id)
           )
-          const newState = formatState(newItem, AvatarBadgeType.New)
-          const newDate: any = update(newMessages, {
-            $push: newState,
-          })
+          const newDate = formatState(newItem, AvatarBadgeType.New)
+          const newState = [...newMessages, ...newDate]
 
-          setSurplus(d.total - newDate.length)
-          setNewMessages(newDate)
+          setSurplus(d.total - newState.length)
+          setNewMessages(newState)
         }
       },
     }
@@ -153,12 +148,9 @@ export const InboxComponent: React.FC = () => {
     const { data } = await api.getMessagesSeen(pageIndex)
 
     if (data?.messages?.length) {
-      const newState = formatState(data.messages, AvatarBadgeType.None)
-      const newDate: any = update(seenMessages, {
-        $push: newState,
-      })
-
-      setSeenMessages(newDate)
+      const newDate = formatState(data.messages, AvatarBadgeType.None)
+      const newState = [...seenMessages, ...newDate]
+      setSeenMessages(newState)
       setIsFetching(false)
       setPageIndexSeen(pageIndex)
     } else {
@@ -189,24 +181,19 @@ export const InboxComponent: React.FC = () => {
   }
 
   const updateItem = (type: string) => (index: number) => {
-    const oldDate: any = type === 'seen' ? seenMessages : newMessages
-
-    const newDate = update(oldDate, {
-      [index]: {
-        isChoose: {
-          $set: !oldDate[index].isChoose,
-        },
-      },
-    })
-
-    if (newDate.every((item: { isChoose: boolean }) => !item.isChoose)) {
-      setIsChooseMode(false)
-    }
-
+    let newDate
     if (type === 'seen') {
+      newDate = [...seenMessages]
+      newDate[index].isChoose = !newDate[index].isChoose
       setSeenMessages(newDate)
     } else {
+      newDate = [...newMessages]
+      newDate[index].isChoose = !newDate[index].isChoose
       setNewMessages(newDate)
+    }
+
+    if (newDate.every((item) => !item.isChoose)) {
+      setIsChooseMode(false)
     }
   }
 
