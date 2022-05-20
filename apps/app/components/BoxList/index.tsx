@@ -108,8 +108,9 @@ const Item = ({
   }[avatarBadgeType]
 
   const AvatarBox = (
-    <Flex w="96px">
+    <Flex w="48px">
       <Avatar
+        cursor="pointer"
         address={from.address}
         w="48px"
         h="48px"
@@ -151,11 +152,11 @@ const Item = ({
 
   return (
     <Flex
+      align="center"
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
       margin="20px 0"
       p="5px"
       borderRadius="8px"
-      cursor="pointer"
       transition="all .2s ease-out"
       _hover={{
         color: '#fff',
@@ -165,12 +166,12 @@ const Item = ({
       //   color: '#6F6F6F',
       //   bg: '#E5E5E5',
       // }}
-      onClick={onClick}
     >
       <Box w="48px">
         {isChooseMode ? (
           <CircleE
             size="48px"
+            cursor="pointer"
             onClick={(e) => {
               e.stopPropagation()
               if (onClickAvatar) onClickAvatar(index)
@@ -184,32 +185,42 @@ const Item = ({
           AvatarBox
         )}
       </Box>
-      <Flex flex="1" padding="0px 20px" wrap="wrap" alignContent="center">
-        <Text
-          fontWeight="600"
-          fontSize="16px"
-          lineHeight={1.2}
-          maxW="100%"
-          w="100%"
-          noOfLines={1}
-        >
-          {subject}
-        </Text>
-        <Text
-          fontWeight="400"
-          fontSize="14px"
-          mt="8px"
-          lineHeight={1.2}
-          maxW="100%"
-          w="100%"
-          noOfLines={1}
-        >
-          {desc}
-        </Text>
+      <Flex
+        marginLeft="20px"
+        align="center"
+        w="100%"
+        onClick={onClick}
+        cursor="pointer"
+      >
+        <Flex flex={1} wrap="wrap" alignContent="center">
+          <Text
+            wordBreak="break-all"
+            fontWeight="600"
+            fontSize="16px"
+            lineHeight={1.2}
+            maxW="100%"
+            w="100%"
+            noOfLines={1}
+          >
+            {subject}
+          </Text>
+          <Text
+            wordBreak="break-all"
+            fontWeight="400"
+            fontSize="14px"
+            mt="8px"
+            lineHeight={1.2}
+            maxW="100%"
+            w="100%"
+            noOfLines={1}
+          >
+            {desc}
+          </Text>
+        </Flex>
+        <Box fontSize="14px" marginLeft="20px" color="#6F6F6F">
+          {dynamicDateString(date)}
+        </Box>
       </Flex>
-      <Center w="170px" fontSize="14px" color="#6F6F6F">
-        {dynamicDateString(date)}
-      </Center>
     </Flex>
   )
 }
