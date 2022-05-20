@@ -34,8 +34,8 @@ export interface BoxListProps {
   data: Array<MessageItem>
   onClickAvatar?: (index: number) => void
   onClickBody: (id: string) => void
-  isChooseMode: boolean
-  setIsChooseMode: React.Dispatch<React.SetStateAction<boolean>>
+  isChooseMode?: boolean
+  setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface BoxItemProps {
@@ -51,8 +51,8 @@ export interface BoxItemProps {
   itemType: ItemType
   onClickAvatar?: (index: number) => void
   onClick?: () => void
-  isChooseMode: boolean
-  setIsChooseMode: React.Dispatch<React.SetStateAction<boolean>>
+  isChooseMode?: boolean
+  setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CircleE = styled(Circle)`

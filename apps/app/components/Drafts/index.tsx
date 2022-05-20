@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
-import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
+import { useTranslation } from 'next-i18next'
 import { useDidMount } from 'hooks'
-import update from 'immutability-helper'
 import { useRouter } from 'next/router'
-import { BoxList, isChooseModeAtom } from '../BoxList'
+import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
 import { useAPI } from '../../hooks/useAPI'
+import { AvatarBadgeType, BoxList, MessageItem } from '../BoxList'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
+import { formatState } from '../Inbox'
+
 import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/none.svg'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
-  const [messages, setMessages] = useState<any>([])
+  const [messages, setMessages] = useState<MessageItem[]>([])
   const [pageIndex, setPageIndex] = useState(0)
   const [hasNext, setHasNext] = useState(true)
-  const [isChooseMode, setIsChooseMode] = useAtom(isChooseModeAtom)
+  const [isChooseMode, setIsChooseMode] = useState(false)
   const router = useRouter()
   const api = useAPI()
   const [, setIsFetching] = useInfiniteScroll(fetchDate)
@@ -40,9 +40,10 @@ export const DraftsComponent: React.FC = () => {
     )
 
     if (data?.messages?.length) {
-      const newDate: any = update(messages, {
-        $push: data.messages,
-      })
+      const newDate = [
+        ...messages,
+        ...formatState(data.messages, AvatarBadgeType.None),
+      ]
       setMessages(newDate)
       setIsFetching(false)
       setPageIndex(_pageIndex)
@@ -51,22 +52,13 @@ export const DraftsComponent: React.FC = () => {
     }
   }
 
-  const updateItem = (index: number) => {
-    console.log('update item index', index)
-
-    const newDate: any = update(messages, {
-      [index]: {
-        isChoose: {
-          $set: !messages[index].isChoose,
-        },
-      },
-    })
-
-    if (newDate.every((item: { isChoose: boolean }) => !item.isChoose)) {
+  const onUpdate = (index: number) => {
+    const newDate = [...messages]
+    newDate[index].isChoose = !newDate[index].isChoose
+    setMessages(newDate)
+    if (newDate.every((item) => !item.isChoose)) {
       setIsChooseMode(false)
     }
-
-    setMessages(newDate)
   }
 
   return (
@@ -109,8 +101,10 @@ export const DraftsComponent: React.FC = () => {
           <Box padding="20px 64px">
             <BoxList
               data={messages}
-              update={updateItem}
-              onBodyClick={(id) => {
+              isChooseMode={isChooseMode}
+              setIsChooseMode={setIsChooseMode}
+              onClickAvatar={onUpdate}
+              onClickBody={(id) => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}
             />

@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { useDidMount } from 'hooks'
 import { Button } from 'ui'
 import styled from '@emotion/styled'
-import update from 'immutability-helper'
 import { useRouter } from 'next/router'
-import { BoxList } from '../BoxList'
+import { AvatarBadgeType, BoxList, MessageItem } from '../BoxList'
 import SVGTrash from '../../assets/trash.svg'
 import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
@@ -16,10 +15,11 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import SVGNone from '../../assets/none.svg'
 import SVGIsBottom from '../../assets/is-bottom.svg'
+import { formatState } from '../Inbox'
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('inbox')
-  const [messages, setMessages] = useState<any>([])
+  const [messages, setMessages] = useState<MessageItem[]>([])
   const [pageIndex, setPageIndex] = useState(0)
   const [hasNext, setHasNext] = useState(true)
   const router = useRouter()
@@ -38,9 +38,10 @@ export const TrashComponent: React.FC = () => {
     const { data } = await api.getMailboxesMessages(Mailboxes.Trash, _pageIndex)
 
     if (data?.messages?.length) {
-      const newDate: any = update(messages, {
-        $push: data.messages,
-      })
+      const newDate = [
+        ...messages,
+        ...formatState(data.messages, AvatarBadgeType.None),
+      ]
       setMessages(newDate)
       setIsFetching(false)
       setPageIndex(_pageIndex)
@@ -102,7 +103,7 @@ export const TrashComponent: React.FC = () => {
             </TextBox>
             <BoxList
               data={messages}
-              onBodyClick={(id) => {
+              onClickBody={(id) => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}
             />
