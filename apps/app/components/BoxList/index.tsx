@@ -116,7 +116,7 @@ const Item = ({
         onClick={(e) => {
           e.stopPropagation()
           if (onClickAvatar) onClickAvatar(index)
-          setIsChooseMode(true)
+          if (setIsChooseMode) setIsChooseMode(true)
           return false
         }}
         borderRadius="50%"
