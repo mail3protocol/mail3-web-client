@@ -36,6 +36,7 @@ import { AuthModal } from '../Auth'
 const Container = styled(Flex)`
   height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);
   background-image: url(${landingBg});
+  position: relative;
   flex-direction: column;
   align-items: center;
   background-repeat: no-repeat;
@@ -132,6 +133,10 @@ const ConnectBox = styled(Flex)`
       .divider {
         margin-right: 26px;
       }
+    }
+
+    &::before {
+      background: none;
     }
   }
 `
