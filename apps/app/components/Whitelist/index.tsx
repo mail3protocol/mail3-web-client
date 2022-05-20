@@ -78,6 +78,7 @@ const ConnectBox = styled(Flex)`
     inset: 0;
     padding: 2px;
     border-radius: 24px;
+    z-index: -1;
     background: linear-gradient(
       90.02deg,
       #ffb1b1 0.01%,
@@ -210,6 +211,7 @@ export const WhiteList: React.FC = () => {
                 href="#"
                 fontSize="12px"
                 textDecoration="underline"
+                cursor="pointer"
               >
                 {t('more-details')}
               </Link>
