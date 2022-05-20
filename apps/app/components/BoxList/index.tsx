@@ -100,8 +100,8 @@ const Item = ({
     <Flex w="96px">
       <Avatar
         address={from.address}
-        w="44px"
-        h="44px"
+        w="48px"
+        h="48px"
         showBorder
         onClick={(e) => {
           e.stopPropagation()
