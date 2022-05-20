@@ -211,7 +211,7 @@ export const InboxComponent: React.FC = () => {
   }
 
   const isClear = !newMessages.length && !seenMessages.length
-  const isNoNew = !newMessages.length && seenMessages.length
+  const isNoNew = !newMessages.length && !!seenMessages.length
 
   return (
     <Box>
