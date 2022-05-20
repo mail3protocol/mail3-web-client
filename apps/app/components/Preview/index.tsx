@@ -4,6 +4,7 @@ import { Avatar } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
+import styled from '@emotion/styled'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -12,7 +13,7 @@ import {
   FlagAction,
   FlagType,
 } from '../../api'
-import { truncateMiddle } from '../../utils'
+import { dynamicDateString, truncateMiddle } from '../../utils'
 
 interface MeesageDetail {
   date: string
@@ -20,6 +21,21 @@ interface MeesageDetail {
   to: AddressListResponse
   from: AddressResponse
 }
+
+const Container = styled(Box)`
+  margin: 25px auto 150px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
+  border-radius: 24px;
+  padding: 40px 60px;
+
+  @media (max-width: 600px) {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0px;
+    margin: 20px auto 130px;
+  }
+`
 
 export const PreviewComponent: React.FC = () => {
   const router = useRouter()
@@ -116,90 +132,97 @@ export const PreviewComponent: React.FC = () => {
           </AvatarGroup>
         </Box>
       </Center>
-      <Box
-        margin="25px auto 150px"
-        bgColor="#FFFFFF"
-        boxShadow="0px 0px 10px 4px rgba(25, 25, 100, 0.1)"
-        borderRadius="24px"
-        padding="40px 60px"
-      >
-        <Box>
-          <Text
-            align="center"
-            fontWeight="700"
-            fontSize="28px"
-            lineHeight={1.2}
-            marginBottom="30px"
-          >
-            {detail?.subject}
-          </Text>
-        </Box>
-        <Box>
-          <Flex>
-            <Box w="48px">
-              {detail?.from && (
-                <Avatar address={detail.from.address} borderRadius="50%" />
-              )}
-            </Box>
-            <Box borderBottom="1px solid #E7E7E7;" flex={1} marginLeft="17px">
-              <Flex
-                lineHeight={1.2}
-                alignItems="flex-end"
-                justify="space-between"
-              >
-                <Box>
+      {!!detail && (
+        <Container>
+          <Box>
+            <Text
+              align="center"
+              fontWeight="700"
+              fontSize={{ base: '20px', md: '28px' }}
+              lineHeight={1.2}
+              marginBottom="30px"
+            >
+              {detail.subject}
+            </Text>
+          </Box>
+          <Box>
+            <Flex>
+              <Box w="48px">
+                {detail.from && (
+                  <Avatar address={detail.from.address} borderRadius="50%" />
+                )}
+              </Box>
+              <Box borderBottom="1px solid #E7E7E7;" flex={1} marginLeft="17px">
+                <Flex
+                  lineHeight={1}
+                  alignItems="baseline"
+                  justify="space-between"
+                >
+                  <Box>
+                    <Box
+                      fontWeight={500}
+                      fontSize="24px"
+                      lineHeight="1"
+                      display="inline-block"
+                      verticalAlign="middle"
+                    >
+                      {detail.from.name}
+                    </Box>
+                    <Box
+                      color="#6F6F6F"
+                      fontWeight={400}
+                      fontSize="14px"
+                      display="inline-block"
+                      verticalAlign="middle"
+                      marginLeft="5px"
+                    >
+                      {`<${detail.from.address}>`}
+                    </Box>
+                  </Box>
+                  <Box />
                   <Box
                     fontWeight={500}
-                    fontSize="24px"
-                    lineHeight="36px"
-                    display="inline-block"
-                    verticalAlign="middle"
-                  >
-                    {detail?.from.name}
-                  </Box>
-                  <Box
+                    fontSize="16px"
                     color="#6F6F6F"
-                    fontWeight={400}
-                    fontSize="14px"
-                    display="inline-block"
-                    verticalAlign="middle"
-                    marginLeft="5px"
+                    whiteSpace="nowrap"
                   >
-                    {`<${detail?.from.address}>`}
+                    {dynamicDateString(detail.date)}
                   </Box>
+                </Flex>
+                <Box
+                  fontWeight={400}
+                  fontSize="16px"
+                  color="#6F6F6F"
+                  lineHeight="24px"
+                  marginTop="5px"
+                  wordBreak="break-word"
+                >
+                  to{' '}
+                  {detail.to
+                    .map((item) => {
+                      // const address = truncateMiddle(item.address, 6, 6)
+                      const { address } = item
+                      if (item.name) return `${item.name} <${address}>`
+                      return `<${address}>`
+                    })
+                    .join(';')}
                 </Box>
-                <Box />
-                <Box fontWeight={500} fontSize="16px" color="#6F6F6F">
-                  {detail?.date}
-                </Box>
-              </Flex>
-              <Box
-                fontWeight={400}
-                fontSize="16px"
-                color="#6F6F6F"
-                lineHeight="24px"
-              >
-                to{' '}
-                {detail?.to
-                  .map((item) => {
-                    const address = truncateMiddle(item.address, 6, 6)
-                    if (item.name) return `${item.name} <${address}>`
-                    return `<${address}>`
-                  })
-                  .join(';')}
               </Box>
-            </Box>
-          </Flex>
-        </Box>
-        <Box paddingTop="24px" paddingLeft="65px">
-          <div
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: content,
-            }}
-          />
-        </Box>
-      </Box>
+            </Flex>
+          </Box>
+          <Box
+            padding={{ base: '20px 0', md: '65px 24px' }}
+            borderBottom="1px solid #ccc"
+          >
+            <div
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                __html: content,
+              }}
+            />
+          </Box>
+        </Container>
+      )}
     </>
   )
 }
