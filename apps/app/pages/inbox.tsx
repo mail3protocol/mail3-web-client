@@ -19,10 +19,14 @@ const NewPageContainer = styled(PageContainer)`
 `
 
 const Inbox: NextPage = () => (
-  <NewPageContainer>
-    <Navbar />
-    <InboxComponent />
-  </NewPageContainer>
+  <>
+    <PageContainer>
+      <Navbar />
+    </PageContainer>
+    <NewPageContainer>
+      <InboxComponent />
+    </NewPageContainer>
+  </>
 )
 
 export default Inbox

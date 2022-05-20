@@ -44,7 +44,6 @@ export const MailboxContainer = styled(Box)`
   border-radius: 24px;
 
   @media (max-width: 600px) {
-    background-size: 100%;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
     box-shadow: none;
