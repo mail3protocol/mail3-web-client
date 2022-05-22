@@ -161,7 +161,7 @@ export const ScrollAnimation: React.FC = () => {
                 />
                 <Box
                   position="absolute"
-                  bg="repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)"
+                  bg="#eee"
                   w="calc(100% + 16px)"
                   h="8px"
                   bottom="-8px"
