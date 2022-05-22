@@ -31,6 +31,7 @@ function Mail3({
         <title>Mail3</title>
 
         <link rel="manifest" href="/manifest.json" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <link
           href="/icons/icon-16x16.png"
           rel="icon"
@@ -43,7 +44,7 @@ function Mail3({
           type="image/png"
           sizes="32x32"
         />
-        <link rel="apple-touch-icon" href="/apple-icon.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-72x72.png" />
         <meta name="theme-color" content="#317EFB" />
       </Head>
       <Script
