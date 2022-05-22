@@ -28,7 +28,7 @@ import PhantomSvg from 'assets/svg/phantom.svg'
 import Blocto from 'assets/svg/blocto.svg'
 import {
   useDialog,
-  SupportedConnectors,
+  // SupportedConnectors,
   metaMask,
   metaMaskStore,
   walletConnect,
@@ -45,7 +45,7 @@ export interface ConnectModalProps {
   onClose: () => void
 }
 
-const { useSelectedIsActivating } = SupportedConnectors
+// const { useSelectedIsActivating } = SupportedConnectors
 
 interface ConnectButtonProps extends ButtonProps {
   text: string
@@ -121,13 +121,22 @@ const PlaceholderButton: React.FC<ConnectButtonProps> = ({
   )
 }
 
+const isRejectedMessage = (error: any) => {
+  if (typeof error === 'string' && error.includes('cancel')) {
+    return true
+  }
+  if (error?.message && error.message.includes('rejected')) {
+    return true
+  }
+  return false
+}
+
 export const ConenctModal: React.FC<ConnectModalProps> = ({
   isOpen,
   onClose,
 }) => {
   const [t] = useTranslation('common')
   const [isConnectingMetamask, setIsConnectingMetamask] = useState(false)
-  const isConnectingWalletConnect = useSelectedIsActivating(walletConnect)
   const dialog = useDialog()
   const setLastConnector = useSetLastConnector()
   const connectorName = useLastConectorName()
@@ -164,7 +173,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                   await metaMask.activate()
                   const { error } = metaMaskStore.getState()
                   if (error != null) {
-                    if (!error?.message.includes('User rejected')) {
+                    if (!isRejectedMessage(error)) {
                       onClose()
                       dialog({
                         type: 'warning',
@@ -187,10 +196,8 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
               text={t('connect.wallet-connect')}
               icon={<WalletConnectSvg />}
               isDisabled={
-                isConnectingWalletConnect ||
-                (connectorName === ConnectorName.WalletConnect && isConnected)
+                connectorName === ConnectorName.WalletConnect && isConnected
               }
-              isLoading={isConnectingWalletConnect}
               isConnected={
                 connectorName === ConnectorName.WalletConnect && isConnected
               }

@@ -10,7 +10,7 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import { useAccount } from 'hooks'
-import { useTranslation } from 'next-i18next'
+import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo } from 'react'
 import styled from '@emotion/styled'
 import { CheckCircleIcon } from '@chakra-ui/icons'
@@ -143,6 +143,8 @@ const ConnectBox = styled(Flex)`
 `
 
 const COLORFUL_BTN_BG = `linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)`
+const moreDetailsLink =
+  'https://feather-amaryllis-11e.notion.site/Join-the-Whitelist-and-get-the-early-access-to-Mail3-43c1bf8f21ff443ca3ca4b6f1119e0b8'
 
 export const WhiteList: React.FC = () => {
   const [t] = useTranslation('whitelist')
@@ -177,7 +179,24 @@ export const WhiteList: React.FC = () => {
     if (mascotIndex === 2) {
       return t('success')
     }
-    return t('fail')
+    return (
+      <Trans
+        ns="whitelist"
+        i18nKey="fail"
+        t={t}
+        components={{
+          a: (
+            <Link
+              isExternal
+              href={DISCORD_URL}
+              color="#4E52F5"
+              textDecoration="underline"
+              fontWeight={700}
+            />
+          ),
+        }}
+      />
+    )
   }, [mascotIndex])
 
   useAuth()
@@ -208,7 +227,7 @@ export const WhiteList: React.FC = () => {
               </Flex>
               <Link
                 isExternal
-                href="#"
+                href={moreDetailsLink}
                 fontSize="12px"
                 textDecoration="underline"
                 cursor="pointer"
@@ -265,7 +284,9 @@ export const WhiteList: React.FC = () => {
               />
               <VStack spacing="16px" alignItems="baseline" w="100%">
                 <Text className="desc">
-                  {isAuth ? t('join-community-desc') : t('earlybird-desc')}
+                  {mascotIndex === 3
+                    ? t('join-community-desc')
+                    : t('earlybird-desc')}
                 </Text>
                 <Stack
                   w="100%"

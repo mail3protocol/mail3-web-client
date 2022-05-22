@@ -21,7 +21,7 @@
         "connecting": "Connecting",
         "coming-soon": "Coming soon",
         "desired-wallet": "Click on the wallet below and let us know which one you need more",
-        "footer": "We do not own your private keys and cannot access your assest without your confirmation.",
+        "footer": "We do not own your private keys and cannot access your assets without your confirmation.",
         "notice": "Notice"
     },
     "auth": {
