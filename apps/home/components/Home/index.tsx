@@ -11,7 +11,14 @@ export const Home: React.FC = () => {
   const [status, setStatus] = useState<EntranceStatus>('opened')
   return (
     <Flex direction="column" position="relative">
-      {status !== 'closed' ? <Entrance onChangeStatus={setStatus} /> : null}
+      {status !== 'closed' ? (
+        <Entrance
+          onChangeStatus={(s) => {
+            window.scroll(0, 0)
+            setStatus(s)
+          }}
+        />
+      ) : null}
       <Navbar />
       <ScrollAnimation />
       <Dao />

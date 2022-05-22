@@ -36,8 +36,16 @@ export const EnvelopeContainer: React.FC<
 export const Envelope: React.FC<{
   progress?: number
   envelopeTransform?: string
+  envelopeTransformEnded?: boolean
   fullScreenHeight?: string
-}> = ({ progress = 0, envelopeTransform, fullScreenHeight }) => {
+  hiddenSide?: boolean
+}> = ({
+  progress = 0,
+  hiddenSide,
+  envelopeTransformEnded,
+  envelopeTransform,
+  fullScreenHeight,
+}) => {
   const { envelopeSealBackTransform, envelopeSealFrontTransform, isFlipped } =
     useMemo(() => {
       const frontDeg = 85
@@ -58,11 +66,28 @@ export const Envelope: React.FC<{
         <Box
           position="relative"
           w="full"
-          transition="50ms"
+          transition="transform 50ms"
           style={{
+            transformStyle: 'preserve-3d',
             transform: envelopeTransform,
+            boxShadow: envelopeTransformEnded
+              ? 'none'
+              : '0 0 20px rgba(0, 0, 0, 0.1)',
           }}
         >
+          <Box
+            position="absolute"
+            bg="#eee"
+            w="full"
+            h="8px"
+            top="-8px"
+            left="0"
+            transform="rotateX(-90deg) translateZ(4px)"
+            rounded="100%"
+            style={{
+              opacity: hiddenSide ? 0 : 1,
+            }}
+          />
           <Image src={EnvelopeBgPath.src} w="full" h="auto" />
           <Flex
             w="full"
@@ -95,12 +120,12 @@ export const Envelope: React.FC<{
         <Box
           position="relative"
           bg="#e7e7e7"
-          shadow="0 0 20px rgba(0, 0, 0, 0.1)"
           borderBottomRadius="12px"
           w="full"
-          transition="50ms"
+          shadow="0 0 20px rgba(0, 0, 0, 0.1)"
           style={{
-            transform: envelopeTransform,
+            opacity: envelopeTransformEnded ? 1 : 0,
+            transform: envelopeTransformEnded ? envelopeTransform : '',
           }}
         >
           <Image src={EnvelopeBgPath.src} w="full" h="auto" opacity={0} />

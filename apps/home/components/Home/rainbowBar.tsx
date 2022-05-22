@@ -43,6 +43,7 @@ export const RainbowBar: React.FC = () => {
       py="6px"
       px="20px"
       top="0"
+      whiteSpace="nowrap"
     >
       <Box>
         {isWhiteListStage() ? (

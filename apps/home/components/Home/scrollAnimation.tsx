@@ -9,7 +9,22 @@ import { Envelope } from './envelope'
 import { HEADER_BAR_HEIGHT } from './navbar'
 
 const ENVELOPE_RADIO = 95 / 157
-const SCROLL_STEPS = [200, 200, 200, 400, 400]
+const SCROLL_STEPS = [300, 300, 300, 600, 600]
+
+const letterPaddingTop =
+  SCROLL_STEPS.slice(0, -1).reduce((acc, step) => acc + step, 0) +
+  Math.floor(SCROLL_STEPS[SCROLL_STEPS.length - 1] / 2)
+
+const scrollStepIndexMap = SCROLL_STEPS.reduce<{
+  [key: number]: number
+}>((acc, step, index) => {
+  if (index === 0) {
+    acc[index] = 0
+  } else {
+    acc[index] = SCROLL_STEPS.slice(0, index).reduce((acc, cur) => acc + cur, 0)
+  }
+  return acc
+}, {})
 
 export const ScrollAnimation: React.FC = () => {
   const [scrollY, setScrollY] = useState(0)
@@ -20,10 +35,7 @@ export const ScrollAnimation: React.FC = () => {
       overflow?: boolean
     }
   ) {
-    const offset =
-      step > 0
-        ? SCROLL_STEPS.slice(0, step).reduce((acc, cur) => acc + cur, 0)
-        : 0
+    const offset = scrollStepIndexMap[step]
     const offsetedScrollY = scrollY - offset
     return options?.overflow
       ? offsetedScrollY / SCROLL_STEPS[step]
@@ -49,7 +61,7 @@ export const ScrollAnimation: React.FC = () => {
   const { bannerTransform, isHiddenBanner } = useMemo(() => {
     const scrollProgressStep1 = getScrollProgress(1)
     const scale = `scale(${1 - getScrollProgress(0) * 0.2})`
-    const rotateX = `rotateX(${scrollProgressStep1 * 90}deg)`
+    const rotateX = `rotateX(${Math.floor(scrollProgressStep1 * 90)}deg)`
     return {
       bannerTransform: [scale, rotateX].join(' '),
       isHiddenBanner: scrollProgressStep1 === 1,
@@ -65,23 +77,30 @@ export const ScrollAnimation: React.FC = () => {
     }
   }, [width, height])
 
-  const { envelopeTransform } = useMemo(() => {
-    const rotateX = `rotateX(${getScrollProgress(2) * 90 + 270}deg)`
-    const scaleBase = 0.8
-    const targetTranslateY =
-      (height - HEADER_BAR_HEIGHT - letterSize.height) / 2 +
-      letterSize.height / 2
-    const targetScale = letterSize.width / width
-    const scaleDiff = Math.abs(scaleBase - targetScale)
-    const p = getScrollProgress(3)
-    const s =
-      scaleBase <= targetScale
-        ? scaleBase + p * scaleDiff
-        : scaleBase - p * scaleDiff
-    const scale = `scale(${s})`
-    const translateY = `translateY(${(p * targetTranslateY) / s}px)`
-    return { envelopeTransform: [rotateX, scale, translateY].join(' ') }
-  }, [scrollY, width, height, letterSize.width, letterSize.height])
+  const { envelopeTransform, envelopeTransformEnded, isHiddenEnvelope } =
+    useMemo(() => {
+      const noOverflowProgress = getScrollProgress(2, { overflow: true })
+      const overflowProgress = Math.min(Math.max(noOverflowProgress, 0), 1)
+      const rotateX = `rotateX(${overflowProgress * 90 + 270}deg)`
+      const scaleBase = 0.8
+      const targetTranslateY =
+        (height - HEADER_BAR_HEIGHT - letterSize.height) / 2 +
+        letterSize.height / 2
+      const targetScale = letterSize.width / width
+      const scaleDiff = Math.abs(scaleBase - targetScale)
+      const p = getScrollProgress(3)
+      const s =
+        scaleBase <= targetScale
+          ? scaleBase + p * scaleDiff
+          : scaleBase - p * scaleDiff
+      const scale = `scale(${s})`
+      const translateY = `translateY(${(p * targetTranslateY) / s}px)`
+      return {
+        envelopeTransform: [rotateX, scale, translateY].join(' '),
+        envelopeTransformEnded: p === 1,
+        isHiddenEnvelope: noOverflowProgress < 0 || noOverflowProgress > 1,
+      }
+    }, [scrollY, width, height, letterSize.width, letterSize.height])
 
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
 
@@ -117,10 +136,11 @@ export const ScrollAnimation: React.FC = () => {
             >
               <Box
                 w="full"
-                transition="50ms"
+                transition="transform 50ms"
                 style={{
                   transform: bannerTransform,
                   opacity: isHiddenBanner ? 0 : 1,
+                  transformStyle: 'preserve-3d',
                 }}
               >
                 <Box
@@ -139,6 +159,16 @@ export const ScrollAnimation: React.FC = () => {
                       '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
                   }}
                 />
+                <Box
+                  position="absolute"
+                  bg="repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)"
+                  w="calc(100% + 16px)"
+                  h="8px"
+                  bottom="-8px"
+                  left="-8px"
+                  transform="rotateX(-90deg) translateZ(4px)"
+                  rounded="100%"
+                />
                 <Banner />
               </Box>
             </Box>
@@ -146,13 +176,17 @@ export const ScrollAnimation: React.FC = () => {
         </Flex>
       </Box>
       <Envelope
+        envelopeTransformEnded={envelopeTransformEnded}
         envelopeTransform={envelopeTransform}
         progress={getScrollProgress(4)}
         fullScreenHeight={fullScreenHeight}
+        hiddenSide={isHiddenEnvelope}
       />
       <Letter
         style={{
-          paddingTop: `calc(${1200 - letterSize.height / 2}px + 100vh)`,
+          paddingTop: `calc(${
+            letterPaddingTop - letterSize.height / 2
+          }px + 100vh)`,
           opacity: scrollY > 1000 ? 1 : 0,
         }}
         containerProps={{
