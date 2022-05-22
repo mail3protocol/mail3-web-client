@@ -45,7 +45,6 @@ function Mail3({
           sizes="32x32"
         />
         <link rel="apple-touch-icon" href="/icons/icon-72x72.png" />
-        <meta name="theme-color" content="#317EFB" />
       </Head>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-WH0BKBPFWP"
