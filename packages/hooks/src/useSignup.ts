@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useSignUpAPI } from './api'
 import { useProvider } from './connectors'
 
-const buildMessaege = (nonce: number, desc: string) => `${desc}
+export const buildSignMessaege = (nonce: number, desc: string) => `${desc}
 
 Nonce: ${nonce}`
 
@@ -51,7 +51,7 @@ export const useSignup = (signatureDesc: string) => {
         nonce,
       }
     }
-    const message = buildMessaege(nonce, signatureDesc)
+    const message = buildSignMessaege(nonce, signatureDesc)
     const signature = await provider.getSigner().signMessage(message)
     try {
       await api.signUp(message, signature)
@@ -72,6 +72,8 @@ export const useSignup = (signatureDesc: string) => {
     return {
       code: SignupResponseCode.Success,
       nonce,
+      message,
+      signature,
     }
   }, [api, provider, getNonce])
 }

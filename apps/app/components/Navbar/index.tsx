@@ -27,6 +27,7 @@ import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
 import { NAVBAR_HEIGHT } from '../../constants'
+import { Auth, AuthModal } from '../Auth'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -59,7 +60,7 @@ const Logo = () => {
   ]
   const popoverRef = useRef<HTMLDivElement>(null)
   const isConnected = !!useAccount()
-  const popoverTragger = isConnected ? (
+  const popoverTrigger = isConnected ? (
     <PopoverTrigger>
       <Box>
         <LogoButton variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
@@ -69,11 +70,13 @@ const Logo = () => {
       </Box>
     </PopoverTrigger>
   ) : (
-    <LogoSvg w="113px" h="auto" />
+    <Box>
+      <LogoSvg w="113px" h="auto" />
+    </Box>
   )
   return (
     <Popover arrowSize={18} autoFocus offset={[0, 10]} closeOnBlur>
-      {popoverTragger}
+      {popoverTrigger}
       <PopoverContent
         _focus={{
           boxShadow: '0px 0px 16px 12px rgba(192, 192, 192, 0.25)',
@@ -155,5 +158,7 @@ export const Navbar: React.FC<NavbarProps> = () => (
         renderConnected={(address) => <ConnectedButton address={address} />}
       />
     </Flex>
+    <AuthModal />
+    <Auth />
   </NavbarContainer>
 )

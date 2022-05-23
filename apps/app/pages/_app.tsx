@@ -1,15 +1,20 @@
 import Head from 'next/head'
 import { appWithTranslation } from 'next-i18next'
 import Script from 'next/script'
-import type { AppProps } from 'next/app'
+import App, { AppContext, AppProps } from 'next/app'
 import { Provider as JotaiProvider } from 'jotai'
 import { theme } from 'ui'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ChakraProvider } from '@chakra-ui/react'
 import { useMemo } from 'react'
+import { Cookies, CookiesProvider } from 'react-cookie'
 import '../styles/globals.css'
 
-function Mail3({ Component, pageProps }: AppProps) {
+function Mail3({
+  Component,
+  pageProps,
+  cookies,
+}: AppProps & { cookies: Cookies }) {
   const queryClient = useMemo(() => new QueryClient(), [])
 
   return (
@@ -51,18 +56,36 @@ function Mail3({ Component, pageProps }: AppProps) {
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-WH0BKBPFWP', { debug_mode: true });
+          gtag('config', 'G-WH0BKBPFWP', { debug_mode: false });
         `}
       </Script>
-      <QueryClientProvider client={queryClient}>
-        <JotaiProvider>
-          <ChakraProvider theme={theme}>
-            <Component {...pageProps} />
-          </ChakraProvider>
-        </JotaiProvider>
-      </QueryClientProvider>
+      <CookiesProvider cookies={new Cookies(cookies)}>
+        <QueryClientProvider client={queryClient}>
+          <JotaiProvider>
+            <ChakraProvider theme={theme}>
+              <Component {...pageProps} />
+            </ChakraProvider>
+          </JotaiProvider>
+        </QueryClientProvider>
+      </CookiesProvider>
     </>
   )
+}
+
+// export async function getServerSideProps(appContext: AppContext) {
+//   return {
+//     props: {
+//       cookies: appContext.ctx.req?.headers?.cookie,
+//     }, // will be passed to the page component as props
+//   }
+// }
+
+Mail3.getInitialProps = async (appContext: AppContext) => {
+  const appProps = await App.getInitialProps(appContext)
+  return {
+    ...appProps,
+    cookies: appContext.ctx.req?.headers?.cookie,
+  }
 }
 
 export default appWithTranslation(Mail3)

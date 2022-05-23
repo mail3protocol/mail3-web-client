@@ -36,18 +36,6 @@ module.exports = withPlugins(plugins, {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/inbox',
-        has: [
-          {
-            type: 'cookie',
-            key: 'authorized',
-            value: 'true',
-          },
-        ],
-        permanent: true,
-      },
-      {
         source: '/settings',
         destination: '/settings/address',
         permanent: true,

@@ -3,7 +3,6 @@ import React from 'react'
 import {
   ConfirmDialog,
   useAccount,
-  useAccountIsActivating,
   useConnectWalletDialog,
   useEagerConnect,
 } from 'hooks'
@@ -18,7 +17,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   renderConnected,
 }) => {
   const [t] = useTranslation('common')
-  const IsActivating = useAccountIsActivating()
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
 
@@ -31,8 +29,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
       ) : (
         <Button
           onClick={onOpen}
-          isDisabled={IsActivating}
-          isLoading={IsActivating}
           w="200px"
           loadingText={t('connect.connecting')}
         >

@@ -1,7 +1,28 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SERVER_URL } from '../constants/env'
-import { mockENSNames } from '../mocks/ens'
-import { mockSignatures } from '../mocks/signature'
+
+export interface LoginResponse {
+  uuid: string
+  jwt: string
+}
+
+export interface Alias {
+  uuid: string
+  address: string
+  is_default: string
+}
+
+export interface AliasResponse {
+  aliases: Alias[]
+}
+
+export interface UserResponse {
+  user_uuid: string
+  avatar: string
+  text_signature: string
+  text_sig_state: 'enabled' | 'disabled'
+  card_sig_state: 'enabled' | 'disabled'
+}
 
 export class API {
   private account: string
@@ -21,40 +42,46 @@ export class API {
     })
   }
 
-  public async getENSNames(): Promise<AxiosResponse<typeof mockENSNames>> {
-    return this.axios.get(`/ens-names?address=${this.account}`)
+  public getAddress() {
+    return this.account
   }
 
-  public async getSignatures(): Promise<AxiosResponse<typeof mockSignatures>> {
-    return this.axios.get(`/signatures?address=${this.account}`)
+  public async getAliaes(): Promise<AxiosResponse<AliasResponse>> {
+    return this.axios.get(`/account/aliases`)
   }
 
-  public async setTextSignature(
-    enable: boolean,
-    text: string
-  ): Promise<AxiosResponse<void>> {
-    return this.axios.post(`/signatures`, {
+  public async getUserInfo(): Promise<AxiosResponse<UserResponse>> {
+    return this.axios.get(`/account/settings/info`)
+  }
+
+  public async login(
+    message: string,
+    signature: string
+  ): Promise<AxiosResponse<LoginResponse>> {
+    return this.axios.post('/sessions', {
+      message,
+      signature,
       address: this.account,
-      enable,
-      type: 'text',
-      text,
     })
   }
 
-  public async setCardSignature(enable: boolean): Promise<AxiosResponse<void>> {
-    return this.axios.post(`/signatures`, {
-      address: this.account,
-      enable,
-      type: 'card',
+  public async setTextSignature(text: string): Promise<AxiosResponse<void>> {
+    return this.axios.put(`/account/settings/text_signatures`, {
+      text_signature: text,
     })
+  }
+
+  public async toggleTextSignature(): Promise<AxiosResponse<void>> {
+    return this.axios.put('/account/settings/text_sig_state_switches')
+  }
+
+  public async toggleCardSignature(): Promise<AxiosResponse<void>> {
+    return this.axios.put(`/account/settings/card_sig_state_switches`)
   }
 
   public async setDefaultSentAddress(
-    account: string
+    uuid: string
   ): Promise<AxiosResponse<void>> {
-    return this.axios.post('/ens-names', {
-      default_address: account,
-      current_address: this.account,
-    })
+    return this.axios.post(`/account/default_aliases/${uuid}`)
   }
 }

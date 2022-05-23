@@ -23,5 +23,17 @@
         "desired-wallet": "Click on the wallet below and let us know which one you need more",
         "footer": "We do not own your private keys and cannot access your assest without your confirmation.",
         "notice": "Notice"
+    },
+    "auth": {
+        "connect": "Connect your Wallet",
+        "desc": "Skip approving every interaction with your wallet by allowing Mail3 to remember you.",
+        "remember": "Remember Me",
+        "check-wallet": "Check Wallet",
+        "sign": "I authorize sending and checking my emails on mail3 from this device. This doesn't cost anything.",
+        "errors": {
+            "wallet-not-connected": "Wallet is not connected, please connect your wallet",
+            "unknown": "Unknown error, please try again later",
+            "condition-not-meet": "You do not have permission to participate in Beta testing."
+        }
     }
 }
