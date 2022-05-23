@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import React, { useState, useRef } from 'react'
+import detectEthereumProvider from '@metamask/detect-provider'
 import MetamaskSvg from 'assets/svg/metamask.svg'
 import WalletConnectSvg from 'assets/svg/wallet-connect.svg'
 import PhantomSvg from 'assets/svg/phantom.svg'
@@ -37,6 +38,7 @@ import {
   ConnectorName,
   useLastConectorName,
   useAccount,
+  useDidMount,
 } from 'hooks'
 import { Button } from '../Button'
 
@@ -51,6 +53,7 @@ interface ConnectButtonProps extends ButtonProps {
   text: string
   icon: React.ReactNode
   isConnected?: boolean
+  href?: string
 }
 
 const ConnectButton: React.FC<ConnectButtonProps> = ({
@@ -59,29 +62,33 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
   isLoading,
   isConnected,
   onClick,
+  href,
   ...props
-}) => (
-  <Button
-    variant="outline"
-    w="250px"
-    paddingRight="6px"
-    {...props}
-    onClick={isConnected ? undefined : onClick}
-  >
-    <Flex w="100%" alignItems="center">
-      <HStack spacing="6px" alignItems="center">
-        {isConnected ? (
-          <Box w="8px" h="8px" bg="rgb(39, 174, 96)" borderRadius="50%" />
-        ) : null}
-        <Text fontSize="16px" fontWeight={700}>
-          {text}
-        </Text>
-      </HStack>
-      <Spacer />
-      {isLoading ? <Spinner /> : icon}
-    </Flex>
-  </Button>
-)
+}) => {
+  const flexProps: any = href ? { as: 'a', href, target: '_blank' } : {}
+  return (
+    <Button
+      variant="outline"
+      w="250px"
+      paddingRight="6px"
+      {...props}
+      onClick={isConnected ? undefined : onClick}
+    >
+      <Flex w="100%" alignItems="center" {...flexProps}>
+        <HStack spacing="6px" alignItems="center">
+          {isConnected ? (
+            <Box w="8px" h="8px" bg="rgb(39, 174, 96)" borderRadius="50%" />
+          ) : null}
+          <Text fontSize="16px" fontWeight={700}>
+            {text}
+          </Text>
+        </HStack>
+        <Spacer />
+        {isLoading ? <Spinner /> : icon}
+      </Flex>
+    </Button>
+  )
+}
 
 const PlaceholderButton: React.FC<ConnectButtonProps> = ({
   text,
@@ -122,17 +129,25 @@ const PlaceholderButton: React.FC<ConnectButtonProps> = ({
 }
 
 const isRejectedMessage = (error: any) => {
-  if (typeof error === 'string' && error.includes('cancel')) {
-    return true
-  }
   if (error?.message && error.message.includes('rejected')) {
-    return true
-  }
-  if (error?.message && error.message.includes('拒绝')) {
     return true
   }
   return false
 }
+
+const isImtoken = () => navigator.userAgent.toLowerCase().includes('imtoken')
+const isWechat = () =>
+  navigator.userAgent.toLowerCase().includes('micromessenger')
+
+const isImotokenReject = (error: any) => {
+  if (isImtoken() && error?.message && error.message.includes('拒绝')) {
+    return true
+  }
+  return false
+}
+
+const generateDeepLink = () =>
+  `https://metamask.app.link/dapp/${window.location.host}`
 
 export const ConenctModal: React.FC<ConnectModalProps> = ({
   isOpen,
@@ -144,6 +159,16 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
   const setLastConnector = useSetLastConnector()
   const connectorName = useLastConectorName()
   const isConnected = !!useAccount()
+  const [shouldUseDeeplink, setShouldUseDeepLink] = useState(false)
+  useDidMount(() => {
+    if (!isWechat()) {
+      detectEthereumProvider({ timeout: 1000, silent: true }).then((res) => {
+        if (res == null) {
+          setShouldUseDeepLink(true)
+        }
+      })
+    }
+  })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
@@ -167,10 +192,22 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
               isLoading={isConnectingMetamask}
               text={t('connect.metamask')}
               icon={<MetamaskSvg />}
+              href={shouldUseDeeplink ? generateDeepLink() : undefined}
               isConnected={
                 connectorName === ConnectorName.MetaMask && isConnected
               }
               onClick={async () => {
+                if (shouldUseDeeplink) {
+                  return
+                }
+                if (isWechat()) {
+                  dialog({
+                    type: 'warning',
+                    title: t('connect.notice'),
+                    description: t('connect.wechat'),
+                  })
+                  return
+                }
                 setIsConnectingMetamask(true)
                 try {
                   await metaMask.activate()
@@ -181,7 +218,9 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                       dialog({
                         type: 'warning',
                         title: t('connect.notice'),
-                        description: error?.message,
+                        description: isImotokenReject(error)
+                          ? t('connect.imtoken-reject')
+                          : error?.message,
                       })
                     }
                   } else {
