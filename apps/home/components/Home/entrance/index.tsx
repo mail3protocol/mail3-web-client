@@ -55,6 +55,7 @@ const BoxStyled = styled(Box)`
     }
     100% {
       opacity: 1;
+      cursor: pointer;
     }
   }
 `

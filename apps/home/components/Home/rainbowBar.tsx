@@ -19,16 +19,13 @@ export const RainbowBarContainer = styled(Center)`
     #ffb1b1
   );
   background-size: 400% 400%;
-  animation: run-text-bg 20s linear infinite;
-  @keyframes run-text-bg {
+  animation: run-rainbow-bar-bg 10s linear infinite;
+  @keyframes run-rainbow-bar-bg {
     0% {
       background-position: 0 50%;
     }
     50% {
       background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0 50%;
     }
   }
 `
@@ -37,7 +34,6 @@ export const RainbowBar: React.FC = () => {
   const { t } = useTranslation('index')
   return (
     <RainbowBarContainer
-      position="sticky"
       minH="44px"
       textAlign="center"
       py="6px"
