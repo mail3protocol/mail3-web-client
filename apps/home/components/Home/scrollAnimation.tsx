@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { fromEvent, map } from 'rxjs'
-import { Box, Center, Flex } from '@chakra-ui/react'
+import { Box, BoxProps, Center, Flex } from '@chakra-ui/react'
 import { useInnerSize } from 'hooks'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Banner } from './banner'
@@ -26,7 +26,7 @@ const scrollStepIndexMap = SCROLL_STEPS.reduce<{
   return acc
 }, {})
 
-export const ScrollAnimation: React.FC = () => {
+export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
   const [scrollY, setScrollY] = useState(0)
   const { width, height } = useInnerSize()
   function getScrollProgress(
@@ -110,7 +110,9 @@ export const ScrollAnimation: React.FC = () => {
       h="auto"
       minH={fullScreenHeight}
       w="full"
+      {...props}
       style={{
+        ...props.style,
         marginBottom: `${Math.floor(letterSize.height / 2) + 20}px`,
       }}
     >

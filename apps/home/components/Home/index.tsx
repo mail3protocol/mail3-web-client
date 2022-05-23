@@ -20,7 +20,9 @@ export const Home: React.FC = () => {
         />
       ) : null}
       <Navbar />
-      <ScrollAnimation />
+      <ScrollAnimation
+        style={{ opacity: status === 'closing' || status === 'closed' ? 1 : 0 }}
+      />
       <Dao />
       <WhitelistGuide />
       <Footer />
