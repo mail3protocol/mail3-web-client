@@ -64,6 +64,7 @@ export const Dao = () => {
     const subscriber = fromEvent(window, 'resize').subscribe(
       onChangeIllustrationTextScale
     )
+    onChangeIllustrationTextScale()
     return () => {
       subscriber.unsubscribe()
     }

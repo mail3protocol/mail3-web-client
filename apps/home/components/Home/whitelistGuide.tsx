@@ -16,7 +16,7 @@ export const WhitelistGuide = () => (
     textAlign={{ base: 'center', md: 'left' }}
   >
     <Heading fontSize={{ base: '24px', md: '48px' }}>
-      Now，hit the whitelist of Mail3{' '}
+      Now, hit the whitelist of Mail3
     </Heading>
     <LogoAnimation w="270px" mt="7px" />
     <Button w="176px" mt="40px">

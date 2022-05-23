@@ -34,7 +34,7 @@ export const Footer = () => (
     <Flex
       w="full"
       maxW={`${CONTAINER_MAX_WIDTH}px`}
-      justify="space-around"
+      justify="space-between"
       direction={{ base: 'column', md: 'row' }}
     >
       <Box mb={{ base: '20px', md: 0 }}>
@@ -108,7 +108,7 @@ export const Footer = () => (
         </Box>
         <Box>
           <Heading fontSize="18px" lineHeight="23px">
-            Community
+            Support
           </Heading>
           <Stack
             mt={{ base: '6px', md: '24px' }}
