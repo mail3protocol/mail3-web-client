@@ -45,7 +45,7 @@ const BoxStyled = styled(Box)`
   }
   &:hover::before {
     transform: scale(1);
-    transition: 50ms;
+    transition: 300ms;
   }
 
   @keyframes show-envelope {
