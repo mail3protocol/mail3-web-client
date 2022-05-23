@@ -147,7 +147,9 @@ const isImotokenReject = (error: any) => {
 }
 
 const generateDeepLink = () =>
-  `https://metamask.app.link/dapp/${window.location.host}`
+  `https://metamask.app.link/dapp/${window.location.host}${
+    window.location.pathname !== '/' ? window.location.pathname : ''
+  }`
 
 export const ConenctModal: React.FC<ConnectModalProps> = ({
   isOpen,
