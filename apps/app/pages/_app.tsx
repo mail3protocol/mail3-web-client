@@ -33,18 +33,12 @@ function Mail3({
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link
-          href="/icons/icon-16x16.png"
+          href="/icons/icon-144x144.png"
           rel="icon"
           type="image/png"
-          sizes="16x16"
+          sizes="144x144"
         />
-        <link
-          href="/icons/icon-32x32.png"
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-        />
-        <link rel="apple-touch-icon" href="/icons/icon-72x72.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-144x144.png" />
       </Head>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-WH0BKBPFWP"

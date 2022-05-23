@@ -128,6 +128,9 @@ const isRejectedMessage = (error: any) => {
   if (error?.message && error.message.includes('rejected')) {
     return true
   }
+  if (error?.message && error.message.includes('拒绝')) {
+    return true
+  }
   return false
 }
 
