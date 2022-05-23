@@ -1,12 +1,28 @@
-import React from 'react'
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  CSSProperties,
+} from 'react'
+import {
+  useInfiniteQuery,
+  QueryFunction,
+  UseInfiniteQueryOptions,
+  QueryKey,
+  InfiniteData,
+} from 'react-query'
+
 import { Avatar } from 'ui'
 import { AvatarBadge, Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import ChooseSVG from '../../assets/choose.svg'
 import {
   AddressListResponse,
   AddressResponse,
+  MailboxesMessagesResponse,
   MessageItemResponse,
 } from '../../api'
 import { dynamicDateString } from '../../utils'
@@ -250,3 +266,98 @@ export const BoxList: React.FC<BoxListProps> = ({
     })}
   </Box>
 )
+
+export interface InfiniteListProps<
+  TQueryFnData = unknown,
+  TError = unknown,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey
+> {
+  queryKey: TQueryKey
+  queryFn: QueryFunction<TQueryFnData, TQueryKey>
+  queryOptions?: UseInfiniteQueryOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryFnData,
+    TQueryKey
+  >
+  emptyElement?: React.ReactNode
+  noMoreElement: React.ReactNode
+  loader?: React.ReactNode
+  calcDataLength?: (data?: InfiniteData<TData>) => number
+  onDataChange?: (data?: MessageItem[]) => void
+  enableQuery?: boolean
+  style?: CSSProperties
+}
+
+export function InfiniteList({
+  queryFn,
+  queryKey,
+  queryOptions,
+  emptyElement,
+  noMoreElement,
+  onDataChange,
+  loader,
+  enableQuery,
+}: InfiniteListProps<MailboxesMessagesResponse>) {
+  const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    queryKey,
+    queryFn,
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage.messages.length > 0) {
+          return lastPage.page + 1
+        }
+        return undefined
+      },
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      ...queryOptions,
+      enabled: enableQuery,
+    }
+  )
+
+  const loaderEl = useMemo(() => loader || <Box>Loading</Box>, [loader])
+
+  const dataMsg: MessageItem[] = useMemo(() => {
+    if (!data) return []
+    const dataList = data.pages.map((item: any) => item.messages)
+
+    return dataList.flat()
+  }, [data])
+
+  useEffect(() => {
+    onDataChange?.(dataMsg)
+  }, [dataMsg])
+
+  const dataLength = dataMsg.length
+
+  return (
+    <Box>
+      {data === undefined && status === 'loading' ? (
+        loaderEl
+      ) : (
+        <InfiniteScroll
+          dataLength={dataLength}
+          next={fetchNextPage}
+          hasMore={hasNextPage === true}
+          loader={loaderEl}
+          endMessage={noMoreElement}
+          style={{ overflow: 'hidden' }}
+        >
+          <BoxList
+            data={dataMsg}
+            onClickBody={(id) => {
+              console.log('id', id)
+            }}
+          />
+          {status === 'success' && dataLength === 0
+            ? emptyElement ?? 'empty'
+            : null}
+        </InfiniteScroll>
+      )}
+    </Box>
+  )
+}

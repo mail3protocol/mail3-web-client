@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
-import { useDidMount } from 'hooks'
 import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { AvatarBadgeType, BoxList, MessageItem } from '../BoxList'
+import { AvatarBadgeType, InfiniteList, MessageItem } from '../BoxList'
 import SVGTrash from '../../assets/trash.svg'
 import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import SVGNone from '../../assets/none.svg'
@@ -20,35 +18,17 @@ import { formatState, MailboxContainer } from '../Inbox'
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<MessageItem[]>([])
-  const [pageIndex, setPageIndex] = useState(0)
-  const [hasNext, setHasNext] = useState(true)
-  const router = useRouter()
+
   const api = useAPI()
-  const [, setIsFetching] = useInfiniteScroll(fetchDate)
 
-  useDidMount(() => {
-    fetchDate(0)
-  })
+  const queryFn = useCallback(async ({ pageParam = 0 }) => {
+    const { data } = await api.getMailboxesMessages(Mailboxes.Trash, pageParam)
+    return data
+  }, [])
 
-  async function fetchDate(page: number | undefined) {
-    if (!hasNext) return
-
-    const _pageIndex = page === undefined ? pageIndex + 1 : 0
-    setIsFetching(true)
-    const { data } = await api.getMailboxesMessages(Mailboxes.Trash, _pageIndex)
-
-    if (data?.messages?.length) {
-      const newDate = [
-        ...messages,
-        ...formatState(data.messages, AvatarBadgeType.None),
-      ]
-      setMessages(newDate)
-      setIsFetching(false)
-      setPageIndex(_pageIndex)
-    } else {
-      setHasNext(false)
-    }
-  }
+  const onDataChange = useCallback((data) => {
+    setMessages(data)
+  }, [])
 
   const TextBox = styled(Box)`
     margin-top: 10px;
@@ -91,11 +71,19 @@ export const TrashComponent: React.FC = () => {
           <TextBox>
             <Text>{t('trash.auto-delete')}</Text>
           </TextBox>
-          <BoxList
+          {/* <BoxList
             data={messages}
             onClickBody={(id) => {
               router.push(`${RoutePath.Message}/${id}`)
             }}
+          /> */}
+          <InfiniteList
+            enableQuery
+            queryFn={queryFn}
+            queryKey={['Trash']}
+            emptyElement="empty"
+            noMoreElement="end"
+            onDataChange={onDataChange}
           />
           {!!messages.length && (
             <Flex h="200px" justifyContent="center" alignItems="center">
