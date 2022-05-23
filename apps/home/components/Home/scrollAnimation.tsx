@@ -21,7 +21,7 @@ const scrollStepIndexMap = SCROLL_STEPS.reduce<{
   if (index === 0) {
     acc[index] = 0
   } else {
-    acc[index] = SCROLL_STEPS.slice(0, index).reduce((acc, cur) => acc + cur, 0)
+    acc[index] = SCROLL_STEPS.slice(0, index).reduce((sum, cur) => sum + cur, 0)
   }
   return acc
 }, {})
