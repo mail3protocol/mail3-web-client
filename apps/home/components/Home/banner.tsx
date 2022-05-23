@@ -25,14 +25,15 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => (
     zIndex={0}
     bg="#fff"
     transform="translate3d(0, 0, 0)"
+    overflow="hidden"
     {...props}
   >
     <Image
       src={HomeGridBgSvgPath}
       objectFit="cover"
       objectPosition="center bottom"
-      w="full"
-      h="full"
+      w="100vw"
+      h="100vh"
       position="absolute"
     />
     <Flex
@@ -42,32 +43,37 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => (
       maxW={`${CONTAINER_MAX_WIDTH}px`}
       position="relative"
     >
-      <Box flex={1} position="relative" mt="28px">
+      <Box
+        position="absolute"
+        transform="translateY(104px)"
+        w="100vw"
+        h="100vh"
+        bottom="0"
+      >
         <Icon
           w="150px"
           as={Illustration1Svg}
           h="auto"
           position="absolute"
-          top="0"
-          left="0"
-          transform={{
-            base: 'unset',
-            md: 'translateY(70px)',
-          }}
+          top="5%"
+          left="5%"
         />
         <Image
           src={Illustration1Png.src}
-          w={{ base: 'auto', md: '181px' }}
-          h={{ base: 'full', md: 'auto' }}
+          w="150px"
+          h="auto"
           position="absolute"
-          top="0"
-          right="0"
-          transform={{
-            base: 'unset',
-            md: 'translateY(70px)',
-          }}
+          top="5%"
+          right="20%"
         />
       </Box>
+      <Image
+        src={Illustration3Png.src}
+        position="absolute"
+        w="120px"
+        bottom="20%"
+        left="0"
+      />
       <Center position="relative" w="full" my="auto" flex={1}>
         <Heading
           fontSize={{ base: '24px', md: '48px' }}
@@ -79,16 +85,6 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => (
           deserve a better mail protocol
         </Heading>
       </Center>
-      <Box flex={1} position="relative">
-        <Image
-          src={Illustration3Png.src}
-          position="absolute"
-          maxW="162px"
-          w="20%"
-          bottom="40px"
-          left="-30px"
-        />
-      </Box>
     </Flex>
   </Flex>
 )

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { fromEvent, map } from 'rxjs'
 import { Box, BoxProps, Center, Flex } from '@chakra-ui/react'
 import { useInnerSize } from 'hooks'
@@ -42,6 +42,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       : Math.max(Math.min(offsetedScrollY / SCROLL_STEPS[step], 1), 0)
   }
 
+  const measureContainerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const subscriber = fromEvent(window, 'scroll')
       .pipe(map(() => window.scrollY))
@@ -68,7 +69,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }
   }, [scrollY])
 
-  const letterSize = useMemo(() => {
+  const envelopeSize = useMemo(() => {
     const w = Math.min(width, CONTAINER_MAX_WIDTH) - (width > 768 ? 40 : 0)
     const h = ENVELOPE_RADIO * w
     return {
@@ -77,6 +78,11 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }
   }, [width, height])
 
+  const bannerHeight = useMemo(() => {
+    const h = measureContainerRef.current?.offsetHeight ?? height
+    return h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0)
+  }, [scrollY, width, height])
+
   const { envelopeTransform, envelopeTransformEnded, isHiddenEnvelope } =
     useMemo(() => {
       const noOverflowProgress = getScrollProgress(2, { overflow: true })
@@ -84,9 +90,9 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       const rotateX = `rotateX(${overflowProgress * 90 + 270}deg)`
       const scaleBase = 0.8
       const targetTranslateY =
-        (height - HEADER_BAR_HEIGHT - letterSize.height) / 2 +
-        letterSize.height / 2
-      const targetScale = letterSize.width / width
+        (height - HEADER_BAR_HEIGHT - envelopeSize.height) / 2 +
+        envelopeSize.height / 2
+      const targetScale = envelopeSize.width / width
       const scaleDiff = Math.abs(scaleBase - targetScale)
       const p = getScrollProgress(3)
       const s =
@@ -100,7 +106,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
         envelopeTransformEnded: p === 1,
         isHiddenEnvelope: noOverflowProgress < 0 || noOverflowProgress > 1,
       }
-    }, [scrollY, width, height, letterSize.width, letterSize.height])
+    }, [scrollY, width, height, envelopeSize.width, envelopeSize.height])
 
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
 
@@ -113,9 +119,17 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       {...props}
       style={{
         ...props.style,
-        marginBottom: `${Math.floor(letterSize.height / 2) + 20}px`,
+        marginBottom: `${Math.floor(envelopeSize.height / 2) + 20}px`,
       }}
     >
+      <Box
+        position="fixed"
+        w="100vw"
+        h="100vh"
+        opacity="0"
+        pointerEvents="none"
+        ref={measureContainerRef}
+      />
       <Box position="absolute" top="0" left="0" w="full" h="full" zIndex={3}>
         <Flex w="100%" position="sticky" top={`${HEADER_BAR_HEIGHT}px`}>
           <Center
@@ -125,7 +139,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
             w="100vw"
             overflow="hidden"
           >
-            <Box
+            <Center
               position="absolute"
               top="0"
               left="0"
@@ -171,9 +185,14 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   transform="rotateX(-90deg) translateZ(4px)"
                   rounded="100%"
                 />
-                <Banner />
+                <Banner
+                  willChange="height"
+                  style={{
+                    height: width < height ? `${bannerHeight}px` : undefined,
+                  }}
+                />
               </Box>
-            </Box>
+            </Center>
           </Center>
         </Flex>
       </Box>
@@ -187,13 +206,13 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       <Letter
         style={{
           paddingTop: `calc(${
-            letterPaddingTop - letterSize.height / 2
+            letterPaddingTop - envelopeSize.height / 2
           }px + 100vh)`,
           opacity: scrollY > 1000 ? 1 : 0,
         }}
         containerProps={{
           paddingBottom: `${Math.max(
-            Math.floor(letterSize.height / 2),
+            Math.floor(envelopeSize.height / 2),
             200
           )}px`,
         }}
