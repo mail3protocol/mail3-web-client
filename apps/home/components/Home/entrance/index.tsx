@@ -95,9 +95,9 @@ export const Entrance: React.FC<
   return (
     <Flex
       position="fixed"
-      h={`calc(100vh - ${HEADER_BAR_HEIGHT}px)`}
+      h="100vh"
       w="full"
-      top={`${60 + (isWhiteListStage() ? 44 : 0)}px`}
+      top="0"
       left="0"
       bg="rgba(255, 255, 255, 1)"
       zIndex={999}

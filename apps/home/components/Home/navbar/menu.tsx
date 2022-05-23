@@ -1,6 +1,7 @@
 import { Button } from 'ui'
 import React from 'react'
 import {
+  Box,
   Button as RowButton,
   ButtonProps,
   Link,
@@ -40,26 +41,63 @@ const menuButtonProps: ButtonProps = {
 
 export const WhiteListButtons = () => (
   <>
-    <NextLink href={WHITE_LIST_URL} passHref>
-      <Link
-        {...linkProps}
-        color="#FFB1B1"
-        bg="linear-gradient(90deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)"
-        bgClip="text"
-        textDecorationColor="#FFB1B1"
-      >
-        Whitelist
-      </Link>
-    </NextLink>
     <NextLink href={LIGHT_PAPER_URL} passHref>
       <Link
         {...linkProps}
+        px="20px"
         display={{
           base: 'none',
           md: 'inline-block',
         }}
       >
         Litepaper
+      </Link>
+    </NextLink>
+    <NextLink href={WHITE_LIST_URL} passHref>
+      <Link
+        {...linkProps}
+        _hover={{
+          textDecoration: 'none',
+        }}
+        rounded="100px"
+        position="relative"
+        _after={{
+          content: '" "',
+          display: 'block',
+          bg: 'linear-gradient(90deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)',
+          w: 'full',
+          h: 'full',
+          rounded: '100px',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 0,
+        }}
+        _before={{
+          content: '" "',
+          display: 'block',
+          bg: '#fff',
+          w: 'calc(100% - 2px)',
+          h: 'calc(100% - 2px)',
+          rounded: '100px',
+          position: 'absolute',
+          top: '1px',
+          left: '1px',
+          zIndex: 1,
+        }}
+      >
+        <Box
+          as="span"
+          color="#FFB1B1"
+          bg="linear-gradient(90deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)"
+          bgClip="text"
+          textDecorationColor="#FFB1B1"
+          rounded="100px"
+          position="relative"
+          zIndex={2}
+        >
+          Whitelist
+        </Box>
       </Link>
     </NextLink>
     <NextLink href={APP_URL} passHref>
@@ -103,11 +141,11 @@ export const NormalMenus = () => (
 
 export const WhiteListMenus = () => (
   <>
-    <NextLink href={LIGHT_PAPER_URL} passHref>
-      <RowButton {...menuButtonProps}>Litepaper</RowButton>
-    </NextLink>
     <NextLink href={APP_URL}>
       <RowButton {...menuButtonProps}>Launch App</RowButton>
+    </NextLink>
+    <NextLink href={LIGHT_PAPER_URL} passHref>
+      <RowButton {...menuButtonProps}>Litepaper</RowButton>
     </NextLink>
   </>
 )
