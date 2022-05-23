@@ -1,5 +1,5 @@
 import { Flex, Box, Grid, Heading, FlexProps } from '@chakra-ui/react'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
 import { useInnerSize } from 'hooks'
@@ -69,8 +69,6 @@ export const Entrance: React.FC<
 > = ({ onChangeStatus, ...props }) => {
   const { width, height } = useInnerSize()
   const [status, setStatus] = useState<EntranceStatus>('opened')
-  const isMobile = width <= MOBILE_SIZE
-  const boxSize = isMobile ? '45px' : '60px'
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => {
@@ -89,12 +87,6 @@ export const Entrance: React.FC<
     clientY: -1,
     isOpen: false,
   })
-  const columnLen = useMemo(() => {
-    if (isMobile) return 8
-    if (width <= 1280) return 14
-    return 19
-  }, [width])
-  const rowLen = isMobile ? 9 : 8
 
   if (status === 'closed') {
     return null
@@ -121,8 +113,16 @@ export const Entrance: React.FC<
     >
       <Flex direction="column" justify="center" align="center">
         <Grid
-          templateColumns={`repeat(${columnLen}, ${boxSize})`}
-          templateRows={`repeat(${rowLen}, ${boxSize})`}
+          templateColumns={{
+            base: 'repeat(8, 45px)',
+            md: 'repeat(13, 60px)',
+            xl: 'repeat(19, 60px)',
+          }}
+          templateRows={{
+            base: 'repeat(9, 45px)',
+            md: 'repeat(8, 60px)',
+          }}
+          overflow="hidden"
           onClick={async (e) => {
             await setCoverInfo({
               clientX: e.clientX,
@@ -135,7 +135,7 @@ export const Entrance: React.FC<
             await setStatus('closed')
           }}
         >
-          {new Array(columnLen * rowLen)
+          {new Array(9 * 19)
             .fill(0)
             .map((_, i) => i)
             .map((i) => (
