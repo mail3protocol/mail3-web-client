@@ -7,6 +7,7 @@ import { Banner } from './banner'
 import { Letter } from './letterContent'
 import { Envelope } from './envelope'
 import { HEADER_BAR_HEIGHT } from './navbar'
+import { RollingBackground } from './rollingSubtitles'
 
 const ENVELOPE_RADIO = 95 / 157
 const SCROLL_STEPS = [300, 300, 300, 600, 600]
@@ -109,6 +110,13 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }, [scrollY, width, height, envelopeSize.width, envelopeSize.height])
 
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
+  const { envelopeProgress, rollingBackgroundOpacity } = useMemo(() => {
+    const scrollProgress4 = getScrollProgress(4)
+    return {
+      envelopeProgress: scrollProgress4,
+      rollingBackgroundOpacity: 1 - scrollProgress4,
+    }
+  }, [scrollY])
 
   return (
     <Box
@@ -121,6 +129,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
         ...props.style,
         marginBottom: `${Math.floor(envelopeSize.height / 2) + 20}px`,
       }}
+      zIndex={1}
     >
       <Box
         position="fixed"
@@ -130,8 +139,23 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
         pointerEvents="none"
         ref={measureContainerRef}
       />
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        w="full"
+        h="full"
+        zIndex={0}
+        style={{
+          opacity: rollingBackgroundOpacity,
+        }}
+      >
+        <Box w="full" position="sticky" top={`${HEADER_BAR_HEIGHT}px`}>
+          <RollingBackground />
+        </Box>
+      </Box>
       <Box position="absolute" top="0" left="0" w="full" h="full" zIndex={3}>
-        <Flex w="100%" position="sticky" top={`${HEADER_BAR_HEIGHT}px`}>
+        <Flex w="full" position="sticky" top={`${HEADER_BAR_HEIGHT}px`}>
           <Center
             position="relative"
             zIndex={1}
@@ -199,7 +223,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       <Envelope
         envelopeTransformEnded={envelopeTransformEnded}
         envelopeTransform={envelopeTransform}
-        progress={getScrollProgress(4)}
+        progress={envelopeProgress}
         fullScreenHeight={fullScreenHeight}
         hiddenSide={isHiddenEnvelope}
       />

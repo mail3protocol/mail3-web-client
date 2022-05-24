@@ -1,14 +1,15 @@
 import styled from '@emotion/styled'
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Flex, Stack } from '@chakra-ui/react'
 import React from 'react'
 
 export const RollingSubtitlesWithAnimation = styled(Box)`
-  animation: rollingSubtitleRun 60s infinite linear;
+  animation: ${(props: { reverse?: boolean }) =>
+      props?.reverse ? 'rollingSubtitleRunReverse' : 'rollingSubtitleRun'}
+    60s infinite linear;
   position: absolute;
   display: flex;
   width: auto;
   height: 100%;
-  color: #fff;
   white-space: nowrap;
 
   @keyframes rollingSubtitleRun {
@@ -20,7 +21,67 @@ export const RollingSubtitlesWithAnimation = styled(Box)`
       transform: translateX(-50%);
     }
   }
+
+  @keyframes rollingSubtitleRunReverse {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 `
+
+export const RollingBackground = () => (
+  <Box
+    h="100vh"
+    overflow="hidden"
+    position="relative"
+    fontWeight="bold"
+    fontSize="120px"
+    color="#E1E1E1"
+    data-name="rolling"
+  >
+    {[false, true].map((isReverse) => (
+      <RollingSubtitlesWithAnimation reverse={isReverse} key={`${isReverse}`}>
+        <Stack
+          spacing="300px"
+          direction="column"
+          transform={isReverse ? 'translateY(300px)' : ''}
+        >
+          {new Array(5)
+            .fill(0)
+            .map((_, i) => i)
+            .map((stackItemIndex) => (
+              <Flex
+                w="auto"
+                key={stackItemIndex}
+                h="300px"
+                minH="300px"
+                lineHeight="300px"
+              >
+                {new Array(2)
+                  .fill(0)
+                  .map((_, i) => i)
+                  .map((k) => (
+                    <Box minW="100vh" key={k} h="300px" lineHeight="300px">
+                      {new Array(10)
+                        .fill(0)
+                        .map((_, i) => i)
+                        .map((i) => (
+                          <React.Fragment key={i}>
+                            Web3.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mail3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          </React.Fragment>
+                        ))}
+                    </Box>
+                  ))}
+              </Flex>
+            ))}
+        </Stack>
+      </RollingSubtitlesWithAnimation>
+    ))}
+  </Box>
+)
 
 export const RollingSubtitles = () => (
   <Box bg="#000" h="44px" overflow="hidden" position="relative">

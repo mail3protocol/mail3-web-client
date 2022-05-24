@@ -88,7 +88,13 @@ export const Envelope: React.FC<{
               opacity: hiddenSide ? 0 : 1,
             }}
           />
-          <Image src={EnvelopeBgPath.src} w="full" h="auto" />
+          <Image
+            src={EnvelopeBgPath.src}
+            w="full"
+            h="auto"
+            position="relative"
+            zIndex={0}
+          />
           <Flex
             w="full"
             h="full"
@@ -100,6 +106,7 @@ export const Envelope: React.FC<{
               opacity: isFlipped ? 0 : 1,
               perspective: 2000,
             }}
+            zIndex={1}
           >
             <Image
               src={EnvelopeCoverClosePath.src}
