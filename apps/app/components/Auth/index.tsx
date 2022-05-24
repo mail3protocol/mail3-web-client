@@ -19,6 +19,9 @@ import {
   useSignup,
   buildSignMessaege,
   useToast,
+  useTrackClick,
+  TrackEvent,
+  TrackKey,
 } from 'hooks'
 import { Button } from 'ui'
 import { useRouter } from 'next/router'
@@ -31,6 +34,7 @@ import {
   useCloseAuthModal,
   useIsAuthModalOpen,
   useLogin,
+  useSetGlobalTrack,
 } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
 
@@ -62,6 +66,8 @@ export const AuthModal: React.FC = () => {
     }
   }
 
+  const trackWhiteListConnect = useTrackClick(TrackEvent.WhiteListConnectWallet)
+  const setTrackGlobal = useSetGlobalTrack()
   const onRemember = async () => {
     setIsLoading(true)
     try {
@@ -70,13 +76,24 @@ export const AuthModal: React.FC = () => {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
           if (signedData != null) {
-            await login(signedData.message, signedData.signature)
+            const { jwt } = await login(
+              signedData.message,
+              signedData.signature
+            )
             closeAuthModal()
+            await setTrackGlobal(jwt)
+            if (router.pathname === RoutePath.WhiteList) {
+              trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
+            }
           }
           break
         }
         case SignupResponseCode.Success: {
-          await login(message!, signature!)
+          const { jwt } = await login(message!, signature!)
+          await setTrackGlobal(jwt)
+          if (router.pathname === RoutePath.WhiteList) {
+            trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
+          }
           closeAuthModal()
           router.push(RoutePath.Setup)
           break
@@ -84,6 +101,7 @@ export const AuthModal: React.FC = () => {
         case SignupResponseCode.ConditionNotMeet:
           if (router.pathname === RoutePath.WhiteList) {
             closeAuthModal()
+            trackWhiteListConnect({ [TrackKey.WhiteListEntry]: false })
           } else {
             toast(t('auth.errors.condition-not-meet'))
           }

@@ -12,3 +12,5 @@ export const TWITTER_URL =
 
 export const WHITE_LIST_DOC_URL =
   process.env.NEXT_PUBLIC_WHITE_LIST_DOC_URL || '#'
+
+export const GOOGLE_ANALYTICS_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
