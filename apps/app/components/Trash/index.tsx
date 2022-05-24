@@ -2,12 +2,12 @@
 import { useTranslation } from 'next-i18next'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
-import { Button } from 'ui'
+// import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { AvatarBadgeType, InfiniteList, MessageItem } from '../BoxList'
 import SVGTrash from '../../assets/trash.svg'
-import SVGIconEmpty from '../../assets/icon-empty.svg'
+// import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
@@ -57,14 +57,14 @@ export const TrashComponent: React.FC = () => {
         </Wrap>
 
         <Spacer />
-        <Button
+        {/* <Button
           onClick={() => {
             console.log('empty')
           }}
         >
           <SVGIconEmpty />
           <Box marginLeft="10px">{t('trash.empty')}</Box>
-        </Button>
+        </Button> */}
       </Flex>
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
