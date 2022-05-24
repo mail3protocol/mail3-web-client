@@ -61,7 +61,9 @@ export const TrashComponent: React.FC = () => {
               onClick: () => {
                 const ids = getChooseList()
                 if (!ids?.length) return
-                refBoxList?.current?.setHiddenIds(ids)
+                api.batchDeleteMessage(ids).then(() => {
+                  refBoxList?.current?.setHiddenIds(ids)
+                })
                 console.log('del')
               },
             },
@@ -105,8 +107,8 @@ export const TrashComponent: React.FC = () => {
             enableQuery
             queryFn={queryFn}
             queryKey={['Trash']}
-            emptyElement="empty"
-            noMoreElement="end"
+            emptyElement=""
+            noMoreElement=""
             onDataChange={onDataChange}
             onChooseModeChange={onChooseModeChange}
             onClickBody={(id: string) => {

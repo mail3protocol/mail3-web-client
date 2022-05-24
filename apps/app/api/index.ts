@@ -208,4 +208,10 @@ export class API {
       },
     })
   }
+
+  public async batchDeleteMessage(ids: string[]): Promise<AxiosResponse> {
+    return this.axios.post('/mailbox/account/messages/batch_delete', {
+      messageIds: ids,
+    })
+  }
 }
