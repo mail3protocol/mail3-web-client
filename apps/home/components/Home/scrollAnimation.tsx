@@ -60,15 +60,18 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }
   }, [])
 
-  const { bannerTransform, isHiddenBanner } = useMemo(() => {
-    const scrollProgressStep1 = getScrollProgress(1)
-    const scale = `scale(${1 - getScrollProgress(0) * 0.2})`
-    const rotateX = `rotateX(${Math.floor(scrollProgressStep1 * 90)}deg)`
-    return {
-      bannerTransform: [scale, rotateX].join(' '),
-      isHiddenBanner: scrollProgressStep1 === 1,
-    }
-  }, [scrollY])
+  const { bannerTransform, isHiddenBanner, isZoomOutCompleted } =
+    useMemo(() => {
+      const scrollProgressStep0 = getScrollProgress(0)
+      const scrollProgressStep1 = getScrollProgress(1)
+      const scale = `scale(${1 - scrollProgressStep0 * 0.2})`
+      const rotateX = `rotateX(${Math.floor(scrollProgressStep1 * 90)}deg)`
+      return {
+        bannerTransform: [scale, rotateX].join(' '),
+        isHiddenBanner: scrollProgressStep1 === 1,
+        isZoomOutCompleted: scrollProgressStep0 === 1,
+      }
+    }, [scrollY])
 
   const envelopeSize = useMemo(() => {
     const w = Math.min(width, CONTAINER_MAX_WIDTH) - (width > 768 ? 40 : 0)
@@ -79,15 +82,19 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }
   }, [width, height])
 
-  const { bannerScaleY, bannerHeadingScaleY } = useMemo(() => {
-    const h = measureContainerRef.current?.offsetHeight ?? height
-    const h2 = h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0)
-    return {
-      bannerHeight: h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0),
-      bannerScaleY: h2 / h,
-      bannerHeadingScaleY: h / h2,
-    }
-  }, [scrollY, width, height])
+  const { bannerSideOffset, bannerScaleY, bannerHeadingScaleY } =
+    useMemo(() => {
+      const h =
+        (measureContainerRef.current?.offsetHeight ?? height) -
+        HEADER_BAR_HEIGHT
+      const h2 = h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0)
+      const scaleY = h2 / h
+      return {
+        bannerSideOffset: (h - scaleY * h) / 2,
+        bannerScaleY: scaleY,
+        bannerHeadingScaleY: h / h2,
+      }
+    }, [scrollY, width, height])
 
   const { envelopeTransform, envelopeTransformEnded, isHiddenEnvelope } =
     useMemo(() => {
@@ -122,6 +129,13 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       rollingBackgroundOpacity: 1 - scrollProgress4,
     }
   }, [scrollY])
+
+  const bannerChildrenProps = {
+    transition: '50ms',
+    style: {
+      transform: width < height ? `scaleY(${bannerHeadingScaleY})` : undefined,
+    },
+  }
 
   return (
     <Box
@@ -212,20 +226,20 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   h="8px"
                   bottom="-8px"
                   left="-8px"
-                  transform="rotateX(-90deg) translateZ(4px)"
                   rounded="100%"
+                  style={{
+                    transform: `rotateX(-90deg) translateZ(${
+                      width < height && isZoomOutCompleted
+                        ? -bannerSideOffset
+                        : 4
+                    }px)`,
+                  }}
                 />
                 <Banner
                   transition="50ms"
-                  headingProps={{
-                    transition: '50ms',
-                    style: {
-                      transform:
-                        width < height
-                          ? `scaleY(${bannerHeadingScaleY})`
-                          : undefined,
-                    },
-                  }}
+                  headingProps={bannerChildrenProps}
+                  topContainerProps={bannerChildrenProps}
+                  bottomContainerProps={bannerChildrenProps}
                   style={{
                     transform: width < height ? `scaleY(${bannerScaleY})` : '',
                   }}
