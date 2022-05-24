@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useMemo, CSSProperties } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  CSSProperties,
+  forwardRef,
+  useImperativeHandle,
+  ForwardRefRenderFunction,
+} from 'react'
 import {
   useInfiniteQuery,
   QueryFunction,
@@ -290,18 +298,25 @@ export interface InfiniteListProps<
   onClickBody?: BoxListProps['onClickBody']
 }
 
-export function InfiniteList({
-  queryFn,
-  queryKey,
-  queryOptions,
-  emptyElement,
-  noMoreElement,
-  loader,
-  enableQuery,
-  onDataChange,
-  onChooseModeChange,
-  onClickBody,
-}: InfiniteListProps<MailboxesMessagesResponse>) {
+export interface InfiniteHandle {
+  getChooseIds: () => string[]
+}
+
+const InfiniteListComponent: ForwardRefRenderFunction<InfiniteHandle, any> = (
+  {
+    queryFn,
+    queryKey,
+    queryOptions,
+    emptyElement,
+    noMoreElement,
+    loader,
+    enableQuery,
+    onDataChange,
+    onChooseModeChange,
+    onClickBody,
+  }: InfiniteListProps<MailboxesMessagesResponse>,
+  forwardedRef
+) => {
   const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
     queryKey,
     queryFn,
@@ -345,6 +360,14 @@ export function InfiniteList({
     }
   }, [chooseMap])
 
+  useImperativeHandle(forwardedRef, () => ({
+    getChooseIds() {
+      return Object.keys(chooseMap)
+        .filter((key) => chooseMap[key])
+        .map((index: any) => dataMsg[index].id)
+    },
+  }))
+
   const dataLength = dataMsg.length
 
   return (
@@ -383,3 +406,5 @@ export function InfiniteList({
     </Box>
   )
 }
+
+export const InfiniteList = forwardRef(InfiniteListComponent)

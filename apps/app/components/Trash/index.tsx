@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 // import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { AvatarBadgeType, InfiniteList, MessageItem } from '../BoxList'
+import { AvatarBadgeType, InfiniteList, InifiniteHandle, MessageItem } from '../BoxList'
 import SVGTrash from '../../assets/trash.svg'
 // import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
@@ -16,10 +16,12 @@ import SVGIsBottom from '../../assets/is-bottom.svg'
 import { formatState, MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 
+
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<MessageItem[]>([])
   const [isChooseMode, setIsChooseMode] = useState(false)
+  const refBoxList = useRef<InifiniteHandle>(null)
 
   const api = useAPI()
 
@@ -37,8 +39,9 @@ export const TrashComponent: React.FC = () => {
   }, [])
 
   const getChooseList = useCallback(() => {
-    // ref get list
-    return []
+    const ids = refBoxList.current.getChooseIds()
+    console.log('ids', ids)
+    return ids
   }, [])
 
   const TextBox = styled(Box)`
@@ -103,6 +106,7 @@ export const TrashComponent: React.FC = () => {
             }}
           /> */}
           <InfiniteList
+            ref={refBoxList}
             enableQuery
             queryFn={queryFn}
             queryKey={['Trash']}
