@@ -16,9 +16,9 @@ import styled from '@emotion/styled'
 import { fromEvent } from 'rxjs'
 import Illustration2Svg from '../../assets/svg/illustration/2.svg'
 import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
-import MediumIconSvg from '../../assets/svg/socialMedia/medium.svg'
 import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
 import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
+import { DISCORD_URL, MIRROR_URL, TWITTER_URL } from '../../constants/env'
 
 const IllustrationText = styled(Box)`
   font-family: NanumPenScript-Regular, serif;
@@ -184,28 +184,39 @@ export const Dao = () => {
             }}
             maxW={{ base: '200px', md: 'unset' }}
           >
-            <Link href="#">
+            <Link
+              href={TWITTER_URL}
+              _hover={{ transform: 'scale(1.2)' }}
+              transition="100ms"
+              h="40px"
+              rounded="100px"
+            >
               <Icon
                 as={TwitterIconSvg}
                 w={{ base: '25px', md: '40px' }}
                 h="auto"
               />
             </Link>
-            <Link href="#">
-              <Icon
-                as={MediumIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
-            <Link href="#">
+            <Link
+              href={MIRROR_URL}
+              _hover={{ transform: 'scale(1.2)' }}
+              transition="100ms"
+              h="40px"
+              rounded="100px"
+            >
               <Icon
                 as={MirrorIconSvg}
                 w={{ base: '25px', md: '40px' }}
                 h="auto"
               />
             </Link>
-            <Link href="#">
+            <Link
+              href={DISCORD_URL}
+              _hover={{ transform: 'scale(1.2)' }}
+              transition="100ms"
+              h="40px"
+              rounded="100px"
+            >
               <Icon
                 as={DiscordIconSvg}
                 w={{ base: '25px', md: '40px' }}

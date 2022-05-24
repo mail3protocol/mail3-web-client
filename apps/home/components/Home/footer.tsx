@@ -14,11 +14,9 @@ import LogoWithWhiteFontColorSvg from 'assets/svg/logo-with-white-font.svg'
 import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
 import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
 import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
-import MediumIconSvg from '../../assets/svg/socialMedia/medium.svg'
 import {
   CONTACT_US_URL,
   DISCORD_URL,
-  MEDIUM_URL,
   MIRROR_URL,
   TWITTER_URL,
 } from '../../constants/env'
@@ -96,12 +94,6 @@ export const Footer = () => (
               <Icon as={MirrorIconSvg} w="20px" h="auto" mr="10px" />
               <Box as="span" display={{ base: 'none', md: 'inline' }}>
                 Mirror
-              </Box>
-            </Link>
-            <Link href={MEDIUM_URL} display="flex" alignItems="center">
-              <Icon as={MediumIconSvg} w="20px" h="auto" mr="10px" />
-              <Box as="span" display={{ base: 'none', md: 'inline' }}>
-                Medium
               </Box>
             </Link>
           </Stack>

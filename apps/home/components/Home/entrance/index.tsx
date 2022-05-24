@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
 import { useInnerSize } from 'hooks'
-import { isWhiteListStage, sleep } from '../../../utils'
-import { HEADER_BAR_HEIGHT } from '../navbar'
+import { sleep } from '../../../utils'
 
 const MOBILE_SIZE = 768
 
@@ -12,6 +11,7 @@ const BoxStyled = styled(Box)`
   width: 100%;
   height: 100%;
   position: relative;
+  cursor: pointer;
   &::before {
     content: ' ';
     display: block;
@@ -55,7 +55,6 @@ const BoxStyled = styled(Box)`
     }
     100% {
       opacity: 1;
-      cursor: pointer;
     }
   }
 `

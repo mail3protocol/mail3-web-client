@@ -37,6 +37,7 @@ const menuButtonProps: ButtonProps = {
   textAlign: 'left',
   h: 'auto',
   rounded: '0',
+  borderBottom: '1px solid #e7e7e7',
 }
 
 export const WhiteListButtons = () => (
@@ -57,19 +58,27 @@ export const WhiteListButtons = () => (
       <Link
         {...linkProps}
         _hover={{
-          textDecoration: 'none',
+          textDecoration: {
+            base: 'none',
+            md: 'underline',
+          },
         }}
+        textDecorationColor="#FFCD4B"
+        color="#FFCD4B"
         rounded="100px"
         position="relative"
         _after={{
-          content: '" "',
+          content: {
+            base: '" "',
+            md: 'none',
+          },
           display: 'block',
           bg: 'linear-gradient(90deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)',
           w: 'full',
           h: 'full',
           rounded: '100px',
           position: 'absolute',
-          top: 0,
+          bottom: 0,
           left: 0,
           zIndex: 0,
         }}

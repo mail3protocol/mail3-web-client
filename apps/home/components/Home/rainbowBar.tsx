@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Box, Center, Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useTranslation } from 'next-i18next'
@@ -32,45 +32,57 @@ export const RainbowBarContainer = styled(Center)`
 
 export const RainbowBar: React.FC = () => {
   const { t } = useTranslation('index')
+  const contentEl = useMemo(() => {
+    if (isWhiteListStage()) {
+      return (
+        <>
+          {t('heading-banner-text.white-list')}
+
+          <NextLink href="/testing">
+            <Link
+              fontWeight="bold"
+              textDecoration="underline"
+              display="inline-block"
+            >
+              {t('join')}
+            </Link>
+          </NextLink>
+        </>
+      )
+    }
+    if (isBetaTestingStage()) {
+      return (
+        <>
+          {t('heading-banner-text.beta-testing')}
+          <NextLink href={WHITE_LIST_URL}>
+            <Link
+              fontWeight="bold"
+              textDecoration="underline"
+              display="inline-block"
+            >
+              {t('join_white_list')}
+            </Link>
+          </NextLink>
+        </>
+      )
+    }
+    return null
+  }, [])
+
   return (
     <RainbowBarContainer
       minH="44px"
+      maxH="44px"
       textAlign="center"
       py="6px"
       px="20px"
       top="0"
-      whiteSpace="nowrap"
+      fontSize={{
+        base: '12px',
+        md: '20px',
+      }}
     >
-      <Box>
-        {isWhiteListStage() ? (
-          <>
-            {t('heading-banner-text.beta-testing')}
-            <NextLink href="/testing">
-              <Link
-                fontWeight="bold"
-                textDecoration="underline"
-                display="inline-block"
-              >
-                {t('join')}
-              </Link>
-            </NextLink>
-          </>
-        ) : null}
-        {isBetaTestingStage() ? (
-          <>
-            {t('heading-banner-text.white-list')}
-            <NextLink href={WHITE_LIST_URL}>
-              <Link
-                fontWeight="bold"
-                textDecoration="underline"
-                display="inline-block"
-              >
-                {t('join_white_list')}
-              </Link>
-            </NextLink>
-          </>
-        ) : null}
-      </Box>
+      <Box>{contentEl}</Box>
     </RainbowBarContainer>
   )
 }

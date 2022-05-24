@@ -84,34 +84,30 @@ export const RollingBackground = () => (
 )
 
 export const RollingSubtitles = () => (
-  <Box bg="#000" h="44px" overflow="hidden" position="relative">
+  <Box
+    bg="#000"
+    h="44px"
+    overflow="hidden"
+    position="relative"
+    color="#fff"
+    fontSize="16px"
+  >
     <RollingSubtitlesWithAnimation lineHeight="44px" fontWeight="bold">
-      <Flex minW="100vh" justify="space-between">
-        {new Array(30).fill(0).map((_, i) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <React.Fragment key={i}>
-            <Box as="span" mr="20px" w="60px" textAlign="center">
-              Web3.0
-            </Box>
-            <Box as="span" mr="20px" w="60px" textAlign="center">
-              Mail3
-            </Box>
-          </React.Fragment>
+      {new Array(2)
+        .fill(0)
+        .map((_, i) => i)
+        .map((k) => (
+          <Box minW="100vh" key={k}>
+            {new Array(10)
+              .fill(0)
+              .map((_, i) => i)
+              .map((i) => (
+                <React.Fragment key={i}>
+                  Web3.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mail3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </React.Fragment>
+              ))}
+          </Box>
         ))}
-      </Flex>
-      <Flex minW="100vh" justify="space-between">
-        {new Array(30).fill(0).map((_, i) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <React.Fragment key={i}>
-            <Box as="span" mr="20px" w="60px" textAlign="center">
-              Web3.0
-            </Box>
-            <Box as="span" mr="20px" w="60px" textAlign="center">
-              Mail3
-            </Box>
-          </React.Fragment>
-        ))}
-      </Flex>
     </RollingSubtitlesWithAnimation>
   </Box>
 )

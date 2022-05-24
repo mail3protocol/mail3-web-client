@@ -1,6 +1,8 @@
 import { Button, CONTAINER_MAX_WIDTH, LogoAnimation } from 'ui'
 import { Flex, Heading } from '@chakra-ui/react'
 import React from 'react'
+import NextLink from 'next/link'
+import { WHITE_LIST_URL } from '../../constants/env'
 
 export const WhitelistGuide = () => (
   <Flex
@@ -19,8 +21,10 @@ export const WhitelistGuide = () => (
       Now, hit the whitelist of Mail3
     </Heading>
     <LogoAnimation w="270px" mt="7px" />
-    <Button w="176px" mt="40px">
-      OK，Get in
-    </Button>
+    <NextLink href={WHITE_LIST_URL}>
+      <Button w="176px" mt="40px">
+        OK，Get in
+      </Button>
+    </NextLink>
   </Flex>
 )

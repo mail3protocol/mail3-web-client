@@ -13,6 +13,7 @@ import HomeGridBgSvgPath from '../../assets/svg/home-grid-bg.svg?url'
 import Illustration1Svg from '../../assets/svg/illustration/1.svg'
 import Illustration1Png from '../../assets/png/illustration/1.png'
 import Illustration3Png from '../../assets/png/illustration/3.png'
+import Illustration8Png from '../../assets/png/illustration/8.png'
 import { HEADER_BAR_HEIGHT } from './navbar'
 
 export const Banner: React.FC<FlexProps> = ({ ...props }) => (
@@ -64,7 +65,7 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => (
           h="auto"
           position="absolute"
           top="5%"
-          right="20%"
+          left="70vw"
         />
       </Box>
       <Image
@@ -73,6 +74,13 @@ export const Banner: React.FC<FlexProps> = ({ ...props }) => (
         w="120px"
         bottom="20%"
         left="0"
+      />
+      <Image
+        src={Illustration8Png.src}
+        position="absolute"
+        w="400px"
+        bottom="20%"
+        left="calc(70vw - 200px)"
       />
       <Center position="relative" w="full" my="auto" flex={1}>
         <Heading

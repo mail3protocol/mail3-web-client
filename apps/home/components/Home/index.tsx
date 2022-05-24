@@ -6,6 +6,7 @@ import { WhitelistGuide } from './whitelistGuide'
 import { Footer } from './footer'
 import { Entrance, EntranceStatus } from './entrance'
 import { ScrollAnimation } from './scrollAnimation'
+import { RollingSubtitles } from './rollingSubtitles'
 
 export const Home: React.FC = () => {
   const [status, setStatus] = useState<EntranceStatus>('opened')
@@ -25,6 +26,7 @@ export const Home: React.FC = () => {
           opacity: status === 'closing' || status === 'closed' ? 1 : 0,
         }}
       />
+      <RollingSubtitles />
       <Dao />
       <WhitelistGuide />
       <Footer />
