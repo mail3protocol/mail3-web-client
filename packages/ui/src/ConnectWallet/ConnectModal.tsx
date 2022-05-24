@@ -143,6 +143,9 @@ const isImotokenReject = (error: any) => {
   if (isImtoken() && error?.message && error.message.includes('拒绝')) {
     return true
   }
+  if (isImtoken() && error?.message && error.message.includes('cancel')) {
+    return true
+  }
   return false
 }
 
