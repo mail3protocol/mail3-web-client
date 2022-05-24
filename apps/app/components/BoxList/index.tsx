@@ -253,37 +253,32 @@ export const BoxList: React.FC<BoxListProps> = ({
   setIsChooseMode,
   chooseMap,
   hiddenMap,
-}) => {
-  console.log('chooseMap', chooseMap)
-  console.log('hiddenMap', hiddenMap)
+}) => (
+  <Box>
+    {data.map((item, index) => {
+      const { id } = item
 
-  return (
-    <Box>
-      {data.map((item, index) => {
-        const { id } = item
+      if (hiddenMap && hiddenMap[id]) {
+        return <Box />
+      }
 
-        if (hiddenMap && hiddenMap[id]) {
-          return <Box />
-        }
-
-        return (
-          <Item
-            key={id}
-            {...item}
-            index={index}
-            chooseMap={chooseMap}
-            onClickAvatar={onClickAvatar}
-            isChooseMode={isChooseMode}
-            setIsChooseMode={setIsChooseMode}
-            onClick={() => {
-              onClickBody(id)
-            }}
-          />
-        )
-      })}
-    </Box>
-  )
-}
+      return (
+        <Item
+          key={id}
+          {...item}
+          index={index}
+          chooseMap={chooseMap}
+          onClickAvatar={onClickAvatar}
+          isChooseMode={isChooseMode}
+          setIsChooseMode={setIsChooseMode}
+          onClick={() => {
+            onClickBody(id)
+          }}
+        />
+      )
+    })}
+  </Box>
+)
 
 export interface InfiniteListProps<
   TQueryFnData = unknown,
@@ -393,6 +388,8 @@ const InfiniteListComponent: ForwardRefRenderFunction<
         ...hiddenMap,
         ...map,
       })
+      setChooseMap({})
+      setIsChooseMode(false)
     },
   }))
 
@@ -419,7 +416,6 @@ const InfiniteListComponent: ForwardRefRenderFunction<
             hiddenMap={hiddenMap}
             onClickAvatar={(index) => {
               const newMap = { ...chooseMap }
-              console.log('newMap', newMap)
               newMap[index] = !newMap[index]
               setChooseMap(newMap)
             }}
