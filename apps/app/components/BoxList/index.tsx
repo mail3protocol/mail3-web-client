@@ -52,6 +52,7 @@ export interface BoxListProps {
   onClickBody: (id: string) => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
+  chooseMap?: any
 }
 
 export interface BoxItemProps {
@@ -62,13 +63,14 @@ export interface BoxItemProps {
   to: AddressListResponse
   from: AddressResponse
   date: string
-  isChoose: boolean
+  isChoose?: boolean
   avatarBadgeType: AvatarBadgeType
   itemType: ItemType
   onClickAvatar?: (index: number) => void
   onClick?: () => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
+  chooseMap?: any
 }
 
 const CircleE = styled(Circle)`
@@ -92,6 +94,7 @@ const Item = ({
   from,
   isChooseMode,
   setIsChooseMode,
+  chooseMap,
 }: BoxItemProps) => {
   const AvatarBadgeE = {
     [AvatarBadgeType.None]: <Box />,
@@ -165,6 +168,7 @@ const Item = ({
     ?.map((item) => `${item?.address}`)
     ?.join(';')}`
 
+  console.log('chooseMap-child', chooseMap)
   return (
     <Flex
       align="center"
@@ -194,7 +198,7 @@ const Item = ({
               return false
             }}
           >
-            {isChoose && <ChooseSVG />}
+            {chooseMap[index] && <ChooseSVG />}
           </CircleE>
         ) : (
           AvatarBox
@@ -246,6 +250,7 @@ export const BoxList: React.FC<BoxListProps> = ({
   onClickBody,
   isChooseMode,
   setIsChooseMode,
+  chooseMap,
 }) => (
   <Box>
     {data.map((item, index) => {
@@ -255,6 +260,7 @@ export const BoxList: React.FC<BoxListProps> = ({
           key={id}
           {...item}
           index={index}
+          chooseMap={chooseMap}
           onClickAvatar={onClickAvatar}
           isChooseMode={isChooseMode}
           setIsChooseMode={setIsChooseMode}
@@ -319,12 +325,14 @@ export function InfiniteList({
     }
   )
 
+  const [isChooseMode, setIsChooseMode] = useState(false)
+  const [chooseMap, setChooseMap] = useState<any>({})
+
   const loaderEl = useMemo(() => loader || <Box>Loading</Box>, [loader])
 
   const dataMsg: MessageItem[] = useMemo(() => {
     if (!data) return []
     const dataList = data.pages.map((item: any) => item.messages)
-
     return dataList.flat()
   }, [data])
 
@@ -349,6 +357,14 @@ export function InfiniteList({
         >
           <BoxList
             data={dataMsg}
+            isChooseMode={isChooseMode}
+            setIsChooseMode={setIsChooseMode}
+            chooseMap={chooseMap}
+            onClickAvatar={(id) => {
+              const newMap = { ...chooseMap }
+              newMap[id] = !newMap[id]
+              setChooseMap(newMap)
+            }}
             onClickBody={(id) => {
               console.log('id', id)
             }}
