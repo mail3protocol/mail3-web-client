@@ -103,8 +103,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       const rotateX = `rotateX(${overflowProgress * 90 + 270}deg)`
       const scaleBase = 0.8
       const targetTranslateY =
-        (height - HEADER_BAR_HEIGHT - envelopeSize.height) / 2 +
-        envelopeSize.height / 2
+        (height - HEADER_BAR_HEIGHT - envelopeSize.height) / 2
       const targetScale = envelopeSize.width / width
       const scaleDiff = Math.abs(scaleBase - targetScale)
       const p = getScrollProgress(3)
@@ -113,7 +112,12 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
           ? scaleBase + p * scaleDiff
           : scaleBase - p * scaleDiff
       const scale = `scale(${s})`
-      const translateY = `translateY(${(p * targetTranslateY) / s}px)`
+      const translateYPart1Value = (p * targetTranslateY) / s
+      const translateYPart2Value =
+        (getScrollProgress(4) * (envelopeSize.height / 2)) / s
+      const translateY = `translateY(${
+        translateYPart1Value + translateYPart2Value
+      }px)`
       return {
         envelopeTransform: [rotateX, scale, translateY].join(' '),
         envelopeTransformEnded: p === 1,

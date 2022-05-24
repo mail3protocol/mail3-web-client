@@ -64,6 +64,7 @@ export const Banner: React.FC<BannerProps> = ({
         top="20px"
         left="0"
         transformOrigin="50% 10%"
+        maxW={`${CONTAINER_MAX_WIDTH}px`}
         {...topContainerProps}
       >
         <Icon
