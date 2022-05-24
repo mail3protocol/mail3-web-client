@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-  CSSProperties,
-} from 'react'
+import React, { useState, useEffect, useMemo, CSSProperties } from 'react'
 import {
   useInfiniteQuery,
   QueryFunction,
@@ -48,7 +42,7 @@ export interface MessageItem extends MessageItemResponse {
 
 export interface BoxListProps {
   data: Array<MessageItem>
-  onClickAvatar?: (index: number) => void
+  onClickAvatar?: (index: number, id?: string) => void
   onClickBody: (id: string) => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
@@ -66,7 +60,7 @@ export interface BoxItemProps {
   isChoose?: boolean
   avatarBadgeType: AvatarBadgeType
   itemType: ItemType
-  onClickAvatar?: (index: number) => void
+  onClickAvatar?: BoxListProps['onClickAvatar']
   onClick?: () => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
@@ -83,7 +77,6 @@ const Item = ({
   subject,
   // desc,
   date,
-  isChoose,
   id,
   index,
   onClickAvatar,
@@ -135,7 +128,7 @@ const Item = ({
         showBorder
         onClick={(e) => {
           e.stopPropagation()
-          if (onClickAvatar) onClickAvatar(index)
+          if (onClickAvatar) onClickAvatar(index, id)
           if (setIsChooseMode) setIsChooseMode(true)
           return false
         }}
@@ -168,7 +161,6 @@ const Item = ({
     ?.map((item) => `${item?.address}`)
     ?.join(';')}`
 
-  console.log('chooseMap-child', chooseMap)
   return (
     <Flex
       align="center"
@@ -193,8 +185,7 @@ const Item = ({
             cursor="pointer"
             onClick={(e) => {
               e.stopPropagation()
-              if (onClickAvatar) onClickAvatar(index)
-              console.log(id, index)
+              if (onClickAvatar) onClickAvatar(index, id)
               return false
             }}
           >
@@ -291,10 +282,12 @@ export interface InfiniteListProps<
   emptyElement?: React.ReactNode
   noMoreElement: React.ReactNode
   loader?: React.ReactNode
-  calcDataLength?: (data?: InfiniteData<TData>) => number
-  onDataChange?: (data?: MessageItem[]) => void
   enableQuery?: boolean
   style?: CSSProperties
+  calcDataLength?: (data?: InfiniteData<TData>) => number
+  onDataChange?: (data?: MessageItem[]) => void
+  onChooseModeChange?: (bool: boolean) => void
+  onClickBody?: BoxListProps['onClickBody']
 }
 
 export function InfiniteList({
@@ -303,9 +296,11 @@ export function InfiniteList({
   queryOptions,
   emptyElement,
   noMoreElement,
-  onDataChange,
   loader,
   enableQuery,
+  onDataChange,
+  onChooseModeChange,
+  onClickBody,
 }: InfiniteListProps<MailboxesMessagesResponse>) {
   const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
     queryKey,
@@ -340,6 +335,16 @@ export function InfiniteList({
     onDataChange?.(dataMsg)
   }, [dataMsg])
 
+  useEffect(() => {
+    onChooseModeChange?.(isChooseMode)
+  }, [isChooseMode])
+
+  useEffect(() => {
+    if (Object.values(chooseMap).every((e) => !e)) {
+      setIsChooseMode(false)
+    }
+  }, [chooseMap])
+
   const dataLength = dataMsg.length
 
   return (
@@ -360,13 +365,14 @@ export function InfiniteList({
             isChooseMode={isChooseMode}
             setIsChooseMode={setIsChooseMode}
             chooseMap={chooseMap}
-            onClickAvatar={(id) => {
+            onClickAvatar={(index) => {
               const newMap = { ...chooseMap }
-              newMap[id] = !newMap[id]
+              newMap[index] = !newMap[index]
               setChooseMap(newMap)
             }}
             onClickBody={(id) => {
-              console.log('id', id)
+              if (!onClickBody) return
+              onClickBody(id)
             }}
           />
           {status === 'success' && dataLength === 0
