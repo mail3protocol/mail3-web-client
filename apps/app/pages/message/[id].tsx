@@ -1,6 +1,9 @@
 import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { PageContainer } from 'ui'
+import { PreviewComponent } from '../../components/Preview'
+import { Navbar } from '../../components/Navbar'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
@@ -8,6 +11,15 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Message: NextPage = () => <div>Message</div>
+const Message: NextPage = () => {
+  console.log('Message')
+
+  return (
+    <PageContainer>
+      <Navbar />
+      <PreviewComponent />
+    </PageContainer>
+  )
+}
 
 export default Message
