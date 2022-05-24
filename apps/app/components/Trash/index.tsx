@@ -5,7 +5,7 @@ import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 // import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { AvatarBadgeType, InfiniteList, InifiniteHandle, MessageItem } from '../BoxList'
+import { InfiniteList, InfiniteHandle, MessageItem } from '../BoxList'
 import SVGTrash from '../../assets/trash.svg'
 // import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
@@ -13,15 +13,15 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import SVGNone from '../../assets/none.svg'
 import SVGIsBottom from '../../assets/is-bottom.svg'
-import { formatState, MailboxContainer } from '../Inbox'
+import { MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
-
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<MessageItem[]>([])
   const [isChooseMode, setIsChooseMode] = useState(false)
-  const refBoxList = useRef<InifiniteHandle>(null)
+  const refBoxList = useRef<InfiniteHandle>(null)
+  const router = useRouter()
 
   const api = useAPI()
 
@@ -39,8 +39,7 @@ export const TrashComponent: React.FC = () => {
   }, [])
 
   const getChooseList = useCallback(() => {
-    const ids = refBoxList.current.getChooseIds()
-    console.log('ids', ids)
+    const ids = refBoxList?.current?.getChooseIds()
     return ids
   }, [])
 
@@ -60,7 +59,9 @@ export const TrashComponent: React.FC = () => {
             {
               type: SuspendButtonType.Delete,
               onClick: () => {
-                console.log('getChooseList', getChooseList())
+                const ids = getChooseList()
+                if (!ids?.length) return
+                refBoxList?.current?.setHiddenIds(ids)
                 console.log('del')
               },
             },
@@ -99,12 +100,6 @@ export const TrashComponent: React.FC = () => {
           <TextBox>
             <Text>{t('trash.auto-delete')}</Text>
           </TextBox>
-          {/* <BoxList
-            data={messages}
-            onClickBody={(id) => {
-              router.push(`${RoutePath.Message}/${id}`)
-            }}
-          /> */}
           <InfiniteList
             ref={refBoxList}
             enableQuery
@@ -114,6 +109,9 @@ export const TrashComponent: React.FC = () => {
             noMoreElement="end"
             onDataChange={onDataChange}
             onChooseModeChange={onChooseModeChange}
+            onClickBody={(id: string) => {
+              router.push(`${RoutePath.Message}/${id}`)
+            }}
           />
           {!!messages.length && (
             <Flex h="200px" justifyContent="center" alignItems="center">

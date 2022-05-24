@@ -54,7 +54,8 @@ export interface BoxListProps {
   onClickBody: (id: string) => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
-  chooseMap?: any
+  chooseMap?: Record<string, boolean>
+  hiddenMap?: Record<string, boolean>
 }
 
 export interface BoxItemProps {
@@ -72,7 +73,7 @@ export interface BoxItemProps {
   onClick?: () => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
-  chooseMap?: any
+  chooseMap?: BoxListProps['chooseMap']
 }
 
 const CircleE = styled(Circle)`
@@ -93,6 +94,7 @@ const Item = ({
   itemType,
   to,
   from,
+  isChoose,
   isChooseMode,
   setIsChooseMode,
   chooseMap,
@@ -197,7 +199,7 @@ const Item = ({
               return false
             }}
           >
-            {chooseMap[index] && <ChooseSVG />}
+            {(isChoose || (chooseMap && chooseMap[index])) && <ChooseSVG />}
           </CircleE>
         ) : (
           AvatarBox
@@ -250,27 +252,38 @@ export const BoxList: React.FC<BoxListProps> = ({
   isChooseMode,
   setIsChooseMode,
   chooseMap,
-}) => (
-  <Box>
-    {data.map((item, index) => {
-      const { id } = item
-      return (
-        <Item
-          key={id}
-          {...item}
-          index={index}
-          chooseMap={chooseMap}
-          onClickAvatar={onClickAvatar}
-          isChooseMode={isChooseMode}
-          setIsChooseMode={setIsChooseMode}
-          onClick={() => {
-            onClickBody(id)
-          }}
-        />
-      )
-    })}
-  </Box>
-)
+  hiddenMap,
+}) => {
+  console.log('chooseMap', chooseMap)
+  console.log('hiddenMap', hiddenMap)
+
+  return (
+    <Box>
+      {data.map((item, index) => {
+        const { id } = item
+
+        if (hiddenMap && hiddenMap[id]) {
+          return <Box />
+        }
+
+        return (
+          <Item
+            key={id}
+            {...item}
+            index={index}
+            chooseMap={chooseMap}
+            onClickAvatar={onClickAvatar}
+            isChooseMode={isChooseMode}
+            setIsChooseMode={setIsChooseMode}
+            onClick={() => {
+              onClickBody(id)
+            }}
+          />
+        )
+      })}
+    </Box>
+  )
+}
 
 export interface InfiniteListProps<
   TQueryFnData = unknown,
@@ -300,9 +313,13 @@ export interface InfiniteListProps<
 
 export interface InfiniteHandle {
   getChooseIds: () => string[]
+  setHiddenIds: (ids: string[]) => void
 }
 
-const InfiniteListComponent: ForwardRefRenderFunction<InfiniteHandle, any> = (
+const InfiniteListComponent: ForwardRefRenderFunction<
+  InfiniteHandle,
+  InfiniteListProps<MailboxesMessagesResponse>
+> = (
   {
     queryFn,
     queryKey,
@@ -314,7 +331,7 @@ const InfiniteListComponent: ForwardRefRenderFunction<InfiniteHandle, any> = (
     onDataChange,
     onChooseModeChange,
     onClickBody,
-  }: InfiniteListProps<MailboxesMessagesResponse>,
+  },
   forwardedRef
 ) => {
   const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
@@ -336,7 +353,8 @@ const InfiniteListComponent: ForwardRefRenderFunction<InfiniteHandle, any> = (
   )
 
   const [isChooseMode, setIsChooseMode] = useState(false)
-  const [chooseMap, setChooseMap] = useState<any>({})
+  const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
+  const [hiddenMap, setHiddenMap] = useState<Record<string, boolean>>({})
 
   const loaderEl = useMemo(() => loader || <Box>Loading</Box>, [loader])
 
@@ -366,6 +384,16 @@ const InfiniteListComponent: ForwardRefRenderFunction<InfiniteHandle, any> = (
         .filter((key) => chooseMap[key])
         .map((index: any) => dataMsg[index].id)
     },
+    setHiddenIds(ids) {
+      const map: Record<string, boolean> = {}
+      ids.forEach((key) => {
+        map[key] = true
+      })
+      setHiddenMap({
+        ...hiddenMap,
+        ...map,
+      })
+    },
   }))
 
   const dataLength = dataMsg.length
@@ -388,8 +416,10 @@ const InfiniteListComponent: ForwardRefRenderFunction<InfiniteHandle, any> = (
             isChooseMode={isChooseMode}
             setIsChooseMode={setIsChooseMode}
             chooseMap={chooseMap}
+            hiddenMap={hiddenMap}
             onClickAvatar={(index) => {
               const newMap = { ...chooseMap }
+              console.log('newMap', newMap)
               newMap[index] = !newMap[index]
               setChooseMap(newMap)
             }}
