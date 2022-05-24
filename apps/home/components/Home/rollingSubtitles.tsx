@@ -42,7 +42,10 @@ export const RollingBackground = () => (
     color="#E1E1E1"
   >
     {[false, true].map((isReverse) => (
-      <RollingSubtitlesWithAnimation reverse={isReverse} key={`${isReverse}`}>
+      <RollingSubtitlesWithAnimation
+        reverse={isReverse}
+        key={isReverse.toString()}
+      >
         <Stack
           spacing="300px"
           direction="column"

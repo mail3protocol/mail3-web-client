@@ -213,6 +213,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   bgSize="80px"
                   transformOrigin="center"
                   border="8px solid transparent"
+                  bg="#fff"
                   style={{
                     borderImage:
                       '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
@@ -228,6 +229,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   left="-8px"
                   rounded="100%"
                   style={{
+                    opacity: isZoomOutCompleted ? 1 : 0,
                     transform: `rotateX(-90deg) translateZ(${
                       width < height && isZoomOutCompleted
                         ? -bannerSideOffset
