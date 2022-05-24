@@ -1,0 +1,16 @@
+{
+    "title": "Join the earlybird whitelist !",
+    "period": "2022.6.7-2022.6.30",
+    "desc": "Be the first to access Mail3 beta version (1st week of June) and get your Earlybird Role in the discord!",
+    "check": "Check Eligibility",
+    "check-desc": "Connect wallet to see if you are eligible for the earlybird whitelist.",
+    "success": "🎉🎉🎉  Congratulations! You have joined the whitelist",
+    "fail": "😔 Sorry you are not qualified to join whitelist now. We invite you to join our <a>Discord</a> to get beta access.",
+    "discord": "Join Discord",
+    "twitter": "Follow Twitter",
+    "more-details": "More Details",
+    "earlybird": "Get Your Earlybird Role",
+    "earlybird-desc": "Join Discord to get your Earlybird Role now！",
+    "join-community": "Join Community",
+    "join-community-desc": "More opportunities to get beta access !"
+}

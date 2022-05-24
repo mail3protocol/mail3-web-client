@@ -21,8 +21,10 @@
         "connecting": "Connecting",
         "coming-soon": "Coming soon",
         "desired-wallet": "Click on the wallet below and let us know which one you need more",
-        "footer": "We do not own your private keys and cannot access your assest without your confirmation.",
-        "notice": "Notice"
+        "footer": "We do not own your private keys and cannot access your assets without your confirmation.",
+        "notice": "Notice",
+        "imtoken-reject": "You have declined authorization, please refresh this page to authorize again.",
+        "wechat": "The current environment does not support metamask. You can connect Metamask in the browser."
     },
     "auth": {
         "connect": "Connect your Wallet",

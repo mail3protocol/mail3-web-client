@@ -12,6 +12,8 @@ export enum TrackKey {
 export enum WalletName {
   Phantom = 'Phantom',
   Blocto = 'Blocto',
+  MetaMask = 'MetaMask',
+  WalletConnect = 'WalletConnect',
 }
 
 export interface TrackProps {

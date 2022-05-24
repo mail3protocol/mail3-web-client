@@ -19,6 +19,7 @@
         "@emotion/styled": "^11",
         "assets": "*",
         "axios": "^0.26.1",
+        "classnames": "^2.3.1",
         "cookie": "^0.5.0",
         "dayjs": "^1.11.2",
         "framer-motion": "^6",

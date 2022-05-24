@@ -1,12 +1,12 @@
 {
-  "name": "Next.JS Progressive Web App",
-  "short_name": "Next PWA",
-  "theme_color": "#ffffff",
-  "background_color": "#004740",
+  "name": "Mail3",
+  "short_name": "Mail3",
   "display": "fullscreen",
   "orientation": "portrait",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa",
   "icons": [
     {
       "src": "icons/icon-72x72.png",
