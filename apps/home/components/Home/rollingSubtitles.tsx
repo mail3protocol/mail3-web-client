@@ -40,7 +40,6 @@ export const RollingBackground = () => (
     fontWeight="bold"
     fontSize="120px"
     color="#E1E1E1"
-    data-name="rolling"
   >
     {[false, true].map((isReverse) => (
       <RollingSubtitlesWithAnimation reverse={isReverse} key={`${isReverse}`}>

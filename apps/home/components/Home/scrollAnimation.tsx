@@ -79,9 +79,14 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }
   }, [width, height])
 
-  const bannerHeight = useMemo(() => {
+  const { bannerScaleY, bannerHeadingScaleY } = useMemo(() => {
     const h = measureContainerRef.current?.offsetHeight ?? height
-    return h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0)
+    const h2 = h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0)
+    return {
+      bannerHeight: h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0),
+      bannerScaleY: h2 / h,
+      bannerHeadingScaleY: h / h2,
+    }
   }, [scrollY, width, height])
 
   const { envelopeTransform, envelopeTransformEnded, isHiddenEnvelope } =
@@ -197,6 +202,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   style={{
                     borderImage:
                       '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
+                    transform: width < height ? `scaleY(${bannerScaleY})` : '',
                   }}
                 />
                 <Box
@@ -210,9 +216,18 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   rounded="100%"
                 />
                 <Banner
-                  willChange="height"
+                  transition="50ms"
+                  headingProps={{
+                    transition: '50ms',
+                    style: {
+                      transform:
+                        width < height
+                          ? `scaleY(${bannerHeadingScaleY})`
+                          : undefined,
+                    },
+                  }}
                   style={{
-                    height: width < height ? `${bannerHeight}px` : undefined,
+                    transform: width < height ? `scaleY(${bannerScaleY})` : '',
                   }}
                 />
               </Box>
