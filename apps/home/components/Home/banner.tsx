@@ -68,13 +68,14 @@ export const Banner: React.FC<BannerProps> = ({
         {...topContainerProps}
       >
         <Icon
-          w="20%"
+          w="30%"
           maxW="150px"
           as={Illustration1Svg}
           h="auto"
           position="absolute"
           top="10%"
-          left="10%"
+          left="0"
+          transform="translateX(-30%)"
         />
         <Image
           src={Illustration1Png.src}
@@ -89,7 +90,7 @@ export const Banner: React.FC<BannerProps> = ({
       <Box
         {...bottomContainerProps}
         position="absolute"
-        bottom="20%"
+        bottom="30%"
         w="100vw"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         left="0"
@@ -97,8 +98,10 @@ export const Banner: React.FC<BannerProps> = ({
         <Image
           src={Illustration3Png.src}
           position="absolute"
-          w="120px"
+          w="20%"
+          maxW="150px"
           bottom="0"
+          transform="translateY(100%)"
           left="0"
         />
         <Image
