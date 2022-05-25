@@ -302,6 +302,7 @@ export interface InfiniteListProps<
   style?: CSSProperties
   calcDataLength?: (data?: InfiniteData<TData>) => number
   onDataChange?: (data?: MessageItem[]) => void
+  onQueryStatusChange?: (data?: any) => void
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
 }
@@ -324,28 +325,28 @@ const InfiniteListComponent: ForwardRefRenderFunction<
     loader,
     enableQuery,
     onDataChange,
+    onQueryStatusChange,
     onChooseModeChange,
     onClickBody,
   },
   forwardedRef
 ) => {
-  const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    queryKey,
-    queryFn,
-    {
-      getNextPageParam: (lastPage) => {
-        if (lastPage.messages.length > 0) {
-          return lastPage.page + 1
-        }
+  const queryData = useInfiniteQuery(queryKey, queryFn, {
+    getNextPageParam: (lastPage) => {
+      if (typeof lastPage?.page !== 'number') return undefined
+      if (lastPage.page >= lastPage.pages - 1) {
         return undefined
-      },
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      ...queryOptions,
-      enabled: enableQuery,
-    }
-  )
+      }
+      return lastPage.page + 1
+    },
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    ...queryOptions,
+    enabled: enableQuery,
+  })
+
+  const { data, status, hasNextPage, fetchNextPage } = queryData
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
@@ -360,8 +361,14 @@ const InfiniteListComponent: ForwardRefRenderFunction<
   }, [data])
 
   useEffect(() => {
-    onDataChange?.(dataMsg)
-  }, [dataMsg])
+    onQueryStatusChange?.(queryData.status)
+  }, [queryData.status])
+
+  useEffect(() => {
+    if (queryData.status === 'success') {
+      onDataChange?.(dataMsg)
+    }
+  }, [dataMsg, queryData.status])
 
   useEffect(() => {
     onChooseModeChange?.(isChooseMode)
