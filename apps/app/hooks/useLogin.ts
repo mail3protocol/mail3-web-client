@@ -134,7 +134,7 @@ export const useSetGlobalTrack = () => {
           [GlobalDimensions.WalletAddress]: account,
           [GlobalDimensions.SignatureStatus]: sigStatus,
         }
-        gtag('set', 'user_properties', config)
+        gtag?.('set', 'user_properties', config)
         setUserProperties(config)
       } catch (error) {
         // todo sentry
@@ -150,13 +150,13 @@ export const useInitUserProperties = () => {
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
   useDidMount(() => {
     if (userProps && isAuth) {
-      gtag('set', 'user_properties', userProps)
+      gtag?.('set', 'user_properties', userProps)
     }
   })
 
   useEffect(() => {
     if (!isAuth) {
-      gtag('set', 'user_properties', {})
+      gtag?.('set', 'user_properties', {})
       setUserProperties(null)
     }
   }, [isAuth])
