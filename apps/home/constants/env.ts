@@ -16,3 +16,6 @@ export const APPLICATION_PERIOD_DATE_RANGE: [Date, Date] = [
 ]
 
 export const GOOGLE_ANALYTICS_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
+
+export const MAIL_SERVER_URL =
+  process.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
