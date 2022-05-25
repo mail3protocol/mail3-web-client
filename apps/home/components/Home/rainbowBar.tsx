@@ -37,16 +37,14 @@ export const RainbowBar: React.FC = () => {
       return (
         <>
           {t('heading-banner-text.white-list')}
-
-          <NextLink href="/testing">
-            <Link
-              fontWeight="bold"
-              textDecoration="underline"
-              display="inline-block"
-            >
-              {t('join')}
-            </Link>
-          </NextLink>
+          <Link
+            fontWeight="bold"
+            textDecoration="underline"
+            display="inline-block"
+            href={WHITE_LIST_URL}
+          >
+            {t('join')}
+          </Link>
         </>
       )
     }
@@ -54,7 +52,7 @@ export const RainbowBar: React.FC = () => {
       return (
         <>
           {t('heading-banner-text.beta-testing')}
-          <NextLink href={WHITE_LIST_URL}>
+          <NextLink href="/testing">
             <Link
               fontWeight="bold"
               textDecoration="underline"

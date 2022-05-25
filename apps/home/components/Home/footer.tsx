@@ -108,7 +108,7 @@ export const Footer = () => (
             fontSize="16px"
           >
             <Link href={CONTACT_US_URL}>
-              <Box>Contact US</Box>
+              <Box>Contact Us</Box>
             </Link>
           </Stack>
         </Box>
