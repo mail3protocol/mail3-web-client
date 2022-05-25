@@ -73,7 +73,7 @@ export const RollingBackground = () => (
                       lineHeight="300px"
                       whiteSpace="pre"
                     >
-                      {new Array(10).fill('   Web3.0      Mail3   ').join('')}
+                      {new Array(10).fill('   Web3      Mail3   ').join('')}
                     </Box>
                   ))}
               </Flex>
