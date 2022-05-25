@@ -11,7 +11,7 @@ import { RollingSubtitles } from './rollingSubtitles'
 export const Home: React.FC = () => {
   const [status, setStatus] = useState<EntranceStatus>('opened')
   return (
-    <Flex direction="column" position="relative">
+    <Flex direction="column" position="relative" bg="#F3F3F3">
       {status !== 'closed' ? (
         <Entrance
           onChangeStatus={(s) => {
