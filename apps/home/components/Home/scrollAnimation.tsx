@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { fromEvent, map } from 'rxjs'
 import { Box, BoxProps, Center, Flex } from '@chakra-ui/react'
 import { useInnerSize } from 'hooks'
@@ -10,7 +10,7 @@ import { HEADER_BAR_HEIGHT } from './navbar'
 import { RollingBackground } from './rollingSubtitles'
 
 const ENVELOPE_RADIO = 95 / 157
-const SCROLL_STEPS = [300, 300, 300, 600, 600]
+const SCROLL_STEPS = [600, 300, 300, 600, 600]
 
 const letterPaddingTop =
   SCROLL_STEPS.slice(0, 4).reduce((acc, step) => acc + step, 0) +
@@ -60,90 +60,98 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }
   }, [])
 
-  const {
-    bannerTransform,
-    isHiddenBanner,
-    isZoomOutCompleted,
-    bannerTransformValue,
-  } = useMemo(() => {
+  const getBannerAnimationInfo = () => {
     const scrollProgressStep0 = getScrollProgress(0)
     const scrollProgressStep1 = getScrollProgress(1)
     const targetScale = 1 - Math.min(CONTAINER_MAX_WIDTH / width, 0.8)
     const scale = 1 - scrollProgressStep0 * targetScale
     const rotateX = Math.floor(scrollProgressStep1 * 90)
+    const h =
+      (measureContainerRef.current?.offsetHeight ?? height) - HEADER_BAR_HEIGHT
+    const targetHeight = h - (h - width * ENVELOPE_RADIO) * scrollProgressStep0
+    const scaleY = width < height ? targetHeight / h : 1
     return {
       bannerTransformValue: {
         scale,
         rotateX,
+        scaleY,
       },
-      bannerTransform: [`scale(${scale})`, `rotateX(${rotateX}deg)`].join(' '),
+      bannerHeadingScaleY: width < height ? h / targetHeight : undefined,
+      bannerTransform: [
+        `scale(${scale})`,
+        `rotateX(${rotateX}deg)`,
+        `scaleY(${scaleY})`,
+      ].join(' '),
       isHiddenBanner: scrollProgressStep1 === 1,
       isZoomOutCompleted: scrollProgressStep0 === 1,
     }
-  }, [scrollY, width])
-
-  const envelopeSize = useMemo(() => {
+  }
+  const getEnvelopeAnimationInfo = (
+    scaleBase: number,
+    envelopeSize: {
+      width: number
+      height: number
+    }
+  ) => {
+    const noOverflowProgress = getScrollProgress(2, { overflow: true })
+    const scrollProgressStep3 = getScrollProgress(3)
+    const scrollProgressStep4Overflow = getScrollProgress(4, { overflow: true })
+    const scrollProgressStep4 = Math.min(
+      Math.max(scrollProgressStep4Overflow, 0),
+      1
+    )
+    const overflowProgress = Math.min(Math.max(noOverflowProgress, 0), 1)
+    const rotateX = `rotateX(${overflowProgress * 90 + 270}deg)`
+    const targetTranslateY =
+      (height - HEADER_BAR_HEIGHT - envelopeSize.height) / 2
+    const targetScale = envelopeSize.width / width
+    const scaleDiff = Math.abs(scaleBase - targetScale)
+    const s =
+      scaleBase <= targetScale
+        ? scaleBase + scrollProgressStep3 * scaleDiff
+        : scaleBase - scrollProgressStep3 * scaleDiff
+    const scale = `scale(${s})`
+    const translateYPart1Value = (scrollProgressStep3 * targetTranslateY) / s
+    const translateYPart2Value =
+      (scrollProgressStep4 * (envelopeSize.height / 2)) / s
+    const translateY = `translateY(${
+      translateYPart1Value + translateYPart2Value
+    }px)`
+    return {
+      envelopeTransform: [rotateX, scale, translateY].join(' '),
+      envelopeTransformEnded: scrollProgressStep3 === 1,
+      isHiddenEnvelope: noOverflowProgress < 0 || noOverflowProgress > 1,
+      envelopeProgress: scrollProgressStep4,
+      rollingBackgroundOpacity:
+        1 - Math.min(Math.max(scrollProgressStep4Overflow - 0.5, 0), 1),
+    }
+  }
+  const getEnvelopeSize = () => {
     const w = Math.min(width, CONTAINER_MAX_WIDTH) - (width > 768 ? 40 : 0)
     const h = ENVELOPE_RADIO * w
     return {
       height: h,
       width: w,
     }
-  }, [width, height])
+  }
 
-  const { bannerSideOffset, bannerScaleY, bannerHeadingScaleY } =
-    useMemo(() => {
-      const h =
-        (measureContainerRef.current?.offsetHeight ?? height) -
-        HEADER_BAR_HEIGHT
-      const h2 = h - (h - width * ENVELOPE_RADIO) * getScrollProgress(0)
-      const scaleY = h2 / h
-      return {
-        bannerSideOffset: (h - scaleY * h) / 2,
-        bannerScaleY: scaleY,
-        bannerHeadingScaleY: h / h2,
-      }
-    }, [scrollY, width, height])
-
-  const { envelopeTransform, envelopeTransformEnded, isHiddenEnvelope } =
-    useMemo(() => {
-      const noOverflowProgress = getScrollProgress(2, { overflow: true })
-      const overflowProgress = Math.min(Math.max(noOverflowProgress, 0), 1)
-      const rotateX = `rotateX(${overflowProgress * 90 + 270}deg)`
-      const scaleBase = bannerTransformValue.scale
-      const targetTranslateY =
-        (height - HEADER_BAR_HEIGHT - envelopeSize.height) / 2
-      const targetScale = envelopeSize.width / width
-      const scaleDiff = Math.abs(scaleBase - targetScale)
-      const p = getScrollProgress(3)
-      const s =
-        scaleBase <= targetScale
-          ? scaleBase + p * scaleDiff
-          : scaleBase - p * scaleDiff
-      const scale = `scale(${s})`
-      const translateYPart1Value = (p * targetTranslateY) / s
-      const translateYPart2Value =
-        (getScrollProgress(4) * (envelopeSize.height / 2)) / s
-      const translateY = `translateY(${
-        translateYPart1Value + translateYPart2Value
-      }px)`
-      return {
-        envelopeTransform: [rotateX, scale, translateY].join(' '),
-        envelopeTransformEnded: p === 1,
-        isHiddenEnvelope: noOverflowProgress < 0 || noOverflowProgress > 1,
-      }
-    }, [scrollY, width, height, envelopeSize.width, envelopeSize.height])
+  const envelopeSize = getEnvelopeSize()
+  const {
+    bannerTransformValue,
+    bannerHeadingScaleY,
+    bannerTransform,
+    isHiddenBanner,
+    isZoomOutCompleted,
+  } = getBannerAnimationInfo()
+  const {
+    envelopeTransform,
+    envelopeTransformEnded,
+    isHiddenEnvelope,
+    envelopeProgress,
+    rollingBackgroundOpacity,
+  } = getEnvelopeAnimationInfo(bannerTransformValue.scale, envelopeSize)
 
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
-  const { envelopeProgress, rollingBackgroundOpacity } = useMemo(() => {
-    const p4 = getScrollProgress(4, { overflow: true })
-    const p5 = p4 - 0.5
-    return {
-      envelopeProgress: Math.min(Math.max(p4, 0), 1),
-      rollingBackgroundOpacity: 1 - Math.max(p5, 0),
-    }
-  }, [scrollY])
-
   const bannerChildrenProps = {
     transition: '50ms',
     style: {
@@ -231,7 +239,6 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   style={{
                     borderImage:
                       '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
-                    transform: `scaleY(${bannerScaleY})`,
                   }}
                 />
                 <Box
@@ -244,9 +251,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   rounded="100%"
                   style={{
                     opacity: isZoomOutCompleted ? 1 : 0,
-                    transform: `rotateX(-90deg) translateZ(${
-                      isZoomOutCompleted ? -bannerSideOffset : 4
-                    }px)`,
+                    transform: `rotateX(-90deg) translateZ(4px)`,
                   }}
                 />
                 <Banner
@@ -254,9 +259,6 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   headingProps={bannerChildrenProps}
                   topContainerProps={bannerChildrenProps}
                   bottomContainerProps={bannerChildrenProps}
-                  style={{
-                    transform: `scaleY(${bannerScaleY})`,
-                  }}
                 />
               </Box>
             </Center>
