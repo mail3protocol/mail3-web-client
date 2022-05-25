@@ -50,7 +50,7 @@ export interface MessageItem extends MessageItemResponse {
 
 export interface BoxListProps {
   data: Array<MessageItem>
-  onClickAvatar?: (index: number, id?: string) => void
+  onClickAvatar?: (index: number, id: string) => void
   onClickBody: (id: string) => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
@@ -199,7 +199,7 @@ const Item = ({
               return false
             }}
           >
-            {(isChoose || (chooseMap && chooseMap[index])) && <ChooseSVG />}
+            {(isChoose || (chooseMap && chooseMap[id])) && <ChooseSVG />}
           </CircleE>
         ) : (
           AvatarBox
@@ -300,6 +300,8 @@ export interface InfiniteListProps<
   loader?: React.ReactNode
   enableQuery?: boolean
   style?: CSSProperties
+  parentIsChooseMode?: boolean
+  parentChooseMap?: Record<string, boolean>
   calcDataLength?: (data?: InfiniteData<TData>) => number
   onDataChange?: (data?: MessageItem[]) => void
   onQueryStatusChange?: (data?: any) => void
@@ -317,13 +319,15 @@ const InfiniteListComponent: ForwardRefRenderFunction<
   InfiniteListProps<MailboxesMessagesResponse>
 > = (
   {
+    enableQuery,
     queryFn,
     queryKey,
     queryOptions,
     emptyElement,
     noMoreElement,
     loader,
-    enableQuery,
+    parentChooseMap = {},
+    parentIsChooseMode = false,
     onDataChange,
     onQueryStatusChange,
     onChooseModeChange,
@@ -375,16 +379,22 @@ const InfiniteListComponent: ForwardRefRenderFunction<
   }, [isChooseMode])
 
   useEffect(() => {
-    if (Object.values(chooseMap).every((e) => !e)) {
+    setIsChooseMode(parentIsChooseMode)
+  }, [parentIsChooseMode])
+
+  useEffect(() => {
+    let parentNoChoose = true
+    if (Object.values(parentChooseMap).length) {
+      parentNoChoose = Object.values(parentChooseMap).every((e) => !e)
+    }
+    if (Object.values(chooseMap).every((e) => !e) && parentNoChoose) {
       setIsChooseMode(false)
     }
-  }, [chooseMap])
+  }, [chooseMap, parentChooseMap])
 
   useImperativeHandle(forwardedRef, () => ({
     getChooseIds() {
-      return Object.keys(chooseMap)
-        .filter((key) => chooseMap[key])
-        .map((index: any) => dataMsg[index].id)
+      return Object.keys(chooseMap).filter((key) => chooseMap[key])
     },
     setHiddenIds(ids) {
       const map: Record<string, boolean> = {}
@@ -421,9 +431,9 @@ const InfiniteListComponent: ForwardRefRenderFunction<
             setIsChooseMode={setIsChooseMode}
             chooseMap={chooseMap}
             hiddenMap={hiddenMap}
-            onClickAvatar={(index) => {
+            onClickAvatar={(_i, id) => {
               const newMap = { ...chooseMap }
-              newMap[index] = !newMap[index]
+              newMap[id] = !newMap[id]
               setChooseMap(newMap)
             }}
             onClickBody={(id) => {

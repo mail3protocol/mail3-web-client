@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { Button } from 'ui'
@@ -107,6 +107,8 @@ export const InboxComponent: React.FC = () => {
   const [seenIsEmpty, setSeenIsEmpty] = useState(true)
 
   const [isChooseMode, setIsChooseMode] = useState(false)
+  const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
+  const [hiddenMap, setHiddenMap] = useState<Record<string, boolean>>({})
 
   const refSeenBoxList = useRef<InfiniteHandle>(null)
 
@@ -213,16 +215,6 @@ export const InboxComponent: React.FC = () => {
     }
   }
 
-  const updateItem = (index: number) => {
-    const newDate = [...newMessages]
-    newDate[index].isChoose = !newDate[index].isChoose
-    setNewMessages(newDate)
-
-    if (newDate.every((item) => !item.isChoose)) {
-      setIsChooseMode(false)
-    }
-  }
-
   const isClear = !newMessages.length && !seenMessages.length
   const isNoNew = !newMessages.length && !!seenMessages.length
 
@@ -234,8 +226,29 @@ export const InboxComponent: React.FC = () => {
             {
               type: SuspendButtonType.Delete,
               onClick: () => {
-                const ids = getChooseList()
-                console.log('del', ids)
+                const newIds =
+                  Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
+                const seenIds = getChooseList() ?? []
+                const ids = [...newIds, ...seenIds]
+
+                if (!ids.length) return
+
+                api.batchDeleteMessage(ids).then(() => {
+                  if (newIds.length) {
+                    const map: Record<string, boolean> = {}
+                    newIds.forEach((key) => {
+                      map[key] = true
+                    })
+                    setHiddenMap({
+                      ...hiddenMap,
+                      ...map,
+                    })
+                    setChooseMap({})
+                    setIsChooseMode(false)
+                  }
+
+                  refSeenBoxList?.current?.setHiddenIds(seenIds)
+                })
               },
             },
           ]}
@@ -294,7 +307,13 @@ export const InboxComponent: React.FC = () => {
                   data={newMessages}
                   isChooseMode={isChooseMode}
                   setIsChooseMode={setIsChooseMode}
-                  onClickAvatar={updateItem}
+                  onClickAvatar={(_i, id) => {
+                    const newMap = { ...chooseMap }
+                    newMap[id] = !newMap[id]
+                    setChooseMap(newMap)
+                  }}
+                  chooseMap={chooseMap}
+                  hiddenMap={hiddenMap}
                   onClickBody={(id) => {
                     setNewToSeen([id])
                     router.push(`${RoutePath.Message}/${id}`)
@@ -337,6 +356,8 @@ export const InboxComponent: React.FC = () => {
                   noMoreElement=""
                   onDataChange={onDataChange}
                   onChooseModeChange={onChooseModeChange}
+                  parentIsChooseMode={isChooseMode}
+                  parentChooseMap={chooseMap}
                   // onQueryStatusChange={onQueryStatusChange}
                   onClickBody={(id: string) => {
                     router.push(`${RoutePath.Message}/${id}`)
