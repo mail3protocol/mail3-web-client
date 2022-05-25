@@ -83,6 +83,10 @@ export const Entrance: React.FC<
   const { width, height } = useInnerSize()
   const [status, setStatus] = useState<EntranceStatus>('opened')
   useEffect(() => {
+    window.scroll(0, 0)
+    setTimeout(() => {
+      window.scroll(0, 0)
+    }, 500)
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = ''
