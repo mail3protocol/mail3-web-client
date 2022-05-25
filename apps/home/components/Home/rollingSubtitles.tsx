@@ -66,15 +66,14 @@ export const RollingBackground = () => (
                   .fill(0)
                   .map((_, i) => i)
                   .map((k) => (
-                    <Box minW="100vh" key={k} h="300px" lineHeight="300px">
-                      {new Array(10)
-                        .fill(0)
-                        .map((_, i) => i)
-                        .map((i) => (
-                          <React.Fragment key={i}>
-                            Web3.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mail3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          </React.Fragment>
-                        ))}
+                    <Box
+                      minW="100vh"
+                      key={k}
+                      h="300px"
+                      lineHeight="300px"
+                      whiteSpace="pre"
+                    >
+                      {new Array(10).fill('   Web3.0      Mail3   ').join('')}
                     </Box>
                   ))}
               </Flex>
@@ -99,15 +98,8 @@ export const RollingSubtitles = () => (
         .fill(0)
         .map((_, i) => i)
         .map((k) => (
-          <Box minW="100vh" key={k}>
-            {new Array(10)
-              .fill(0)
-              .map((_, i) => i)
-              .map((i) => (
-                <React.Fragment key={i}>
-                  Web3.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mail3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </React.Fragment>
-              ))}
+          <Box minW="100vh" key={k} whiteSpace="pre">
+            {new Array(10).fill('Web3.0      Mail3      ').join('')}
           </Box>
         ))}
     </RollingSubtitlesWithAnimation>
