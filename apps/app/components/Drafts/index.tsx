@@ -1,65 +1,44 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'next-i18next'
-import { useDidMount } from 'hooks'
 import { useRouter } from 'next/router'
 import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
 import { useAPI } from '../../hooks/useAPI'
-import { AvatarBadgeType, BoxList, MessageItem } from '../BoxList'
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
-import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
-import { formatState, MailboxContainer } from '../Inbox'
+import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
+import { InfiniteHandle, InfiniteList, MessageItem } from '../BoxList'
+import { MailboxContainer } from '../Inbox'
 
 import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/none.svg'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const [messages, setMessages] = useState<MessageItem[]>([])
-  const [pageIndex, setPageIndex] = useState(0)
-  const [hasNext, setHasNext] = useState(true)
-  const [isChooseMode, setIsChooseMode] = useState(false)
   const router = useRouter()
   const api = useAPI()
-  const [, setIsFetching] = useInfiniteScroll(fetchDate)
 
-  useDidMount(() => {
-    fetchDate(0)
-  })
+  const [messages, setMessages] = useState<MessageItem[]>([])
+  const [isChooseMode, setIsChooseMode] = useState(false)
+  const refBoxList = useRef<InfiniteHandle>(null)
 
-  async function fetchDate(page: number | undefined) {
-    if (!hasNext) return
+  const queryFn = useCallback(async ({ pageParam = 0 }) => {
+    const { data } = await api.getMailboxesMessages(Mailboxes.Drafts, pageParam)
+    return data
+  }, [])
 
-    const _pageIndex = page === undefined ? pageIndex + 1 : 0
-    setIsFetching(true)
-    const { data } = await api.getMailboxesMessages(
-      Mailboxes.Drafts,
-      _pageIndex
-    )
+  const onDataChange = useCallback((data) => {
+    setMessages(data)
+  }, [])
 
-    if (data?.messages?.length) {
-      const newDate = [
-        ...messages,
-        ...formatState(data.messages, AvatarBadgeType.None),
-      ]
-      setMessages(newDate)
-      setIsFetching(false)
-      setPageIndex(_pageIndex)
-    } else {
-      setHasNext(false)
-    }
-  }
+  const onChooseModeChange = useCallback((bool) => {
+    setIsChooseMode(bool)
+  }, [])
 
-  const onUpdate = (index: number) => {
-    const newDate = [...messages]
-    newDate[index].isChoose = !newDate[index].isChoose
-    setMessages(newDate)
-    if (newDate.every((item) => !item.isChoose)) {
-      setIsChooseMode(false)
-    }
-  }
+  const getChooseList = useCallback(() => {
+    const ids = refBoxList?.current?.getChooseIds()
+    return ids
+  }, [])
 
   return (
     <>
@@ -69,6 +48,11 @@ export const DraftsComponent: React.FC = () => {
             {
               type: SuspendButtonType.Delete,
               onClick: () => {
+                const ids = getChooseList()
+                if (!ids?.length) return
+                api.batchDeleteMessage(ids).then(() => {
+                  refBoxList?.current?.setHiddenIds(ids)
+                })
                 console.log('del')
               },
             },
@@ -93,12 +77,16 @@ export const DraftsComponent: React.FC = () => {
       </Flex>
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
-          <BoxList
-            data={messages}
-            isChooseMode={isChooseMode}
-            setIsChooseMode={setIsChooseMode}
-            onClickAvatar={onUpdate}
-            onClickBody={(id) => {
+          <InfiniteList
+            ref={refBoxList}
+            enableQuery
+            queryFn={queryFn}
+            queryKey={['Drafts']}
+            emptyElement=""
+            noMoreElement=""
+            onDataChange={onDataChange}
+            onChooseModeChange={onChooseModeChange}
+            onClickBody={(id: string) => {
               router.push(`${RoutePath.Message}/${id}`)
             }}
           />

@@ -8,9 +8,10 @@ import { InfiniteHandle, InfiniteList } from '../BoxList'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
 import { useAPI } from '../../hooks/useAPI'
-import SVGBottom from '../../assets/is-bottom.svg'
 import { MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
+
+import SVGBottom from '../../assets/is-bottom.svg'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
