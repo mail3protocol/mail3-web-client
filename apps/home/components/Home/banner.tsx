@@ -90,7 +90,7 @@ export const Banner: React.FC<BannerProps> = ({
       <Box
         {...bottomContainerProps}
         position="absolute"
-        bottom="30%"
+        bottom="20%"
         w="100vw"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         left="0"
@@ -101,7 +101,7 @@ export const Banner: React.FC<BannerProps> = ({
           w="20%"
           maxW="150px"
           bottom="0"
-          transform="translateY(100%)"
+          transform="translateY(150%)"
           left="0"
         />
         <Image
