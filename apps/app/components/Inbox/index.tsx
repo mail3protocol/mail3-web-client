@@ -213,17 +213,10 @@ export const InboxComponent: React.FC = () => {
     }
   }
 
-  const updateItem = (type: string) => (index: number) => {
-    let newDate
-    if (type === 'seen') {
-      newDate = [...seenMessages]
-      newDate[index].isChoose = !newDate[index].isChoose
-      setSeenMessages(newDate)
-    } else {
-      newDate = [...newMessages]
-      newDate[index].isChoose = !newDate[index].isChoose
-      setNewMessages(newDate)
-    }
+  const updateItem = (index: number) => {
+    const newDate = [...newMessages]
+    newDate[index].isChoose = !newDate[index].isChoose
+    setNewMessages(newDate)
 
     if (newDate.every((item) => !item.isChoose)) {
       setIsChooseMode(false)
@@ -301,7 +294,7 @@ export const InboxComponent: React.FC = () => {
                   data={newMessages}
                   isChooseMode={isChooseMode}
                   setIsChooseMode={setIsChooseMode}
-                  onClickAvatar={updateItem('new')}
+                  onClickAvatar={updateItem}
                   onClickBody={(id) => {
                     setNewToSeen([id])
                     router.push(`${RoutePath.Message}/${id}`)
