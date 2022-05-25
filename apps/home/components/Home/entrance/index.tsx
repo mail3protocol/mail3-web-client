@@ -115,7 +115,7 @@ export const Entrance: React.FC<
     const el = containerRef.current as HTMLDivElement
     const onScroll = async () => {
       setScrollOpenProgress(Math.min(el.scrollTop / el.clientHeight, 1))
-      if (el.scrollTop === el.clientHeight) {
+      if (el.scrollTop >= el.clientHeight) {
         await onClose()
       }
     }
