@@ -10,7 +10,7 @@ import { HEADER_BAR_HEIGHT } from './navbar'
 import { RollingBackground } from './rollingSubtitles'
 
 const ENVELOPE_RADIO = 95 / 157
-const SCROLL_STEPS = [300, 300, 300, 600, 600, 100]
+const SCROLL_STEPS = [300, 300, 300, 600, 600]
 
 const letterPaddingTop =
   SCROLL_STEPS.slice(0, 4).reduce((acc, step) => acc + step, 0) +
@@ -126,13 +126,14 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }, [scrollY, width, height, envelopeSize.width, envelopeSize.height])
 
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
-  const { envelopeProgress, rollingBackgroundOpacity } = useMemo(
-    () => ({
-      envelopeProgress: getScrollProgress(4),
-      rollingBackgroundOpacity: 1 - getScrollProgress(5),
-    }),
-    [scrollY]
-  )
+  const { envelopeProgress, rollingBackgroundOpacity } = useMemo(() => {
+    const p4 = getScrollProgress(4, { overflow: true })
+    const p5 = p4 - 0.5
+    return {
+      envelopeProgress: Math.min(Math.max(p4, 0), 1),
+      rollingBackgroundOpacity: 1 - Math.max(p5, 0),
+    }
+  }, [scrollY])
 
   const bannerChildrenProps = {
     transition: '50ms',
