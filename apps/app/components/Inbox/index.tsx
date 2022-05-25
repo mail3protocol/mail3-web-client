@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { Button } from 'ui'

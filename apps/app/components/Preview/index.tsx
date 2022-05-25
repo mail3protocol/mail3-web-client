@@ -13,7 +13,7 @@ import {
   FlagAction,
   FlagType,
 } from '../../api'
-import { dynamicDateString, truncateMiddle } from '../../utils'
+import { dynamicDateString } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 
