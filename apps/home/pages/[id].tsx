@@ -17,7 +17,8 @@ import { MAIL_SERVER_URL } from '../constants/env'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { locale, resolvedUrl } = context
   const [address] = resolvedUrl.slice(1).split('?')
-  const errorCode = isEthAddress(address) ? false : 404
+  const errorCode =
+    isEthAddress(address) || address?.endsWith('.eth') ? false : 404
   return {
     props: {
       errorCode,
