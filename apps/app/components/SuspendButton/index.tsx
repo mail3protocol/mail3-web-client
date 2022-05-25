@@ -19,7 +19,7 @@ export enum SuspendButtonType {
   Reply,
   Forward,
   Delete,
-  // Restore,
+  Restore,
 }
 
 interface buttonItemConfig {
@@ -29,6 +29,10 @@ interface buttonItemConfig {
 }
 
 const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
+  [SuspendButtonType.Restore]: {
+    Icon: ReplySVG,
+    name: 'Restore',
+  },
   [SuspendButtonType.Reply]: {
     Icon: ReplySVG,
     name: 'Reply',

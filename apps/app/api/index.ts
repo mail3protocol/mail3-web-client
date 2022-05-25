@@ -209,6 +209,12 @@ export class API {
     })
   }
 
+  public async moveMessage(messageId: string): Promise<AxiosResponse<any>> {
+    return this.axios.put(`/mailbox/account/message/${messageId}`, {
+      path: Mailboxes.INBOX,
+    })
+  }
+
   public async batchDeleteMessage(ids: string[]): Promise<AxiosResponse> {
     return this.axios.post('/mailbox/account/messages/batch_delete', {
       messageIds: ids,

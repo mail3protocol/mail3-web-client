@@ -112,7 +112,12 @@ export const TrashComponent: React.FC = () => {
             onDataChange={onDataChange}
             onChooseModeChange={onChooseModeChange}
             onClickBody={(id: string) => {
-              router.push(`${RoutePath.Message}/${id}`)
+              router.push({
+                pathname: `${RoutePath.Message}/${id}`,
+                query: {
+                  origin: Mailboxes.Trash,
+                },
+              })
             }}
           />
           {!!messages.length && (

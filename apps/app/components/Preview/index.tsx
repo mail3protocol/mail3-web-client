@@ -14,6 +14,7 @@ import {
   FlagType,
 } from '../../api'
 import { dynamicDateString, truncateMiddle } from '../../utils'
+import { Mailboxes } from '../../api/mailboxes'
 
 interface MeesageDetail {
   date: string
@@ -39,7 +40,7 @@ const Container = styled(Box)`
 
 export const PreviewComponent: React.FC = () => {
   const router = useRouter()
-  const { id } = router.query
+  const { id, origin } = router.query
   const [content, setContent] = useState('')
   const [detail, setDetail] = useState<MeesageDetail>()
   const api = useAPI()
@@ -76,54 +77,71 @@ export const PreviewComponent: React.FC = () => {
     }
   )
 
+  const buttonList = [
+    {
+      type: SuspendButtonType.Reply,
+      onClick: () => {
+        router.push({
+          pathname: '/message/new',
+          query: {
+            id,
+            action: 'replay',
+          },
+        })
+      },
+    },
+    {
+      type: SuspendButtonType.Forward,
+      onClick: () => {
+        router.push({
+          pathname: '/message/new',
+          query: {
+            id,
+            action: 'forward',
+          },
+        })
+      },
+    },
+    {
+      type: SuspendButtonType.Delete,
+      onClick: async () => {
+        if (typeof id !== 'string') {
+          return
+        }
+        await api.deleteMessage(id)
+        router.back()
+      },
+    },
+  ]
+  if (origin === Mailboxes.Trash) {
+    buttonList.unshift({
+      type: SuspendButtonType.Restore,
+      onClick: () => {
+        if (typeof id !== 'string') return
+        api.moveMessage(id as string)
+        console.log('restore')
+      },
+    })
+  }
+
   return (
     <>
-      <SuspendButton
-        list={[
-          {
-            type: SuspendButtonType.Reply,
-            onClick: () => {
-              router.push({
-                pathname: '/message/new',
-                query: {
-                  id,
-                  action: 'replay',
-                },
-              })
-            },
-          },
-          {
-            type: SuspendButtonType.Forward,
-            onClick: () => {
-              router.push({
-                pathname: '/message/new',
-                query: {
-                  id,
-                  action: 'forward',
-                },
-              })
-            },
-          },
-          {
-            type: SuspendButtonType.Delete,
-            onClick: async () => {
-              if (typeof id !== 'string') {
-                return
-              }
-              await api.deleteMessage(id)
-              router.back()
-            },
-          },
-        ]}
-      />
+      <SuspendButton list={buttonList} />
       <Center>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={10}>
             {detail?.from && (
-              <Avatar address={detail.from.address} borderRadius="50%" />
+              <Avatar
+                w="48px"
+                h="48px"
+                address={detail.from.address}
+                borderRadius="50%"
+              />
             )}
             {detail?.to.map((item) => (
               <Avatar
+                w="48px"
+                h="48px"
                 key={item.address}
                 address={item.address}
                 borderRadius="50%"
