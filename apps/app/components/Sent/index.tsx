@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
-import { useDidMount } from 'hooks'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { AvatarBadgeType, BoxList, MessageItem } from '../BoxList'
+import { InfiniteHandle, InfiniteList } from '../BoxList'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { useAPI } from '../../hooks/useAPI'
 import SVGBottom from '../../assets/is-bottom.svg'
-import { MailboxContainer, formatState } from '../Inbox'
+import { MailboxContainer } from '../Inbox'
+import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -21,76 +20,85 @@ const TitleBox = styled(Box)`
 
 export const SentComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const [messages, setMessages] = useState<Array<MessageItem>>([])
-  const [pageIndex, setPageIndex] = useState(0)
-  const [hasNext, setHasNext] = useState(true)
   const router = useRouter()
   const api = useAPI()
-  const [, setIsFetching] = useInfiniteScroll(fetchDate)
+
+  // const [messages, setMessages] = useState<Array<MessageItem>>([])
+
+  const refBoxList = useRef<InfiniteHandle>(null)
+
   const [isChooseMode, setIsChooseMode] = useState(false)
 
-  useDidMount(() => {
-    fetchDate(0)
-  })
+  const queryFn = useCallback(async ({ pageParam = 0 }) => {
+    const { data } = await api.getMailboxesMessages(Mailboxes.Sent, pageParam)
+    return data
+  }, [])
 
-  async function fetchDate(page: number | undefined) {
-    if (!hasNext) return
+  // const onDataChange = useCallback((data) => {
+  //   setMessages(data)
+  // }, [])
 
-    const _pageIndex = page === undefined ? pageIndex + 1 : 0
-    setIsFetching(true)
-    const { data } = await api.getMailboxesMessages(Mailboxes.Sent, _pageIndex)
+  const onChooseModeChange = useCallback((bool) => {
+    setIsChooseMode(bool)
+  }, [])
 
-    if (data?.messages?.length) {
-      const newState = [
-        ...messages,
-        ...formatState(data.messages, AvatarBadgeType.SentOK),
-      ]
-      setMessages(newState)
-      setIsFetching(false)
-      setPageIndex(_pageIndex)
-    } else {
-      setHasNext(false)
-    }
-  }
-
-  const onUpdate = (index: number) => {
-    const newDate = [...messages]
-    newDate[index].isChoose = !newDate[index].isChoose
-    setMessages(newDate)
-    if (newDate.every((item) => !item.isChoose)) {
-      setIsChooseMode(false)
-    }
-  }
+  const getChooseList = useCallback(() => {
+    const ids = refBoxList?.current?.getChooseIds()
+    return ids
+  }, [])
 
   return (
-    <MailboxContainer>
-      <Box padding={{ md: '20px 64px' }}>
-        <TitleBox>{t('sent.title')}</TitleBox>
-        <BoxList
-          data={messages}
-          isChooseMode={isChooseMode}
-          setIsChooseMode={setIsChooseMode}
-          onClickAvatar={onUpdate}
-          onClickBody={(id) => {
-            router.push(`${RoutePath.Message}/${id}`)
-          }}
+    <>
+      {isChooseMode && (
+        <StickyButtonBox
+          list={[
+            {
+              type: SuspendButtonType.Delete,
+              onClick: () => {
+                const ids = getChooseList()
+                if (!ids?.length) return
+                api.batchDeleteMessage(ids).then(() => {
+                  refBoxList?.current?.setHiddenIds(ids)
+                })
+                console.log('del')
+              },
+            },
+          ]}
         />
+      )}
+      <MailboxContainer>
+        <Box padding={{ md: '20px 64px' }}>
+          <TitleBox>{t('sent.title')}</TitleBox>
+          <InfiniteList
+            ref={refBoxList}
+            enableQuery
+            queryFn={queryFn}
+            queryKey={['Sent']}
+            emptyElement=""
+            noMoreElement=""
+            // onDataChange={onDataChange}
+            onChooseModeChange={onChooseModeChange}
+            onClickBody={(id: string) => {
+              router.push(`${RoutePath.Message}/${id}`)
+            }}
+          />
 
-        <Flex h="200px" justifyContent="center" alignItems="center">
-          <Box>
-            <Box
-              fontSize="12px"
-              fontWeight={400}
-              lineHeight="18px"
-              marginBottom="20px"
-              textAlign="center"
-            >
-              {t('this-is-bottom')}
+          <Flex h="200px" justifyContent="center" alignItems="center">
+            <Box>
+              <Box
+                fontSize="12px"
+                fontWeight={400}
+                lineHeight="18px"
+                marginBottom="20px"
+                textAlign="center"
+              >
+                {t('this-is-bottom')}
+              </Box>
+              <SVGBottom />
             </Box>
-            <SVGBottom />
-          </Box>
-        </Flex>
-      </Box>
-    </MailboxContainer>
+          </Flex>
+        </Box>
+      </MailboxContainer>
+    </>
   )
 }
