@@ -76,7 +76,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
         rotateX,
         scaleY,
       },
-      bannerHeadingScaleY: width < height ? h / targetHeight : undefined,
+      bannerHeadingScaleY: width < height ? h / targetHeight : 1,
       bannerTransform: [
         `scale(${scale})`,
         `rotateX(${rotateX}deg)`,
