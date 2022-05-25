@@ -178,7 +178,7 @@ export const Entrance: React.FC<
               xl: `${20 * 60}px`,
             }}
           >
-            <Icon as={LogoSvg} w="112px" h="auto" />
+            <Icon as={LogoSvg} w="112px" h="auto" mb="auto" />
             <Heading
               w={{
                 base: 'full',
