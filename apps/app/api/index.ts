@@ -210,7 +210,7 @@ export class API {
   }
 
   public async moveMessage(messageId: string): Promise<AxiosResponse<any>> {
-    return this.axios.put(`/mailbox/account/message/${messageId}`, {
+    return this.axios.put(`/mailbox/account/message/${messageId}/move`, {
       path: Mailboxes.INBOX,
     })
   }

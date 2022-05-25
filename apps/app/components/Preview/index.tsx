@@ -15,6 +15,7 @@ import {
 } from '../../api'
 import { dynamicDateString, truncateMiddle } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
+import { RoutePath } from '../../route/path'
 
 interface MeesageDetail {
   date: string
@@ -118,8 +119,11 @@ export const PreviewComponent: React.FC = () => {
       type: SuspendButtonType.Restore,
       onClick: () => {
         if (typeof id !== 'string') return
-        api.moveMessage(id as string)
-        console.log('restore')
+        api.moveMessage(id as string).then(() => {
+          // if ok
+          // TODO not ok flag
+          router.replace(`${RoutePath.Message}/${id}`)
+        })
       },
     })
   }
