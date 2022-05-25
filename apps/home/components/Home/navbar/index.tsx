@@ -92,6 +92,7 @@ export const Navbar: React.FC = () => {
         isOpen={isOpenMenuDrawer}
         placement="right"
         onClose={onCloseMenuDrawer}
+        autoFocus={false}
       >
         <DrawerOverlay
           backdropFilter="blur(10px)"
