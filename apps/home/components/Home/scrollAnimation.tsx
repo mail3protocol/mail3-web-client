@@ -60,18 +60,27 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     }
   }, [])
 
-  const { bannerTransform, isHiddenBanner, isZoomOutCompleted } =
-    useMemo(() => {
-      const scrollProgressStep0 = getScrollProgress(0)
-      const scrollProgressStep1 = getScrollProgress(1)
-      const scale = `scale(${1 - scrollProgressStep0 * 0.2})`
-      const rotateX = `rotateX(${Math.floor(scrollProgressStep1 * 90)}deg)`
-      return {
-        bannerTransform: [scale, rotateX].join(' '),
-        isHiddenBanner: scrollProgressStep1 === 1,
-        isZoomOutCompleted: scrollProgressStep0 === 1,
-      }
-    }, [scrollY])
+  const {
+    bannerTransform,
+    isHiddenBanner,
+    isZoomOutCompleted,
+    bannerTransformValue,
+  } = useMemo(() => {
+    const scrollProgressStep0 = getScrollProgress(0)
+    const scrollProgressStep1 = getScrollProgress(1)
+    const targetScale = 1 - Math.min(CONTAINER_MAX_WIDTH / width, 0.8)
+    const scale = 1 - scrollProgressStep0 * targetScale
+    const rotateX = Math.floor(scrollProgressStep1 * 90)
+    return {
+      bannerTransformValue: {
+        scale,
+        rotateX,
+      },
+      bannerTransform: [`scale(${scale})`, `rotateX(${rotateX}deg)`].join(' '),
+      isHiddenBanner: scrollProgressStep1 === 1,
+      isZoomOutCompleted: scrollProgressStep0 === 1,
+    }
+  }, [scrollY, width])
 
   const envelopeSize = useMemo(() => {
     const w = Math.min(width, CONTAINER_MAX_WIDTH) - (width > 768 ? 40 : 0)
@@ -101,7 +110,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       const noOverflowProgress = getScrollProgress(2, { overflow: true })
       const overflowProgress = Math.min(Math.max(noOverflowProgress, 0), 1)
       const rotateX = `rotateX(${overflowProgress * 90 + 270}deg)`
-      const scaleBase = 0.8
+      const scaleBase = bannerTransformValue.scale
       const targetTranslateY =
         (height - HEADER_BAR_HEIGHT - envelopeSize.height) / 2
       const targetScale = envelopeSize.width / width
@@ -138,7 +147,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
   const bannerChildrenProps = {
     transition: '50ms',
     style: {
-      transform: width < height ? `scaleY(${bannerHeadingScaleY})` : undefined,
+      transform: `scaleY(${bannerHeadingScaleY})`,
     },
   }
 
@@ -222,7 +231,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   style={{
                     borderImage:
                       '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
-                    transform: width < height ? `scaleY(${bannerScaleY})` : '',
+                    transform: `scaleY(${bannerScaleY})`,
                   }}
                 />
                 <Box
@@ -236,9 +245,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   style={{
                     opacity: isZoomOutCompleted ? 1 : 0,
                     transform: `rotateX(-90deg) translateZ(${
-                      width < height && isZoomOutCompleted
-                        ? -bannerSideOffset
-                        : 4
+                      isZoomOutCompleted ? -bannerSideOffset : 4
                     }px)`,
                   }}
                 />
@@ -248,7 +255,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   topContainerProps={bannerChildrenProps}
                   bottomContainerProps={bannerChildrenProps}
                   style={{
-                    transform: width < height ? `scaleY(${bannerScaleY})` : '',
+                    transform: `scaleY(${bannerScaleY})`,
                   }}
                 />
               </Box>
