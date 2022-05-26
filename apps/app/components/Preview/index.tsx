@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { Avatar } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex } from '@chakra-ui/react'
@@ -18,6 +18,7 @@ import {
 import { dynamicDateString } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
+import { Loading } from '../Loading'
 
 interface MeesageDetail {
   date: string
@@ -82,65 +83,78 @@ export const PreviewComponent: React.FC = () => {
     }
   )
 
-  const buttonList = [
-    {
-      type: SuspendButtonType.Reply,
-      onClick: () => {
-        router.push({
-          pathname: RoutePath.NewMessage,
-          query: {
-            id,
-            action: 'replay',
-          },
-        })
-      },
-    },
-    {
-      type: SuspendButtonType.Forward,
-      onClick: () => {
-        router.push({
-          pathname: RoutePath.NewMessage,
-          query: {
-            id,
-            action: 'forward',
-          },
-        })
-      },
-    },
-    {
-      type: SuspendButtonType.Delete,
-      onClick: async () => {
-        if (typeof id !== 'string') {
-          return
-        }
-        try {
-          await api.deleteMessage(id)
-        } catch (error) {
-          dialog({
-            type: 'warning',
-            description: t('delete-failed'),
+  const buttonList = useMemo(() => {
+    const list = [
+      {
+        type: SuspendButtonType.Reply,
+        onClick: () => {
+          router.push({
+            pathname: RoutePath.NewMessage,
+            query: {
+              id,
+              action: 'replay',
+            },
           })
-        }
-        router.back()
+        },
       },
-    },
-  ]
-  if (origin === Mailboxes.Trash) {
-    buttonList.unshift({
-      type: SuspendButtonType.Restore,
-      onClick: async () => {
-        if (typeof id !== 'string') return
-        try {
-          await api.moveMessage(id as string)
-          router.replace(`${RoutePath.Message}/${id}`)
-        } catch (error) {
-          dialog({
-            type: 'warning',
-            description: t('restore-failed'),
+      {
+        type: SuspendButtonType.Forward,
+        onClick: () => {
+          router.push({
+            pathname: RoutePath.NewMessage,
+            query: {
+              id,
+              action: 'forward',
+            },
           })
-        }
+        },
       },
-    })
+      {
+        type: SuspendButtonType.Delete,
+        onClick: async () => {
+          if (typeof id !== 'string') {
+            return
+          }
+          try {
+            await api.deleteMessage(id)
+          } catch (error) {
+            dialog({
+              type: 'warning',
+              description: t('delete-failed'),
+            })
+          }
+          router.back()
+        },
+      },
+    ]
+
+    if (origin === Mailboxes.Trash) {
+      list.unshift({
+        type: SuspendButtonType.Restore,
+        onClick: async () => {
+          if (typeof id !== 'string') return
+          try {
+            await api.moveMessage(id as string)
+            router.replace(`${RoutePath.Message}/${id}`)
+          } catch (error) {
+            dialog({
+              type: 'warning',
+              description: t('restore-failed'),
+            })
+          }
+        },
+      })
+    }
+
+    return list
+  }, [api, id, origin])
+
+  if (!detail) {
+    return (
+      <Container>
+        <Loading />
+      </Container>
+    )
   }
 
   return (
@@ -169,97 +183,96 @@ export const PreviewComponent: React.FC = () => {
           </AvatarGroup>
         </Box>
       </Center>
-      {!!detail && (
-        <Container>
-          <Box>
-            <Text
-              align="center"
-              fontWeight="700"
-              fontSize={{ base: '20px', md: '28px' }}
-              lineHeight={1.2}
-              marginBottom="30px"
-            >
-              {detail.subject}
-            </Text>
-          </Box>
-          <Box>
-            <Flex>
-              <Box w="48px">
-                {detail.from && (
-                  <Avatar address={detail.from.address} borderRadius="50%" />
-                )}
-              </Box>
-              <Box borderBottom="1px solid #E7E7E7;" flex={1} marginLeft="17px">
-                <Flex
-                  lineHeight={1}
-                  alignItems="baseline"
-                  justify="space-between"
-                >
-                  <Box>
-                    <Box
-                      fontWeight={500}
-                      fontSize="24px"
-                      lineHeight="1"
-                      display="inline-block"
-                      verticalAlign="middle"
-                    >
-                      {detail.from.name}
-                    </Box>
-                    <Box
-                      color="#6F6F6F"
-                      fontWeight={400}
-                      fontSize="14px"
-                      display="inline-block"
-                      verticalAlign="middle"
-                      marginLeft="5px"
-                    >
-                      {`<${detail.from.address}>`}
-                    </Box>
-                  </Box>
-                  <Box />
+
+      <Container>
+        <Box>
+          <Text
+            align="center"
+            fontWeight="700"
+            fontSize={{ base: '20px', md: '28px' }}
+            lineHeight={1.2}
+            marginBottom="30px"
+          >
+            {detail.subject}
+          </Text>
+        </Box>
+        <Box>
+          <Flex>
+            <Box w="48px">
+              {detail.from && (
+                <Avatar address={detail.from.address} borderRadius="50%" />
+              )}
+            </Box>
+            <Box borderBottom="1px solid #E7E7E7;" flex={1} marginLeft="17px">
+              <Flex
+                lineHeight={1}
+                alignItems="baseline"
+                justify="space-between"
+              >
+                <Box>
                   <Box
                     fontWeight={500}
-                    fontSize="16px"
-                    color="#6F6F6F"
-                    whiteSpace="nowrap"
+                    fontSize="24px"
+                    lineHeight="1"
+                    display="inline-block"
+                    verticalAlign="middle"
                   >
-                    {dynamicDateString(detail.date)}
+                    {detail.from.name}
                   </Box>
-                </Flex>
+                  <Box
+                    color="#6F6F6F"
+                    fontWeight={400}
+                    fontSize="14px"
+                    display="inline-block"
+                    verticalAlign="middle"
+                    marginLeft="5px"
+                  >
+                    {`<${detail.from.address}>`}
+                  </Box>
+                </Box>
+                <Box />
                 <Box
-                  fontWeight={400}
+                  fontWeight={500}
                   fontSize="16px"
                   color="#6F6F6F"
-                  lineHeight="24px"
-                  marginTop="5px"
-                  wordBreak="break-word"
+                  whiteSpace="nowrap"
                 >
-                  to{' '}
-                  {detail.to
-                    .map((item) => {
-                      // const address = truncateMiddle(item.address, 6, 6)
-                      const { address } = item
-                      if (item.name) return `${item.name} <${address}>`
-                      return `<${address}>`
-                    })
-                    .join(';')}
+                  {dynamicDateString(detail.date)}
                 </Box>
+              </Flex>
+              <Box
+                fontWeight={400}
+                fontSize="16px"
+                color="#6F6F6F"
+                lineHeight="24px"
+                marginTop="5px"
+                wordBreak="break-word"
+              >
+                to{' '}
+                {detail.to
+                  .map((item) => {
+                    // const address = truncateMiddle(item.address, 6, 6)
+                    const { address } = item
+                    if (item.name) return `${item.name} <${address}>`
+                    return `<${address}>`
+                  })
+                  .join(';')}
               </Box>
-            </Flex>
-          </Box>
-          <Box
-            padding={{ base: '20px 0', md: '65px 24px' }}
-            borderBottom="1px solid #ccc"
-          >
-            <div
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                __html: content,
-              }}
-            />
-          </Box>
-        </Container>
-      )}
+            </Box>
+          </Flex>
+        </Box>
+        <Box
+          padding={{ base: '20px 0', md: '65px 24px' }}
+          borderBottom="1px solid #ccc"
+        >
+          <div
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{
+              __html: content,
+            }}
+          />
+        </Box>
+      </Container>
     </>
   )
 }
