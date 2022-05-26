@@ -22,7 +22,6 @@ import IMGNewNone from '../../assets/new-none.png'
 
 const PAGE_SIZE = 20
 
-
 const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
     padding: 0;
