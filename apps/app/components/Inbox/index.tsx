@@ -17,8 +17,8 @@ import { MessageItemResponse } from '../../api'
 import { RoutePath } from '../../route/path'
 
 import SVGWrite from '../../assets/icon-write.svg'
-import IMGClear from '../../assets/clear.png'
 import IMGNewNone from '../../assets/new-none.png'
+import { EmptyStatus } from '../MailboxStatus'
 
 const PAGE_SIZE = 20
 
@@ -259,21 +259,7 @@ export const InboxComponent: React.FC = () => {
         <MailboxContainer minH="700px">
           <Box padding={{ md: '30px 64px', base: '20px' }}>
             <Box className="title">{t('inbox.title.new')}</Box>
-            {isClear && (
-              <Flex h="500px" justifyContent="center" alignItems="center">
-                <Box>
-                  <Box
-                    fontSize="20px"
-                    fontWeight={500}
-                    lineHeight="30px"
-                    marginBottom="30px"
-                  >
-                    {t('inbox.all-clear')}
-                  </Box>
-                  <Image src={IMGClear} />
-                </Box>
-              </Flex>
-            )}
+            {isClear && <EmptyStatus />}
 
             {isNoNew && (
               <Flex h="300px" justifyContent="center" alignItems="center">

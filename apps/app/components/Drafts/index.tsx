@@ -12,14 +12,14 @@ import { MailboxContainer } from '../Inbox'
 
 import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/none.svg'
-import { MessageItem } from '../Mailbox'
+import { Loading } from '../Loading'
+import { ThisBottomStatus } from '../MailboxStatus'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const router = useRouter()
   const api = useAPI()
 
-  const [messages, setMessages] = useState<MessageItem[]>([])
   const [isChooseMode, setIsChooseMode] = useState(false)
   const refBoxList = useRef<InfiniteHandle>(null)
 
@@ -33,10 +33,6 @@ export const DraftsComponent: React.FC = () => {
     },
     [api]
   )
-
-  const onDataChange = (data: MessageItem[]) => {
-    setMessages(data)
-  }
 
   const onChooseModeChange = (bool: boolean) => {
     setIsChooseMode(bool)
@@ -82,36 +78,34 @@ export const DraftsComponent: React.FC = () => {
             enableQuery
             queryFn={queryFn}
             queryKey={['Drafts']}
-            emptyElement=""
-            noMoreElement=""
-            onDataChange={onDataChange}
+            loader={<Loading />}
+            emptyElement={
+              <Flex
+                h="400px"
+                justifyContent="center"
+                alignItems="center"
+                direction="column"
+              >
+                <Box
+                  fontSize="16px"
+                  fontWeight={500}
+                  lineHeight="24px"
+                  marginBottom="20px"
+                  textAlign="center"
+                >
+                  <p>{t('drafts.no-content-w1')}</p>
+                  <p>{t('drafts.no-content-w2')}</p>
+                  <p>{t('drafts.no-content-w3')}</p>
+                </Box>
+                <SVGNone />
+              </Flex>
+            }
+            noMoreElement={<ThisBottomStatus />}
             onChooseModeChange={onChooseModeChange}
             onClickBody={(id: string) => {
               router.push(`${RoutePath.Message}/${id}`)
             }}
           />
-
-          {!messages.length && (
-            <Flex
-              h="400px"
-              justifyContent="center"
-              alignItems="center"
-              direction="column"
-            >
-              <Box
-                fontSize="16px"
-                fontWeight={500}
-                lineHeight="24px"
-                marginBottom="20px"
-                textAlign="center"
-              >
-                <p>{t('drafts.no-content-w1')}</p>
-                <p>{t('drafts.no-content-w2')}</p>
-                <p>{t('drafts.no-content-w3')}</p>
-              </Box>
-              <SVGNone />
-            </Flex>
-          )}
         </Box>
       </MailboxContainer>
     </>

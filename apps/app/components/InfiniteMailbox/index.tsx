@@ -43,7 +43,7 @@ interface InfiniteMailboxProps<
   parentChooseMap?: Record<string, boolean>
   calcDataLength?: (data?: InfiniteData<TData>) => number
   onDataChange?: (data: MessageItem[]) => void
-  onQueryStatusChange?: (data?: any) => void
+  onGetIsFetching?: (isFetching: boolean) => void
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
 }
@@ -68,7 +68,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     parentChooseMap = {},
     parentIsChooseMode = false,
     onDataChange,
-    onQueryStatusChange,
+    onGetIsFetching,
     onChooseModeChange,
     onClickBody,
   },
@@ -89,7 +89,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     enabled: enableQuery,
   })
 
-  const { data, status, hasNextPage, fetchNextPage } = queryData
+  const { data, status, hasNextPage, fetchNextPage, isFetching } = queryData
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
@@ -104,8 +104,8 @@ const InfiniteBox: ForwardRefRenderFunction<
   }, [data])
 
   useEffect(() => {
-    onQueryStatusChange?.(queryData.status)
-  }, [queryData.status])
+    onGetIsFetching?.(isFetching)
+  }, [isFetching])
 
   useEffect(() => {
     if (queryData.status === 'success') {
@@ -150,6 +150,8 @@ const InfiniteBox: ForwardRefRenderFunction<
   }))
 
   const dataLength = dataMsg.length
+  const isEmpty = status === 'success' && dataLength === 0
+  const endMessage = isEmpty ? '' : noMoreElement
 
   return (
     <Box>
@@ -161,7 +163,7 @@ const InfiniteBox: ForwardRefRenderFunction<
           next={fetchNextPage}
           hasMore={hasNextPage === true}
           loader={loaderEl}
-          endMessage={noMoreElement}
+          endMessage={endMessage}
           style={{ overflow: 'hidden' }}
         >
           <Mailbox
@@ -180,9 +182,7 @@ const InfiniteBox: ForwardRefRenderFunction<
               onClickBody(id)
             }}
           />
-          {status === 'success' && dataLength === 0
-            ? emptyElement ?? 'empty'
-            : null}
+          {isEmpty ? emptyElement ?? 'empty' : null}
         </InfiniteScroll>
       )}
     </Box>

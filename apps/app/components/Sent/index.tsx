@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTranslation } from 'next-i18next'
 import React, { useCallback, useRef, useState } from 'react'
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
@@ -10,8 +10,8 @@ import { Mailboxes } from '../../api/mailboxes'
 import { useAPI } from '../../hooks/useAPI'
 import { MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
-
-import SVGBottom from '../../assets/is-bottom.svg'
+import { Loading } from '../Loading'
+import { EmptyStatus, ThisBottomStatus } from '../MailboxStatus'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -64,29 +64,15 @@ export const SentComponent: React.FC = () => {
             enableQuery
             queryFn={queryFn}
             queryKey={['Sent']}
-            emptyElement=""
-            noMoreElement=""
+            loader={<Loading />}
+            emptyElement={<EmptyStatus />}
+            noMoreElement={<ThisBottomStatus />}
             // onDataChange={onDataChange}
             onChooseModeChange={onChooseModeChange}
             onClickBody={(id: string) => {
               router.push(`${RoutePath.Message}/${id}`)
             }}
           />
-
-          <Flex h="200px" justifyContent="center" alignItems="center">
-            <Box>
-              <Box
-                fontSize="12px"
-                fontWeight={400}
-                lineHeight="18px"
-                marginBottom="20px"
-                textAlign="center"
-              >
-                {t('this-is-bottom')}
-              </Box>
-              <SVGBottom />
-            </Box>
-          </Flex>
         </Box>
       </MailboxContainer>
     </>

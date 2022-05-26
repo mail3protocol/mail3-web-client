@@ -11,11 +11,10 @@ import SVGTrash from '../../assets/trash.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
-import SVGNone from '../../assets/none.svg'
-import SVGIsBottom from '../../assets/is-bottom.svg'
 import { MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
-import { MessageItem } from '../Mailbox'
+import { Loading } from '../Loading'
+import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
 
 const TextBox = styled(Box)`
   margin-top: 10px;
@@ -27,12 +26,10 @@ const TextBox = styled(Box)`
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const [messages, setMessages] = useState<MessageItem[]>([])
-  const [isChooseMode, setIsChooseMode] = useState(false)
-  const refBoxList = useRef<InfiniteHandle>(null)
   const router = useRouter()
-
   const api = useAPI()
+  const refBoxList = useRef<InfiniteHandle>(null)
+  const [isChooseMode, setIsChooseMode] = useState(false)
 
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
@@ -40,14 +37,12 @@ export const TrashComponent: React.FC = () => {
         Mailboxes.Trash,
         pageParam
       )
+      // test empty status
+      // data.messages = []
       return data
     },
     [api]
   )
-
-  const onDataChange = (data: MessageItem[]) => {
-    setMessages(data)
-  }
 
   const onChooseModeChange = (bool: boolean) => {
     setIsChooseMode(bool)
@@ -107,9 +102,9 @@ export const TrashComponent: React.FC = () => {
             enableQuery
             queryFn={queryFn}
             queryKey={['Trash']}
-            emptyElement=""
-            noMoreElement=""
-            onDataChange={onDataChange}
+            loader={<Loading />}
+            emptyElement={<ClearStatus />}
+            noMoreElement={<ThisBottomStatus />}
             onChooseModeChange={onChooseModeChange}
             onClickBody={(id: string) => {
               router.push({
@@ -120,38 +115,6 @@ export const TrashComponent: React.FC = () => {
               })
             }}
           />
-          {!!messages.length && (
-            <Flex h="200px" justifyContent="center" alignItems="center">
-              <Box>
-                <Box
-                  fontSize="12px"
-                  fontWeight={400}
-                  lineHeight="18px"
-                  marginBottom="20px"
-                  textAlign="center"
-                >
-                  {t('this-is-bottom')}
-                </Box>
-                <SVGIsBottom />
-              </Box>
-            </Flex>
-          )}
-          {!messages.length && (
-            <Flex h="200px" justifyContent="center" alignItems="center">
-              <Box>
-                <Box
-                  fontSize="16px"
-                  fontWeight={400}
-                  lineHeight="18px"
-                  marginBottom="20px"
-                  textAlign="center"
-                >
-                  {t('trash.clear')}
-                </Box>
-                <SVGNone />
-              </Box>
-            </Flex>
-          )}
         </Box>
       </MailboxContainer>
     </>
