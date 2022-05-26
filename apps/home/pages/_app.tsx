@@ -8,6 +8,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { theme } from 'ui'
 import '../styles/globals.css'
+import { GOOGLE_ANALYTICS_ID } from '../constants/env'
 
 function Mail3({ Component, pageProps }: AppProps) {
   const queryClient = useMemo(() => new QueryClient(), [])
@@ -45,15 +46,19 @@ function Mail3({ Component, pageProps }: AppProps) {
         src="https://www.googletagmanager.com/gtag/js?id=G-1PW4LM5ETS"
         strategy="afterInteractive"
       />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
+      {GOOGLE_ANALYTICS_ID ? (
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-1PW4LM5ETS', { debug_mode: true });
+          gtag('config', '${GOOGLE_ANALYTICS_ID}', { debug_mode: ${
+            process.env.NODE_ENV !== 'production'
+          } });
         `}
-      </Script>
+        </Script>
+      ) : null}
       <QueryClientProvider client={queryClient}>
         <JotaiProvider>
           <ChakraProvider theme={theme}>

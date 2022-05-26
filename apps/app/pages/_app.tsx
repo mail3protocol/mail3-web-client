@@ -9,6 +9,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import '../styles/globals.css'
+import { GOOGLE_ANALYTICS_ID } from '../constants'
 
 function Mail3({
   Component,
@@ -44,15 +45,19 @@ function Mail3({
         src="https://www.googletagmanager.com/gtag/js?id=G-WH0BKBPFWP"
         strategy="afterInteractive"
       />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
+      {GOOGLE_ANALYTICS_ID ? (
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-WH0BKBPFWP', { debug_mode: false });
+          gtag('config', '${GOOGLE_ANALYTICS_ID}', { debug_mode: ${
+            process.env.NODE_ENV !== 'production'
+          } });
         `}
-      </Script>
+        </Script>
+      ) : null}
       <CookiesProvider cookies={new Cookies(cookies)}>
         <QueryClientProvider client={queryClient}>
           <JotaiProvider>

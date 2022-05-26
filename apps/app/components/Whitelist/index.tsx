@@ -9,7 +9,7 @@ import {
   Link,
   HStack,
 } from '@chakra-ui/react'
-import { useAccount } from 'hooks'
+import { TrackEvent, useAccount, useTrackClick } from 'hooks'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo } from 'react'
 import styled from '@emotion/styled'
@@ -150,6 +150,10 @@ export const WhiteList: React.FC = () => {
   const [t] = useTranslation('whitelist')
   const account = useAccount()
   const isAuth = useIsAuthenticated()
+  const trackDiscord = useTrackClick(TrackEvent.WhiteListDiscord)
+  const trackTwitter = useTrackClick(TrackEvent.WhiteListTwitter)
+  const trackMoreDetail = useTrackClick(TrackEvent.WhiteListMoreDetails)
+
   const mascotIndex = useMemo(() => {
     if (!account) {
       return 1
@@ -189,6 +193,7 @@ export const WhiteList: React.FC = () => {
             <Link
               isExternal
               href={DISCORD_URL}
+              onClick={() => trackDiscord()}
               color="#4E52F5"
               textDecoration="underline"
               fontWeight={700}
@@ -198,7 +203,6 @@ export const WhiteList: React.FC = () => {
       />
     )
   }, [mascotIndex])
-
   useAuth()
 
   return (
@@ -229,6 +233,7 @@ export const WhiteList: React.FC = () => {
                 isExternal
                 href={moreDetailsLink}
                 fontSize="12px"
+                onClick={() => trackMoreDetail()}
                 textDecoration="underline"
                 cursor="pointer"
               >
@@ -309,6 +314,7 @@ export const WhiteList: React.FC = () => {
                       spacing="4px"
                       alignItems="center"
                       as="a"
+                      onClick={() => trackDiscord()}
                       href={DISCORD_URL}
                       target="_blank"
                     >
@@ -316,7 +322,11 @@ export const WhiteList: React.FC = () => {
                       <Text>{t('discord')}</Text>
                     </HStack>
                   </Button>
-                  <Link href={TWITTER_URL} isExternal>
+                  <Link
+                    href={TWITTER_URL}
+                    onClick={() => trackTwitter()}
+                    isExternal
+                  >
                     <HStack spacing="4px">
                       <TwitterSvg />
                       <Text>{t('twitter')}</Text>

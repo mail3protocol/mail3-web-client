@@ -12,12 +12,17 @@ import {
   useProvider,
   LoginInfo,
   useJWT,
+  useLastConectorName,
+  GlobalDimensions,
+  SignatureStatus,
+  useDidMount,
 } from 'hooks'
 import { useRouter } from 'next/router'
 import { atom, useAtomValue } from 'jotai'
-import { useUpdateAtom } from 'jotai/utils'
+import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
+import { API } from '../api'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -41,11 +46,13 @@ export const useLogin = () => {
   return useCallback(
     async (message: string, sig: string) => {
       const { data } = await api.login(message, sig)
-      setLoginInfo({
+      const loginInfo = {
         address: api.getAddress(),
         jwt: data.jwt,
         uuid: data.uuid,
-      })
+      }
+      setLoginInfo(loginInfo)
+      return loginInfo
     },
     [api]
   )
@@ -81,6 +88,91 @@ export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.Home,
   RoutePath.WhiteList,
 ])
+
+export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
+  'mail3_user_properties',
+  null
+)
+
+export const useSetGlobalTrack = () => {
+  const account = useAccount()
+  const walletName = useLastConectorName()
+  const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  return useCallback(
+    async (jwt: string) => {
+      try {
+        const api = new API(account, jwt)
+        const [{ data: userInfo }, { data: aliases }] = await Promise.all([
+          api.getUserInfo(),
+          api.getAliaes(),
+        ])
+        let sigStatus: SignatureStatus = SignatureStatus.OnlyText
+        if (
+          userInfo.card_sig_state === 'enabled' &&
+          userInfo.text_sig_state === 'enabled'
+        ) {
+          sigStatus = SignatureStatus.BothEnabled
+        } else if (
+          userInfo.card_sig_state === 'enabled' &&
+          userInfo.text_sig_state === 'disabled'
+        ) {
+          sigStatus = SignatureStatus.OnlyImage
+        } else if (
+          userInfo.card_sig_state === 'disabled' &&
+          userInfo.text_sig_state === 'enabled'
+        ) {
+          sigStatus = SignatureStatus.OnlyText
+        } else if (
+          userInfo.card_sig_state === 'disabled' &&
+          userInfo.text_sig_state === 'disabled'
+        ) {
+          sigStatus = SignatureStatus.BothDisabled
+        }
+        const config = {
+          [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
+          [GlobalDimensions.ConnectedWalletName]: walletName,
+          [GlobalDimensions.WalletAddress]: account,
+          [GlobalDimensions.SignatureStatus]: sigStatus,
+        }
+        try {
+          gtag?.('set', 'user_properties', config)
+        } catch (error) {
+          //
+        }
+        setUserProperties(config)
+      } catch (error) {
+        // todo sentry
+      }
+    },
+    [account, walletName]
+  )
+}
+
+export const useInitUserProperties = () => {
+  const isAuth = useIsAuthenticated()
+  const userProps = useAtomValue(userPropertiesAtom)
+  const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  useDidMount(() => {
+    if (userProps && isAuth) {
+      try {
+        gtag?.('set', 'user_properties', userProps)
+      } catch (error) {
+        //
+      }
+    }
+  })
+
+  useEffect(() => {
+    if (!isAuth) {
+      try {
+        gtag?.('set', 'user_properties', {})
+      } catch (error) {
+        //
+      }
+      setUserProperties(null)
+    }
+  }, [isAuth])
+}
 
 export const useWalletChange = () => {
   const isAuth = useIsAuthenticated()
@@ -148,6 +240,7 @@ export const useAuth = () => {
     }
   }, [isAuth, router.pathname])
 
+  useInitUserProperties()
   useWalletChange()
 }
 
