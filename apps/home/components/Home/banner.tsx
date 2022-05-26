@@ -63,7 +63,7 @@ export const Banner: React.FC<BannerProps> = ({
         h="100vh"
         top="20px"
         left="0"
-        transformOrigin="50% 10%"
+        transformOrigin="86% 10%"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         {...topContainerProps}
       >
@@ -73,46 +73,50 @@ export const Banner: React.FC<BannerProps> = ({
           as={Illustration1Svg}
           h="auto"
           position="absolute"
-          top="10%"
-          left="0"
-          transform="translateX(-30%)"
+          top="5%"
+          left={{ base: '40%', md: '0' }}
         />
         <Image
           src={Illustration1Png.src}
-          w="20%"
-          maxW="150px"
+          w="30%"
+          maxW="200px"
           h="auto"
+          maxH="20vh"
           position="absolute"
           top="5%"
           right="10%"
+          objectFit="contain"
         />
       </Box>
       <Box
-        {...bottomContainerProps}
         position="absolute"
-        bottom="20%"
         w="100vw"
+        h="100vh"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         left="0"
+        bottom="20%"
+        transformOrigin="50% 95%"
+        {...bottomContainerProps}
       >
         <Image
           src={Illustration3Png.src}
           position="absolute"
-          w="20%"
-          maxW="150px"
+          w="30%"
+          maxW="200px"
           bottom="0"
-          transform="translateY(150%)"
+          transform="translateY(60%)"
           left="0"
         />
         <Image
           src={Illustration8Png.src}
           position="absolute"
-          w="50%"
+          w="70%"
           maxW="400px"
           right="10%"
           bottom="0"
         />
       </Box>
+
       <Center position="relative" w="full" my="auto" flex={1}>
         <Heading
           fontSize={{ base: '24px', md: '48px' }}
@@ -120,9 +124,14 @@ export const Banner: React.FC<BannerProps> = ({
           lineHeight={{ base: '30px', md: '60px' }}
           {...headingProps}
         >
-          Crypto native generation
-          <br />
-          deserve a better mail protocol
+          Crypto native
+          <Box as="span" display="inline-block">
+            {' '}
+            generation deserve{' '}
+          </Box>
+          <Box as="span" display="inline-block">
+            a better mail protocol
+          </Box>
         </Heading>
       </Center>
     </Flex>

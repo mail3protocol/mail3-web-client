@@ -163,6 +163,15 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       transform: `scaleY(${bannerHeadingScaleY})`,
     },
   }
+  const bannerTopContainerProps = {
+    ...bannerChildrenProps,
+    style: {
+      transform: `scaleY(${bannerHeadingScaleY}) scale(${Math.max(
+        1 / bannerHeadingScaleY,
+        0.7
+      )})`,
+    },
+  }
 
   return (
     <Box
@@ -262,7 +271,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                 <Banner
                   transition="50ms"
                   headingProps={bannerChildrenProps}
-                  topContainerProps={bannerChildrenProps}
+                  topContainerProps={bannerTopContainerProps}
                   bottomContainerProps={bannerChildrenProps}
                 />
               </Box>
