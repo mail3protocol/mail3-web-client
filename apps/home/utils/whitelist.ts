@@ -1,5 +1,4 @@
 import {
-  BETA_TESTING_DATE_RANGE,
   IS_FORCE_WHITELIST,
   WHITE_LIST_APPLY_DATE_RANGE,
 } from '../constants/env'
@@ -18,13 +17,5 @@ export function isWhiteListStage() {
   return (
     now.getTime() >= WHITE_LIST_APPLY_DATE_RANGE[0].getTime() &&
     now.getTime() <= WHITE_LIST_APPLY_DATE_RANGE[1].getTime()
-  )
-}
-
-export function isBetaTestingStage() {
-  const now = new Date()
-  return (
-    now.getTime() >= BETA_TESTING_DATE_RANGE[0].getTime() &&
-    now.getTime() <= BETA_TESTING_DATE_RANGE[1].getTime()
   )
 }

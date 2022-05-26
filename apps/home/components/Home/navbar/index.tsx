@@ -18,7 +18,7 @@ import React from 'react'
 import LogoSvg from 'assets/svg/logo.svg'
 import LogoWithoutFontSvg from 'assets/svg/logo-without-font.svg'
 import HomeNavbarSvg from '../../../assets/svg/home-navbar-menu.svg'
-import { isBetaTestingStage, isWhiteListStage } from '../../../utils'
+import { isWhiteListStage } from '../../../utils'
 import {
   NormalButtons,
   NormalMenus,
@@ -36,7 +36,7 @@ export const Navbar: React.FC = () => {
     onClose: onCloseMenuDrawer,
     onOpen: onOpenMenuDrawer,
   } = useDisclosure()
-  const isShowRainbowBar = isShowWhiteListStage || isBetaTestingStage()
+  const isShowRainbowBar = isShowWhiteListStage
   return (
     <Flex
       h={`${HEADER_BAR_HEIGHT}px`}

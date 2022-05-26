@@ -1,9 +1,7 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Box, Center, Link } from '@chakra-ui/react'
-import NextLink from 'next/link'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
-import { isBetaTestingStage, isWhiteListStage } from '../../utils'
 import { WHITE_LIST_URL } from '../../constants/env'
 
 export const RainbowBarContainer = styled(Center)`
@@ -32,41 +30,6 @@ export const RainbowBarContainer = styled(Center)`
 
 export const RainbowBar: React.FC = () => {
   const { t } = useTranslation('index')
-  const contentEl = useMemo(() => {
-    if (isWhiteListStage()) {
-      return (
-        <>
-          {t('heading-banner-text.white-list')}
-          <Link
-            fontWeight="bold"
-            textDecoration="underline"
-            display="inline-block"
-            href={WHITE_LIST_URL}
-          >
-            {t('join')}
-          </Link>
-        </>
-      )
-    }
-    if (isBetaTestingStage()) {
-      return (
-        <>
-          {t('heading-banner-text.beta-testing')}
-          <NextLink href="/testing">
-            <Link
-              fontWeight="bold"
-              textDecoration="underline"
-              display="inline-block"
-            >
-              {t('join_white_list')}
-            </Link>
-          </NextLink>
-        </>
-      )
-    }
-    return null
-  }, [])
-
   return (
     <RainbowBarContainer
       minH="44px"
@@ -80,7 +43,17 @@ export const RainbowBar: React.FC = () => {
         md: '20px',
       }}
     >
-      <Box>{contentEl}</Box>
+      <Box>
+        {t('heading-banner-text.white-list')}
+        <Link
+          fontWeight="bold"
+          textDecoration="underline"
+          display="inline-block"
+          href={WHITE_LIST_URL}
+        >
+          {t('join')}
+        </Link>
+      </Box>
     </RainbowBarContainer>
   )
 }
