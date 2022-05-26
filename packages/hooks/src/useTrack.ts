@@ -1,6 +1,4 @@
 export enum TrackEvent {
-  DesiredWallet = 'desired_wallet',
-
   // settings
   ClickImageSignature = 'click_image_signature_edit',
   ClickRegisterENS = 'click_register_new_ens',
