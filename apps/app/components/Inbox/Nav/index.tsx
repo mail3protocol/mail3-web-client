@@ -33,7 +33,6 @@ const HStackContainer = styled(HStack)`
     font-size: 24px;
     line-height: 30px;
     color: #6f6f6f;
-    align-items: center;
     cursor: pointer;
   }
 
@@ -70,6 +69,7 @@ export const InboxNav: React.FC<{ currentType: InboxNavType }> = ({
         return (
           <Wrap
             className={isCur ? 'wrap cur' : 'wrap'}
+            align="center"
             key={title}
             onClick={() => {
               if (type === InboxNavType.Subscription) {
