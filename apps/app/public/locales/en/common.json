@@ -15,6 +15,7 @@
     "connect": {
         "metamask": "MetaMask",
         "wallet-connect": "Wallet Connect",
+        "dialog-title": "Connect Your Wallet",
         "connect-wallet": "Connect Wallet",
         "phantom": "Phantom",
         "blocto": "Blocto",

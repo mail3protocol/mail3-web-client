@@ -271,7 +271,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
       <ModalOverlay />
       <ModalContent maxWidth="340px">
         <ModalHeader textAlign="center" fontSize="16px">
-          {t('connect.connect-wallet')}
+          {t('connect.dialog-title')}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody
