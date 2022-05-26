@@ -1,24 +1,35 @@
 import React from 'react'
 import { Box, HStack, Wrap, WrapItem } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 import SVGInbox from '../../../assets/inbox.svg'
 import SVGSub from '../../../assets/subscrption.svg'
-import { pageTypeAtom } from '..'
+import { RoutePath } from '../../../route/path'
 
-const navList = [
-  {
+export enum InboxNavType {
+  Inbox = 'Inbox',
+  Subscription = 'Subscription',
+}
+
+interface NavItem {
+  icon: any
+  title: string
+}
+
+const navMap: Record<InboxNavType, NavItem> = {
+  [InboxNavType.Inbox]: {
     icon: <SVGInbox />,
     title: 'Inbox',
   },
-  {
+  [InboxNavType.Subscription]: {
     icon: <SVGSub />,
     title: 'Subscrption',
   },
-]
+}
 
-export const InboxNav: React.FC = () => {
-  const [pageType, setPageType] = useAtom(pageTypeAtom)
-
+export const InboxNav: React.FC<{ currentType: InboxNavType }> = ({
+  currentType,
+}) => {
+  const router = useRouter()
   const initStyles = {
     fontWeight: 700,
     fontSize: '24px',
@@ -49,19 +60,24 @@ export const InboxNav: React.FC = () => {
 
   return (
     <HStack spacing={{ md: '80px', base: '40px' }}>
-      {navList.map((item, i) => {
-        const { icon, title } = item
+      {Object.keys(navMap).map((type) => {
+        const { icon, title } = navMap[type as keyof typeof InboxNavType]
+
         return (
           <Wrap
             key={title}
-            {...(i === pageType ? curStyleItem : initStyles)}
+            {...(type === currentType ? curStyleItem : initStyles)}
             onClick={() => {
-              setPageType(i)
+              if (type === InboxNavType.Subscription) {
+                router.push(RoutePath.Subscription)
+              } else {
+                router.push(RoutePath.Home)
+              }
             }}
           >
             <WrapItem>{icon}</WrapItem>
             <WrapItem>
-              <Box {...(i === pageType ? curStyleWord : {})}>{title}</Box>
+              <Box {...(type === currentType ? curStyleWord : {})}>{title}</Box>
             </WrapItem>
           </Wrap>
         )

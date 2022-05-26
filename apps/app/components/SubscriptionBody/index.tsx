@@ -3,11 +3,11 @@ import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { Button } from 'ui'
 import { useDidMount } from 'hooks'
 import update from 'immutability-helper'
-import AvatarTemp from '../../../assets/sub-avatar-temp.png'
-import SubTop from '../../../assets/subscrption-top.png'
-import SVGVector from '../../../assets/sub-icon-vector.svg'
-import SVGBell from '../../../assets/sub-icon-bell.svg'
-import SVGBellCur from '../../../assets/sub-icon-bell-cur.svg'
+import AvatarTemp from '../../assets/sub-avatar-temp.png'
+import SubTop from '../../assets/subscrption-top.png'
+import SVGVector from '../../assets/sub-icon-vector.svg'
+import SVGBell from '../../assets/sub-icon-bell.svg'
+import SVGBellCur from '../../assets/sub-icon-bell-cur.svg'
 
 let data = [
   {
@@ -130,7 +130,7 @@ const Item = (props: ItemProps) => {
   )
 }
 
-export const Subscription: React.FC = () => {
+export const SubscriptionBody: React.FC = () => {
   const [list, setList] = useState<Array<ListItem>>([])
 
   useDidMount(() => {

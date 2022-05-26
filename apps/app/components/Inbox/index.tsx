@@ -2,7 +2,6 @@
 import { useTranslation } from 'next-i18next'
 import React, { useCallback, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex } from '@chakra-ui/react'
-import { atom, useAtom } from 'jotai'
 import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
@@ -11,8 +10,7 @@ import Image from 'next/image'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
 
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
-import { InboxNav } from './Nav'
-import { Subscription } from './Subscription'
+import { InboxNav, InboxNavType } from './Nav'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import { MessageItemResponse } from '../../api'
@@ -23,13 +21,6 @@ import IMGClear from '../../assets/clear.png'
 import IMGNewNone from '../../assets/new-none.png'
 
 const PAGE_SIZE = 20
-
-export enum PageType {
-  Inbox,
-  Subscrption,
-}
-
-export const pageTypeAtom = atom<PageType>(PageType.Inbox)
 
 export const MailboxContainer = styled(Box)`
   margin: 20px auto;
@@ -49,7 +40,7 @@ export const MailboxContainer = styled(Box)`
     box-shadow: none;
   }
 `
-const FlexButtonBox = styled(Flex)`
+export const FlexButtonBox = styled(Flex)`
   justify-content: space-between;
 
   @media (max-width: 600px) {
@@ -89,7 +80,6 @@ export const formatState = (
 
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const [pageType] = useAtom(pageTypeAtom)
   const api = useAPI()
   const router = useRouter()
 
@@ -249,7 +239,7 @@ export const InboxComponent: React.FC = () => {
 
       <Box paddingTop={{ base: '25px', md: '35px' }}>
         <FlexButtonBox>
-          <InboxNav />
+          <InboxNav currentType={InboxNavType.Inbox} />
           <Button
             className="btn-write"
             onClick={() => {
@@ -261,110 +251,95 @@ export const InboxComponent: React.FC = () => {
         </FlexButtonBox>
 
         <MailboxContainer minH="700px">
-          {pageType === PageType.Inbox && (
-            <>
-              <Box padding={{ md: '30px 64px', base: '20px' }}>
-                <Box className="title">{t('inbox.title.new')}</Box>
-                {isClear && (
-                  <Flex h="500px" justifyContent="center" alignItems="center">
-                    <Box>
-                      <Box
-                        fontSize="20px"
-                        fontWeight={500}
-                        lineHeight="30px"
-                        marginBottom="30px"
-                      >
-                        {t('inbox.all-clear')}
-                      </Box>
-                      <Image src={IMGClear} />
-                    </Box>
-                  </Flex>
-                )}
+          <Box padding={{ md: '30px 64px', base: '20px' }}>
+            <Box className="title">{t('inbox.title.new')}</Box>
+            {isClear && (
+              <Flex h="500px" justifyContent="center" alignItems="center">
+                <Box>
+                  <Box
+                    fontSize="20px"
+                    fontWeight={500}
+                    lineHeight="30px"
+                    marginBottom="30px"
+                  >
+                    {t('inbox.all-clear')}
+                  </Box>
+                  <Image src={IMGClear} />
+                </Box>
+              </Flex>
+            )}
 
-                {isNoNew && (
-                  <Flex h="300px" justifyContent="center" alignItems="center">
-                    <Box>
-                      <Box
-                        fontSize="20px"
-                        fontWeight={500}
-                        lineHeight="30px"
-                        marginBottom="30px"
-                      >
-                        {t('inbox.no-new')}
-                      </Box>
-                      <Image src={IMGNewNone} />
-                    </Box>
-                  </Flex>
-                )}
-                <Mailbox
-                  data={newMessages}
-                  isChooseMode={isChooseMode}
-                  setIsChooseMode={setIsChooseMode}
-                  onClickAvatar={(_i, id) => {
-                    const newMap = { ...chooseMap }
-                    newMap[id] = !newMap[id]
-                    setChooseMap(newMap)
+            {isNoNew && (
+              <Flex h="300px" justifyContent="center" alignItems="center">
+                <Box>
+                  <Box
+                    fontSize="20px"
+                    fontWeight={500}
+                    lineHeight="30px"
+                    marginBottom="30px"
+                  >
+                    {t('inbox.no-new')}
+                  </Box>
+                  <Image src={IMGNewNone} />
+                </Box>
+              </Flex>
+            )}
+            <Mailbox
+              data={newMessages}
+              isChooseMode={isChooseMode}
+              setIsChooseMode={setIsChooseMode}
+              onClickAvatar={(_i, id) => {
+                const newMap = { ...chooseMap }
+                newMap[id] = !newMap[id]
+                setChooseMap(newMap)
+              }}
+              chooseMap={chooseMap}
+              hiddenMap={hiddenMap}
+              onClickBody={(id) => {
+                setNewToSeen([id])
+                router.push(`${RoutePath.Message}/${id}`)
+              }}
+            />
+            {surplus > 0 && (
+              <Center>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setNewPageIndex(newPageIndex + 1)
                   }}
-                  chooseMap={chooseMap}
-                  hiddenMap={hiddenMap}
-                  onClickBody={(id) => {
-                    setNewToSeen([id])
-                    router.push(`${RoutePath.Message}/${id}`)
-                  }}
-                />
-                {surplus > 0 && (
-                  <Center>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setNewPageIndex(newPageIndex + 1)
-                      }}
-                    >
-                      {t('inbox.load-more')} +{PAGE_SIZE}
-                    </Button>
-                    <Circle
-                      size="40px"
-                      bg="black"
-                      color="white"
-                      marginLeft="10px"
-                    >
-                      {surplus}
-                    </Circle>
-                  </Center>
-                )}
-              </Box>
+                >
+                  {t('inbox.load-more')} +{PAGE_SIZE}
+                </Button>
+                <Circle size="40px" bg="black" color="white" marginLeft="10px">
+                  {surplus}
+                </Circle>
+              </Center>
+            )}
+          </Box>
 
-              <Box
-                padding={{ base: '20px', md: '20px 64px' }}
-                bg="rgba(243, 243, 243, 0.4);"
-                display={seenIsEmpty ? 'none' : 'block'}
-              >
-                <Box className="title">{t('inbox.title.seen')}</Box>
-                <InfiniteMailbox
-                  ref={refSeenBoxList}
-                  enableQuery
-                  queryFn={queryFn}
-                  queryKey={['Seen']}
-                  emptyElement=""
-                  noMoreElement=""
-                  onDataChange={onDataChange}
-                  onChooseModeChange={onChooseModeChange}
-                  parentIsChooseMode={isChooseMode}
-                  parentChooseMap={chooseMap}
-                  // onQueryStatusChange={onQueryStatusChange}
-                  onClickBody={(id: string) => {
-                    router.push(`${RoutePath.Message}/${id}`)
-                  }}
-                />
-              </Box>
-            </>
-          )}
-
-          {pageType === PageType.Subscrption && (
-            <Box padding="40px 64px">
-              <Subscription />
-            </Box>
-          )}
+          <Box
+            padding={{ base: '20px', md: '20px 64px' }}
+            bg="rgba(243, 243, 243, 0.4);"
+            display={seenIsEmpty ? 'none' : 'block'}
+          >
+            <Box className="title">{t('inbox.title.seen')}</Box>
+            <InfiniteMailbox
+              ref={refSeenBoxList}
+              enableQuery
+              queryFn={queryFn}
+              queryKey={['Seen']}
+              emptyElement=""
+              noMoreElement=""
+              onDataChange={onDataChange}
+              onChooseModeChange={onChooseModeChange}
+              parentIsChooseMode={isChooseMode}
+              parentChooseMap={chooseMap}
+              // onQueryStatusChange={onQueryStatusChange}
+              onClickBody={(id: string) => {
+                router.push(`${RoutePath.Message}/${id}`)
+              }}
+            />
+          </Box>
         </MailboxContainer>
       </Box>
     </Box>
