@@ -132,8 +132,8 @@ export const InboxComponent: React.FC = () => {
           // BUG unshift not work
           const newDate = formatState(newItem, AvatarBadgeType.New)
           const newState = [...newDate, ...newMessages]
-          console.log('newDate', newDate)
-          console.log('newState', newState)
+          // console.log('newDate', newDate)
+          // console.log('newState', newState)
           setSurplus(d.total - newState.length)
           setNewMessages(newState)
         }

@@ -134,7 +134,6 @@ export const Subscription: React.FC = () => {
   const [list, setList] = useState<Array<ListItem>>([])
 
   useDidMount(() => {
-    console.log('subscription')
     setList(data)
   })
 

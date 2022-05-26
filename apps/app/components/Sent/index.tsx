@@ -55,13 +55,11 @@ export const SentComponent: React.FC = () => {
           list={[
             {
               type: SuspendButtonType.Delete,
-              onClick: () => {
+              onClick: async () => {
                 const ids = getChooseList()
                 if (!ids?.length) return
-                api.batchDeleteMessage(ids).then(() => {
-                  refBoxList?.current?.setHiddenIds(ids)
-                })
-                console.log('del')
+                await api.batchDeleteMessage(ids)
+                refBoxList?.current?.setHiddenIds(ids)
               },
             },
           ]}

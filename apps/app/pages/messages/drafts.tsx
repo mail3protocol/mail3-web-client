@@ -11,15 +11,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Drafts: NextPage = () => {
-  console.log('Drafts')
-
-  return (
-    <PageContainer>
-      <Navbar />
-      <DraftsComponent />
-    </PageContainer>
-  )
-}
+const Drafts: NextPage = () => (
+  <PageContainer>
+    <Navbar />
+    <DraftsComponent />
+  </PageContainer>
+)
 
 export default Drafts

@@ -216,9 +216,8 @@ export class API {
   }
 
   public async batchDeleteMessage(ids: string[]): Promise<AxiosResponse> {
-    console.log('batchDeleteMessage ids:', ids)
     return this.axios.post('/mailbox/account/messages/batch_delete', {
-      messageIds: [],
+      messageIds: ids,
     })
   }
 }

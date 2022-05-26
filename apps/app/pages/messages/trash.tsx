@@ -11,15 +11,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Trash: NextPage = () => {
-  console.log('Trash')
-
-  return (
-    <PageContainer>
-      <Navbar />
-      <TrashComponent />
-    </PageContainer>
-  )
-}
+const Trash: NextPage = () => (
+  <PageContainer>
+    <Navbar />
+    <TrashComponent />
+  </PageContainer>
+)
 
 export default Trash

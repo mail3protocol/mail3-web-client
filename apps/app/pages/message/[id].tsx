@@ -11,15 +11,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   },
 })
 
-const Message: NextPage = () => {
-  console.log('Message')
-
-  return (
-    <PageContainer>
-      <Navbar />
-      <PreviewComponent />
-    </PageContainer>
-  )
-}
+const Message: NextPage = () => (
+  <PageContainer>
+    <Navbar />
+    <PreviewComponent />
+  </PageContainer>
+)
 
 export default Message
