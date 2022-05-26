@@ -2,7 +2,7 @@
 import { useTranslation } from 'next-i18next'
 import React, { useCallback, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex } from '@chakra-ui/react'
-import { Button } from 'ui'
+import { Button, PageContainer } from 'ui'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
@@ -21,6 +21,13 @@ import IMGClear from '../../assets/clear.png'
 import IMGNewNone from '../../assets/new-none.png'
 
 const PAGE_SIZE = 20
+
+
+const NewPageContainer = styled(PageContainer)`
+  @media (max-width: 600px) {
+    padding: 0;
+  }
+`
 
 export const MailboxContainer = styled(Box)`
   margin: 20px auto;
@@ -201,7 +208,7 @@ export const InboxComponent: React.FC = () => {
   const isNoNew = !newMessages.length && !!seenMessages.length
 
   return (
-    <Box>
+    <NewPageContainer>
       {isChooseMode && (
         <StickyButtonBox
           list={[
@@ -342,6 +349,6 @@ export const InboxComponent: React.FC = () => {
           </Box>
         </MailboxContainer>
       </Box>
-    </Box>
+    </NewPageContainer>
   )
 }
