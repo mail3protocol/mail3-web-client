@@ -7,7 +7,7 @@ import { Banner } from './banner'
 import { Letter } from './letterContent'
 import { Envelope } from './envelope'
 import { HEADER_BAR_HEIGHT } from './navbar'
-import { RollingBackground } from './rollingSubtitles'
+import { RollingBackgroundCanvas } from './rollingSubtitles'
 
 const ENVELOPE_RADIO = 95 / 157
 const SCROLL_STEPS = [600, 300, 300, 600, 600]
@@ -192,7 +192,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
         }}
       >
         <Box w="full" position="sticky" top={`${HEADER_BAR_HEIGHT}px`}>
-          <RollingBackground />
+          <RollingBackgroundCanvas />
         </Box>
       </Box>
       <Box position="absolute" top="0" left="0" w="full" h="full" zIndex={3}>
