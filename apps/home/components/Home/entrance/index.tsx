@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
 import LogoSvg from 'assets/svg/logo.svg'
 import { useInnerSize } from 'hooks'
+import { debounceTime, delay, fromEvent } from 'rxjs'
 import { sleep } from '../../../utils'
 
 const MOBILE_SIZE = 768
@@ -104,7 +105,6 @@ export const Entrance: React.FC<
     clientY: -1,
     isOpen: false,
   })
-  const [scrollOpenProgress, setScrollOpenProgress] = useState(1)
   const containerRef = useRef<HTMLDivElement>(null)
   const onClose = useCallback(async () => {
     await setStatus('closing')
@@ -113,19 +113,23 @@ export const Entrance: React.FC<
   }, [])
   useEffect(() => {
     const el = containerRef.current as HTMLDivElement
-    const onScroll = async () => {
-      setScrollOpenProgress(Math.min(el.scrollTop / el.clientHeight, 1))
-      if (el.scrollTop >= el.clientHeight) {
-        await onClose()
-      }
-    }
-    if (el) {
-      el.addEventListener('scroll', onScroll)
-    }
+    const subscriber = fromEvent(el, 'scroll')
+      .pipe(debounceTime(300))
+      .subscribe(async () => {
+        if (el.scrollTop >= el.clientHeight) {
+          await onClose()
+        }
+      })
+    const touchendSubscriber = fromEvent(window, 'touchend')
+      .pipe(delay(300))
+      .subscribe(async () => {
+        if (el.scrollTop + 200 >= el.clientHeight) {
+          await onClose()
+        }
+      })
     return () => {
-      if (el) {
-        el.removeEventListener('scroll', onScroll)
-      }
+      subscriber.unsubscribe()
+      touchendSubscriber.unsubscribe()
     }
   }, [])
 
@@ -157,6 +161,7 @@ export const Entrance: React.FC<
         py="30px"
         scrollSnapAlign="center"
         bg="#fff"
+        shadow="0 20px 50px rgba(0, 0, 0, 0.2)"
         {...props}
       >
         <Flex
@@ -182,18 +187,19 @@ export const Entrance: React.FC<
               xl: `${20 * 60}px`,
             }}
           >
-            <Icon as={LogoSvg} w="112px" h="auto" mb="auto" />
+            <Icon as={LogoSvg} w="136px" h="auto" mb="auto" />
             <Heading
               w={{
                 base: 'full',
                 md: 'calc(100% - 112px)',
               }}
-              fontSize={{ base: '22px', md: '36px', lg: '48px' }}
-              lineHeight={{ base: '22px', md: '36px', lg: '64px' }}
+              fontSize={{ base: '22px', md: '36px' }}
+              lineHeight={{ base: '22px', md: '36px' }}
               textAlign={{ base: 'left', md: 'right' }}
               mt={{ base: '46px', md: '0' }}
             >
-              Build valuable connections in the decentralized society
+              Build valuable connections <br />
+              in the decentralized society
             </Heading>
           </Flex>
           <DotContainer
@@ -263,10 +269,9 @@ export const Entrance: React.FC<
       <Box
         w="full"
         h="100vh"
-        bg="#000"
+        bg="rgba(0, 0, 0, 0)"
         scrollSnapAlign="center"
         transition="100ms"
-        style={{ opacity: 1 - scrollOpenProgress }}
       />
     </Box>
   )
