@@ -8,14 +8,9 @@ import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import {
-  BoxList,
-  AvatarBadgeType,
-  ItemType,
-  MessageItem,
-  InfiniteHandle,
-  InfiniteList,
-} from '../BoxList'
+import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
+
+import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { InboxNav } from './Nav'
 import { Subscription } from './Subscription'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
@@ -303,7 +298,7 @@ export const InboxComponent: React.FC = () => {
                     </Box>
                   </Flex>
                 )}
-                <BoxList
+                <Mailbox
                   data={newMessages}
                   isChooseMode={isChooseMode}
                   setIsChooseMode={setIsChooseMode}
@@ -347,7 +342,7 @@ export const InboxComponent: React.FC = () => {
                 display={seenIsEmpty ? 'none' : 'block'}
               >
                 <Box className="title">{t('inbox.title.seen')}</Box>
-                <InfiniteList
+                <InfiniteMailbox
                   ref={refSeenBoxList}
                   enableQuery
                   queryFn={queryFn}

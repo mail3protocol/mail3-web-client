@@ -5,7 +5,7 @@ import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 // import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { InfiniteList, InfiniteHandle, MessageItem } from '../BoxList'
+import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import SVGTrash from '../../assets/trash.svg'
 // import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
@@ -15,6 +15,7 @@ import SVGNone from '../../assets/none.svg'
 import SVGIsBottom from '../../assets/is-bottom.svg'
 import { MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
+import { MessageItem } from '../Mailbox'
 
 const TextBox = styled(Box)`
   margin-top: 10px;
@@ -100,7 +101,7 @@ export const TrashComponent: React.FC = () => {
           <TextBox>
             <Text>{t('trash.auto-delete')}</Text>
           </TextBox>
-          <InfiniteList
+          <InfiniteMailbox
             ref={refBoxList}
             enableQuery
             queryFn={queryFn}

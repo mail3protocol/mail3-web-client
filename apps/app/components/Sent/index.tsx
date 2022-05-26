@@ -4,7 +4,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import { InfiniteHandle, InfiniteList } from '../BoxList'
+import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
 import { useAPI } from '../../hooks/useAPI'
@@ -68,7 +68,7 @@ export const SentComponent: React.FC = () => {
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
           <TitleBox>{t('sent.title')}</TitleBox>
-          <InfiniteList
+          <InfiniteMailbox
             ref={refBoxList}
             enableQuery
             queryFn={queryFn}

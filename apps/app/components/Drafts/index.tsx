@@ -7,11 +7,12 @@ import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
-import { InfiniteHandle, InfiniteList, MessageItem } from '../BoxList'
+import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { MailboxContainer } from '../Inbox'
 
 import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/none.svg'
+import { MessageItem } from '../Mailbox'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
@@ -75,7 +76,7 @@ export const DraftsComponent: React.FC = () => {
       </Flex>
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
-          <InfiniteList
+          <InfiniteMailbox
             ref={refBoxList}
             enableQuery
             queryFn={queryFn}
