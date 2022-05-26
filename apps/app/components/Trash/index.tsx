@@ -16,6 +16,14 @@ import SVGIsBottom from '../../assets/is-bottom.svg'
 import { MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 
+const TextBox = styled(Box)`
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  text-align: center;
+`
+
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [messages, setMessages] = useState<MessageItem[]>([])
@@ -42,14 +50,6 @@ export const TrashComponent: React.FC = () => {
     const ids = refBoxList?.current?.getChooseIds()
     return ids
   }, [])
-
-  const TextBox = styled(Box)`
-    margin-top: 10px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    text-align: center;
-  `
 
   return (
     <>

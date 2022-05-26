@@ -36,17 +36,17 @@ export enum PageType {
 
 export const pageTypeAtom = atom<PageType>(PageType.Inbox)
 
-const TitleBox = styled(Box)`
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 30px;
-`
-
 export const MailboxContainer = styled(Box)`
   margin: 20px auto;
   background-color: #ffffff;
   box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
   border-radius: 24px;
+
+  .title {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+  }
 
   @media (max-width: 600px) {
     border-top-right-radius: 0;
@@ -61,13 +61,12 @@ const FlexButtonBox = styled(Flex)`
     flex-direction: column-reverse;
     justify-content: normal;
     align-items: center;
-  }
-`
-const ButtonWrite = styled(Button)`
-  @media (max-width: 600px) {
-    margin-bottom: 20px;
-    margin-right: 20px;
-    align-self: flex-end;
+
+    .btn-write {
+      margin-bottom: 20px;
+      margin-right: 20px;
+      align-self: flex-end;
+    }
   }
 `
 
@@ -258,20 +257,21 @@ export const InboxComponent: React.FC = () => {
       <Box paddingTop={{ base: '25px', md: '35px' }}>
         <FlexButtonBox>
           <InboxNav />
-          <ButtonWrite
+          <Button
+            className="btn-write"
             onClick={() => {
               router.push(RoutePath.NewMessage)
             }}
           >
             <SVGWrite /> <Box ml="10px">Write</Box>
-          </ButtonWrite>
+          </Button>
         </FlexButtonBox>
 
         <MailboxContainer minH="700px">
           {pageType === PageType.Inbox && (
             <>
               <Box padding={{ md: '30px 64px', base: '20px' }}>
-                <TitleBox>{t('inbox.title.new')}</TitleBox>
+                <Box className="title">{t('inbox.title.new')}</Box>
                 {isClear && (
                   <Flex h="500px" justifyContent="center" alignItems="center">
                     <Box>
@@ -346,7 +346,7 @@ export const InboxComponent: React.FC = () => {
                 bg="rgba(243, 243, 243, 0.4);"
                 display={seenIsEmpty ? 'none' : 'block'}
               >
-                <TitleBox>{t('inbox.title.seen')}</TitleBox>
+                <Box className="title">{t('inbox.title.seen')}</Box>
                 <InfiniteList
                   ref={refSeenBoxList}
                   enableQuery

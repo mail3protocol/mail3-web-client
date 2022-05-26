@@ -57,43 +57,43 @@ const ButtonItem = styled(Center)`
   position: relative;
   cursor: pointer;
   transition: all 0.2s ease;
+
+  .line {
+    position: absolute;
+    width: 1px;
+    height: 70%;
+    top: 50%;
+    left: 0;
+    background-color: #c4c4c4;
+    transform: translateY(-50%);
+  }
 `
 
-const LineDiv = styled(Box)`
-  position: absolute;
-  width: 1px;
-  height: 70%;
-  top: 50%;
-  left: 0;
-  background-color: #c4c4c4;
-  transform: translateY(-50%);
+const BoxWrap = styled(Center)`
+  top: 10px;
+  left: 5%;
+  width: calc(100% - 10%);
+  position: sticky;
+  z-index: 9;
+
+  .content {
+    top: 0;
+    position: absolute;
+  }
+
+  .sticky {
+    top: 0;
+    position: sticky;
+  }
 `
 
 export const StickyButtonBox: React.FC<Props> = (props) => {
   const { list } = props
 
-  const BoxWrap = styled(Center)`
-    top: 10px;
-    left: 5%;
-    width: calc(100% - 10%);
-    position: sticky;
-    z-index: 9;
-  `
-
-  const BoxContent = styled(Box)`
-    top: 0;
-    position: absolute;
-  `
-
-  const BoxContentSticky = styled(Box)`
-    top: 0;
-    position: sticky;
-  `
-
   return (
     <BoxWrap>
-      <BoxContent>
-        <BoxContentSticky>
+      <Box className="content">
+        <Box className="sticky">
           <Box>
             <HStack
               borderRadius="32px"
@@ -119,8 +119,8 @@ export const StickyButtonBox: React.FC<Props> = (props) => {
               })}
             </HStack>
           </Box>
-        </BoxContentSticky>
-      </BoxContent>
+        </Box>
+      </Box>
     </BoxWrap>
   )
 }
@@ -151,7 +151,7 @@ export const SuspendButton: React.FC<Props> = (props) => {
 
           return (
             <ButtonItem key={type} onClick={onClick}>
-              {useLine && <LineDiv />}
+              {useLine && <Box className="line" />}
               <Box>
                 <Icon />
               </Box>
