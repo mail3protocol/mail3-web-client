@@ -1,24 +1,21 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { useTranslation } from 'next-i18next'
 import React, { useCallback, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex } from '@chakra-ui/react'
-import { Button, PageContainer } from 'ui'
+import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
-import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
-
-import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
-import { InboxNav, InboxNavType } from './Nav'
-import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
+import { Button, PageContainer } from 'ui'
 import { useAPI } from '../../hooks/useAPI'
-import { MessageItemResponse } from '../../api'
 import { RoutePath } from '../../route/path'
-
+import { MessageItemResponse } from '../../api'
+import { Loading } from '../Loading'
+import { InboxNav, InboxNavType } from './Nav'
+import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
+import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
+import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
+import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import SVGWrite from '../../assets/icon-write.svg'
-import IMGNewNone from '../../assets/new-none.png'
-import { EmptyStatus } from '../MailboxStatus'
 
 const PAGE_SIZE = 20
 
@@ -46,6 +43,7 @@ export const MailboxContainer = styled(Box)`
     box-shadow: none;
   }
 `
+
 export const FlexButtonBox = styled(Flex)`
   justify-content: space-between;
 
@@ -94,7 +92,7 @@ export const InboxComponent: React.FC = () => {
   const [surplus, setSurplus] = useState(0)
 
   const [seenMessages, setSeenMessages] = useState<Array<MessageItem>>([])
-  const [seenIsEmpty, setSeenIsEmpty] = useState(true)
+  const [seenIsFetching, setSeenIsFetching] = useState(true)
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
@@ -110,6 +108,9 @@ export const InboxComponent: React.FC = () => {
     },
     {
       refetchInterval: 30000,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
       onSuccess(d) {
         if (d.messages.length) {
           // TODO will be have bug when new mail to exceed page size
@@ -131,7 +132,7 @@ export const InboxComponent: React.FC = () => {
     }
   )
 
-  useQuery(
+  const { isFetching: newIsFetching } = useQuery(
     ['getNewMessages', newPageIndex],
     async () => {
       const { data } = await api.getMessagesNew(newPageIndex)
@@ -156,10 +157,6 @@ export const InboxComponent: React.FC = () => {
     }
   )
 
-  // useEffect(() => {
-  //   console.log('pageType:', pageType)
-  // }, [pageType])
-
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
       const { data } = await api.getMessagesSeen(pageParam)
@@ -167,19 +164,6 @@ export const InboxComponent: React.FC = () => {
     },
     [api]
   )
-
-  const onDataChange = (data: MessageItem[]) => {
-    if (data.length) {
-      setSeenIsEmpty(false)
-    } else {
-      setSeenIsEmpty(true)
-    }
-    setSeenMessages(data)
-  }
-
-  const onChooseModeChange = (bool: boolean) => {
-    setIsChooseMode(bool)
-  }
 
   const setNewToSeen = (ids: Array<string>) => {
     const targetMgs = ids.map((id) => {
@@ -203,8 +187,10 @@ export const InboxComponent: React.FC = () => {
     }
   }
 
-  const isClear = !newMessages.length && !seenMessages.length
-  const isNoNew = !newMessages.length && !!seenMessages.length
+  const isLoading = newIsFetching && seenIsFetching
+  const seenIsHidden = seenIsFetching || !seenMessages.length
+  const isClear = !isLoading && !newMessages.length && !seenMessages.length
+  const isNoNew = !isLoading && !newMessages.length && !!seenMessages.length
 
   return (
     <NewPageContainer>
@@ -256,26 +242,12 @@ export const InboxComponent: React.FC = () => {
           </Button>
         </FlexButtonBox>
 
-        <MailboxContainer minH="700px">
+        <MailboxContainer minH="500px">
           <Box padding={{ md: '30px 64px', base: '20px' }}>
             <Box className="title">{t('inbox.title.new')}</Box>
             {isClear && <EmptyStatus />}
-
-            {isNoNew && (
-              <Flex h="300px" justifyContent="center" alignItems="center">
-                <Box>
-                  <Box
-                    fontSize="20px"
-                    fontWeight={500}
-                    lineHeight="30px"
-                    marginBottom="30px"
-                  >
-                    {t('inbox.no-new')}
-                  </Box>
-                  <Image src={IMGNewNone} />
-                </Box>
-              </Flex>
-            )}
+            {isLoading && <Loading />}
+            {isNoNew && <NoNewStatus />}
             <Mailbox
               data={newMessages}
               isChooseMode={isChooseMode}
@@ -312,7 +284,7 @@ export const InboxComponent: React.FC = () => {
           <Box
             padding={{ base: '20px', md: '20px 64px' }}
             bg="rgba(243, 243, 243, 0.4);"
-            display={seenIsEmpty ? 'none' : 'block'}
+            display={seenIsHidden ? 'none' : 'block'}
           >
             <Box className="title">{t('inbox.title.seen')}</Box>
             <InfiniteMailbox
@@ -321,12 +293,18 @@ export const InboxComponent: React.FC = () => {
               queryFn={queryFn}
               queryKey={['Seen']}
               emptyElement=""
-              noMoreElement=""
-              onDataChange={onDataChange}
-              onChooseModeChange={onChooseModeChange}
+              noMoreElement={<ThisBottomStatus />}
+              onDataChange={(data) => {
+                setSeenMessages(data)
+              }}
+              onGetIsFetching={(b) => {
+                setSeenIsFetching(b)
+              }}
+              onChooseModeChange={(b) => {
+                setIsChooseMode(b)
+              }}
               parentIsChooseMode={isChooseMode}
               parentChooseMap={chooseMap}
-              // onQueryStatusChange={onQueryStatusChange}
               onClickBody={(id: string) => {
                 router.push(`${RoutePath.Message}/${id}`)
               }}

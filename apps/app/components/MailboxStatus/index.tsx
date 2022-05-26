@@ -6,6 +6,7 @@ import React from 'react'
 import IMGClear from '../../assets/clear.png'
 import SVGBottom from '../../assets/is-bottom.svg'
 import SVGNone from '../../assets/none.svg'
+import IMGNewNone from '../../assets/new-none.png'
 
 export const EmptyStatus = () => {
   const [t] = useTranslation('mailboxes')
@@ -64,6 +65,26 @@ export const ClearStatus = () => {
           {t('trash.clear')}
         </Box>
         <SVGNone />
+      </Box>
+    </Flex>
+  )
+}
+
+export const NoNewStatus = () => {
+  const [t] = useTranslation('mailboxes')
+
+  return (
+    <Flex h="300px" justifyContent="center" alignItems="center">
+      <Box>
+        <Box
+          fontSize="20px"
+          fontWeight={500}
+          lineHeight="30px"
+          marginBottom="30px"
+        >
+          {t('inbox.no-new')}
+        </Box>
+        <Image src={IMGNewNone} />
       </Box>
     </Flex>
   )
