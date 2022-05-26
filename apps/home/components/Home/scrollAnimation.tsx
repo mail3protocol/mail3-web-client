@@ -88,6 +88,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
   }
   const getEnvelopeAnimationInfo = (
     scaleBase: number,
+    isZoomOutCompleted: boolean,
     envelopeSize: {
       width: number
       height: number
@@ -110,12 +111,12 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       scaleBase <= targetScale
         ? scaleBase + scrollProgressStep3 * scaleDiff
         : scaleBase - scrollProgressStep3 * scaleDiff
-    const scale = `scale(${s})`
+    const scale = `scale(${isZoomOutCompleted ? s : 1})`
     const translateYPart1Value = (scrollProgressStep3 * targetTranslateY) / s
     const translateYPart2Value =
       (scrollProgressStep4 * (envelopeSize.height / 2)) / s
     const translateY = `translateY(${
-      translateYPart1Value + translateYPart2Value
+      isZoomOutCompleted ? translateYPart1Value + translateYPart2Value : 0
     }px)`
     return {
       envelopeTransform: [rotateX, scale, translateY].join(' '),
@@ -149,7 +150,11 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     isHiddenEnvelope,
     envelopeProgress,
     rollingBackgroundOpacity,
-  } = getEnvelopeAnimationInfo(bannerTransformValue.scale, envelopeSize)
+  } = getEnvelopeAnimationInfo(
+    bannerTransformValue.scale,
+    isZoomOutCompleted,
+    envelopeSize
+  )
 
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
   const bannerChildrenProps = {

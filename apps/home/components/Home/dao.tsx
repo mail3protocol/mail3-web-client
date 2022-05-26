@@ -73,7 +73,7 @@ export const Dao = () => {
     <Center
       w="full"
       h="auto"
-      minH={{ base: '667px', md: 'unset' }}
+      minH={{ base: '667px', md: '749px' }}
       bg="#000"
       color="#fff"
       px={{ base: '20px', md: '30px' }}
@@ -101,21 +101,23 @@ export const Dao = () => {
           direction="column"
           pb={{ base: 0, md: '32px' }}
           pt={{ base: '20px', md: '26px' }}
+          pr="24px"
         >
           <Heading
             fontSize="56px"
             lineHeight="56px"
-            mb={{ base: '24px', md: '8px' }}
+            mb={{ base: '24px', md: '48px' }}
             w="full"
           >
             Mail3 Postoffice
           </Heading>
           <Text
             fontSize={{ base: '18px', md: '24px' }}
-            lineHeight={{ base: '24px', md: '30px' }}
+            lineHeight={{ base: '24px', md: '48px' }}
             mb="32px"
             fontWeight="300"
             w="full"
+            maxW={{ base: 'unset', md: '570px' }}
           >
             Mail3 Postoffice is the decentralized autonomous organization owned
             by the community to govern the protocol development, the
@@ -140,6 +142,7 @@ export const Dao = () => {
             transformOrigin="top right"
             style={{
               transform: `scale(${illustrationTextScale})`,
+              width: `${488 * illustrationTextScale}px`,
               height: `${402 * illustrationTextScale}px`,
             }}
           >

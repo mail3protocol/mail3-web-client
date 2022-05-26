@@ -1,4 +1,11 @@
-import { Box, BoxProps, Center, Flex, Image } from '@chakra-ui/react'
+import {
+  AspectRatio,
+  Box,
+  BoxProps,
+  Center,
+  Flex,
+  Image,
+} from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import EnvelopeBgPath from '../../assets/png/envelope/bg.png'
 import EnvelopeCoverClosePath from '../../assets/png/envelope/cover-close.png'
@@ -135,7 +142,9 @@ export const Envelope: React.FC<{
             transform: envelopeTransformEnded ? envelopeTransform : '',
           }}
         >
-          <Image src={EnvelopeBgPath.src} w="full" h="auto" opacity={0} />
+          <AspectRatio ratio={157 / 95} w="full" h="auto" opacity={0}>
+            <div />
+          </AspectRatio>
           <Flex
             w="full"
             h="full"
