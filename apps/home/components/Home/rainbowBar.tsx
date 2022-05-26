@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Center, Link } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { WHITE_LIST_URL } from '../../constants/env'
 
 export const RainbowBarContainer = styled(Center)`
@@ -30,6 +31,7 @@ export const RainbowBarContainer = styled(Center)`
 
 export const RainbowBar: React.FC = () => {
   const { t } = useTranslation('index')
+  const trackJoinWhitelist = useTrackClick(TrackEvent.HomeClickJoinWhiteList)
   return (
     <RainbowBarContainer
       minH="44px"
@@ -50,6 +52,7 @@ export const RainbowBar: React.FC = () => {
           textDecoration="underline"
           display="inline-block"
           href={WHITE_LIST_URL}
+          onClick={() => trackJoinWhitelist()}
         >
           {t('join')}
         </Link>

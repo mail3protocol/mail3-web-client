@@ -14,13 +14,14 @@ export enum TrackEvent {
   WhiteListTwitter = 'earlybird_click_followtwitter',
 
   // home
-  HomeLaunchApp = 'Mail3_offical_click_launchapp',
-  HomeClickWhiteList = 'Mail3_offical_click_whitelist',
-  HomeClickJoinWhiteList = 'Mail3_offical_click_jointhewhitelist',
-  HomeClickTestingGo = 'Mail3_offical_click_testinggo',
-  HomeClickWhitePaper = 'Mail3_offical_click_litepaper',
-  HomeClickGetIn = 'Mail3_offical_click_getin',
-  HomeClickContact = 'Mail3_offical_click_contactus',
+  HomeLaunchApp = 'mail3_offical_click_launchapp',
+  HomeClickWhiteList = 'mail3_offical_click_whitelist',
+  HomeClickJoinWhiteList = 'mail3_offical_click_jointhewhitelist',
+  HomeClickTestingGo = 'mail3_offical_click_testinggo',
+  HomeClickWhitePaper = 'mail3_offical_click_litepaper',
+  HomeClickCommunity = 'mail3_offical_click_community',
+  HomeClickGetIn = 'mail3_offical_click_getin',
+  HomeClickContact = 'mail3_offical_click_contactus',
 }
 
 // dimensions

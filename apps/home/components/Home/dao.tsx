@@ -14,6 +14,7 @@ import { CONTAINER_MAX_WIDTH } from 'ui'
 import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { fromEvent } from 'rxjs'
+import { useTrackClick, TrackEvent, TrackKey, HomeCommunity } from 'hooks'
 import Illustration2Svg from '../../assets/svg/illustration/2.svg'
 import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
 import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
@@ -69,6 +70,7 @@ export const Dao = () => {
       subscriber.unsubscribe()
     }
   }, [])
+  const trackClickCommunity = useTrackClick(TrackEvent.HomeClickCommunity)
   return (
     <Center
       w="full"
@@ -193,6 +195,11 @@ export const Dao = () => {
               transition="100ms"
               h="40px"
               rounded="100px"
+              onClick={() => {
+                trackClickCommunity({
+                  [TrackKey.HomeCommunity]: HomeCommunity.Twitter,
+                })
+              }}
             >
               <Icon
                 as={TwitterIconSvg}
@@ -206,6 +213,11 @@ export const Dao = () => {
               transition="100ms"
               h="40px"
               rounded="100px"
+              onClick={() => {
+                trackClickCommunity({
+                  [TrackKey.HomeCommunity]: HomeCommunity.Mirror,
+                })
+              }}
             >
               <Icon
                 as={MirrorIconSvg}
@@ -219,6 +231,11 @@ export const Dao = () => {
               transition="100ms"
               h="40px"
               rounded="100px"
+              onClick={() => {
+                trackClickCommunity({
+                  [TrackKey.HomeCommunity]: HomeCommunity.Discord,
+                })
+              }}
             >
               <Icon
                 as={DiscordIconSvg}

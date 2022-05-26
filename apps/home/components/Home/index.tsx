@@ -15,7 +15,6 @@ export const Home: React.FC = () => {
       {status !== 'closed' ? (
         <Entrance
           onChangeStatus={(s) => {
-            window.scroll(0, 0)
             setStatus(s)
           }}
         />

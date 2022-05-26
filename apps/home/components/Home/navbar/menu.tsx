@@ -8,6 +8,8 @@ import {
   LinkProps,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import { TrackEvent, useTrackClick } from 'hooks'
+import styled from '@emotion/styled'
 import {
   APP_URL,
   LIGHT_PAPER_URL,
@@ -29,31 +31,54 @@ const linkProps: LinkProps = {
   },
 }
 
-const menuButtonProps: ButtonProps = {
-  variant: 'unstyled',
-  p: '20px',
-  py: '24px',
-  w: 'full',
-  textAlign: 'left',
-  h: 'auto',
-  rounded: '0',
-  borderBottom: '1px solid #e7e7e7',
-}
+const MenuItem = styled(RowButton)`
+  padding: 24px 20px;
+  width: 100%;
+  text-align: left;
+  height: auto;
+  border-radius: 0;
+  border-bottom: 1px solid #e7e7e7;
+`
 
-export const WhiteListButtons = () => (
-  <>
+export const Buttons: React.FC<{
+  isWhiteList?: boolean
+}> = ({ isWhiteList }) => {
+  const trackLaunchApp = useTrackClick(TrackEvent.HomeLaunchApp)
+  const trackWhiteList = useTrackClick(TrackEvent.HomeClickWhiteList)
+  const trackWhitePaper = useTrackClick(TrackEvent.HomeClickWhitePaper)
+  const litepaperButton = (
     <NextLink href={LIGHT_PAPER_URL} passHref>
       <Link
         {...linkProps}
-        px="20px"
         display={{
           base: 'none',
           md: 'inline-block',
         }}
+        onClick={() => trackWhitePaper()}
       >
         Litepaper
       </Link>
     </NextLink>
+  )
+  const launchAppButton = (
+    <NextLink href={APP_URL} passHref>
+      <Button
+        {...buttonProps}
+        onClick={() => trackLaunchApp()}
+        display={
+          isWhiteList
+            ? {
+                base: 'none',
+                md: 'inline-block',
+              }
+            : undefined
+        }
+      >
+        Launch App
+      </Button>
+    </NextLink>
+  )
+  const whilelistButton = (
     <NextLink href={WHITE_LIST_URL} passHref>
       <Link
         {...linkProps}
@@ -94,6 +119,7 @@ export const WhiteListButtons = () => (
           left: '1px',
           zIndex: 1,
         }}
+        onClick={() => trackWhiteList()}
       >
         <Box
           as="span"
@@ -109,52 +135,46 @@ export const WhiteListButtons = () => (
         </Box>
       </Link>
     </NextLink>
-    <NextLink href={APP_URL} passHref>
-      <Button
-        {...buttonProps}
-        display={{
-          base: 'none',
-          md: 'inline-block',
-        }}
-      >
-        Launch App
-      </Button>
-    </NextLink>
-  </>
-)
+  )
+  return isWhiteList ? (
+    <>
+      {litepaperButton}
+      {whilelistButton}
+      {launchAppButton}
+    </>
+  ) : (
+    <>
+      {litepaperButton}
+      {launchAppButton}
+    </>
+  )
+}
 
-export const NormalButtons = () => (
-  <>
-    <NextLink href={LIGHT_PAPER_URL} passHref>
-      <Link
-        {...linkProps}
-        display={{
-          base: 'none',
-          md: 'inline-block',
-        }}
-      >
-        Litepaper
-      </Link>
-    </NextLink>
-    <NextLink href={APP_URL} passHref>
-      <Button {...buttonProps}>Launch App</Button>
-    </NextLink>
-  </>
-)
-
-export const NormalMenus = () => (
-  <NextLink href={LIGHT_PAPER_URL} passHref>
-    <RowButton {...menuButtonProps}>Litepaper</RowButton>
-  </NextLink>
-)
-
-export const WhiteListMenus = () => (
-  <>
+export const Menus: React.FC<{
+  isWhiteList?: boolean
+}> = ({ isWhiteList }) => {
+  const trackLaunchApp = useTrackClick(TrackEvent.HomeLaunchApp)
+  const trackWhitePaper = useTrackClick(TrackEvent.HomeClickWhitePaper)
+  const launchAppButton = (
     <NextLink href={APP_URL}>
-      <RowButton {...menuButtonProps}>Launch App</RowButton>
+      <MenuItem variant="unstyled" onClick={() => trackLaunchApp()}>
+        Launch App
+      </MenuItem>
     </NextLink>
+  )
+  const litepaperButton = (
     <NextLink href={LIGHT_PAPER_URL} passHref>
-      <RowButton {...menuButtonProps}>Litepaper</RowButton>
+      <MenuItem variant="unstyled" onClick={() => trackWhitePaper()}>
+        Litepaper
+      </MenuItem>
     </NextLink>
-  </>
-)
+  )
+  return isWhiteList ? (
+    <>
+      {launchAppButton}
+      {litepaperButton}
+    </>
+  ) : (
+    launchAppButton
+  )
+}
