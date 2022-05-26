@@ -27,7 +27,7 @@ export const Footer = () => {
   const trackClickContactus = useTrackClick(TrackEvent.HomeClickContact)
   return (
     <Center
-      h={{ base: 'auto', md: '352px' }}
+      h={{ base: 'auto', md: '245px' }}
       bg="#000"
       color="#fff"
       px="33px"

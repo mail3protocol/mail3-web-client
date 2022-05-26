@@ -77,6 +77,8 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
         scaleY,
       },
       bannerHeadingScaleY: width < height ? h / targetHeight : 1,
+      bannerHeadingTranslateY:
+        width < height ? `${50 - scrollProgressStep0 * 50}%` : '50%',
       bannerTransform: [
         `scale(${scale})`,
         `rotateX(${rotateX}deg)`,
@@ -140,6 +142,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
   const {
     bannerTransformValue,
     bannerHeadingScaleY,
+    bannerHeadingTranslateY,
     bannerTransform,
     isHiddenBanner,
     isZoomOutCompleted,
@@ -161,6 +164,13 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     transition: '50ms',
     style: {
       transform: `scaleY(${bannerHeadingScaleY})`,
+    },
+  }
+  const bannerHeadingProps = {
+    ...bannerChildrenProps,
+    transition: '50ms',
+    style: {
+      transform: `scaleY(${bannerHeadingScaleY}) translateY(-${bannerHeadingTranslateY})`,
     },
   }
   const bannerTopContainerProps = {
@@ -270,7 +280,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                 />
                 <Banner
                   transition="50ms"
-                  headingProps={bannerChildrenProps}
+                  headingProps={bannerHeadingProps}
                   topContainerProps={bannerTopContainerProps}
                   bottomContainerProps={bannerChildrenProps}
                 />

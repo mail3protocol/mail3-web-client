@@ -183,11 +183,16 @@ export const Entrance: React.FC<
               xl: `${20 * 60}px`,
             }}
           >
-            <Icon as={LogoSvg} w="136px" h="auto" mb="auto" />
+            <Icon
+              as={LogoSvg}
+              w={{ base: '136px', md: '240px' }}
+              h="auto"
+              mb="auto"
+            />
             <Heading
               w={{
                 base: 'full',
-                md: 'calc(100% - 112px)',
+                md: 'calc(100% - 240px)',
               }}
               fontSize={{ base: '22px', md: '36px' }}
               lineHeight={{ base: '22px', md: '36px' }}

@@ -63,7 +63,7 @@ export const Banner: React.FC<BannerProps> = ({
         h="100vh"
         top="20px"
         left="0"
-        transformOrigin="86% 10%"
+        transformOrigin={{ base: '90% 10%', md: '50% 10%' }}
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         {...topContainerProps}
       >
@@ -84,7 +84,7 @@ export const Banner: React.FC<BannerProps> = ({
           maxH="20vh"
           position="absolute"
           top="5%"
-          right="10%"
+          right={{ base: '5%', md: '0' }}
           objectFit="contain"
         />
       </Box>
@@ -116,7 +116,6 @@ export const Banner: React.FC<BannerProps> = ({
           bottom="0"
         />
       </Box>
-
       <Center position="relative" w="full" my="auto" flex={1}>
         <Heading
           fontSize={{ base: '24px', md: '48px' }}
