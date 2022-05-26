@@ -39,6 +39,10 @@ import {
   useLastConectorName,
   useAccount,
   useDidMount,
+  useTrackClick,
+  TrackEvent,
+  DesiredWallet,
+  TrackKey,
 } from 'hooks'
 import { Button } from '../Button'
 
@@ -175,6 +179,8 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
     }
   })
 
+  const trackWallet = useTrackClick(TrackEvent.ConnectWallet)
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
       <ModalOverlay />
@@ -202,6 +208,9 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                 connectorName === ConnectorName.MetaMask && isConnected
               }
               onClick={async () => {
+                trackWallet({
+                  [TrackKey.DesiredWallet]: DesiredWallet.MetaMask,
+                })
                 if (shouldUseDeeplink) {
                   return
                 }
@@ -249,6 +258,9 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                 connectorName === ConnectorName.WalletConnect && isConnected
               }
               onClick={async () => {
+                trackWallet({
+                  [TrackKey.DesiredWallet]: DesiredWallet.WalletConnect,
+                })
                 await walletConnect.activate()
                 const { error } = walletConnectStore.getState()
                 if (error != null) {
@@ -283,8 +295,21 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
               <PlaceholderButton
                 text={t('connect.phantom')}
                 icon={<PhantomSvg />}
+                onClick={() => {
+                  trackWallet({
+                    [TrackKey.DesiredWallet]: DesiredWallet.Phantom,
+                  })
+                }}
               />
-              <PlaceholderButton text={t('connect.blocto')} icon={<Blocto />} />
+              <PlaceholderButton
+                text={t('connect.blocto')}
+                icon={<Blocto />}
+                onClick={() => {
+                  trackWallet({
+                    [TrackKey.DesiredWallet]: DesiredWallet.Blocto,
+                  })
+                }}
+              />
             </VStack>
           </Center>
           <ModalFooter fontSize="12px" pb="24px" pt="16px">
