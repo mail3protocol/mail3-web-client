@@ -35,10 +35,6 @@ export const SentComponent: React.FC = () => {
     [api]
   )
 
-  const onChooseModeChange = (bool: boolean) => {
-    setIsChooseMode(bool)
-  }
-
   return (
     <>
       {isChooseMode && (
@@ -67,8 +63,7 @@ export const SentComponent: React.FC = () => {
             loader={<Loading />}
             emptyElement={<EmptyStatus />}
             noMoreElement={<ThisBottomStatus />}
-            // onDataChange={onDataChange}
-            onChooseModeChange={onChooseModeChange}
+            onChooseModeChange={(b) => setIsChooseMode(b)}
             onClickBody={(id: string) => {
               router.push(`${RoutePath.Message}/${id}`)
             }}

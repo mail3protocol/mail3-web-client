@@ -34,10 +34,6 @@ export const DraftsComponent: React.FC = () => {
     [api]
   )
 
-  const onChooseModeChange = (bool: boolean) => {
-    setIsChooseMode(bool)
-  }
-
   return (
     <>
       {isChooseMode && (
@@ -101,7 +97,7 @@ export const DraftsComponent: React.FC = () => {
               </Flex>
             }
             noMoreElement={<ThisBottomStatus />}
-            onChooseModeChange={onChooseModeChange}
+            onChooseModeChange={(b) => setIsChooseMode(b)}
             onClickBody={(id: string) => {
               router.push(`${RoutePath.Message}/${id}`)
             }}

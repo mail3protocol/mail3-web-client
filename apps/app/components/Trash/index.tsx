@@ -44,10 +44,6 @@ export const TrashComponent: React.FC = () => {
     [api]
   )
 
-  const onChooseModeChange = (bool: boolean) => {
-    setIsChooseMode(bool)
-  }
-
   return (
     <>
       {isChooseMode && (
@@ -105,7 +101,7 @@ export const TrashComponent: React.FC = () => {
             loader={<Loading />}
             emptyElement={<ClearStatus />}
             noMoreElement={<ThisBottomStatus />}
-            onChooseModeChange={onChooseModeChange}
+            onChooseModeChange={(b) => setIsChooseMode(b)}
             onClickBody={(id: string) => {
               router.push({
                 pathname: `${RoutePath.Message}/${id}`,
