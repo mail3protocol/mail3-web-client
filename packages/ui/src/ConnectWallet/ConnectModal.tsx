@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import {
   Modal,
   ModalOverlay,
@@ -100,14 +101,21 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
     >
       <Flex w="100%" alignItems="center" {...flexProps}>
         <HStack spacing="6px" alignItems="center">
-          {isConnected ? (
-            <Box w="8px" h="8px" bg="rgb(39, 174, 96)" borderRadius="50%" />
-          ) : null}
           {icon}
           <Text {...textProps}>{text}</Text>
         </HStack>
         <Spacer />
-        {isLoading ? <Spinner /> : null}
+        {isLoading ? (
+          <Spinner />
+        ) : isConnected ? (
+          <Box
+            w="8px"
+            h="8px"
+            bg="rgb(39, 174, 96)"
+            borderRadius="50%"
+            mr="4px"
+          />
+        ) : null}
       </Flex>
     </Button>
   )
