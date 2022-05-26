@@ -113,7 +113,14 @@ export const PreviewComponent: React.FC = () => {
         if (typeof id !== 'string') {
           return
         }
-        await api.deleteMessage(id)
+        try {
+          await api.deleteMessage(id)
+        } catch (error) {
+          dialog({
+            type: 'warning',
+            description: t('delete-failed'),
+          })
+        }
         router.back()
       },
     },

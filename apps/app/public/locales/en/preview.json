@@ -1,3 +1,4 @@
 {
-    "restore-fail": "Restore is fail, try again."
+    "Delete-failed": "Delete the mail is not success, please try again.",
+    "restore-failed": "Restore is fail, try again."
 }
