@@ -5,6 +5,8 @@ import { AvatarGroup, Box, Center, Text, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import styled from '@emotion/styled'
+import { useDialog } from 'hooks'
+import { useTranslation } from 'next-i18next'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -40,11 +42,13 @@ const Container = styled(Box)`
 `
 
 export const PreviewComponent: React.FC = () => {
+  const [t] = useTranslation('preview')
   const router = useRouter()
   const { id, origin } = router.query
   const [content, setContent] = useState('')
   const [detail, setDetail] = useState<MeesageDetail>()
   const api = useAPI()
+  const dialog = useDialog()
 
   useQuery(
     ['preview', id],
@@ -83,7 +87,7 @@ export const PreviewComponent: React.FC = () => {
       type: SuspendButtonType.Reply,
       onClick: () => {
         router.push({
-          pathname: '/message/new',
+          pathname: RoutePath.NewMessage,
           query: {
             id,
             action: 'replay',
@@ -95,7 +99,7 @@ export const PreviewComponent: React.FC = () => {
       type: SuspendButtonType.Forward,
       onClick: () => {
         router.push({
-          pathname: '/message/new',
+          pathname: RoutePath.NewMessage,
           query: {
             id,
             action: 'forward',
@@ -117,13 +121,17 @@ export const PreviewComponent: React.FC = () => {
   if (origin === Mailboxes.Trash) {
     buttonList.unshift({
       type: SuspendButtonType.Restore,
-      onClick: () => {
+      onClick: async () => {
         if (typeof id !== 'string') return
-        api.moveMessage(id as string).then(() => {
-          // if ok
-          // TODO not ok flag
+        try {
+          await api.moveMessage(id as string)
           router.replace(`${RoutePath.Message}/${id}`)
-        })
+        } catch (error) {
+          dialog({
+            type: 'warning',
+            description: t('restore-failed'),
+          })
+        }
       },
     })
   }
