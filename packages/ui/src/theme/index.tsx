@@ -4,6 +4,9 @@ const font =
   'Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
 
 export const theme = extendTheme({
+  shadows: {
+    outline: 'none',
+  },
   colors: {
     brand: {
       50: 'rgba(0, 0, 0, 0.64)',
