@@ -42,7 +42,7 @@ interface InfiniteMailboxProps<
   parentIsChooseMode?: boolean
   parentChooseMap?: Record<string, boolean>
   calcDataLength?: (data?: InfiniteData<TData>) => number
-  onDataChange?: (data?: MessageItem[]) => void
+  onDataChange?: (data: MessageItem[]) => void
   onQueryStatusChange?: (data?: any) => void
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']

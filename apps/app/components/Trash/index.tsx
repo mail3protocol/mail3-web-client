@@ -34,23 +34,24 @@ export const TrashComponent: React.FC = () => {
 
   const api = useAPI()
 
-  const queryFn = useCallback(async ({ pageParam = 0 }) => {
-    const { data } = await api.getMailboxesMessages(Mailboxes.Trash, pageParam)
-    return data
-  }, [])
+  const queryFn = useCallback(
+    async ({ pageParam = 0 }) => {
+      const { data } = await api.getMailboxesMessages(
+        Mailboxes.Trash,
+        pageParam
+      )
+      return data
+    },
+    [api]
+  )
 
-  const onDataChange = useCallback((data) => {
+  const onDataChange = (data: MessageItem[]) => {
     setMessages(data)
-  }, [])
+  }
 
-  const onChooseModeChange = useCallback((bool) => {
+  const onChooseModeChange = (bool: boolean) => {
     setIsChooseMode(bool)
-  }, [])
-
-  const getChooseList = useCallback(() => {
-    const ids = refBoxList?.current?.getChooseIds()
-    return ids
-  }, [])
+  }
 
   return (
     <>
@@ -60,7 +61,7 @@ export const TrashComponent: React.FC = () => {
             {
               type: SuspendButtonType.Delete,
               onClick: async () => {
-                const ids = getChooseList()
+                const ids = refBoxList?.current?.getChooseIds()
                 if (!ids?.length) return
                 await api.batchDeleteMessage(ids)
                 refBoxList?.current?.setHiddenIds(ids)

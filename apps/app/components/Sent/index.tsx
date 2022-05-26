@@ -24,29 +24,20 @@ export const SentComponent: React.FC = () => {
   const router = useRouter()
   const api = useAPI()
 
-  // const [messages, setMessages] = useState<Array<MessageItem>>([])
-
   const refBoxList = useRef<InfiniteHandle>(null)
-
   const [isChooseMode, setIsChooseMode] = useState(false)
 
-  const queryFn = useCallback(async ({ pageParam = 0 }) => {
-    const { data } = await api.getMailboxesMessages(Mailboxes.Sent, pageParam)
-    return data
-  }, [])
+  const queryFn = useCallback(
+    async ({ pageParam = 0 }) => {
+      const { data } = await api.getMailboxesMessages(Mailboxes.Sent, pageParam)
+      return data
+    },
+    [api]
+  )
 
-  // const onDataChange = useCallback((data) => {
-  //   setMessages(data)
-  // }, [])
-
-  const onChooseModeChange = useCallback((bool) => {
+  const onChooseModeChange = (bool: boolean) => {
     setIsChooseMode(bool)
-  }, [])
-
-  const getChooseList = useCallback(() => {
-    const ids = refBoxList?.current?.getChooseIds()
-    return ids
-  }, [])
+  }
 
   return (
     <>
@@ -56,7 +47,7 @@ export const SentComponent: React.FC = () => {
             {
               type: SuspendButtonType.Delete,
               onClick: async () => {
-                const ids = getChooseList()
+                const ids = refBoxList?.current?.getChooseIds()
                 if (!ids?.length) return
                 await api.batchDeleteMessage(ids)
                 refBoxList?.current?.setHiddenIds(ids)

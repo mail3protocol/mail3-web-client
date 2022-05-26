@@ -164,28 +164,26 @@ export const InboxComponent: React.FC = () => {
   //   console.log('pageType:', pageType)
   // }, [pageType])
 
-  const queryFn = useCallback(async ({ pageParam = 0 }) => {
-    const { data } = await api.getMessagesSeen(pageParam)
-    return data
-  }, [])
+  const queryFn = useCallback(
+    async ({ pageParam = 0 }) => {
+      const { data } = await api.getMessagesSeen(pageParam)
+      return data
+    },
+    [api]
+  )
 
-  const onDataChange = useCallback((data) => {
+  const onDataChange = (data: MessageItem[]) => {
     if (data.length) {
       setSeenIsEmpty(false)
     } else {
       setSeenIsEmpty(true)
     }
     setSeenMessages(data)
-  }, [])
+  }
 
-  const onChooseModeChange = useCallback((bool) => {
+  const onChooseModeChange = (bool: boolean) => {
     setIsChooseMode(bool)
-  }, [])
-
-  const getChooseList = useCallback(() => {
-    const ids = refSeenBoxList?.current?.getChooseIds()
-    return ids
-  }, [])
+  }
 
   const setNewToSeen = (ids: Array<string>) => {
     const targetMgs = ids.map((id) => {
@@ -222,7 +220,7 @@ export const InboxComponent: React.FC = () => {
               onClick: () => {
                 const newIds =
                   Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
-                const seenIds = getChooseList() ?? []
+                const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
                 const ids = [...newIds, ...seenIds]
 
                 if (!ids.length) return
