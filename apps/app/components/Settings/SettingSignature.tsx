@@ -174,7 +174,12 @@ export const SettingSignature: React.FC = () => {
 
   return (
     <Container>
-      <Stack direction="column" spacing="32px" justifyContent="center">
+      <Stack
+        direction="column"
+        spacing="32px"
+        justifyContent="center"
+        maxW="100%"
+      >
         <Text fontSize={['14px', '14px', '18px']}>{t('signature.desc')}</Text>
         <VStack spacing="8px" w="100%">
           <Flex className="label">

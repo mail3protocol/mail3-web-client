@@ -28,7 +28,7 @@ export const CardSignature: React.FC<SignatureCardProps> = ({ account }) => (
       <Image src={StampPng} width="163px" height="144px" />
     </Flex>
     <Flex position="absolute" bottom="10px">
-      <QrCode value={`https://mail.me/${account}`} size={32} fgColor="blue" />
+      <QrCode value={`https://mail3.me/${account}`} size={32} fgColor="blue" />
     </Flex>
   </Center>
 )
