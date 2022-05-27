@@ -75,15 +75,15 @@ export const Dao = () => {
     <Center
       w="full"
       h="auto"
-      minH={{ base: '667px', md: '749px' }}
       bg="#000"
       color="#fff"
       px={{ base: '20px', md: '30px' }}
     >
       <Grid
         w="full"
+        h="auto"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
-        h="full"
+        minH={{ base: '667px', md: '749px' }}
         templateColumns={{
           base: '100%',
           md: '60% 40%',
