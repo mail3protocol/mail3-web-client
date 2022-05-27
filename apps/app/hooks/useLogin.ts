@@ -183,6 +183,11 @@ export const useWalletChange = () => {
 
   const handleAccountChanged = useCallback(
     ([acc]) => {
+      // disconected
+      if (acc === undefined) {
+        removeCookie(COOKIE_KEY, { path: '/' })
+        return
+      }
       if (isConnecting || !account) {
         return
       }
@@ -203,8 +208,7 @@ export const useWalletChange = () => {
   useEffect(() => {
     const w = window as any
     const { ethereum } = w
-    console.log('effect')
-    if (ethereum && ethereum.once) {
+    if (ethereum && ethereum.on) {
       ethereum.on('disconnect', handleDisconnect)
       ethereum.on('accountsChanged', handleAccountChanged)
     }
