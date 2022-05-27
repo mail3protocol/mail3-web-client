@@ -13,7 +13,7 @@ export const MIRROR_URL =
 export const MEDIUM_URL =
   process.env.NEXT_PUBLIC_MEDIUM_URL || 'https://medium.com/@mail3'
 export const CONTACT_US_URL =
-  process.env.NEXT_PUBLIC_CONTACT_US_URL || 'mailto:mail3dao.eth@mail3.me'
+  process.env.NEXT_PUBLIC_CONTACT_US_URL || 'mailto:mail3.eth@mail3.me'
 export const IS_FORCE_WHITELIST = true
 export const WHITE_LIST_APPLY_DATE_RANGE: [Date, Date] = [
   new Date('2022-6-7'),
