@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { fromEvent, map } from 'rxjs'
+import { fromEvent } from 'rxjs'
 import { Box, BoxProps, Center, Flex } from '@chakra-ui/react'
-import { useInnerSize } from 'hooks'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Banner } from './banner'
 import { Letter } from './letterContent'
@@ -29,7 +28,6 @@ const scrollStepIndexMap = SCROLL_STEPS.reduce<{
 
 export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
   const [scrollY, setScrollY] = useState(0)
-  const { width, height } = useInnerSize()
   function getScrollProgress(
     step: number,
     options?: {
@@ -42,32 +40,41 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       ? offsetedScrollY / SCROLL_STEPS[step]
       : Math.max(Math.min(offsetedScrollY / SCROLL_STEPS[step], 1), 0)
   }
-
+  const [width, setWidth] = useState(1920)
+  const [height, setHeight] = useState(1920)
   const measureContainerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const subscriber = fromEvent(window, 'scroll')
-      .pipe(map(() => window.scrollY))
-      .subscribe((y) => {
-        setScrollY(y)
-        document.body.style.overflowX = 'hidden'
-        if (window.scrollX !== 0) {
-          window.scroll(0, y)
-        }
-      })
+    const scrollSubscriber = fromEvent(window, 'scroll').subscribe(() => {
+      setScrollY(window.scrollY)
+      document.body.style.overflowX = 'hidden'
+      if (window.scrollX !== 0) {
+        window.scroll(0, window.scrollY)
+      }
+    })
+    const resizeSubscriber = fromEvent(window, 'resize').subscribe(() => {
+      if (measureContainerRef.current?.offsetHeight) {
+        setHeight(measureContainerRef.current.offsetHeight)
+      }
+      setWidth(window.innerWidth)
+    })
+    setHeight(measureContainerRef.current?.offsetHeight || window.innerHeight)
+    setWidth(window.innerWidth)
     return () => {
       document.body.style.overflowX = ''
-      subscriber.unsubscribe()
+      scrollSubscriber.unsubscribe()
+      resizeSubscriber.unsubscribe()
     }
   }, [])
 
+  const getHeightWithoutHeaderBar = () => height - HEADER_BAR_HEIGHT
   const getBannerAnimationInfo = () => {
     const scrollProgressStep0 = getScrollProgress(0)
     const scrollProgressStep1 = getScrollProgress(1)
     const targetScale = 1 - Math.min(CONTAINER_MAX_WIDTH / width, 0.8)
     const scale = 1 - scrollProgressStep0 * targetScale
-    const rotateX = Math.floor(scrollProgressStep1 * 90)
-    const h =
-      (measureContainerRef.current?.offsetHeight ?? height) - HEADER_BAR_HEIGHT
+    const rotateX =
+      scrollProgressStep0 > 0 ? Math.floor(scrollProgressStep1 * 89) + 1 : 0
+    const h = getHeightWithoutHeaderBar()
     const targetHeight = h - (h - width * ENVELOPE_RADIO) * scrollProgressStep0
     const scaleY = width < height ? targetHeight / h : 1
     return {
@@ -106,7 +113,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
     const overflowProgress = Math.min(Math.max(noOverflowProgress, 0), 1)
     const rotateX = `rotateX(${overflowProgress * 90 + 270}deg)`
     const targetTranslateY =
-      (height - HEADER_BAR_HEIGHT - envelopeSize.height) / 2
+      (getHeightWithoutHeaderBar() - envelopeSize.height) / 2
     const targetScale = envelopeSize.width / width
     const scaleDiff = Math.abs(scaleBase - targetScale)
     const s =
