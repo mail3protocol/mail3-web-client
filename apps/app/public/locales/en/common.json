@@ -1,0 +1,42 @@
+{
+    "navbar": {
+        "inbox": "Inbox",
+        "sent": "Sent",
+        "drafts": "Drafts",
+        "trash": "Trash",
+        "subscriptions": "Subscriptions",
+        "other-stuff": "Other Stuff",
+        "settings": "Settings",
+        "profile": "Web3 Profile",
+        "copy-address": "Copy Address",
+        "change-wallet": "Change Wallet",
+        "copied": "Copied"
+    },
+    "connect": {
+        "metamask": "MetaMask",
+        "wallet-connect": "Wallet Connect",
+        "dialog-title": "Connect Your Wallet",
+        "connect-wallet": "Connect Wallet",
+        "phantom": "Phantom",
+        "blocto": "Blocto",
+        "connecting": "Connecting",
+        "coming-soon": "Coming soon",
+        "desired-wallet": "Click on the wallet below and let us know which one you need more",
+        "footer": "We do not own your private keys and cannot access your assets without your confirmation.",
+        "notice": "Notice",
+        "imtoken-reject": "You have declined authorization, please refresh this page to authorize again.",
+        "wechat": "The current environment does not support metamask. You can connect Metamask in the browser."
+    },
+    "auth": {
+        "connect": "Connect your Wallet",
+        "desc": "Skip approving every interaction with your wallet by allowing Mail3 to remember you.",
+        "remember": "Check",
+        "check-wallet": "Check Wallet",
+        "sign": "I authorize sending and checking my emails on mail3 from this device. This doesn't cost anything.",
+        "errors": {
+            "wallet-not-connected": "Wallet is not connected, please connect your wallet",
+            "unknown": "Unknown error, please try again later",
+            "condition-not-meet": "You do not have permission to participate in Beta testing."
+        }
+    }
+}

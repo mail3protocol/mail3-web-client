@@ -1,0 +1,37 @@
+{
+    "name": "hooks",
+    "version": "0.0.0",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "scripts": {
+        "lint": "eslint ./src"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@walletconnect/ethereum-provider": "^1.7.7",
+        "@walletconnect/jsonrpc-http-connection": "^1.0.0",
+        "@walletconnect/jsonrpc-provider": "^1.0.3",
+        "@web3-react/core": "8.0.23-beta.0",
+        "@web3-react/metamask": "8.0.19-beta.0",
+        "@web3-react/walletconnect": "8.0.26-beta.0"
+    },
+    "devDependencies": {
+        "@chakra-ui/react": "^1.8.6",
+        "@emotion/react": "^11",
+        "@emotion/styled": "^11",
+        "@types/gtag.js": "^0.0.10",
+        "@types/react": "17.0.38",
+        "@types/react-dom": "^17.0.0",
+        "axios": "^0.26.1",
+        "eslint": "8.13.0",
+        "framer-motion": "^6",
+        "jotai": "^1.6.1",
+        "react": "^17.0.2",
+        "react-cookie": "^4.1.1",
+        "react-dom": "^17.0.2",
+        "react-query": "^3.34.16",
+        "scripts": "*",
+        "tsconfig": "*",
+        "typescript": "4.6.3"
+    }
+}

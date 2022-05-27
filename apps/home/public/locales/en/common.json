@@ -1,0 +1,27 @@
+{
+    "navbar": {
+        "inbox": "Inbox",
+        "sent": "Sent",
+        "drafts": "Drafts",
+        "trash": "Trash",
+        "subscriptions": "Subscriptions",
+        "other-stuff": "Other Stuff",
+        "settings": "Settings",
+        "profile": "Web3 Profile",
+        "copy-address": "Copy Address",
+        "change-wallet": "Change Wallet",
+        "copied": "Copied"
+    },
+    "connect": {
+        "metamask": "MetaMask",
+        "wallet-connect": "Wallet Connect",
+        "connect-wallet": "Connect Wallet",
+        "phantom": "Phantom",
+        "blocto": "Blocto",
+        "connecting": "Connecting",
+        "coming-soon": "Coming soon",
+        "desired-wallet": "Click on the wallet below and let us know which one you need more",
+        "footer": "We do not own your private keys and cannot access your assest without your confirmation.",
+        "notice": "Notice"
+    }
+}

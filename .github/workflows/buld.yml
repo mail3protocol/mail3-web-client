@@ -13,8 +13,6 @@ jobs:
         with:
           node-version: '14'
       - name: Install dependency
-        run: yarn
-      - name: Lint
-        run: yarn lint
+        run: yarn install
       - name: Build
         run: yarn build

@@ -1,0 +1,38 @@
+{
+    "$schema": "https://turborepo.org/schema.json",
+    "baseBranch": "origin/develop",
+    "pipeline": {
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "outputs": [
+                ".next/**"
+            ]
+        },
+        "lint": {
+            "outputs": []
+        },
+        "dev": {
+            "cache": false
+        },
+        "app#build": {
+            "dependsOn": [
+                "^build",
+                "$NEXT_PUBLIC_ALCHEMY_KEY"
+            ],
+            "outputs": [
+                ".next/**"
+            ]
+        },
+        "home#build": {
+            "dependsOn": [
+                "^build",
+                "$NEXT_PUBLIC_ALCHEMY_KEY"
+            ],
+            "outputs": [
+                ".next/**"
+            ]
+        }
+    }
+}

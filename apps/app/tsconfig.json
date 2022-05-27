@@ -1,0 +1,12 @@
+{
+    "extends": "tsconfig/next.json",
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "@types/gtag.js"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
