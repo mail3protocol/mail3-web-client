@@ -134,7 +134,7 @@ export const PreviewComponent: React.FC = () => {
         onClick: async () => {
           if (typeof id !== 'string') return
           try {
-            await api.moveMessage(id as string)
+            await api.moveMessage(id)
             router.replace(`${RoutePath.Message}/${id}`)
           } catch (error) {
             dialog({
