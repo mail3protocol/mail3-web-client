@@ -81,6 +81,7 @@ export const Envelope: React.FC<{
             boxShadow: envelopeTransformEnded
               ? 'none'
               : '0 0 20px rgba(0, 0, 0, 0.1)',
+            backfaceVisibility: 'hidden',
           }}
         >
           <Box

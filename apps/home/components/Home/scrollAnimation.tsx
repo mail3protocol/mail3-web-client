@@ -257,7 +257,10 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                 style={{
                   transform: bannerTransform,
                   opacity: isHiddenBanner ? 0 : 1,
-                  transformStyle: 'preserve-3d',
+                  transformStyle: isZoomOutCompleted
+                    ? 'preserve-3d'
+                    : undefined,
+                  backfaceVisibility: 'hidden',
                 }}
               >
                 <Box
