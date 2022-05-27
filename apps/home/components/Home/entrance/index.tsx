@@ -42,18 +42,25 @@ const BoxStyled = styled(Box)`
     left: 0;
     filter: invert(100%);
     transition: 300ms;
-    transform: scale(0.16);
-    @media (max-width: ${MOBILE_SIZE}px) {
-      transform: scale(0.22);
-    }
+    transform: scale(0);
   }
   &:hover::after {
-    opacity: 1;
-    transform: scale(1);
+    animation: 300ms showAfterByOpacity forwards;
+    animation-delay: 300ms;
   }
   &:hover::before {
     transform: scale(1);
     transition: 300ms;
+  }
+  @keyframes showAfterByOpacity {
+    0% {
+      opacity: 0;
+      transform: scale(0.16);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 `
 
@@ -137,8 +144,8 @@ export const Entrance: React.FC<
       textAlign={{ base: 'left', md: 'right' }}
       mt={{ base: '46px', md: '0' }}
     >
-      Build valuable connections <br />
-      in the decentralized society
+      Build valuable connections in the <br />
+      decentralized society
     </Heading>
   )
 
@@ -194,7 +201,7 @@ export const Entrance: React.FC<
           >
             <Icon
               as={LogoSvg}
-              w={{ base: '136px', md: '240px' }}
+              w={{ base: '100px', md: '170px' }}
               h="auto"
               mb="auto"
             />
