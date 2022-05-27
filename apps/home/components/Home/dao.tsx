@@ -97,7 +97,8 @@ export const Dao = () => {
           base: 'center',
           md: 'left',
         }}
-        py="64px"
+        pt="146px"
+        pb="114px"
       >
         <Flex
           direction="column"
@@ -170,9 +171,6 @@ export const Dao = () => {
           </Box>
         </Center>
         <VStack justify="end">
-          <Heading fontSize="36px" w="full" mb="26px">
-            Join Now
-          </Heading>
           <Stack
             direction="row"
             fontWeight="500"

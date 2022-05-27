@@ -17,16 +17,18 @@ export const LetterContentContainer = styled(Box)`
 
   h1 {
     font-size: 48px;
-    margin-bottom: 62px;
-    margin-top: 54px;
+    margin-bottom: 114px;
+    margin-top: 62px;
   }
   h2 {
     font-size: 28px;
     margin-bottom: 16px;
-    margin-top: 32px;
+    margin-top: 60px;
   }
   p {
-    margin-bottom: 8px;
+    margin-bottom: 0;
+    line-height: 30px;
+    font-weight: 300;
   }
 
   @media (max-width: 767px) {
