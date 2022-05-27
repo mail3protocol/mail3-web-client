@@ -13,7 +13,6 @@ import { Loading } from '../Loading'
 import { InboxNav, InboxNavType } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
-import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import SVGWrite from '../../assets/icon-write.svg'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
@@ -197,7 +196,7 @@ export const InboxComponent: React.FC = () => {
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.MarkBoth}
+          type={MailboxMenuType.Base}
           actionMap={{
             [BulkActionType.Delete]: () => {
               const newIds =
@@ -224,6 +223,11 @@ export const InboxComponent: React.FC = () => {
                 refSeenBoxList?.current?.setHiddenIds(seenIds)
               })
             },
+          }}
+          onClose={() => {
+            // TODO rerender bug
+            // setChooseMap({})
+            // setIsChooseMode(false)
           }}
         />
       )}

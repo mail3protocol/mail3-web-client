@@ -2,6 +2,7 @@ import { Box, Button, HStack, useMediaQuery, VStack } from '@chakra-ui/react'
 import React from 'react'
 import styled from '@emotion/styled'
 
+import { CloseIcon } from '@chakra-ui/icons'
 import ReplySVG from '../../assets/reply-white.svg'
 import ForwardSVG from '../../assets/forward-white.svg'
 import TrashSVG from '../../assets/trash-white.svg'
@@ -30,6 +31,7 @@ export enum BulkActionType {
 interface MailboxMenuProps {
   type: MailboxMenuType
   actionMap: PartialRecord<BulkActionType, () => void>
+  onClose: () => void
 }
 
 const menuConfig: Record<MailboxMenuType, BulkActionType[]> = {
@@ -87,6 +89,7 @@ const BulkAtion: React.FC<{
   const { Icon, name } = bulkConfig[type]
   return (
     <Button
+      height="50px"
       leftIcon={<Icon />}
       variant="solid"
       onClick={() => {
@@ -101,21 +104,34 @@ const BulkAtion: React.FC<{
 const BulkAtionWrap: React.FC<{
   list: BulkActionType[]
   onClickMap: MailboxMenuProps['actionMap']
-}> = ({ list, onClickMap }) => {
+  onClose: () => void
+}> = ({ list, onClickMap, onClose }) => {
   const [isMaxWdith600] = useMediaQuery(`(max-width: 600px)`)
 
   const content = list.map((type) => {
     const onClick = onClickMap[type]
-    if (onClick) return <BulkAtion key={type} onClick={onClick} type={type} />
-    return <BulkAtion key={type} type={type} />
+    return <BulkAtion key={type} onClick={onClick} type={type} />
   })
 
   return (
     <Box>
+      {/* <Button
+        className="close"
+        variant="unstyled"
+        size="sm"
+        borderRadius="50%"
+        _focus={{ boxShadow: 'none' }}
+        onClick={() => {
+          onClose()
+        }}
+      >
+        <CloseIcon />
+      </Button> */}
+
       {!isMaxWdith600 ? (
-        <HStack spacing="20px">{content}</HStack>
+        <HStack spacing="15px">{content}</HStack>
       ) : (
-        <VStack spacing="20px" align="stretch">
+        <VStack spacing="15px" align="stretch">
           {content}
         </VStack>
       )}
@@ -135,6 +151,13 @@ const Container = styled(Box)`
   @media (max-width: 600px) {
     justify-content: right;
   }
+
+  .close {
+    z-index: 9;
+    right: -2px;
+    top: -2px;
+    position: absolute;
+  }
 `
 
 const Content = styled(Box)`
@@ -143,16 +166,21 @@ const Content = styled(Box)`
   background-color: #ffffff;
   box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
   border-radius: 10px;
-  padding: 20px;
+  padding: 25px;
 `
 
 export const MailboxMenu: React.FC<MailboxMenuProps> = ({
   type,
   actionMap,
+  onClose,
 }) => (
   <Container>
     <Content>
-      <BulkAtionWrap list={menuConfig[type]} onClickMap={actionMap} />
+      <BulkAtionWrap
+        list={menuConfig[type]}
+        onClickMap={actionMap}
+        onClose={onClose}
+      />
     </Content>
   </Container>
 )
