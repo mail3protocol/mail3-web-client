@@ -16,6 +16,7 @@ import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import SVGWrite from '../../assets/icon-write.svg'
+import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 const PAGE_SIZE = 20
 
@@ -195,37 +196,35 @@ export const InboxComponent: React.FC = () => {
   return (
     <NewPageContainer>
       {isChooseMode && (
-        <StickyButtonBox
-          list={[
-            {
-              type: SuspendButtonType.Delete,
-              onClick: () => {
-                const newIds =
-                  Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
-                const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
-                const ids = [...newIds, ...seenIds]
+        <MailboxMenu
+          type={MailboxMenuType.MarkBoth}
+          actionMap={{
+            [BulkActionType.Delete]: () => {
+              const newIds =
+                Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
+              const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
+              const ids = [...newIds, ...seenIds]
 
-                if (!ids.length) return
+              if (!ids.length) return
 
-                api.batchDeleteMessage(ids).then(() => {
-                  if (newIds.length) {
-                    const map: Record<string, boolean> = {}
-                    newIds.forEach((key) => {
-                      map[key] = true
-                    })
-                    setHiddenMap({
-                      ...hiddenMap,
-                      ...map,
-                    })
-                    setChooseMap({})
-                    setIsChooseMode(false)
-                  }
+              api.batchDeleteMessage(ids).then(() => {
+                if (newIds.length) {
+                  const map: Record<string, boolean> = {}
+                  newIds.forEach((key) => {
+                    map[key] = true
+                  })
+                  setHiddenMap({
+                    ...hiddenMap,
+                    ...map,
+                  })
+                  setChooseMap({})
+                  setIsChooseMode(false)
+                }
 
-                  refSeenBoxList?.current?.setHiddenIds(seenIds)
-                })
-              },
+                refSeenBoxList?.current?.setHiddenIds(seenIds)
+              })
             },
-          ]}
+          }}
         />
       )}
 
