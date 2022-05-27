@@ -9,23 +9,19 @@ import { useDialog } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
-import {
-  AddressListResponse,
-  AddressResponse,
-  FlagAction,
-  FlagType,
-} from '../../api'
-import { dynamicDateString } from '../../utils'
+import { FlagAction, FlagType, MessageDetailResponse } from '../../api'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
+import { Attachment } from './Attachment'
+import { dynamicDateString } from '../../utils'
+import { EmptyStatus } from '../MailboxStatus'
 
-interface MeesageDetail {
-  date: string
-  subject: string
-  to: AddressListResponse
-  from: AddressResponse
-}
+interface MeesageDetailState
+  extends Pick<
+    MessageDetailResponse,
+    'date' | 'subject' | 'to' | 'from' | 'attachments'
+  > {}
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -45,9 +41,12 @@ const Container = styled(Box)`
 export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('preview')
   const router = useRouter()
-  const { id, origin } = router.query
+  const { id, origin } = router.query as {
+    id: string | undefined
+    origin: string
+  }
   const [content, setContent] = useState('')
-  const [detail, setDetail] = useState<MeesageDetail>()
+  const [detail, setDetail] = useState<MeesageDetailState>()
   const api = useAPI()
   const dialog = useDialog()
 
@@ -74,6 +73,7 @@ export const PreviewComponent: React.FC = () => {
           subject: messageData.subject,
           to: messageData.to,
           from: messageData.from,
+          attachments: messageData.attachments,
         })
         setContent(html)
 
@@ -148,6 +148,14 @@ export const PreviewComponent: React.FC = () => {
 
     return list
   }, [api, id, origin])
+
+  if (!id) {
+    return (
+      <Container>
+        <EmptyStatus />
+      </Container>
+    )
+  }
 
   if (!detail) {
     return (
@@ -271,6 +279,9 @@ export const PreviewComponent: React.FC = () => {
               __html: content,
             }}
           />
+          {!!detail?.attachments && (
+            <Attachment data={detail.attachments} messageId={id} />
+          )}
         </Box>
       </Container>
     </>

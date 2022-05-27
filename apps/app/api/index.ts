@@ -28,6 +28,7 @@ export interface MessageItemResponse {
   from: AddressResponse
   to: AddressListResponse
 }
+
 export interface MailboxesMessagesResponse {
   messages: Array<MessageItemResponse>
   page: number
@@ -38,6 +39,20 @@ export interface MailboxesMessagesResponse {
 export interface AddressResponse {
   name: string
   address: string
+}
+
+export interface AttachmentItemResponse {
+  id: string
+  contentType: string
+  encodedSize: number
+  filename: string
+  embedded: boolean
+  inline: boolean
+  contentId: string
+}
+
+export interface MessageDetailResponse extends MessageItemResponse {
+  attachments: AttachmentItemResponse[]
 }
 
 export enum FlagType {
@@ -218,6 +233,18 @@ export class API {
   public async batchDeleteMessage(ids: string[]): Promise<AxiosResponse> {
     return this.axios.post('/mailbox/account/messages/batch_delete', {
       messageIds: ids,
+    })
+  }
+
+  public async downloadAttachment(
+    messageId: string,
+    attachmentId: string
+  ): Promise<AxiosResponse> {
+    return this.axios.get(`/mailbox/account/attachment/${attachmentId}`, {
+      params: {
+        messageId,
+      },
+      responseType: 'blob',
     })
   }
 }
