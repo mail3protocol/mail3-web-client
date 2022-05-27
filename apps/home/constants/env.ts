@@ -1,4 +1,4 @@
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://mail3.app'
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'
 export const TWITTER_URL =
   process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com/mail3dao'
 export const DISCORD_URL =
