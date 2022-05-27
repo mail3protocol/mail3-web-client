@@ -39,7 +39,8 @@ function Mail3({ Component, pageProps }: AppProps) {
           type="image/png"
           sizes="32x32"
         />
-        <link rel="apple-touch-icon" href="/apple-icon.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="theme-color" content="#fff" />
       </Head>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-1PW4LM5ETS"
