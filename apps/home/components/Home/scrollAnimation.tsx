@@ -87,9 +87,8 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       bannerHeadingTranslateY:
         width < height ? `${50 - scrollProgressStep0 * 50}%` : '50%',
       bannerTransform: [
-        `scale(${scale})`,
+        `scale(${scale}, ${scaleY * scale})`,
         `rotateX(${rotateX}deg)`,
-        `scaleY(${scaleY})`,
       ].join(' '),
       isHiddenBanner: scrollProgressStep1 === 1,
       isZoomOutCompleted: scrollProgressStep0 === 1,
@@ -169,6 +168,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
   const bannerHeadingProps = {
     transition: '50ms',
+    willChange: 'transform',
     style: {
       transform: `scaleY(${bannerHeadingScaleY}) translateY(-${bannerHeadingTranslateY}) scale(${Math.max(
         1 / bannerHeadingScaleY,
@@ -261,6 +261,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                 }}
               >
                 <Box
+                  overflow="hidden"
                   position="absolute"
                   top="-8px"
                   left="-8px"
@@ -268,9 +269,17 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   h="calc(100% + 16px)"
                   zIndex={-1}
                   rounded="10px"
-                  bg="repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em), #fff"
-                  shadow="0 0 40px rgba(0, 0, 0, 0.15)"
-                />
+                >
+                  <Box
+                    w="full"
+                    h="full"
+                    bg="repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em), #fff"
+                    shadow="0 0 40px rgba(0, 0, 0, 0.15)"
+                    style={{
+                      transform: `scaleY(${bannerHeadingScaleY})`,
+                    }}
+                  />
+                </Box>
                 <Box
                   position="absolute"
                   bg="#eee"
@@ -281,7 +290,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   rounded="100%"
                   style={{
                     opacity: isZoomOutCompleted ? 1 : 0,
-                    transform: `rotateX(-90deg) translateZ(4px)`,
+                    transform: `rotateX(-90deg) translateZ(16px)`,
                   }}
                 />
                 <Banner
