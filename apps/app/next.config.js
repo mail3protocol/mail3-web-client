@@ -2,20 +2,31 @@ const withPWA = require('next-pwa')
 const withPlugins = require('next-compose-plugins')
 const withTM = require('next-transpile-modules')(['ui', 'assets', 'hooks'])
 const runtimeCaching = require('next-pwa/cache')
+const { withSentryConfig } = require('@sentry/nextjs')
 const { i18n } = require('./next-i18next.config')
 
 const plugins = [withTM]
 
 if (process.env.NODE_ENV === 'production') {
-  plugins.push(withPWA)
+  plugins.push([
+    withPWA,
+    {
+      pwa: {
+        dest: 'public',
+        runtimeCaching,
+      },
+    },
+  ])
+  plugins.push([
+    withSentryConfig,
+    {
+      slient: true,
+    },
+  ])
 }
 
 /** @type {import('next').NextConfig} */
 module.exports = withPlugins(plugins, {
-  pwa: {
-    dest: 'public',
-    runtimeCaching,
-  },
   i18n,
   reactStrictMode: true,
   webpack(config) {

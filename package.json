@@ -8,7 +8,9 @@
         "dev:app": "turbo run dev --scope=app",
         "dev:home": "turbo run dev --scope=home",
         "build:app": "turbo run build --scope=app",
-        "build:home": "turbo run build --scope=home"
+        "build:home": "turbo run build --scope=home",
+        "start:app": "turbo run start --scope=app",
+        "start:home": "turbo run start --scope=home"
     },
     "workspaces": [
         "packages/*",
