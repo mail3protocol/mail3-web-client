@@ -5,12 +5,14 @@ import {
   Flex,
   FlexProps,
   Heading,
+  Icon,
   Image,
   Text,
 } from '@chakra-ui/react'
 import React from 'react'
 import styled from '@emotion/styled'
 import Illustration2Png from '../../assets/png/illustration/2.png'
+import Illustration3Svg from '../../assets/svg/illustration/3.svg'
 
 export const LetterContentContainer = styled(Box)`
   font-size: 20px;
@@ -137,6 +139,16 @@ export const Letter: React.FC<
         zIndex={999}
       />
       <LetterContent />
+      <Icon
+        as={Illustration3Svg}
+        w="20%"
+        h="auto"
+        position="absolute"
+        bottom="0"
+        right="25%"
+        zIndex={99}
+        transform="translateY(10%)"
+      />
     </LetterContentContainer>
   </Flex>
 )
