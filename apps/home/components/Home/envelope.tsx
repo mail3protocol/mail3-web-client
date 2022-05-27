@@ -74,6 +74,7 @@ export const Envelope: React.FC<{
           position="relative"
           w="full"
           transition="transform 50ms"
+          borderBottomRadius="12px"
           style={{
             transformStyle: 'preserve-3d',
             transform: envelopeTransform,
@@ -100,6 +101,7 @@ export const Envelope: React.FC<{
             w="full"
             h="auto"
             position="relative"
+            borderBottomRadius="12px"
             zIndex={-1}
           />
           <Flex
