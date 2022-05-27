@@ -160,21 +160,26 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
   )
 
   const fullScreenHeight = `calc(100vh - ${HEADER_BAR_HEIGHT}px)`
-  const bannerChildrenProps = {
-    transition: '50ms',
-    style: {
-      transform: `scaleY(${bannerHeadingScaleY})`,
-    },
-  }
   const bannerHeadingProps = {
-    ...bannerChildrenProps,
     transition: '50ms',
     style: {
-      transform: `scaleY(${bannerHeadingScaleY}) translateY(-${bannerHeadingTranslateY})`,
+      transform: `scaleY(${bannerHeadingScaleY}) translateY(-${bannerHeadingTranslateY}) scale(${Math.max(
+        1 / bannerHeadingScaleY,
+        0.8
+      )})`,
     },
   }
   const bannerTopContainerProps = {
-    ...bannerChildrenProps,
+    transition: '50ms',
+    style: {
+      transform: `scaleY(${bannerHeadingScaleY}) scale(${Math.max(
+        1 / bannerHeadingScaleY,
+        0.7
+      )})`,
+    },
+  }
+  const bottomContainerProps = {
+    transition: '50ms',
     style: {
       transform: `scaleY(${bannerHeadingScaleY}) scale(${Math.max(
         1 / bannerHeadingScaleY,
@@ -260,6 +265,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   transformOrigin="center"
                   border="8px solid transparent"
                   bg="#fff"
+                  shadow="0 0 40px rgba(0, 0, 0, 0.15)"
                   style={{
                     borderImage:
                       '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
@@ -282,7 +288,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   transition="50ms"
                   headingProps={bannerHeadingProps}
                   topContainerProps={bannerTopContainerProps}
-                  bottomContainerProps={bannerChildrenProps}
+                  bottomContainerProps={bottomContainerProps}
                 />
               </Box>
             </Center>

@@ -32,16 +32,19 @@ export const LetterContentContainer = styled(Box)`
   }
 
   @media (max-width: 767px) {
-    font-size: 14px;
+    font-size: 13px;
     h1 {
       font-size: 24px;
       margin-bottom: 32px;
       margin-top: 32px;
     }
     h2 {
-      font-size: 18px;
+      font-size: 16px;
       margin-bottom: 8px;
       margin-top: 24px;
+    }
+    p {
+      line-height: 20px;
     }
   }
 `

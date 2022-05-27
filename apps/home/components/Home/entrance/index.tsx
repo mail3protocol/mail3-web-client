@@ -33,7 +33,7 @@ const BoxStyled = styled(Box)`
     height: 100%;
     background-image: url(${LogoNoColor});
     background-repeat: no-repeat;
-    background-size: 80%;
+    background-size: 50%;
     background-position: center;
     opacity: 0;
     z-index: 1;
@@ -41,23 +41,19 @@ const BoxStyled = styled(Box)`
     top: 0;
     left: 0;
     filter: invert(100%);
+    transition: 300ms;
+    transform: scale(0.16);
+    @media (max-width: ${MOBILE_SIZE}px) {
+      transform: scale(0.22);
+    }
   }
   &:hover::after {
-    animation: 2s show-envelope forwards;
+    opacity: 1;
+    transform: scale(1);
   }
   &:hover::before {
     transform: scale(1);
     transition: 300ms;
-  }
-
-  @keyframes show-envelope {
-    0%,
-    90% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
   }
 `
 
@@ -133,6 +129,19 @@ export const Entrance: React.FC<
     return null
   }
 
+  const heading = (
+    <Heading
+      w="full"
+      fontSize={{ base: '22px', md: '36px' }}
+      lineHeight={{ base: '22px', md: '48px' }}
+      textAlign={{ base: 'left', md: 'right' }}
+      mt={{ base: '46px', md: '0' }}
+    >
+      Build valuable connections <br />
+      in the decentralized society
+    </Heading>
+  )
+
   return (
     <Box
       w="100vw"
@@ -189,19 +198,9 @@ export const Entrance: React.FC<
               h="auto"
               mb="auto"
             />
-            <Heading
-              w={{
-                base: 'full',
-                md: 'calc(100% - 240px)',
-              }}
-              fontSize={{ base: '22px', md: '36px' }}
-              lineHeight={{ base: '22px', md: '36px' }}
-              textAlign={{ base: 'left', md: 'right' }}
-              mt={{ base: '46px', md: '0' }}
-            >
-              Build valuable connections <br />
-              in the decentralized society
-            </Heading>
+            <Box w="auto" display={{ base: 'block', md: 'none' }}>
+              {heading}
+            </Box>
           </Flex>
           <DotContainer
             templateColumns={{
@@ -231,6 +230,21 @@ export const Entrance: React.FC<
                 <BoxStyled key={i} />
               ))}
           </DotContainer>
+          <Flex
+            justify="flex-end"
+            w={{
+              base: `${8 * 45}px`,
+              md: `${13 * 60}px`,
+              xl: `${20 * 60}px`,
+            }}
+            display={{
+              base: 'none',
+              md: 'flex',
+            }}
+            px={{ base: '15px', md: '20px' }}
+          >
+            {heading}
+          </Flex>
           <Box
             position="absolute"
             top="0"

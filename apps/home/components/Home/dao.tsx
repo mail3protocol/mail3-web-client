@@ -6,7 +6,6 @@ import {
   Link,
   Stack,
   Text,
-  VStack,
   Flex,
   Box,
 } from '@chakra-ui/react'
@@ -88,10 +87,6 @@ export const Dao = () => {
           base: '100%',
           md: '60% 40%',
         }}
-        templateRows={{
-          base: 'auto auto auto',
-          md: '60% 40%',
-        }}
         gap={{ base: '20px', md: 0 }}
         textAlign={{
           base: 'center',
@@ -124,53 +119,12 @@ export const Dao = () => {
           >
             Mail3 Postoffice is the decentralized autonomous organization owned
             by the community to govern the protocol development, the
-            collaboration between interested parties, and so on.
+            collaboration between interested
+            <Box as="span" display="inline-block">
+              {' '}
+              parties, and so on.
+            </Box>
           </Text>
-        </Flex>
-        <Center
-          gridRowEnd={{
-            base: 'unset',
-            md: 'span 2',
-          }}
-          gridColumn={{
-            base: 'unset',
-            md: '2',
-          }}
-          ref={illustrationContainerRef}
-        >
-          <Box
-            w="full"
-            h="full"
-            position="relative"
-            transformOrigin="top right"
-            style={{
-              transform: `scale(${illustrationTextScale})`,
-              width: `${488 * illustrationTextScale}px`,
-              height: `${402 * illustrationTextScale}px`,
-            }}
-          >
-            <Icon
-              as={Illustration2Svg}
-              w="488px"
-              h="402px"
-              mt="auto"
-              mr="auto"
-              position="absolute"
-              top="0"
-              right="0"
-            />
-            <IllustrationText
-              w="410px"
-              position="absolute"
-              top="0"
-              right="0"
-              bgClip="text"
-            >
-              Together we protect our own realm, make our own rules.
-            </IllustrationText>
-          </Box>
-        </Center>
-        <VStack justify="end">
           <Stack
             direction="row"
             fontWeight="500"
@@ -186,7 +140,27 @@ export const Dao = () => {
               md: '56px',
             }}
             maxW={{ base: '200px', md: 'unset' }}
+            mx={{ base: 'auto', md: 0 }}
           >
+            <Link
+              href={DISCORD_URL}
+              _hover={{ transform: 'scale(1.2)' }}
+              transition="100ms"
+              h="40px"
+              rounded="100px"
+              target="_blank"
+              onClick={() => {
+                trackClickCommunity({
+                  [TrackKey.HomeCommunity]: HomeCommunity.Discord,
+                })
+              }}
+            >
+              <Icon
+                as={DiscordIconSvg}
+                w={{ base: '25px', md: '40px' }}
+                h="auto"
+              />
+            </Link>
             <Link
               href={TWITTER_URL}
               _hover={{ transform: 'scale(1.2)' }}
@@ -225,27 +199,41 @@ export const Dao = () => {
                 h="auto"
               />
             </Link>
-            <Link
-              href={DISCORD_URL}
-              _hover={{ transform: 'scale(1.2)' }}
-              transition="100ms"
-              h="40px"
-              rounded="100px"
-              target="_blank"
-              onClick={() => {
-                trackClickCommunity({
-                  [TrackKey.HomeCommunity]: HomeCommunity.Discord,
-                })
-              }}
-            >
-              <Icon
-                as={DiscordIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
           </Stack>
-        </VStack>
+        </Flex>
+        <Center ref={illustrationContainerRef} w="full">
+          <Box
+            w="full"
+            h="full"
+            position="relative"
+            transformOrigin="top right"
+            style={{
+              transform: `scale(${illustrationTextScale})`,
+              width: `${488 * illustrationTextScale}px`,
+              height: `${402 * illustrationTextScale}px`,
+            }}
+          >
+            <Icon
+              as={Illustration2Svg}
+              w="488px"
+              h="402px"
+              mt="auto"
+              mr="auto"
+              position="absolute"
+              top="0"
+              right="0"
+            />
+            <IllustrationText
+              w="410px"
+              position="absolute"
+              top="0"
+              right="0"
+              bgClip="text"
+            >
+              Together we protect our own realm, make our own rules.
+            </IllustrationText>
+          </Box>
+        </Center>
       </Grid>
     </Center>
   )

@@ -8,6 +8,7 @@ import {
   Center,
   HeadingProps,
   BoxProps,
+  ImageProps,
 } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
@@ -22,12 +23,14 @@ export interface BannerProps extends FlexProps {
   bottomContainerProps?: BoxProps
   topContainerProps?: BoxProps
   headingProps?: HeadingProps
+  bgProps?: ImageProps
 }
 
 export const Banner: React.FC<BannerProps> = ({
   headingProps,
   topContainerProps,
   bottomContainerProps,
+  bgProps,
   ...props
 }) => (
   <Flex
@@ -46,9 +49,10 @@ export const Banner: React.FC<BannerProps> = ({
       src={HomeGridBgSvgPath}
       objectFit="cover"
       objectPosition="center bottom"
-      w="100vw"
-      h="100vh"
+      w="full"
+      h="full"
       position="absolute"
+      {...bgProps}
     />
     <Flex
       direction="column"
@@ -118,18 +122,17 @@ export const Banner: React.FC<BannerProps> = ({
       </Box>
       <Center position="relative" w="full" my="auto" flex={1}>
         <Heading
-          fontSize={{ base: '24px', md: '48px' }}
+          fontSize={{ base: '28px', md: '48px' }}
           textAlign="center"
           lineHeight={{ base: '30px', md: '60px' }}
           {...headingProps}
         >
-          Crypto native
           <Box as="span" display="inline-block">
-            {' '}
-            generation deserve{' '}
-          </Box>
+            Web3 natives
+          </Box>{' '}
+          deserve <br />a better{' '}
           <Box as="span" display="inline-block">
-            a better mail protocol
+            mail protocol
           </Box>
         </Heading>
       </Center>

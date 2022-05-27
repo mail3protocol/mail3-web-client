@@ -165,7 +165,7 @@ export const Menus: React.FC<{
   )
   const litepaperButton = (
     <NextLink href={LIGHT_PAPER_URL} passHref>
-      <Link target="_blank">
+      <Link target="_blank" w="full">
         <MenuItem variant="unstyled" onClick={() => trackWhitePaper()}>
           Litepaper
         </MenuItem>
