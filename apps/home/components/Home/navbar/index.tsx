@@ -62,7 +62,7 @@ export const Navbar: React.FC = () => {
             display={{ base: 'inline-block', md: 'none' }}
           />
           <Flex align="center">
-            <Stack direction="row" spacing="24px">
+            <Stack direction="row" spacing="8px">
               <Buttons isWhiteList={isShowWhiteListStage} />
             </Stack>
             <RowButton
