@@ -97,8 +97,8 @@ export const Dao = () => {
           base: 'center',
           md: 'left',
         }}
-        pt="146px"
-        pb="114px"
+        pt={{ base: '64px', md: '146px' }}
+        pb={{ base: '64px', md: '114px' }}
       >
         <Flex
           direction="column"
