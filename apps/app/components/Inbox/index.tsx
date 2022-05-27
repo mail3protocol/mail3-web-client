@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useCallback, useRef, useState } from 'react'
-import { Box, Center, Circle, Flex, SlideFade } from '@chakra-ui/react'
+import { Box, Center, Circle, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
@@ -194,7 +194,7 @@ export const InboxComponent: React.FC = () => {
 
   return (
     <NewPageContainer>
-      <SlideFade in={isChooseMode} offsetY="-20px">
+      {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
           actionMap={{
@@ -230,7 +230,7 @@ export const InboxComponent: React.FC = () => {
             // setIsChooseMode(false)
           }}
         />
-      </SlideFade>
+      )}
 
       <Box paddingTop={{ base: '25px', md: '35px' }}>
         <FlexButtonBox>
