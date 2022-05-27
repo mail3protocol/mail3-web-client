@@ -1,7 +1,7 @@
-import { Box, Button, HStack, VStack } from '@chakra-ui/react'
+import { Box, Button, HStack, useMediaQuery, VStack } from '@chakra-ui/react'
 import React from 'react'
-
 import styled from '@emotion/styled'
+
 import ReplySVG from '../../assets/reply-white.svg'
 import ForwardSVG from '../../assets/forward-white.svg'
 import TrashSVG from '../../assets/trash-white.svg'
@@ -98,30 +98,12 @@ const BulkAtion: React.FC<{
   )
 }
 
-const BulkWrap = styled(Box)`
-  .h-stack {
-    display: block;
-  }
-
-  .v-stack {
-    display: none;
-  }
-
-  @media (max-width: 600px) {
-    .h-stack {
-      display: none;
-    }
-
-    .v-stack {
-      display: block;
-    }
-  }
-`
-
 const BulkAtionWrap: React.FC<{
   list: BulkActionType[]
   onClickMap: MailboxMenuProps['actionMap']
 }> = ({ list, onClickMap }) => {
+  const [isMaxWdith600] = useMediaQuery(`(max-width: 600px)`)
+
   const content = list.map((type) => {
     const onClick = onClickMap[type]
     if (onClick) return <BulkAtion key={type} onClick={onClick} type={type} />
@@ -129,16 +111,15 @@ const BulkAtionWrap: React.FC<{
   })
 
   return (
-    <BulkWrap>
-      <Box className="h-stack">
+    <Box>
+      {!isMaxWdith600 ? (
         <HStack spacing="20px">{content}</HStack>
-      </Box>
-      <Box className="v-stack">
+      ) : (
         <VStack spacing="20px" align="stretch">
           {content}
         </VStack>
-      </Box>
-    </BulkWrap>
+      )}
+    </Box>
   )
 }
 
@@ -168,14 +149,10 @@ const Content = styled(Box)`
 export const MailboxMenu: React.FC<MailboxMenuProps> = ({
   type,
   actionMap,
-}) => {
-  const list = menuConfig[type]
-
-  return (
-    <Container>
-      <Content>
-        <BulkAtionWrap list={list} onClickMap={actionMap} />
-      </Content>
-    </Container>
-  )
-}
+}) => (
+  <Container>
+    <Content>
+      <BulkAtionWrap list={menuConfig[type]} onClickMap={actionMap} />
+    </Content>
+  </Container>
+)
