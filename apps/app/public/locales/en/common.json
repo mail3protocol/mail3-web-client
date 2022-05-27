@@ -30,7 +30,7 @@
     "auth": {
         "connect": "Connect your Wallet",
         "desc": "Skip approving every interaction with your wallet by allowing Mail3 to remember you.",
-        "remember": "Remember Me",
+        "remember": "Check",
         "check-wallet": "Check Wallet",
         "sign": "I authorize sending and checking my emails on mail3 from this device. This doesn't cost anything.",
         "errors": {
