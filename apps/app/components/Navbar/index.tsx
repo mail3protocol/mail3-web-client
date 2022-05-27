@@ -7,9 +7,9 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverBody,
-  Box,
   PopoverArrow,
   Button,
+  Icon,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import styled from '@emotion/styled'
@@ -62,17 +62,17 @@ const Logo = () => {
   const isConnected = !!useAccount()
   const popoverTrigger = isConnected ? (
     <PopoverTrigger>
-      <Box>
+      <Center>
         <LogoButton variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
-          <LogoSvg w="113px" h="auto" />
+          <Icon as={LogoSvg} w="124px" h="auto" />
           <DownTriangleSvg className="triangle" />
         </LogoButton>
-      </Box>
+      </Center>
     </PopoverTrigger>
   ) : (
-    <Box>
-      <LogoSvg w="113px" h="auto" />
-    </Box>
+    <Center>
+      <Icon as={LogoSvg} w="124px" h="auto" />
+    </Center>
   )
   return (
     <Popover arrowSize={18} autoFocus offset={[0, 10]} closeOnBlur>
