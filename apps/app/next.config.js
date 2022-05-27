@@ -22,10 +22,10 @@ if (process.env.NODE_ENV === 'production') {
     plugins.push([
       withSentryConfig,
       {
-        slient: true,
+        slient: false,
         url: 'https://sentry.mail3.imibao.net/',
         authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: 'mail3',
+        org: 'sentry',
         project: 'web-app',
       },
     ])
