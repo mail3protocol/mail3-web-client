@@ -48,10 +48,13 @@ export const Banner: React.FC<BannerProps> = ({
     <Image
       src={HomeGridBgSvgPath}
       objectFit="cover"
-      objectPosition="center bottom"
+      objectPosition="center 70%"
       w="full"
       h="full"
       position="absolute"
+      zIndex={-2}
+      transform="50ms"
+      opacity={{ base: 1, md: 0.3 }}
       {...bgProps}
     />
     <Flex
@@ -122,18 +125,16 @@ export const Banner: React.FC<BannerProps> = ({
       </Box>
       <Center position="relative" w="full" my="auto" flex={1}>
         <Heading
+          maxW="580px"
           fontSize={{ base: '28px', md: '48px' }}
           textAlign="center"
           lineHeight={{ base: '30px', md: '60px' }}
           {...headingProps}
         >
-          <Box as="span" display="inline-block">
+          <Box as="span" display={{ base: 'block', md: 'inline-block' }}>
             Web3 natives
           </Box>{' '}
-          deserve <br />a better{' '}
-          <Box as="span" display="inline-block">
-            mail protocol
-          </Box>
+          deserve a better mail protocol
         </Heading>
       </Center>
     </Flex>
