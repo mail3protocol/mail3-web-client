@@ -144,8 +144,9 @@ export const Entrance: React.FC<
       textAlign={{ base: 'left', md: 'right' }}
       mt={{ base: '46px', md: '0' }}
     >
-      Build valuable connections in the <br />
-      decentralized society
+      Build valuable connections
+      <br />
+      in the decentralized society
     </Heading>
   )
 
