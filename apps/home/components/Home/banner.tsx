@@ -104,7 +104,7 @@ export const Banner: React.FC<BannerProps> = ({
           w="30%"
           maxW="200px"
           bottom="0"
-          transform="translateY(60%)"
+          transform="translateY(80%)"
           left="0"
         />
         <Image

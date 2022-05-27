@@ -306,7 +306,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
         containerProps={{
           paddingBottom: `${Math.max(
             Math.floor(envelopeSize.height / 2),
-            200
+            50
           )}px`,
         }}
       />
