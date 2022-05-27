@@ -115,7 +115,8 @@ const BulkAtionWrap: React.FC<{
 
   return (
     <Box>
-      {/* <Button
+      <Button
+        hidden
         className="close"
         variant="unstyled"
         size="sm"
@@ -126,7 +127,7 @@ const BulkAtionWrap: React.FC<{
         }}
       >
         <CloseIcon />
-      </Button> */}
+      </Button>
 
       {!isMaxWdith600 ? (
         <HStack spacing="15px">{content}</HStack>
