@@ -85,7 +85,7 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
       },
       bannerHeadingScaleY: width < height ? h / targetHeight : 1,
       bannerHeadingTranslateY:
-        width < height ? `${50 - scrollProgressStep0 * 50}%` : '50%',
+        width < height ? `${75 - scrollProgressStep0 * 75}%` : '75%',
       bannerTransform: [
         `scale(${scale}, ${scaleY * scale})`,
         `rotateX(${rotateX}deg)`,
