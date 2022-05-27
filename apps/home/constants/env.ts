@@ -2,14 +2,14 @@ export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://mail3.app'
 export const TWITTER_URL =
   process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com/mail3dao'
 export const DISCORD_URL =
-  process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/J3ac6YcXUU'
+  process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
 export const LIGHT_PAPER_URL =
   process.env.NEXT_PUBLIC_LIGHT_PAPER_URL || '/litepaper.pdf'
 export const WHITE_LIST_URL =
   process.env.NEXT_PUBLIC_WHITE_LIST_URL || `${APP_URL}/whitelist`
 export const LAUNCH_URL = WHITE_LIST_URL
 export const MIRROR_URL =
-  process.env.NEXT_PUBLIC_MIRROR_URL || 'https://mirror.xyz/mail3dao.eth'
+  process.env.NEXT_PUBLIC_MIRROR_URL || 'https://mirror.xyz/mail3.eth'
 export const MEDIUM_URL =
   process.env.NEXT_PUBLIC_MEDIUM_URL || 'https://medium.com/@mail3'
 export const CONTACT_US_URL =
