@@ -17,12 +17,19 @@ if (process.env.NODE_ENV === 'production') {
       },
     },
   ])
-  plugins.push([
-    withSentryConfig,
-    {
-      slient: true,
-    },
-  ])
+  // only in vercel
+  if (process.env.SENTRY_AUTH_TOKEN) {
+    plugins.push([
+      withSentryConfig,
+      {
+        slient: true,
+        url: 'https://sentry.mail3.imibao.net/',
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: 'mail3',
+        project: 'web-app',
+      },
+    ])
+  }
 }
 
 /** @type {import('next').NextConfig} */
