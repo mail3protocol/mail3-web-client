@@ -11,7 +11,7 @@ import NextLink from 'next/link'
 import { TrackEvent, useTrackClick } from 'hooks'
 import styled from '@emotion/styled'
 import {
-  APP_URL,
+  LAUNCH_URL,
   LIGHT_PAPER_URL,
   WHITE_LIST_URL,
 } from '../../../constants/env'
@@ -55,13 +55,14 @@ export const Buttons: React.FC<{
           md: 'inline-block',
         }}
         onClick={() => trackWhitePaper()}
+        target="_blank"
       >
         Litepaper
       </Link>
     </NextLink>
   )
   const launchAppButton = (
-    <NextLink href={APP_URL} passHref>
+    <NextLink href={LAUNCH_URL} passHref>
       <Button
         {...buttonProps}
         onClick={() => trackLaunchApp()}
@@ -156,7 +157,7 @@ export const Menus: React.FC<{
   const trackLaunchApp = useTrackClick(TrackEvent.HomeLaunchApp)
   const trackWhitePaper = useTrackClick(TrackEvent.HomeClickWhitePaper)
   const launchAppButton = (
-    <NextLink href={APP_URL}>
+    <NextLink href={LAUNCH_URL}>
       <MenuItem variant="unstyled" onClick={() => trackLaunchApp()}>
         Launch App
       </MenuItem>
@@ -164,9 +165,11 @@ export const Menus: React.FC<{
   )
   const litepaperButton = (
     <NextLink href={LIGHT_PAPER_URL} passHref>
-      <MenuItem variant="unstyled" onClick={() => trackWhitePaper()}>
-        Litepaper
-      </MenuItem>
+      <Link target="_blank">
+        <MenuItem variant="unstyled" onClick={() => trackWhitePaper()}>
+          Litepaper
+        </MenuItem>
+      </Link>
     </NextLink>
   )
   return isWhiteList ? (

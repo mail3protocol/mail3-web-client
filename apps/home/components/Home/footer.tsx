@@ -42,10 +42,10 @@ export const Footer = () => {
         <Box mb={{ base: '20px', md: 0 }}>
           <Icon
             as={LogoWithWhiteFontColorSvg}
-            w={{ base: '139px', md: '275px' }}
+            w={{ base: '139px', md: '289px' }}
             h="auto"
           />
-          <Box fontSize={{ bsae: '12px', md: '24px' }} letterSpacing="0.04em">
+          <Box fontSize={{ base: '12px', md: '24px' }} letterSpacing="0.04em">
             For all crytpo natives
           </Box>
         </Box>
@@ -73,6 +73,7 @@ export const Footer = () => {
                 href={TWITTER_URL}
                 display="flex"
                 alignItems="center"
+                target="_blank"
                 onClick={() => {
                   trackClickCommunity({
                     [TrackKey.HomeCommunity]: HomeCommunity.Twitter,
@@ -88,6 +89,7 @@ export const Footer = () => {
                 href={DISCORD_URL}
                 display="flex"
                 alignItems="center"
+                target="_blank"
                 onClick={() => {
                   trackClickCommunity({
                     [TrackKey.HomeCommunity]: HomeCommunity.Discord,
@@ -118,7 +120,6 @@ export const Footer = () => {
                 alignItems="center"
                 target="_blank"
                 onClick={() => {
-                  console.log('mirror')
                   trackClickCommunity({
                     [TrackKey.HomeCommunity]: HomeCommunity.Mirror,
                   })

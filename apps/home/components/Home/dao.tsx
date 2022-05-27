@@ -195,6 +195,7 @@ export const Dao = () => {
               transition="100ms"
               h="40px"
               rounded="100px"
+              target="_blank"
               onClick={() => {
                 trackClickCommunity({
                   [TrackKey.HomeCommunity]: HomeCommunity.Twitter,
@@ -213,6 +214,7 @@ export const Dao = () => {
               transition="100ms"
               h="40px"
               rounded="100px"
+              target="_blank"
               onClick={() => {
                 trackClickCommunity({
                   [TrackKey.HomeCommunity]: HomeCommunity.Mirror,
@@ -231,6 +233,7 @@ export const Dao = () => {
               transition="100ms"
               h="40px"
               rounded="100px"
+              target="_blank"
               onClick={() => {
                 trackClickCommunity({
                   [TrackKey.HomeCommunity]: HomeCommunity.Discord,
