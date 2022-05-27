@@ -100,7 +100,7 @@ export const Envelope: React.FC<{
             w="full"
             h="auto"
             position="relative"
-            zIndex={0}
+            zIndex={-1}
           />
           <Flex
             w="full"

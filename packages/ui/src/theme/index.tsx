@@ -38,6 +38,20 @@ export const theme = extendTheme({
           padding: '0',
         },
       },
+      baseStyle: {
+        _focus: {
+          outline: 'none',
+          boxShadow: 'none',
+        },
+      },
+    },
+    Link: {
+      baseStyle: {
+        _focus: {
+          outline: 'none',
+          boxShadow: 'none',
+        },
+      },
     },
   },
 })
