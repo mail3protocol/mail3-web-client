@@ -268,15 +268,8 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   h="calc(100% + 16px)"
                   zIndex={-1}
                   rounded="10px"
-                  bgSize="80px"
-                  transformOrigin="center"
-                  border="8px solid transparent"
-                  bg="#fff"
+                  bg="repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em), #fff"
                   shadow="0 0 40px rgba(0, 0, 0, 0.15)"
-                  style={{
-                    borderImage:
-                      '8 repeating-linear-gradient(-45deg, #4E51F4 0, #4E51F4 1em, transparent 0, transparent 2em, #000 0, #000 3em, transparent 0, transparent 4em)',
-                  }}
                 />
                 <Box
                   position="absolute"
@@ -296,6 +289,8 @@ export const ScrollAnimation: React.FC<BoxProps> = ({ ...props }) => {
                   headingProps={bannerHeadingProps}
                   topContainerProps={bannerTopContainerProps}
                   bottomContainerProps={bottomContainerProps}
+                  bg="#fff"
+                  zIndex={1}
                 />
               </Box>
             </Center>
