@@ -131,10 +131,8 @@ export const Banner: React.FC<BannerProps> = ({
           lineHeight={{ base: '30px', md: '60px' }}
           {...headingProps}
         >
-          <Box as="span" display={{ base: 'block', md: 'inline-block' }}>
-            Web3 natives
-          </Box>{' '}
-          deserve a better mail protocol
+          Web3 natives <br />
+          deserve a better mail
         </Heading>
       </Center>
     </Flex>
