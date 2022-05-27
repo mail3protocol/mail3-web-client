@@ -208,7 +208,12 @@ export const PreviewComponent: React.FC = () => {
           <Flex>
             <Box w="48px">
               {detail.from && (
-                <Avatar address={detail.from.address} borderRadius="50%" />
+                <Avatar
+                  w="48px"
+                  h="48px"
+                  address={detail.from.address}
+                  borderRadius="50%"
+                />
               )}
             </Box>
             <Box borderBottom="1px solid #E7E7E7;" flex={1} marginLeft="17px">
@@ -245,7 +250,7 @@ export const PreviewComponent: React.FC = () => {
                   color="#6F6F6F"
                   whiteSpace="nowrap"
                 >
-                  {dynamicDateString(detail.date)}
+                  {detail?.date && dynamicDateString(detail.date)}
                 </Box>
               </Flex>
               <Box

@@ -1,10 +1,9 @@
 import { Box, SimpleGrid, Text } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
-import Image from 'next/image'
 import prettyBytes from 'pretty-bytes'
 import { useDialog } from 'hooks'
 import { useAPI } from '../../../hooks/useAPI'
-import SvgTest from '../../../assets/loading.gif'
+import { FileIcon } from './fileIcon'
 
 type AttachmentData = {
   id: string
@@ -45,12 +44,16 @@ export const Attachment: React.FC<AttachmentProps> = ({ data, messageId }) => {
 
   return (
     <Box marginTop="50px">
-      <SimpleGrid minChildWidth="100px" spacing="20px">
+      <SimpleGrid
+        spacing="20px"
+        gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
+      >
         {data.map((e) => {
-          const { id, filename, encodedSize } = e
+          const { id, filename, encodedSize, contentType } = e
           const size = prettyBytes(encodedSize)
           return (
             <Box
+              maxWidth="150px"
               textAlign="center"
               key={id}
               cursor="pointer"
@@ -59,7 +62,7 @@ export const Attachment: React.FC<AttachmentProps> = ({ data, messageId }) => {
               }}
             >
               <Box w="100%">
-                <Image src={SvgTest} />
+                <FileIcon type={contentType} w="100%" h="100%" />
               </Box>
               <Text
                 color="#000"
