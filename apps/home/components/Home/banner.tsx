@@ -76,7 +76,7 @@ export const Banner: React.FC<BannerProps> = ({
       >
         <Icon
           w="30%"
-          maxW="150px"
+          maxW="200px"
           as={Illustration1Svg}
           h="auto"
           position="absolute"
@@ -85,8 +85,8 @@ export const Banner: React.FC<BannerProps> = ({
         />
         <Image
           src={Illustration1Png.src}
-          w="30%"
-          maxW="200px"
+          w="40%"
+          maxW="300px"
           h="auto"
           maxH="20vh"
           position="absolute"
@@ -109,7 +109,7 @@ export const Banner: React.FC<BannerProps> = ({
           src={Illustration3Png.src}
           position="absolute"
           w="30%"
-          maxW="200px"
+          maxW="250px"
           bottom="0"
           transform="translateY(80%)"
           left="0"
@@ -118,15 +118,14 @@ export const Banner: React.FC<BannerProps> = ({
           src={Illustration8Png.src}
           position="absolute"
           w="70%"
-          maxW="400px"
+          maxW="450px"
           right="10%"
           bottom="0"
         />
       </Box>
       <Center position="relative" w="full" my="auto" flex={1}>
         <Heading
-          maxW="580px"
-          fontSize={{ base: '28px', md: '48px' }}
+          fontSize={{ base: '28px', md: '56px' }}
           textAlign="center"
           lineHeight={{ base: '30px', md: '60px' }}
           {...headingProps}

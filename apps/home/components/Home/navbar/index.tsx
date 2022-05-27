@@ -16,7 +16,6 @@ import {
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
 import LogoSvg from 'assets/svg/logo.svg'
-import LogoWithoutFontSvg from 'assets/svg/logo-without-font.svg'
 import HomeNavbarSvg from '../../../assets/svg/home-navbar-menu.svg'
 import { isWhiteListStage } from '../../../utils'
 import { Buttons, Menus } from './menu'
@@ -49,18 +48,7 @@ export const Navbar: React.FC = () => {
           justify="space-between"
           align="center"
         >
-          <Icon
-            as={LogoSvg}
-            w="112px"
-            h="auto"
-            display={{ base: 'none', md: 'inline-block' }}
-          />
-          <Icon
-            as={LogoWithoutFontSvg}
-            w="36px"
-            h="auto"
-            display={{ base: 'inline-block', md: 'none' }}
-          />
+          <Icon as={LogoSvg} w="112px" h="auto" />
           <Flex align="center">
             <Stack direction="row" spacing="8px">
               <Buttons isWhiteList={isShowWhiteListStage} />

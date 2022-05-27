@@ -62,7 +62,7 @@ export const Envelope: React.FC<{
       const backTransform = 0 - (backDeg - backProgress * backDeg)
       return {
         envelopeSealBackTransform: `rotateX(${backTransform}deg)`,
-        envelopeSealFrontTransform: `rotateX(${frontTransform}deg)`,
+        envelopeSealFrontTransform: `rotateX(${frontTransform}deg) translateZ(5px)`,
         isFlipped: frontTransform >= frontDeg,
       }
     }, [progress])
@@ -76,11 +76,12 @@ export const Envelope: React.FC<{
           transition="transform 50ms"
           borderBottomRadius="12px"
           style={{
-            transformStyle: 'preserve-3d',
+            transformStyle: progress <= 0 ? 'preserve-3d' : undefined,
             transform: envelopeTransform,
             boxShadow: envelopeTransformEnded
               ? 'none'
               : '0 0 20px rgba(0, 0, 0, 0.1)',
+            backfaceVisibility: 'hidden',
           }}
         >
           <Box
