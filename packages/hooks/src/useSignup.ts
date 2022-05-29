@@ -14,8 +14,8 @@ export enum SignupResponseCode {
   Failed = 401,
 }
 
-export const useGetNonce = () => {
-  const api = useSignUpAPI()
+export const useGetNonce = (url: string) => {
+  const api = useSignUpAPI(url)
   return useCallback(async () => {
     try {
       const { data } = await api.getNonce()
@@ -35,10 +35,10 @@ export const useGetNonce = () => {
   }, [api])
 }
 
-export const useSignup = (signatureDesc: string) => {
-  const api = useSignUpAPI()
+export const useSignup = (signatureDesc: string, serverURL: string) => {
+  const api = useSignUpAPI(serverURL)
   const provider = useProvider()
-  const getNonce = useGetNonce()
+  const getNonce = useGetNonce(serverURL)
   return useCallback(async () => {
     if (provider == null) {
       throw new Error('Please conenct a wallet')

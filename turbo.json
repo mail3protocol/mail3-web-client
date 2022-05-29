@@ -19,7 +19,8 @@
         "app#build": {
             "dependsOn": [
                 "^build",
-                "$NEXT_PUBLIC_ALCHEMY_KEY"
+                "$NEXT_PUBLIC_ALCHEMY_KEY",
+                "$NEXT_PUBLIC_SERVER_URL"
             ],
             "outputs": [
                 ".next/**"
@@ -28,7 +29,8 @@
         "home#build": {
             "dependsOn": [
                 "^build",
-                "$NEXT_PUBLIC_ALCHEMY_KEY"
+                "$NEXT_PUBLIC_ALCHEMY_KEY",
+                "$NEXT_PUBLIC_SERVER_URL"
             ],
             "outputs": [
                 ".next/**"
