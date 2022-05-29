@@ -1,17 +1,16 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { useMemo } from 'react'
 import { useAccount } from './connectors'
-import { SERVER_URL } from './env'
 
 export class API {
   private address: string
 
   private axios: Axios
 
-  constructor(account = '') {
+  constructor(account: string, baseURL: string) {
     this.address = account
     this.axios = axios.create({
-      baseURL: SERVER_URL,
+      baseURL,
     })
   }
 
@@ -28,7 +27,7 @@ export class API {
   }
 }
 
-export const useSignUpAPI = () => {
+export const useSignUpAPI = (url: string) => {
   const account = useAccount()
-  return useMemo(() => new API(account), [account])
+  return useMemo(() => new API(account, url), [account, url])
 }

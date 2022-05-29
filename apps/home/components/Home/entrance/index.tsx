@@ -112,7 +112,7 @@ export const Entrance: React.FC<
   }, [])
   useEffect(() => {
     const el = containerRef.current as HTMLDivElement
-    const subscriber = fromEvent(el, 'scroll')
+    const scrollSubscriber = fromEvent(el, 'scroll')
       .pipe(debounceTime(300))
       .subscribe(async () => {
         if (el.scrollTop >= el.clientHeight) {
@@ -126,13 +126,22 @@ export const Entrance: React.FC<
           await onClose()
         }
       })
+    const resizeSubscriber = fromEvent(window, 'resize').subscribe(async () => {
+      if (window.innerWidth < 768) {
+        await onClose()
+      }
+    })
+    if (window.innerWidth < 768) {
+      onClose()
+    }
     return () => {
-      subscriber.unsubscribe()
+      scrollSubscriber.unsubscribe()
       touchendSubscriber.unsubscribe()
+      resizeSubscriber.unsubscribe()
     }
   }, [])
 
-  if (status === 'closed') {
+  if (status === 'closed' || width < 768) {
     return null
   }
 
@@ -144,9 +153,9 @@ export const Entrance: React.FC<
       textAlign={{ base: 'left', md: 'right' }}
       mt={{ base: '46px', md: '0' }}
     >
-      Build valuable connections
+      Build valuable connections in the
       <br />
-      in the decentralized society
+      decentralized society
     </Heading>
   )
 
@@ -154,15 +163,14 @@ export const Entrance: React.FC<
     <Box
       w="100vw"
       h="100vh"
-      overflowX="hidden"
-      overflowY={{ base: 'auto', md: 'hidden' }}
+      overflow="hidden"
       position="fixed"
       top="0"
       left="0"
       scrollSnapType="y mandatory"
       zIndex={999}
       transition="opacity 500ms"
-      opacity={status === 'closing' ? 0 : 1}
+      opacity={{ base: 0, md: status === 'closing' ? 0 : 1 }}
       ref={containerRef}
     >
       <Flex
@@ -281,21 +289,6 @@ export const Entrance: React.FC<
           </Box>
         </Flex>
       </Flex>
-      <Box
-        position="fixed"
-        top="-100vh"
-        left="0"
-        h="100vh"
-        w="full"
-        bg="#fff"
-      />
-      <Box
-        w="full"
-        h="100vh"
-        bg="rgba(0, 0, 0, 0)"
-        scrollSnapAlign="center"
-        transition="100ms"
-      />
     </Box>
   )
 }
