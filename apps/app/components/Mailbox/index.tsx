@@ -144,7 +144,7 @@ const Item = ({
 
   return (
     <Flex
-      align="center"
+      align="flex-start"
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
       margin="20px 0"
       p="5px"
@@ -178,7 +178,8 @@ const Item = ({
       </Box>
       <Flex
         marginLeft="20px"
-        align="center"
+        align={{ base: 'flex-start', md: 'center' }}
+        flexDirection={{ base: 'column', md: 'row' }}
         w="100%"
         onClick={onClick}
         cursor="pointer"
@@ -188,9 +189,6 @@ const Item = ({
             wordBreak="break-all"
             fontWeight="600"
             fontSize="16px"
-            lineHeight={1.2}
-            maxW="100%"
-            w="100%"
             noOfLines={1}
           >
             {subject}
@@ -199,16 +197,19 @@ const Item = ({
             wordBreak="break-all"
             fontWeight="400"
             fontSize="14px"
-            mt="8px"
-            lineHeight={1.2}
-            maxW="100%"
-            w="100%"
-            noOfLines={1}
+            pt="8px"
+            lineHeight={1.5}
+            noOfLines={{ base: 3, md: 1 }}
           >
             {desc}
           </Text>
         </Flex>
-        <Box fontSize="14px" marginLeft="20px" color="#6F6F6F">
+        <Box
+          fontSize="14px"
+          mt={{ base: '20px' }}
+          ml={{ md: '20px' }}
+          color="#6F6F6F"
+        >
           {dynamicDateString(date)}
         </Box>
       </Flex>
