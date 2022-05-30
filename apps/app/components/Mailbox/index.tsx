@@ -240,7 +240,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
       const { id } = item
 
       if (hiddenMap && hiddenMap[id]) {
-        return <Box />
+        return null
       }
 
       return (

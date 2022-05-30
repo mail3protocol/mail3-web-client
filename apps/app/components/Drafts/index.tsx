@@ -6,7 +6,6 @@ import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
-import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { MailboxContainer } from '../Inbox'
 
@@ -14,6 +13,7 @@ import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/none.svg'
 import { Loading } from '../Loading'
 import { ThisBottomStatus } from '../MailboxStatus'
+import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
@@ -37,18 +37,16 @@ export const DraftsComponent: React.FC = () => {
   return (
     <>
       {isChooseMode && (
-        <StickyButtonBox
-          list={[
-            {
-              type: SuspendButtonType.Delete,
-              onClick: async () => {
-                const ids = refBoxList?.current?.getChooseIds()
-                if (!ids?.length) return
-                await api.batchDeleteMessage(ids)
-                refBoxList?.current?.setHiddenIds(ids)
-              },
+        <MailboxMenu
+          type={MailboxMenuType.Base}
+          actionMap={{
+            [BulkActionType.Delete]: async () => {
+              const ids = refBoxList?.current?.getChooseIds()
+              if (!ids?.length) return
+              await api.batchDeleteMessage(ids)
+              refBoxList?.current?.setHiddenIds(ids)
             },
-          ]}
+          }}
         />
       )}
       <Flex alignItems="center" paddingTop="30px">

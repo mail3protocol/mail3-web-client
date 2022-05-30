@@ -12,6 +12,7 @@ import { MailboxContainer } from '../Inbox'
 import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { Loading } from '../Loading'
 import { EmptyStatus, ThisBottomStatus } from '../MailboxStatus'
+import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -38,18 +39,16 @@ export const SentComponent: React.FC = () => {
   return (
     <>
       {isChooseMode && (
-        <StickyButtonBox
-          list={[
-            {
-              type: SuspendButtonType.Delete,
-              onClick: async () => {
-                const ids = refBoxList?.current?.getChooseIds()
-                if (!ids?.length) return
-                await api.batchDeleteMessage(ids)
-                refBoxList?.current?.setHiddenIds(ids)
-              },
+        <MailboxMenu
+          type={MailboxMenuType.Base}
+          actionMap={{
+            [BulkActionType.Delete]: async () => {
+              const ids = refBoxList?.current?.getChooseIds()
+              if (!ids?.length) return
+              await api.batchDeleteMessage(ids)
+              refBoxList?.current?.setHiddenIds(ids)
             },
-          ]}
+          }}
         />
       )}
       <MailboxContainer>

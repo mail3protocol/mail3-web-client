@@ -12,9 +12,9 @@ import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { MailboxContainer } from '../Inbox'
-import { StickyButtonBox, SuspendButtonType } from '../SuspendButton'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
+import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 const TextBox = styled(Box)`
   margin-top: 10px;
@@ -47,18 +47,16 @@ export const TrashComponent: React.FC = () => {
   return (
     <>
       {isChooseMode && (
-        <StickyButtonBox
-          list={[
-            {
-              type: SuspendButtonType.Delete,
-              onClick: async () => {
-                const ids = refBoxList?.current?.getChooseIds()
-                if (!ids?.length) return
-                await api.batchDeleteMessage(ids)
-                refBoxList?.current?.setHiddenIds(ids)
-              },
+        <MailboxMenu
+          type={MailboxMenuType.Base}
+          actionMap={{
+            [BulkActionType.Delete]: async () => {
+              const ids = refBoxList?.current?.getChooseIds()
+              if (!ids?.length) return
+              await api.batchDeleteMessage(ids)
+              refBoxList?.current?.setHiddenIds(ids)
             },
-          ]}
+          }}
         />
       )}
 

@@ -31,7 +31,7 @@ export enum BulkActionType {
 interface MailboxMenuProps {
   type: MailboxMenuType
   actionMap: PartialRecord<BulkActionType, () => void>
-  onClose: () => void
+  onClose?: () => void
 }
 
 const menuConfig: Record<MailboxMenuType, BulkActionType[]> = {
@@ -104,7 +104,7 @@ const BulkAtion: React.FC<{
 const BulkAtionWrap: React.FC<{
   list: BulkActionType[]
   onClickMap: MailboxMenuProps['actionMap']
-  onClose: () => void
+  onClose?: () => void
 }> = ({ list, onClickMap, onClose }) => {
   const [isMaxWdith600] = useMediaQuery(`(max-width: 600px)`)
 
@@ -123,7 +123,7 @@ const BulkAtionWrap: React.FC<{
         borderRadius="50%"
         _focus={{ boxShadow: 'none' }}
         onClick={() => {
-          onClose()
+          if (onClose) onClose()
         }}
       >
         <CloseIcon />
