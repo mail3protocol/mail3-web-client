@@ -23,7 +23,7 @@ const navMap: Record<InboxNavType, NavItem> = {
   },
   [InboxNavType.Subscription]: {
     icon: <SVGSub />,
-    title: 'Subscrption',
+    title: 'Subscription',
   },
 }
 
@@ -51,7 +51,7 @@ const HStackContainer = styled(HStack)`
     transform: translateX(-50%);
     position: absolute;
     height: 3px;
-    width: 50px;
+    width: 60px;
     background-color: #000;
   }
 `
