@@ -10,10 +10,10 @@ export const dynamicDateString = (date: string | number | Date) => {
   const targetDayjs = dayjs(date)
 
   if (targetDayjs.isToday()) {
-    return `Today / ${targetDayjs.format('h:mma')}`
+    return `Today / ${targetDayjs.format('h:mm a')}`
   }
   if (targetDayjs.isYesterday()) {
-    return `Yesterday / ${targetDayjs.format('h:mma')}`
+    return `Yesterday / ${targetDayjs.format('h:mm a')}`
   }
   if (thisYear === targetDayjs.year()) {
     return targetDayjs.format('MMM D / h:mm a')
