@@ -24,7 +24,7 @@ function Mail3({ Component, pageProps }: AppProps) {
         />
         <meta
           name="description"
-          content="Mail3 is a crypto native communication protocol that promises security, privacy preservation and self-sovereign identity. It aims to be the infrastructure for web3"
+          content="Mail3 is a crypto native communication protocol that promises security, privacy preservation and self-sovereign identity. It aims to be the infrastructure for web3 communication and the platform for valuable information such as relationships, reputation, and trust. "
         />
         <meta
           name="keywords"
@@ -40,7 +40,7 @@ function Mail3({ Component, pageProps }: AppProps) {
         />
         <meta
           property="og:description"
-          content="Mail3 is a crypto native communication protocol that promises security, privacy preservation and self-sovereign identity. It aims to be the infrastructure for web3"
+          content="Mail3 is a crypto native communication protocol that promises security, privacy preservation and self-sovereign identity. It aims to be the infrastructure for web3 communication and the platform for valuable information such as relationships, reputation, and trust. "
         />
         <meta property="og:url" content="https://app.mail3.me" />
         <meta property="og:image" content="https://mail3.me/preview.png" />
@@ -53,7 +53,7 @@ function Mail3({ Component, pageProps }: AppProps) {
         />
         <meta
           name="twitter:description"
-          content="Mail3 is a crypto native communication protocol that promises security, privacy preservation and self-sovereign identity. It aims to be the infrastructure for web3"
+          content="Mail3 is a crypto native communication protocol that promises security, privacy preservation and self-sovereign identity. It aims to be the infrastructure for web3 communication and the platform for valuable information such as relationships, reputation, and trust. "
         />
         <meta name="twitter:image:src" content="https://mail3.me/preview.png" />
 
