@@ -7,7 +7,10 @@ import { Navbar } from '../../components/Navbar'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale as string, ['mailboxes'])),
+    ...(await serverSideTranslations(locale as string, [
+      'common',
+      'mailboxes',
+    ])),
   },
 })
 
