@@ -15,7 +15,8 @@ import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
-import SVGWrite from '../../assets/mailbox/icon-write.svg'
+
+import SVGWrite from '../../assets/mailbox/write.svg'
 
 const PAGE_SIZE = 20
 
