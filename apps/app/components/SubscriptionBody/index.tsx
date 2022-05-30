@@ -112,19 +112,16 @@ const Item = (props: ItemProps) => {
           </Box>
         </Center>
       </Box>
-
-      <Text
-        noOfLines={4}
+      <Box
         maxWidth="220px"
         fontWeight="400"
         fontSize="12px"
         lineHeight="16px"
         height="64px"
-        align="center"
+        textAlign="center"
       >
-        {desc}
-      </Text>
-
+        <Text noOfLines={4}>{desc}</Text>
+      </Box>
       {_button}
     </>
   )
