@@ -229,7 +229,7 @@ export const PreviewComponent: React.FC = () => {
                 <Box>
                   <Text
                     fontWeight={500}
-                    fontSize="24px"
+                    fontSize={{ base: '20px', md: '24px' }}
                     lineHeight="1"
                     display="inline-block"
                     verticalAlign="middle"
@@ -239,7 +239,7 @@ export const PreviewComponent: React.FC = () => {
                   <Text
                     color="#6F6F6F"
                     fontWeight={400}
-                    fontSize="14px"
+                    fontSize={{ base: '12px', md: '14px' }}
                     display="inline-block"
                     verticalAlign="middle"
                     ml="5px"
@@ -260,7 +260,7 @@ export const PreviewComponent: React.FC = () => {
               </Flex>
               <Box
                 fontWeight={400}
-                fontSize="16px"
+                fontSize={{ base: '12px', md: '16px' }}
                 color="#6F6F6F"
                 lineHeight="24px"
                 marginTop="5px"
@@ -280,7 +280,7 @@ export const PreviewComponent: React.FC = () => {
               <Box
                 display={{ base: 'block', md: 'none' }}
                 fontWeight={500}
-                fontSize="16px"
+                fontSize="12px"
                 mt="10px"
                 color="#6F6F6F"
                 whiteSpace="nowrap"
