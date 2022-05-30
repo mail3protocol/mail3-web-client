@@ -197,8 +197,8 @@ const Item = ({
             wordBreak="break-all"
             fontWeight="400"
             fontSize="14px"
-            pt="8px"
-            lineHeight={1.5}
+            pt="5px"
+            lineHeight={1.3}
             noOfLines={{ base: 3, md: 1 }}
           >
             {desc}
