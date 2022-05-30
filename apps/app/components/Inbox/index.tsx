@@ -38,9 +38,15 @@ export const MailboxContainer = styled(Box)`
   }
 
   @media (max-width: 600px) {
+    margin-top: 0px;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
     box-shadow: none;
+
+    .title {
+      padding-left: 20px;
+      padding-top: 20px;
+    }
   }
 `
 
@@ -49,13 +55,17 @@ export const FlexButtonBox = styled(Flex)`
 
   @media (max-width: 600px) {
     flex-direction: column-reverse;
-    justify-content: normal;
-    align-items: center;
+    /* justify-content: normal; */
+    /* align-items: center; */
+    padding-left: 20px;
 
     .btn-write {
-      margin-bottom: 20px;
-      margin-right: 20px;
-      align-self: flex-end;
+      bottom: 30px;
+      left: 50%;
+      width: 250px;
+      transform: translateX(-50%);
+      position: fixed;
+      z-index: 99;
     }
   }
 `
@@ -236,7 +246,7 @@ export const InboxComponent: React.FC = () => {
         </FlexButtonBox>
 
         <MailboxContainer minH="500px">
-          <Box padding={{ md: '30px 64px', base: '20px' }}>
+          <Box padding={{ md: '30px 64px', base: '0' }}>
             <Box className="title">{t('inbox.title.new')}</Box>
             {isClear && <EmptyStatus />}
             {isLoading && <Loading />}
@@ -275,7 +285,7 @@ export const InboxComponent: React.FC = () => {
           </Box>
 
           <Box
-            padding={{ base: '20px', md: '20px 64px' }}
+            padding={{ base: 0, md: '20px 64px' }}
             bg="rgba(243, 243, 243, 0.4);"
             display={seenIsHidden ? 'none' : 'block'}
           >

@@ -146,18 +146,18 @@ const Item = ({
     <Flex
       align="flex-start"
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
-      margin="20px 0"
-      p="5px"
-      borderRadius="8px"
-      transition="all .2s ease-out"
+      margin={{ base: 0, md: '20px 0' }}
+      p={{ base: '20px', md: '5px' }}
+      borderRadius={{ base: 0, md: '8px' }}
+      transition="background .2s ease-out, color .2s ease-out"
       _hover={{
+        color: '#6F6F6F',
+        bg: '#E5E5E5',
+      }}
+      _active={{
         color: '#fff',
         bg: '#000000',
       }}
-      // _active={{
-      //   color: '#6F6F6F',
-      //   bg: '#E5E5E5',
-      // }}
     >
       <Box w="48px">
         {isChooseMode ? (
