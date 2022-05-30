@@ -96,7 +96,12 @@ export const AuthModal: React.FC = () => {
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
           }
           closeAuthModal()
-          router.push(RoutePath.Setup)
+          if (
+            router.pathname !== RoutePath.WhiteList &&
+            router.pathname !== RoutePath.Testing
+          ) {
+            router.push(RoutePath.Setup)
+          }
           break
         }
         case SignupResponseCode.ConditionNotMeet:
