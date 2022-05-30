@@ -1,21 +1,23 @@
 import dayjs from 'dayjs'
+import isToday from 'dayjs/plugin/isToday'
+import isYesterday from 'dayjs/plugin/isYesterday'
+
+dayjs.extend(isToday)
+dayjs.extend(isYesterday)
 
 export const dynamicDateString = (date: string | number | Date) => {
-  const now = dayjs()
-  const thisYear = now.format('YYYY')
-  const today = now.format('YYYY/MM/DD')
+  const thisYear = dayjs().year()
   const targetDayjs = dayjs(date)
-  const targetYear = targetDayjs.format('YYYY')
-  const targetDay = targetDayjs.format('YYYY/MM/DD')
-  let dispalyString = ''
 
-  if (thisYear !== targetYear) {
-    dispalyString = targetDay
-  } else if (today !== targetDay) {
-    dispalyString = targetDayjs.format('MMM D')
-  } else {
-    dispalyString = targetDayjs.format('h:mma')
+  if (targetDayjs.isToday()) {
+    return `Today / ${targetDayjs.format('h:mma')}`
+  }
+  if (targetDayjs.isYesterday()) {
+    return `Yesterday / ${targetDayjs.format('h:mma')}`
+  }
+  if (thisYear === targetDayjs.year()) {
+    return targetDayjs.format('MMM D / h:mm a')
   }
 
-  return dispalyString
+  return targetDayjs.format('DD-MM-YYYY / h:mm a')
 }
