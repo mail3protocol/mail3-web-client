@@ -20,7 +20,6 @@ const TextBox = styled(Box)`
   font-weight: 400;
   font-size: 14px;
   line-height: 21px;
-  text-align: center;
 `
 
 export const TrashComponent: React.FC = () => {
@@ -87,7 +86,7 @@ export const TrashComponent: React.FC = () => {
       </Flex>
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
-          <TextBox>
+          <TextBox textAlign={{ base: 'left', md: 'center' }}>
             <Text>{t('trash.auto-delete')}</Text>
           </TextBox>
           <InfiniteMailbox
