@@ -10,7 +10,7 @@ import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { MailboxContainer } from '../Inbox'
 
 import SVGDrafts from '../../assets/drafts.svg'
-import SVGNone from '../../assets/none.svg'
+import SVGNone from '../../assets/mailbox/none.svg'
 import { Loading } from '../Loading'
 import { ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'

@@ -10,7 +10,7 @@ import { FlexButtonBox, MailboxContainer } from '../components/Inbox'
 import { InboxNav, InboxNavType } from '../components/Inbox/Nav'
 import { RoutePath } from '../route/path'
 import { SubscriptionBody } from '../components/SubscriptionBody'
-import SVGWrite from '../assets/icon-write.svg'
+import SVGWrite from '../assets/mailbox/icon-write.svg'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {

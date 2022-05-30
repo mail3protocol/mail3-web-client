@@ -2,7 +2,7 @@ import { Avatar } from 'ui'
 import { AvatarBadge, Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
-import ChooseSVG from '../../assets/choose.svg'
+import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
 import { dynamicDateString } from '../../utils'
 

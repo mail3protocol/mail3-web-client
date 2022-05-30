@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import Image from 'next/image'
 import React from 'react'
 
-import GIFLoading from '../../assets/loading.gif'
+import GIFLoading from '../../assets/mailbox/loading.gif'
 
 const LoadingBox = styled(Center)`
   width: 100%;

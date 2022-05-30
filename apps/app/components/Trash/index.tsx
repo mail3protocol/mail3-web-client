@@ -6,8 +6,6 @@ import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
-import SVGTrash from '../../assets/trash.svg'
-// import SVGIconEmpty from '../../assets/icon-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
@@ -15,6 +13,8 @@ import { MailboxContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+// import SVGIconEmpty from '../../assets/icon-empty.svg'
+import SVGTrash from '../../assets/trash.svg'
 
 const TextBox = styled(Box)`
   margin-top: 10px;

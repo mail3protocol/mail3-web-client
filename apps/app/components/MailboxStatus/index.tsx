@@ -3,10 +3,10 @@ import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import React from 'react'
 
-import IMGClear from '../../assets/clear.png'
-import SVGBottom from '../../assets/is-bottom.svg'
-import SVGNone from '../../assets/none.svg'
-import IMGNewNone from '../../assets/new-none.png'
+import IMGClear from '../../assets/mailbox/clear.png'
+import SVGBottom from '../../assets/mailbox/is-bottom.svg'
+import SVGNone from '../../assets/mailbox/none.svg'
+import IMGNewNone from '../../assets/mailbox/new-none.png'
 
 export const EmptyStatus = () => {
   const [t] = useTranslation('mailboxes')
