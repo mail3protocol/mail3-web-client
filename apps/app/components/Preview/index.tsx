@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import dayjs from 'dayjs'
 import { Avatar } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
@@ -73,7 +72,7 @@ export const PreviewComponent: React.FC = () => {
       onSuccess(d) {
         const { messageData, html } = d
         setDetail({
-          date: dayjs(messageData.date).format('YYYY-MM-DD h:mm A'),
+          date: messageData.date,
           subject: messageData.subject,
           to: messageData.to,
           from: messageData.from,
@@ -177,16 +176,16 @@ export const PreviewComponent: React.FC = () => {
           <AvatarGroup size="md" max={10}>
             {detail?.from && (
               <Avatar
-                w="48px"
-                h="48px"
+                w={{ base: '32px', md: '48px' }}
+                h={{ base: '32px', md: '48px' }}
                 address={detail.from.address}
                 borderRadius="50%"
               />
             )}
             {detail?.to.map((item) => (
               <Avatar
-                w="48px"
-                h="48px"
+                w={{ base: '32px', md: '48px' }}
+                h={{ base: '32px', md: '48px' }}
                 key={item.address}
                 address={item.address}
                 borderRadius="50%"
