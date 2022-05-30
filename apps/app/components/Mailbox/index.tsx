@@ -3,11 +3,7 @@ import { AvatarBadge, Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import ChooseSVG from '../../assets/choose.svg'
-import {
-  AddressListResponse,
-  AddressResponse,
-  MessageItemResponse,
-} from '../../api'
+import { MailboxMessageItemResponse } from '../../api'
 import { dynamicDateString } from '../../utils'
 
 export enum AvatarBadgeType {
@@ -22,7 +18,7 @@ export enum ItemType {
   Fail,
 }
 
-export interface MessageItem extends MessageItemResponse {
+export interface MessageItem extends MailboxMessageItemResponse {
   // ui need state
   isChoose: boolean
   avatarBadgeType: AvatarBadgeType
@@ -39,14 +35,8 @@ export interface BoxListProps {
   hiddenMap?: Record<string, boolean>
 }
 
-export interface BoxItemProps {
-  id: string
+export interface BoxItemProps extends MailboxMessageItemResponse {
   index: number
-  subject: string
-  // desc: string
-  to: AddressListResponse
-  from: AddressResponse
-  date: string
   isChoose?: boolean
   avatarBadgeType: AvatarBadgeType
   itemType: ItemType

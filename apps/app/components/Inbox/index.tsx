@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import { Button, PageContainer } from 'ui'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
-import { MessageItemResponse } from '../../api'
+import { MailboxMessageItemResponse } from '../../api'
 import { Loading } from '../Loading'
 import { InboxNav, InboxNavType } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
@@ -61,26 +61,16 @@ export const FlexButtonBox = styled(Flex)`
 `
 
 export const formatState = (
-  data: Array<MessageItemResponse>,
+  data: Array<MailboxMessageItemResponse>,
   avatarBadgeType: AvatarBadgeType
 ): Array<MessageItem> =>
-  data.map((item) => {
-    const { subject, unseen, messageId, date, from, to, id, uid } = item
-    return {
-      id,
-      uid,
-      subject,
-      unseen,
-      messageId,
-      date,
-      from,
-      to,
-      // ui need state
-      isChoose: false,
-      avatarBadgeType,
-      itemType: ItemType.None,
-    }
-  })
+  data.map((item) => ({
+    ...item,
+    // ui need state
+    isChoose: false,
+    avatarBadgeType,
+    itemType: ItemType.None,
+  }))
 
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')

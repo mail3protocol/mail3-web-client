@@ -1,6 +1,5 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SERVER_URL } from '../constants/env'
-import { mockSignatures } from '../mocks/signature'
 import { Mailboxes } from './mailboxes'
 
 export interface LoginResponse {
@@ -18,7 +17,28 @@ export interface AliasResponse {
   aliases: Alias[]
 }
 
-export interface MessageItemResponse {
+export enum MessageFlagType {
+  Answered = '\\Answered ',
+  Flagged = '\\Flagged',
+  Deleted = '\\Deleted',
+  Seen = '\\Seen',
+  Draft = '\\Draft',
+}
+
+export enum MessageFlagAction {
+  add = 'add',
+  del = 'del',
+  set = 'set',
+}
+
+export interface AddressResponse {
+  name?: string
+  address: string
+}
+
+export type AddressListResponse = Array<AddressResponse>
+
+export interface MailboxMessageItemResponse {
   id: string
   uid: string
   subject: string
@@ -27,18 +47,31 @@ export interface MessageItemResponse {
   date: string
   from: AddressResponse
   to: AddressListResponse
+  emailId: string
+  threadId: string
+  flagged: boolean
+  size: number
+  cc: Array<any> | null
+  bcc: Array<any> | null
+  inReplyTo: string
+  flags: Array<Partial<MessageFlagType>> | null
+  labels: Array<any> | null
+  attachments: AttachmentItemResponse[] | null
+  text: {
+    id: string
+    encodedSize: {
+      plan: number
+      html: number
+    }
+  }
+  bounces: Array<any> | null
 }
 
 export interface MailboxesMessagesResponse {
-  messages: Array<MessageItemResponse>
+  messages: Array<MailboxMessageItemResponse>
   page: number
   pages: number
   total: number
-}
-
-export interface AddressResponse {
-  name: string
-  address: string
 }
 
 export interface AttachmentItemResponse {
@@ -51,25 +84,8 @@ export interface AttachmentItemResponse {
   contentId: string
 }
 
-export interface MessageDetailResponse extends MessageItemResponse {
-  attachments: AttachmentItemResponse[]
-}
-
-export enum FlagType {
-  Answered = '\\Answered ',
-  Flagged = '\\Flagged',
-  Deleted = '\\Deleted',
-  Seen = '\\Seen',
-  Draft = '\\Draft',
-}
-
-export enum FlagAction {
-  add = 'add',
-  del = 'del',
-  set = 'set',
-}
-
-export type AddressListResponse = Array<AddressResponse>
+export interface MailboxMessageDetailResponse
+  extends MailboxMessageItemResponse {}
 
 export interface UserResponse {
   user_uuid: string
@@ -214,8 +230,8 @@ export class API {
 
   public async putMessage(
     messageId: string,
-    action: FlagAction,
-    flagType: FlagType
+    action: MessageFlagAction,
+    flagType: MessageFlagType
   ): Promise<AxiosResponse<any>> {
     return this.axios.put(`/mailbox/account/message/${messageId}`, {
       flags: {

@@ -9,7 +9,11 @@ import { useDialog } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
-import { FlagAction, FlagType, MessageDetailResponse } from '../../api'
+import {
+  MessageFlagAction,
+  MessageFlagType,
+  MailboxMessageDetailResponse,
+} from '../../api'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
@@ -19,7 +23,7 @@ import { EmptyStatus } from '../MailboxStatus'
 
 interface MeesageDetailState
   extends Pick<
-    MessageDetailResponse,
+    MailboxMessageDetailResponse,
     'date' | 'subject' | 'to' | 'from' | 'attachments'
   > {}
 
@@ -78,7 +82,7 @@ export const PreviewComponent: React.FC = () => {
         setContent(html)
 
         if (typeof id !== 'string') return
-        api.putMessage(id, FlagAction.add, FlagType.Seen)
+        api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
       },
     }
   )
