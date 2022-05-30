@@ -1,6 +1,7 @@
 import { Avatar } from 'ui'
 import { AvatarBadge, Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
+import classNames from 'classnames'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
@@ -51,6 +52,30 @@ const CircleE = styled(Circle)`
   background: #ffffff;
   border: 3px solid #4e52f5;
   border-radius: 50px;
+`
+
+const ItemFlex = styled(Flex)`
+  transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  :hover {
+    background-color: #f3f3f3;
+  }
+
+  :active {
+    color: #fff;
+    background-color: #000000;
+    .date {
+      color: #fff;
+    }
+  }
+
+  &.focus {
+    color: #6f6f6f;
+    background-color: #f3f3f3;
+  }
+
+  .date {
+    color: #6f6f6f;
+  }
 `
 
 const Item = ({
@@ -143,21 +168,15 @@ const Item = ({
     ?.join(';')}`
 
   return (
-    <Flex
+    <ItemFlex
+      className={classNames({
+        focus: isChoose || (chooseMap && chooseMap[id]),
+      })}
       align="flex-start"
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
       margin={{ base: 0, md: '20px 0' }}
       p={{ base: '20px', md: '5px' }}
       borderRadius={{ base: 0, md: '8px' }}
-      transition="background .2s ease-out, color .2s ease-out"
-      _hover={{
-        color: '#6F6F6F',
-        bg: '#E5E5E5',
-      }}
-      _active={{
-        color: '#fff',
-        bg: '#000000',
-      }}
     >
       <Box w="48px">
         {isChooseMode ? (
@@ -205,15 +224,15 @@ const Item = ({
           </Text>
         </Flex>
         <Box
+          className="date"
           fontSize="14px"
           mt={{ base: '20px' }}
           ml={{ md: '20px' }}
-          color="#6F6F6F"
         >
           {dynamicDateString(date)}
         </Box>
       </Flex>
-    </Flex>
+    </ItemFlex>
   )
 }
 
