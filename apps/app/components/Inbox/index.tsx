@@ -55,8 +55,6 @@ export const FlexButtonBox = styled(Flex)`
 
   @media (max-width: 600px) {
     flex-direction: column-reverse;
-    /* justify-content: normal; */
-    /* align-items: center; */
     padding-left: 20px;
 
     .btn-write {
@@ -107,7 +105,7 @@ export const InboxComponent: React.FC = () => {
       return data
     },
     {
-      refetchInterval: 30000,
+      refetchInterval: 5000,
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
@@ -139,7 +137,7 @@ export const InboxComponent: React.FC = () => {
       return data
     },
     {
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
