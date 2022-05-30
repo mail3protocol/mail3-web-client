@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useCallback, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
