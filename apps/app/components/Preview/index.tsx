@@ -227,7 +227,7 @@ export const PreviewComponent: React.FC = () => {
                 justify="space-between"
               >
                 <Box>
-                  <Box
+                  <Text
                     fontWeight={500}
                     fontSize="24px"
                     lineHeight="1"
@@ -235,20 +235,21 @@ export const PreviewComponent: React.FC = () => {
                     verticalAlign="middle"
                   >
                     {detail.from.name}
-                  </Box>
-                  <Box
+                  </Text>
+                  <Text
                     color="#6F6F6F"
                     fontWeight={400}
                     fontSize="14px"
                     display="inline-block"
                     verticalAlign="middle"
-                    marginLeft="5px"
+                    ml="5px"
                   >
                     {`<${detail.from.address}>`}
-                  </Box>
+                  </Text>
                 </Box>
                 <Box />
                 <Box
+                  display={{ base: 'none', md: 'block' }}
                   fontWeight={500}
                   fontSize="16px"
                   color="#6F6F6F"
@@ -263,7 +264,7 @@ export const PreviewComponent: React.FC = () => {
                 color="#6F6F6F"
                 lineHeight="24px"
                 marginTop="5px"
-                wordBreak="break-word"
+                wordBreak="break-all"
               >
                 to{' '}
                 {detail.to
@@ -274,6 +275,17 @@ export const PreviewComponent: React.FC = () => {
                     return `<${address}>`
                   })
                   .join(';')}
+              </Box>
+
+              <Box
+                display={{ base: 'block', md: 'none' }}
+                fontWeight={500}
+                fontSize="16px"
+                mt="10px"
+                color="#6F6F6F"
+                whiteSpace="nowrap"
+              >
+                {detail?.date && dynamicDateString(detail.date)}
               </Box>
             </Box>
           </Flex>
