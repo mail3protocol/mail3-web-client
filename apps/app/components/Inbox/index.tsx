@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Box, Center, Circle, Flex } from '@chakra-ui/react'
+import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
@@ -138,7 +138,7 @@ export const InboxComponent: React.FC = () => {
     },
     {
       refetchOnMount: true,
-      refetchOnReconnect: false,
+      refetchOnReconnect: true,
       refetchOnWindowFocus: false,
       onSuccess(d) {
         if (d.messages.length) {
@@ -186,7 +186,7 @@ export const InboxComponent: React.FC = () => {
   }
 
   const isLoading = newIsFetching && seenIsFetching
-  const seenIsHidden = seenIsFetching || !seenMessages.length
+  const seenIsHidden = !seenMessages.length
   const isClear = !isLoading && !newMessages.length && !seenMessages.length
   const isNoNew = !isLoading && !newMessages.length && !!seenMessages.length
 
@@ -294,6 +294,11 @@ export const InboxComponent: React.FC = () => {
               queryFn={queryFn}
               queryKey={['Seen']}
               emptyElement=""
+              loader={
+                <Center w="100%">
+                  <Spinner />
+                </Center>
+              }
               noMoreElement={<ThisBottomStatus />}
               onDataChange={(data) => {
                 setSeenMessages(data)

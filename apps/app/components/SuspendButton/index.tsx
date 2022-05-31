@@ -77,24 +77,6 @@ const ButtonItem = styled(Center)`
   }
 `
 
-const BoxWrap = styled(Center)`
-  top: 10px;
-  left: 5%;
-  width: calc(100% - 10%);
-  position: sticky;
-  z-index: 9;
-
-  .content {
-    top: 0;
-    position: absolute;
-  }
-
-  .sticky {
-    top: 0;
-    position: sticky;
-  }
-`
-
 export const SuspendButton: React.FC<Props> = (props) => {
   const { list } = props
 
