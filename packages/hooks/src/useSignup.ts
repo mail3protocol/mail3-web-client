@@ -41,7 +41,7 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
   const getNonce = useGetNonce(serverURL)
   return useCallback(async () => {
     if (provider == null) {
-      throw new Error('Please conenct a wallet')
+      throw new Error('Please connect a wallet')
     }
     const { isRegistered, nonce } = await getNonce()
     // if it's already registered, return code 200 and nonce
