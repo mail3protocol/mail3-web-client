@@ -156,7 +156,11 @@ const ProfilePage: NextPage<{ errorCode: number }> = ({ errorCode }) => {
           borderRadius="40px"
           as="a"
           target="_blank"
-          href={`https://app.mail3.me/message/new?to=${router.query.id}@${MAIL_SERVER_URL}`}
+          href={
+            account
+              ? `https://app.mail3.me/message/new?to=${router.query.id}@${MAIL_SERVER_URL}`
+              : 'https://app.mail3.me'
+          }
         >
           {t('mail-me')}
         </Button>
