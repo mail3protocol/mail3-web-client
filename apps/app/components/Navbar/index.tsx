@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import styled from '@emotion/styled'
-import LogoSvg from 'assets/svg/logo.svg'
+import LogoSvg from 'assets/svg/logo-pure.svg'
 import DownTriangleSvg from 'assets/svg/triangle-down.svg'
 import { useTranslation } from 'next-i18next'
 import { ConnectWallet } from 'ui'
@@ -48,14 +48,14 @@ const Logo = () => {
       icon: <DraftSvg />,
     },
     {
+      href: RoutePath.Sent,
+      label: t('navbar.sent'),
+      icon: <SentSvg />,
+    },
+    {
       href: RoutePath.Trash,
       label: t('navbar.trash'),
       icon: <TrashSvg />,
-    },
-    {
-      href: RoutePath.Inbox,
-      label: t('navbar.subscriptions'),
-      icon: <SubscrptionSvg />,
     },
   ]
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -64,14 +64,14 @@ const Logo = () => {
     <PopoverTrigger>
       <Center>
         <LogoButton variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
-          <Icon as={LogoSvg} w="124px" h="auto" />
+          <Icon as={LogoSvg} w="auto" h="auto" />
           <DownTriangleSvg className="triangle" />
         </LogoButton>
       </Center>
     </PopoverTrigger>
   ) : (
-    <Center>
-      <Icon as={LogoSvg} w="124px" h="auto" />
+    <Center width="100px">
+      <Icon as={LogoSvg} w="auto" h="auto" />
     </Center>
   )
   return (
@@ -95,6 +95,7 @@ const Logo = () => {
                 bg="black"
                 color="white"
                 height="66px"
+                borderRadius="16px"
                 flex="1"
                 _hover={{
                   bg: 'brand.50',
@@ -111,6 +112,7 @@ const Logo = () => {
               <Button
                 flex="1"
                 ml="9px"
+                borderRadius="16px"
                 bg="white"
                 height="66px"
                 border="1px solid black"
@@ -120,8 +122,8 @@ const Logo = () => {
                 as="a"
               >
                 <Center flexDirection="column">
-                  <SentSvg />
-                  <Text>{t('navbar.sent')}</Text>
+                  <SubscrptionSvg />
+                  <Text>{t('navbar.subscriptions')}</Text>
                 </Center>
               </Button>
             </Link>

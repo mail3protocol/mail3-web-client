@@ -96,6 +96,8 @@ export const Avatar: React.FC<AvatarProps> = ({
       <WrapItem
         w={width}
         h={width}
+        maxW={width}
+        maxH={width}
         borderRadius={isSquare ? undefined : '50%'}
         overflow="hidden"
       >

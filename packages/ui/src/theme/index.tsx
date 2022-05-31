@@ -46,6 +46,7 @@ export const theme = extendTheme({
           outline: 'none',
           boxShadow: 'none',
         },
+        fontWeight: '600',
       },
     },
     Link: {
