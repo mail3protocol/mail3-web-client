@@ -20,6 +20,7 @@ export enum SuspendButtonType {
   Forward,
   Delete,
   Restore,
+  Trash,
 }
 
 interface buttonItemConfig {
@@ -42,6 +43,11 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
     name: 'Forward',
   },
   [SuspendButtonType.Delete]: {
+    useLine: true,
+    Icon: TrashSVG,
+    name: 'Delete',
+  },
+  [SuspendButtonType.Trash]: {
     useLine: true,
     Icon: TrashSVG,
     name: 'Trash',

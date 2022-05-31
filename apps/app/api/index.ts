@@ -224,8 +224,15 @@ export class API {
     return this.axios.get(`/mailbox/account/text/${textId}`)
   }
 
-  public async deleteMessage(messageId: string): Promise<AxiosResponse<any>> {
-    return this.axios.delete(`/mailbox/account/message/${messageId}`)
+  public async deleteMessage(
+    messageId: string,
+    isForce = false
+  ): Promise<AxiosResponse> {
+    return this.axios.delete(`/mailbox/account/message/${messageId}`, {
+      data: {
+        force: isForce,
+      },
+    })
   }
 
   public async putMessage(

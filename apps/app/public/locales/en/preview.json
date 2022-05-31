@@ -1,4 +1,25 @@
 {
-    "Delete-failed": "Delete the mail is not success, please try again.",
-    "restore-failed": "Restore is fail, try again."
+    "button": {
+        "delete": "Delete"
+    },
+    "confirm": {
+        "delete": {
+            "title": "Are you sure you want to continue?",
+            "description": "This operation will completely delete the message and cannot be recovered."
+        }
+    },
+    "status": {
+        "trash": {
+            "ok": "trash ok!",
+            "fail": "trash fail!"
+        },
+        "delete":  {
+            "ok": "The message has been completely deleted.",
+            "fail": "Delete fail, try again."
+        },
+        "restore": {
+            "ok": "restore ok!",
+            "fail": "Restore is fail, try again."
+        }
+    }
 }

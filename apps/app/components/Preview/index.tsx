@@ -4,7 +4,7 @@ import { AvatarGroup, Box, Center, Text, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import styled from '@emotion/styled'
-import { useDialog } from 'hooks'
+import { ConfirmDialog, useDialog } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
@@ -86,70 +86,115 @@ export const PreviewComponent: React.FC = () => {
     }
   )
 
-  const buttonList = useMemo(() => {
-    const list = [
-      {
-        type: SuspendButtonType.Reply,
-        onClick: () => {
-          router.push({
-            pathname: RoutePath.NewMessage,
-            query: {
-              id,
-              action: 'replay',
-            },
-          })
-        },
+  const buttonConfig = {
+    [SuspendButtonType.Reply]: {
+      type: SuspendButtonType.Reply,
+      onClick: () => {
+        router.push({
+          pathname: RoutePath.NewMessage,
+          query: {
+            id,
+            action: 'replay',
+          },
+        })
       },
-      {
-        type: SuspendButtonType.Forward,
-        onClick: () => {
-          router.push({
-            pathname: RoutePath.NewMessage,
-            query: {
-              id,
-              action: 'forward',
-            },
-          })
-        },
+    },
+    [SuspendButtonType.Forward]: {
+      type: SuspendButtonType.Forward,
+      onClick: () => {
+        router.push({
+          pathname: RoutePath.NewMessage,
+          query: {
+            id,
+            action: 'forward',
+          },
+        })
       },
-      {
-        type: SuspendButtonType.Delete,
-        onClick: async () => {
-          if (typeof id !== 'string') {
-            return
-          }
-          try {
-            await api.deleteMessage(id)
-          } catch (error) {
-            dialog({
-              type: 'warning',
-              description: t('delete-failed'),
-            })
-          }
+    },
+    [SuspendButtonType.Trash]: {
+      type: SuspendButtonType.Trash,
+      onClick: async () => {
+        if (typeof id !== 'string') {
+          return
+        }
+        try {
+          await api.deleteMessage(id)
+          dialog({
+            type: 'success',
+            description: t('status.trash.ok'),
+          })
           router.back()
-        },
+        } catch (error) {
+          dialog({
+            type: 'warning',
+            description: t('status.trash.fail'),
+          })
+        }
       },
+    },
+    [SuspendButtonType.Delete]: {
+      type: SuspendButtonType.Delete,
+      onClick: () => {
+        if (typeof id !== 'string') {
+          return
+        }
+
+        dialog({
+          type: 'text',
+          title: t('confirm.delete.title'),
+          description: t('confirm.delete.description'),
+          okText: 'Yes',
+          cancelText: 'Cancel',
+          onConfirm: async () => {
+            try {
+              await api.deleteMessage(id, true)
+              setTimeout(() => {
+                dialog({
+                  type: 'success',
+                  description: t('status.delete.ok'),
+                })
+                router.back()
+              }, 500)
+            } catch (error) {
+              dialog({
+                type: 'warning',
+                description: t('status.delete.fail'),
+              })
+            }
+          },
+          onCancel: () => {},
+        })
+      },
+    },
+    [SuspendButtonType.Restore]: {
+      type: SuspendButtonType.Restore,
+      onClick: async () => {
+        if (typeof id !== 'string') return
+        try {
+          await api.moveMessage(id)
+          router.replace(`${RoutePath.Message}/${id}`)
+        } catch (error) {
+          dialog({
+            type: 'warning',
+            description: t('restore-failed'),
+          })
+        }
+      },
+    },
+  }
+
+  const buttonList = useMemo(() => {
+    let list = [
+      SuspendButtonType.Reply,
+      SuspendButtonType.Forward,
+      SuspendButtonType.Trash,
     ]
 
     if (origin === Mailboxes.Trash) {
-      list.unshift({
-        type: SuspendButtonType.Restore,
-        onClick: async () => {
-          if (typeof id !== 'string') return
-          try {
-            await api.moveMessage(id)
-            router.replace(`${RoutePath.Message}/${id}`)
-          } catch (error) {
-            dialog({
-              type: 'warning',
-              description: t('restore-failed'),
-            })
-          }
-        },
-      })
+      list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
     }
 
-    return list
+    return list.map((key) => buttonConfig[key])
   }, [api, id, origin])
 
   if (!id) {
@@ -170,6 +215,7 @@ export const PreviewComponent: React.FC = () => {
 
   return (
     <>
+      <ConfirmDialog />
       <SuspendButton list={buttonList} />
       <Center>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
