@@ -92,7 +92,7 @@ const Item = ({
   from,
   isChoose,
   isChooseMode,
-  setIsChooseMode,
+  // setIsChooseMode,
   chooseMap,
 }: BoxItemProps) => {
   const AvatarBadgeE = {
@@ -134,8 +134,8 @@ const Item = ({
         showBorder
         onClick={(e) => {
           e.stopPropagation()
-          if (onClickAvatar) onClickAvatar(index, id)
-          if (setIsChooseMode) setIsChooseMode(true)
+          // if (onClickAvatar) onClickAvatar(index, id)
+          // if (setIsChooseMode) setIsChooseMode(true)
           return false
         }}
         borderRadius="50%"
