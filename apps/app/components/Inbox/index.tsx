@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
@@ -125,12 +125,8 @@ export const InboxComponent: React.FC = () => {
           oldMessages.every((i2: { id: any }) => i2.id !== i.id)
         )
         if (!newItem.length) return
-        // TODO
-        // BUG unshift not work
         const newDate = formatState(newItem, AvatarBadgeType.New)
         const newState = [...newDate, ...oldMessages]
-        // console.log('newDate', newDate)
-        // console.log('newState', newState)
         setSurplus(d.total - newState.length)
         setNewMessages(newState)
       },
