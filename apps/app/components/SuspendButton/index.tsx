@@ -1,4 +1,4 @@
-import { Box, Center, HStack } from '@chakra-ui/react'
+import { Box, Center, HStack, StyleProps } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 
@@ -26,6 +26,7 @@ export enum SuspendButtonType {
 interface buttonItemConfig {
   Icon: React.FC
   name: string
+  propsStyle?: StyleProps
   useLine?: boolean
 }
 
@@ -33,6 +34,7 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
   [SuspendButtonType.Restore]: {
     Icon: ReplySVG,
     name: 'Restore',
+    propsStyle: { w: '200px' },
   },
   [SuspendButtonType.Reply]: {
     Icon: ReplySVG,
@@ -62,7 +64,7 @@ const ButtonItem = styled(Center)`
   }
   position: relative;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease;
 
   .line {
     position: absolute;
@@ -93,44 +95,6 @@ const BoxWrap = styled(Center)`
   }
 `
 
-export const StickyButtonBox: React.FC<Props> = (props) => {
-  const { list } = props
-
-  return (
-    <BoxWrap>
-      <Box className="content">
-        <Box className="sticky">
-          <Box>
-            <HStack
-              borderRadius="32px"
-              background="#000"
-              fontSize="18px"
-              spacing="0px"
-              color="#fff"
-              overflow="hidden"
-            >
-              {list.map((item) => {
-                const { onClick, type } = item
-                const config = buttonConfig[type]
-                const { Icon, name } = config
-
-                return (
-                  <ButtonItem key={type} onClick={onClick}>
-                    <Box>
-                      <Icon />
-                    </Box>
-                    <Box>{name}</Box>
-                  </ButtonItem>
-                )
-              })}
-            </HStack>
-          </Box>
-        </Box>
-      </Box>
-    </BoxWrap>
-  )
-}
-
 export const SuspendButton: React.FC<Props> = (props) => {
   const { list } = props
 
@@ -153,10 +117,10 @@ export const SuspendButton: React.FC<Props> = (props) => {
         {list.map((item) => {
           const { onClick, type } = item
           const config = buttonConfig[type]
-          const { Icon, name, useLine } = config
+          const { Icon, name, useLine, propsStyle } = config
 
           return (
-            <ButtonItem key={type} onClick={onClick}>
+            <ButtonItem key={type} onClick={onClick} {...propsStyle}>
               {useLine && <Box className="line" />}
               <Box>
                 <Icon />
