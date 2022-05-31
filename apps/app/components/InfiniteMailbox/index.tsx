@@ -82,9 +82,9 @@ const InfiniteBox: ForwardRefRenderFunction<
       }
       return lastPage.page + 1
     },
-    refetchOnReconnect: false,
+    refetchOnReconnect: true,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     ...queryOptions,
     enabled: enableQuery,
   })
