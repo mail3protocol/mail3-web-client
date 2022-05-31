@@ -13,6 +13,14 @@ export enum TrackEvent {
   WhiteListDiscord = 'earlybird_click_joindiscord',
   WhiteListTwitter = 'earlybird_click_followtwitter',
 
+  // testing
+  TestingConnectWallet = 'beta1_home_click_connectwallet',
+  TestingMoreDetails = 'beta1_click_moredetails',
+  TestingDiscord = 'beta1_click_joindiscord',
+  TestingDisCordLink = 'beta1_click_discord',
+  TestingTwitter = 'beta1_click_followtwitter',
+  TestingEnterApp = 'beta1_click_enterapp',
+
   // home
   HomeLaunchApp = 'mail3_offical_click_launchapp',
   HomeClickWhiteList = 'mail3_offical_click_whitelist',
@@ -34,6 +42,9 @@ export enum TrackKey {
 
   // home
   HomeCommunity = 'Mail3_offical_click_community',
+
+  // testing
+  TestingEntry = 'beta1_check_eligilibity',
 }
 
 export enum GlobalDimensions {
@@ -68,6 +79,7 @@ export interface TrackProps {
   [TrackKey.DesiredWallet]?: DesiredWallet
   [TrackKey.CollectedAddress]?: string
   [TrackKey.WhiteListEntry]?: boolean
+  [TrackKey.TestingEntry]?: boolean
   [TrackKey.HomeCommunity]?: HomeCommunity
 }
 
