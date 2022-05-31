@@ -1,10 +1,9 @@
 import React from 'react'
 import { Center, Heading, Text } from '@chakra-ui/react'
-import Logo from 'assets/svg/logo-big.svg'
 import Image from 'next/image'
 import landingBg from 'assets/svg/landing-bg.svg?url'
 import { useTranslation } from 'next-i18next'
-import { Button } from 'ui'
+import { Button, LogoAnimation } from 'ui'
 import { useConnectWalletDialog } from 'hooks'
 import styled from '@emotion/styled'
 import landingCat from '../../assets/landing-cat.png'
@@ -44,7 +43,7 @@ export const LandingPage = () => {
         position="relative"
         top={`-${(NAVBAR_GUTTER + NAVBAR_HEIGHT) / 2}px`}
       >
-        <Logo />
+        <LogoAnimation w="270px" />
         <Heading mt="44px" mb="8px">
           {t('title')}
         </Heading>
