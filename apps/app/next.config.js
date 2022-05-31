@@ -38,12 +38,12 @@ module.exports = withPlugins(plugins, {
       {
         source: '/settings',
         destination: '/settings/address',
-        permanent: true,
+        permanent: false,
       },
       {
         source: '/setup',
         destination: '/setup/address',
-        permanent: true,
+        permanent: false,
       },
     ]
   },

@@ -9,6 +9,7 @@ import {
   Link,
   HStack,
 } from '@chakra-ui/react'
+import dayjs from 'dayjs'
 import { TrackEvent, useAccount, useTrackClick } from 'hooks'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo } from 'react'
@@ -27,6 +28,7 @@ import TwitterSvg from '../../assets/twitter.svg'
 import { truncateMiddle } from '../../utils'
 import {
   DISCORD_URL,
+  MORE_DETAILS_LINK,
   NAVBAR_GUTTER,
   NAVBAR_HEIGHT,
   TWITTER_URL,
@@ -143,8 +145,10 @@ const ConnectBox = styled(Flex)`
 `
 
 const COLORFUL_BTN_BG = `linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)`
-const moreDetailsLink =
-  'https://feather-amaryllis-11e.notion.site/Join-the-Whitelist-and-get-the-early-access-to-Mail3-43c1bf8f21ff443ca3ca4b6f1119e0b8'
+
+const TIME_FORMART_EN = 'MMM DD, YYYY'
+const periodStart = dayjs('2022.5.30').format(TIME_FORMART_EN)
+const periodEnd = dayjs('2022.6.13').format(TIME_FORMART_EN)
 
 export const WhiteList: React.FC = () => {
   const [t] = useTranslation('whitelist')
@@ -216,7 +220,7 @@ export const WhiteList: React.FC = () => {
         >
           <VStack textAlign="center">
             <Heading fontSize="28px">{t('title')}</Heading>
-            <Heading fontSize="16px">{t('period')}</Heading>
+            <Heading fontSize="16px">{`${periodStart} - ${periodEnd}`}</Heading>
             <Text>{t('desc')}</Text>
           </VStack>
           <ConnectBox>
@@ -231,7 +235,7 @@ export const WhiteList: React.FC = () => {
               </Flex>
               <Link
                 isExternal
-                href={moreDetailsLink}
+                href={MORE_DETAILS_LINK}
                 fontSize="12px"
                 onClick={() => trackMoreDetail()}
                 textDecoration="underline"

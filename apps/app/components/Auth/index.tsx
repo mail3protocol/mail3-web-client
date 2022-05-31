@@ -37,13 +37,14 @@ import {
   useSetGlobalTrack,
 } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
+import { SERVER_URL } from '../../constants'
 
 export const AuthModal: React.FC = () => {
   const [t] = useTranslation('common')
   const account = useAccount()
   const [isLoading, setIsLoading] = useState(false)
   const signatureDesc = t('auth.sign')
-  const signup = useSignup(signatureDesc)
+  const signup = useSignup(signatureDesc, SERVER_URL)
   const provider = useProvider()
   const _toast = useToast()
   const toast = (s: string) => _toast(s, { position: 'top', duration: 2000 })
@@ -95,7 +96,12 @@ export const AuthModal: React.FC = () => {
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
           }
           closeAuthModal()
-          router.push(RoutePath.Setup)
+          if (
+            router.pathname !== RoutePath.WhiteList &&
+            router.pathname !== RoutePath.Testing
+          ) {
+            router.push(RoutePath.Setup)
+          }
           break
         }
         case SignupResponseCode.ConditionNotMeet:

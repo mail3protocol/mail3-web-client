@@ -1,11 +1,11 @@
 import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
-import { Center, Link } from '@chakra-ui/react'
+import { Center, Link, Icon } from '@chakra-ui/react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer } from 'ui'
 import LogoSvg from 'assets/svg/logo.svg'
 import { WhiteList } from '../components/Whitelist'
-import { NAVBAR_HEIGHT } from '../constants'
+import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
@@ -18,8 +18,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
 
 const Navbar = () => (
   <Center h={`${NAVBAR_HEIGHT}px`}>
-    <Link isExternal href="https://mail3.me">
-      <LogoSvg />
+    <Link isExternal href={HOME_URL}>
+      <Icon as={LogoSvg} w="124px" h="auto" />
     </Link>
   </Center>
 )
