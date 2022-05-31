@@ -1,10 +1,11 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { Button, PageContainer } from 'ui'
+import { atom, useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { MailboxMessageItemResponse } from '../../api'
@@ -80,16 +81,20 @@ export const formatState = (
     itemType: ItemType.None,
   }))
 
+type messagesState = Array<MessageItem> | null
+
+const newMessagesAtom = atom<messagesState>(null)
+
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
   const router = useRouter()
 
   const [newPageIndex, setNewPageIndex] = useState(0)
-  const [newMessages, setNewMessages] = useState<Array<MessageItem>>([])
+  const [newMessages, setNewMessages] = useAtom(newMessagesAtom)
   const [surplus, setSurplus] = useState(0)
 
-  const [seenMessages, setSeenMessages] = useState<Array<MessageItem>>([])
+  const [seenMessages, setSeenMessages] = useState<messagesState>(null)
   const [seenIsFetching, setSeenIsFetching] = useState(true)
 
   const [isChooseMode, setIsChooseMode] = useState(false)
@@ -99,7 +104,7 @@ export const InboxComponent: React.FC = () => {
   const refSeenBoxList = useRef<InfiniteHandle>(null)
 
   useQuery(
-    ['getNewMessages', 0],
+    ['getNewMessages', 'interval'],
     async () => {
       const { data } = await api.getMessagesNew(0)
       return data
@@ -110,22 +115,24 @@ export const InboxComponent: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        if (d.messages.length) {
-          // TODO will be have bug when new mail to exceed page size
-          // so, should be request alone api to get all new mails
-          const newItem = d.messages.filter((i) =>
-            newMessages.every((i2: { id: any }) => i2.id !== i.id)
-          )
-          if (!newItem.length) return
-          // TODO
-          // BUG unshift not work
-          const newDate = formatState(newItem, AvatarBadgeType.New)
-          const newState = [...newDate, ...newMessages]
-          // console.log('newDate', newDate)
-          // console.log('newState', newState)
-          setSurplus(d.total - newState.length)
-          setNewMessages(newState)
+        if (!d.messages.length) {
+          return
         }
+        // TODO will be have bug when new mail to exceed page size
+        // so, should be request alone api to get all new mails
+        const oldMessages = newMessages ?? []
+        const newItem = d.messages.filter((i) =>
+          oldMessages.every((i2: { id: any }) => i2.id !== i.id)
+        )
+        if (!newItem.length) return
+        // TODO
+        // BUG unshift not work
+        const newDate = formatState(newItem, AvatarBadgeType.New)
+        const newState = [...newDate, ...oldMessages]
+        // console.log('newDate', newDate)
+        // console.log('newState', newState)
+        setSurplus(d.total - newState.length)
+        setNewMessages(newState)
       },
     }
   )
@@ -141,16 +148,19 @@ export const InboxComponent: React.FC = () => {
       refetchOnReconnect: true,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        if (d.messages.length) {
-          const newItem = d.messages.filter((i) =>
-            newMessages.every((i2: { id: any }) => i2.id !== i.id)
-          )
-          const newDate = formatState(newItem, AvatarBadgeType.New)
-          const newState = [...newMessages, ...newDate]
-
-          setSurplus(d.total - newState.length)
-          setNewMessages(newState)
+        if (!d.messages.length) {
+          if (!newMessages) setNewMessages([])
+          return
         }
+        const oldMessages = newMessages || []
+        const newItem = d.messages.filter((i) =>
+          oldMessages.every((i2: { id: any }) => i2.id !== i.id)
+        )
+        const newDate = formatState(newItem, AvatarBadgeType.New)
+        const newState = [...oldMessages, ...newDate]
+
+        setSurplus(d.total - newState.length)
+        setNewMessages(newState)
       },
     }
   )
@@ -164,6 +174,7 @@ export const InboxComponent: React.FC = () => {
   )
 
   const setNewToSeen = (ids: Array<string>) => {
+    if (!newMessages) return
     const targetMgs = ids.map((id) => {
       let retIndex = -1
       newMessages.some((_item, i) => {
@@ -185,10 +196,19 @@ export const InboxComponent: React.FC = () => {
     }
   }
 
-  const isLoading = newIsFetching && seenIsFetching
-  const seenIsHidden = !seenMessages.length
-  const isClear = !isLoading && !newMessages.length && !seenMessages.length
-  const isNoNew = !isLoading && !newMessages.length && !!seenMessages.length
+  const isLoading =
+    newIsFetching && seenIsFetching && !seenMessages && !newMessages
+  const seenIsHidden = !seenMessages
+  const isClear =
+    !!newMessages &&
+    !newMessages.length &&
+    !!seenMessages &&
+    !seenMessages.length
+  const isNoNew =
+    !!newMessages &&
+    !newMessages.length &&
+    !!seenMessages &&
+    !!seenMessages.length
 
   return (
     <NewPageContainer>
@@ -249,22 +269,24 @@ export const InboxComponent: React.FC = () => {
             {isClear && <EmptyStatus />}
             {isLoading && <Loading />}
             {isNoNew && <NoNewStatus />}
-            <Mailbox
-              data={newMessages}
-              isChooseMode={isChooseMode}
-              setIsChooseMode={setIsChooseMode}
-              onClickAvatar={(_i, id) => {
-                const newMap = { ...chooseMap }
-                newMap[id] = !newMap[id]
-                setChooseMap(newMap)
-              }}
-              chooseMap={chooseMap}
-              hiddenMap={hiddenMap}
-              onClickBody={(id) => {
-                setNewToSeen([id])
-                router.push(`${RoutePath.Message}/${id}`)
-              }}
-            />
+            {!!newMessages && (
+              <Mailbox
+                data={newMessages}
+                isChooseMode={isChooseMode}
+                setIsChooseMode={setIsChooseMode}
+                onClickAvatar={(_i, id) => {
+                  const newMap = { ...chooseMap }
+                  newMap[id] = !newMap[id]
+                  setChooseMap(newMap)
+                }}
+                chooseMap={chooseMap}
+                hiddenMap={hiddenMap}
+                onClickBody={(id) => {
+                  setNewToSeen([id])
+                  router.push(`${RoutePath.Message}/${id}`)
+                }}
+              />
+            )}
             {surplus > 0 && (
               <Center>
                 <Button
