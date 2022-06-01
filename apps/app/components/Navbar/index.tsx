@@ -128,7 +128,7 @@ const Logo = () => {
               </Button>
             </Link>
           </Center>
-          <Text color="#e7e7e7" fontWeight={700} fontSize="18px" mb="6px">
+          <Text color="#7e7e7e" fontWeight={700} fontSize="18px" mb="6px">
             {t('navbar.other-stuff')}
           </Text>
           <ButtonList items={btns} />
