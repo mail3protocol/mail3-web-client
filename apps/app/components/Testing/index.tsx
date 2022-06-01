@@ -58,13 +58,15 @@ const Container = styled(Flex)`
     border-top-left-radius: 0;
     box-shadow: none;
     background-position: 50% 15%;
+    background: none;
   }
 
   .title {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     @media (max-width: 600px) {
       margin-top: 0;
+      font-size: 24px;
     }
   }
 
