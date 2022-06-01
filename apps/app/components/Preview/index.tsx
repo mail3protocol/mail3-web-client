@@ -145,6 +145,12 @@ export const PreviewComponent: React.FC = () => {
           description: t('confirm.delete.description'),
           okText: 'Yes',
           cancelText: 'Cancel',
+          modalProps: {
+            isOpen: false,
+            onClose: () => {},
+            size: 'md', // this size mobile is ugly, pc is better
+            children: '',
+          },
           onConfirm: async () => {
             try {
               await api.deleteMessage(id, true)

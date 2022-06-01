@@ -149,24 +149,6 @@ const Item = ({
       >
         {avatarBadgConfig[avatarBadgeType]}
       </Avatar>
-      {/* <Center
-        flexGrow={1}
-        w="48px"
-        h="48px"
-        zIndex={9}
-        background="#6F6F6F"
-        border="1px solid #FFFFFF"
-        borderRadius="50px"
-        transform="translateX(-70%)"
-        onClick={(e) => {
-          e.stopPropagation()
-          if (update) update(index)
-          setIsChooseMode(true)
-          return false
-        }}
-      >
-        10
-      </Center> */}
     </Flex>
   )
 
