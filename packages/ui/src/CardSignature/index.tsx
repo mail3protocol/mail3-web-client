@@ -41,7 +41,7 @@ export const CardSignature: React.FC<SignatureCardProps> = ({ account }) => (
       <Text
         fontSize="12px"
         w="95px"
-        fontWeight={700}
+        fontWeight={500}
         color="#4E52F5"
         lineHeight="10px"
       >{`${truncateMiddle(account, 6, 4)}@mail3.me`}</Text>
