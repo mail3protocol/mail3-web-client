@@ -10,7 +10,7 @@
     },
     "status": {
         "trash": {
-            "ok": "trash ok!",
+            "ok": "The message has been moved to the trash.",
             "fail": "trash fail!"
         },
         "delete":  {
@@ -18,7 +18,7 @@
             "fail": "Delete fail, try again."
         },
         "restore": {
-            "ok": "restore ok!",
+            "ok": "The message has been restore.",
             "fail": "Restore is fail, try again."
         }
     }
