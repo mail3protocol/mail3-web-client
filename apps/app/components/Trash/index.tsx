@@ -7,7 +7,7 @@ import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
-import { MailboxContainer } from '../Inbox'
+import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
@@ -41,7 +41,7 @@ export const TrashComponent: React.FC = () => {
   )
 
   return (
-    <>
+    <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -56,7 +56,7 @@ export const TrashComponent: React.FC = () => {
         />
       )}
 
-      <Flex alignItems="center" paddingTop="30px">
+      <Flex alignItems="center" pt="30px" pl={{ base: '20px', md: 0 }}>
         <Wrap>
           <WrapItem alignItems="center">
             <SVGTrash />
@@ -84,7 +84,10 @@ export const TrashComponent: React.FC = () => {
       </Flex>
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
-          <TextBox textAlign={{ base: 'left', md: 'center' }}>
+          <TextBox
+            textAlign={{ base: 'left', md: 'center' }}
+            pl={{ base: '20px', md: 0 }}
+          >
             <Text>{t('trash.auto-delete')}</Text>
           </TextBox>
           <InfiniteMailbox
@@ -108,6 +111,6 @@ export const TrashComponent: React.FC = () => {
           />
         </Box>
       </MailboxContainer>
-    </>
+    </NewPageContainer>
   )
 }

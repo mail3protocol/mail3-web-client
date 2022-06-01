@@ -5,7 +5,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
-import { MailboxContainer } from '../Inbox'
+import { MailboxContainer, NewPageContainer } from '../Inbox'
 
 import SVGDrafts from '../../assets/drafts.svg'
 import SVGNone from '../../assets/mailbox/none.svg'
@@ -32,7 +32,7 @@ export const DraftsComponent: React.FC = () => {
   )
 
   return (
-    <>
+    <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -46,7 +46,7 @@ export const DraftsComponent: React.FC = () => {
           }}
         />
       )}
-      <Flex alignItems="center" paddingTop="30px">
+      <Flex alignItems="center" pt="30px" pl={{ base: '20px', md: 0 }}>
         <Wrap>
           <WrapItem alignItems="center">
             <SVGDrafts />
@@ -105,6 +105,6 @@ export const DraftsComponent: React.FC = () => {
           />
         </Box>
       </MailboxContainer>
-    </>
+    </NewPageContainer>
   )
 }

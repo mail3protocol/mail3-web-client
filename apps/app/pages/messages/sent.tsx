@@ -15,10 +15,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
 })
 
 const Sent: NextPage = () => (
-  <PageContainer>
-    <Navbar />
+  <>
+    <PageContainer>
+      <Navbar />
+    </PageContainer>
     <SentComponent />
-  </PageContainer>
+  </>
 )
 
 export default Sent

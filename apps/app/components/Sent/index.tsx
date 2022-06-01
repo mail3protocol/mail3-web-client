@@ -6,7 +6,7 @@ import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
 import { useAPI } from '../../hooks/useAPI'
-import { MailboxContainer } from '../Inbox'
+import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { EmptyStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
@@ -33,7 +33,7 @@ export const SentComponent: React.FC = () => {
   )
 
   return (
-    <>
+    <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -49,7 +49,7 @@ export const SentComponent: React.FC = () => {
       )}
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
-          <TitleBox>{t('sent.title')}</TitleBox>
+          <TitleBox pl={{ base: '20px', md: 0 }}>{t('sent.title')}</TitleBox>
           <InfiniteMailbox
             ref={refBoxList}
             enableQuery
@@ -66,6 +66,6 @@ export const SentComponent: React.FC = () => {
           />
         </Box>
       </MailboxContainer>
-    </>
+    </NewPageContainer>
   )
 }

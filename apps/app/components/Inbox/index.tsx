@@ -19,7 +19,7 @@ import SVGWrite from '../../assets/mailbox/write.svg'
 
 const PAGE_SIZE = 20
 
-const NewPageContainer = styled(PageContainer)`
+export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
     padding: 0;
   }
