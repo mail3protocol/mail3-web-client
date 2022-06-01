@@ -1,11 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
-import { useQuery } from 'react-query'
+import { useInfiniteQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { Button, PageContainer } from 'ui'
-import { atom, useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { MailboxMessageItemResponse } from '../../api'
@@ -83,16 +82,10 @@ export const formatState = (
 
 type messagesState = Array<MessageItem> | null
 
-const newMessagesAtom = atom<messagesState>(null)
-
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
   const router = useRouter()
-
-  const [newPageIndex, setNewPageIndex] = useState(0)
-  const [newMessages, setNewMessages] = useAtom(newMessagesAtom)
-  const [surplus, setSurplus] = useState(0)
 
   const [seenMessages, setSeenMessages] = useState<messagesState>(null)
   const [seenIsFetching, setSeenIsFetching] = useState(true)
@@ -103,65 +96,46 @@ export const InboxComponent: React.FC = () => {
 
   const refSeenBoxList = useRef<InfiniteHandle>(null)
 
-  useQuery(
-    ['getNewMessages', 'interval'],
-    async () => {
-      const { data } = await api.getMessagesNew(0)
+  const queryFnNews = useCallback(
+    async ({ pageParam = 0 }) => {
+      const { data } = await api.getMessagesNew(pageParam)
       return data
     },
-    {
-      refetchInterval: 5000,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      onSuccess(d) {
-        if (!d.messages.length) {
-          return
-        }
-        // TODO will be have bug when new mail to exceed page size
-        // so, should be request alone api to get all new mails
-        const oldMessages = newMessages ?? []
-        const newItem = d.messages.filter((i) =>
-          oldMessages.every((i2: { id: any }) => i2.id !== i.id)
-        )
-        if (!newItem.length) return
-        const newDate = formatState(newItem, AvatarBadgeType.New)
-        const newState = [...newDate, ...oldMessages]
-        setSurplus(d.total - newState.length)
-        setNewMessages(newState)
-      },
-    }
+    [api]
   )
 
-  const { isFetching: newIsFetching } = useQuery(
-    ['getNewMessages', newPageIndex],
-    async () => {
-      const { data } = await api.getMessagesNew(newPageIndex)
-      return data
+  const {
+    data: newsInfiniteData,
+    hasNextPage,
+    fetchNextPage,
+    isFetching: newIsFetching,
+  } = useInfiniteQuery('newsQuery', queryFnNews, {
+    getNextPageParam: (lastPage) => {
+      if (typeof lastPage?.page !== 'number') return undefined
+      if (lastPage.page >= lastPage.pages - 1) {
+        return undefined
+      }
+      return lastPage.page + 1
     },
-    {
-      refetchOnMount: true,
-      refetchOnReconnect: true,
-      refetchOnWindowFocus: false,
-      onSuccess(d) {
-        if (!d.messages.length) {
-          if (!newMessages) setNewMessages([])
-          return
-        }
-        const oldMessages = newMessages || []
-        const newItem = d.messages.filter((i) =>
-          oldMessages.every((i2: { id: any }) => i2.id !== i.id)
-        )
-        const newDate = formatState(newItem, AvatarBadgeType.New)
-        const newState = [...oldMessages, ...newDate]
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchInterval: 5000,
+  })
 
-        setSurplus(d.total - newState.length)
-        setNewMessages(newState)
-      },
-    }
-  )
+  const newMessages = useMemo(() => {
+    if (!newsInfiniteData) return null
+    const dataList = newsInfiniteData.pages.map((item) => item.messages)
+    return formatState(dataList.flat(), AvatarBadgeType.New)
+  }, [newsInfiniteData])
 
-  const queryFn = useCallback(
+  const newsTotal = useMemo(() => {
+    if (newsInfiniteData?.pages?.length)
+      return newsInfiniteData.pages[newsInfiniteData.pages.length - 1].total
+    return 0
+  }, [newsInfiniteData])
+
+  const queryFnSeen = useCallback(
     async ({ pageParam = 0 }) => {
       const { data } = await api.getMessagesSeen(pageParam)
       return data
@@ -260,18 +234,23 @@ export const InboxComponent: React.FC = () => {
                 }}
               />
             )}
-            {surplus > 0 && (
+            {newIsFetching && newMessages?.length && (
+              <Center w="100%" p="20px">
+                <Spinner />
+              </Center>
+            )}
+            {hasNextPage && (
               <Center>
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setNewPageIndex(newPageIndex + 1)
+                    fetchNextPage()
                   }}
                 >
                   {t('inbox.load-more')} +{PAGE_SIZE}
                 </Button>
                 <Circle size="40px" bg="black" color="white" marginLeft="10px">
-                  {surplus}
+                  {newMessages?.length ? newsTotal - newMessages.length : 0}
                 </Circle>
               </Center>
             )}
@@ -286,7 +265,7 @@ export const InboxComponent: React.FC = () => {
             <InfiniteMailbox
               ref={refSeenBoxList}
               enableQuery
-              queryFn={queryFn}
+              queryFn={queryFnSeen}
               queryKey={['Seen']}
               emptyElement=""
               loader={
