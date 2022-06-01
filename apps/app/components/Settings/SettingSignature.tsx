@@ -57,9 +57,13 @@ const Container = styled(Center)`
     z-index: 1;
     position: absolute;
 
-    @media (max-width: 930px) {
+    @media (max-width: 1024px) {
       position: static;
       bottom: 50px;
+    }
+
+    @media (max-height: 768px) {
+      right: 50px;
     }
   }
 

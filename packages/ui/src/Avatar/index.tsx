@@ -96,6 +96,8 @@ export const Avatar: React.FC<AvatarProps> = ({
       <WrapItem
         w={width}
         h={width}
+        maxW={width}
+        maxH={width}
         borderRadius={isSquare ? undefined : '50%'}
         overflow="hidden"
       >
@@ -104,6 +106,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           variant="marble"
           square
           size={width}
+          colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
         />
       </WrapItem>
     ) : (
