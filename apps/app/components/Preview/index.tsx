@@ -261,7 +261,7 @@ export const PreviewComponent: React.FC = () => {
         </Box>
         <Box>
           <Flex>
-            <Box w="48px">
+            <Box>
               {detail.from && (
                 <Avatar
                   w="48px"
@@ -271,7 +271,11 @@ export const PreviewComponent: React.FC = () => {
                 />
               )}
             </Box>
-            <Box borderBottom="1px solid #E7E7E7;" flex={1} marginLeft="17px">
+            <Box
+              borderBottom="1px solid #E7E7E7;"
+              wordBreak="break-all"
+              pl="15px"
+            >
               <Flex
                 lineHeight={1}
                 alignItems="baseline"
@@ -315,7 +319,6 @@ export const PreviewComponent: React.FC = () => {
                 color="#6F6F6F"
                 lineHeight="24px"
                 marginTop="5px"
-                wordBreak="break-all"
               >
                 to{' '}
                 {detail.to
