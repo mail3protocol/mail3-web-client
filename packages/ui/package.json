@@ -10,7 +10,7 @@
     "dependencies": {
         "@metamask/detect-provider": "^1.2.0",
         "assets": "*",
-        "boring-avatars": "^1.6.3",
+        "boring-avatars": "1.5.8",
         "hooks": "*",
         "qrcode.react": "^3.0.1"
     },
