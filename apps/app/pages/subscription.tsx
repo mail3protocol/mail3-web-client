@@ -14,7 +14,10 @@ import SVGWrite from '../assets/mailbox/write.svg'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale as string, ['subscription'])),
+    ...(await serverSideTranslations(locale as string, [
+      'common',
+      'subscription',
+    ])),
   },
 })
 
