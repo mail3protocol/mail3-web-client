@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react'
 import { Avatar } from 'ui'
-import { AvatarGroup, Box, Center, Text, Flex } from '@chakra-ui/react'
+import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import styled from '@emotion/styled'
 import { ConfirmDialog, useDialog } from 'hooks'
 import { useTranslation } from 'next-i18next'
+import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -223,7 +224,18 @@ export const PreviewComponent: React.FC = () => {
     <>
       <ConfirmDialog />
       <SuspendButton list={buttonList} />
-      <Center>
+      <Center position="relative">
+        <Circle
+          as="button"
+          position="absolute"
+          left="0px"
+          border={{ base: 0, md: '2px solid #292D32' }}
+          onClick={() => {
+            router.back()
+          }}
+        >
+          <ChevronLeftIcon w="26px" h="26px" />
+        </Circle>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={10}>
             {detail?.from && (
