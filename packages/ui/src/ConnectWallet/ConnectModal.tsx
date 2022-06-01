@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import {
   Modal,
   ModalOverlay,
@@ -19,14 +20,25 @@ import {
   SlideFade,
   useDisclosure,
   WrapItem,
+  Wrap,
+  TextProps,
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import detectEthereumProvider from '@metamask/detect-provider'
-import MetamaskSvg from 'assets/svg/metamask.svg'
-import WalletConnectSvg from 'assets/svg/wallet-connect.svg'
-import PhantomSvg from 'assets/svg/phantom.svg'
-import Blocto from 'assets/svg/blocto.svg'
+import MetamaskPng from 'assets/wallets/metamask.png'
+import WalletConnectPng from 'assets/wallets/walletconnect.png'
+import PhantomPng from 'assets/wallets/phantom.png'
+import BloctoPng from 'assets/wallets/blocto.png'
+import SolflarePng from 'assets/wallets/solflare.png'
+import TorusPng from 'assets/wallets/torus.png'
+import KeplrPng from 'assets/wallets/keplr.png'
+import DfinityPng from 'assets/wallets/dfinity.png'
+import PolkadotPng from 'assets/wallets/polkadot.png'
+import CoinbasePng from 'assets/wallets/coinbase.png'
+import TronPng from 'assets/wallets/tron.png'
+import AvalanchePng from 'assets/wallets/avalanche.png'
+
 import {
   useDialog,
   // SupportedConnectors,
@@ -39,7 +51,13 @@ import {
   useLastConectorName,
   useAccount,
   useDidMount,
+  useTrackClick,
+  TrackEvent,
+  DesiredWallet,
+  TrackKey,
 } from 'hooks'
+import Image from 'next/image'
+import type { StaticImageData } from 'next/image'
 import { Button } from '../Button'
 
 export interface ConnectModalProps {
@@ -54,7 +72,12 @@ interface ConnectButtonProps extends ButtonProps {
   icon: React.ReactNode
   isConnected?: boolean
   href?: string
+  textProps?: TextProps
 }
+
+const generateIcon = (src: StaticImageData, w = '24px') => (
+  <Image src={src} width={w} height={w} />
+)
 
 const ConnectButton: React.FC<ConnectButtonProps> = ({
   text,
@@ -63,6 +86,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
   isConnected,
   onClick,
   href,
+  textProps,
   ...props
 }) => {
   const flexProps: any = href ? { as: 'a', href, target: '_blank' } : {}
@@ -70,40 +94,59 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
     <Button
       variant="outline"
       w="250px"
-      paddingRight="6px"
+      px="4px"
       {...props}
       onClick={isConnected ? undefined : onClick}
     >
       <Flex w="100%" alignItems="center" {...flexProps}>
         <HStack spacing="6px" alignItems="center">
-          {isConnected ? (
-            <Box w="8px" h="8px" bg="rgb(39, 174, 96)" borderRadius="50%" />
-          ) : null}
-          <Text fontSize="16px" fontWeight={700}>
-            {text}
-          </Text>
+          {icon}
+          <Text {...textProps}>{text}</Text>
         </HStack>
         <Spacer />
-        {isLoading ? <Spinner /> : icon}
+        {isLoading ? (
+          <Spinner />
+        ) : isConnected ? (
+          <Box
+            w="8px"
+            h="8px"
+            bg="rgb(39, 174, 96)"
+            borderRadius="50%"
+            mr="4px"
+          />
+        ) : null}
       </Flex>
     </Button>
   )
 }
 
-const PlaceholderButton: React.FC<ConnectButtonProps> = ({
+const PlaceholderButton: React.FC<ConnectButtonProps & { index: number }> = ({
   text,
   icon,
   onClick,
+  index,
+  textProps,
   ...props
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const timeoutRef = useRef<NodeJS.Timeout>()
 
   return (
-    <WrapItem alignItems="center" position="relative">
+    <WrapItem w="calc(50% - 50px)" position="relative">
       <ConnectButton
+        isFullWidth
         text={text}
         icon={icon}
+        size="sm"
+        bg="#E7E7E7"
+        border="none"
+        color="6F6F6F"
+        fontWeight="normal"
+        fontSize="12px"
+        _hover={{
+          bg: '#E7E7E7',
+          opacity: 0.8,
+        }}
         onClick={(e) => {
           if (timeoutRef.current) {
             clearTimeout(timeoutRef.current)
@@ -115,14 +158,21 @@ const PlaceholderButton: React.FC<ConnectButtonProps> = ({
           }, 1000)
           onClick?.(e)
         }}
+        textProps={textProps}
         {...props}
       />
       <SlideFade
         offsetY="20px"
         in={isOpen}
-        style={{ position: 'absolute', right: '-10px', top: '8px' }}
+        style={
+          (index + 1) % 2 !== 0
+            ? { position: 'absolute', left: '-25px', top: '8px' }
+            : { position: 'absolute', right: '-8px', top: '8px' }
+        }
       >
-        <Text position="absolute">+1</Text>
+        <Text position="absolute" fontStyle="italic" fontSize="12px">
+          +1
+        </Text>
       </SlideFade>
     </WrapItem>
   )
@@ -175,12 +225,60 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
     }
   })
 
+  const trackWallet = useTrackClick(TrackEvent.ConnectWallet)
+
+  const placeHolderBtns = useMemo(
+    () => [
+      {
+        name: 'Phantom',
+        icon: generateIcon(PhantomPng),
+      },
+      {
+        name: 'Blocto',
+        icon: generateIcon(BloctoPng),
+      },
+      {
+        name: 'Solflare',
+        icon: generateIcon(SolflarePng),
+      },
+      {
+        name: 'Torus',
+        icon: generateIcon(TorusPng),
+      },
+      {
+        name: 'Keplr',
+        icon: generateIcon(KeplrPng),
+      },
+      {
+        name: 'Dfinity',
+        icon: generateIcon(DfinityPng),
+      },
+      {
+        name: 'Polkadot',
+        icon: generateIcon(PolkadotPng),
+      },
+      {
+        name: 'Coinbase',
+        icon: generateIcon(CoinbasePng),
+      },
+      {
+        name: 'Tron',
+        icon: generateIcon(TronPng),
+      },
+      {
+        name: 'Avalance',
+        icon: generateIcon(AvalanchePng),
+      },
+    ],
+    []
+  )
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
       <ModalOverlay />
       <ModalContent maxWidth="340px">
         <ModalHeader textAlign="center" fontSize="16px">
-          {t('connect.connect-wallet')}
+          {t('connect.dialog-title')}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody
@@ -196,12 +294,15 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
               }
               isLoading={isConnectingMetamask}
               text={t('connect.metamask')}
-              icon={<MetamaskSvg />}
+              icon={generateIcon(MetamaskPng)}
               href={shouldUseDeeplink ? generateDeepLink() : undefined}
               isConnected={
                 connectorName === ConnectorName.MetaMask && isConnected
               }
               onClick={async () => {
+                trackWallet({
+                  [TrackKey.DesiredWallet]: DesiredWallet.MetaMask,
+                })
                 if (shouldUseDeeplink) {
                   return
                 }
@@ -241,7 +342,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
             />
             <ConnectButton
               text={t('connect.wallet-connect')}
-              icon={<WalletConnectSvg />}
+              icon={generateIcon(WalletConnectPng)}
               isDisabled={
                 connectorName === ConnectorName.WalletConnect && isConnected
               }
@@ -249,6 +350,9 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                 connectorName === ConnectorName.WalletConnect && isConnected
               }
               onClick={async () => {
+                trackWallet({
+                  [TrackKey.DesiredWallet]: DesiredWallet.WalletConnect,
+                })
                 await walletConnect.activate()
                 const { error } = walletConnectStore.getState()
                 if (error != null) {
@@ -279,13 +383,22 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
             <Text fontSize="12px" color="#6f6f6f" mb="16px" maxWidth="250px">
               {t('connect.desired-wallet')}
             </Text>
-            <VStack spacing="10px">
-              <PlaceholderButton
-                text={t('connect.phantom')}
-                icon={<PhantomSvg />}
-              />
-              <PlaceholderButton text={t('connect.blocto')} icon={<Blocto />} />
-            </VStack>
+            <Wrap spacing="10px" align="center" justify="center">
+              {placeHolderBtns.map((item, index) => (
+                <PlaceholderButton
+                  index={index}
+                  key={item.name}
+                  text={item.name}
+                  icon={item.icon}
+                  textProps={{ color: '#6F6F6F' }}
+                  onClick={() => {
+                    trackWallet({
+                      [TrackKey.DesiredWallet]: item.name as any,
+                    })
+                  }}
+                />
+              ))}
+            </Wrap>
           </Center>
           <ModalFooter fontSize="12px" pb="24px" pt="16px">
             <Center maxWidth="280px" textAlign="center">

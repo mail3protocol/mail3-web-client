@@ -19,6 +19,9 @@ import {
   useSignup,
   buildSignMessaege,
   useToast,
+  useTrackClick,
+  TrackEvent,
+  TrackKey,
 } from 'hooks'
 import { Button } from 'ui'
 import { useRouter } from 'next/router'
@@ -31,15 +34,17 @@ import {
   useCloseAuthModal,
   useIsAuthModalOpen,
   useLogin,
+  useSetGlobalTrack,
 } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
+import { SERVER_URL } from '../../constants'
 
 export const AuthModal: React.FC = () => {
   const [t] = useTranslation('common')
   const account = useAccount()
   const [isLoading, setIsLoading] = useState(false)
   const signatureDesc = t('auth.sign')
-  const signup = useSignup(signatureDesc)
+  const signup = useSignup(signatureDesc, SERVER_URL)
   const provider = useProvider()
   const _toast = useToast()
   const toast = (s: string) => _toast(s, { position: 'top', duration: 2000 })
@@ -62,6 +67,8 @@ export const AuthModal: React.FC = () => {
     }
   }
 
+  const trackWhiteListConnect = useTrackClick(TrackEvent.WhiteListConnectWallet)
+  const setTrackGlobal = useSetGlobalTrack()
   const onRemember = async () => {
     setIsLoading(true)
     try {
@@ -70,20 +77,37 @@ export const AuthModal: React.FC = () => {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
           if (signedData != null) {
-            await login(signedData.message, signedData.signature)
+            const { jwt } = await login(
+              signedData.message,
+              signedData.signature
+            )
             closeAuthModal()
+            await setTrackGlobal(jwt)
+            if (router.pathname === RoutePath.WhiteList) {
+              trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
+            }
           }
           break
         }
         case SignupResponseCode.Success: {
-          await login(message!, signature!)
+          const { jwt } = await login(message!, signature!)
+          await setTrackGlobal(jwt)
+          if (router.pathname === RoutePath.WhiteList) {
+            trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
+          }
           closeAuthModal()
-          router.push(RoutePath.Setup)
+          if (
+            router.pathname !== RoutePath.WhiteList &&
+            router.pathname !== RoutePath.Testing
+          ) {
+            router.push(RoutePath.Setup)
+          }
           break
         }
         case SignupResponseCode.ConditionNotMeet:
           if (router.pathname === RoutePath.WhiteList) {
             closeAuthModal()
+            trackWhiteListConnect({ [TrackKey.WhiteListEntry]: false })
           } else {
             toast(t('auth.errors.condition-not-meet'))
           }

@@ -1,9 +1,12 @@
 import { extendTheme } from '@chakra-ui/react'
 
 const font =
-  'Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
+  "'Poppins', Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
 
 export const theme = extendTheme({
+  shadows: {
+    outline: 'none',
+  },
   colors: {
     brand: {
       50: 'rgba(0, 0, 0, 0.64)',
@@ -36,6 +39,21 @@ export const theme = extendTheme({
           _hover: { bg: 'transparent' },
           _focus: { outline: 'none', bg: 'transparent', boxShadow: 'none' },
           padding: '0',
+        },
+      },
+      baseStyle: {
+        _focus: {
+          outline: 'none',
+          boxShadow: 'none',
+        },
+        fontWeight: '600',
+      },
+    },
+    Link: {
+      baseStyle: {
+        _focus: {
+          outline: 'none',
+          boxShadow: 'none',
         },
       },
     },

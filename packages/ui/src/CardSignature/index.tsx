@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Center } from '@chakra-ui/react'
+import { Flex, Center, Text } from '@chakra-ui/react'
 import Image from 'next/image'
 // @ts-ignore
 import stampBg from 'assets/svg/stamp-bg.svg?url'
@@ -10,6 +10,16 @@ import { Avatar } from '../Avatar'
 
 export interface SignatureCardProps {
   account: string
+}
+
+function truncateMiddle(
+  str = '',
+  takeLength = 6,
+  tailLength = takeLength,
+  pad = '...'
+): string {
+  if (takeLength + tailLength >= str.length) return str
+  return `${str.slice(0, takeLength)}${pad}${str.slice(-tailLength)}`
 }
 
 export const CardSignature: React.FC<SignatureCardProps> = ({ account }) => (
@@ -27,8 +37,17 @@ export const CardSignature: React.FC<SignatureCardProps> = ({ account }) => (
     <Flex position="absolute" bottom="0" left="-10px">
       <Image src={StampPng} width="163px" height="144px" />
     </Flex>
-    <Flex position="absolute" bottom="10px">
-      <QrCode value={`https://mail.me/${account}`} size={32} fgColor="blue" />
+    <Flex position="absolute" bottom="42px" right="45px">
+      <Text
+        fontSize="12px"
+        w="95px"
+        fontWeight={700}
+        color="#4E52F5"
+        lineHeight="10px"
+      >{`${truncateMiddle(account, 6, 4)}@mail3.me`}</Text>
+    </Flex>
+    <Flex position="absolute" bottom="5px">
+      <QrCode value={`https://mail3.me/${account}`} size={32} fgColor="blue" />
     </Flex>
   </Center>
 )
