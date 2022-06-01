@@ -88,7 +88,7 @@ export const InboxComponent: React.FC = () => {
   const router = useRouter()
 
   const [seenMessages, setSeenMessages] = useState<messagesState>(null)
-  const [seenIsFetching, setSeenIsFetching] = useState(true)
+  const [isLoadingSeen, setIsLoadingSeen] = useState(true)
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
@@ -108,7 +108,8 @@ export const InboxComponent: React.FC = () => {
     data: newsInfiniteData,
     hasNextPage,
     fetchNextPage,
-    isFetching: newIsFetching,
+    isLoading: isLoadingNews,
+    isFetchingNextPage,
   } = useInfiniteQuery('newsQuery', queryFnNews, {
     getNextPageParam: (lastPage) => {
       if (typeof lastPage?.page !== 'number') return undefined
@@ -143,19 +144,11 @@ export const InboxComponent: React.FC = () => {
     [api]
   )
 
-  const isLoading =
-    newIsFetching && seenIsFetching && !seenMessages && !newMessages
-  const seenIsHidden = !seenMessages
-  const isClear =
-    !!newMessages &&
-    !newMessages.length &&
-    !!seenMessages &&
-    !seenMessages.length
-  const isNoNew =
-    !!newMessages &&
-    !newMessages.length &&
-    !!seenMessages &&
-    !!seenMessages.length
+  const isLoading = isLoadingNews || isLoadingSeen
+  const isNewsEmpty = !isLoading && !newMessages?.length
+  const isNewsNoEmpty = !isLoading && newMessages?.length
+  const isSeenEmpty = isLoading || !seenMessages?.length
+  const isClear = !isLoading && isNewsEmpty && isSeenEmpty
 
   return (
     <NewPageContainer>
@@ -215,51 +208,54 @@ export const InboxComponent: React.FC = () => {
             <Box className="title">{t('inbox.title.new')}</Box>
             {isClear && <EmptyStatus />}
             {isLoading && <Loading />}
-            {isNoNew && <NoNewStatus />}
-            {!!newMessages && (
-              <Mailbox
-                data={newMessages}
-                isChooseMode={isChooseMode}
-                setIsChooseMode={setIsChooseMode}
-                onClickAvatar={(_i, id) => {
-                  const newMap = { ...chooseMap }
-                  newMap[id] = !newMap[id]
-                  setChooseMap(newMap)
-                }}
-                chooseMap={chooseMap}
-                hiddenMap={hiddenMap}
-                getHref={(id) => `${RoutePath.Message}/${id}`}
-                onClickBody={() => {
-                  // report point
-                }}
-              />
-            )}
-            {newIsFetching && newMessages?.length && (
-              <Center w="100%" p="20px">
-                <Spinner />
-              </Center>
-            )}
-            {hasNextPage && (
-              <Center>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    fetchNextPage()
+            {isNewsEmpty && <NoNewStatus />}
+            {isNewsNoEmpty && (
+              <>
+                <Mailbox
+                  data={newMessages}
+                  isChooseMode={isChooseMode}
+                  setIsChooseMode={setIsChooseMode}
+                  onClickAvatar={(_i, id) => {
+                    const newMap = { ...chooseMap }
+                    newMap[id] = !newMap[id]
+                    setChooseMap(newMap)
                   }}
-                >
-                  {t('inbox.load-more')} +{PAGE_SIZE}
-                </Button>
-                <Circle size="40px" bg="black" color="white" marginLeft="10px">
-                  {newMessages?.length ? newsTotal - newMessages.length : 0}
-                </Circle>
-              </Center>
+                  chooseMap={chooseMap}
+                  hiddenMap={hiddenMap}
+                  getHref={(id) => `${RoutePath.Message}/${id}`}
+                  onClickBody={() => {
+                    // report point
+                  }}
+                />
+                {hasNextPage && (
+                  <Center>
+                    <Button
+                      isLoading={isFetchingNextPage}
+                      variant="outline"
+                      onClick={() => {
+                        fetchNextPage()
+                      }}
+                    >
+                      {t('inbox.load-more')} +{PAGE_SIZE}
+                    </Button>
+                    <Circle
+                      size="40px"
+                      bg="black"
+                      color="white"
+                      marginLeft="10px"
+                    >
+                      {newMessages?.length ? newsTotal - newMessages.length : 0}
+                    </Circle>
+                  </Center>
+                )}
+              </>
             )}
           </Box>
 
           <Box
             padding={{ base: 0, md: '20px 64px' }}
             bg="rgba(243, 243, 243, 0.4);"
-            display={seenIsHidden ? 'none' : 'block'}
+            display={isSeenEmpty ? 'none' : 'block'}
           >
             <Box className="title">{t('inbox.title.seen')}</Box>
             <InfiniteMailbox
@@ -277,8 +273,8 @@ export const InboxComponent: React.FC = () => {
               onDataChange={(data) => {
                 setSeenMessages(data)
               }}
-              onGetIsFetching={(b) => {
-                setSeenIsFetching(b)
+              onGetIsLoading={(b) => {
+                setIsLoadingSeen(b)
               }}
               onChooseModeChange={(b) => {
                 setIsChooseMode(b)

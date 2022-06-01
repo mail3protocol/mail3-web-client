@@ -45,6 +45,7 @@ interface InfiniteMailboxProps<
   calcDataLength?: (data?: InfiniteData<TData>) => number
   onDataChange?: (data: MessageItem[]) => void
   onGetIsFetching?: (isFetching: boolean) => void
+  onGetIsLoading?: (isLoading: boolean) => void
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
   getHref: (id: string) => LinkProps['href']
@@ -70,6 +71,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     parentChooseMap = {},
     parentIsChooseMode = false,
     onDataChange,
+    onGetIsLoading,
     onGetIsFetching,
     onChooseModeChange,
     onClickBody,
@@ -92,7 +94,8 @@ const InfiniteBox: ForwardRefRenderFunction<
     enabled: enableQuery,
   })
 
-  const { data, status, hasNextPage, fetchNextPage, isFetching } = queryData
+  const { data, status, hasNextPage, fetchNextPage, isFetching, isLoading } =
+    queryData
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
@@ -109,6 +112,10 @@ const InfiniteBox: ForwardRefRenderFunction<
   useEffect(() => {
     onGetIsFetching?.(isFetching)
   }, [isFetching])
+
+  useEffect(() => {
+    onGetIsLoading?.(isLoading)
+  }, [isLoading])
 
   useEffect(() => {
     if (queryData.status === 'success') {
