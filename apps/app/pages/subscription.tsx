@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
@@ -24,14 +24,64 @@ const NewPageContainer = styled(PageContainer)`
   }
 `
 
+const StickyWrap = styled(Box)`
+  width: 100%;
+  background-color: #fff;
+  top: -1px;
+  position: sticky;
+  z-index: 9;
+`
+
+interface StickyProps {
+  children: any
+}
+const Sticky: React.FC<StickyProps> = ({ children }) => {
+  const refWrap = useRef(null)
+  const [isShadow, setIsShadow] = useState(false)
+
+  useEffect(() => {
+    if (refWrap.current) {
+      const observer = new IntersectionObserver(
+        ([e]) => {
+          const isSticky = e.intersectionRatio < 1
+          setIsShadow(isSticky)
+        },
+        { threshold: [1] }
+      )
+      observer.observe(refWrap.current)
+
+      return () => {
+        if (refWrap.current) {
+          observer.unobserve(refWrap.current)
+        }
+      }
+    }
+
+    return () => {}
+  }, [refWrap.current])
+
+  return (
+    <StickyWrap
+      ref={refWrap}
+      style={{
+        boxShadow: isShadow ? '0px 0px 10px 4px rgb(25 25 100 / 10%)' : 'none',
+      }}
+    >
+      {children}
+    </StickyWrap>
+  )
+}
+
 const Subscription: NextPage = () => {
   const router = useRouter()
 
   return (
     <>
-      <PageContainer>
-        <Navbar />
-      </PageContainer>
+      <Sticky>
+        <PageContainer>
+          <Navbar />
+        </PageContainer>
+      </Sticky>
       <NewPageContainer>
         <Box paddingTop={{ base: '25px', md: '35px' }}>
           <FlexButtonBox>
