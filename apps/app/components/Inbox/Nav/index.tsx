@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, HStack, Wrap, WrapItem } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
+import Link from 'next/link'
 import SVGInbox from '../../../assets/inbox.svg'
 import SVGSub from '../../../assets/subscrption.svg'
 import { RoutePath } from '../../../route/path'
@@ -58,34 +58,36 @@ const HStackContainer = styled(HStack)`
 
 export const InboxNav: React.FC<{ currentType: InboxNavType }> = ({
   currentType,
-}) => {
-  const router = useRouter()
+}) => (
+  <HStackContainer spacing={{ md: '80px', base: '40px' }}>
+    {Object.keys(navMap).map((type, index) => {
+      const { icon, title } = navMap[type as keyof typeof InboxNavType]
+      const isCur = type === currentType
 
-  return (
-    <HStackContainer spacing={{ md: '80px', base: '40px' }}>
-      {Object.keys(navMap).map((type) => {
-        const { icon, title } = navMap[type as keyof typeof InboxNavType]
-        const isCur = type === currentType
-        return (
-          <Wrap
-            className={isCur ? 'wrap cur' : 'wrap'}
-            align="center"
-            key={title}
+      return (
+        <Link
+          // eslint-disable-next-line react/no-array-index-key
+          key={index}
+          href={
+            type === InboxNavType.Subscription
+              ? RoutePath.Subscription
+              : RoutePath.Home
+          }
+        >
+          <a
             onClick={() => {
-              if (type === InboxNavType.Subscription) {
-                router.push(RoutePath.Subscription)
-              } else {
-                router.push(RoutePath.Home)
-              }
+              // report point
             }}
           >
-            <WrapItem>{icon}</WrapItem>
-            <WrapItem>
-              <Box className={isCur ? 'box-cur' : ''}>{title}</Box>
-            </WrapItem>
-          </Wrap>
-        )
-      })}
-    </HStackContainer>
-  )
-}
+            <Wrap className={isCur ? 'wrap cur' : 'wrap'} align="center">
+              <WrapItem>{icon}</WrapItem>
+              <WrapItem>
+                <Box className={isCur ? 'box-cur' : ''}>{title}</Box>
+              </WrapItem>
+            </Wrap>
+          </a>
+        </Link>
+      )
+    })}
+  </HStackContainer>
+)
