@@ -3,6 +3,7 @@ import { AvatarBadge, Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import classNames from 'classnames'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
+import { useTranslation } from 'next-i18next'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
 import { dynamicDateString } from '../../utils'
@@ -78,6 +79,35 @@ const ItemFlex = styled(Flex)`
   }
 `
 
+const avatarBadgConfig = {
+  [AvatarBadgeType.None]: <Box />,
+  [AvatarBadgeType.New]: (
+    <AvatarBadge
+      boxSize="10px"
+      bg="#9093F9"
+      top="0"
+      bottom="auto"
+      border="none"
+    />
+  ),
+  [AvatarBadgeType.SentOK]: (
+    <AvatarBadge boxSize="10px" bg="#000" top="0" bottom="auto" border="none">
+      <CheckIcon color="#fff" w="5px" h="5px" />
+    </AvatarBadge>
+  ),
+  [AvatarBadgeType.SentFail]: (
+    <AvatarBadge
+      boxSize="10px"
+      bg="#FF5F57"
+      top="0"
+      bottom="auto"
+      border="none"
+    >
+      <CloseIcon color="#fff" w="5px" h="5px" />
+    </AvatarBadge>
+  ),
+}
+
 const Item = ({
   subject,
   // desc,
@@ -95,34 +125,7 @@ const Item = ({
   // setIsChooseMode,
   chooseMap,
 }: BoxItemProps) => {
-  const AvatarBadgeE = {
-    [AvatarBadgeType.None]: <Box />,
-    [AvatarBadgeType.New]: (
-      <AvatarBadge
-        boxSize="10px"
-        bg="#9093F9"
-        top="0"
-        bottom="auto"
-        border="none"
-      />
-    ),
-    [AvatarBadgeType.SentOK]: (
-      <AvatarBadge boxSize="10px" bg="#000" top="0" bottom="auto" border="none">
-        <CheckIcon color="#fff" w="5px" h="5px" />
-      </AvatarBadge>
-    ),
-    [AvatarBadgeType.SentFail]: (
-      <AvatarBadge
-        boxSize="10px"
-        bg="#FF5F57"
-        top="0"
-        bottom="auto"
-        border="none"
-      >
-        <CloseIcon color="#fff" w="5px" h="5px" />
-      </AvatarBadge>
-    ),
-  }[avatarBadgeType]
+  const [t] = useTranslation('mailboxes')
 
   const AvatarBox = (
     <Flex w="48px">
@@ -140,7 +143,7 @@ const Item = ({
         }}
         borderRadius="50%"
       >
-        {AvatarBadgeE}
+        {avatarBadgConfig[avatarBadgeType]}
       </Avatar>
       {/* <Center
         flexGrow={1}
@@ -205,12 +208,13 @@ const Item = ({
       >
         <Flex flex={1} wrap="wrap" alignContent="center">
           <Text
+            width="100%"
             wordBreak="break-all"
             fontWeight="600"
             fontSize="16px"
             noOfLines={1}
           >
-            {subject}
+            {subject || t('No-subject')}
           </Text>
           <Text
             wordBreak="break-all"
