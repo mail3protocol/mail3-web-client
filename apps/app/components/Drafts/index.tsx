@@ -1,6 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
 import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
@@ -16,7 +15,6 @@ import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const router = useRouter()
   const api = useAPI()
 
   const [isChooseMode, setIsChooseMode] = useState(false)
@@ -95,9 +93,15 @@ export const DraftsComponent: React.FC = () => {
             }
             noMoreElement={<ThisBottomStatus />}
             onChooseModeChange={(b) => setIsChooseMode(b)}
-            onClickBody={(id: string) => {
-              router.push(`${RoutePath.Message}/${id}`)
+            onClickBody={() => {
+              // report point
             }}
+            getHref={(id) => ({
+              pathname: RoutePath.NewMessage,
+              query: {
+                id,
+              },
+            })}
           />
         </Box>
       </MailboxContainer>

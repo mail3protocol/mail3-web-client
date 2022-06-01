@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next'
 import React, { useCallback, useRef, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
@@ -20,7 +19,6 @@ const TitleBox = styled(Box)`
 
 export const SentComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const router = useRouter()
   const api = useAPI()
 
   const refBoxList = useRef<InfiniteHandle>(null)
@@ -61,9 +59,10 @@ export const SentComponent: React.FC = () => {
             emptyElement={<EmptyStatus />}
             noMoreElement={<ThisBottomStatus />}
             onChooseModeChange={(b) => setIsChooseMode(b)}
-            onClickBody={(id: string) => {
-              router.push(`${RoutePath.Message}/${id}`)
+            onClickBody={() => {
+              // report point
             }}
+            getHref={(id) => `${RoutePath.Message}/${id}`}
           />
         </Box>
       </MailboxContainer>

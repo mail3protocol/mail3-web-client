@@ -16,6 +16,7 @@ import {
 } from 'react-query'
 import { Box } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { LinkProps } from 'next/link'
 import { MailboxesMessagesResponse } from '../../api'
 import { BoxListProps, Mailbox, MessageItem } from '../Mailbox'
 
@@ -46,6 +47,7 @@ interface InfiniteMailboxProps<
   onGetIsFetching?: (isFetching: boolean) => void
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
+  getHref: (id: string) => LinkProps['href']
 }
 
 export interface InfiniteHandle {
@@ -71,6 +73,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     onGetIsFetching,
     onChooseModeChange,
     onClickBody,
+    getHref,
   },
   forwardedRef
 ) => {
@@ -181,6 +184,7 @@ const InfiniteBox: ForwardRefRenderFunction<
               if (!onClickBody) return
               onClickBody(id)
             }}
+            getHref={getHref}
           />
           {isEmpty ? emptyElement ?? 'empty' : null}
         </InfiniteScroll>

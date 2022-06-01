@@ -3,7 +3,6 @@ import React, { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 // import { Button } from 'ui'
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
@@ -24,7 +23,6 @@ const TextBox = styled(Box)`
 
 export const TrashComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const router = useRouter()
   const api = useAPI()
   const refBoxList = useRef<InfiniteHandle>(null)
   const [isChooseMode, setIsChooseMode] = useState(false)
@@ -98,14 +96,15 @@ export const TrashComponent: React.FC = () => {
             emptyElement={<ClearStatus />}
             noMoreElement={<ThisBottomStatus />}
             onChooseModeChange={(b) => setIsChooseMode(b)}
-            onClickBody={(id: string) => {
-              router.push({
-                pathname: `${RoutePath.Message}/${id}`,
-                query: {
-                  origin: Mailboxes.Trash,
-                },
-              })
+            onClickBody={() => {
+              // report point
             }}
+            getHref={(id) => ({
+              pathname: `${RoutePath.Message}/${id}`,
+              query: {
+                origin: Mailboxes.Trash,
+              },
+            })}
           />
         </Box>
       </MailboxContainer>

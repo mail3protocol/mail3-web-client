@@ -169,29 +169,6 @@ export const InboxComponent: React.FC = () => {
     [api]
   )
 
-  const setNewToSeen = (ids: Array<string>) => {
-    if (!newMessages) return
-    const targetMgs = ids.map((id) => {
-      let retIndex = -1
-      newMessages.some((_item, i) => {
-        if (_item.id === id) {
-          retIndex = i
-          return true
-        }
-        return false
-      })
-      return retIndex
-    })
-
-    if (targetMgs.length) {
-      const newState = [...newMessages]
-      targetMgs.forEach((i) => {
-        newState[i].avatarBadgeType = AvatarBadgeType.None
-      })
-      setNewMessages(newState)
-    }
-  }
-
   const isLoading =
     newIsFetching && seenIsFetching && !seenMessages && !newMessages
   const seenIsHidden = !seenMessages
@@ -277,9 +254,9 @@ export const InboxComponent: React.FC = () => {
                 }}
                 chooseMap={chooseMap}
                 hiddenMap={hiddenMap}
-                onClickBody={(id) => {
-                  setNewToSeen([id])
-                  router.push(`${RoutePath.Message}/${id}`)
+                getHref={(id) => `${RoutePath.Message}/${id}`}
+                onClickBody={() => {
+                  // report point
                 }}
               />
             )}
@@ -329,9 +306,10 @@ export const InboxComponent: React.FC = () => {
               }}
               parentIsChooseMode={isChooseMode}
               parentChooseMap={chooseMap}
-              onClickBody={(id: string) => {
-                router.push(`${RoutePath.Message}/${id}`)
+              onClickBody={() => {
+                // report point
               }}
+              getHref={(id) => `${RoutePath.Message}/${id}`}
             />
           </Box>
         </MailboxContainer>

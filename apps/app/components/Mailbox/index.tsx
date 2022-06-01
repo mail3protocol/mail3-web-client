@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import classNames from 'classnames'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import { useTranslation } from 'next-i18next'
+import Link, { LinkProps } from 'next/link'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
 import { dynamicDateString } from '../../utils'
@@ -35,6 +36,7 @@ export interface BoxListProps {
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: Record<string, boolean>
   hiddenMap?: Record<string, boolean>
+  getHref: (id: string) => LinkProps['href']
 }
 
 export interface BoxItemProps extends MailboxMessageItemResponse {
@@ -47,6 +49,7 @@ export interface BoxItemProps extends MailboxMessageItemResponse {
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: BoxListProps['chooseMap']
+  href: LinkProps['href']
 }
 
 const CircleE = styled(Circle)`
@@ -124,6 +127,7 @@ const Item = ({
   isChooseMode,
   // setIsChooseMode,
   chooseMap,
+  href,
 }: BoxItemProps) => {
   const [t] = useTranslation('mailboxes')
 
@@ -198,44 +202,47 @@ const Item = ({
           AvatarBox
         )}
       </Box>
-      <Flex
-        marginLeft="20px"
-        align={{ base: 'flex-start', md: 'center' }}
-        flexDirection={{ base: 'column', md: 'row' }}
-        w="100%"
-        onClick={onClick}
-        cursor="pointer"
-      >
-        <Flex flex={1} wrap="wrap" alignContent="center">
-          <Text
-            width="100%"
-            wordBreak="break-all"
-            fontWeight="600"
-            fontSize="16px"
-            noOfLines={1}
-          >
-            {subject || t('No-subject')}
-          </Text>
-          <Text
-            wordBreak="break-all"
-            fontWeight="400"
-            fontSize="14px"
-            pt="5px"
-            lineHeight={1.3}
-            noOfLines={{ base: 3, md: 1 }}
-          >
-            {desc}
-          </Text>
-        </Flex>
-        <Box
-          className="date"
-          fontSize="14px"
-          mt={{ base: '20px' }}
-          ml={{ md: '20px' }}
+      <Link href={href} passHref>
+        <Flex
+          as="a"
+          marginLeft="20px"
+          align={{ base: 'flex-start', md: 'center' }}
+          flexDirection={{ base: 'column', md: 'row' }}
+          w="100%"
+          onClick={onClick}
+          cursor="pointer"
         >
-          {dynamicDateString(date)}
-        </Box>
-      </Flex>
+          <Flex flex={1} wrap="wrap" alignContent="center">
+            <Text
+              width="100%"
+              wordBreak="break-all"
+              fontWeight="600"
+              fontSize="16px"
+              noOfLines={1}
+            >
+              {subject || t('No-subject')}
+            </Text>
+            <Text
+              wordBreak="break-all"
+              fontWeight="400"
+              fontSize="14px"
+              pt="5px"
+              lineHeight={1.3}
+              noOfLines={{ base: 3, md: 1 }}
+            >
+              {desc}
+            </Text>
+          </Flex>
+          <Box
+            className="date"
+            fontSize="14px"
+            mt={{ base: '20px' }}
+            ml={{ md: '20px' }}
+          >
+            {dynamicDateString(date)}
+          </Box>
+        </Flex>
+      </Link>
     </ItemFlex>
   )
 }
@@ -248,6 +255,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
   setIsChooseMode,
   chooseMap,
   hiddenMap,
+  getHref,
 }) => (
   <Box>
     {data.map((item, index) => {
@@ -256,6 +264,8 @@ export const Mailbox: React.FC<BoxListProps> = ({
       if (hiddenMap && hiddenMap[id]) {
         return null
       }
+
+      const href = getHref ? getHref(id) : ''
 
       return (
         <Item
@@ -269,6 +279,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
           onClick={() => {
             onClickBody(id)
           }}
+          href={href}
         />
       )
     })}
