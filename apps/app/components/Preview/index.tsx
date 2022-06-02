@@ -209,7 +209,8 @@ export const PreviewComponent: React.FC = () => {
     if (!address.endsWith(MAIL_SERVER_URL)) {
       return
     }
-    console.log(removeMailSuffix(address))
+    const realAddress = removeMailSuffix(address)
+    router.push(`${MAIL_SERVER_URL}/${realAddress}`)
   }
 
   if (!id) {
