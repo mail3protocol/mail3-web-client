@@ -18,8 +18,9 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
 import { Attachment } from './Attachment'
-import { dynamicDateString } from '../../utils'
+import { dynamicDateString, removeMailSuffix } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
+import { MAIL_SERVER_URL } from '../../constants'
 
 interface MeesageDetailState
   extends Pick<
@@ -204,6 +205,13 @@ export const PreviewComponent: React.FC = () => {
     return list.map((key) => buttonConfig[key])
   }, [api, id, origin])
 
+  const onClickAvatar = (address: string) => {
+    if (!address.endsWith(MAIL_SERVER_URL)) {
+      return
+    }
+    console.log(removeMailSuffix(address))
+  }
+
   if (!id) {
     return (
       <Container>
@@ -244,6 +252,9 @@ export const PreviewComponent: React.FC = () => {
                 h={{ base: '32px', md: '48px' }}
                 address={detail.from.address}
                 borderRadius="50%"
+                onClick={() => {
+                  onClickAvatar(detail.from.address)
+                }}
               />
             )}
             {detail?.to.map((item) => (
@@ -253,6 +264,9 @@ export const PreviewComponent: React.FC = () => {
                 key={item.address}
                 address={item.address}
                 borderRadius="50%"
+                onClick={() => {
+                  onClickAvatar(item.address)
+                }}
               />
             ))}
           </AvatarGroup>
