@@ -36,3 +36,14 @@ export async function copyText(s: string) {
     copyTextFallback(s)
   }
 }
+
+export function removeMailSuffix(emailAddress: string) {
+  if (!verifyEmail(emailAddress)) return emailAddress
+  let i = emailAddress.length - 1
+  for (; i >= 0; i--) {
+    if (emailAddress[i] === '@') {
+      break
+    }
+  }
+  return emailAddress.substring(0, i)
+}

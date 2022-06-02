@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import Link, { LinkProps } from 'next/link'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
-import { dynamicDateString } from '../../utils'
+import { dynamicDateString, removeMailSuffix } from '../../utils'
 
 export enum AvatarBadgeType {
   None,
@@ -130,12 +130,13 @@ const Item = ({
   href,
 }: BoxItemProps) => {
   const [t] = useTranslation('mailboxes')
+  const fromAddress = removeMailSuffix(from.address)
 
   const AvatarBox = (
     <Flex w="48px">
       <Avatar
         cursor="pointer"
-        address={from.address}
+        address={fromAddress}
         w="48px"
         h="48px"
         showBorder
