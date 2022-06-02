@@ -249,6 +249,21 @@ export const PreviewComponent: React.FC = () => {
         </Circle>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={10}>
+            {detail?.from && (
+              <Box
+                as="button"
+                onClick={() => {
+                  onClickAvatar(detail.from.address)
+                }}
+              >
+                <Avatar
+                  w={{ base: '32px', md: '48px' }}
+                  h={{ base: '32px', md: '48px' }}
+                  address={removeMailSuffix(detail.from.address)}
+                  borderRadius="50%"
+                />
+              </Box>
+            )}
             {detail?.to.map((item) => (
               <Box
                 as="button"
@@ -265,21 +280,6 @@ export const PreviewComponent: React.FC = () => {
                 />
               </Box>
             ))}
-            {detail?.from && (
-              <Box
-                as="button"
-                onClick={() => {
-                  onClickAvatar(detail.from.address)
-                }}
-              >
-                <Avatar
-                  w={{ base: '32px', md: '48px' }}
-                  h={{ base: '32px', md: '48px' }}
-                  address={removeMailSuffix(detail.from.address)}
-                  borderRadius="50%"
-                />
-              </Box>
-            )}
           </AvatarGroup>
         </Box>
       </Center>
@@ -312,6 +312,7 @@ export const PreviewComponent: React.FC = () => {
               borderBottom="1px solid #E7E7E7;"
               wordBreak="break-all"
               pl="15px"
+              flexGrow={1}
             >
               <Flex
                 lineHeight={1}
