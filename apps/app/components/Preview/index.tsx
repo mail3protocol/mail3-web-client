@@ -4,7 +4,7 @@ import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import styled from '@emotion/styled'
-import { ConfirmDialog, useDialog } from 'hooks'
+import { ConfirmDialog, useDialog, useToast } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
@@ -46,6 +46,7 @@ const Container = styled(Box)`
 export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('preview')
   const router = useRouter()
+  const toast = useToast()
   const { id, origin } = router.query as {
     id: string | undefined
     origin: string
@@ -85,6 +86,7 @@ export const PreviewComponent: React.FC = () => {
         if (typeof id !== 'string') return
         api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
       },
+      enabled: typeof id === 'string',
     }
   )
 
@@ -121,16 +123,10 @@ export const PreviewComponent: React.FC = () => {
         }
         try {
           await api.deleteMessage(id)
-          dialog({
-            type: 'success',
-            description: t('status.trash.ok'),
-          })
+          toast(t('status.trash.ok'))
           router.back()
         } catch (error) {
-          dialog({
-            type: 'warning',
-            description: t('status.trash.fail'),
-          })
+          toast(t('status.trash.fail'))
         }
       },
     },
@@ -156,18 +152,10 @@ export const PreviewComponent: React.FC = () => {
           onConfirm: async () => {
             try {
               await api.deleteMessage(id, true)
-              setTimeout(() => {
-                dialog({
-                  type: 'success',
-                  description: t('status.delete.ok'),
-                })
-                router.back()
-              }, 500)
+              toast(t('status.delete.ok'))
+              router.back()
             } catch (error) {
-              dialog({
-                type: 'warning',
-                description: t('status.delete.fail'),
-              })
+              toast(t('status.delete.fail'))
             }
           },
           onCancel: () => {},
@@ -180,12 +168,10 @@ export const PreviewComponent: React.FC = () => {
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id)
+          toast(t('status.restore.ok'))
           router.replace(`${RoutePath.Message}/${id}`)
         } catch (error) {
-          dialog({
-            type: 'warning',
-            description: t('restore-failed'),
-          })
+          toast(t('status.restore.fail'))
         }
       },
     },
