@@ -18,7 +18,11 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
 import { Attachment } from './Attachment'
-import { dynamicDateString, removeMailSuffix } from '../../utils'
+import {
+  dynamicDateString,
+  isMail3Address,
+  removeMailSuffix,
+} from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
 import { MAIL_SERVER_URL } from '../../constants'
 
@@ -192,11 +196,6 @@ export const PreviewComponent: React.FC = () => {
   }, [api, id, origin])
 
   const onClickAvatar = (address: string) => {
-    if (
-      [MAIL_SERVER_URL, 'imibao.net'].every((item) => !address.endsWith(item))
-    ) {
-      return
-    }
     const realAddress = removeMailSuffix(address).toLowerCase()
     window.location.href = `https://${MAIL_SERVER_URL}/${realAddress}`
   }
@@ -235,12 +234,16 @@ export const PreviewComponent: React.FC = () => {
         </Circle>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={10}>
-            {detail?.from && (
+            {detail.from && (
               <Box
-                as="button"
-                onClick={() => {
-                  onClickAvatar(detail.from.address)
-                }}
+                {...(isMail3Address(detail.from.address)
+                  ? {
+                      as: 'button',
+                      onClick: () => {
+                        onClickAvatar(detail.from.address)
+                      },
+                    }
+                  : {})}
               >
                 <Avatar
                   w={{ base: '32px', md: '48px' }}
@@ -250,18 +253,22 @@ export const PreviewComponent: React.FC = () => {
                 />
               </Box>
             )}
-            {detail?.to.map((item) => (
+            {detail.to.map(({ address }) => (
               <Box
-                as="button"
-                key={item.address}
-                onClick={() => {
-                  onClickAvatar(item.address)
-                }}
+                key={address}
+                {...(isMail3Address(address)
+                  ? {
+                      as: 'button',
+                      onClick: () => {
+                        onClickAvatar(address)
+                      },
+                    }
+                  : {})}
               >
                 <Avatar
                   w={{ base: '32px', md: '48px' }}
                   h={{ base: '32px', md: '48px' }}
-                  address={removeMailSuffix(item.address)}
+                  address={removeMailSuffix(address)}
                   borderRadius="50%"
                 />
               </Box>

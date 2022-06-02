@@ -1,3 +1,5 @@
+import { MAIL_SERVER_URL } from '../constants'
+
 export function verifyEmail(email: string) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -47,3 +49,8 @@ export function removeMailSuffix(emailAddress: string) {
   }
   return emailAddress.substring(0, i)
 }
+
+export const isMail3Address = (address: string) =>
+  [MAIL_SERVER_URL, 'imibao.net'].some((item) =>
+    address.toLowerCase().endsWith(item)
+  )
