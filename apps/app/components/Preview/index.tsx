@@ -206,11 +206,13 @@ export const PreviewComponent: React.FC = () => {
   }, [api, id, origin])
 
   const onClickAvatar = (address: string) => {
-    if (!address.endsWith(MAIL_SERVER_URL)) {
+    if (
+      [MAIL_SERVER_URL, 'imibao.net'].every((item) => !address.endsWith(item))
+    ) {
       return
     }
-    const realAddress = removeMailSuffix(address)
-    router.push(`${MAIL_SERVER_URL}/${realAddress}`)
+    const realAddress = removeMailSuffix(address).toLowerCase()
+    window.location.href = `https://${MAIL_SERVER_URL}/${realAddress}`
   }
 
   if (!id) {
@@ -247,29 +249,37 @@ export const PreviewComponent: React.FC = () => {
         </Circle>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={10}>
-            {detail?.from && (
-              <Avatar
-                w={{ base: '32px', md: '48px' }}
-                h={{ base: '32px', md: '48px' }}
-                address={detail.from.address}
-                borderRadius="50%"
-                onClick={() => {
-                  onClickAvatar(detail.from.address)
-                }}
-              />
-            )}
             {detail?.to.map((item) => (
-              <Avatar
-                w={{ base: '32px', md: '48px' }}
-                h={{ base: '32px', md: '48px' }}
+              <Box
+                as="button"
                 key={item.address}
-                address={item.address}
-                borderRadius="50%"
                 onClick={() => {
                   onClickAvatar(item.address)
                 }}
-              />
+              >
+                <Avatar
+                  w={{ base: '32px', md: '48px' }}
+                  h={{ base: '32px', md: '48px' }}
+                  address={removeMailSuffix(item.address)}
+                  borderRadius="50%"
+                />
+              </Box>
             ))}
+            {detail?.from && (
+              <Box
+                as="button"
+                onClick={() => {
+                  onClickAvatar(detail.from.address)
+                }}
+              >
+                <Avatar
+                  w={{ base: '32px', md: '48px' }}
+                  h={{ base: '32px', md: '48px' }}
+                  address={removeMailSuffix(detail.from.address)}
+                  borderRadius="50%"
+                />
+              </Box>
+            )}
           </AvatarGroup>
         </Box>
       </Center>
@@ -293,7 +303,7 @@ export const PreviewComponent: React.FC = () => {
                 <Avatar
                   w="48px"
                   h="48px"
-                  address={detail.from.address}
+                  address={removeMailSuffix(detail.from.address)}
                   borderRadius="50%"
                 />
               )}
