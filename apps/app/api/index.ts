@@ -153,7 +153,7 @@ export class API {
   public async setDefaultSentAddress(
     uuid: string
   ): Promise<AxiosResponse<void>> {
-    return this.axios.post(`/account/default_aliases/${uuid}`)
+    return this.axios.put(`/account/default_aliases/${uuid}`)
   }
 
   public async getMailboxes(): Promise<AxiosResponse<void>> {
