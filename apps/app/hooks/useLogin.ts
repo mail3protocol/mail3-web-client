@@ -191,7 +191,7 @@ export const useWalletChange = () => {
       if (isConnecting || !account) {
         return
       }
-      if (acc === account) {
+      if (acc?.toLowerCase() === account?.toLowerCase()) {
         return
       }
       removeCookie(COOKIE_KEY, { path: '/' })
