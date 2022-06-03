@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 import { useInfiniteQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { Button, PageContainer } from 'ui'
+import { useToast } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { MailboxMessageItemResponse } from '../../api'
@@ -86,6 +87,7 @@ export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
   const router = useRouter()
+  const toast = useToast()
 
   const [seenMessages, setSeenMessages] = useState<messagesState>(null)
   const [isLoadingSeen, setIsLoadingSeen] = useState(true)
@@ -156,15 +158,15 @@ export const InboxComponent: React.FC = () => {
         <MailboxMenu
           type={MailboxMenuType.Base}
           actionMap={{
-            [BulkActionType.Delete]: () => {
+            [BulkActionType.Delete]: async () => {
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
               const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
               const ids = [...newIds, ...seenIds]
 
               if (!ids.length) return
-
-              api.batchDeleteMessage(ids).then(() => {
+              try {
+                await api.batchDeleteMessage(ids)
                 if (newIds.length) {
                   const map: Record<string, boolean> = {}
                   newIds.forEach((key) => {
@@ -177,9 +179,11 @@ export const InboxComponent: React.FC = () => {
                   setChooseMap({})
                   setIsChooseMode(false)
                 }
-
                 refSeenBoxList?.current?.setHiddenIds(seenIds)
-              })
+                toast(t('status.trash.ok'))
+              } catch (error) {
+                toast(t('status.trash.fail'))
+              }
             },
           }}
           onClose={() => {

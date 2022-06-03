@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next'
 import React, { useCallback, useRef, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
+import { useToast } from 'hooks'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
@@ -23,6 +24,7 @@ export const SentComponent: React.FC = () => {
 
   const refBoxList = useRef<InfiniteHandle>(null)
   const [isChooseMode, setIsChooseMode] = useState(false)
+  const toast = useToast()
 
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
@@ -41,8 +43,13 @@ export const SentComponent: React.FC = () => {
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
               if (!ids?.length) return
-              await api.batchDeleteMessage(ids)
-              refBoxList?.current?.setHiddenIds(ids)
+              try {
+                await api.batchDeleteMessage(ids)
+                refBoxList?.current?.setHiddenIds(ids)
+                toast(t('status.trash.ok'))
+              } catch (error) {
+                toast(t('status.trash.fail'))
+              }
             },
           }}
         />

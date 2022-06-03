@@ -3,6 +3,7 @@ import React, { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 // import { Button } from 'ui'
 import styled from '@emotion/styled'
+import { useDialog, useToast } from 'hooks'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
@@ -27,6 +28,9 @@ export const TrashComponent: React.FC = () => {
   const refBoxList = useRef<InfiniteHandle>(null)
   const [isChooseMode, setIsChooseMode] = useState(false)
 
+  const toast = useToast()
+  const dialog = useDialog()
+
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
       const { data } = await api.getMailboxesMessages(
@@ -49,8 +53,30 @@ export const TrashComponent: React.FC = () => {
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
               if (!ids?.length) return
-              await api.batchDeleteMessage(ids)
-              refBoxList?.current?.setHiddenIds(ids)
+
+              dialog({
+                type: 'text',
+                title: t('confirm.delete.title'),
+                description: t('confirm.delete.description'),
+                okText: 'Yes',
+                cancelText: 'Cancel',
+                modalProps: {
+                  isOpen: false,
+                  onClose: () => {},
+                  size: 'md', // this size mobile is ugly, pc is better
+                  children: '',
+                },
+                onConfirm: async () => {
+                  try {
+                    await api.batchDeleteMessage(ids)
+                    refBoxList?.current?.setHiddenIds(ids)
+                    toast(t('status.delete.ok'))
+                  } catch (error) {
+                    toast(t('status.delete.fail'))
+                  }
+                },
+                onCancel: () => {},
+              })
             },
           }}
         />

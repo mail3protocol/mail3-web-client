@@ -253,9 +253,13 @@ export class API {
     })
   }
 
-  public async batchDeleteMessage(ids: string[]): Promise<AxiosResponse> {
+  public async batchDeleteMessage(
+    ids: string[],
+    isForce?: boolean
+  ): Promise<AxiosResponse> {
     return this.axios.post('/mailbox/account/messages/batch_delete', {
       messageIds: ids,
+      force: isForce,
     })
   }
 

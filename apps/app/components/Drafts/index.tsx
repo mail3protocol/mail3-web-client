@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
+import { useDialog, useToast } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { Mailboxes } from '../../api/mailboxes'
@@ -16,6 +17,8 @@ import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
+  const dialog = useDialog()
+  const toast = useToast()
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const refBoxList = useRef<InfiniteHandle>(null)
@@ -40,8 +43,30 @@ export const DraftsComponent: React.FC = () => {
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
               if (!ids?.length) return
-              await api.batchDeleteMessage(ids)
-              refBoxList?.current?.setHiddenIds(ids)
+
+              dialog({
+                type: 'text',
+                title: t('confirm.delete.title'),
+                description: t('confirm.delete.description'),
+                okText: 'Yes',
+                cancelText: 'Cancel',
+                modalProps: {
+                  isOpen: false,
+                  onClose: () => {},
+                  size: 'md', // this size mobile is ugly, pc is better
+                  children: '',
+                },
+                onConfirm: async () => {
+                  try {
+                    await api.batchDeleteMessage(ids, true)
+                    refBoxList?.current?.setHiddenIds(ids)
+                    toast(t('status.delete.ok'))
+                  } catch (error) {
+                    toast(t('status.delete.fail'))
+                  }
+                },
+                onCancel: () => {},
+              })
             },
           }}
         />
