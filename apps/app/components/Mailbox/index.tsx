@@ -203,7 +203,7 @@ const Item = ({
               fontSize="16px"
               noOfLines={1}
             >
-              {subject || t('No-subject')}
+              {subject || t('no-subject')}
             </Text>
             <Text
               wordBreak="break-all"

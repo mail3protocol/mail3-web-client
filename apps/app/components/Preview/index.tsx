@@ -286,7 +286,7 @@ export const PreviewComponent: React.FC = () => {
             lineHeight={1.2}
             marginBottom="30px"
           >
-            {detail.subject}
+            {detail.subject ? detail.subject : t('no-subject')}
           </Text>
         </Box>
         <Box>
