@@ -206,9 +206,8 @@ export const InboxComponent: React.FC = () => {
         <MailboxContainer minH="500px">
           <Box padding={{ md: '30px 64px', base: '0' }}>
             <Box className="title">{t('inbox.title.new')}</Box>
-            {isClear && <EmptyStatus />}
             {isLoading && <Loading />}
-            {isNewsEmpty && <NoNewStatus />}
+            {isClear ? <EmptyStatus /> : isNewsEmpty && <NoNewStatus />}
             {isNewsNoEmpty && (
               <>
                 <Mailbox
