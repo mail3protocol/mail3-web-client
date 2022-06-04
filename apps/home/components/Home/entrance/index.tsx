@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg?url'
 import LogoSvg from 'assets/svg/logo.svg'
-import { useInnerSize } from 'hooks'
+import { TrackEvent, useInnerSize, useTrackClick } from 'hooks'
 import { debounceTime, delay, fromEvent } from 'rxjs'
 import { sleep } from '../../../utils'
 
@@ -140,6 +140,7 @@ export const Entrance: React.FC<
       resizeSubscriber.unsubscribe()
     }
   }, [])
+  const trackBlackCube = useTrackClick(TrackEvent.HomeClickBlackCube)
 
   if (status === 'closed' || width < 768) {
     return null
@@ -230,6 +231,7 @@ export const Entrance: React.FC<
             }}
             overflow="hidden"
             onClick={async (e) => {
+              trackBlackCube()
               await setCoverInfo({
                 clientX: e.clientX,
                 clientY: e.clientY,
