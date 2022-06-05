@@ -9,13 +9,13 @@ import {
   useAccount,
   useConnector,
   useConnectWalletDialog,
-  useProvider,
   LoginInfo,
   useJWT,
   useLastConectorName,
   GlobalDimensions,
   SignatureStatus,
   useDidMount,
+  useAccountIsActivating,
 } from 'hooks'
 import { useRouter } from 'next/router'
 import { atom, useAtomValue } from 'jotai'
@@ -175,48 +175,50 @@ export const useInitUserProperties = () => {
 }
 
 export const useWalletChange = () => {
-  const isAuth = useIsAuthenticated()
   const closeAuthModal = useCloseAuthModal()
   const [, , removeCookie] = useCookies([COOKIE_KEY])
   const { onOpen: openConnectWalletModal } = useConnectWalletDialog()
-  const provider = useProvider()
-  const router = useRouter()
-  useEffect(() => {
-    if (!isAuth && !allowWithoutAuthPaths.has(router.pathname)) {
-      router.replace(RoutePath.Home)
-    }
-  }, [isAuth, router.pathname])
+  const account = useAccount()
+  const isConnecting = useAccountIsActivating()
+
+  const handleAccountChanged = useCallback(
+    ([acc]) => {
+      // disconected
+      if (acc === undefined) {
+        removeCookie(COOKIE_KEY, { path: '/' })
+        return
+      }
+      if (isConnecting || !account) {
+        return
+      }
+      if (acc?.toLowerCase() === account?.toLowerCase()) {
+        return
+      }
+      removeCookie(COOKIE_KEY, { path: '/' })
+    },
+    [account, isConnecting]
+  )
+
+  const handleDisconnect = useCallback(() => {
+    removeCookie(COOKIE_KEY, { path: '/' })
+    closeAuthModal()
+    openConnectWalletModal()
+  }, [])
 
   useEffect(() => {
-    const handleAccountChanged = () => {
-      removeCookie(COOKIE_KEY, { path: '/' })
-    }
-    const handleDisconnect = () => {
-      removeCookie(COOKIE_KEY, { path: '/' })
-      closeAuthModal()
-      openConnectWalletModal()
-    }
     const w = window as any
     const { ethereum } = w
     if (ethereum && ethereum.on) {
       ethereum.on('disconnect', handleDisconnect)
       ethereum.on('accountsChanged', handleAccountChanged)
     }
-    if (provider && provider.on) {
-      provider.on('disconnect', handleDisconnect)
-      provider.on('accountsChanged', handleAccountChanged)
-    }
     return () => {
       if (ethereum && ethereum.off) {
         ethereum.off('disconnect', handleDisconnect)
         ethereum.off('accountsChanged', handleAccountChanged)
       }
-      if (provider && provider.off) {
-        provider.off('disconnect', handleDisconnect)
-        provider.off('accountsChanged', handleAccountChanged)
-      }
     }
-  }, [provider])
+  }, [])
 }
 
 export const useAuth = () => {

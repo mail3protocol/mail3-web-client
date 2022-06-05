@@ -1,18 +1,13 @@
 {
-    "name": "ui",
+    "name": "models",
     "version": "0.0.0",
-    "main": "./src/index.tsx",
-    "types": "./src/index.tsx",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
     "scripts": {
         "lint": "eslint ./src"
     },
     "license": "MIT",
     "dependencies": {
-        "@metamask/detect-provider": "^1.2.0",
-        "assets": "*",
-        "boring-avatars": "1.5.8",
-        "hooks": "*",
-        "qrcode.react": "^3.0.1"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",
@@ -21,12 +16,8 @@
         "@types/react": "17.0.38",
         "@types/react-dom": "^17.0.0",
         "eslint": "8.13.0",
-        "framer-motion": "^6",
-        "jotai": "^1.6.1",
-        "next": "12.1.4",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
-        "react-query": "^3.34.16",
         "scripts": "*",
         "tsconfig": "*",
         "typescript": "4.6.3"

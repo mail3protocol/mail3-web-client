@@ -57,9 +57,13 @@ const Container = styled(Center)`
     z-index: 1;
     position: absolute;
 
-    @media (max-width: 930px) {
+    @media (max-width: 1024px) {
       position: static;
       bottom: 50px;
+    }
+
+    @media (max-height: 768px) {
+      right: 50px;
     }
   }
 
@@ -174,7 +178,12 @@ export const SettingSignature: React.FC = () => {
 
   return (
     <Container>
-      <Stack direction="column" spacing="32px" justifyContent="center">
+      <Stack
+        direction="column"
+        spacing="32px"
+        justifyContent="center"
+        maxW="100%"
+      >
         <Text fontSize={['14px', '14px', '18px']}>{t('signature.desc')}</Text>
         <VStack spacing="8px" w="100%">
           <Flex className="label">
