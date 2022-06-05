@@ -10,5 +10,6 @@ export enum RoutePath {
   SetupSignature = '/setup/signature',
   NewMessage = '/message/new',
   WhiteList = '/whitelist',
+  Subscription = '/subscription',
   Testing = '/testing',
 }

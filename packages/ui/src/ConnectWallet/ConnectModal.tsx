@@ -94,8 +94,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
     <Button
       variant="outline"
       w="250px"
-      paddingRight="6px"
-      paddingLeft="6px"
+      px="4px"
       {...props}
       onClick={isConnected ? undefined : onClick}
     >
