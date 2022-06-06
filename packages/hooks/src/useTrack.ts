@@ -22,6 +22,13 @@ export enum TrackEvent {
   HomeClickCommunity = 'mail3_offical_click_community',
   HomeClickGetIn = 'mail3_offical_click_getin',
   HomeClickContact = 'mail3_offical_click_contactus',
+
+  // subscriptions
+  ClickSubscriptionBell = 'click_subscription_bell',
+  // mailboxes
+
+  // mail detail
+  ClickMailDetailsPageItem = 'click_mail_details_page_item',
 }
 
 // dimensions
@@ -34,6 +41,9 @@ export enum TrackKey {
 
   // home
   HomeCommunity = 'Mail3_offical_click_community',
+
+  // mail detail
+  MailDetailPage = 'click_mail_details_page_item',
 }
 
 export enum GlobalDimensions {
@@ -64,11 +74,20 @@ export enum HomeCommunity {
   Mirror = 'mirror',
 }
 
+export enum MailDetailPageItem {
+  Reply = 'reply',
+  Forward = 'Forward',
+  Trash = 'Trash',
+  Restore = 'Restore',
+  Delete = 'Delete',
+}
+
 export interface TrackProps {
   [TrackKey.DesiredWallet]?: DesiredWallet
   [TrackKey.CollectedAddress]?: string
   [TrackKey.WhiteListEntry]?: boolean
   [TrackKey.HomeCommunity]?: HomeCommunity
+  [TrackKey.MailDetailPage]?: MailDetailPageItem
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {

@@ -4,7 +4,15 @@ import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import styled from '@emotion/styled'
-import { ConfirmDialog, useDialog, useToast } from 'hooks'
+import {
+  ConfirmDialog,
+  MailDetailPageItem,
+  TrackEvent,
+  TrackKey,
+  useDialog,
+  useToast,
+  useTrackClick,
+} from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
@@ -60,6 +68,7 @@ export const PreviewComponent: React.FC = () => {
   const [detail, setDetail] = useState<MeesageDetailState>()
   const api = useAPI()
   const dialog = useDialog()
+  const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
 
   useQuery(
     ['preview', id],
@@ -103,11 +112,14 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
       onClick: () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
+        })
         router.push({
           pathname: RoutePath.NewMessage,
           query: {
             id,
-            action: 'replay',
+            action: 'reply',
           },
         })
       },
@@ -115,6 +127,9 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
       onClick: () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
+        })
         router.push({
           pathname: RoutePath.NewMessage,
           query: {
@@ -127,6 +142,9 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Trash]: {
       type: SuspendButtonType.Trash,
       onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Trash,
+        })
         if (typeof id !== 'string') {
           return
         }
@@ -142,6 +160,9 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Delete]: {
       type: SuspendButtonType.Delete,
       onClick: () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Delete,
+        })
         if (typeof id !== 'string') {
           return
         }
@@ -174,6 +195,9 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Restore]: {
       type: SuspendButtonType.Restore,
       onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Restore,
+        })
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id)
