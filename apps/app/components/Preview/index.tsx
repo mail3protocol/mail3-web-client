@@ -30,7 +30,7 @@ import { MAIL_SERVER_URL } from '../../constants'
 interface MeesageDetailState
   extends Pick<
     MailboxMessageDetailResponse,
-    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc'
+    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc' | 'bcc'
   > {}
 
 const Container = styled(Box)`
@@ -79,7 +79,7 @@ export const PreviewComponent: React.FC = () => {
       refetchOnWindowFocus: false,
       onSuccess(d) {
         const { messageData, html } = d
-        const { date, subject, to, cc, from, attachments } = messageData
+        const { date, subject, to, cc, from, attachments, bcc } = messageData
 
         setDetail({
           date,
@@ -88,6 +88,7 @@ export const PreviewComponent: React.FC = () => {
           cc,
           from,
           attachments,
+          bcc,
         })
         setContent(html)
 
@@ -220,8 +221,9 @@ export const PreviewComponent: React.FC = () => {
     )
   }
 
-  let avatarGroupList = [detail.from, ...detail.to]
-  if (detail.cc) avatarGroupList = [...avatarGroupList, ...detail.cc]
+  let avatarList = [detail.from, ...detail.to]
+  if (detail.cc) avatarList = [...avatarList, ...detail.cc]
+  if (detail.bcc) avatarList = [...avatarList, ...detail.bcc]
 
   return (
     <>
@@ -241,7 +243,7 @@ export const PreviewComponent: React.FC = () => {
         </Circle>
         <Box bg="#F3F3F3" padding="4px" borderRadius="47px">
           <AvatarGroup size="md" max={10}>
-            {avatarGroupList.map(({ address }) => (
+            {avatarList.map(({ address }) => (
               <Box
                 key={address}
                 {...(isMail3Address(address)
@@ -353,6 +355,19 @@ export const PreviewComponent: React.FC = () => {
                   <span>
                     ; cc{' '}
                     {detail.cc
+                      .map((item) => {
+                        const address = truncateMiddle0xMail(item.address, 3, 4)
+                        if (item.name) return `${item.name} <${address}>`
+                        return `<${address}>`
+                      })
+                      .join(',')}
+                    ;
+                  </span>
+                )}
+                {detail?.bcc && (
+                  <span>
+                    ; bcc{' '}
+                    {detail.bcc
                       .map((item) => {
                         const address = truncateMiddle0xMail(item.address, 3, 4)
                         if (item.name) return `${item.name} <${address}>`

@@ -51,8 +51,8 @@ export interface MailboxMessageItemResponse {
   threadId: string
   flagged: boolean
   size: number
-  cc: Array<any> | null
-  bcc: Array<any> | null
+  cc: Array<AddressResponse> | null
+  bcc: Array<AddressResponse> | null
   inReplyTo: string
   flags: Array<Partial<MessageFlagType>> | null
   labels: Array<any> | null
