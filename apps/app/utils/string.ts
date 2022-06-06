@@ -54,3 +54,18 @@ export const isMail3Address = (address: string) =>
   [MAIL_SERVER_URL, 'imibao.net'].some((item) =>
     address.toLowerCase().endsWith(item)
   )
+
+export const is0xAddress = (address: string) => address.startsWith('0x')
+
+export const truncateMiddle0xMail = (
+  address: string,
+  takeLength?: number,
+  tailLength?: number
+) => {
+  if (!verifyEmail(address)) return address
+  if (!is0xAddress(address)) return address
+  const splitAddress = address.split('@')
+  const realAddress = splitAddress[0]
+  const suffix = splitAddress[1]
+  return `${truncateMiddle(realAddress, takeLength, tailLength)}@${suffix}`
+}

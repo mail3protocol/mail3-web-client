@@ -22,6 +22,7 @@ import {
   dynamicDateString,
   isMail3Address,
   removeMailSuffix,
+  truncateMiddle0xMail,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
 import { MAIL_SERVER_URL } from '../../constants'
@@ -29,7 +30,7 @@ import { MAIL_SERVER_URL } from '../../constants'
 interface MeesageDetailState
   extends Pick<
     MailboxMessageDetailResponse,
-    'date' | 'subject' | 'to' | 'from' | 'attachments'
+    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc'
   > {}
 
 const Container = styled(Box)`
@@ -78,12 +79,15 @@ export const PreviewComponent: React.FC = () => {
       refetchOnWindowFocus: false,
       onSuccess(d) {
         const { messageData, html } = d
+        const { date, subject, to, cc, from, attachments } = messageData
+
         setDetail({
-          date: messageData.date,
-          subject: messageData.subject,
-          to: messageData.to,
-          from: messageData.from,
-          attachments: messageData.attachments,
+          date,
+          subject,
+          to,
+          cc,
+          from,
+          attachments,
         })
         setContent(html)
 
@@ -304,7 +308,7 @@ export const PreviewComponent: React.FC = () => {
             <Box
               borderBottom="1px solid #E7E7E7;"
               wordBreak="break-all"
-              pl="15px"
+              ml="15px"
               flexGrow={1}
             >
               <Flex
@@ -351,15 +355,29 @@ export const PreviewComponent: React.FC = () => {
                 lineHeight="24px"
                 marginTop="5px"
               >
-                to{' '}
-                {detail.to
-                  .map((item) => {
-                    // const address = truncateMiddle(item.address, 6, 6)
-                    const { address } = item
-                    if (item.name) return `${item.name} <${address}>`
-                    return `<${address}>`
-                  })
-                  .join(';')}
+                <span>
+                  to{' '}
+                  {detail.to
+                    .map((item) => {
+                      const address = truncateMiddle0xMail(item.address, 3, 4)
+                      if (item.name) return `${item.name} <${address}>`
+                      return `<${address}>`
+                    })
+                    .join(',')}
+                </span>
+                {detail?.cc && (
+                  <span>
+                    ; cc{' '}
+                    {detail.cc
+                      .map((item) => {
+                        const address = truncateMiddle0xMail(item.address, 3, 4)
+                        if (item.name) return `${item.name} <${address}>`
+                        return `<${address}>`
+                      })
+                      .join(',')}
+                    ;
+                  </span>
+                )}
               </Box>
 
               <Box
