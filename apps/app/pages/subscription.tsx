@@ -5,6 +5,7 @@ import { Button, PageContainer } from 'ui'
 import styled from '@emotion/styled'
 import { Box } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { Navbar } from '../components/Navbar'
 import { FlexButtonBox, MailboxContainer } from '../components/Inbox'
 import { InboxNav, InboxNavType } from '../components/Inbox/Nav'
@@ -77,6 +78,7 @@ const Sticky: React.FC<StickyProps> = ({ children }) => {
 
 const Subscription: NextPage = () => {
   const router = useRouter()
+  const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
 
   return (
     <>
@@ -92,6 +94,7 @@ const Subscription: NextPage = () => {
             <Button
               className="btn-write"
               onClick={() => {
+                trackWriteButton()
                 router.push(RoutePath.NewMessage)
               }}
             >

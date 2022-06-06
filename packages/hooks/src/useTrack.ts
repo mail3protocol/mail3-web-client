@@ -26,6 +26,7 @@ export enum TrackEvent {
   // subscriptions
   ClickSubscriptionBell = 'click_subscription_bell',
   // mailboxes
+  ClickWrite = 'click_write',
 
   // mail detail
   ClickMailDetailsPageItem = 'click_mail_details_page_item',

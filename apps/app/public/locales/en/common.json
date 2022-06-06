@@ -38,5 +38,8 @@
             "unknown": "Unknown error, please try again later",
             "condition-not-meet": "You do not have permission to participate in Beta testing."
         }
+    },
+    "button": {
+        "btn-write": "write"
     }
 }

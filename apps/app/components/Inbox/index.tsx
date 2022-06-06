@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { useInfiniteQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { Button, PageContainer } from 'ui'
-import { useToast } from 'hooks'
+import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { MailboxMessageItemResponse } from '../../api'
@@ -88,6 +88,7 @@ export const InboxComponent: React.FC = () => {
   const api = useAPI()
   const router = useRouter()
   const toast = useToast()
+  const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
 
   const [seenMessages, setSeenMessages] = useState<messagesState>(null)
   const [isLoadingSeen, setIsLoadingSeen] = useState(true)
@@ -200,6 +201,7 @@ export const InboxComponent: React.FC = () => {
           <Button
             className="btn-write"
             onClick={() => {
+              trackWriteButton()
               router.push(RoutePath.NewMessage)
             }}
           >
