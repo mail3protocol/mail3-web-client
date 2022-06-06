@@ -45,6 +45,9 @@ export enum TrackKey {
 
   // mail detail
   MailDetailPage = 'click_mail_details_page_item',
+
+  // subscriptions
+  SubscriptionBell = 'click_subscription_bell',
 }
 
 export enum GlobalDimensions {
@@ -89,6 +92,7 @@ export interface TrackProps {
   [TrackKey.WhiteListEntry]?: boolean
   [TrackKey.HomeCommunity]?: HomeCommunity
   [TrackKey.MailDetailPage]?: MailDetailPageItem
+  [TrackKey.SubscriptionBell]?: string
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {

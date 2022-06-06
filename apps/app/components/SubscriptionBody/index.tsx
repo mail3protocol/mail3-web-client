@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { Button } from 'ui'
-import { useDidMount } from 'hooks'
-import update from 'immutability-helper'
+import { TrackEvent, TrackKey, useDidMount, useTrackClick } from 'hooks'
 import AvatarTemp from '../../assets/subscription/avatar-temp.png'
 import SubTop from '../../assets/subscription/top.png'
 import SVGVector from '../../assets/subscription/vector.svg'
@@ -19,21 +18,21 @@ let data = [
   },
   {
     avatarSrc: AvatarTemp,
-    name: 'name',
+    name: 'name1',
     desc: 'Hi，I am your best neighbor spiderman',
     isSub: true,
     isNew: false,
   },
   {
     avatarSrc: AvatarTemp,
-    name: 'name',
+    name: 'name2',
     desc: 'Hi，I am your best neighbor spiderman.Hi，I am your best neighbor spiderman.Hi，I am your best neighbor spiderman. neighbor spiderman.Hi，I am your best neighbor spiderman.Hi，I am your best neighbor spiderman.',
     isSub: false,
     isNew: false,
   },
   {
     avatarSrc: AvatarTemp,
-    name: 'name',
+    name: 'name3',
     desc: 'Hi，I am your best neighbor spiderman.Hi，I am your best or spiderman.Hi，I am your best neighbor spiderman.Hi，I  spiderman.Hi，I am your best neighbor spiderman.',
     isSub: false,
     isNew: false,
@@ -46,9 +45,9 @@ data = [...data, ...data]
 
 interface ListItem {
   isNew: boolean
-  name: any
+  name: string
   avatarSrc: any
-  desc: any
+  desc: string
   isSub: boolean
 }
 
@@ -128,6 +127,7 @@ const Item = (props: ItemProps) => {
 }
 
 export const SubscriptionBody: React.FC = () => {
+  const trackBell = useTrackClick(TrackEvent.ClickSubscriptionBell)
   const [list, setList] = useState<Array<ListItem>>([])
 
   useDidMount(() => {
@@ -135,26 +135,16 @@ export const SubscriptionBody: React.FC = () => {
   })
 
   const handleClick: HandleClick = (index, type) => {
-    let newList: Array<ListItem> = []
-
+    const newList = [...list]
+    trackBell({
+      [TrackKey.SubscriptionBell]: newList[index].name,
+    })
     if (type === 'follow') {
       // doing follow
-      newList = update(list, {
-        [index]: {
-          isSub: {
-            $set: true,
-          },
-        },
-      })
+      newList[index].isSub = true
     } else {
       // doing unfollow
-      newList = update(list, {
-        [index]: {
-          isSub: {
-            $set: false,
-          },
-        },
-      })
+      newList[index].isSub = false
     }
     setList(newList)
   }
