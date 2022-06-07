@@ -23,6 +23,7 @@ import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
+import { GOOGLE_ANALYTICS_ID } from '../constants'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -136,6 +137,12 @@ export const useSetGlobalTrack = () => {
         }
         try {
           gtag?.('set', 'user_properties', config)
+          gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
+            user_id: account,
+          })
+          gtag?.('set', 'user_properties', {
+            crm_id: account,
+          })
         } catch (error) {
           //
         }
@@ -156,6 +163,14 @@ export const useInitUserProperties = () => {
     if (userProps && isAuth) {
       try {
         gtag?.('set', 'user_properties', userProps)
+        if (userProps.wallet_address) {
+          gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
+            user_id: userProps.wallet_address,
+          })
+          gtag?.('set', 'user_properties', {
+            crm_id: userProps.wallet_address,
+          })
+        }
       } catch (error) {
         //
       }

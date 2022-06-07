@@ -5,6 +5,7 @@ import { PageContainer } from 'ui'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { Center, Heading } from '@chakra-ui/react'
+import Head from 'next/head'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
@@ -23,38 +24,43 @@ export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
   })
 )
 
-const SettingsAddressPage: NextPage = () => {
+const SettingsSignaturePage: NextPage = () => {
   const [t] = useTranslation('settings')
   return (
-    <PageContainer>
-      <Navbar />
-      <SettingContainer>
-        <Center
-          position="relative"
-          w="100%"
-          mb="20px"
-          mt={['20px', '20px', '40px']}
-        >
-          <Heading fontSize={['20px', '20px', '28px']}>
-            {t('settings.title')}
-          </Heading>
-        </Center>
-        <Tabs mb="32px">
-          <Link href={RoutePath.Settings} passHref>
-            <Tab as="a" isActive={false}>
-              {t('settings.tabs.address')}
-            </Tab>
-          </Link>
-          <Link href={RoutePath.SettingSignature} passHref>
-            <Tab as="a" isActive>
-              {t('settings.tabs.signature')}
-            </Tab>
-          </Link>
-        </Tabs>
-        <SettingSignature />
-      </SettingContainer>
-    </PageContainer>
+    <>
+      <Head>
+        <title>Mail3: Setting Signature</title>
+      </Head>
+      <PageContainer>
+        <Navbar />
+        <SettingContainer>
+          <Center
+            position="relative"
+            w="100%"
+            mb="20px"
+            mt={['20px', '20px', '40px']}
+          >
+            <Heading fontSize={['20px', '20px', '28px']}>
+              {t('settings.title')}
+            </Heading>
+          </Center>
+          <Tabs mb="32px">
+            <Link href={RoutePath.Settings} passHref>
+              <Tab as="a" isActive={false}>
+                {t('settings.tabs.address')}
+              </Tab>
+            </Link>
+            <Link href={RoutePath.SettingSignature} passHref>
+              <Tab as="a" isActive>
+                {t('settings.tabs.signature')}
+              </Tab>
+            </Link>
+          </Tabs>
+          <SettingSignature />
+        </SettingContainer>
+      </PageContainer>
+    </>
   )
 }
 
-export default SettingsAddressPage
+export default SettingsSignaturePage
