@@ -40,6 +40,8 @@
         }
     },
     "button": {
-        "btn-write": "write"
+        "btn-write": "write",
+        "yes": "Yes",
+        "cancel": "Cancel"
     }
 }
