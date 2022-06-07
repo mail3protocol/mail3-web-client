@@ -34,6 +34,7 @@ import {
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
 import { MAIL_SERVER_URL } from '../../constants'
+import { RenderHTML } from './parser'
 
 interface MeesageDetailState
   extends Pick<
@@ -420,12 +421,13 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          <div
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: content,
-            }}
-          />
+          <Box>
+            <RenderHTML
+              html={content}
+              attachments={detail.attachments}
+              messageId={id}
+            />
+          </Box>
           {!!detail?.attachments && (
             <Attachment data={detail.attachments} messageId={id} />
           )}
