@@ -205,7 +205,9 @@ export const SettingAddress: React.FC = () => {
             </Text>
             <HStack spacing="4px">
               <CheckCircleIcon color="#4E52F5" w="12px" />
-              <Text fontWeight={500}>{t('address.default')}</Text>
+              <Text fontWeight={500} color="#4E52F5">
+                {t('address.default')}
+              </Text>
             </HStack>
             <Tooltip label={t('address.default-hover')}>
               <QuestionIcon cursor="pointer" w="16px" color="#4E52F5" />

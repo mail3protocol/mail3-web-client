@@ -129,7 +129,10 @@ export const useSetGlobalTrack = () => {
         ) {
           sigStatus = SignatureStatus.BothDisabled
         }
+        const defaultAddress =
+          aliases.aliases.find((a) => a.is_default) || account
         const config = {
+          defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
           [GlobalDimensions.ConnectedWalletName]: walletName,
           [GlobalDimensions.WalletAddress]: account,

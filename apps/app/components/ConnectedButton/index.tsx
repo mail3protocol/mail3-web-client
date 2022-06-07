@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
+import { useAtomValue } from 'jotai'
 import React, { useMemo, useRef, useState } from 'react'
 import { useConnectWalletDialog, useDidMount, useToast } from 'hooks'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
@@ -21,6 +22,7 @@ import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
 import { copyText } from '../../utils'
 import { MAIL_SERVER_URL } from '../../constants'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
@@ -28,10 +30,11 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const toast = useToast()
   const popoverRef = useRef<HTMLElement>(null)
   const { onOpen } = useConnectWalletDialog()
+  const userProps = useAtomValue(userPropertiesAtom)
   const btns: ButtonListItemProps[] = useMemo(
     () => [
       {
-        href: RoutePath.Settings,
+        href: RoutePath.SettingSignature,
         label: t('navbar.settings'),
         icon: <SetupSvg />,
       },
@@ -45,7 +48,11 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
-          await copyText(`${address.toLowerCase()}@${MAIL_SERVER_URL}`)
+          await copyText(
+            `${(
+              userProps?.defaultAddress || address
+            ).toLowerCase()}@${MAIL_SERVER_URL}`
+          )
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
         },
@@ -58,7 +65,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         },
       },
     ],
-    [address]
+    [address, userProps]
   )
 
   const [mounted, setMounted] = useState(false)
