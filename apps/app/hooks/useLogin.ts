@@ -35,7 +35,9 @@ export const useSetLoginCookie = () => {
       secure: false,
     }
     if (process.env.NODE_ENV === 'production') {
-      option.domain = COOKIE_DOMAIN
+      if (COOKIE_DOMAIN) {
+        option.domain = COOKIE_DOMAIN
+      }
       option.secure = true
     }
     console.log(option)
