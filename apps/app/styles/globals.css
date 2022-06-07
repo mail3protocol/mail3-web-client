@@ -16,12 +16,6 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-@font-face {
-  font-family: Poppins-Regular;
-  src: local(Poppins-Regular), url(/fonts/Poppins-Regular.ttf) format('truetype');
-  font-display: fallback;
-}
-
 /* poppins-300 - latin */
 @font-face {
   font-family: 'Poppins';

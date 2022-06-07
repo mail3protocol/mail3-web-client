@@ -149,7 +149,7 @@ export const InboxComponent: React.FC = () => {
 
   const isLoading = isLoadingNews || isLoadingSeen
   const isNewsEmpty = !isLoading && !newMessages?.length
-  const isNewsNoEmpty = !isLoading && newMessages?.length
+  const isNewsNoEmpty = !isLoading && !!newMessages?.length
   const isSeenEmpty = isLoading || !seenMessages?.length
   const isClear = !isLoading && isNewsEmpty && isSeenEmpty
 
@@ -212,9 +212,9 @@ export const InboxComponent: React.FC = () => {
         <MailboxContainer minH="500px">
           <Box padding={{ md: '30px 64px', base: '0' }}>
             <Box className="title">{t('inbox.title.new')}</Box>
-            {isLoading && <Loading />}
+            {isLoading ? <Loading /> : null}
             {isClear ? <EmptyStatus /> : isNewsEmpty && <NoNewStatus />}
-            {isNewsNoEmpty && (
+            {isNewsNoEmpty ? (
               <>
                 <Mailbox
                   data={newMessages}
@@ -254,7 +254,7 @@ export const InboxComponent: React.FC = () => {
                   </Center>
                 )}
               </>
-            )}
+            ) : null}
           </Box>
 
           <Box
