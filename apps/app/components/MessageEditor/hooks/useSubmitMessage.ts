@@ -7,6 +7,7 @@ import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
 import { useCardSignature } from './useCardSignature'
 import { DRAFT_ID_NAME } from './useSaveMessage'
+import { RoutePath } from '../../../route/path'
 
 const CARD_SIGNATURE_FILENAME = 'signature.png'
 const CARD_SIGNATURE_CONTENT_ID = 'signature'
@@ -56,7 +57,7 @@ export function useSubmitMessage() {
       if (draftId) {
         await api.deleteMessage(draftId, { force: true })
       }
-      await router.push('/inbox')
+      await router.push(RoutePath.Inbox)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
         textProps: {
