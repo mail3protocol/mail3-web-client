@@ -68,6 +68,7 @@ export const AuthModal: React.FC = () => {
   }
 
   const trackWhiteListConnect = useTrackClick(TrackEvent.WhiteListConnectWallet)
+  const trackTestingConnect = useTrackClick(TrackEvent.TestingConnectWallet)
   const setTrackGlobal = useSetGlobalTrack()
   const onRemember = async () => {
     setIsLoading(true)
@@ -86,6 +87,9 @@ export const AuthModal: React.FC = () => {
             if (router.pathname === RoutePath.WhiteList) {
               trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
             }
+            if (router.pathname === RoutePath.Testing) {
+              trackTestingConnect({ [TrackKey.TestingEntry]: true })
+            }
           }
           break
         }
@@ -94,6 +98,9 @@ export const AuthModal: React.FC = () => {
           await setTrackGlobal(jwt)
           if (router.pathname === RoutePath.WhiteList) {
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
+          }
+          if (router.pathname === RoutePath.Testing) {
+            trackTestingConnect({ [TrackKey.TestingEntry]: true })
           }
           closeAuthModal()
           if (
@@ -108,6 +115,9 @@ export const AuthModal: React.FC = () => {
           if (router.pathname === RoutePath.WhiteList) {
             closeAuthModal()
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: false })
+          } else if (router.pathname === RoutePath.Testing) {
+            closeAuthModal()
+            trackTestingConnect({ [TrackKey.TestingEntry]: false })
           } else {
             toast(t('auth.errors.condition-not-meet'))
           }

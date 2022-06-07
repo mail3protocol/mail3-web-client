@@ -5,7 +5,7 @@ export const MAIL_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
 
 export const DISCORD_URL =
-  process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/J3ac6YcXUU'
+  process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
 
 export const TWITTER_URL =
   process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com/mail3dao'
