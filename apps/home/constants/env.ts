@@ -7,7 +7,10 @@ export const LIGHT_PAPER_URL =
   process.env.NEXT_PUBLIC_LIGHT_PAPER_URL || '/mail3-litepaper.pdf'
 export const WHITE_LIST_URL =
   process.env.NEXT_PUBLIC_WHITE_LIST_URL || `${APP_URL}/whitelist`
-export const LAUNCH_URL = WHITE_LIST_URL
+
+export const TESTING_URL =
+  process.env.NEXT_PUBLIC_TESTING_URL || `${APP_URL}/testing`
+export const LAUNCH_URL = APP_URL
 export const MIRROR_URL =
   process.env.NEXT_PUBLIC_MIRROR_URL || 'https://mirror.xyz/mail3.eth'
 export const MEDIUM_URL =

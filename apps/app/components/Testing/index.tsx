@@ -74,7 +74,6 @@ const Container = styled(Flex)`
     margin-top: 20px;
     font-weight: 500;
     font-size: 16px;
-    max-width: 500px;
     text-align: center;
   }
 
