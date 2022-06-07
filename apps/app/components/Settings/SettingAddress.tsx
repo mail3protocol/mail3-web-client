@@ -142,7 +142,7 @@ export const SettingAddress: React.FC = () => {
   const { data: ensNames, isLoading } = useQuery(
     [Query.ENS_NAMES, account],
     async () => {
-      const { data } = await api.getAliaes()
+      const { data } = await api.getAliases()
       return data
     },
     {
@@ -153,7 +153,9 @@ export const SettingAddress: React.FC = () => {
       onSuccess(d) {
         for (let i = 0; i < d.aliases.length; i++) {
           const alias = d.aliases[i]
-          setActiveAccount(alias.uuid)
+          if (alias.is_default) {
+            setActiveAccount(alias.uuid)
+          }
         }
       },
     }

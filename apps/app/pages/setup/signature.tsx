@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { Center, Heading, Text } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
+import Head from 'next/head'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingSignature } from '../../components/Settings/SettingSignature'
@@ -28,41 +29,46 @@ const SetupSignaturePage: NextPage = () => {
   const [t] = useTranslation('settings')
   const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
   return (
-    <PageContainer>
-      <Navbar />
-      <SettingContainer>
-        <Center
-          position="relative"
-          w="100%"
-          mb="20px"
-          mt={['20px', '20px', '40px']}
-        >
-          <Heading fontSize={['20px', '20px', '28px']}>
-            {t('setup.signature.title')}
-          </Heading>
-          <Link href={RoutePath.Inbox} passHref>
-            <Button
-              bg="black"
-              color="white"
-              className="next-header"
-              position="absolute"
-              right="60px"
-              onClick={() => trackNext()}
-              _hover={{
-                bg: 'brand.50',
-              }}
-              as="a"
-              rightIcon={<ChevronRightIcon color="white" />}
-            >
-              <Center flexDirection="column">
-                <Text>{t('setup.next')}</Text>
-              </Center>
-            </Button>
-          </Link>
-        </Center>
-        <SettingSignature />
-      </SettingContainer>
-    </PageContainer>
+    <>
+      <Head>
+        <title>Mail3: Setup Signature</title>
+      </Head>
+      <PageContainer>
+        <Navbar />
+        <SettingContainer>
+          <Center
+            position="relative"
+            w="100%"
+            mb="20px"
+            mt={['20px', '20px', '40px']}
+          >
+            <Heading fontSize={['20px', '20px', '28px']}>
+              {t('setup.signature.title')}
+            </Heading>
+            <Link href={RoutePath.Inbox} passHref>
+              <Button
+                bg="black"
+                color="white"
+                className="next-header"
+                position="absolute"
+                right="60px"
+                onClick={() => trackNext()}
+                _hover={{
+                  bg: 'brand.50',
+                }}
+                as="a"
+                rightIcon={<ChevronRightIcon color="white" />}
+              >
+                <Center flexDirection="column">
+                  <Text>{t('setup.next')}</Text>
+                </Center>
+              </Button>
+            </Link>
+          </Center>
+          <SettingSignature />
+        </SettingContainer>
+      </PageContainer>
+    </>
   )
 }
 

@@ -108,7 +108,7 @@ const Logo = () => {
                 </Center>
               </Button>
             </Link>
-            <Link href={RoutePath.Sent} passHref>
+            <Link href={RoutePath.Subscription} passHref>
               <Button
                 flex="1"
                 ml="9px"

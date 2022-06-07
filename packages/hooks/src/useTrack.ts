@@ -33,6 +33,7 @@ export enum TrackEvent {
   HomeClickGetIn = 'mail3_offical_click_getin',
   HomeClickContact = 'mail3_offical_click_contactus',
   HomeClickGoTesting = 'Mail3_offical_click_testinggo',
+  HomeClickBlackCube = 'mail3_offical_click_blackcube',
 }
 
 // dimensions

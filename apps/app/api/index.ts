@@ -1,4 +1,8 @@
 import axios, { Axios, AxiosResponse } from 'axios'
+import { SubmitMessage } from 'models/src/submitMessage'
+import { UploadMessage } from 'models/src/uploadMessage'
+import { GetMessage } from 'models/src/getMessage'
+import { GetMessageContent } from 'models/src/getMessageContent'
 import { SERVER_URL } from '../constants/env'
 
 export interface LoginResponse {
@@ -46,7 +50,7 @@ export class API {
     return this.account
   }
 
-  public async getAliaes(): Promise<AxiosResponse<AliasResponse>> {
+  public async getAliases(): Promise<AxiosResponse<AliasResponse>> {
     return this.axios.get(`/account/aliases`)
   }
 
@@ -82,6 +86,56 @@ export class API {
   public async setDefaultSentAddress(
     uuid: string
   ): Promise<AxiosResponse<void>> {
-    return this.axios.post(`/account/default_aliases/${uuid}`)
+    return this.axios.put(`/account/default_aliases/${uuid}`)
+  }
+
+  public async submitMessage(body: SubmitMessage.RequestBody) {
+    return this.axios.post<SubmitMessage.Response>(
+      `/mailbox/account/submit`,
+      body
+    )
+  }
+
+  public uploadMessage(body: UploadMessage.RequestBody) {
+    return this.axios.post<UploadMessage.Response>(
+      `/mailbox/account/message`,
+      body
+    )
+  }
+
+  public deleteMessage(messageId: string, params?: { force?: boolean }) {
+    return this.axios.delete<{
+      deleted: boolean
+      moved: {
+        destination: string
+        message: string
+      }
+    }>(`/mailbox/account/message/${messageId}`, {
+      params,
+    })
+  }
+
+  public async getMessageInfo(messageId: string) {
+    return this.axios.get<GetMessage.Response>(
+      `/mailbox/account/message/${messageId}`
+    )
+  }
+
+  public async getMessageContent(textId: string) {
+    return this.axios.get<GetMessageContent.Response>(
+      `/mailbox/account/text/${textId}`
+    )
+  }
+
+  public async downloadAttachment(
+    messageId: string,
+    attachmentId: string
+  ): Promise<AxiosResponse> {
+    return this.axios.get(`/mailbox/account/attachment/${attachmentId}`, {
+      params: {
+        messageId,
+      },
+      responseType: 'blob',
+    })
   }
 }
