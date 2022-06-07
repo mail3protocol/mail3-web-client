@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import Link, { LinkProps } from 'next/link'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
-import { dynamicDateString, removeMailSuffix } from '../../utils'
+import { formatDateString, removeMailSuffix } from '../../utils'
 
 export enum AvatarBadgeType {
   None,
@@ -222,7 +222,7 @@ const Item = ({
             mt={{ base: '20px' }}
             ml={{ md: '20px' }}
           >
-            {dynamicDateString(date)}
+            {formatDateString(date)}
           </Box>
         </Flex>
       </Link>

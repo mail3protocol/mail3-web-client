@@ -27,7 +27,7 @@ import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
 import { Attachment } from './Attachment'
 import {
-  dynamicDateString,
+  formatDateString,
   isMail3Address,
   removeMailSuffix,
   truncateMiddle0xMail,
@@ -355,7 +355,7 @@ export const PreviewComponent: React.FC = () => {
                   color="#6F6F6F"
                   whiteSpace="nowrap"
                 >
-                  {detail?.date && dynamicDateString(detail.date)}
+                  {detail?.date && formatDateString(detail.date)}
                 </Box>
               </Flex>
               <Box
@@ -411,7 +411,7 @@ export const PreviewComponent: React.FC = () => {
                 color="#6F6F6F"
                 whiteSpace="nowrap"
               >
-                {detail?.date && dynamicDateString(detail.date)}
+                {detail?.date && formatDateString(detail.date)}
               </Box>
             </Box>
           </Flex>

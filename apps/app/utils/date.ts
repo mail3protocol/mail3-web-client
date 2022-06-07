@@ -5,7 +5,7 @@ import isYesterday from 'dayjs/plugin/isYesterday'
 dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 
-export const dynamicDateString = (date: string | number | Date) => {
+export const formatDateString = (date: string | number | Date) => {
   const thisYear = dayjs().year()
   const targetDayjs = dayjs(date)
 
