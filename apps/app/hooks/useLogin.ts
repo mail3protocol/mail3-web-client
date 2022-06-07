@@ -134,14 +134,12 @@ export const useSetGlobalTrack = () => {
           [GlobalDimensions.ConnectedWalletName]: walletName,
           [GlobalDimensions.WalletAddress]: account,
           [GlobalDimensions.SignatureStatus]: sigStatus,
+          crm_id: account,
         }
         try {
           gtag?.('set', 'user_properties', config)
           gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
             user_id: account,
-          })
-          gtag?.('set', 'user_properties', {
-            crm_id: account,
           })
         } catch (error) {
           //
@@ -166,9 +164,6 @@ export const useInitUserProperties = () => {
         if (userProps.wallet_address) {
           gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
             user_id: userProps.wallet_address,
-          })
-          gtag?.('set', 'user_properties', {
-            crm_id: userProps.wallet_address,
           })
         }
       } catch (error) {
