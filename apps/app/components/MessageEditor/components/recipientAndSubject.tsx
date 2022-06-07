@@ -65,7 +65,6 @@ export const RecipientAndSubject: React.FC = () => {
     onOpen: onOpenCommunityDialog,
     onClose: onCloseCommunityDialog,
   } = useDisclosure()
-  const headingText = "You've found a super cool feature."
   const isFoldCcAndBcc = useBreakpointValue({ base: false, md: true })
   useEffect(() => {
     if (!isFoldCcAndBcc) {

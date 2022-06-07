@@ -22,37 +22,37 @@ export const ToInput: React.FC<ToInputProps> = ({
 }) => {
   const [addresses, setAddresses] = useState<string[]>(defaultAddresses ?? [])
   const [inputValue, setInputValue] = useState('')
-  const onKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const target = e.target as HTMLInputElement
-      switch (e.code) {
-        case 'Enter': {
-          if (
-            inputValue !== '' &&
-            (isEthAddress(inputValue) || verifyEmail(inputValue))
-          ) {
-            setAddresses((targets) => [...targets, inputValue])
-            setInputValue('')
-          }
-          break
-        }
-        case 'Backspace': {
-          if (inputValue === '') {
-            setAddresses((targets) => targets.slice(0, -1))
-          }
-          break
-        }
-        case 'Escape': {
-          target.blur()
-          break
-        }
-        default: {
-          break
-        }
+  const onAddAddress = () => {
+    if (
+      inputValue !== '' &&
+      (isEthAddress(inputValue) || verifyEmail(inputValue))
+    ) {
+      setAddresses((targets) => [...targets, inputValue])
+      setInputValue('')
+    }
+  }
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement
+    switch (e.code) {
+      case 'Enter': {
+        onAddAddress()
+        break
       }
-    },
-    [inputValue, setAddresses, setInputValue]
-  )
+      case 'Backspace': {
+        if (inputValue === '') {
+          setAddresses((targets) => targets.slice(0, -1))
+        }
+        break
+      }
+      case 'Escape': {
+        target.blur()
+        break
+      }
+      default: {
+        break
+      }
+    }
+  }
   const onDeleteAddress = useCallback(
     (targetAddress: string) =>
       setAddresses((address) => address.filter((t) => t !== targetAddress)),
@@ -102,6 +102,7 @@ export const ToInput: React.FC<ToInputProps> = ({
           onKeyDown={onKeyDown}
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
+          onBlur={onAddAddress}
         />
       </Box>
     </Flex>
