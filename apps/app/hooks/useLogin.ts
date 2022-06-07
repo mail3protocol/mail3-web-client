@@ -59,7 +59,7 @@ export const useLogin = () => {
   )
 }
 
-function parseCookies(req?: IncomingMessage) {
+export function parseCookies(req?: IncomingMessage) {
   try {
     const cookies = universalCookie.parse(
       req ? req.headers.cookie || '' : document.cookie
@@ -105,7 +105,7 @@ export const useSetGlobalTrack = () => {
         const api = new API(account, jwt)
         const [{ data: userInfo }, { data: aliases }] = await Promise.all([
           api.getUserInfo(),
-          api.getAliaes(),
+          api.getAliases(),
         ])
         let sigStatus: SignatureStatus = SignatureStatus.OnlyText
         if (

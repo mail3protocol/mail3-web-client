@@ -36,3 +36,36 @@ export async function copyText(s: string) {
     copyTextFallback(s)
   }
 }
+
+export function isEthAddress(s: string) {
+  return s.startsWith('0x') && s.length === 42
+}
+
+export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 6) {
+  if (!verifyEmail(str)) return str
+  let i = str.length - 1
+  for (; i >= 0; i--) {
+    if (str[i] === '@') {
+      break
+    }
+  }
+  return truncateMiddle(str, takeLength, str.length - i + tailLength)
+}
+
+export function removeMailSuffix(emailAddress: string) {
+  if (!verifyEmail(emailAddress)) return emailAddress
+  let i = emailAddress.length - 1
+  for (; i >= 0; i--) {
+    if (emailAddress[i] === '@') {
+      break
+    }
+  }
+  return emailAddress.substring(0, i)
+}
+
+export function generateUuid() {
+  function S4() {
+    return ((1 + Math.random()) * 0x10000 || 0).toString(16).substring(1)
+  }
+  return `${S4() + S4()}-${S4()}-${S4()}-${S4()}-${S4()}${S4()}${S4()}`
+}

@@ -1,20 +1,10 @@
 export namespace SubmitMessage {
-  export enum ReferenceAction {
-    Forward = 'forward',
-    Reply = 'reply',
+  export type ContentDisposition = 'inline' | 'attachment'
+  export type ReferenceAction = 'forward' | 'reply'
+
+  export enum Encoding {
+    Base64 = 'base64',
   }
-
-  export namespace AttachmentItem {
-    export enum ContentDisposition {
-      Inline = 'inline',
-      Attachment = 'attachment',
-    }
-
-    export enum Encoding {
-      Base64 = 'base64',
-    }
-  }
-
   export interface Address {
     name?: string
     address: string
@@ -23,17 +13,19 @@ export namespace SubmitMessage {
   export interface Attachment {
     filename?: string
     content: string // Base64 formatted attachment file
-    contentType?: string
-    contentDisposition?: AttachmentItem.ContentDisposition
+    contentType: string
+    contentDisposition: ContentDisposition
     cid?: string
-    encoding?: AttachmentItem.Encoding
+    encoding?: Encoding
+  }
+
+  export interface Reference {
+    message: string
+    action?: ReferenceAction
   }
 
   export interface RequestBody {
-    reference?: {
-      message: string
-      action?: ReferenceAction
-    }
+    reference?: Reference
     envelope?: {
       from: string
       to: string[]
@@ -43,7 +35,7 @@ export namespace SubmitMessage {
     cc?: Address[]
     bcc?: Address[]
     raw?: string
-    subject?: string
+    subject: string
     text?: string
     html?: string
     attachments?: Attachment[]
