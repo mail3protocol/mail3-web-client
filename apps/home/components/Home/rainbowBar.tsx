@@ -51,6 +51,7 @@ export const RainbowBar: React.FC = () => {
           fontWeight="bold"
           textDecoration="underline"
           display="inline-block"
+          ml="8px"
           href={TESTING_URL}
           onClick={() => trackTesting()}
         >
