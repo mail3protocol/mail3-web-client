@@ -11,5 +11,17 @@
     "add_attach_files": "+ Add",
     "add_link": "Add Link",
     "cancel": "Cancel",
-    "ok": "Ok"
+    "ok": "Ok",
+    "community_guide_modal": {
+        "title": "Congratulations!\nYou've found a super cool feature. ",
+        "text": {
+            "1": "1. You can customize your email audience \nthrough filters to achieve precise push",
+            "2": "2. New feature notifications, DAO voting, \nand sales withdrawals, anything is possible"
+        },
+        "next": "Next",
+        "Apply to become a beta user": "Apply to become a beta user",
+        "You will have the possibility to experience this cool feature for the first time.": "You will have the possibility to experience this cool feature for the first time.",
+        "apply": "Apply",
+        "no_thanks": "No, Thanks"
+    }
 }

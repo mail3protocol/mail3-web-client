@@ -20,6 +20,7 @@ import {
   HeadingExtension,
   ParagraphExtension,
   TableExtension,
+  IframeExtension,
 } from 'remirror/extensions'
 import {
   Remirror,
@@ -33,6 +34,7 @@ import { htmlToProsemirrorNode } from 'remirror'
 import { useTranslation } from 'next-i18next'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
@@ -83,6 +85,8 @@ const Footer = () => {
   const { getHTML } = useHelpers()
   const { onSave } = useSaveMessage()
   const { t } = useTranslation('edit-message')
+  const trackClickSave = useTrackClick(TrackEvent.AppEditMessageClickSave)
+  const trackClickSend = useTrackClick(TrackEvent.AppEditMessageClickSend)
   return (
     <Stack
       direction="row"
@@ -110,7 +114,10 @@ const Footer = () => {
         variant="outline"
         colorScheme="BlackAlpha"
         fontSize="14px"
-        onClick={() => onSave(getHTML())}
+        onClick={() => {
+          trackClickSave()
+          onSave(getHTML())
+        }}
       >
         {t('save')}
       </Button>
@@ -131,7 +138,10 @@ const Footer = () => {
         fontSize="14px"
         disabled={isDisabledSendButton}
         isLoading={isLoading}
-        onClick={onSubmit}
+        onClick={() => {
+          trackClickSend()
+          onSubmit()
+        }}
       >
         {t('send')}
       </Button>
@@ -177,6 +187,7 @@ export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
       new CalloutExtension(),
       new HeadingExtension(),
       new ParagraphExtension(),
+      new IframeExtension({ enableResizing: true }),
     ],
     content,
     selection: 'start',

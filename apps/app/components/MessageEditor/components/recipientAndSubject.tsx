@@ -18,10 +18,12 @@ import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useTranslation } from 'next-i18next'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { From } from './from'
 import { ToInput } from './toInput'
 import { InlineCheckbox } from './inlineCheckbox'
 import { useSubject } from '../hooks/useSubject'
+import { CommunityGuideModal } from './communityGuideModal'
 
 const SUBJECT_TEXT_LIMIT = 80
 
@@ -73,17 +75,38 @@ export const RecipientAndSubject: React.FC = () => {
       }
     }
   }, [isFoldCcAndBcc])
+  const trackChangeFrom = useTrackClick(TrackEvent.AppEditMessageChangeFrom)
+  const trackClickCC = useTrackClick(TrackEvent.AppEditMessageClickCC)
+  const trackClickCommunity = useTrackClick(
+    TrackEvent.AppEditMessageClickCommunity
+  )
+  const trackClickBCC = useTrackClick(TrackEvent.AppEditMessageClickBCC)
+  const trackClickMobileCCAndBCC = useTrackClick(
+    TrackEvent.AppEditMessageClickMobileCCAndBCC
+  )
+
   return (
     <>
       <Item h="38px" px={ItemPx}>
         <ItemField>{t('from')}</ItemField>
-        <From onChange={setFromAddress} />
+        <From
+          onChange={(e) => {
+            trackChangeFrom()
+            setFromAddress(e)
+          }}
+        />
       </Item>
       <Item px={ItemPx}>
         <ItemField>To</ItemField>
         <ToInput onChange={setToAddresses} defaultAddresses={toAddresses} />
         <Stack direction="row" spacing="5px">
-          <InlineCheckbox checked onClick={onOpenCommunityDialog}>
+          <InlineCheckbox
+            checked
+            onClick={() => {
+              onOpenCommunityDialog()
+              trackClickCommunity()
+            }}
+          >
             {t('community')}
           </InlineCheckbox>
           <RowButton
@@ -96,6 +119,7 @@ export const RecipientAndSubject: React.FC = () => {
             onClick={() => {
               setIsEnabledCC((b) => !b)
               setIsEnabledBCC((b) => !b)
+              trackClickMobileCCAndBCC()
             }}
           >
             <ChevronDownIcon
@@ -111,7 +135,10 @@ export const RecipientAndSubject: React.FC = () => {
           <InlineCheckbox
             display={{ base: 'none', md: 'inline-block' }}
             checked={isEnabledCC}
-            onChangeChecked={setIsEnabledCC}
+            onChangeChecked={(e) => {
+              trackClickCC()
+              setIsEnabledCC(e)
+            }}
             color="#858585"
             activeBorderColor="#858585"
           >
@@ -120,7 +147,10 @@ export const RecipientAndSubject: React.FC = () => {
           <InlineCheckbox
             display={{ base: 'none', md: 'inline-block' }}
             checked={isEnabledBCC}
-            onChangeChecked={setIsEnabledBCC}
+            onChangeChecked={(e) => {
+              trackClickBCC()
+              setIsEnabledBCC(e)
+            }}
             color="#858585"
             activeBorderColor="#858585"
           >
@@ -160,32 +190,10 @@ export const RecipientAndSubject: React.FC = () => {
           {SUBJECT_TEXT_LIMIT - subject.length}
         </Box>
       </Item>
-      <Modal
+      <CommunityGuideModal
         isOpen={isOpenCommunityDialog}
         onClose={onCloseCommunityDialog}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent
-          w="calc(100% - 40px)"
-          h="100%"
-          maxH="578px"
-          maxW="855px"
-          rounded="48px"
-          py="32px"
-        >
-          <ModalBody>
-            <Heading fontSize="24px" textAlign="center" lineHeight="36px">
-              Congratulations!
-              <br />
-              {headingText}
-            </Heading>
-          </ModalBody>
-          <ModalFooter display="flex" justifyContent="center">
-            <Button w="218px">Next</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      />
     </>
   )
 }

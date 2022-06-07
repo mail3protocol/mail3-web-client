@@ -21,7 +21,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react'
-import { useDialog } from 'hooks'
+import { TrackEvent, useDialog, useTrackClick } from 'hooks'
 import { SubmitMessage } from 'models/src/submitMessage'
 import { useTranslation } from 'next-i18next'
 import { AttachActivationButton } from './attachActivationButton'
@@ -97,6 +97,9 @@ export const Attach: React.FC<{
     },
     []
   )
+  const trackClickAttachFiles = useTrackClick(
+    TrackEvent.AppEditMessageClickAttachFiles
+  )
   useEffect(() => {
     onChangeFiles?.(files)
     if (files.length === 0) {
@@ -145,7 +148,12 @@ export const Attach: React.FC<{
   )
   const uploadPanelEl = (
     <>
-      <Popover placement="top-start">
+      <Popover
+        placement="top-start"
+        onOpen={() => {
+          trackClickAttachFiles()
+        }}
+      >
         <PopoverTrigger>
           <Box as="span" display={{ base: 'none', md: 'inline' }}>
             <AttachActivationButton fileCount={noInlineFiles.length} />
@@ -170,7 +178,10 @@ export const Attach: React.FC<{
         </PopoverContent>
       </Popover>
       <AttachActivationButton
-        onClick={onOpen}
+        onClick={() => {
+          trackClickAttachFiles()
+          onOpen()
+        }}
         fileCount={files.length}
         display={{ base: 'inline-block', md: 'none' }}
       />
@@ -206,7 +217,10 @@ export const Attach: React.FC<{
         uploadPanelEl
       ) : (
         <AttachActivationButton
-          onClick={() => inputRef.current?.click()}
+          onClick={() => {
+            trackClickAttachFiles()
+            inputRef.current?.click()
+          }}
           fileCount={files.length}
         />
       )}
