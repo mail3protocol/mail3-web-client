@@ -1,6 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer } from 'ui'
+import Head from 'next/head'
 import { Navbar } from '../components/Navbar'
 import { LandingPage } from '../components/LandingPage'
 
@@ -24,10 +25,15 @@ export const getServerSideProps: GetServerSideProps = async ({
 }
 
 const Home: NextPage = () => (
-  <PageContainer>
-    <Navbar />
-    <LandingPage />
-  </PageContainer>
+  <>
+    <Head>
+      <title>Mail3: Home</title>
+    </Head>
+    <PageContainer>
+      <Navbar />
+      <LandingPage />
+    </PageContainer>
+  </>
 )
 
 export default Home
