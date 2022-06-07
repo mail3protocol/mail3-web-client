@@ -4,6 +4,7 @@ import { UploadMessage } from 'models/src/uploadMessage'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { SERVER_URL } from '../constants/env'
+import { Mailboxes } from './mailboxes'
 
 export interface LoginResponse {
   uuid: string
@@ -19,6 +20,76 @@ export interface Alias {
 export interface AliasResponse {
   aliases: Alias[]
 }
+
+export enum MessageFlagType {
+  Answered = '\\Answered ',
+  Flagged = '\\Flagged',
+  Deleted = '\\Deleted',
+  Seen = '\\Seen',
+  Draft = '\\Draft',
+}
+
+export enum MessageFlagAction {
+  add = 'add',
+  del = 'del',
+  set = 'set',
+}
+
+export interface AddressResponse {
+  name?: string
+  address: string
+}
+
+export type AddressListResponse = Array<AddressResponse>
+
+export interface MailboxMessageItemResponse {
+  id: string
+  uid: string
+  subject: string
+  unseen: boolean
+  messageId: string
+  date: string
+  from: AddressResponse
+  to: AddressListResponse
+  emailId: string
+  threadId: string
+  flagged: boolean
+  size: number
+  cc: Array<AddressResponse> | null
+  bcc: Array<AddressResponse> | null
+  inReplyTo: string
+  flags: Array<Partial<MessageFlagType>> | null
+  labels: Array<any> | null
+  attachments: AttachmentItemResponse[] | null
+  text: {
+    id: string
+    encodedSize: {
+      plan: number
+      html: number
+    }
+  }
+  bounces: Array<any> | null
+}
+
+export interface MailboxesMessagesResponse {
+  messages: Array<MailboxMessageItemResponse>
+  page: number
+  pages: number
+  total: number
+}
+
+export interface AttachmentItemResponse {
+  id: string
+  contentType: string
+  encodedSize: number
+  filename: string
+  embedded: boolean
+  inline: boolean
+  contentId: string
+}
+
+export interface MailboxMessageDetailResponse
+  extends MailboxMessageItemResponse {}
 
 export interface UserResponse {
   user_uuid: string
@@ -125,6 +196,113 @@ export class API {
     return this.axios.get<GetMessageContent.Response>(
       `/mailbox/account/text/${textId}`
     )
+  }
+
+  public async getMailboxes(): Promise<AxiosResponse<void>> {
+    return this.axios.get('/mailbox/account/mailboxes')
+  }
+
+  public async getMailboxesMessages(
+    path: string,
+    page: number,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.get('/mailbox/account/messages', {
+      params: {
+        path,
+        pageSize,
+        page,
+      },
+    })
+  }
+
+  public async getMessagesSearch(
+    path: string,
+    page: number,
+    search: Object,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.post('/mailbox/account/search', {
+      path,
+      pageSize,
+      page,
+      search,
+    })
+  }
+
+  public async getMessagesNew(
+    page: number,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.post('/mailbox/account/search', {
+      path: Mailboxes.INBOX,
+      pageSize,
+      page,
+      search: {
+        unseen: true,
+      },
+    })
+  }
+
+  public async getMessagesSeen(
+    page: number,
+    pageSize: number = 20
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.post('/mailbox/account/search', {
+      path: Mailboxes.INBOX,
+      pageSize,
+      page,
+      search: {
+        seen: true,
+      },
+    })
+  }
+
+  public async getMessageData(messageId: string): Promise<AxiosResponse<any>> {
+    return this.axios.get(`/mailbox/account/message/${messageId}`)
+  }
+
+  public async getTextData(textId: string): Promise<AxiosResponse<any>> {
+    return this.axios.get(`/mailbox/account/text/${textId}`)
+  }
+
+  public async deleteMessage2(
+    messageId: string,
+    isForce = false
+  ): Promise<AxiosResponse> {
+    return this.axios.delete(`/mailbox/account/message/${messageId}`, {
+      data: {
+        force: isForce,
+      },
+    })
+  }
+
+  public async putMessage(
+    messageId: string,
+    action: MessageFlagAction,
+    flagType: MessageFlagType
+  ): Promise<AxiosResponse<any>> {
+    return this.axios.put(`/mailbox/account/message/${messageId}`, {
+      flags: {
+        [action]: [flagType],
+      },
+    })
+  }
+
+  public async moveMessage(messageId: string): Promise<AxiosResponse<any>> {
+    return this.axios.put(`/mailbox/account/message/${messageId}/move`, {
+      path: Mailboxes.INBOX,
+    })
+  }
+
+  public async batchDeleteMessage(
+    ids: string[],
+    isForce?: boolean
+  ): Promise<AxiosResponse> {
+    return this.axios.post('/mailbox/account/messages/batch_delete', {
+      messageIds: ids,
+      force: isForce,
+    })
   }
 
   public async downloadAttachment(

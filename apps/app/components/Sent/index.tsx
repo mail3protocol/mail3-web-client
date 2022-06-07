@@ -1,0 +1,78 @@
+import { useTranslation } from 'next-i18next'
+import React, { useCallback, useRef, useState } from 'react'
+import { Box } from '@chakra-ui/react'
+import styled from '@emotion/styled'
+import { useToast } from 'hooks'
+import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
+import { RoutePath } from '../../route/path'
+import { Mailboxes } from '../../api/mailboxes'
+import { useAPI } from '../../hooks/useAPI'
+import { MailboxContainer, NewPageContainer } from '../Inbox'
+import { Loading } from '../Loading'
+import { EmptyStatus, ThisBottomStatus } from '../MailboxStatus'
+import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+
+const TitleBox = styled(Box)`
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+`
+
+export const SentComponent: React.FC = () => {
+  const [t] = useTranslation('mailboxes')
+  const api = useAPI()
+
+  const refBoxList = useRef<InfiniteHandle>(null)
+  const [isChooseMode, setIsChooseMode] = useState(false)
+  const toast = useToast()
+
+  const queryFn = useCallback(
+    async ({ pageParam = 0 }) => {
+      const { data } = await api.getMailboxesMessages(Mailboxes.Sent, pageParam)
+      return data
+    },
+    [api]
+  )
+
+  return (
+    <NewPageContainer>
+      {isChooseMode && (
+        <MailboxMenu
+          type={MailboxMenuType.Base}
+          actionMap={{
+            [BulkActionType.Delete]: async () => {
+              const ids = refBoxList?.current?.getChooseIds()
+              if (!ids?.length) return
+              try {
+                await api.batchDeleteMessage(ids)
+                refBoxList?.current?.setHiddenIds(ids)
+                toast(t('status.trash.ok'))
+              } catch (error) {
+                toast(t('status.trash.fail'))
+              }
+            },
+          }}
+        />
+      )}
+      <MailboxContainer>
+        <Box padding={{ md: '20px 64px' }}>
+          <TitleBox pl={{ base: '20px', md: 0 }}>{t('sent.title')}</TitleBox>
+          <InfiniteMailbox
+            ref={refBoxList}
+            enableQuery
+            queryFn={queryFn}
+            queryKey={['Sent']}
+            loader={<Loading />}
+            emptyElement={<EmptyStatus />}
+            noMoreElement={<ThisBottomStatus />}
+            onChooseModeChange={(b) => setIsChooseMode(b)}
+            onClickBody={() => {
+              // report point
+            }}
+            getHref={(id) => `${RoutePath.Message}/${id}`}
+          />
+        </Box>
+      </MailboxContainer>
+    </NewPageContainer>
+  )
+}

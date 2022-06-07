@@ -1,0 +1,52 @@
+{
+    "no-subject": "(No subject)",
+    "inbox": {
+        "title": {
+            "new": "New",
+            "seen": "Seen"
+        },
+        "no-new": "Nothing New！",
+        "all-clear": "You’re all clear",
+        "load-more": "load more"
+    },
+    "this-is-bottom": "This is bottom！",
+    "sent": {
+        "title": "Sent"
+    },
+    "trash": {
+        "title": "Trash",
+        "empty": "Empty",
+        "auto-delete": "Messages that have been in Trash more than 30 days will be automatically deleted.",
+        "clear": "Clean Trash!"
+    },
+    "drafts": {
+        "title": "Drafts",
+        "no-content-w1": "Any time you start writing a new Email,",
+        "no-content-w2": "Mail3 will automatically save it as a draft along the way.",
+        "no-content-w3": "Come here to find all your works in progress."
+    },
+
+    "button": {
+        "delete": "Delete"
+    },
+    "confirm": {
+        "delete": {
+            "title": "Are you sure you want to continue?",
+            "description": "This operation will completely delete the message and cannot be recovered."
+        }
+    },
+    "status": {
+        "trash": {
+            "ok": "The message has been moved to the trash.",
+            "fail": "trash fail!"
+        },
+        "delete":  {
+            "ok": "The message has been completely deleted.",
+            "fail": "Delete fail, try again."
+        },
+        "restore": {
+            "ok": "The message has been restore.",
+            "fail": "Restore is fail, try again."
+        }
+    }
+}
