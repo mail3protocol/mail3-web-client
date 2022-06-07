@@ -8,7 +8,12 @@ import {
 } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Avatar } from 'ui'
-import { isEthAddress, truncateMiddle, verifyEmail } from '../../../utils'
+import {
+  isEthAddress,
+  removeMailSuffix,
+  truncateMiddle,
+  verifyEmail,
+} from '../../../utils'
 import { MAIL_SERVER_URL } from '../../../constants'
 
 export interface ToInputProps {
@@ -77,7 +82,12 @@ export const ToInput: React.FC<ToInputProps> = ({
           mr="8px"
           bg="#F3F3F3"
         >
-          <Avatar address={address} w="16px" h="16px" rounded="100px" />
+          <Avatar
+            address={removeMailSuffix(address)}
+            w="16px"
+            h="16px"
+            rounded="100px"
+          />
           <TagLabel pl="4px" color="#6F6F6F">
             {isEthAddress(address)
               ? `${truncateMiddle(address)}@${MAIL_SERVER_URL}`
