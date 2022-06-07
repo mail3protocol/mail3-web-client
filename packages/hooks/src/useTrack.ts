@@ -3,6 +3,8 @@ export enum TrackEvent {
   ClickImageSignature = 'click_image_signature_edit',
   ClickRegisterENS = 'click_register_new_ens',
   ClickCyperConnect = 'click_image_signature_edit_cyberconnect',
+  ClickAddressNext = 'click_guide_your_email_address_next',
+  ClickSignatureNext = 'click_show_your_own_signature_next',
 
   // connect wallet
   ConnectWallet = 'Mail3_app_home_click_connectwallet',
@@ -13,6 +15,14 @@ export enum TrackEvent {
   WhiteListDiscord = 'earlybird_click_joindiscord',
   WhiteListTwitter = 'earlybird_click_followtwitter',
 
+  // testing
+  TestingConnectWallet = 'beta1_home_click_connectwallet',
+  TestingMoreDetails = 'beta1_click_moredetails',
+  TestingDiscord = 'beta1_click_joindiscord',
+  TestingDisCordLink = 'beta1_click_discord',
+  TestingTwitter = 'beta1_click_followtwitter',
+  TestingEnterApp = 'beta1_click_enterapp',
+
   // home
   HomeLaunchApp = 'mail3_offical_click_launchapp',
   HomeClickWhiteList = 'mail3_offical_click_whitelist',
@@ -22,6 +32,7 @@ export enum TrackEvent {
   HomeClickCommunity = 'mail3_offical_click_community',
   HomeClickGetIn = 'mail3_offical_click_getin',
   HomeClickContact = 'mail3_offical_click_contactus',
+  HomeClickGoTesting = 'Mail3_offical_click_testinggo',
   HomeClickBlackCube = 'mail3_offical_click_blackcube',
 
   // subscriptions
@@ -49,6 +60,8 @@ export enum TrackKey {
 
   // subscriptions
   SubscriptionBell = 'click_subscription_bell',
+  // testing
+  TestingEntry = 'beta1_check_eligilibity',
 }
 
 export enum GlobalDimensions {
@@ -91,6 +104,7 @@ export interface TrackProps {
   [TrackKey.DesiredWallet]?: DesiredWallet
   [TrackKey.CollectedAddress]?: string
   [TrackKey.WhiteListEntry]?: boolean
+  [TrackKey.TestingEntry]?: boolean
   [TrackKey.HomeCommunity]?: HomeCommunity
   [TrackKey.MailDetailPage]?: MailDetailPageItem
   [TrackKey.SubscriptionBell]?: string

@@ -55,10 +55,12 @@ import {
   TrackEvent,
   DesiredWallet,
   TrackKey,
+  COOKIE_KEY,
 } from 'hooks'
 import Image from 'next/image'
 import type { StaticImageData } from 'next/image'
 import { Button } from '../Button'
+import { useCookies } from 'react-cookie'
 
 export interface ConnectModalProps {
   isOpen: boolean
@@ -273,6 +275,8 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
     []
   )
 
+  const [, , removeCookie] = useCookies([COOKIE_KEY])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
       <ModalOverlay />
@@ -330,6 +334,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                       })
                     }
                   } else {
+                    removeCookie(COOKIE_KEY, { path: '/' })
                     setLastConnector(ConnectorName.MetaMask)
                     onClose()
                   }
@@ -365,6 +370,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                     })
                   }
                 } else {
+                  removeCookie(COOKIE_KEY, { path: '/' })
                   setLastConnector(ConnectorName.WalletConnect)
                   onClose()
                 }

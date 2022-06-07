@@ -17,14 +17,13 @@ import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
 import LogoSvg from 'assets/svg/logo.svg'
 import HomeNavbarSvg from '../../../assets/svg/home-navbar-menu.svg'
-import { isWhiteListStage } from '../../../utils'
 import { Buttons, Menus } from './menu'
 import { RainbowBar } from '../rainbowBar'
 
-export const HEADER_BAR_HEIGHT = 60 + (isWhiteListStage() ? 44 : 0)
+const isShowWhiteListStage = false
+export const HEADER_BAR_HEIGHT = 60 + 44
 
 export const Navbar: React.FC = () => {
-  const isShowWhiteListStage = isWhiteListStage()
   const {
     isOpen: isOpenMenuDrawer,
     onClose: onCloseMenuDrawer,
@@ -40,7 +39,7 @@ export const Navbar: React.FC = () => {
       zIndex={99}
       direction="column"
     >
-      {isShowWhiteListStage ? <RainbowBar /> : null}
+      <RainbowBar />
       <Center bg="#fff" px="20px" h="60px">
         <Flex
           w="full"

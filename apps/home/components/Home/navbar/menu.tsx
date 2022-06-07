@@ -157,7 +157,7 @@ export const Menus: React.FC<{
   const trackLaunchApp = useTrackClick(TrackEvent.HomeLaunchApp)
   const trackWhitePaper = useTrackClick(TrackEvent.HomeClickWhitePaper)
   const launchAppButton = (
-    <NextLink href={LAUNCH_URL}>
+    <NextLink href={LAUNCH_URL} passHref>
       <MenuItem variant="unstyled" onClick={() => trackLaunchApp()}>
         Launch App
       </MenuItem>

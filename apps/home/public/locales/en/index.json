@@ -1,8 +1,10 @@
 {
     "heading-banner-text": {
         "white-list": "Mail3 Beta Testing is available for application now. ",
-        "beta-testing": "Join Mail3 Beta Testing. "
+        "beta-testing": "Join Mail3 Beta Testing. ",
+        "testing": "Mail3 Beta is openning now!"
     },
     "join_white_list": "Mail3 Beta Testing is available for application now.",
-    "join": "Join the whitelist>>>"
+    "join": "Join the whitelist>>>",
+    "go": "GO>>>"
 }
