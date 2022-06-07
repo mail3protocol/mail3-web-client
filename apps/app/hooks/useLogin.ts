@@ -32,13 +32,11 @@ export const useSetLoginCookie = () => {
     const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-      secure: false,
     }
     if (process.env.NODE_ENV === 'production') {
       if (COOKIE_DOMAIN) {
         option.domain = COOKIE_DOMAIN
       }
-      option.secure = true
     }
     console.log(option)
     setCookie(COOKIE_KEY, info, option)
@@ -68,7 +66,7 @@ export const useLogin = () => {
   )
 }
 
-function parseCookies(req?: IncomingMessage) {
+export function parseCookies(req?: IncomingMessage) {
   try {
     const cookies = universalCookie.parse(
       req ? req.headers.cookie || '' : document.cookie
@@ -139,7 +137,7 @@ export const useSetGlobalTrack = () => {
           sigStatus = SignatureStatus.BothDisabled
         }
         const defaultAddress =
-          aliases.aliases.find((a) => a.is_default) || account
+          aliases.aliases.find((a) => a.is_default)?.address || account
         const config = {
           defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,

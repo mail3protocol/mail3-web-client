@@ -48,11 +48,8 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
-          await copyText(
-            `${(
-              userProps?.defaultAddress || address
-            ).toLowerCase()}@${MAIL_SERVER_URL}`
-          )
+          const addr = userProps?.defaultAddress || address
+          await copyText(`${addr.toLowerCase()}@${MAIL_SERVER_URL}`)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
         },
@@ -104,7 +101,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
           boxShadow: '0px 0px 16px 12px rgba(192, 192, 192, 0.25)',
           outline: 'none',
         }}
-        w="220px"
+        w="250px"
         border="none"
         borderRadius="12px"
         boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25)"
