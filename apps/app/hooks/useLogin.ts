@@ -23,7 +23,7 @@ import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
-import { GOOGLE_ANALYTICS_ID } from '../constants'
+import { COOKIE_DOMAIN, GOOGLE_ANALYTICS_ID } from '../constants'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -32,6 +32,7 @@ export const useSetLoginCookie = () => {
     setCookie(COOKIE_KEY, info, {
       path: '/',
       expires: now.add(14, 'day').toDate(),
+      domain: COOKIE_DOMAIN,
     })
   }, [])
 }
