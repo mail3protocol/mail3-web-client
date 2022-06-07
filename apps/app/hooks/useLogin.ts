@@ -29,11 +29,17 @@ export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
   return useCallback((info: LoginInfo) => {
     const now = dayjs()
-    setCookie(COOKIE_KEY, info, {
+    const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-      domain: COOKIE_DOMAIN,
-    })
+      secure: false,
+    }
+    if (process.env.NODE_ENV === 'production') {
+      option.domain = COOKIE_DOMAIN
+      option.secure = true
+    }
+    console.log(option)
+    setCookie(COOKIE_KEY, info, option)
   }, [])
 }
 
