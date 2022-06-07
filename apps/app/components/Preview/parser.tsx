@@ -5,6 +5,7 @@ import parse, {
   Element,
   HTMLReactParserOptions,
 } from 'html-react-parser'
+import DOMPurify from 'dompurify'
 import { AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
 
@@ -40,5 +41,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     replace,
   }
 
-  return <Box>{parse(html, options)}</Box>
+  const cleanHtml = DOMPurify.sanitize(html)
+
+  return <Box>{parse(cleanHtml, options)}</Box>
 }

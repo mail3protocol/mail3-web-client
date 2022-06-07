@@ -26,6 +26,7 @@
         "classnames": "^2.3.1",
         "cookie": "^0.5.0",
         "dayjs": "^1.11.2",
+        "dompurify": "^2.3.8",
         "framer-motion": "^6",
         "hooks": "*",
         "html-react-parser": "^1.4.14",
@@ -47,6 +48,7 @@
     },
     "devDependencies": {
         "@svgr/webpack": "6.2.1",
+        "@types/dompurify": "^2.3.3",
         "@types/node": "17.0.4",
         "@types/react": "17.0.38",
         "@types/react-dom": "^17.0.0",
