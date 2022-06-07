@@ -4,6 +4,8 @@ import { PageContainer } from 'ui'
 import Head from 'next/head'
 import { Navbar } from '../components/Navbar'
 import { LandingPage } from '../components/LandingPage'
+import { InboxComponent } from '../components/Inbox'
+import { useIsAuthenticated } from '../hooks/useLogin'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
@@ -19,21 +21,30 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ['common', 'home'])),
+      ...(await serverSideTranslations(locale as string, [
+        'common',
+        'home',
+        'mailboxes',
+      ])),
     },
   }
 }
 
-const Home: NextPage = () => (
-  <>
-    <Head>
-      <title>Mail3: Home</title>
-    </Head>
-    <PageContainer>
-      <Navbar />
-      <LandingPage />
-    </PageContainer>
-  </>
-)
+const Home: NextPage = () => {
+  const isAuth = useIsAuthenticated()
+
+  return (
+    <>
+      <Head>
+        <title>Mail3: Home</title>
+      </Head>
+      <PageContainer>
+        <Navbar />
+        {!isAuth && <LandingPage />}
+      </PageContainer>
+      {isAuth && <InboxComponent />}
+    </>
+  )
+}
 
 export default Home

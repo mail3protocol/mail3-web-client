@@ -11,5 +11,6 @@ export enum RoutePath {
   NewMessage = '/message/new',
   WhiteList = '/whitelist',
   Subscription = '/subscription',
+  Message = '/message',
   Testing = '/testing',
 }
