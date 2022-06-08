@@ -125,6 +125,12 @@ const ColorfulButton = styled(Flex)`
 
 const COLORFUL_BTN_BG = `linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)`
 
+const RenderedButton: React.FC<{ addr: string }> = ({ addr }) => (
+  <Button w="185px" fontSize="14px" variant="outline">
+    {truncateMiddle(addr, 6, 4)}
+  </Button>
+)
+
 interface IconLinkProps extends StackProps {
   icon: React.ReactNode
   href: string
@@ -230,11 +236,7 @@ export const Testing: React.FC = () => {
               opacity: 0.8,
             }}
             w="185px"
-            renderConnected={(addr) => (
-              <Button w="185px" fontSize="14px" variant="outline">
-                {truncateMiddle(addr, 6, 4)}
-              </Button>
-            )}
+            renderConnected={(addr) => <RenderedButton addr={addr} />}
           />
         </Box>
         {mascotIndex === 2 ? (

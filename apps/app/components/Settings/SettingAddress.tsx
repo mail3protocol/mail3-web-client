@@ -21,6 +21,7 @@ import {
   CheckCircleIcon,
   QuestionOutlineIcon,
 } from '@chakra-ui/icons'
+import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
@@ -33,6 +34,7 @@ import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { truncateMiddle } from '../../utils'
 import { MAIL_SERVER_URL } from '../../constants'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -73,8 +75,9 @@ interface EmailSwitchProps {
   isLoading?: boolean
   uuid: string
   isChecked: boolean
+  address: string
   // eslint-disable-next-line prettier/prettier
-  onChange: (account: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (uuid: string, address: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const EmailSwitch: React.FC<EmailSwitchProps> = ({
@@ -82,6 +85,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
   onChange,
   isLoading = false,
   isChecked,
+  address,
   uuid,
 }) => (
   <Flex
@@ -103,7 +107,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
           colorScheme="deepBlue"
           isReadOnly={isChecked}
           isChecked={isChecked}
-          onChange={onChange(uuid)}
+          onChange={onChange(uuid, address)}
           display={['none', 'none', 'block']}
         />
         <Checkbox
@@ -111,7 +115,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
           isReadOnly={isChecked}
           top="2px"
           isChecked={isChecked}
-          onChange={onChange(uuid)}
+          onChange={onChange(uuid, address)}
           display={['block', 'block', 'none']}
         />
       </>
@@ -161,19 +165,25 @@ export const SettingAddress: React.FC = () => {
     }
   )
 
-  const onDefaultAccountChange = (address: string) => async () => {
-    const prevActiveAccount = activeAcount
-    try {
-      setActiveAccount(address)
-      await api.setDefaultSentAddress(address)
-    } catch (error) {
-      setActiveAccount(prevActiveAccount)
-      dialog({
-        type: 'warning',
-        description: t('address.request-failed'),
-      })
+  const setUserInfo = useUpdateAtom(userPropertiesAtom)
+  const onDefaultAccountChange =
+    (uuid: string, address: string) => async () => {
+      const prevActiveAccount = activeAcount
+      try {
+        setActiveAccount(uuid)
+        await api.setDefaultSentAddress(uuid)
+        setUserInfo((prev) => ({
+          ...prev,
+          defaultAddress: address,
+        }))
+      } catch (error) {
+        setActiveAccount(prevActiveAccount)
+        dialog({
+          type: 'warning',
+          description: t('address.request-failed'),
+        })
+      }
     }
-  }
 
   const aliases = useMemo(() => {
     if (ensNames?.aliases) {
@@ -220,6 +230,7 @@ export const SettingAddress: React.FC = () => {
           account={firstAlias?.address}
           onChange={onDefaultAccountChange}
           key={firstAlias?.address}
+          address={firstAlias?.address ?? account}
           isLoading={isLoading}
           isChecked={firstAlias?.uuid === activeAcount || aliases.length === 1}
         />
@@ -232,6 +243,7 @@ export const SettingAddress: React.FC = () => {
               {restAliases.map((a) => (
                 <EmailSwitch
                   uuid={a.uuid}
+                  address={a.address}
                   emailAddress={generateEmailAddress(a.address)}
                   account={a.address}
                   onChange={onDefaultAccountChange}
