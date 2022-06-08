@@ -8,6 +8,8 @@ import { useAttachment } from './useAttachment'
 import { useCardSignature } from './useCardSignature'
 import { RoutePath } from '../../../route/path'
 import { API } from '../../../api'
+import { onRenderElementToImage } from '../../../utils/editor'
+import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
 
 const CARD_SIGNATURE_FILENAME = 'signature.png'
 const CARD_SIGNATURE_CONTENT_ID = 'signature'
@@ -36,17 +38,21 @@ export function useSubmitMessage() {
   )
   const toast = useToast()
   const { attachments } = useAttachment()
-  const { isEnableCardSignature, cardSignatureBase64 } = useCardSignature()
+  const { isEnableCardSignature } = useCardSignature()
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
     setIsLoading(true)
     let html = getHTML()
-    if (isEnableCardSignature && cardSignatureBase64) {
+    if (isEnableCardSignature) {
       attachments.push({
         filename: CARD_SIGNATURE_FILENAME,
         contentType: 'image/png',
-        content: cardSignatureBase64,
+        content: (
+          await onRenderElementToImage(
+            document.getElementById(CARD_SIGNATURE_ID) as HTMLDivElement
+          )
+        ).split(',')[1],
         contentDisposition: 'inline',
         cid: CARD_SIGNATURE_CONTENT_ID,
       })
