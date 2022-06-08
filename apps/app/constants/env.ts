@@ -4,6 +4,9 @@ export const SERVER_URL =
 export const MAIL_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
 
+export const COOKIE_DOMAIN =
+  process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.mail3.me'
+
 export const DISCORD_URL =
   process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
 

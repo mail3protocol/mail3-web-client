@@ -4,20 +4,24 @@ import { PageContainer } from 'ui'
 import Head from 'next/head'
 import { Navbar } from '../components/Navbar'
 import { LandingPage } from '../components/LandingPage'
+import { parseCookies, useIsAuthenticated } from '../hooks/useLogin'
 import { InboxComponent } from '../components/Inbox'
-import { useIsAuthenticated } from '../hooks/useLogin'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
   res,
+  req,
 }) => {
   if (res && !!process.env.REDIRECT_HOME) {
-    res.writeHead(307, {
-      Location: '/whitelist',
-      'Cache-Control': 'no-cache, no-store',
-      Pragma: 'no-cache',
-    })
-    res.end()
+    const cookie = parseCookies(req)
+    if (typeof cookie?.jwt !== 'string') {
+      res.writeHead(307, {
+        Location: '/testing',
+        'Cache-Control': 'no-cache, no-store',
+        Pragma: 'no-cache',
+      })
+      res.end()
+    }
   }
   return {
     props: {

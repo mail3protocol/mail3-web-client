@@ -25,14 +25,17 @@ import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID } from '../constants'
 
+
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
   return useCallback((info: LoginInfo) => {
     const now = dayjs()
-    setCookie(COOKIE_KEY, info, {
+    const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-    })
+      secure: process.env.NODE_ENV === 'production',
+    }
+    setCookie(COOKIE_KEY, info, option)
   }, [])
 }
 
@@ -130,7 +133,10 @@ export const useSetGlobalTrack = () => {
         ) {
           sigStatus = SignatureStatus.BothDisabled
         }
+        const defaultAddress =
+          aliases.aliases.find((a) => a.is_default)?.address || account
         const config = {
+          defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
           [GlobalDimensions.ConnectedWalletName]: walletName,
           [GlobalDimensions.WalletAddress]: account,
