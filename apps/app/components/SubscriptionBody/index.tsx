@@ -2,11 +2,30 @@ import React, { useState } from 'react'
 import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { Button } from 'ui'
 import { TrackEvent, TrackKey, useDidMount, useTrackClick } from 'hooks'
-import AvatarTemp from '../../assets/subscription/avatar-temp.png'
 import SubTop from '../../assets/subscription/top.png'
 import SVGVector from '../../assets/subscription/vector.svg'
 import SVGBell from '../../assets/subscription/bell.svg'
 import SVGBellCur from '../../assets/subscription/bell-cur.svg'
+
+import Mail3 from '../../assets/subscription/logo/Mail3.png'
+import Bankless from '../../assets/subscription/logo/Bankless.png'
+import TheDefiant from '../../assets/subscription/logo/TheDefiant.png'
+import WeekinEthereumNews from '../../assets/subscription/logo/WeekinEthereumNews.png'
+import MirrorCuratorDAO from '../../assets/subscription/logo/MirrorCuratorDAO.png'
+import ArthurHayes from '../../assets/subscription/logo/ArthurHayes.png'
+import CryptoJobsList from '../../assets/subscription/logo/CryptoJobsList.png'
+import Web3Jobs from '../../assets/subscription/logo/Web3Jobs.png'
+
+const imgs = [
+  Mail3,
+  Bankless,
+  TheDefiant,
+  WeekinEthereumNews,
+  MirrorCuratorDAO,
+  ArthurHayes,
+  CryptoJobsList,
+  Web3Jobs,
+]
 
 const dataMD = `
 | n | name | url | class | desc |
@@ -133,11 +152,11 @@ export const SubscriptionBody: React.FC = () => {
   const [list, setList] = useState<Array<ListItem>>([])
 
   useDidMount(() => {
-    const data = realData.map((e) => ({
+    const data = realData.map((e, i) => ({
       ...e,
       isNew: false,
       isSub: false,
-      avatarSrc: AvatarTemp,
+      avatarSrc: imgs[i],
     }))
     setList(data)
   })
