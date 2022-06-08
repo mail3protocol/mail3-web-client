@@ -6,12 +6,12 @@ import {
   Input,
   Box,
 } from '@chakra-ui/react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar } from 'ui'
 import {
   isEthAddress,
   removeMailSuffix,
-  truncateMiddle,
+  truncateMiddle0xMail,
   verifyEmail,
 } from '../../../utils'
 import { MAIL_SERVER_URL } from '../../../constants'
@@ -27,20 +27,22 @@ export const ToInput: React.FC<ToInputProps> = ({
 }) => {
   const [addresses, setAddresses] = useState<string[]>(defaultAddresses ?? [])
   const [inputValue, setInputValue] = useState('')
-  const onAddAddress = () => {
-    if (
-      inputValue !== '' &&
-      (isEthAddress(inputValue) || verifyEmail(inputValue))
-    ) {
-      setAddresses((targets) => [...targets, inputValue])
+  const onAddAddress = (value: string) => {
+    if (value !== '' && (isEthAddress(value) || verifyEmail(value))) {
+      const addingAddress = isEthAddress(value)
+        ? `${value}@${MAIL_SERVER_URL}`
+        : value
+      setAddresses((targets) => [...targets, addingAddress])
       setInputValue('')
+      return true
     }
+    return false
   }
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
     switch (e.code) {
       case 'Enter': {
-        onAddAddress()
+        onAddAddress(inputValue)
         break
       }
       case 'Backspace': {
@@ -53,16 +55,18 @@ export const ToInput: React.FC<ToInputProps> = ({
         target.blur()
         break
       }
+      case 'Semicolon': {
+        if (onAddAddress(inputValue)) {
+          e.stopPropagation()
+          e.preventDefault()
+        }
+        break
+      }
       default: {
         break
       }
     }
   }
-  const onDeleteAddress = useCallback(
-    (targetAddress: string) =>
-      setAddresses((address) => address.filter((t) => t !== targetAddress)),
-    [setAddresses]
-  )
 
   useEffect(() => {
     onChange?.(addresses)
@@ -70,7 +74,7 @@ export const ToInput: React.FC<ToInputProps> = ({
 
   return (
     <Flex wrap="wrap" rowGap="8px" w="full" alignItems="center">
-      {addresses.map((address) => (
+      {addresses.map((address, i) => (
         <Tag
           key={`${address}`}
           lineHeight="24px"
@@ -89,16 +93,19 @@ export const ToInput: React.FC<ToInputProps> = ({
             rounded="100px"
           />
           <TagLabel pl="4px" color="#6F6F6F">
-            {isEthAddress(address)
-              ? `${truncateMiddle(address)}@${MAIL_SERVER_URL}`
-              : address}
+            {truncateMiddle0xMail(address)}
           </TagLabel>
           <TagCloseButton
             w="13px"
             h="13px"
             fontSize="12px"
             bg="#EBEBEB"
-            onClick={() => onDeleteAddress(address)}
+            onClick={() => {
+              setAddresses((a) => {
+                a.splice(i, 1)
+                return [...a]
+              })
+            }}
           />
         </Tag>
       ))}
@@ -112,7 +119,12 @@ export const ToInput: React.FC<ToInputProps> = ({
           onKeyDown={onKeyDown}
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
-          onBlur={onAddAddress}
+          onBlur={() => onAddAddress(inputValue)}
+          onPaste={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            onAddAddress(e.clipboardData.getData('text'))
+          }}
         />
       </Box>
     </Flex>
