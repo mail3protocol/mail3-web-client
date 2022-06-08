@@ -8,14 +8,13 @@ import {
   Box,
   Flex,
 } from '@chakra-ui/react'
-import { useQuery } from 'react-query'
-import { useAccount } from 'hooks'
 import React, { useEffect, useState } from 'react'
 import { Avatar } from 'ui'
+import { useAtomValue } from 'jotai'
 import ChangeFromAddressSvg from '../../../assets/change-from-address.svg'
-import { Query } from '../../../api/query'
-import { useAPI } from '../../../hooks/useAPI'
 import { removeMailSuffix, truncateEmailMiddle } from '../../../utils'
+import { userPropertiesAtom } from '../../../hooks/useLogin'
+import { Alias } from '../../../api'
 
 export interface FromProps {
   onChange?: (address: string) => void
@@ -25,20 +24,11 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
   const [emailAddress, setEmailAddress] = useState<string | undefined>(
     undefined
   )
-  const account = useAccount()
-  const api = useAPI()
-  const { data } = useQuery(
-    [Query.ENS_NAMES, account],
-    async () => (await api.getAliases()).data,
-    {
-      onSuccess(d) {
-        const defaultAddress = (
-          d.aliases.find((alias) => alias.is_default) || d.aliases[0]
-        ).address
-        setEmailAddress(defaultAddress)
-      },
-    }
-  )
+  const userProperties = useAtomValue(userPropertiesAtom)
+  useEffect(() => {
+    if (!userProperties) return
+    setEmailAddress(userProperties.defaultAddress)
+  }, [])
   useEffect(() => {
     if (emailAddress) {
       onChange?.(emailAddress)
@@ -92,7 +82,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
         rounded="20px"
         maxW="min(460px, 100vw)"
       >
-        {data?.aliases?.map((alias) => (
+        {(userProperties?.aliases as Alias[])?.map((alias) => (
           <MenuItem
             key={alias.uuid}
             position="relative"

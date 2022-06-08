@@ -86,14 +86,10 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
       const messageContent = messageInfo?.text.id
         ? await apiHandle(api.getMessageContent(messageInfo?.text.id))
         : null
-      const userInfo = isEnableSignatureText
-        ? await apiHandle(api.getUserInfo())
-        : null
 
       return {
         messageInfo,
         messageContent,
-        userInfo,
       }
     },
     {
@@ -106,11 +102,12 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
   )
   const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
   const messageContent = queryMessageInfoAndContentData?.data?.messageContent
-  const userInfo = queryMessageInfoAndContentData?.data?.userInfo
 
   const defaultContent = useMemo(() => {
     const signContent =
-      isEnableSignatureText && userInfo ? userInfo.text_signature : ''
+      isEnableSignatureText && userProperties?.text_signature
+        ? userProperties?.text_signature
+        : ''
     if (!messageContent) {
       return getDefaultTemplate(signContent)
     }
@@ -121,7 +118,12 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
       return getReplyTemplate(messageContent.html, signContent)
     }
     return messageContent.html
-  }, [messageContent, action, isEnableSignatureText, userInfo])
+  }, [
+    messageContent,
+    action,
+    isEnableSignatureText,
+    userProperties?.text_signature,
+  ])
   const [isLoadedSubjectInfo, setIsLoadingSubjectInfo] = useState(false)
   const {
     setSubject,
