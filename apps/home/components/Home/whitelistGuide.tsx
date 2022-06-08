@@ -3,7 +3,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import React from 'react'
 import NextLink from 'next/link'
 import { TrackEvent, useTrackClick } from 'hooks'
-import { TESTING_URL, WHITE_LIST_URL } from '../../constants/env'
+import { TESTING_URL } from '../../constants/env'
 
 export const WhitelistGuide = () => {
   const trackClickGetIn = useTrackClick(TrackEvent.HomeClickGetIn)
