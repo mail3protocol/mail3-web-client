@@ -1,4 +1,4 @@
-import { Box, Center, Image, Skeleton } from '@chakra-ui/react'
+import { Box, Image, Skeleton } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import React, { useState } from 'react'
 import { useAPI } from '../../../hooks/useAPI'

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
 import parse, {
   DOMNode,
@@ -6,19 +6,24 @@ import parse, {
   HTMLReactParserOptions,
 } from 'html-react-parser'
 import DOMPurify from 'dompurify'
-import { AttachmentItemResponse } from '../../api'
+import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
+import { MAIL_SERVER_URL } from '../../constants'
 
 interface htmlParserProps {
   html: string
   messageId: string
   attachments: AttachmentItemResponse[] | null
+  from: AddressResponse
 }
+
+const OFFICE_ADDRESS_LIST = [`no-reply-pls.eth@${MAIL_SERVER_URL}`]
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
   html,
   attachments,
   messageId,
+  from,
 }) => {
   const replace = (dom: DOMNode) => {
     if (dom instanceof Element) {
@@ -41,7 +46,15 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     replace,
   }
 
-  const cleanHtml = DOMPurify.sanitize(html)
+  const addTags = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => from.address === address
+    )
+    if (isOfficeMail) return ['iframe']
+    return []
+  }, [from.address])
+
+  const cleanHtml = DOMPurify.sanitize(html, { ADD_TAGS: addTags })
 
   return <Box>{parse(cleanHtml, options)}</Box>
 }

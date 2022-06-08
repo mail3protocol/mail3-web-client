@@ -374,7 +374,7 @@ export const PreviewComponent: React.FC = () => {
                       if (item.name) return `${item.name} <${address}>`
                       return `<${address}>`
                     })
-                    .join(',')}
+                    .join(';')}
                 </span>
                 {detail?.cc && (
                   <span>
@@ -385,7 +385,7 @@ export const PreviewComponent: React.FC = () => {
                         if (item.name) return `${item.name} <${address}>`
                         return `<${address}>`
                       })
-                      .join(',')}
+                      .join('; ')}
                     ;
                   </span>
                 )}
@@ -398,7 +398,7 @@ export const PreviewComponent: React.FC = () => {
                         if (item.name) return `${item.name} <${address}>`
                         return `<${address}>`
                       })
-                      .join(',')}
+                      .join(';')}
                     ;
                   </span>
                 )}
@@ -412,7 +412,7 @@ export const PreviewComponent: React.FC = () => {
                 color="#6F6F6F"
                 whiteSpace="nowrap"
               >
-                {detail?.date && formatDateString(detail.date)}
+                {formatDateString(detail.date)}
               </Box>
             </Box>
           </Flex>
@@ -426,11 +426,12 @@ export const PreviewComponent: React.FC = () => {
               html={content}
               attachments={detail.attachments}
               messageId={id}
+              from={detail.from}
             />
           </Box>
-          {!!detail?.attachments && (
+          {detail?.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
-          )}
+          ) : null}
         </Box>
       </Container>
     </>
