@@ -70,7 +70,7 @@ export const TrashComponent: React.FC = () => {
                   try {
                     await api.batchDeleteMessage(ids)
                     refBoxList?.current?.setHiddenIds(ids)
-                    toast(t('status.delete.ok'))
+                    toast(t('status.delete.ok'), { status: 'success' })
                   } catch (error) {
                     toast(t('status.delete.fail'))
                   }

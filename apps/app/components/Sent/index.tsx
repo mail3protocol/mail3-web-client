@@ -46,7 +46,7 @@ export const SentComponent: React.FC = () => {
               try {
                 await api.batchDeleteMessage(ids)
                 refBoxList?.current?.setHiddenIds(ids)
-                toast(t('status.trash.ok'))
+                toast(t('status.trash.ok'), { status: 'success' })
               } catch (error) {
                 toast(t('status.trash.fail'))
               }
