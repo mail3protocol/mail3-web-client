@@ -53,6 +53,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   size,
   skeletonProps,
   isSquare,
+  onClick,
   ...props
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
@@ -100,6 +101,8 @@ export const Avatar: React.FC<AvatarProps> = ({
         maxH={width}
         borderRadius={isSquare ? undefined : '50%'}
         overflow="hidden"
+        onClick={onClick}
+        cursor={onClick ? 'pointer' : undefined}
       >
         <BoringAvatar
           name={address.toLowerCase()}
@@ -115,6 +118,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         borderRadius={isSquare ? 2 : 0}
         size={size}
         ignoreFallback
+        onClick={onClick}
         {...props}
       />
     )
@@ -134,6 +138,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       src={avatar}
       size={size}
       ignoreFallback
+      onClick={onClick}
       {...props}
     />
   )
