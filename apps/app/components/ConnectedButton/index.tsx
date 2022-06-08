@@ -21,7 +21,6 @@ import ProfileSvg from '../../assets/profile.svg'
 import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
 import { copyText } from '../../utils'
-import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
@@ -49,7 +48,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         icon: <CopySvg />,
         async onClick() {
           const addr = userProps?.defaultAddress || address
-          await copyText(`${addr.toLowerCase()}@${MAIL_SERVER_URL}`)
+          await copyText(addr)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
         },

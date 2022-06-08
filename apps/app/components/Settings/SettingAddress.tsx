@@ -19,7 +19,7 @@ import NextLink from 'next/link'
 import {
   ChevronRightIcon,
   CheckCircleIcon,
-  QuestionIcon,
+  QuestionOutlineIcon,
 } from '@chakra-ui/icons'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo, useState } from 'react'
@@ -210,7 +210,7 @@ export const SettingAddress: React.FC = () => {
               </Text>
             </HStack>
             <Tooltip label={t('address.default-hover')}>
-              <QuestionIcon cursor="pointer" w="16px" color="#4E52F5" />
+              <QuestionOutlineIcon cursor="pointer" w="16px" color="#4E52F5" />
             </Tooltip>
           </Stack>
         </FormLabel>
