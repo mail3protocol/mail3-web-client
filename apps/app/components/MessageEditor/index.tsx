@@ -16,11 +16,13 @@ const Editor = dynamic<EditorProps>(
 export interface MessageEditorProps {
   defaultContent: string
   isEnableCardSignature: boolean
+  isLoading?: boolean
 }
 
 export const MessageEditor: React.FC<MessageEditorProps> = ({
   defaultContent,
   isEnableCardSignature,
+  isLoading,
 }) => {
   const { t } = useTranslation('edit-message')
   const { setIsEnableCardSignature } = useCardSignature()
@@ -71,7 +73,7 @@ export const MessageEditor: React.FC<MessageEditorProps> = ({
         {t('title')}
       </Heading>
       <RecipientAndSubject />
-      <Editor content={defaultContent} />
+      {!isLoading ? <Editor content={defaultContent} /> : null}
     </Flex>
   )
 }
