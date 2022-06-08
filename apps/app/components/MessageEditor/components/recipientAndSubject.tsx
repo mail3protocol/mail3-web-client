@@ -4,17 +4,10 @@ import {
   Input,
   Stack,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalFooter,
-  Heading,
   Button as RowButton,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useTranslation } from 'next-i18next'
