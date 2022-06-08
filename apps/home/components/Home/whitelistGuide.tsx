@@ -3,7 +3,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import React from 'react'
 import NextLink from 'next/link'
 import { TrackEvent, useTrackClick } from 'hooks'
-import { WHITE_LIST_URL } from '../../constants/env'
+import { TESTING_URL, WHITE_LIST_URL } from '../../constants/env'
 
 export const WhitelistGuide = () => {
   const trackClickGetIn = useTrackClick(TrackEvent.HomeClickGetIn)
@@ -21,10 +21,10 @@ export const WhitelistGuide = () => {
       textAlign={{ base: 'center', md: 'left' }}
     >
       <Heading fontSize={{ base: '24px', md: '48px' }}>
-        Now, hit the whitelist of Mail3
+        Now, hit the Mail3 Beta
       </Heading>
       <LogoAnimation w="270px" mt="7px" />
-      <NextLink href={WHITE_LIST_URL}>
+      <NextLink href={TESTING_URL} passHref>
         <Button w="176px" mt="40px" onClick={() => trackClickGetIn()}>
           OK，Get in
         </Button>
