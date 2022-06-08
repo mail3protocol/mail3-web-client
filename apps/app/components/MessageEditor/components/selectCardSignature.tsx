@@ -5,9 +5,7 @@ import {
   MenuList,
   MenuItem,
   Button,
-  Image,
   Box,
-  Skeleton,
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { CardSignature } from 'ui'
@@ -15,6 +13,8 @@ import React from 'react'
 import { useCardSignature } from '../hooks/useCardSignature'
 import { useSubject } from '../hooks/useSubject'
 import { removeMailSuffix } from '../../../utils'
+
+export const CARD_SIGNATURE_ID = 'CardSignature'
 
 export const SelectCardSignature: React.FC = () => {
   const { fromAddress } = useSubject()
@@ -28,12 +28,7 @@ export const SelectCardSignature: React.FC = () => {
       value: false,
     },
   ]
-  const {
-    isEnableCardSignature,
-    setIsEnableCardSignature,
-    ref: cardSignatureRef,
-    blobUrl,
-  } = useCardSignature([`${fromAddress}`])
+  const { isEnableCardSignature, setIsEnableCardSignature } = useCardSignature()
   return (
     <Flex flexDirection="column" mr="auto" minW="200px">
       <Menu>
@@ -48,13 +43,10 @@ export const SelectCardSignature: React.FC = () => {
             {list[isEnableCardSignature ? 0 : 1].key}
             <ChevronDownIcon ml="6px" />
           </Flex>
-          {isEnableCardSignature ? (
-            <Image
-              src={blobUrl}
-              w="200px"
-              h="auto"
-              fallback={<Skeleton w="200px" h="188px" />}
-            />
+          {isEnableCardSignature && fromAddress ? (
+            <Box id={CARD_SIGNATURE_ID}>
+              <CardSignature account={removeMailSuffix(fromAddress)} />
+            </Box>
           ) : null}
         </MenuButton>
         <MenuList
@@ -88,14 +80,6 @@ export const SelectCardSignature: React.FC = () => {
           ))}
         </MenuList>
       </Menu>
-      {isEnableCardSignature && fromAddress ? (
-        <Box position="fixed" top="0" left="0" opacity="0">
-          <CardSignature
-            account={removeMailSuffix(fromAddress)}
-            ref={cardSignatureRef}
-          />
-        </Box>
-      ) : null}
     </Flex>
   )
 }

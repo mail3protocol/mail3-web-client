@@ -179,7 +179,7 @@ export const InboxComponent: React.FC = () => {
                   setIsChooseMode(false)
                 }
                 refSeenBoxList?.current?.setHiddenIds(seenIds)
-                toast(t('status.trash.ok'))
+                toast(t('status.trash.ok'), { status: 'success' })
               } catch (error) {
                 toast(t('status.trash.fail'))
               }

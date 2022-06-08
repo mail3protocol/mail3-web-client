@@ -28,7 +28,7 @@ import SetupSvg from '../../assets/setup.svg'
 import ProfileSvg from '../../assets/profile.svg'
 import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
-import { copyText } from '../../utils'
+import { copyText, truncateMiddle } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
@@ -89,6 +89,15 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
     setMounted(true)
   })
 
+  const addr = useMemo(() => {
+    const defaultAddress = userProps?.defaultAddress
+    if (defaultAddress) {
+      const [a, url] = defaultAddress.split('@')
+      return `${truncateMiddle(a, 6, 4)}@${url}`
+    }
+    return emailAddress
+  }, [userProps, emailAddress])
+
   if (!mounted) {
     return null
   }
@@ -109,7 +118,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
               </Box>
             </PopoverAnchor>
             <Text ml="6px" fontSize="12px" fontWeight="normal">
-              {emailAddress}
+              {addr}
             </Text>
           </Button>
         </Box>

@@ -151,7 +151,7 @@ export const PreviewComponent: React.FC = () => {
         }
         try {
           await api.deleteMessage2(id)
-          toast(t('status.trash.ok'))
+          toast(t('status.trash.ok'), { status: 'success' })
           router.back()
         } catch (error) {
           toast(t('status.trash.fail'))

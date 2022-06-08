@@ -1,17 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Box } from '@chakra-ui/react'
-import { GetMessage } from 'models/src/getMessage'
-import { GetMessageContent } from 'models/src/getMessageContent'
 import { SubmitMessage } from 'models/src/submitMessage'
+import { useAtomValue } from 'jotai'
+import { SignatureStatus } from 'hooks'
+import { useQuery } from 'react-query'
+import { AxiosResponse } from 'axios'
 import Head from 'next/head'
 import { MessageEditor } from '../../components/MessageEditor'
 import { Navbar } from '../../components/Navbar'
-import { API, UserResponse } from '../../api'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
-import { getAuthenticateProps, parseCookies } from '../../hooks/useLogin'
+import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
 import {
   AttachmentExtraInfo,
   useAttachment,
@@ -19,21 +20,6 @@ import {
 import { useAPI } from '../../hooks/useAPI'
 import { convertBlobToBase64 } from '../../utils/file'
 import { useSaveMessage } from '../../components/MessageEditor/hooks/useSaveMessage'
-
-interface ServerSideProps {
-  userInfo: UserResponse
-  messageInfo: GetMessage.Response | null
-  messageContent: GetMessageContent.Response | null
-  action: SubmitMessage.ReferenceAction | null
-}
-
-function catchApiError<T>(fn: Promise<T>) {
-  return fn.catch((err) => {
-    // eslint-disable-next-line no-console
-    console.error(err.response)
-    return null
-  })
-}
 
 function getDefaultTemplate(content: string) {
   return `<p>
@@ -64,50 +50,65 @@ ${signContent}
 `)
 }
 
+interface ServerSideProps {
+  action: SubmitMessage.ReferenceAction | null
+  id: string | null
+}
+
 export const getServerSideProps: GetServerSideProps<ServerSideProps> =
-  getAuthenticateProps(async ({ locale, req, query }) => {
-    const cookies = parseCookies(req) as {
-      address?: string
-      jwt?: string
-    }
-    const address = cookies?.address
-    const jwt = cookies?.jwt
-    const api = new API(address, jwt)
-    const { data: userInfo } = await api.getUserInfo()
-    const messageInfo = query.id
-      ? await catchApiError(
-          api.getMessageInfo(query.id as string).then((r) => r.data)
-        )
-      : null
-    const messageContent = messageInfo?.text?.id
-      ? await catchApiError(
-          api.getMessageContent(messageInfo.text.id).then((r) => r.data)
-        )
-      : null
-    return {
-      props: {
-        ...(await serverSideTranslations(locale as string, [
-          'edit-message',
-          'connect',
-          'common',
-        ])),
-        userInfo,
+  getAuthenticateProps(async ({ locale, query }) => ({
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        'edit-message',
+        'connect',
+        'common',
+      ])),
+      action: query.action ? query.action : null,
+      id: query.id ? query.id : null,
+    },
+  }))
+
+const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
+  const api = useAPI()
+  const userProperties = useAtomValue(userPropertiesAtom)
+  const signatureStatus = userProperties?.signature_status as SignatureStatus
+  const isEnableSignatureText =
+    signatureStatus === SignatureStatus.OnlyText ||
+    signatureStatus === SignatureStatus.BothEnabled
+  const queryMessageInfoAndContentData = useQuery(
+    ['INIT_EDIT_MESSAGE_QUERY'],
+    async () => {
+      function apiHandle<T>(p: Promise<AxiosResponse<T>>) {
+        return p.then((r) => r.data).catch(() => null)
+      }
+      const messageInfo = id
+        ? await apiHandle(api.getMessageInfo(id as string))
+        : null
+      const messageContent = messageInfo?.text.id
+        ? await apiHandle(api.getMessageContent(messageInfo?.text.id))
+        : null
+
+      return {
         messageInfo,
         messageContent,
-        action: query.action ? query.action : null,
-      },
+      }
+    },
+    {
+      enabled: !!id,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: false,
     }
-  })
+  )
+  const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
+  const messageContent = queryMessageInfoAndContentData?.data?.messageContent
 
-const NewMessagePage: NextPage<ServerSideProps> = ({
-  userInfo,
-  messageInfo,
-  messageContent,
-  action,
-}) => {
   const defaultContent = useMemo(() => {
     const signContent =
-      userInfo.text_sig_state === 'enabled' ? userInfo.text_signature : ''
+      isEnableSignatureText && userProperties?.text_signature
+        ? userProperties?.text_signature
+        : ''
     if (!messageContent) {
       return getDefaultTemplate(signContent)
     }
@@ -118,7 +119,12 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
       return getReplyTemplate(messageContent.html, signContent)
     }
     return messageContent.html
-  }, [messageContent, action])
+  }, [
+    messageContent,
+    action,
+    isEnableSignatureText,
+    userProperties?.text_signature,
+  ])
   const [isLoadedSubjectInfo, setIsLoadingSubjectInfo] = useState(false)
   const {
     setSubject,
@@ -131,7 +137,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   const { setAttachmentExtraInfo, setAttachments, onResetAttachments } =
     useAttachment()
   const { onResetSavingAtom } = useSaveMessage()
-  const api = useAPI()
   const getSubject = () => {
     if (!messageInfo) return ''
     if (
@@ -207,9 +212,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   }, [])
   return (
     <>
-      <Head>
-        <title>Mail3: Write Mail</title>
-      </Head>
+      <Head>Mail3: Write Mail</Head>
       <Box
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         px={{
@@ -229,7 +232,11 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
         </Box>
         <MessageEditor
           defaultContent={defaultContent}
-          isEnableCardSignature={userInfo.card_sig_state === 'enabled'}
+          isEnableCardSignature={
+            signatureStatus === SignatureStatus.OnlyImage ||
+            signatureStatus === SignatureStatus.BothEnabled
+          }
+          isLoading={queryMessageInfoAndContentData.isLoading}
         />
       </Box>
     </>

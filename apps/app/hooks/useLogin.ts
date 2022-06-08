@@ -25,7 +25,6 @@ import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID } from '../constants'
 
-
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
   return useCallback((info: LoginInfo) => {
@@ -142,6 +141,8 @@ export const useSetGlobalTrack = () => {
           [GlobalDimensions.WalletAddress]: account,
           [GlobalDimensions.SignatureStatus]: sigStatus,
           crm_id: account,
+          text_signature: userInfo.text_signature,
+          aliases: aliases.aliases,
         }
         try {
           gtag?.('set', 'user_properties', config)
