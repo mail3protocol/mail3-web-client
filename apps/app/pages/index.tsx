@@ -4,9 +4,8 @@ import { PageContainer } from 'ui'
 import Head from 'next/head'
 import { Navbar } from '../components/Navbar'
 import { LandingPage } from '../components/LandingPage'
-import { parseCookies } from '../hooks/useLogin'
+import { parseCookies, useIsAuthenticated } from '../hooks/useLogin'
 import { InboxComponent } from '../components/Inbox'
-import { useIsAuthenticated } from '../hooks/useLogin'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
