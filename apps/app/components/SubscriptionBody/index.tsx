@@ -46,10 +46,10 @@ function textToObj(str: string) {
 const realData = textToObj(dataMD)
 
 interface ListItem {
-  isNew: boolean
   name: string
-  avatarSrc: any
   desc: string
+  avatarSrc: any
+  isNew: boolean
   isSub: boolean
 }
 
