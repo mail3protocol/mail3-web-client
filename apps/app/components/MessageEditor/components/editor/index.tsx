@@ -201,12 +201,13 @@ export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
   )
   useEffect(() => {
     const s = new Subject<() => void>()
-    s.pipe(debounceTime(5000)).subscribe((fn) => {
+    const subscriber = s.pipe(debounceTime(5000)).subscribe((fn) => {
       fn()
     })
     setSaveSubject(s)
     return () => {
       s.unsubscribe()
+      subscriber.unsubscribe()
     }
   }, [])
 
