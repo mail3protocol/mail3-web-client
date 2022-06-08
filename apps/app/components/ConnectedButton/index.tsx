@@ -12,7 +12,15 @@ import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
 import { useAtomValue } from 'jotai'
 import React, { useMemo, useRef, useState } from 'react'
-import { useConnectWalletDialog, useDidMount, useToast } from 'hooks'
+import {
+  PersonnalCenter,
+  TrackEvent,
+  TrackKey,
+  useConnectWalletDialog,
+  useDidMount,
+  useToast,
+  useTrackClick,
+} from 'hooks'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { RoutePath } from '../../route/path'
@@ -30,23 +38,31 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const popoverRef = useRef<HTMLElement>(null)
   const { onOpen } = useConnectWalletDialog()
   const userProps = useAtomValue(userPropertiesAtom)
+  const trackItem = useTrackClick(TrackEvent.ClickPersonalCenter)
   const btns: ButtonListItemProps[] = useMemo(
     () => [
       {
         href: RoutePath.SettingSignature,
         label: t('navbar.settings'),
         icon: <SetupSvg />,
+        onClick() {
+          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Settings })
+        },
       },
       {
         href: `https://mail3.me/${address}`,
         label: t('navbar.profile'),
         icon: <ProfileSvg />,
         isExternal: true,
+        onClick() {
+          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Profile })
+        },
       },
       {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
+          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
           const addr = userProps?.defaultAddress || address
           await copyText(addr)
           toast(t('navbar.copied'))
@@ -57,6 +73,9 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.change-wallet'),
         icon: <ChangeWalletSvg />,
         onClick() {
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.ChangeWallet,
+          })
           onOpen()
         },
       },

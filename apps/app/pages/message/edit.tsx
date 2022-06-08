@@ -8,6 +8,7 @@ import { useAtomValue } from 'jotai'
 import { SignatureStatus } from 'hooks'
 import { useQuery } from 'react-query'
 import { AxiosResponse } from 'axios'
+import Head from 'next/head'
 import { MessageEditor } from '../../components/MessageEditor'
 import { Navbar } from '../../components/Navbar'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
@@ -210,32 +211,35 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
     })()
   }, [])
   return (
-    <Box
-      maxW={`${CONTAINER_MAX_WIDTH}px`}
-      px={{
-        base: '0',
-        md: '20px',
-      }}
-      mx="auto"
-    >
+    <>
+      <Head>Mail3: Write Mail</Head>
       <Box
-        w="full"
+        maxW={`${CONTAINER_MAX_WIDTH}px`}
         px={{
-          base: '20px',
-          md: '0',
+          base: '0',
+          md: '20px',
         }}
+        mx="auto"
       >
-        <Navbar />
+        <Box
+          w="full"
+          px={{
+            base: '20px',
+            md: '0',
+          }}
+        >
+          <Navbar />
+        </Box>
+        <MessageEditor
+          defaultContent={defaultContent}
+          isEnableCardSignature={
+            signatureStatus === SignatureStatus.OnlyImage ||
+            signatureStatus === SignatureStatus.BothEnabled
+          }
+          isLoading={queryMessageInfoAndContentData.isLoading}
+        />
       </Box>
-      <MessageEditor
-        defaultContent={defaultContent}
-        isEnableCardSignature={
-          signatureStatus === SignatureStatus.OnlyImage ||
-          signatureStatus === SignatureStatus.BothEnabled
-        }
-        isLoading={queryMessageInfoAndContentData.isLoading}
-      />
-    </Box>
+    </>
   )
 }
 
