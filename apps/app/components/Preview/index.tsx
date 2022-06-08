@@ -58,7 +58,7 @@ const Container = styled(Box)`
 `
 
 export const PreviewComponent: React.FC = () => {
-  const [t] = useTranslation('preview')
+  const [t] = useTranslation('mailboxes')
   const router = useRouter()
   const toast = useToast()
   const { id, origin } = router.query as {
@@ -345,7 +345,7 @@ export const PreviewComponent: React.FC = () => {
                     verticalAlign="middle"
                     ml="5px"
                   >
-                    {`<${detail.from.address}>`}
+                    {`<${truncateMiddle0xMail(detail.from.address)}>`}
                   </Text>
                 </Box>
                 <Box />
@@ -370,7 +370,7 @@ export const PreviewComponent: React.FC = () => {
                   to{' '}
                   {detail.to
                     .map((item) => {
-                      const address = truncateMiddle0xMail(item.address, 3, 4)
+                      const address = truncateMiddle0xMail(item.address)
                       if (item.name) return `${item.name} <${address}>`
                       return `<${address}>`
                     })
@@ -381,7 +381,7 @@ export const PreviewComponent: React.FC = () => {
                     ; cc{' '}
                     {detail.cc
                       .map((item) => {
-                        const address = truncateMiddle0xMail(item.address, 3, 4)
+                        const address = truncateMiddle0xMail(item.address)
                         if (item.name) return `${item.name} <${address}>`
                         return `<${address}>`
                       })
@@ -394,7 +394,7 @@ export const PreviewComponent: React.FC = () => {
                     ; bcc{' '}
                     {detail.bcc
                       .map((item) => {
-                        const address = truncateMiddle0xMail(item.address, 3, 4)
+                        const address = truncateMiddle0xMail(item.address)
                         if (item.name) return `${item.name} <${address}>`
                         return `<${address}>`
                       })

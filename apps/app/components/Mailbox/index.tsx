@@ -7,7 +7,11 @@ import { useTranslation } from 'next-i18next'
 import Link, { LinkProps } from 'next/link'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
-import { formatDateString, removeMailSuffix } from '../../utils'
+import {
+  formatDateString,
+  removeMailSuffix,
+  truncateMiddle0xMail,
+} from '../../utils'
 
 export enum AvatarBadgeType {
   None,
@@ -153,8 +157,8 @@ const Item = ({
     </Flex>
   )
 
-  const desc = `${from?.address} - ${to
-    ?.map((item) => `${item?.address}`)
+  const desc = `${truncateMiddle0xMail(from?.address)} - ${to
+    ?.map((item) => `${truncateMiddle0xMail(item?.address)}`)
     ?.join(';')}`
 
   return (
