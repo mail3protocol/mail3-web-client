@@ -13,12 +13,7 @@ a {
 
 * {
   box-sizing: border-box;
-}
-
-@font-face {
-  font-family: Poppins-Regular;
-  src: local(Poppins-Regular), url(/fonts/Poppins-Regular.ttf) format('truetype');
-  font-display: fallback;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* poppins-300 - latin */

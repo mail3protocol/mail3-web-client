@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { Center, Heading, Text } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Head from 'next/head'
@@ -26,6 +27,7 @@ export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
 
 const SetupSignaturePage: NextPage = () => {
   const [t] = useTranslation('settings')
+  const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
   return (
     <>
       <Head>
@@ -50,6 +52,7 @@ const SetupSignaturePage: NextPage = () => {
                 className="next-header"
                 position="absolute"
                 right="60px"
+                onClick={() => trackNext()}
                 _hover={{
                   bg: 'brand.50',
                 }}

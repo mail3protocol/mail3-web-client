@@ -91,6 +91,7 @@ export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.Home,
   RoutePath.WhiteList,
+  RoutePath.Testing,
 ])
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
@@ -108,7 +109,7 @@ export const useSetGlobalTrack = () => {
         const api = new API(account, jwt)
         const [{ data: userInfo }, { data: aliases }] = await Promise.all([
           api.getUserInfo(),
-          api.getAliaes(),
+          api.getAliases(),
         ])
         let sigStatus: SignatureStatus = SignatureStatus.OnlyText
         if (

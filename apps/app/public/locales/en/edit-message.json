@@ -1,0 +1,15 @@
+{
+    "title": "New Message",
+    "from": "From",
+    "community": "Community",
+    "cc": "CC",
+    "bcc": "BCC",
+    "subject": "Subject",
+    "save": "Save",
+    "send": "Send",
+    "attach_files": "Attach files",
+    "add_attach_files": "+ Add",
+    "add_link": "Add Link",
+    "cancel": "Cancel",
+    "ok": "Ok"
+}

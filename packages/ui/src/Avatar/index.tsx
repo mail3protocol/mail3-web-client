@@ -14,8 +14,8 @@ import BoringAvatar from 'boring-avatars'
 export interface AvatarProps extends RawAvatarProps {
   address: string
   skeletonProps?: SkeletonProps
-  w: LayoutProps['w']
-  h: LayoutProps['h']
+  w?: LayoutProps['w']
+  h?: LayoutProps['h']
   isSquare?: boolean
 }
 

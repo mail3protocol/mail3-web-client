@@ -142,7 +142,7 @@ export const SettingAddress: React.FC = () => {
   const { data: ensNames, isLoading } = useQuery(
     [Query.ENS_NAMES, account],
     async () => {
-      const { data } = await api.getAliaes()
+      const { data } = await api.getAliases()
       return data
     },
     {
