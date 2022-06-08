@@ -15,7 +15,6 @@ import { useTranslation, Trans } from 'next-i18next'
 import { useAccount, useTrackClick, TrackEvent } from 'hooks'
 import { Button, ConnectWallet } from 'ui'
 import NextLink from 'next/link'
-import { useAtomValue } from 'jotai'
 import {
   DISCORD_URL,
   MORE_DETAILS_LINK,
@@ -28,7 +27,6 @@ import {
   useAuth,
   useIsAuthenticated,
   useIsAuthModalOpen,
-  userPropertiesAtom,
 } from '../../hooks/useLogin'
 import { MascotSvg } from '../Whitelist/Mascot'
 import { truncateMiddle } from '../../utils'
@@ -127,14 +125,11 @@ const ColorfulButton = styled(Flex)`
 
 const COLORFUL_BTN_BG = `linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)`
 
-const RenderedButton: React.FC<{ addr: string }> = ({ addr }) => {
-  const userInfo = useAtomValue(userPropertiesAtom)
-  return (
-    <Button w="185px" fontSize="14px" variant="outline">
-      {truncateMiddle(userInfo?.defaultAddress ?? addr, 6, 4)}
-    </Button>
-  )
-}
+const RenderedButton: React.FC<{ addr: string }> = ({ addr }) => (
+  <Button w="185px" fontSize="14px" variant="outline">
+    {truncateMiddle(addr, 6, 4)}
+  </Button>
+)
 
 interface IconLinkProps extends StackProps {
   icon: React.ReactNode

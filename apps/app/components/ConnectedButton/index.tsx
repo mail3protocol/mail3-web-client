@@ -90,7 +90,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
               </Box>
             </PopoverAnchor>
             <Text ml="6px" fontSize="12px" fontWeight="normal">
-              {emailAddress}
+              {userProps?.defaultAddress ?? emailAddress}
             </Text>
           </Button>
         </Box>
