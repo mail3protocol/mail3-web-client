@@ -34,6 +34,7 @@ import {
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
 import { MAIL_SERVER_URL } from '../../constants'
+import { RenderHTML } from './parser'
 
 interface MeesageDetailState
   extends Pick<
@@ -57,7 +58,7 @@ const Container = styled(Box)`
 `
 
 export const PreviewComponent: React.FC = () => {
-  const [t] = useTranslation('preview')
+  const [t] = useTranslation('mailboxes')
   const router = useRouter()
   const toast = useToast()
   const { id, origin } = router.query as {
@@ -344,7 +345,7 @@ export const PreviewComponent: React.FC = () => {
                     verticalAlign="middle"
                     ml="5px"
                   >
-                    {`<${detail.from.address}>`}
+                    {`<${truncateMiddle0xMail(detail.from.address)}>`}
                   </Text>
                 </Box>
                 <Box />
@@ -369,22 +370,22 @@ export const PreviewComponent: React.FC = () => {
                   to{' '}
                   {detail.to
                     .map((item) => {
-                      const address = truncateMiddle0xMail(item.address, 3, 4)
+                      const address = truncateMiddle0xMail(item.address)
                       if (item.name) return `${item.name} <${address}>`
                       return `<${address}>`
                     })
-                    .join(',')}
+                    .join(';')}
                 </span>
                 {detail?.cc && (
                   <span>
                     ; cc{' '}
                     {detail.cc
                       .map((item) => {
-                        const address = truncateMiddle0xMail(item.address, 3, 4)
+                        const address = truncateMiddle0xMail(item.address)
                         if (item.name) return `${item.name} <${address}>`
                         return `<${address}>`
                       })
-                      .join(',')}
+                      .join('; ')}
                     ;
                   </span>
                 )}
@@ -393,11 +394,11 @@ export const PreviewComponent: React.FC = () => {
                     ; bcc{' '}
                     {detail.bcc
                       .map((item) => {
-                        const address = truncateMiddle0xMail(item.address, 3, 4)
+                        const address = truncateMiddle0xMail(item.address)
                         if (item.name) return `${item.name} <${address}>`
                         return `<${address}>`
                       })
-                      .join(',')}
+                      .join(';')}
                     ;
                   </span>
                 )}
@@ -411,7 +412,7 @@ export const PreviewComponent: React.FC = () => {
                 color="#6F6F6F"
                 whiteSpace="nowrap"
               >
-                {detail?.date && formatDateString(detail.date)}
+                {formatDateString(detail.date)}
               </Box>
             </Box>
           </Flex>
@@ -420,15 +421,17 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          <div
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: content,
-            }}
-          />
-          {!!detail?.attachments && (
+          <Box>
+            <RenderHTML
+              html={content}
+              attachments={detail.attachments}
+              messageId={id}
+              from={detail.from}
+            />
+          </Box>
+          {detail?.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
-          )}
+          ) : null}
         </Box>
       </Container>
     </>

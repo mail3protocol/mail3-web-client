@@ -18,8 +18,6 @@ import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 import SVGWrite from '../../assets/mailbox/write.svg'
 
-const PAGE_SIZE = 20
-
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
     padding: 0;
@@ -241,7 +239,7 @@ export const InboxComponent: React.FC = () => {
                         fetchNextPage()
                       }}
                     >
-                      {t('inbox.load-more')} +{PAGE_SIZE}
+                      {t('inbox.load-more')}
                     </Button>
                     <Circle
                       size="40px"
