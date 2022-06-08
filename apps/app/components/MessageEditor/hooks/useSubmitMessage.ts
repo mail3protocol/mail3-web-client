@@ -6,11 +6,23 @@ import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
 import { useCardSignature } from './useCardSignature'
-import { DRAFT_ID_NAME } from './useSaveMessage'
 import { RoutePath } from '../../../route/path'
+import { API } from '../../../api'
 
 const CARD_SIGNATURE_FILENAME = 'signature.png'
 const CARD_SIGNATURE_CONTENT_ID = 'signature'
+export const ID_NAME = 'id'
+export const ACTION_NAME = 'action'
+
+export async function removeDraft(api: API) {
+  // eslint-disable-next-line compat/compat
+  const searchParams = new URLSearchParams(location.search)
+  const id = searchParams.get(ID_NAME)
+  const action = searchParams.get(ACTION_NAME)
+  if (id && action === null) {
+    await api.deleteMessage(id, { force: true })
+  }
+}
 
 export function useSubmitMessage() {
   const { getHTML } = useHelpers()
@@ -52,11 +64,7 @@ export function useSubmitMessage() {
         html,
         attachments,
       })
-      // eslint-disable-next-line compat/compat
-      const draftId = new URLSearchParams(location.search).get(DRAFT_ID_NAME)
-      if (draftId) {
-        await api.deleteMessage(draftId, { force: true })
-      }
+      await removeDraft(api)
       await router.push(RoutePath.Inbox)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {

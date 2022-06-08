@@ -42,6 +42,18 @@ export enum TrackEvent {
 
   // mail detail
   ClickMailDetailsPageItem = 'click_mail_details_page_item',
+
+  // app_edit_message
+  AppEditMessageChangeFrom = 'click_from',
+  AppEditMessageClickCommunity = 'click_community',
+  AppEditMessageClickCommunityApply = 'click_community_apply',
+  AppEditMessageClickCommunityNoThanks = 'click_community_nothanks',
+  AppEditMessageClickSave = 'click_save',
+  AppEditMessageClickSend = 'click_send',
+  AppEditMessageClickAttachFiles = 'click_attachfiles',
+  AppEditMessageClickCC = 'click_cc',
+  AppEditMessageClickBCC = 'click_bcc',
+  AppEditMessageClickMobileCCAndBCC = 'click_mobile_cc_bcc',
 }
 
 // dimensions
