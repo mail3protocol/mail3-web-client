@@ -40,7 +40,6 @@ export function useSaveMessage() {
       if (draftId) {
         await api.deleteMessage(draftId, { force: true })
       }
-      toast('Draft Saved')
       await router.replace(
         router.pathname,
         {

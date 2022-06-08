@@ -34,7 +34,7 @@ import { htmlToProsemirrorNode } from 'remirror'
 import { useTranslation } from 'next-i18next'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
-import { TrackEvent, useTrackClick } from 'hooks'
+import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
@@ -87,6 +87,7 @@ const Footer = () => {
   const { t } = useTranslation('edit-message')
   const trackClickSave = useTrackClick(TrackEvent.AppEditMessageClickSave)
   const trackClickSend = useTrackClick(TrackEvent.AppEditMessageClickSend)
+  const toast = useToast()
   return (
     <Stack
       direction="row"
@@ -117,6 +118,7 @@ const Footer = () => {
         onClick={() => {
           trackClickSave()
           onSave(getHTML())
+          toast('Draft Saved')
         }}
       >
         {t('save')}
