@@ -65,7 +65,7 @@ export function useSubmitMessage() {
         attachments,
       })
       await removeDraft(api)
-      await router.push(RoutePath.Inbox)
+      await router.push(RoutePath.Sent)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
         textProps: {
