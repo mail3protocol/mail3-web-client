@@ -1,5 +1,5 @@
 import { Box, Center, SimpleGrid, Spinner, Text } from '@chakra-ui/react'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import prettyBytes from 'pretty-bytes'
 import { useDialog } from 'hooks'
 import { useAPI } from '../../../hooks/useAPI'
