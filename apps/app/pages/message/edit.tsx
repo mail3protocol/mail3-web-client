@@ -168,6 +168,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
       setFromAddress(messageInfo.from.address)
     }
     ;(async () => {
+      if (!messageInfo.attachments) return
       setAttachments(
         messageInfo.attachments.map((a) => ({
           filename: a.filename,
