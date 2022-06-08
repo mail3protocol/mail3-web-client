@@ -6,6 +6,7 @@ import { Box } from '@chakra-ui/react'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { SubmitMessage } from 'models/src/submitMessage'
+import Head from 'next/head'
 import { MessageEditor } from '../../components/MessageEditor'
 import { Navbar } from '../../components/Navbar'
 import { API, UserResponse } from '../../api'
@@ -205,28 +206,33 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     })()
   }, [])
   return (
-    <Box
-      maxW={`${CONTAINER_MAX_WIDTH}px`}
-      px={{
-        base: '0',
-        md: '20px',
-      }}
-      mx="auto"
-    >
+    <>
+      <Head>
+        <title>Mail3: Write Mail</title>
+      </Head>
       <Box
-        w="full"
+        maxW={`${CONTAINER_MAX_WIDTH}px`}
         px={{
-          base: '20px',
-          md: '0',
+          base: '0',
+          md: '20px',
         }}
+        mx="auto"
       >
-        <Navbar />
+        <Box
+          w="full"
+          px={{
+            base: '20px',
+            md: '0',
+          }}
+        >
+          <Navbar />
+        </Box>
+        <MessageEditor
+          defaultContent={defaultContent}
+          isEnableCardSignature={userInfo.card_sig_state === 'enabled'}
+        />
       </Box>
-      <MessageEditor
-        defaultContent={defaultContent}
-        isEnableCardSignature={userInfo.card_sig_state === 'enabled'}
-      />
-    </Box>
+    </>
   )
 }
 

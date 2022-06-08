@@ -6,6 +6,9 @@ export enum TrackEvent {
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
 
+  // navbar
+  ClickPersonalCenter = 'click_personalcenter',
+  ClickMail3Menu = 'click_mail3_menu',
   // connect wallet
   ConnectWallet = 'Mail3_app_home_click_connectwallet',
 
@@ -61,6 +64,10 @@ export enum TrackKey {
   DesiredWallet = 'desired_wallet',
   CollectedAddress = 'collected_address',
 
+  // navbar
+  PersonnalCenter = 'click_personalcenter_item',
+  Mail3MenuItem = 'click_mail3_menu_item',
+
   // whitelist
   WhiteListEntry = 'entered_whitelist',
 
@@ -74,6 +81,21 @@ export enum TrackKey {
   SubscriptionBell = 'click_subscription_bell',
   // testing
   TestingEntry = 'beta1_check_eligilibity',
+}
+
+export enum PersonnalCenter {
+  Settings = 'Settings',
+  Profile = 'Profile',
+  CopyAddress = 'CopyAddress',
+  ChangeWallet = 'ChangeWallet',
+}
+
+export enum Mail3MenuItem {
+  Inbox = 'Inbox',
+  Sent = 'Sent',
+  Subscription = 'Subscription',
+  Drafts = 'Drafts',
+  Trash = 'Trash',
 }
 
 export enum GlobalDimensions {
@@ -120,6 +142,8 @@ export interface TrackProps {
   [TrackKey.HomeCommunity]?: HomeCommunity
   [TrackKey.MailDetailPage]?: MailDetailPageItem
   [TrackKey.SubscriptionBell]?: string
+  [TrackKey.PersonnalCenter]?: PersonnalCenter
+  [TrackKey.Mail3MenuItem]?: Mail3MenuItem
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {

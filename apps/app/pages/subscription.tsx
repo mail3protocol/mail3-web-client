@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
 import styled from '@emotion/styled'
 import { Box } from '@chakra-ui/react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { Navbar } from '../components/Navbar'
@@ -12,15 +13,18 @@ import { InboxNav, InboxNavType } from '../components/Inbox/Nav'
 import { RoutePath } from '../route/path'
 import { SubscriptionBody } from '../components/SubscriptionBody'
 import SVGWrite from '../assets/mailbox/write.svg'
+import { getAuthenticateProps } from '../hooks/useLogin'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale as string, [
-      'common',
-      'subscription',
-    ])),
-  },
-})
+export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
+  async ({ locale }) => ({
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        'common',
+        'subscription',
+      ])),
+    },
+  })
+)
 
 const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -82,6 +86,9 @@ const Subscription: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Mail3: Subscription</title>
+      </Head>
       <Sticky>
         <PageContainer>
           <Navbar />
