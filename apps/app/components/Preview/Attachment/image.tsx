@@ -67,9 +67,7 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
       {isLoading ? (
         <Skeleton width="200px" height="200px" isLoaded={false} />
       ) : (
-        <Center>
-          <Image src={imgSrc} />
-        </Center>
+        <Image src={imgSrc} />
       )}
     </Box>
   )

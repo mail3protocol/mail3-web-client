@@ -68,13 +68,13 @@ const ItemFlex = styled(Flex)`
     background-color: #f3f3f3;
   }
 
-  :active {
+  /* :active {
     color: #fff;
     background-color: #000000;
     .date {
       color: #fff;
     }
-  }
+  } */
 
   &.focus {
     color: #6f6f6f;
