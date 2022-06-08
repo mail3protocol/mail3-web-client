@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Box } from '@chakra-ui/react'
 import { SubmitMessage } from 'models/src/submitMessage'
-import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { SignatureStatus } from 'hooks'
 import { useQuery } from 'react-query'
 import { AxiosResponse } from 'axios'
@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> =
 
 const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
   const api = useAPI()
-  const [userProperties] = useAtom(userPropertiesAtom)
+  const userProperties = useAtomValue(userPropertiesAtom)
   const signatureStatus = userProperties?.signature_status as SignatureStatus
   const isEnableSignatureText =
     signatureStatus === SignatureStatus.OnlyText ||

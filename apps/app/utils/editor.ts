@@ -11,5 +11,5 @@ export async function onRenderElementToImage(element: HTMLDivElement) {
     y: boundingClientRect.y,
     scale: 2,
     backgroundColor: null,
-  }).then(async (canvas) => canvas.toDataURL())
+  }).then((canvas) => canvas.toDataURL())
 }
