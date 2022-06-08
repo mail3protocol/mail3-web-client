@@ -8,40 +8,42 @@ import SVGVector from '../../assets/subscription/vector.svg'
 import SVGBell from '../../assets/subscription/bell.svg'
 import SVGBellCur from '../../assets/subscription/bell-cur.svg'
 
-let data = [
-  {
-    avatarSrc: AvatarTemp,
-    name: 'name',
-    desc: 'Hi，I am your best ne spiderman.Hi，I am your best neighbor spiderman.',
-    isSub: false,
-    isNew: true,
-  },
-  {
-    avatarSrc: AvatarTemp,
-    name: 'name1',
-    desc: 'Hi，I am your best neighbor spiderman',
-    isSub: true,
-    isNew: false,
-  },
-  {
-    avatarSrc: AvatarTemp,
-    name: 'name2',
-    desc: 'Hi，I am your best neighbor spiderman.Hi，I am your best neighbor spiderman.Hi，I am your best neighbor spiderman. neighbor spiderman.Hi，I am your best neighbor spiderman.Hi，I am your best neighbor spiderman.',
-    isSub: false,
-    isNew: false,
-  },
-  {
-    avatarSrc: AvatarTemp,
-    name: 'name3',
-    desc: 'Hi，I am your best neighbor spiderman.Hi，I am your best or spiderman.Hi，I am your best neighbor spiderman.Hi，I  spiderman.Hi，I am your best neighbor spiderman.',
-    isSub: false,
-    isNew: false,
-  },
-]
+const dataMD = `
+| n | name | url | class | desc |
+| 1 | Mail3 | / | 项目方动态 | All about Mail3! |
+| 2 | Bankless | https://newsletter.banklesshq.com/ | 综合 | The ultimate guide to DeFi, NFTs, Ethereum, and Bitcoin.  |
+| 3 | The Defiant  | https://newsletter.thedefiant.io/ | / | Curate, digest, and analyze all the major developments in DeFi |
+| 4 | Week in Ethereum News | https://weekinethereumnews.com/ | / | Ethereum News and Links |
+| 5 | Mirror Curator DAO | https://mcdao.mirror.xyz/ | 项目方动态更新 | Find the best writers, articles and projects on Mirror |
+| 6 | Arthur Hayes | https://cryptohayes.medium.com/ | 投资长文 | Co-Founder of 100x. Trading and crypto enthusiast. Focused on helping spread financial literacy and educate investors. |
+| 7 | CryptoJobsList | https://cryptojobslist.com/newsletter | web3 job | The Web’s Biggest List of Cryptocurrency Jobs, Web3 Jobs and Blockchain Jobs |
+| 8 | Web3 Jobs | https://web3.career/ | web3 job | Blockchain, Solidity and Crypto Jobs |
+`
 
-data = [...data, ...data]
-// data = [...data, ...data]
-// data = [...data, ...data]
+function textToObj(str: string) {
+  const data = str
+    .split('\n')
+    .filter((e: string) => e.trim().length > 0)
+    .map((e) =>
+      e
+        .trim()
+        .split('|')
+        .filter((_e) => _e.trim().length > 0)
+        .map((_e) => _e.trim())
+    )
+
+  const ret = data.slice(1).map((item) => {
+    const obj: any = {}
+    data[0].forEach((key, index) => {
+      obj[key] = item[index]
+    })
+    return obj
+  })
+
+  return ret
+}
+
+const realData = textToObj(dataMD)
 
 interface ListItem {
   isNew: boolean
@@ -131,6 +133,12 @@ export const SubscriptionBody: React.FC = () => {
   const [list, setList] = useState<Array<ListItem>>([])
 
   useDidMount(() => {
+    const data = realData.map((e) => ({
+      ...e,
+      isNew: false,
+      isSub: false,
+      avatarSrc: AvatarTemp,
+    }))
     setList(data)
   })
 
