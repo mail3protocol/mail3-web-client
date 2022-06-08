@@ -5,8 +5,7 @@ import { useAtom } from 'jotai'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
-
-export const DRAFT_ID_NAME = 'id'
+import { ID_NAME, removeDraft } from './useSubmitMessage'
 
 const savingMessageAtom = atomWithReset(false)
 
@@ -22,8 +21,6 @@ export function useSaveMessage() {
   const onSave = async (html: string) => {
     if (!fromAddress || isLoading) return
     setIsLoading(true)
-    // eslint-disable-next-line compat/compat
-    const draftId = new URLSearchParams(location.search).get(DRAFT_ID_NAME)
     try {
       const res = await api.uploadMessage({
         path: 'Drafts',
@@ -37,14 +34,12 @@ export function useSaveMessage() {
         html,
         attachments,
       })
-      if (draftId) {
-        await api.deleteMessage(draftId, { force: true })
-      }
+      await removeDraft(api)
       await router.replace(
         router.pathname,
         {
           query: {
-            [DRAFT_ID_NAME]: res.data.id,
+            [ID_NAME]: res.data.id,
           },
         },
         {
