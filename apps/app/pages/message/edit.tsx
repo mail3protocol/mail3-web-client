@@ -75,6 +75,18 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
   const isEnableSignatureText =
     signatureStatus === SignatureStatus.OnlyText ||
     signatureStatus === SignatureStatus.BothEnabled
+  const title = useMemo(() => {
+    if (action === null && id === null) {
+      return 'Write Mail'
+    }
+    if (action === 'forward') {
+      return 'Foward Mail'
+    }
+    if (action === 'reply') {
+      return 'Reply Mail'
+    }
+    return 'Edit Mail'
+  }, [action, id])
   const queryMessageInfoAndContentData = useQuery(
     ['INIT_EDIT_MESSAGE_QUERY'],
     async () => {
@@ -212,7 +224,9 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
   }, [])
   return (
     <>
-      <Head>Mail3: Write Mail</Head>
+      <Head>
+        <title>Mail3: {title}</title>
+      </Head>
       <Box
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         px={{
