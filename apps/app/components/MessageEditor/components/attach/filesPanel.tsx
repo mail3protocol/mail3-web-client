@@ -27,11 +27,12 @@ export const FilesPanel: React.FC<FilesPanelProps> = ({
       }}
       gridGap="8px"
     >
-      {files.map((file) => {
+      {files.map((file, index) => {
         const extraInfo = attachmentExtraInfo[file.cid as string]
         return (
           <Grid
-            key={file.cid}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${file.cid}${index}`}
             bg="#f3f3f3"
             rounded="8px"
             h="44px"

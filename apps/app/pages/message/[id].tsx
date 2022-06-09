@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
 const Message: NextPage = () => (
   <>
     <Head>
-      <title>Mail3: Edit Mail</title>
+      <title>Mail3: Read Mail</title>
     </Head>
     <PageContainer>
       <Navbar />
