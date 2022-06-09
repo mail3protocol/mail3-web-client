@@ -127,6 +127,7 @@ export const DraftsComponent: React.FC = () => {
                 id,
               },
             })}
+            mailboxType={Mailboxes.Drafts}
           />
         </Box>
       </MailboxContainer>
