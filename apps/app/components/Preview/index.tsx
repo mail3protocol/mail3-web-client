@@ -236,6 +236,22 @@ export const PreviewComponent: React.FC = () => {
     window.location.href = `https://${MAIL_SERVER_URL}/${realAddress}`
   }
 
+  const avatarList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = []
+
+    let arr = [detail.from, ...detail.to]
+    if (detail.cc) arr = [...arr, ...detail.cc]
+    if (detail.bcc) arr = [...arr, ...detail.bcc]
+
+    arr = arr.filter(({ address }) => {
+      if (exists.includes(address.toLocaleLowerCase())) return false
+      exists.push(address.toLocaleLowerCase())
+      return true
+    })
+    return arr
+  }, [detail])
+
   if (!id) {
     return (
       <Container>
@@ -251,10 +267,6 @@ export const PreviewComponent: React.FC = () => {
       </Container>
     )
   }
-
-  let avatarList = [detail.from, ...detail.to]
-  if (detail.cc) avatarList = [...avatarList, ...detail.cc]
-  if (detail.bcc) avatarList = [...avatarList, ...detail.bcc]
 
   return (
     <>
