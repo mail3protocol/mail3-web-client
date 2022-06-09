@@ -55,7 +55,7 @@ export const SentComponent: React.FC = () => {
         />
       )}
       <MailboxContainer>
-        <Box padding={{ md: '20px 64px' }}>
+        <Box padding={{ md: '20px 64px', base: '30px 0 0 0' }}>
           <TitleBox pl={{ base: '20px', md: 0 }}>{t('sent.title')}</TitleBox>
           <InfiniteMailbox
             ref={refBoxList}
