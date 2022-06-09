@@ -376,8 +376,8 @@ export const PreviewComponent: React.FC = () => {
                 fontWeight={400}
                 fontSize={{ base: '12px', md: '16px' }}
                 color="#6F6F6F"
-                lineHeight="24px"
-                marginTop="5px"
+                lineHeight={{ base: '16px', md: '24px' }}
+                marginTop={{ base: '10px', md: '5px' }}
               >
                 <span>
                   to{' '}
