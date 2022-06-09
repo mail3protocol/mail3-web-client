@@ -19,10 +19,12 @@ interface AttachmentImageProps {
 }
 
 const findId = (arr: AttachmentData[], cid: string) => {
-  //   contentId: "<signature>"
   for (let i = 0; i < arr.length; i++) {
     const e = arr[i]
-    if (e.inline && e.contentId === `<${cid.replace('cid:', '')}>`) {
+    if (
+      e.inline &&
+      e.contentId.trim() === `\u003c${cid.replace('cid:', '')}\u003e`
+    ) {
       return arr[i].id
     }
   }
