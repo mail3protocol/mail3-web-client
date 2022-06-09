@@ -59,6 +59,8 @@ const Container = styled(Box)`
 
 export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
+  const [t2] = useTranslation('common')
+
   const router = useRouter()
   const toast = useToast()
   const { id, origin } = router.query as {
@@ -172,8 +174,8 @@ export const PreviewComponent: React.FC = () => {
           type: 'text',
           title: t('confirm.delete.title'),
           description: t('confirm.delete.description'),
-          okText: 'Yes',
-          cancelText: 'Cancel',
+          okText: t2('button.yes'),
+          cancelText: t2('button.cancel'),
           modalProps: {
             isOpen: false,
             onClose: () => {},
