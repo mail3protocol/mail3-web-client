@@ -446,7 +446,7 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          <Box>
+          <Box className="preview-mail-content">
             <RenderHTML
               html={content}
               attachments={detail.attachments}
