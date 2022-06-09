@@ -63,7 +63,7 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
   if (isError)
     return (
       <Box w="200px" h="100px" border="1px solid #ccc" p="10px">
-        The image load fail.
+        The image fails to load.
       </Box>
     )
 
