@@ -75,7 +75,7 @@ export const NoNewStatus = () => {
 
   return (
     <Flex h="300px" justifyContent="center" alignItems="center">
-      <Box>
+      <Box textAlign="center">
         <Box
           fontSize="20px"
           fontWeight={500}
@@ -84,7 +84,9 @@ export const NoNewStatus = () => {
         >
           {t('inbox.no-new')}
         </Box>
-        <Image src={IMGNewNone} />
+        <Box mr="40px">
+          <Image src={IMGNewNone} />
+        </Box>
       </Box>
     </Flex>
   )

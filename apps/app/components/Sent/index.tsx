@@ -70,6 +70,7 @@ export const SentComponent: React.FC = () => {
               // report point
             }}
             getHref={(id) => `${RoutePath.Message}/${id}`}
+            mailboxType={Mailboxes.Sent}
           />
         </Box>
       </MailboxContainer>

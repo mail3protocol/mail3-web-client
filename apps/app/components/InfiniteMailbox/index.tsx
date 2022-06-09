@@ -19,6 +19,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { LinkProps } from 'next/link'
 import { MailboxesMessagesResponse } from '../../api'
 import { BoxListProps, Mailbox, MessageItem } from '../Mailbox'
+import { Mailboxes } from '../../api/mailboxes'
 
 interface InfiniteMailboxProps<
   TQueryFnData = unknown,
@@ -49,6 +50,7 @@ interface InfiniteMailboxProps<
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
   getHref: (id: string) => LinkProps['href']
+  mailboxType?: Mailboxes
 }
 
 export interface InfiniteHandle {
@@ -76,6 +78,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     onChooseModeChange,
     onClickBody,
     getHref,
+    mailboxType,
   },
   forwardedRef
 ) => {
@@ -192,6 +195,7 @@ const InfiniteBox: ForwardRefRenderFunction<
               onClickBody(id)
             }}
             getHref={getHref}
+            mailboxType={mailboxType}
           />
           {isEmpty ? emptyElement ?? 'empty' : null}
         </InfiniteScroll>

@@ -12,6 +12,7 @@ import {
   removeMailSuffix,
   truncateMiddle0xMail,
 } from '../../utils'
+import { Mailboxes } from '../../api/mailboxes'
 
 export enum AvatarBadgeType {
   None,
@@ -41,6 +42,7 @@ export interface BoxListProps {
   chooseMap?: Record<string, boolean>
   hiddenMap?: Record<string, boolean>
   getHref: (id: string) => LinkProps['href']
+  mailboxType?: Mailboxes
 }
 
 export interface BoxItemProps extends MailboxMessageItemResponse {
@@ -54,6 +56,7 @@ export interface BoxItemProps extends MailboxMessageItemResponse {
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: BoxListProps['chooseMap']
   href: LinkProps['href']
+  mailboxType?: Mailboxes
 }
 
 const CircleE = styled(Circle)`
@@ -115,7 +118,7 @@ const avatarBadgConfig = {
   ),
 }
 
-const Item = ({
+const Item: React.FC<BoxItemProps> = ({
   subject,
   // desc,
   date,
@@ -132,15 +135,15 @@ const Item = ({
   setIsChooseMode,
   chooseMap,
   href,
-}: BoxItemProps) => {
+  mailboxType,
+}) => {
   const [t] = useTranslation('mailboxes')
-  const fromAddress = removeMailSuffix(from.address)
 
-  const AvatarBox = (
+  let AvatarBox = (
     <Flex w="48px">
       <Avatar
         cursor="pointer"
-        address={fromAddress}
+        address={removeMailSuffix(from.address)}
         w="48px"
         h="48px"
         showBorder
@@ -156,6 +159,32 @@ const Item = ({
       </Avatar>
     </Flex>
   )
+
+  if (
+    mailboxType === Mailboxes.Sent ||
+    (mailboxType === Mailboxes.Drafts && to?.length)
+  ) {
+    AvatarBox = (
+      <Flex w="48px">
+        <Avatar
+          cursor="pointer"
+          address={removeMailSuffix(to[0].address)}
+          w="48px"
+          h="48px"
+          showBorder
+          onClick={(e) => {
+            e.stopPropagation()
+            if (onClickAvatar) onClickAvatar(index, id)
+            if (setIsChooseMode) setIsChooseMode(true)
+            return false
+          }}
+          borderRadius="50%"
+        >
+          {avatarBadgConfig[avatarBadgeType]}
+        </Avatar>
+      </Flex>
+    )
+  }
 
   const desc = `${truncateMiddle0xMail(from?.address)} - ${to
     ?.map((item) => `${truncateMiddle0xMail(item?.address)}`)
@@ -243,6 +272,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
   chooseMap,
   hiddenMap,
   getHref,
+  mailboxType,
 }) => (
   <Box>
     {data.map((item, index) => {
@@ -267,6 +297,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
             onClickBody(id)
           }}
           href={href}
+          mailboxType={mailboxType}
         />
       )
     })}

@@ -81,7 +81,7 @@ export const is0xAddress = (address: string) => address.startsWith('0x')
 
 export const truncateMiddle0xMail = (
   address: string,
-  takeLength = 5,
+  takeLength = 6,
   tailLength = 4
 ) => {
   if (!verifyEmail(address)) return address

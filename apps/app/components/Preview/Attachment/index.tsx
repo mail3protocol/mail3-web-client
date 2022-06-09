@@ -1,5 +1,5 @@
-import { Box, SimpleGrid, Text } from '@chakra-ui/react'
-import React, { useCallback } from 'react'
+import { Box, Center, SimpleGrid, Spinner, Text } from '@chakra-ui/react'
+import React, { useState } from 'react'
 import prettyBytes from 'pretty-bytes'
 import { useDialog } from 'hooks'
 import { useAPI } from '../../../hooks/useAPI'
@@ -21,48 +21,68 @@ interface AttachmentProps {
 export const Attachment: React.FC<AttachmentProps> = ({ data, messageId }) => {
   const api = useAPI()
   const dialog = useDialog()
+  const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({})
 
-  const onDownload = useCallback(
-    async (id, filename) => {
-      try {
-        const res = await api.downloadAttachment(messageId, id)
-        const url = window.URL.createObjectURL(new Blob([res.data]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', filename)
-        document.body.appendChild(link)
-        link.click()
-      } catch (error) {
-        dialog({
-          type: 'warning',
-          title: 'error',
-        })
-      }
-    },
-    [api, messageId]
-  )
+  const onDownload = async (id: string, filename: string) => {
+    setLoadingMap((m) => ({
+      ...m,
+      [id]: true,
+    }))
+    try {
+      const res = await api.downloadAttachment(messageId, id)
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', filename)
+      document.body.appendChild(link)
+      link.click()
+    } catch (error) {
+      dialog({
+        type: 'warning',
+        title: 'error',
+      })
+    }
+    setLoadingMap((m) => ({
+      ...m,
+      [id]: false,
+    }))
+  }
 
   return (
     <Box marginTop="50px">
       <SimpleGrid
         spacing="20px"
-        gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
+        gridTemplateColumns="repeat(auto-fill, minmax(100px, 1fr))"
       >
-        {data.map((e) => {
+        {data.map((e, index) => {
           const { id, filename, encodedSize, contentType } = e
           const size = prettyBytes(encodedSize)
           return (
             <Box
               maxWidth="150px"
               textAlign="center"
-              key={id}
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
               cursor="pointer"
               onClick={() => {
+                if (loadingMap[id]) return
                 onDownload(id, filename)
               }}
             >
-              <Box w="100%">
+              <Box w="100%" position="relative">
                 <FileIcon type={contentType} w="100%" h="100%" />
+                {loadingMap[id] ? (
+                  <Center
+                    w="100%"
+                    h="100%"
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    backgroundColor="rgba(255,255,255,0.5)"
+                  >
+                    <Spinner />
+                  </Center>
+                ) : null}
               </Box>
               <Text
                 color="#000"

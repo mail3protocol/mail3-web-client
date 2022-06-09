@@ -313,6 +313,13 @@ export const PreviewComponent: React.FC = () => {
                   h="48px"
                   address={removeMailSuffix(detail.from.address)}
                   borderRadius="50%"
+                  {...(isMail3Address(detail.from.address)
+                    ? {
+                        onClick: () => {
+                          onClickAvatar(detail.from.address)
+                        },
+                      }
+                    : {})}
                 />
               )}
             </Box>
