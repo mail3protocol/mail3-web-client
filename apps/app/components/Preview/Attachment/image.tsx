@@ -1,6 +1,6 @@
 import { Box, Image, Skeleton } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
-import React, { useState } from 'react'
+import React from 'react'
 import { useAPI } from '../../../hooks/useAPI'
 
 type AttachmentData = {
@@ -35,10 +35,11 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
   cid,
 }) => {
   const api = useAPI()
-
-  const [imgSrc, setImgSrc] = useState('')
-
-  const { isLoading } = useQuery(
+  const {
+    isLoading,
+    data: imgSrc,
+    isError,
+  } = useQuery(
     ['image', cid],
     async () => {
       const res = await api.downloadAttachment(
@@ -50,25 +51,25 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
     },
     {
       refetchIntervalInBackground: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      onSuccess(d) {
-        setImgSrc(d)
-      },
-      onError() {
-        setImgSrc('')
-      },
     }
   )
 
+  if (isLoading)
+    return <Skeleton width="200px" height="200px" isLoaded={false} />
+
+  if (isError)
+    return (
+      <Box w="200px" h="100px" border="1px solid #ccc" p="10px">
+        The image load fail.
+      </Box>
+    )
+
   return (
     <Box>
-      {isLoading ? (
-        <Skeleton width="200px" height="200px" isLoaded={false} />
-      ) : (
-        <Image src={imgSrc} />
-      )}
+      <Image src={imgSrc} />
     </Box>
   )
 }
