@@ -64,6 +64,7 @@ const CircleE = styled(Circle)`
 
 const ItemFlex = styled(Flex)`
   transition: background-color 0.2s ease-out, color 0.2s ease-out;
+
   :hover {
     background-color: #f3f3f3;
   }
@@ -83,6 +84,12 @@ const ItemFlex = styled(Flex)`
 
   .date {
     color: #6f6f6f;
+  }
+
+  @media (max-width: 600px) {
+    :hover {
+      background-color: transparent;
+    }
   }
 `
 
