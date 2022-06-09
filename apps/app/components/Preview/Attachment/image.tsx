@@ -35,9 +35,10 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
   cid,
 }) => {
   const api = useAPI()
+
   const {
     isLoading,
-    data: imgSrc,
+    data: src,
     isError,
   } = useQuery(
     ['image', cid],
@@ -69,7 +70,7 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
 
   return (
     <Box>
-      <Image src={imgSrc} />
+      <Image src={src} />
     </Box>
   )
 }

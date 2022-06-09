@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { Avatar } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
@@ -67,13 +67,11 @@ export const PreviewComponent: React.FC = () => {
     id: string | undefined
     origin: string
   }
-  const [content, setContent] = useState('')
-  const [detail, setDetail] = useState<MeesageDetailState>()
   const api = useAPI()
   const dialog = useDialog()
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
 
-  useQuery(
+  const { data } = useQuery(
     ['preview', id],
     async () => {
       if (typeof id !== 'string') return {}
@@ -89,27 +87,33 @@ export const PreviewComponent: React.FC = () => {
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      onSuccess(d) {
-        const { messageData, html } = d
-        const { date, subject, to, cc, from, attachments, bcc } = messageData
-
-        setDetail({
-          date,
-          subject,
-          to,
-          cc,
-          from,
-          attachments,
-          bcc,
-        })
-        setContent(html)
-
+      onSuccess() {
         if (typeof id !== 'string') return
         api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
       },
       enabled: typeof id === 'string',
     }
   )
+
+  const detail: MeesageDetailState | undefined = useMemo(() => {
+    if (data) {
+      const { messageData } = data
+      const { date, subject, to, cc, from, attachments, bcc } = messageData
+
+      return {
+        date,
+        subject,
+        to,
+        cc,
+        from,
+        attachments,
+        bcc,
+      }
+    }
+    return undefined
+  }, [data])
+
+  const content = useMemo(() => data?.html ?? '', [data])
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
