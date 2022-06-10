@@ -98,6 +98,34 @@ export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
   null
 )
 
+export function getSigStatus<
+  T extends {
+    card_sig_state: 'enabled' | 'disabled'
+    text_sig_state: 'enabled' | 'disabled'
+  }
+>(info: T): SignatureStatus {
+  let sigStatus: SignatureStatus = SignatureStatus.OnlyText
+  if (info.card_sig_state === 'enabled' && info.text_sig_state === 'enabled') {
+    sigStatus = SignatureStatus.BothEnabled
+  } else if (
+    info.card_sig_state === 'enabled' &&
+    info.text_sig_state === 'disabled'
+  ) {
+    sigStatus = SignatureStatus.OnlyImage
+  } else if (
+    info.card_sig_state === 'disabled' &&
+    info.text_sig_state === 'enabled'
+  ) {
+    sigStatus = SignatureStatus.OnlyText
+  } else if (
+    info.card_sig_state === 'disabled' &&
+    info.text_sig_state === 'disabled'
+  ) {
+    sigStatus = SignatureStatus.BothDisabled
+  }
+  return sigStatus
+}
+
 export const useSetGlobalTrack = () => {
   const account = useAccount()
   const walletName = useLastConectorName()
@@ -110,28 +138,7 @@ export const useSetGlobalTrack = () => {
           api.getUserInfo(),
           api.getAliases(),
         ])
-        let sigStatus: SignatureStatus = SignatureStatus.OnlyText
-        if (
-          userInfo.card_sig_state === 'enabled' &&
-          userInfo.text_sig_state === 'enabled'
-        ) {
-          sigStatus = SignatureStatus.BothEnabled
-        } else if (
-          userInfo.card_sig_state === 'enabled' &&
-          userInfo.text_sig_state === 'disabled'
-        ) {
-          sigStatus = SignatureStatus.OnlyImage
-        } else if (
-          userInfo.card_sig_state === 'disabled' &&
-          userInfo.text_sig_state === 'enabled'
-        ) {
-          sigStatus = SignatureStatus.OnlyText
-        } else if (
-          userInfo.card_sig_state === 'disabled' &&
-          userInfo.text_sig_state === 'disabled'
-        ) {
-          sigStatus = SignatureStatus.BothDisabled
-        }
+        const sigStatus = getSigStatus(userInfo)
         const defaultAddress =
           aliases.aliases.find((a) => a.is_default)?.address || account
         const config = {
