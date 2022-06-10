@@ -18,6 +18,7 @@ type AttachmentData = {
   filename: string
   encodedSize: number
   contentId: string
+  inline: boolean
 }
 
 interface AttachmentProps {
@@ -62,8 +63,10 @@ export const Attachment: React.FC<AttachmentProps> = ({ data, messageId }) => {
         gridTemplateColumns="repeat(auto-fill, minmax(100px, 1fr))"
       >
         {data.map((e, index) => {
-          const { id, filename, encodedSize, contentType } = e
-          const size = prettyBytes(encodedSize)
+          const { id, filename, encodedSize, contentType, inline } = e
+
+          if (inline) return null
+
           return (
             <Box
               maxWidth="150px"
@@ -109,7 +112,7 @@ export const Attachment: React.FC<AttachmentProps> = ({ data, messageId }) => {
                 {filename}
               </Text>
               <Box color="#888" fontSize="16px">
-                {size}
+                {prettyBytes(encodedSize)}
               </Box>
             </Box>
           )
