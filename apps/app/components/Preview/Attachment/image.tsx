@@ -19,10 +19,12 @@ interface AttachmentImageProps {
 }
 
 const findId = (arr: AttachmentData[], cid: string) => {
-  //   contentId: "<signature>"
   for (let i = 0; i < arr.length; i++) {
     const e = arr[i]
-    if (e.inline && e.contentId === `<${cid.replace('cid:', '')}>`) {
+    if (
+      e.inline &&
+      e.contentId.trim() === `\u003c${cid.replace('cid:', '')}\u003e`
+    ) {
       return arr[i].id
     }
   }
@@ -58,14 +60,19 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
     }
   )
 
+  if (isLoading)
+    return <Skeleton width="200px" height="200px" isLoaded={false} />
+
+  if (isError)
+    return (
+      <Box w="200px" h="100px" border="1px solid #ccc" p="10px">
+        The image fails to load.
+      </Box>
+    )
+
   return (
     <Box>
-      {isLoading ? (
-        <Skeleton width="200px" height="200px" isLoaded={false} />
-      ) : (
-        // todo fallback placeholder image
-        <Image src={isError ? '' : src} />
-      )}
+      <Image src={src} />
     </Box>
   )
 }

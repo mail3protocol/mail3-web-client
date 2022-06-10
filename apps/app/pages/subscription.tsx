@@ -110,7 +110,7 @@ const Subscription: NextPage = () => {
           </FlexButtonBox>
 
           <MailboxContainer minH="700px">
-            <Box padding="40px 64px">
+            <Box padding={{ base: '20px 30px 60px', md: '40px 64px' }}>
               <SubscriptionBody />
             </Box>
           </MailboxContainer>

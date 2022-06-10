@@ -1,4 +1,11 @@
-import { Box, Center, SimpleGrid, Spinner, Text } from '@chakra-ui/react'
+import {
+  AspectRatio,
+  Box,
+  Center,
+  SimpleGrid,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
 import React, { useState } from 'react'
 import prettyBytes from 'pretty-bytes'
 import { useDialog } from 'hooks'
@@ -69,25 +76,34 @@ export const Attachment: React.FC<AttachmentProps> = ({ data, messageId }) => {
                 onDownload(id, filename)
               }}
             >
-              <Box w="100%" position="relative">
-                <FileIcon type={contentType} w="100%" h="100%" />
-                {loadingMap[id] ? (
-                  <Center
-                    w="100%"
-                    h="100%"
-                    position="absolute"
-                    top="0"
-                    left="0"
-                    backgroundColor="rgba(255,255,255,0.5)"
-                  >
-                    <Spinner />
-                  </Center>
-                ) : null}
-              </Box>
+              <AspectRatio w="100%" ratio={1}>
+                <Box
+                  w="100%"
+                  position="relative"
+                  bg="#f3f3f3"
+                  overflow="hidden"
+                  borderRadius="15px"
+                >
+                  <FileIcon type={contentType} w="36px" h="36px" />
+                  {loadingMap[id] ? (
+                    <Center
+                      w="100%"
+                      h="100%"
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      backgroundColor="rgba(255,255,255,0.5)"
+                    >
+                      <Spinner />
+                    </Center>
+                  ) : null}
+                </Box>
+              </AspectRatio>
               <Text
                 color="#000"
                 fontSize="16px"
                 noOfLines={1}
+                p="5px 0"
                 wordBreak="break-all"
               >
                 {filename}

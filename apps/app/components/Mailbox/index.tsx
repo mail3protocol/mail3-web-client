@@ -1,8 +1,7 @@
 import { Avatar } from 'ui'
-import { AvatarBadge, Box, Circle, Flex, Text } from '@chakra-ui/react'
+import { Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import classNames from 'classnames'
-import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import { useTranslation } from 'next-i18next'
 import Link, { LinkProps } from 'next/link'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
@@ -17,8 +16,6 @@ import { Mailboxes } from '../../api/mailboxes'
 export enum AvatarBadgeType {
   None,
   New,
-  SentOK,
-  SentFail,
 }
 
 export enum ItemType {
@@ -67,6 +64,7 @@ const CircleE = styled(Circle)`
 
 const ItemFlex = styled(Flex)`
   transition: background-color 0.2s ease-out, color 0.2s ease-out;
+
   :hover {
     background-color: #f3f3f3;
   }
@@ -87,35 +85,25 @@ const ItemFlex = styled(Flex)`
   .date {
     color: #6f6f6f;
   }
+
+  @media (max-width: 600px) {
+    :hover {
+      background-color: transparent;
+    }
+  }
+`
+
+const Badge = styled(Circle)`
+  top: 2px;
+  right: 2px;
+  height: 10px;
+  width: 10px;
+  position: absolute;
 `
 
 const avatarBadgConfig = {
   [AvatarBadgeType.None]: <Box />,
-  [AvatarBadgeType.New]: (
-    <AvatarBadge
-      boxSize="10px"
-      bg="#9093F9"
-      top="0"
-      bottom="auto"
-      border="none"
-    />
-  ),
-  [AvatarBadgeType.SentOK]: (
-    <AvatarBadge boxSize="10px" bg="#000" top="0" bottom="auto" border="none">
-      <CheckIcon color="#fff" w="5px" h="5px" />
-    </AvatarBadge>
-  ),
-  [AvatarBadgeType.SentFail]: (
-    <AvatarBadge
-      boxSize="10px"
-      bg="#FF5F57"
-      top="0"
-      bottom="auto"
-      border="none"
-    >
-      <CloseIcon color="#fff" w="5px" h="5px" />
-    </AvatarBadge>
-  ),
+  [AvatarBadgeType.New]: <Badge boxSize="10px" bg="#9093F9" />,
 }
 
 const Item: React.FC<BoxItemProps> = ({
@@ -140,7 +128,7 @@ const Item: React.FC<BoxItemProps> = ({
   const [t] = useTranslation('mailboxes')
 
   let AvatarBox = (
-    <Flex w="48px">
+    <Flex w="48px" position="relative">
       <Avatar
         cursor="pointer"
         address={removeMailSuffix(from.address)}
@@ -154,9 +142,8 @@ const Item: React.FC<BoxItemProps> = ({
           return false
         }}
         borderRadius="50%"
-      >
-        {avatarBadgConfig[avatarBadgeType]}
-      </Avatar>
+      />
+      {avatarBadgConfig[avatarBadgeType]}
     </Flex>
   )
 

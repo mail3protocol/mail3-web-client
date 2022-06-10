@@ -59,6 +59,8 @@ const Container = styled(Box)`
 
 export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
+  const [t2] = useTranslation('common')
+
   const router = useRouter()
   const toast = useToast()
   const { id, origin } = router.query as {
@@ -176,8 +178,8 @@ export const PreviewComponent: React.FC = () => {
           type: 'text',
           title: t('confirm.delete.title'),
           description: t('confirm.delete.description'),
-          okText: 'Yes',
-          cancelText: 'Cancel',
+          okText: t2('button.yes'),
+          cancelText: t2('button.cancel'),
           modalProps: {
             isOpen: false,
             onClose: () => {},
@@ -234,6 +236,22 @@ export const PreviewComponent: React.FC = () => {
     window.location.href = `https://${MAIL_SERVER_URL}/${realAddress}`
   }
 
+  const avatarList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = []
+
+    let arr = [detail.from, ...detail.to]
+    if (detail.cc) arr = [...arr, ...detail.cc]
+    if (detail.bcc) arr = [...arr, ...detail.bcc]
+
+    arr = arr.filter(({ address }) => {
+      if (exists.includes(address.toLocaleLowerCase())) return false
+      exists.push(address.toLocaleLowerCase())
+      return true
+    })
+    return arr
+  }, [detail])
+
   if (!id) {
     return (
       <Container>
@@ -249,10 +267,6 @@ export const PreviewComponent: React.FC = () => {
       </Container>
     )
   }
-
-  let avatarList = [detail.from, ...detail.to]
-  if (detail.cc) avatarList = [...avatarList, ...detail.cc]
-  if (detail.bcc) avatarList = [...avatarList, ...detail.bcc]
 
   return (
     <>
@@ -374,8 +388,8 @@ export const PreviewComponent: React.FC = () => {
                 fontWeight={400}
                 fontSize={{ base: '12px', md: '16px' }}
                 color="#6F6F6F"
-                lineHeight="24px"
-                marginTop="5px"
+                lineHeight={{ base: '16px', md: '24px' }}
+                marginTop={{ base: '10px', md: '5px' }}
               >
                 <span>
                   to{' '}
@@ -432,7 +446,7 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          <Box>
+          <Box className="preview-mail-content">
             <RenderHTML
               html={content}
               attachments={detail.attachments}
