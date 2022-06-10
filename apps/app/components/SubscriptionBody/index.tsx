@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { Button } from 'ui'
-import { TrackEvent, TrackKey, useDidMount, useTrackClick } from 'hooks'
+import { TrackEvent, TrackKey, useTrackClick } from 'hooks'
 import SubTop from '../../assets/subscription/top.png'
 import SVGVector from '../../assets/subscription/vector.svg'
 import SVGBell from '../../assets/subscription/bell.svg'
@@ -147,19 +149,18 @@ const Item = (props: ItemProps) => {
   )
 }
 
+const data = realData.map((e, i) => ({
+  ...e,
+  isNew: false,
+  isSub: false,
+  avatarSrc: imgs[i],
+}))
+
+const dataAtom = atomWithStorage<Array<ListItem>>('subscriptionData', data)
+
 export const SubscriptionBody: React.FC = () => {
   const trackBell = useTrackClick(TrackEvent.ClickSubscriptionBell)
-  const [list, setList] = useState<Array<ListItem>>([])
-
-  useDidMount(() => {
-    const data = realData.map((e, i) => ({
-      ...e,
-      isNew: false,
-      isSub: false,
-      avatarSrc: imgs[i],
-    }))
-    setList(data)
-  })
+  const [list, setList] = useAtom(dataAtom)
 
   const handleClick: HandleClick = (index, type) => {
     const newList = [...list]
