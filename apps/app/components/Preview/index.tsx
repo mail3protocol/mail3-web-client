@@ -21,6 +21,7 @@ import {
   MessageFlagAction,
   MessageFlagType,
   MailboxMessageDetailResponse,
+  AddressResponse,
 } from '../../api'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
@@ -237,7 +238,7 @@ export const PreviewComponent: React.FC = () => {
   }
 
   const avatarList = useMemo(() => {
-    if (!detail) return []
+    if (!detail?.to) return []
     const exists: Array<string> = []
 
     let arr = [detail.from, ...detail.to]
@@ -266,6 +267,12 @@ export const PreviewComponent: React.FC = () => {
         <Loading />
       </Container>
     )
+  }
+
+  const getNameAddress = (item: AddressResponse) => {
+    const address = truncateMiddle0xMail(item.address)
+    if (item.name) return `${item.name} <${address}>`
+    return `<${address}>`
   }
 
   return (
@@ -353,22 +360,24 @@ export const PreviewComponent: React.FC = () => {
                 justify="space-between"
               >
                 <Box>
-                  <Text
-                    fontWeight={500}
-                    fontSize={{ base: '20px', md: '24px' }}
-                    lineHeight="1"
-                    display="inline-block"
-                    verticalAlign="middle"
-                  >
-                    {detail.from.name}
-                  </Text>
+                  {detail.from.name ? (
+                    <Text
+                      fontWeight={500}
+                      fontSize={{ base: '20px', md: '24px' }}
+                      lineHeight="1"
+                      display="inline-block"
+                      verticalAlign="middle"
+                    >
+                      {detail.from.name}
+                    </Text>
+                  ) : null}
                   <Text
                     color="#6F6F6F"
                     fontWeight={400}
                     fontSize={{ base: '12px', md: '14px' }}
-                    display="inline-block"
+                    display={{ base: 'block', md: 'inline-block' }}
                     verticalAlign="middle"
-                    ml="5px"
+                    ml={{ base: 0, md: '5px' }}
                   >
                     {`<${truncateMiddle0xMail(detail.from.address)}>`}
                   </Text>
@@ -381,7 +390,7 @@ export const PreviewComponent: React.FC = () => {
                   color="#6F6F6F"
                   whiteSpace="nowrap"
                 >
-                  {detail?.date && formatDateString(detail.date)}
+                  {detail.date && formatDateString(detail.date)}
                 </Box>
               </Flex>
               <Box
@@ -389,44 +398,17 @@ export const PreviewComponent: React.FC = () => {
                 fontSize={{ base: '12px', md: '16px' }}
                 color="#6F6F6F"
                 lineHeight={{ base: '16px', md: '24px' }}
-                marginTop={{ base: '10px', md: '5px' }}
+                marginTop={{ base: '12px', md: '5px' }}
               >
-                <span>
-                  to{' '}
-                  {detail.to
-                    .map((item) => {
-                      const address = truncateMiddle0xMail(item.address)
-                      if (item.name) return `${item.name} <${address}>`
-                      return `<${address}>`
-                    })
-                    .join(';')}
-                </span>
-                {detail?.cc && (
-                  <span>
-                    ; cc{' '}
-                    {detail.cc
-                      .map((item) => {
-                        const address = truncateMiddle0xMail(item.address)
-                        if (item.name) return `${item.name} <${address}>`
-                        return `<${address}>`
-                      })
-                      .join('; ')}
-                    ;
-                  </span>
-                )}
-                {detail?.bcc && (
-                  <span>
-                    ; bcc{' '}
-                    {detail.bcc
-                      .map((item) => {
-                        const address = truncateMiddle0xMail(item.address)
-                        if (item.name) return `${item.name} <${address}>`
-                        return `<${address}>`
-                      })
-                      .join(';')}
-                    ;
-                  </span>
-                )}
+                {detail.to ? (
+                  <span>to {detail.to.map(getNameAddress).join('; ')}; </span>
+                ) : null}
+                {detail.cc ? (
+                  <span>cc {detail.cc.map(getNameAddress).join('; ')}; </span>
+                ) : null}
+                {detail.bcc ? (
+                  <span>bcc {detail.bcc.map(getNameAddress).join(';')};</span>
+                ) : null}
               </Box>
 
               <Box
@@ -454,7 +436,7 @@ export const PreviewComponent: React.FC = () => {
               from={detail.from}
             />
           </Box>
-          {detail?.attachments ? (
+          {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
         </Box>

@@ -58,7 +58,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
   const avatar = avatars?.[address]
-  const width = props?.w as string
+  const width = props?.w
   const { isLoading } = useQuery(
     ['avatar', address],
     async () =>
@@ -108,7 +108,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           name={address.toLowerCase()}
           variant="marble"
           square
-          size={width}
+          size="100%"
           colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
         />
       </WrapItem>

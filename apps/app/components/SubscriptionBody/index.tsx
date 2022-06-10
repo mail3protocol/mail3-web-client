@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { Button } from 'ui'
 import { TrackEvent, TrackKey, useDidMount, useTrackClick } from 'hooks'
 import SubTop from '../../assets/subscription/top.png'
@@ -147,18 +149,22 @@ const Item = (props: ItemProps) => {
   )
 }
 
+const data = realData.map((e, i) => ({
+  ...e,
+  isNew: false,
+  isSub: false,
+  avatarSrc: imgs[i],
+}))
+
+const dataAtom = atomWithStorage<Array<ListItem>>('subscriptionData', data)
+
 export const SubscriptionBody: React.FC = () => {
   const trackBell = useTrackClick(TrackEvent.ClickSubscriptionBell)
-  const [list, setList] = useState<Array<ListItem>>([])
+  const [list, setList] = useAtom(dataAtom)
+  const [isShow, setIsShow] = useState(false)
 
   useDidMount(() => {
-    const data = realData.map((e, i) => ({
-      ...e,
-      isNew: false,
-      isSub: false,
-      avatarSrc: imgs[i],
-    }))
-    setList(data)
+    setIsShow(true)
   })
 
   const handleClick: HandleClick = (index, type) => {
@@ -188,26 +194,28 @@ export const SubscriptionBody: React.FC = () => {
         </Box>
       </Box>
 
-      <Box marginTop="20px">
-        <Wrap spacing="20px" justify="center">
-          {list.map((item, index) => (
-            <WrapItem
-              key={item.name}
-              w="259px"
-              h="266px"
-              bg="#FFFFFF"
-              boxShadow="0px 0px 6px 2px rgba(198, 198, 198, 0.2)"
-              borderRadius="12px"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="space-evenly"
-              position="relative"
-            >
-              <Item {...item} index={index} handleClick={handleClick} />
-            </WrapItem>
-          ))}
-        </Wrap>
-      </Box>
+      {isShow ? (
+        <Box marginTop="20px">
+          <Wrap spacing="20px" justify="center">
+            {list.map((item, index) => (
+              <WrapItem
+                key={item.name}
+                w="259px"
+                h="266px"
+                bg="#FFFFFF"
+                boxShadow="0px 0px 6px 2px rgba(198, 198, 198, 0.2)"
+                borderRadius="12px"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="space-evenly"
+                position="relative"
+              >
+                <Item {...item} index={index} handleClick={handleClick} />
+              </WrapItem>
+            ))}
+          </Wrap>
+        </Box>
+      ) : null}
     </Box>
   )
 }

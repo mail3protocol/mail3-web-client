@@ -50,13 +50,13 @@ export interface MailboxMessageItemResponse {
   messageId: string
   date: string
   from: AddressResponse
-  to: AddressListResponse
+  to: AddressListResponse | null
   emailId: string
   threadId: string
   flagged: boolean
   size: number
-  cc: Array<AddressResponse> | null
-  bcc: Array<AddressResponse> | null
+  cc: AddressListResponse | null
+  bcc: AddressListResponse | null
   inReplyTo: string
   flags: Array<Partial<MessageFlagType>> | null
   labels: Array<any> | null

@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
 import Link, { LinkProps } from 'next/link'
+import { useMemo } from 'react'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
 import {
@@ -118,6 +119,8 @@ const Item: React.FC<BoxItemProps> = ({
   itemType,
   to,
   from,
+  cc,
+  bcc,
   isChoose,
   isChooseMode,
   setIsChooseMode,
@@ -126,6 +129,23 @@ const Item: React.FC<BoxItemProps> = ({
   mailboxType,
 }) => {
   const [t] = useTranslation('mailboxes')
+
+  const avatarList = useMemo(() => {
+    if (!to) return []
+    const exists: Array<string> = []
+
+    let arr = [...to]
+    if (cc) arr = [...arr, ...cc]
+    if (bcc) arr = [...arr, ...bcc]
+
+    arr = arr.filter(({ address }) => {
+      if (exists.includes(address.toLocaleLowerCase())) return false
+      exists.push(address.toLocaleLowerCase())
+      return true
+    })
+
+    return arr
+  }, [to, cc, bcc])
 
   let AvatarBox = (
     <Flex w="48px" position="relative">
@@ -148,14 +168,14 @@ const Item: React.FC<BoxItemProps> = ({
   )
 
   if (
-    mailboxType === Mailboxes.Sent ||
-    (mailboxType === Mailboxes.Drafts && to?.length)
+    avatarList.length &&
+    (mailboxType === Mailboxes.Sent || mailboxType === Mailboxes.Drafts)
   ) {
     AvatarBox = (
       <Flex w="48px">
         <Avatar
           cursor="pointer"
-          address={removeMailSuffix(to[0].address)}
+          address={removeMailSuffix(avatarList[0].address)}
           w="48px"
           h="48px"
           showBorder
@@ -166,9 +186,46 @@ const Item: React.FC<BoxItemProps> = ({
             return false
           }}
           borderRadius="50%"
-        >
-          {avatarBadgConfig[avatarBadgeType]}
-        </Avatar>
+          transform={avatarList.length > 1 ? 'translateX(-20%)' : ''}
+        />
+
+        {avatarList.length === 2 ? (
+          <Avatar
+            cursor="pointer"
+            address={removeMailSuffix(avatarList[1].address)}
+            w="48px"
+            h="48px"
+            showBorder
+            onClick={(e) => {
+              e.stopPropagation()
+              if (onClickAvatar) onClickAvatar(index, id)
+              if (setIsChooseMode) setIsChooseMode(true)
+              return false
+            }}
+            borderRadius="50%"
+            transform="translateX(-80%)"
+          />
+        ) : null}
+
+        {avatarList.length > 2 ? (
+          <Circle
+            as="button"
+            size="48px"
+            bg="#6f6f6f"
+            border="1px solid #fff"
+            color="#fff"
+            fontSize="12px"
+            onClick={(e) => {
+              e.stopPropagation()
+              if (onClickAvatar) onClickAvatar(index, id)
+              if (setIsChooseMode) setIsChooseMode(true)
+              return false
+            }}
+            transform="translateX(-80%)"
+          >
+            <p>{avatarList.length - 1}</p>
+          </Circle>
+        ) : null}
       </Flex>
     )
   }
@@ -185,7 +242,7 @@ const Item: React.FC<BoxItemProps> = ({
       align="flex-start"
       bg={itemType === ItemType.Fail ? '#FFF9F9' : ''}
       margin={{ base: 0, md: '20px 0' }}
-      p={{ base: '20px', md: '5px' }}
+      p={{ base: '20px', md: '5px 5px 5px 10px' }}
       borderRadius={{ base: 0, md: '8px' }}
     >
       <Box w="48px">
