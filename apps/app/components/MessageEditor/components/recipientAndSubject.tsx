@@ -90,7 +90,7 @@ export const RecipientAndSubject: React.FC = () => {
       </Item>
       <Item px={ItemPx}>
         <ItemField>To</ItemField>
-        <ToInput onChange={setToAddresses} defaultAddresses={toAddresses} />
+        <ToInput onChange={setToAddresses} addresses={toAddresses} />
         <Stack direction="row" spacing="5px">
           <InlineCheckbox
             checked
@@ -153,13 +153,13 @@ export const RecipientAndSubject: React.FC = () => {
       {isEnabledCC ? (
         <Item px={ItemPx}>
           <ItemField> {t('cc')}</ItemField>
-          <ToInput onChange={setCcAddresses} defaultAddresses={ccAddresses} />
+          <ToInput onChange={setCcAddresses} addresses={ccAddresses} />
         </Item>
       ) : null}
       {isEnabledBCC ? (
         <Item px={ItemPx}>
           <ItemField> {t('bcc')}</ItemField>
-          <ToInput onChange={setBccAddresses} defaultAddresses={bccAddresses} />
+          <ToInput onChange={setBccAddresses} addresses={bccAddresses} />
         </Item>
       ) : null}
       <Item

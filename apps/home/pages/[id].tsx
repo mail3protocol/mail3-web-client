@@ -147,7 +147,7 @@ const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
   const account = useLoginAccount()
   const router = useRouter()
   const [t] = useTranslation('profile')
-  console.log(account)
+
   if (errorCode) {
     return <ErrorPage statusCode={errorCode} />
   }

@@ -76,11 +76,10 @@ export const Attach: React.FC<{
       if (filterOverSizeFiles.length > 0) {
         dialog({
           type: 'error',
-          title: 'Files exceeds size',
+          title: t('file_over_title'),
           description: (
             <>
-              File size is limited to {kbToMb(FILESIZE_LIMIT)}MB, files size
-              exceeded:
+              {t('file_size_up_to', { size: `${kbToMb(FILESIZE_LIMIT)}MB` })}
               {filterOverSizeFiles
                 .map((a, i) => ({ filename: a.filename, i }))
                 .map((a) => (

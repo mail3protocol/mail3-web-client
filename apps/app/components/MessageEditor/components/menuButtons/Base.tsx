@@ -9,6 +9,7 @@ export const ButtonBase: React.FC<ButtonProps> = ({ children, ...props }) => (
     display="flex"
     justifyContent="center"
     alignContent="center"
+    tabIndex={-1}
     {...props}
   >
     {children}

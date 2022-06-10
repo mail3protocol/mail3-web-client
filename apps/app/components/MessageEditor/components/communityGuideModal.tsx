@@ -8,43 +8,20 @@ import {
   Stack,
   Image,
   Flex,
-  Center,
   Button as RowButton,
   Box,
 } from '@chakra-ui/react'
 import { Button } from 'ui'
 import React, { useState } from 'react'
-import { TrackEvent, useDialog, useTrackClick } from 'hooks'
+import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'next-i18next'
-import CommunityGuide11 from '../../../assets/commuity-guide/1-1.png'
-import CommunityGuide12 from '../../../assets/commuity-guide/1-2.png'
-import CommunityGuide13 from '../../../assets/commuity-guide/1-3.png'
-import CommunityGuide2 from '../../../assets/commuity-guide/2.png'
+import DesktopImage1 from '../../../assets/commuity-guide/desktop1.png'
+import DesktopImage2 from '../../../assets/commuity-guide/desktop2.png'
+import MobileImage1 from '../../../assets/commuity-guide/mobile1.png'
+import MobileImage2 from '../../../assets/commuity-guide/mobile2.png'
+import { useAPI } from '../../../hooks/useAPI'
 
 const IMAGE_COUNT = 2
-
-export const Page1 = () => (
-  <Flex direction={{ base: 'column', md: 'row' }} w="full" flex={0} h="full">
-    <Center w={{ base: 'full', md: '47.5%' }} h={{ base: '49%', md: 'full' }}>
-      <Image src={CommunityGuide11.src} w="full" h="full" objectFit="contain" />
-    </Center>
-    <Center w={{ base: 'full', md: '5%' }} h={{ base: '2%', md: 'full' }}>
-      <Image
-        src={CommunityGuide13.src}
-        w="full"
-        h="full"
-        objectFit="contain"
-        transform={{
-          base: 'scale(5) rotate(90deg)',
-          md: 'scale(2)',
-        }}
-      />
-    </Center>
-    <Center w={{ base: 'full', md: '47.5%' }} h={{ base: '49%', md: 'full' }}>
-      <Image src={CommunityGuide12.src} w="full" h="full" objectFit="contain" />
-    </Center>
-  </Flex>
-)
 
 export const CommunityGuideModal: React.FC<{
   isOpen: boolean
@@ -59,6 +36,8 @@ export const CommunityGuideModal: React.FC<{
   )
   const dialog = useDialog()
   const [index, setIndex] = useState(0)
+  const api = useAPI()
+  const toast = useToast()
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
@@ -66,7 +45,6 @@ export const CommunityGuideModal: React.FC<{
         w={{ base: 'full', md: 'calc(100% - 40px)' }}
         h={{ base: 'full', md: 'calc(100% - 40px)' }}
         maxH={{ base: '100vh', md: '578px' }}
-        // maxH="578px"
         maxW="855px"
         rounded={{ base: '0', md: '48px' }}
         py="32px"
@@ -96,7 +74,7 @@ export const CommunityGuideModal: React.FC<{
                 top="0"
                 left="0"
                 transition="200ms"
-                direction="column"
+                direction={{ base: 'column', md: 'column-reverse' }}
                 style={{
                   opacity: index === 0 ? 1 : 0,
                 }}
@@ -110,7 +88,18 @@ export const CommunityGuideModal: React.FC<{
                 >
                   {t('community_guide_modal.text.1')}
                 </Box>
-                <Page1 />
+                <Image
+                  src={DesktopImage1.src}
+                  w="full"
+                  display={{ base: 'none', md: 'block' }}
+                />
+                <Image
+                  src={MobileImage1.src}
+                  h="full"
+                  w="full"
+                  objectFit="contain"
+                  display={{ base: 'block', md: 'none' }}
+                />
               </Flex>
               <Flex
                 w="full"
@@ -124,18 +113,24 @@ export const CommunityGuideModal: React.FC<{
                 }}
                 overflowX="auto"
                 overflowY="hidden"
-                direction="column"
+                direction={{ base: 'column', md: 'column-reverse' }}
               >
                 <Box fontSize="16px" textAlign="center" maxW="400px" mx="auto">
                   {t('community_guide_modal.text.2')}
                 </Box>
                 <Image
-                  src={CommunityGuide2.src}
-                  objectFit="contain"
-                  w="auto"
+                  src={DesktopImage2.src}
                   h="full"
-                  flex={0}
-                  my="auto"
+                  w="full"
+                  objectFit="contain"
+                  display={{ base: 'none', md: 'block' }}
+                />
+                <Image
+                  src={MobileImage2.src}
+                  h="full"
+                  w="full"
+                  objectFit="contain"
+                  display={{ base: 'block', md: 'none' }}
                 />
               </Flex>
             </Flex>
@@ -184,14 +179,19 @@ export const CommunityGuideModal: React.FC<{
                     'You will have the possibility to experience this cool feature for the first time.'
                   ),
                   showCloseButton: true,
-                  onConfirm: () => {
+                  onConfirm: async () => {
                     trackClickCommunityApply()
+                    await api.applyToExperienceNewFeature('community-mail')
+                    toast(t('succeeded'))
+                    onClose()
                   },
                   onCancel: () => {
                     trackClickCommunityNoThanks()
+                    onClose()
                   },
                   onClose: () => {
                     trackClickCommunityNoThanks()
+                    onClose()
                   },
                   okText: t('apply'),
                   cancelText: t('no_thanks'),

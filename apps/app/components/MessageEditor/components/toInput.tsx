@@ -6,7 +6,7 @@ import {
   Input,
   Box,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Avatar } from 'ui'
 import {
   isEthAddress,
@@ -17,22 +17,21 @@ import {
 import { MAIL_SERVER_URL } from '../../../constants'
 
 export interface ToInputProps {
-  defaultAddresses?: string[]
+  addresses?: string[]
   onChange?: (to: string[]) => void
 }
 
 export const ToInput: React.FC<ToInputProps> = ({
-  defaultAddresses,
+  addresses = [],
   onChange,
 }) => {
-  const [addresses, setAddresses] = useState<string[]>(defaultAddresses ?? [])
   const [inputValue, setInputValue] = useState('')
   const onAddAddress = (value: string) => {
     if (value !== '' && (isEthAddress(value) || verifyEmail(value))) {
       const addingAddress = isEthAddress(value)
         ? `${value}@${MAIL_SERVER_URL}`
         : value
-      setAddresses((targets) => [...targets, addingAddress])
+      onChange?.([...addresses, addingAddress])
       setInputValue('')
       return true
     }
@@ -47,7 +46,7 @@ export const ToInput: React.FC<ToInputProps> = ({
       }
       case 'Backspace': {
         if (inputValue === '') {
-          setAddresses((targets) => targets.slice(0, -1))
+          onChange?.(addresses.slice(0, -1))
         }
         break
       }
@@ -62,15 +61,18 @@ export const ToInput: React.FC<ToInputProps> = ({
         }
         break
       }
+      case 'Space': {
+        if (onAddAddress(inputValue)) {
+          e.stopPropagation()
+          e.preventDefault()
+        }
+        break
+      }
       default: {
         break
       }
     }
   }
-
-  useEffect(() => {
-    onChange?.(addresses)
-  }, [addresses.length])
 
   return (
     <Flex wrap="wrap" rowGap="8px" w="full" alignItems="center">
@@ -101,10 +103,9 @@ export const ToInput: React.FC<ToInputProps> = ({
             fontSize="12px"
             bg="#EBEBEB"
             onClick={() => {
-              setAddresses((a) => {
-                a.splice(i, 1)
-                return [...a]
-              })
+              const a = addresses.concat()
+              a.splice(i, 1)
+              onChange?.(a)
             }}
           />
         </Tag>

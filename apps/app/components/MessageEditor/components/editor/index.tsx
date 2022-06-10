@@ -11,11 +11,6 @@ import {
   BlockquoteExtension,
   HardBreakExtension,
   HorizontalRuleExtension,
-  FontFamilyExtension,
-  FontSizeExtension,
-  TextHighlightExtension,
-  TextColorExtension,
-  TextCaseExtension,
   CalloutExtension,
   HeadingExtension,
   ParagraphExtension,
@@ -30,7 +25,6 @@ import {
 } from '@remirror/react'
 import { Stack, Button, Flex, Grid } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { htmlToProsemirrorNode } from 'remirror'
 import { useTranslation } from 'next-i18next'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
@@ -67,8 +61,22 @@ const RemirrorTheme = styled(Flex)`
 
 const TextEditor = () => {
   const { getRootProps } = useRemirrorContext({ autoUpdate: true })
+  const CONTAINER_ID = 'EDIT_MESSAGE_TEXT_CONTAINER_ID'
+  useEffect(() => {
+    const el = document.querySelector(`#${CONTAINER_ID} div`)
+    if (!el) return () => {}
+    const fn = (e: Event) => {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    el.addEventListener('drop', fn)
+    return () => {
+      el.removeEventListener('drop', fn)
+    }
+  }, [])
   return (
     <Flex
+      id={CONTAINER_ID}
       direction="column"
       pt="15px"
       pb={{ base: '20px', md: 0 }}
@@ -118,7 +126,13 @@ const Footer = () => {
         onClick={() => {
           trackClickSave()
           onSave(getHTML())
-          toast('Draft Saved')
+            .then(() => {
+              toast(t('draft.saved'))
+            })
+            .catch((err) => {
+              toast(t('draft.failed'))
+              console.error(err)
+            })
         }}
       >
         {t('save')}
@@ -157,35 +171,29 @@ export interface EditorProps {
 
 export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
   const { manager, state } = useRemirror({
-    extraAttributes: [
-      {
-        identifiers: 'all',
-        attributes: {
-          style: {
-            default: null,
-            parseDOM: 'style',
-          },
-        },
-      },
-    ],
     extensions: () => [
       new BoldExtension(),
-      new ImageExtension({ enableResizing: true }),
+      new ImageExtension({
+        enableResizing: true,
+        createPlaceholder: () => document.createElement('span'),
+      }),
       new ItalicExtension(),
       new UnderlineExtension(),
       new BulletListExtension(),
       new OrderedListExtension(),
       new LinkExtension(),
       new StrikeExtension(),
-      new BlockquoteExtension(),
+      new BlockquoteExtension({
+        extraAttributes: {
+          style: {
+            default: null,
+            parseDOM: (dom) => dom.getAttribute('style'),
+          },
+        },
+      }),
       new HardBreakExtension(),
       new HorizontalRuleExtension(),
       new TableExtension(),
-      new FontFamilyExtension(),
-      new FontSizeExtension(),
-      new TextHighlightExtension(),
-      new TextColorExtension(),
-      new TextCaseExtension(),
       new CalloutExtension(),
       new HeadingExtension(),
       new ParagraphExtension(),
@@ -193,7 +201,7 @@ export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
     ],
     content,
     selection: 'start',
-    stringHandler: htmlToProsemirrorNode,
+    stringHandler: 'html',
   })
   const { onSave } = useSaveMessage()
   const [saveSubject, setSaveSubject] = useState<Subject<() => void> | null>(
@@ -216,7 +224,11 @@ export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
       <Remirror
         manager={manager}
         initialContent={state}
-        onChange={(e) => saveSubject?.next(() => onSave(e.helpers.getHTML()))}
+        onChange={(e) => {
+          saveSubject?.next(() =>
+            onSave(e.helpers.getHTML()).catch(() => false)
+          )
+        }}
       >
         <Menu />
         <Grid

@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { useToast } from 'hooks'
 import { atomWithReset, useResetAtom } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useAPI } from '../../../hooks/useAPI'
@@ -14,7 +13,6 @@ export function useSaveMessage() {
   const { subject, toAddresses, fromAddress, ccAddresses, bccAddresses } =
     useSubject()
   const router = useRouter()
-  const toast = useToast()
   const [isLoading, setIsLoading] = useAtom(savingMessageAtom)
   const onResetSavingAtom = useResetAtom(savingMessageAtom)
   const { attachments } = useAttachment()
@@ -46,10 +44,6 @@ export function useSaveMessage() {
           shallow: true,
         }
       )
-    } catch (err) {
-      toast('Draft Save Failed')
-      // eslint-disable-next-line no-console
-      console.error(err)
     } finally {
       setIsLoading(false)
     }

@@ -8,11 +8,12 @@ import { useAttachment } from './useAttachment'
 import { useCardSignature } from './useCardSignature'
 import { RoutePath } from '../../../route/path'
 import { API } from '../../../api'
-import { onRenderElementToImage } from '../../../utils/editor'
+import {
+  onRenderElementToImage,
+  outputHtmlWithAttachmentImages,
+} from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
 
-const CARD_SIGNATURE_FILENAME = 'signature.png'
-const CARD_SIGNATURE_CONTENT_ID = 'signature'
 export const ID_NAME = 'id'
 export const ACTION_NAME = 'action'
 
@@ -29,13 +30,21 @@ export async function removeDraft(api: API) {
 export function useSubmitMessage() {
   const { getHTML } = useHelpers()
   const api = useAPI()
-  const { subject, toAddresses, fromAddress, ccAddresses, bccAddresses } =
-    useSubject()
+  const {
+    subject,
+    toAddresses,
+    fromAddress,
+    ccAddresses,
+    bccAddresses,
+    onReset,
+  } = useSubject()
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const isDisabledSendButton = [!fromAddress, toAddresses.length <= 0].some(
-    (item) => item
-  )
+  const isDisabledSendButton = [
+    !fromAddress,
+    toAddresses.length <= 0,
+    !subject,
+  ].some((item) => item)
   const toast = useToast()
   const { attachments } = useAttachment()
   const { isEnableCardSignature } = useCardSignature()
@@ -45,19 +54,14 @@ export function useSubmitMessage() {
     setIsLoading(true)
     let html = getHTML()
     if (isEnableCardSignature) {
-      attachments.push({
-        filename: CARD_SIGNATURE_FILENAME,
-        contentType: 'image/png',
-        content: (
-          await onRenderElementToImage(
-            document.getElementById(CARD_SIGNATURE_ID) as HTMLDivElement
-          )
-        ).split(',')[1],
-        contentDisposition: 'inline',
-        cid: CARD_SIGNATURE_CONTENT_ID,
-      })
-      html += `<img src="cid:${CARD_SIGNATURE_CONTENT_ID}" alt="cid:${CARD_SIGNATURE_CONTENT_ID}" width="200">`
+      const cardSignatureContent = await onRenderElementToImage(
+        document.getElementById(CARD_SIGNATURE_ID) as HTMLDivElement
+      )
+      html += `<p style="text-align: center"><img src="${cardSignatureContent}" alt="card-signature" style="width: 200px; height: auto"></p>`
     }
+    const { html: replacedAttachmentImageHtml, attachments: imageAttachments } =
+      outputHtmlWithAttachmentImages(html)
+    html = replacedAttachmentImageHtml
     try {
       await api.submitMessage({
         from: {
@@ -68,9 +72,12 @@ export function useSubmitMessage() {
         cc: ccAddresses.map((address) => ({ address })),
         bcc: bccAddresses.map((address) => ({ address })),
         html,
-        attachments,
+        attachments: attachments
+          .filter((a) => a.contentDisposition !== 'inline')
+          .concat(imageAttachments),
       })
       await removeDraft(api)
+      onReset()
       await router.push(RoutePath.Sent)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {

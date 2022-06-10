@@ -2,6 +2,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'next-i18next'
+import styled from '@emotion/styled'
 import { RecipientAndSubject } from './components/recipientAndSubject'
 import { EditorProps } from './components/editor'
 import { useCardSignature } from './hooks/useCardSignature'
@@ -12,6 +13,12 @@ const Editor = dynamic<EditorProps>(
     ssr: false,
   }
 )
+
+const FocusThemeContainer = styled(Flex)`
+  button:focus {
+    outline-color: rgba(0, 0, 0, 0.3) !important;
+  }
+`
 
 export interface MessageEditorProps {
   defaultContent: string
@@ -31,7 +38,7 @@ export const MessageEditor: React.FC<MessageEditorProps> = ({
   }, [isEnableCardSignature])
 
   return (
-    <Flex
+    <FocusThemeContainer
       w="full"
       h="100%"
       minH={{ base: 'calc(100vh - 60px)', md: 'calc(100vh - 100px)' }}
@@ -74,6 +81,6 @@ export const MessageEditor: React.FC<MessageEditorProps> = ({
       </Heading>
       <RecipientAndSubject />
       {!isLoading ? <Editor content={defaultContent} /> : null}
-    </Flex>
+    </FocusThemeContainer>
   )
 }

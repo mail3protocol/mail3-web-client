@@ -316,4 +316,8 @@ export class API {
       responseType: 'blob',
     })
   }
+
+  public async applyToExperienceNewFeature(featureName: 'community-mail') {
+    return this.axios.post(`/account/feature_experiences/${featureName}`)
+  }
 }
