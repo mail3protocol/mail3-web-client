@@ -22,6 +22,7 @@ import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
 import { useObservableCallback, useSubscription } from 'observable-hooks'
 import { pluck, debounceTime, tap } from 'rxjs/operators'
+import { useRouter } from 'next/router'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -175,7 +176,7 @@ export const SettingSignature: React.FC = () => {
   )
 
   useSubscription(onTextareaChange$, onTextSignatureChange)
-
+  const router = useRouter()
   return (
     <Container>
       <Stack
@@ -293,25 +294,27 @@ export const SettingSignature: React.FC = () => {
           />
         </Flex>
       )}
-      <Center className="footer" w="full">
-        <NextLink href={RoutePath.Inbox} passHref>
-          <Button
-            bg="black"
-            color="white"
-            w="250px"
-            height="50px"
-            _hover={{
-              bg: 'brand.50',
-            }}
-            as="a"
-            rightIcon={<ChevronRightIcon color="white" />}
-          >
-            <Center flexDirection="column">
-              <Text>{t('setup.next')}</Text>
-            </Center>
-          </Button>
-        </NextLink>
-      </Center>
+      {router.pathname !== RoutePath.SettingSignature ? (
+        <Center className="footer" w="full">
+          <NextLink href={RoutePath.Inbox} passHref>
+            <Button
+              bg="black"
+              color="white"
+              w="250px"
+              height="50px"
+              _hover={{
+                bg: 'brand.50',
+              }}
+              as="a"
+              rightIcon={<ChevronRightIcon color="white" />}
+            >
+              <Center flexDirection="column">
+                <Text>{t('setup.next')}</Text>
+              </Center>
+            </Button>
+          </NextLink>
+        </Center>
+      ) : null}
     </Container>
   )
 }

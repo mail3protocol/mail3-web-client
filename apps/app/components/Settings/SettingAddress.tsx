@@ -27,6 +27,7 @@ import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
+import { useRouter } from 'next/router'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -194,6 +195,8 @@ export const SettingAddress: React.FC = () => {
 
   const [firstAlias, ...restAliases] = aliases
 
+  const router = useRouter()
+
   return (
     <Container>
       <header className="header">
@@ -268,25 +271,27 @@ export const SettingAddress: React.FC = () => {
       <Flex className="mascot">
         <Mascot src={happySetupMascot.src} />
       </Flex>
-      <Center className="footer" w="full">
-        <NextLink href={RoutePath.SetupSignature} passHref>
-          <Button
-            bg="black"
-            color="white"
-            w="250px"
-            height="50px"
-            _hover={{
-              bg: 'brand.50',
-            }}
-            as="a"
-            rightIcon={<ChevronRightIcon color="white" />}
-          >
-            <Center flexDirection="column">
-              <Text>{t('setup.next')}</Text>
-            </Center>
-          </Button>
-        </NextLink>
-      </Center>
+      {(router.pathname as any) !== RoutePath.Settings ? (
+        <Center className="footer" w="full">
+          <NextLink href={RoutePath.SetupSignature} passHref>
+            <Button
+              bg="black"
+              color="white"
+              w="250px"
+              height="50px"
+              _hover={{
+                bg: 'brand.50',
+              }}
+              as="a"
+              rightIcon={<ChevronRightIcon color="white" />}
+            >
+              <Center flexDirection="column">
+                <Text>{t('setup.next')}</Text>
+              </Center>
+            </Button>
+          </NextLink>
+        </Center>
+      ) : null}
     </Container>
   )
 }
