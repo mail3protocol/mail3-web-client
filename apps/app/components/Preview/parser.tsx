@@ -31,8 +31,8 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
         return (
           <AttachmentImage
             attachments={attachments}
-            cid={dom.attribs.src}
             messageId={messageId}
+            attribs={dom.attribs}
           />
         )
       }
