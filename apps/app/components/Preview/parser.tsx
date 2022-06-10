@@ -19,6 +19,10 @@ interface htmlParserProps {
 
 const OFFICE_ADDRESS_LIST = [
   'mail3.eth@imibao.net',
+  'mail3.eth@mail3.me',
+  'no-reply-pls.eth@imibao.net',
+  'no-reply-pls.eth@mail3.me',
+
   `no-reply-pls.eth@${MAIL_SERVER_URL}`,
   `mail3.eth@${MAIL_SERVER_URL}`,
 ]
