@@ -10,7 +10,7 @@ export const WHITE_LIST_URL =
 
 export const TESTING_URL =
   process.env.NEXT_PUBLIC_TESTING_URL || `${APP_URL}/testing`
-export const LAUNCH_URL = APP_URL
+export const LAUNCH_URL = process.env.NEXT_PUBLIC_LANCH_URL || APP_URL
 export const MIRROR_URL =
   process.env.NEXT_PUBLIC_MIRROR_URL || 'https://mirror.xyz/mail3.eth'
 export const MEDIUM_URL =

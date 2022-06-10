@@ -62,7 +62,7 @@ export const Buttons: React.FC<{
     </NextLink>
   )
   const launchAppButton = (
-    <NextLink href={LAUNCH_URL} passHref>
+    <Link href={LAUNCH_URL}>
       <Button
         {...buttonProps}
         onClick={() => trackLaunchApp()}
@@ -77,7 +77,7 @@ export const Buttons: React.FC<{
       >
         Launch App
       </Button>
-    </NextLink>
+    </Link>
   )
   const whilelistButton = (
     <NextLink href={WHITE_LIST_URL} passHref>
@@ -157,11 +157,11 @@ export const Menus: React.FC<{
   const trackLaunchApp = useTrackClick(TrackEvent.HomeLaunchApp)
   const trackWhitePaper = useTrackClick(TrackEvent.HomeClickWhitePaper)
   const launchAppButton = (
-    <NextLink href={LAUNCH_URL} passHref>
+    <Link href={LAUNCH_URL}>
       <MenuItem variant="unstyled" onClick={() => trackLaunchApp()}>
         Launch App
       </MenuItem>
-    </NextLink>
+    </Link>
   )
   const litepaperButton = (
     <NextLink href={LIGHT_PAPER_URL} passHref>
@@ -178,6 +178,6 @@ export const Menus: React.FC<{
       {litepaperButton}
     </>
   ) : (
-    launchAppButton
+    litepaperButton
   )
 }
