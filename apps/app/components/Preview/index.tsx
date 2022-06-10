@@ -360,22 +360,24 @@ export const PreviewComponent: React.FC = () => {
                 justify="space-between"
               >
                 <Box>
-                  <Text
-                    fontWeight={500}
-                    fontSize={{ base: '20px', md: '24px' }}
-                    lineHeight="1"
-                    display="inline-block"
-                    verticalAlign="middle"
-                  >
-                    {detail.from.name}
-                  </Text>
+                  {detail.from.name ? (
+                    <Text
+                      fontWeight={500}
+                      fontSize={{ base: '20px', md: '24px' }}
+                      lineHeight="1"
+                      display="inline-block"
+                      verticalAlign="middle"
+                    >
+                      {detail.from.name}
+                    </Text>
+                  ) : null}
                   <Text
                     color="#6F6F6F"
                     fontWeight={400}
                     fontSize={{ base: '12px', md: '14px' }}
-                    display="inline-block"
+                    display={{ base: 'block', md: 'inline-block' }}
                     verticalAlign="middle"
-                    ml="5px"
+                    ml={{ base: 0, md: '5px' }}
                   >
                     {`<${truncateMiddle0xMail(detail.from.address)}>`}
                   </Text>
@@ -396,7 +398,7 @@ export const PreviewComponent: React.FC = () => {
                 fontSize={{ base: '12px', md: '16px' }}
                 color="#6F6F6F"
                 lineHeight={{ base: '16px', md: '24px' }}
-                marginTop={{ base: '10px', md: '5px' }}
+                marginTop={{ base: '12px', md: '5px' }}
               >
                 {detail.to ? (
                   <span>to {detail.to.map(getNameAddress).join('; ')}; </span>
