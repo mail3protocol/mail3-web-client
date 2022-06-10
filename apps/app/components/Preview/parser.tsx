@@ -17,7 +17,11 @@ interface htmlParserProps {
   from: AddressResponse
 }
 
-const OFFICE_ADDRESS_LIST = [`no-reply-pls.eth@${MAIL_SERVER_URL}`]
+const OFFICE_ADDRESS_LIST = [
+  'mail3.eth@imibao.net',
+  `no-reply-pls.eth@${MAIL_SERVER_URL}`,
+  `mail3.eth@${MAIL_SERVER_URL}`,
+]
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
   html,
