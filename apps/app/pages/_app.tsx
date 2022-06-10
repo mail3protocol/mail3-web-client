@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { appWithTranslation } from 'next-i18next'
 import Script from 'next/script'
-import { AppContext, AppProps } from 'next/app'
+import App, { AppContext, AppProps } from 'next/app'
 import { Provider as JotaiProvider } from 'jotai'
 import { theme } from 'ui'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -102,11 +102,11 @@ function Mail3({
   )
 }
 
-export async function getServerSideProps(appContext: AppContext) {
+Mail3.getInitialProps = async (appContext: AppContext) => {
+  const appProps = await App.getInitialProps(appContext)
   return {
-    props: {
-      cookies: appContext.ctx.req?.headers?.cookie,
-    }, // will be passed to the page component as props
+    ...appProps,
+    cookies: appContext.ctx.req?.headers?.cookie,
   }
 }
 

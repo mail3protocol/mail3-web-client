@@ -19,13 +19,15 @@ import NextLink from 'next/link'
 import {
   ChevronRightIcon,
   CheckCircleIcon,
-  QuestionIcon,
+  QuestionOutlineIcon,
 } from '@chakra-ui/icons'
+import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
+import { useRouter } from 'next/router'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -33,6 +35,7 @@ import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { truncateMiddle } from '../../utils'
 import { MAIL_SERVER_URL } from '../../constants'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -73,8 +76,9 @@ interface EmailSwitchProps {
   isLoading?: boolean
   uuid: string
   isChecked: boolean
+  address: string
   // eslint-disable-next-line prettier/prettier
-  onChange: (account: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (uuid: string, address: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const EmailSwitch: React.FC<EmailSwitchProps> = ({
@@ -82,6 +86,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
   onChange,
   isLoading = false,
   isChecked,
+  address,
   uuid,
 }) => (
   <Flex
@@ -103,7 +108,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
           colorScheme="deepBlue"
           isReadOnly={isChecked}
           isChecked={isChecked}
-          onChange={onChange(uuid)}
+          onChange={onChange(uuid, address)}
           display={['none', 'none', 'block']}
         />
         <Checkbox
@@ -111,7 +116,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
           isReadOnly={isChecked}
           top="2px"
           isChecked={isChecked}
-          onChange={onChange(uuid)}
+          onChange={onChange(uuid, address)}
           display={['block', 'block', 'none']}
         />
       </>
@@ -142,7 +147,7 @@ export const SettingAddress: React.FC = () => {
   const { data: ensNames, isLoading } = useQuery(
     [Query.ENS_NAMES, account],
     async () => {
-      const { data } = await api.getAliaes()
+      const { data } = await api.getAliases()
       return data
     },
     {
@@ -161,19 +166,25 @@ export const SettingAddress: React.FC = () => {
     }
   )
 
-  const onDefaultAccountChange = (address: string) => async () => {
-    const prevActiveAccount = activeAcount
-    try {
-      setActiveAccount(address)
-      await api.setDefaultSentAddress(address)
-    } catch (error) {
-      setActiveAccount(prevActiveAccount)
-      dialog({
-        type: 'warning',
-        description: t('address.request-failed'),
-      })
+  const setUserInfo = useUpdateAtom(userPropertiesAtom)
+  const onDefaultAccountChange =
+    (uuid: string, address: string) => async () => {
+      const prevActiveAccount = activeAcount
+      try {
+        setActiveAccount(uuid)
+        await api.setDefaultSentAddress(uuid)
+        setUserInfo((prev) => ({
+          ...prev,
+          defaultAddress: address,
+        }))
+      } catch (error) {
+        setActiveAccount(prevActiveAccount)
+        dialog({
+          type: 'warning',
+          description: t('address.request-failed'),
+        })
+      }
     }
-  }
 
   const aliases = useMemo(() => {
     if (ensNames?.aliases) {
@@ -183,6 +194,8 @@ export const SettingAddress: React.FC = () => {
   }, [ensNames])
 
   const [firstAlias, ...restAliases] = aliases
+
+  const router = useRouter()
 
   return (
     <Container>
@@ -205,10 +218,12 @@ export const SettingAddress: React.FC = () => {
             </Text>
             <HStack spacing="4px">
               <CheckCircleIcon color="#4E52F5" w="12px" />
-              <Text fontWeight={500}>{t('address.default')}</Text>
+              <Text fontWeight={500} color="#4E52F5">
+                {t('address.default')}
+              </Text>
             </HStack>
             <Tooltip label={t('address.default-hover')}>
-              <QuestionIcon cursor="pointer" w="16px" color="#4E52F5" />
+              <QuestionOutlineIcon cursor="pointer" w="16px" color="#4E52F5" />
             </Tooltip>
           </Stack>
         </FormLabel>
@@ -218,6 +233,7 @@ export const SettingAddress: React.FC = () => {
           account={firstAlias?.address}
           onChange={onDefaultAccountChange}
           key={firstAlias?.address}
+          address={firstAlias?.address ?? account}
           isLoading={isLoading}
           isChecked={firstAlias?.uuid === activeAcount || aliases.length === 1}
         />
@@ -230,6 +246,7 @@ export const SettingAddress: React.FC = () => {
               {restAliases.map((a) => (
                 <EmailSwitch
                   uuid={a.uuid}
+                  address={a.address}
                   emailAddress={generateEmailAddress(a.address)}
                   account={a.address}
                   onChange={onDefaultAccountChange}
@@ -254,25 +271,27 @@ export const SettingAddress: React.FC = () => {
       <Flex className="mascot">
         <Mascot src={happySetupMascot.src} />
       </Flex>
-      <Center className="footer" w="full">
-        <NextLink href={RoutePath.SetupSignature} passHref>
-          <Button
-            bg="black"
-            color="white"
-            w="250px"
-            height="50px"
-            _hover={{
-              bg: 'brand.50',
-            }}
-            as="a"
-            rightIcon={<ChevronRightIcon color="white" />}
-          >
-            <Center flexDirection="column">
-              <Text>{t('setup.next')}</Text>
-            </Center>
-          </Button>
-        </NextLink>
-      </Center>
+      {(router.pathname as any) !== RoutePath.Settings ? (
+        <Center className="footer" w="full">
+          <NextLink href={RoutePath.SetupSignature} passHref>
+            <Button
+              bg="black"
+              color="white"
+              w="250px"
+              height="50px"
+              _hover={{
+                bg: 'brand.50',
+              }}
+              as="a"
+              rightIcon={<ChevronRightIcon color="white" />}
+            >
+              <Center flexDirection="column">
+                <Text>{t('setup.next')}</Text>
+              </Center>
+            </Button>
+          </NextLink>
+        </Center>
+      ) : null}
     </Container>
   )
 }

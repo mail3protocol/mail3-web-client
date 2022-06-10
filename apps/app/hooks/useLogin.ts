@@ -29,10 +29,12 @@ export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
   return useCallback((info: LoginInfo) => {
     const now = dayjs()
-    setCookie(COOKIE_KEY, info, {
+    const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-    })
+      secure: process.env.NODE_ENV === 'production',
+    }
+    setCookie(COOKIE_KEY, info, option)
   }, [])
 }
 
@@ -59,7 +61,7 @@ export const useLogin = () => {
   )
 }
 
-function parseCookies(req?: IncomingMessage) {
+export function parseCookies(req?: IncomingMessage) {
   try {
     const cookies = universalCookie.parse(
       req ? req.headers.cookie || '' : document.cookie
@@ -88,6 +90,7 @@ export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.Home,
   RoutePath.WhiteList,
+  RoutePath.Testing,
 ])
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
@@ -105,7 +108,7 @@ export const useSetGlobalTrack = () => {
         const api = new API(account, jwt)
         const [{ data: userInfo }, { data: aliases }] = await Promise.all([
           api.getUserInfo(),
-          api.getAliaes(),
+          api.getAliases(),
         ])
         let sigStatus: SignatureStatus = SignatureStatus.OnlyText
         if (
@@ -129,12 +132,17 @@ export const useSetGlobalTrack = () => {
         ) {
           sigStatus = SignatureStatus.BothDisabled
         }
+        const defaultAddress =
+          aliases.aliases.find((a) => a.is_default)?.address || account
         const config = {
+          defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
           [GlobalDimensions.ConnectedWalletName]: walletName,
           [GlobalDimensions.WalletAddress]: account,
           [GlobalDimensions.SignatureStatus]: sigStatus,
           crm_id: account,
+          text_signature: userInfo.text_signature,
+          aliases: aliases.aliases,
         }
         try {
           gtag?.('set', 'user_properties', config)

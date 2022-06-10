@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
+import { Box } from '@chakra-ui/react'
 import Mascot1Svg from '../../assets/mascot/1.svg'
 import Mascot2Svg from '../../assets/mascot/2.svg'
 import Mascot3Svg from '../../assets/mascot/3.svg'
@@ -67,6 +68,29 @@ export const Mascot: React.FC<{
     1: <Mascot1 />,
     2: <Mascot2 />,
     3: <Mascot3 />,
+  }
+  return imageMap[imageIndex]
+}
+
+export const MascotSvg: React.FC<{
+  imageIndex?: 1 | 2 | 3
+}> = ({ imageIndex = 1 }) => {
+  const imageMap = {
+    1: (
+      <Box w="98px" mt="48px">
+        <Mascot1Svg />
+      </Box>
+    ),
+    2: (
+      <Box w="194px" mt="40px">
+        <Mascot2Svg />
+      </Box>
+    ),
+    3: (
+      <Box w="107px" mt="48px">
+        <Mascot3Svg />
+      </Box>
+    ),
   }
   return imageMap[imageIndex]
 }

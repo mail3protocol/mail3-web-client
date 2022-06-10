@@ -3,7 +3,7 @@ import { Box, Center, Link } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { TrackEvent, useTrackClick } from 'hooks'
-import { WHITE_LIST_URL } from '../../constants/env'
+import { TESTING_URL } from '../../constants/env'
 
 export const RainbowBarContainer = styled(Center)`
   background: linear-gradient(
@@ -31,7 +31,7 @@ export const RainbowBarContainer = styled(Center)`
 
 export const RainbowBar: React.FC = () => {
   const { t } = useTranslation('index')
-  const trackJoinWhitelist = useTrackClick(TrackEvent.HomeClickJoinWhiteList)
+  const trackTesting = useTrackClick(TrackEvent.HomeClickTestingGo)
   return (
     <RainbowBarContainer
       minH="44px"
@@ -46,15 +46,16 @@ export const RainbowBar: React.FC = () => {
       }}
     >
       <Box>
-        {t('heading-banner-text.white-list')}
+        {t('heading-banner-text.testing')}
         <Link
           fontWeight="bold"
           textDecoration="underline"
           display="inline-block"
-          href={WHITE_LIST_URL}
-          onClick={() => trackJoinWhitelist()}
+          ml="8px"
+          href={TESTING_URL}
+          onClick={() => trackTesting()}
         >
-          {t('join')}
+          {t('go')}
         </Link>
       </Box>
     </RainbowBarContainer>

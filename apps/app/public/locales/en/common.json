@@ -4,11 +4,11 @@
         "sent": "Sent",
         "drafts": "Drafts",
         "trash": "Trash",
-        "subscriptions": "Subscriptions",
+        "subscriptions": "Subscription",
         "other-stuff": "Other Stuff",
         "settings": "Settings",
         "profile": "Web3 Profile",
-        "copy-address": "Copy Address",
+        "copy-address": "Copy Mail Address",
         "change-wallet": "Change Wallet",
         "copied": "Copied"
     },
@@ -38,5 +38,10 @@
             "unknown": "Unknown error, please try again later",
             "condition-not-meet": "You do not have permission to participate in Beta testing."
         }
+    },
+    "button": {
+        "btn-write": "write",
+        "yes": "Yes",
+        "cancel": "Cancel"
     }
 }
