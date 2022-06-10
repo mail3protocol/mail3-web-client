@@ -1,6 +1,7 @@
-import { Box, Image, Skeleton } from '@chakra-ui/react'
+import { Box, Image, ImageProps, Skeleton } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import React from 'react'
+
 import { useAPI } from '../../../hooks/useAPI'
 
 type AttachmentData = {
@@ -15,7 +16,7 @@ type AttachmentData = {
 interface AttachmentImageProps {
   messageId: string
   attachments: AttachmentData[]
-  cid: string
+  attribs: Record<string, string>
 }
 
 const findId = (arr: AttachmentData[], cid: string) => {
@@ -34,9 +35,10 @@ const findId = (arr: AttachmentData[], cid: string) => {
 export const AttachmentImage: React.FC<AttachmentImageProps> = ({
   attachments,
   messageId,
-  cid,
+  attribs,
 }) => {
   const api = useAPI()
+  const { src: cid, width, height, style, alt } = attribs
 
   const {
     isLoading,
@@ -59,8 +61,7 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
       refetchOnWindowFocus: false,
     }
   )
-
-  if (isLoading)
+  if (isLoading || !src)
     return <Skeleton width="200px" height="200px" isLoaded={false} />
 
   if (isError)
@@ -70,9 +71,9 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
       </Box>
     )
 
-  return (
-    <Box>
-      <Image src={src} />
-    </Box>
-  )
+  const imgProps: ImageProps = {}
+  if (width) imgProps.width = width
+  if (height) imgProps.height = height
+
+  return <Image src={src} alt={alt} {...imgProps} css={style} />
 }

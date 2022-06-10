@@ -56,6 +56,15 @@ const Container = styled(Box)`
     padding: 0px;
     margin: 20px auto 130px;
   }
+
+  p {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  img {
+    display: inline;
+  }
 `
 
 export const PreviewComponent: React.FC = () => {
