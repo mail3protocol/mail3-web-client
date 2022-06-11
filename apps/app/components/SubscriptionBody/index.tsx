@@ -186,7 +186,7 @@ export const SubscriptionBody: React.FC = () => {
     <Box color="#000">
       <Box lineHeight="30px" textAlign={{ base: 'left', md: 'center' }}>
         <Box fontWeight="700" fontSize={{ base: '16px', md: '28px' }}>
-          Coming soon：
+          Coming soon
         </Box>
         <Box fontWeight="300" fontSize={{ base: '14px', md: '20px' }}>
           Subscribe to your favorite authors and you&apos;ll receive a curated

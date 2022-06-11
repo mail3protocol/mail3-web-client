@@ -46,12 +46,13 @@ const HStackContainer = styled(HStack)`
 
   .box-cur::before {
     content: '';
-    bottom: 0;
+    bottom: -5px;
     left: 50%;
     transform: translateX(-50%);
     position: absolute;
-    height: 3px;
-    width: 60px;
+    height: 4px;
+    width: 100%;
+    border-radius: 10px;
     background-color: #000;
   }
 `
