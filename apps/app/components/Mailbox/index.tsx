@@ -173,26 +173,10 @@ const Item: React.FC<BoxItemProps> = ({
   ) {
     AvatarBox = (
       <Flex w="48px">
-        <Avatar
-          cursor="pointer"
-          address={removeMailSuffix(avatarList[0].address)}
-          w="48px"
-          h="48px"
-          showBorder
-          onClick={(e) => {
-            e.stopPropagation()
-            if (onClickAvatar) onClickAvatar(index, id)
-            if (setIsChooseMode) setIsChooseMode(true)
-            return false
-          }}
-          borderRadius="50%"
-          transform={avatarList.length > 1 ? 'translateX(-20%)' : ''}
-        />
-
-        {avatarList.length === 2 ? (
+        <Box transform={avatarList.length > 1 ? 'translateX(-20%)' : ''}>
           <Avatar
             cursor="pointer"
-            address={removeMailSuffix(avatarList[1].address)}
+            address={removeMailSuffix(avatarList[0].address)}
             w="48px"
             h="48px"
             showBorder
@@ -203,8 +187,26 @@ const Item: React.FC<BoxItemProps> = ({
               return false
             }}
             borderRadius="50%"
-            transform="translateX(-80%)"
           />
+        </Box>
+
+        {avatarList.length === 2 ? (
+          <Box transform="translateX(-80%)">
+            <Avatar
+              cursor="pointer"
+              address={removeMailSuffix(avatarList[1].address)}
+              w="48px"
+              h="48px"
+              showBorder
+              onClick={(e) => {
+                e.stopPropagation()
+                if (onClickAvatar) onClickAvatar(index, id)
+                if (setIsChooseMode) setIsChooseMode(true)
+                return false
+              }}
+              borderRadius="50%"
+            />
+          </Box>
         ) : null}
 
         {avatarList.length > 2 ? (
