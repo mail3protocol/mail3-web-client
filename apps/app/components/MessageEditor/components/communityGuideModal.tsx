@@ -80,7 +80,7 @@ export const CommunityGuideModal: React.FC<{
                 }}
               >
                 <Box
-                  flex={1}
+                  flex={0}
                   fontSize="16px"
                   textAlign="center"
                   maxW="400px"
@@ -115,7 +115,13 @@ export const CommunityGuideModal: React.FC<{
                 overflowY="hidden"
                 direction={{ base: 'column', md: 'column-reverse' }}
               >
-                <Box fontSize="16px" textAlign="center" maxW="400px" mx="auto">
+                <Box
+                  fontSize="16px"
+                  textAlign="center"
+                  maxW="400px"
+                  mx="auto"
+                  flex={0}
+                >
                   {t('community_guide_modal.text.2')}
                 </Box>
                 <Image

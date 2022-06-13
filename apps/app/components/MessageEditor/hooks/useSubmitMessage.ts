@@ -51,6 +51,7 @@ export function useSubmitMessage() {
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
+    window.scroll(0, 0)
     setIsLoading(true)
     let html = getHTML()
     if (isEnableCardSignature) {
@@ -77,8 +78,6 @@ export function useSubmitMessage() {
           .concat(imageAttachments),
       })
       await removeDraft(api)
-      onReset()
-      await router.push(RoutePath.Sent)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
         textProps: {
@@ -91,6 +90,8 @@ export function useSubmitMessage() {
       })
       console.error({ err })
     } finally {
+      onReset()
+      await router.push(RoutePath.Sent)
       setIsLoading(false)
     }
   }
