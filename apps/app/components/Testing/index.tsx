@@ -197,6 +197,25 @@ export const Testing: React.FC = () => {
         >
           {t('more-details')}
         </Link>
+        <Text as="p">
+          <Trans
+            ns="testing"
+            i18nKey="fail-desc-2"
+            t={t}
+            components={{
+              a: (
+                <Link
+                  isExternal
+                  href={DISCORD_URL}
+                  onClick={() => trackDiscordLink()}
+                  color="#4E52F5"
+                  textDecoration="underline"
+                  fontWeight={700}
+                />
+              ),
+            }}
+          />
+        </Text>
       </>
     )
   }, [mascotIndex])

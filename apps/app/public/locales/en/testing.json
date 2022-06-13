@@ -1,8 +1,9 @@
 {
-    "title": "Mail3 Beta is openning now 🔥",
-    "not-connected-desc": "Connect wallet to see if you are on the whitelist and eligible to access the Beta",
-    "success-desc": "Congratulations! 🎉 you are qualified for the beta access to Mail3.",
-    "fail-desc": "😔 Sorry you are not qualified to access beta now.",
+    "title": "Mail3 Beta is opening now \uD83D\uDD25",
+    "not-connected-desc": "Connect wallet to see if you are eligible to access the Beta",
+    "success-desc": "Congratulations! \uD83C\uDF89 you are qualified for the beta access to Mail3.",
+    "fail-desc": "\uD83D\uDE14 Sorry you are not qualified.",
+    "fail-desc-2": "Join our <a>Discord</a>! We will randomly reward Beta slots to community member ",
     "more-details": "More Details",
     "discord-desc": "We invite you to join our <a>Discord</a> to get beta access.",
     "discord": "Join Discord",
