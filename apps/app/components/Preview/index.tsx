@@ -56,7 +56,9 @@ const Container = styled(Box)`
     padding: 0px;
     margin: 20px auto 130px;
   }
+`
 
+const PreviewContent = styled(Box)`
   p {
     margin-top: 15px;
     margin-bottom: 15px;
@@ -64,6 +66,11 @@ const Container = styled(Box)`
 
   img {
     display: inline;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #3182ce;
   }
 `
 
@@ -437,14 +444,14 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          <Box className="preview-mail-content">
+          <PreviewContent>
             <RenderHTML
               html={content}
               attachments={detail.attachments}
               messageId={id}
               from={detail.from}
             />
-          </Box>
+          </PreviewContent>
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
