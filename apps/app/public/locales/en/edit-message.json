@@ -1,0 +1,34 @@
+{
+    "title": "New Message",
+    "from": "From",
+    "community": "Community",
+    "cc": "CC",
+    "bcc": "BCC",
+    "subject": "Subject",
+    "save": "Save",
+    "send": "Send",
+    "attach_files": "Attach files",
+    "add_attach_files": "+ Add",
+    "add_link": "Add Link",
+    "cancel": "Cancel",
+    "ok": "Ok",
+    "community_guide_modal": {
+        "title": "You’ve found a super cool feature!",
+        "text": {
+            "1": "1. Customize your audience by specific tokens, send direct mails to them in bulk.",
+            "2": "2. Push the project updates, DAO voting messages, and private information to the target users accurately."
+        },
+        "next": "Next"
+    },
+    "Apply to become a beta user": "Apply to become a beta user",
+    "You will have the possibility to experience this cool feature for the first time.": "You will have the possibility to experience this cool feature for the first time.",
+    "apply": "Apply",
+    "no_thanks": "No, Thanks",
+    "file_size_up_to": "File size up to {{size}}",
+    "file_over_title": "Files exceeds size",
+    "draft": {
+        "saved": "Draft Saved",
+        "failed": "Draft Save Failed"
+    },
+    "succeeded": "succeeded"
+}

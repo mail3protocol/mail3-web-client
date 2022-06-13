@@ -29,10 +29,12 @@ export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
   return useCallback((info: LoginInfo) => {
     const now = dayjs()
-    setCookie(COOKIE_KEY, info, {
+    const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-    })
+      secure: process.env.NODE_ENV === 'production',
+    }
+    setCookie(COOKIE_KEY, info, option)
   }, [])
 }
 
@@ -59,7 +61,7 @@ export const useLogin = () => {
   )
 }
 
-function parseCookies(req?: IncomingMessage) {
+export function parseCookies(req?: IncomingMessage) {
   try {
     const cookies = universalCookie.parse(
       req ? req.headers.cookie || '' : document.cookie
@@ -88,12 +90,41 @@ export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.Home,
   RoutePath.WhiteList,
+  RoutePath.Testing,
 ])
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
   'mail3_user_properties',
   null
 )
+
+export function getSigStatus<
+  T extends {
+    card_sig_state: 'enabled' | 'disabled'
+    text_sig_state: 'enabled' | 'disabled'
+  }
+>(info: T): SignatureStatus {
+  let sigStatus: SignatureStatus = SignatureStatus.OnlyText
+  if (info.card_sig_state === 'enabled' && info.text_sig_state === 'enabled') {
+    sigStatus = SignatureStatus.BothEnabled
+  } else if (
+    info.card_sig_state === 'enabled' &&
+    info.text_sig_state === 'disabled'
+  ) {
+    sigStatus = SignatureStatus.OnlyImage
+  } else if (
+    info.card_sig_state === 'disabled' &&
+    info.text_sig_state === 'enabled'
+  ) {
+    sigStatus = SignatureStatus.OnlyText
+  } else if (
+    info.card_sig_state === 'disabled' &&
+    info.text_sig_state === 'disabled'
+  ) {
+    sigStatus = SignatureStatus.BothDisabled
+  }
+  return sigStatus
+}
 
 export const useSetGlobalTrack = () => {
   const account = useAccount()
@@ -105,36 +136,20 @@ export const useSetGlobalTrack = () => {
         const api = new API(account, jwt)
         const [{ data: userInfo }, { data: aliases }] = await Promise.all([
           api.getUserInfo(),
-          api.getAliaes(),
+          api.getAliases(),
         ])
-        let sigStatus: SignatureStatus = SignatureStatus.OnlyText
-        if (
-          userInfo.card_sig_state === 'enabled' &&
-          userInfo.text_sig_state === 'enabled'
-        ) {
-          sigStatus = SignatureStatus.BothEnabled
-        } else if (
-          userInfo.card_sig_state === 'enabled' &&
-          userInfo.text_sig_state === 'disabled'
-        ) {
-          sigStatus = SignatureStatus.OnlyImage
-        } else if (
-          userInfo.card_sig_state === 'disabled' &&
-          userInfo.text_sig_state === 'enabled'
-        ) {
-          sigStatus = SignatureStatus.OnlyText
-        } else if (
-          userInfo.card_sig_state === 'disabled' &&
-          userInfo.text_sig_state === 'disabled'
-        ) {
-          sigStatus = SignatureStatus.BothDisabled
-        }
+        const sigStatus = getSigStatus(userInfo)
+        const defaultAddress =
+          aliases.aliases.find((a) => a.is_default)?.address || account
         const config = {
+          defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
           [GlobalDimensions.ConnectedWalletName]: walletName,
           [GlobalDimensions.WalletAddress]: account,
           [GlobalDimensions.SignatureStatus]: sigStatus,
           crm_id: account,
+          text_signature: userInfo.text_signature,
+          aliases: aliases.aliases,
         }
         try {
           gtag?.('set', 'user_properties', config)

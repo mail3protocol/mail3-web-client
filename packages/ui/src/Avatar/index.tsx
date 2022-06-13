@@ -14,8 +14,8 @@ import BoringAvatar from 'boring-avatars'
 export interface AvatarProps extends RawAvatarProps {
   address: string
   skeletonProps?: SkeletonProps
-  w: LayoutProps['w']
-  h: LayoutProps['h']
+  w?: LayoutProps['w']
+  h?: LayoutProps['h']
   isSquare?: boolean
 }
 
@@ -53,11 +53,12 @@ export const Avatar: React.FC<AvatarProps> = ({
   size,
   skeletonProps,
   isSquare,
+  onClick,
   ...props
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
   const avatar = avatars?.[address]
-  const width = props?.w as string
+  const width = props?.w
   const { isLoading } = useQuery(
     ['avatar', address],
     async () =>
@@ -100,12 +101,14 @@ export const Avatar: React.FC<AvatarProps> = ({
         maxH={width}
         borderRadius={isSquare ? undefined : '50%'}
         overflow="hidden"
+        onClick={onClick}
+        cursor={onClick ? 'pointer' : undefined}
       >
         <BoringAvatar
           name={address.toLowerCase()}
           variant="marble"
           square
-          size={width}
+          size="100%"
           colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
         />
       </WrapItem>
@@ -115,6 +118,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         borderRadius={isSquare ? 2 : 0}
         size={size}
         ignoreFallback
+        onClick={onClick}
         {...props}
       />
     )
@@ -134,6 +138,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       src={avatar}
       size={size}
       ignoreFallback
+      onClick={onClick}
       {...props}
     />
   )

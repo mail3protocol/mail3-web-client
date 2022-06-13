@@ -4,8 +4,11 @@ export const SERVER_URL =
 export const MAIL_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
 
+export const COOKIE_DOMAIN =
+  process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.mail3.me'
+
 export const DISCORD_URL =
-  process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/J3ac6YcXUU'
+  process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
 
 export const TWITTER_URL =
   process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com/mail3dao'
@@ -19,4 +22,4 @@ export const GOOGLE_ANALYTICS_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 
 export const MORE_DETAILS_LINK =
   process.env.NEXT_PUBLIC_MORE_DETAILS_LINK ||
-  'https://mirror.xyz/mail3.eth/S-gyy6mI6GpCfJLoGcZgYqBLkVWaU6uE0xP5Svpr3J8'
+  'https://feather-amaryllis-11e.notion.site/Mail3-Beta-Access-43c1bf8f21ff443ca3ca4b6f1119e0b8'

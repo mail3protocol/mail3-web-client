@@ -17,7 +17,13 @@ import LogoSvg from 'assets/svg/logo-pure.svg'
 import DownTriangleSvg from 'assets/svg/triangle-down.svg'
 import { useTranslation } from 'next-i18next'
 import { ConnectWallet } from 'ui'
-import { useAccount } from 'hooks'
+import {
+  Mail3MenuItem,
+  TrackEvent,
+  TrackKey,
+  useAccount,
+  useTrackClick,
+} from 'hooks'
 import InboxWhiteSvg from '../../assets/inbox-white.svg'
 import DraftSvg from '../../assets/drafts.svg'
 import TrashSvg from '../../assets/trash.svg'
@@ -41,21 +47,31 @@ const LogoButton = styled(Button)`
 
 const Logo = () => {
   const [t] = useTranslation('common')
+  const trackMenuClick = useTrackClick(TrackEvent.ClickMail3Menu)
   const btns: ButtonListItemProps[] = [
     {
       href: RoutePath.Drafts,
       label: t('navbar.drafts'),
       icon: <DraftSvg />,
+      onClick() {
+        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Drafts })
+      },
     },
     {
       href: RoutePath.Sent,
       label: t('navbar.sent'),
       icon: <SentSvg />,
+      onClick() {
+        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Sent })
+      },
     },
     {
       href: RoutePath.Trash,
       label: t('navbar.trash'),
       icon: <TrashSvg />,
+      onClick() {
+        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Trash })
+      },
     },
   ]
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -97,6 +113,11 @@ const Logo = () => {
                 height="66px"
                 borderRadius="16px"
                 flex="1"
+                onClick={() =>
+                  trackMenuClick({
+                    [TrackKey.Mail3MenuItem]: Mail3MenuItem.Inbox,
+                  })
+                }
                 _hover={{
                   bg: 'brand.50',
                 }}
@@ -115,6 +136,11 @@ const Logo = () => {
                 borderRadius="16px"
                 bg="white"
                 height="66px"
+                onClick={() =>
+                  trackMenuClick({
+                    [TrackKey.Mail3MenuItem]: Mail3MenuItem.Subscription,
+                  })
+                }
                 border="1px solid black"
                 _hover={{
                   bg: '#E7E7E7',

@@ -18,10 +18,12 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useCallback, useState } from 'react'
 import { Button, CardSignature } from 'ui'
-import { useAccount, useDialog } from 'hooks'
+import { GlobalDimensions, useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
 import { useObservableCallback, useSubscription } from 'observable-hooks'
 import { pluck, debounceTime, tap } from 'rxjs/operators'
+import { useRouter } from 'next/router'
+import { useUpdateAtom } from 'jotai/utils'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -29,6 +31,7 @@ import unhappySetupMascot from '../../assets/unhappy-setup-mascot.png'
 import EditSvg from '../../assets/edit.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
+import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -107,11 +110,29 @@ export const SettingSignature: React.FC = () => {
     }
   )
   const toast = useToast()
+  const setUserInfo = useUpdateAtom(userPropertiesAtom)
+  const onChangeSignStatus = () => {
+    const sigStatus = getSigStatus({
+      card_sig_state: isCardEnable ? 'enabled' : 'disabled',
+      text_sig_state: isTextEnable ? 'enabled' : 'disabled',
+    })
+    setUserInfo((prev) => ({
+      ...prev,
+      [GlobalDimensions.SignatureStatus]: sigStatus,
+    }))
+  }
+  const onChangeSignText = (v: string) => {
+    setUserInfo((prev) => ({
+      ...prev,
+      text_signature: v,
+    }))
+  }
 
   const onTextEnableSubscription = useCallback(async () => {
     const prevValue = isTextEnable
     try {
       await api.toggleTextSignature()
+      await onChangeSignStatus()
     } catch (error: any) {
       toast(error?.message)
       setIsTextEnable(prevValue)
@@ -137,6 +158,7 @@ export const SettingSignature: React.FC = () => {
     const prevValue = isCardEnable
     try {
       await api.toggleCardSignature()
+      onChangeSignStatus()
     } catch (error: any) {
       toast(error?.message)
       setIsCardEnable(prevValue)
@@ -167,6 +189,7 @@ export const SettingSignature: React.FC = () => {
     async (v: string) => {
       try {
         await api.setTextSignature(v)
+        onChangeSignText(v)
       } catch (error: any) {
         toast(error?.message)
       }
@@ -175,7 +198,7 @@ export const SettingSignature: React.FC = () => {
   )
 
   useSubscription(onTextareaChange$, onTextSignatureChange)
-
+  const router = useRouter()
   return (
     <Container>
       <Stack
@@ -293,25 +316,27 @@ export const SettingSignature: React.FC = () => {
           />
         </Flex>
       )}
-      <Center className="footer" w="full">
-        <NextLink href={RoutePath.Inbox} passHref>
-          <Button
-            bg="black"
-            color="white"
-            w="250px"
-            height="50px"
-            _hover={{
-              bg: 'brand.50',
-            }}
-            as="a"
-            rightIcon={<ChevronRightIcon color="white" />}
-          >
-            <Center flexDirection="column">
-              <Text>{t('setup.next')}</Text>
-            </Center>
-          </Button>
-        </NextLink>
-      </Center>
+      {router.pathname !== RoutePath.SettingSignature ? (
+        <Center className="footer" w="full">
+          <NextLink href={RoutePath.Inbox} passHref>
+            <Button
+              bg="black"
+              color="white"
+              w="250px"
+              height="50px"
+              _hover={{
+                bg: 'brand.50',
+              }}
+              as="a"
+              rightIcon={<ChevronRightIcon color="white" />}
+            >
+              <Center flexDirection="column">
+                <Text>{t('setup.next')}</Text>
+              </Center>
+            </Button>
+          </NextLink>
+        </Center>
+      ) : null}
     </Container>
   )
 }

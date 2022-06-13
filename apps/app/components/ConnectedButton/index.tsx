@@ -10,8 +10,17 @@ import {
 } from '@chakra-ui/react'
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'next-i18next'
+import { useAtomValue } from 'jotai'
 import React, { useMemo, useRef, useState } from 'react'
-import { useConnectWalletDialog, useDidMount, useToast } from 'hooks'
+import {
+  PersonnalCenter,
+  TrackEvent,
+  TrackKey,
+  useConnectWalletDialog,
+  useDidMount,
+  useToast,
+  useTrackClick,
+} from 'hooks'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { RoutePath } from '../../route/path'
@@ -19,8 +28,8 @@ import SetupSvg from '../../assets/setup.svg'
 import ProfileSvg from '../../assets/profile.svg'
 import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
-import { copyText } from '../../utils'
-import { MAIL_SERVER_URL } from '../../constants'
+import { copyText, truncateMiddle } from '../../utils'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
@@ -28,24 +37,34 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const toast = useToast()
   const popoverRef = useRef<HTMLElement>(null)
   const { onOpen } = useConnectWalletDialog()
+  const userProps = useAtomValue(userPropertiesAtom)
+  const trackItem = useTrackClick(TrackEvent.ClickPersonalCenter)
   const btns: ButtonListItemProps[] = useMemo(
     () => [
       {
-        href: RoutePath.Settings,
+        href: RoutePath.SettingSignature,
         label: t('navbar.settings'),
         icon: <SetupSvg />,
+        onClick() {
+          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Settings })
+        },
       },
       {
         href: `https://mail3.me/${address}`,
         label: t('navbar.profile'),
         icon: <ProfileSvg />,
         isExternal: true,
+        onClick() {
+          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Profile })
+        },
       },
       {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
-          await copyText(`${address.toLowerCase()}@${MAIL_SERVER_URL}`)
+          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
+          const addr = userProps?.defaultAddress || address
+          await copyText(addr)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
         },
@@ -54,11 +73,14 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.change-wallet'),
         icon: <ChangeWalletSvg />,
         onClick() {
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.ChangeWallet,
+          })
           onOpen()
         },
       },
     ],
-    [address]
+    [address, userProps]
   )
 
   const [mounted, setMounted] = useState(false)
@@ -66,6 +88,15 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   useDidMount(() => {
     setMounted(true)
   })
+
+  const addr = useMemo(() => {
+    const defaultAddress = userProps?.defaultAddress
+    if (defaultAddress) {
+      const [a, url] = defaultAddress.split('@')
+      return `${truncateMiddle(a, 6, 4)}@${url}`
+    }
+    return emailAddress
+  }, [userProps, emailAddress])
 
   if (!mounted) {
     return null
@@ -87,7 +118,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
               </Box>
             </PopoverAnchor>
             <Text ml="6px" fontSize="12px" fontWeight="normal">
-              {emailAddress}
+              {addr}
             </Text>
           </Button>
         </Box>
@@ -97,7 +128,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
           boxShadow: '0px 0px 16px 12px rgba(192, 192, 192, 0.25)',
           outline: 'none',
         }}
-        w="220px"
+        w="250px"
         border="none"
         borderRadius="12px"
         boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25)"

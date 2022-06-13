@@ -2,9 +2,10 @@ import React, { useCallback } from 'react'
 import {
   useToast as useChakraToast,
   UseToastOptions,
-  Center,
   Text,
   TextProps,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react'
 
 export interface ToastOptions extends UseToastOptions {
@@ -16,29 +17,24 @@ export const useToast = () => {
   return useCallback(
     (message: React.ReactNode, options?: ToastOptions) => {
       toast.closeAll()
-      const { textProps, ...rest } = options ?? {}
+      const { textProps, position = 'top', ...rest } = options ?? {}
       toast({
-        duration: 1500,
+        duration: 2000,
+        position,
         ...rest,
         render: () => (
-          <Center
+          <Alert
+            status={options?.status ?? 'error'}
             position="relative"
-            bottom={
-              options?.position ? undefined : `${window.innerHeight / 2}px`
-            }
+            bg="white"
+            borderRadius="22px"
+            boxShadow="0px 0px 10px 4px rgb(25 25 100 / 10%)"
           >
-            <Text
-              borderRadius="16px"
-              px="40px"
-              py="10px"
-              fontSize="16px"
-              color="white"
-              bg="rgba(51, 51, 51, 0.7)"
-              {...textProps}
-            >
+            <AlertIcon color="black" />
+            <Text fontSize="16px" {...textProps}>
               {message}
             </Text>
-          </Center>
+          </Alert>
         ),
       })
     },
