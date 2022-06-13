@@ -192,10 +192,10 @@ export const SettingAddress: React.FC = () => {
         if (isEthAddress(a.address)) {
           return -1
         }
-        if (a.address > b.address) {
+        if (a.address < b.address) {
           return -1
         }
-        if (a.address < b.address) {
+        if (a.address > b.address) {
           return 1
         }
         return 0
