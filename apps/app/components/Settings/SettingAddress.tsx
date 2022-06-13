@@ -33,7 +33,7 @@ import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { truncateMiddle } from '../../utils'
+import { isEthAddress, truncateMiddle } from '../../utils'
 import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
@@ -188,7 +188,18 @@ export const SettingAddress: React.FC = () => {
 
   const aliases = useMemo(() => {
     if (ensNames?.aliases) {
-      return ensNames?.aliases
+      return ensNames?.aliases.sort((a, b) => {
+        if (isEthAddress(a.address)) {
+          return -1
+        }
+        if (a.address > b.address) {
+          return -1
+        }
+        if (a.address < b.address) {
+          return 1
+        }
+        return 0
+      })
     }
     return []
   }, [ensNames])
