@@ -80,12 +80,13 @@ export const PreviewComponent: React.FC = () => {
   const api = useAPI()
   const dialog = useDialog()
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
-
+  const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
+  const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const { data } = useQuery(
     ['preview', id],
     async () => {
       if (typeof id !== 'string') return {}
-      const { data: messageData } = await api.getMessageData(id)
+      const { data: messageData } = await api.getMessageInfo(id)
       const { data: textData } = await api.getTextData(messageData.text.id)
 
       return {
@@ -97,8 +98,23 @@ export const PreviewComponent: React.FC = () => {
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      onSuccess() {
+      onSuccess(d) {
         if (typeof id !== 'string') return
+        const messageInfo = d.messageData
+        if (messageInfo?.unseen) {
+          if (
+            messageInfo.from.address.startsWith('mail3dao.eth') &&
+            messageInfo.subject.startsWith('Join Mail3 DAO!')
+          ) {
+            trackJoinDao()
+          }
+          if (
+            messageInfo.from.address.startsWith('mail3.eth') &&
+            messageInfo.subject.startsWith('Show your mail3')
+          ) {
+            trackShowYourNft()
+          }
+        }
         api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
       },
       enabled: typeof id === 'string',
@@ -106,7 +122,7 @@ export const PreviewComponent: React.FC = () => {
   )
 
   const detail: MeesageDetailState | undefined = useMemo(() => {
-    if (data) {
+    if (data?.messageData) {
       const { messageData } = data
       const { date, subject, to, cc, from, attachments, bcc } = messageData
 
