@@ -9,6 +9,10 @@ export enum TrackEvent {
   // navbar
   ClickPersonalCenter = 'click_personalcenter',
   ClickMail3Menu = 'click_mail3_menu',
+
+  // mail tracking
+  OpenJoinMail3Dao = 'open_join_mail3_dao',
+  OpenShowYourMail3NFT = 'open_show_your_mail3_nft',
   // connect wallet
   ConnectWallet = 'Mail3_app_home_click_connectwallet',
 
