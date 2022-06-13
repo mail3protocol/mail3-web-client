@@ -13,10 +13,10 @@
     "cancel": "Cancel",
     "ok": "Ok",
     "community_guide_modal": {
-        "title": "Congratulations!\nYou've found a super cool feature. ",
+        "title": "You’ve found a super cool feature!",
         "text": {
-            "1": "1. You can customize your email audience \nthrough filters to achieve precise push",
-            "2": "2. New feature notifications, DAO voting, \nand sales withdrawals, anything is possible"
+            "1": "1. Customize your audience by specific tokens, send direct mails to them in bulk.",
+            "2": "2. Push the project updates, DAO voting messages, and private information to the target users accurately."
         },
         "next": "Next"
     },
