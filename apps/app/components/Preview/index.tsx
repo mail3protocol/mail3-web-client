@@ -239,7 +239,7 @@ export const PreviewComponent: React.FC = () => {
         })
         if (typeof id !== 'string') return
         try {
-          await api.moveMessage(id)
+          await api.moveMessage(id, Mailboxes.INBOX)
           toast(t('status.restore.ok'))
           router.replace(`${RoutePath.Message}/${id}`)
         } catch (error) {
