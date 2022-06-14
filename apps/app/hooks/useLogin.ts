@@ -24,6 +24,7 @@ import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID } from '../constants'
+import { useEmailAddress } from './useEmailAddress'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -130,6 +131,7 @@ export const useSetGlobalTrack = () => {
   const account = useAccount()
   const walletName = useLastConectorName()
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  const emailAddress = useEmailAddress()
   return useCallback(
     async (jwt: string) => {
       try {
@@ -140,7 +142,7 @@ export const useSetGlobalTrack = () => {
         ])
         const sigStatus = getSigStatus(userInfo)
         const defaultAddress =
-          aliases.aliases.find((a) => a.is_default)?.address || account
+          aliases.aliases.find((a) => a.is_default)?.address || emailAddress
         const config = {
           defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
@@ -164,7 +166,7 @@ export const useSetGlobalTrack = () => {
         // todo sentry
       }
     },
-    [account, walletName]
+    [account, walletName, emailAddress]
   )
 }
 
