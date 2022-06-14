@@ -99,6 +99,17 @@ export interface UserResponse {
   card_sig_state: 'enabled' | 'disabled'
 }
 
+interface putMessageResponse {
+  flags: { add: boolean; delete: boolean; set: boolean }
+  labels: { add: boolean; delete: boolean; set: boolean }
+}
+
+interface moveMessageResponse {
+  path: Mailboxes
+  id: string
+  uid: number
+}
+
 export class API {
   private account: string
 
@@ -198,9 +209,10 @@ export class API {
     )
   }
 
-  public async getMailboxes(): Promise<AxiosResponse<void>> {
-    return this.axios.get('/mailbox/account/mailboxes')
-  }
+  // Lists all available mailboxes, not use for now.
+  // public async getMailboxes(): Promise<AxiosResponse<void>> {
+  //   return this.axios.get('/mailbox/account/mailboxes')
+  // }
 
   public async getMailboxesMessages(
     path: string,
@@ -258,30 +270,11 @@ export class API {
     })
   }
 
-  public async getMessageData(messageId: string): Promise<AxiosResponse<any>> {
-    return this.axios.get(`/mailbox/account/message/${messageId}`)
-  }
-
-  public async getTextData(textId: string): Promise<AxiosResponse<any>> {
-    return this.axios.get(`/mailbox/account/text/${textId}`)
-  }
-
-  public async deleteMessage2(
-    messageId: string,
-    isForce = false
-  ): Promise<AxiosResponse> {
-    return this.axios.delete(`/mailbox/account/message/${messageId}`, {
-      data: {
-        force: isForce,
-      },
-    })
-  }
-
   public async putMessage(
     messageId: string,
     action: MessageFlagAction,
     flagType: MessageFlagType
-  ): Promise<AxiosResponse<any>> {
+  ): Promise<AxiosResponse<putMessageResponse>> {
     return this.axios.put(`/mailbox/account/message/${messageId}`, {
       flags: {
         [action]: [flagType],
@@ -289,16 +282,19 @@ export class API {
     })
   }
 
-  public async moveMessage(messageId: string): Promise<AxiosResponse<any>> {
+  public async moveMessage(
+    messageId: string,
+    path: Mailboxes
+  ): Promise<AxiosResponse<moveMessageResponse>> {
     return this.axios.put(`/mailbox/account/message/${messageId}/move`, {
-      path: Mailboxes.INBOX,
+      path,
     })
   }
 
   public async batchDeleteMessage(
     ids: string[],
     isForce?: boolean
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<void>> {
     return this.axios.post('/mailbox/account/messages/batch_delete', {
       messageIds: ids,
       force: isForce,
@@ -308,7 +304,7 @@ export class API {
   public async downloadAttachment(
     messageId: string,
     attachmentId: string
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<Blob>> {
     return this.axios.get(`/mailbox/account/attachment/${attachmentId}`, {
       params: {
         messageId,

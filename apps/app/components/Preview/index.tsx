@@ -93,12 +93,12 @@ export const PreviewComponent: React.FC = () => {
     ['preview', id],
     async () => {
       if (typeof id !== 'string') return {}
-      const { data: messageData } = await api.getMessageInfo(id)
-      const { data: textData } = await api.getTextData(messageData.text.id)
+      const { data: info } = await api.getMessageInfo(id)
+      const { data: content } = await api.getMessageContent(info.text.id)
 
       return {
-        messageData,
-        html: textData.html,
+        info,
+        html: content.html,
       }
     },
     {
@@ -107,7 +107,7 @@ export const PreviewComponent: React.FC = () => {
       refetchOnWindowFocus: false,
       onSuccess(d) {
         if (typeof id !== 'string') return
-        const messageInfo = d.messageData
+        const messageInfo = d.info
         if (messageInfo?.unseen) {
           if (
             messageInfo.from.address.startsWith('mail3dao.eth') &&
@@ -129,9 +129,8 @@ export const PreviewComponent: React.FC = () => {
   )
 
   const detail: MeesageDetailState | undefined = useMemo(() => {
-    if (data?.messageData) {
-      const { messageData } = data
-      const { date, subject, to, cc, from, attachments, bcc } = messageData
+    if (data?.info) {
+      const { date, subject, to, cc, from, attachments, bcc } = data.info
 
       return {
         date,
@@ -189,7 +188,7 @@ export const PreviewComponent: React.FC = () => {
           return
         }
         try {
-          await api.deleteMessage2(id)
+          await api.deleteMessage(id, { force: false })
           toast(t('status.trash.ok'), { status: 'success' })
           router.back()
         } catch (error) {
@@ -221,7 +220,7 @@ export const PreviewComponent: React.FC = () => {
           },
           onConfirm: async () => {
             try {
-              await api.deleteMessage2(id, true)
+              await api.deleteMessage(id, { force: true })
               toast(t('status.delete.ok'))
               router.back()
             } catch (error) {
@@ -240,7 +239,7 @@ export const PreviewComponent: React.FC = () => {
         })
         if (typeof id !== 'string') return
         try {
-          await api.moveMessage(id)
+          await api.moveMessage(id, Mailboxes.INBOX)
           toast(t('status.restore.ok'))
           router.replace(`${RoutePath.Message}/${id}`)
         } catch (error) {
