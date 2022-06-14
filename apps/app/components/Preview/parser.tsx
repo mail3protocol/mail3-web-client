@@ -8,7 +8,7 @@ import parse, {
 import DOMPurify from 'dompurify'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
-import { MAIL_SERVER_URL } from '../../constants'
+import { OFFICE_ADDRESS_LIST } from '../../constants'
 
 interface htmlParserProps {
   html: string
@@ -16,16 +16,6 @@ interface htmlParserProps {
   attachments: AttachmentItemResponse[] | null
   from: AddressResponse
 }
-
-const OFFICE_ADDRESS_LIST = [
-  'mail3.eth@mail3.me',
-  'mail3.eth@imibao.net',
-  'no-reply-pls.eth@mail3.me',
-  'no-reply-pls.eth@imibao.net',
-
-  `no-reply-pls.eth@${MAIL_SERVER_URL}`,
-  `mail3.eth@${MAIL_SERVER_URL}`,
-]
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
   html,

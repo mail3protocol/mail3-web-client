@@ -63,7 +63,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         icon: <CopySvg />,
         async onClick() {
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
-          const addr = userProps?.defaultAddress || address
+          const addr = userProps?.defaultAddress || emailAddress
           await copyText(addr)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
@@ -80,7 +80,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         },
       },
     ],
-    [address, userProps]
+    [address, userProps, emailAddress]
   )
 
   const [mounted, setMounted] = useState(false)
