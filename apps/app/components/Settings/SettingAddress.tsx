@@ -188,15 +188,9 @@ export const SettingAddress: React.FC = () => {
 
   const aliases = useMemo(() => {
     if (ensNames?.aliases) {
-      return ensNames?.aliases.sort((a, b) => {
+      return ensNames?.aliases.sort((a) => {
         if (isEthAddress(a.address)) {
           return -1
-        }
-        if (a.address < b.address) {
-          return -1
-        }
-        if (a.address > b.address) {
-          return 1
         }
         return 0
       })
