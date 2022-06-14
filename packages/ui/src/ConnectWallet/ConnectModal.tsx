@@ -59,8 +59,8 @@ import {
 } from 'hooks'
 import Image from 'next/image'
 import type { StaticImageData } from 'next/image'
-import { Button } from '../Button'
 import { useCookies } from 'react-cookie'
+import { Button } from '../Button'
 
 export interface ConnectModalProps {
   isOpen: boolean
