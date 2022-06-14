@@ -67,11 +67,11 @@ const PreviewContent = styled(Box)`
   img {
     display: inline;
   }
-
+  /*
   a {
     text-decoration: underline;
     color: #3182ce;
-  }
+  } */
 `
 
 export const PreviewComponent: React.FC = () => {
@@ -457,7 +457,7 @@ export const PreviewComponent: React.FC = () => {
           </Flex>
         </Box>
         <Box
-          padding={{ base: '20px 0', md: '65px 24px' }}
+          padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
           borderBottom="1px solid #ccc"
         >
           <PreviewContent>
