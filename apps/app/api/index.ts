@@ -258,25 +258,6 @@ export class API {
     })
   }
 
-  public async getMessageData(messageId: string): Promise<AxiosResponse<any>> {
-    return this.axios.get(`/mailbox/account/message/${messageId}`)
-  }
-
-  public async getTextData(textId: string): Promise<AxiosResponse<any>> {
-    return this.axios.get(`/mailbox/account/text/${textId}`)
-  }
-
-  public async deleteMessage2(
-    messageId: string,
-    isForce = false
-  ): Promise<AxiosResponse> {
-    return this.axios.delete(`/mailbox/account/message/${messageId}`, {
-      data: {
-        force: isForce,
-      },
-    })
-  }
-
   public async putMessage(
     messageId: string,
     action: MessageFlagAction,
