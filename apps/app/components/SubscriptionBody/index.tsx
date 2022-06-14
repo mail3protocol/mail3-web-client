@@ -5,7 +5,6 @@ import { atomWithStorage } from 'jotai/utils'
 import { Button } from 'ui'
 import { TrackEvent, TrackKey, useDidMount, useTrackClick } from 'hooks'
 import SubTop from '../../assets/subscription/top.png'
-import SVGVector from '../../assets/subscription/vector.svg'
 import SVGBell from '../../assets/subscription/bell.svg'
 import SVGBellCur from '../../assets/subscription/bell-cur.svg'
 
@@ -128,7 +127,6 @@ const Item = (props: ItemProps) => {
       <Avatar src={avatarSrc.src} />
       <Box>
         <Center>
-          <SVGVector />{' '}
           <Box marginLeft="5px" fontWeight="700" fontSize="18px">
             {name}
           </Box>
