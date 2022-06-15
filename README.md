@@ -1,23 +1,30 @@
-# Progressive Web App Example
+# Mail3 Web client
 
-This example uses [`next-pwa`](https://github.com/shadowwalker/next-pwa) to create a progressive web app (PWA) powered by [Workbox](https://developers.google.com/web/tools/workbox/).
+The web client of [Mail3](https://mail3.me).
 
-## Deploy your own
+## Quick start
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+### Prerequisites
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/progressive-web-app&project-name=progressive-web-app&repository-name=progressive-web-app)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+You will need node >= 14 and yarn >= 1.22 to build and run Mibao. Run command:
 
 ```bash
-npx create-next-app --example progressive-web-app progressive-web-app
-# or
-yarn create next-app --example progressive-web-app progressive-web-app
-# or
-pnpm create next-app -- --example progressive-web-app progressive-web-app
+$ yarn
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+to install dependencies.
+
+### Start local development server
+
+After Node.js and yarn has been installed, run this command to start a local development server:
+
+```bash
+# start mail.me home page
+$ yarn dev:home
+# start mail3 web client
+$ yarn dev:app
+```
+
+## License
+
+mail3-web-client is released under the terms of the Apache-2.0 license.
