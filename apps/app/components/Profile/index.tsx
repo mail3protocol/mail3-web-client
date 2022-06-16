@@ -99,7 +99,7 @@ export const ProfileComponent: React.FC = () => {
   const [t] = useTranslation('settings')
   const [t2] = useTranslation('common')
   const router = useRouter()
-  const queryAddress = router.query?.address ?? []
+  const queryAddress = router.query.address as undefined | Array<string>
 
   const userProps = useAtomValue(userPropertiesAtom)
   const emailAddress = useEmailAddress()
@@ -149,7 +149,7 @@ export const ProfileComponent: React.FC = () => {
         popoverRef?.current?.blur()
       },
     }),
-    [address]
+    [mailAddress]
   )
 
   return (
@@ -160,17 +160,20 @@ export const ProfileComponent: React.FC = () => {
         </Box>
         <Box className="button-list">
           <Box className="button-wrap-mobile">
-            <Popover offset={[0, 10]} arrowSize={18}>
+            <Popover offset={[0, 10]} arrowSize={18} autoFocus>
               <PopoverTrigger>
                 <Box p="10px">
                   <SvgMore />
                 </Box>
               </PopoverTrigger>
               <PopoverContent
-                ref={popoverRef}
                 width="auto"
-                boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25);"
+                _focus={{
+                  boxShadow: '0px 0px 16px 12px rgba(192, 192, 192, 0.25)',
+                  outline: 'none',
+                }}
                 borderRadius="20px"
+                ref={popoverRef}
               >
                 <PopoverArrow />
                 <PopoverBody>
