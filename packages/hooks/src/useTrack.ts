@@ -61,6 +61,12 @@ export enum TrackEvent {
   AppEditMessageClickCC = 'click_cc',
   AppEditMessageClickBCC = 'click_bcc',
   AppEditMessageClickMobileCCAndBCC = 'click_mobile_cc_bcc',
+
+  // driftbottle
+  ClickDriftbottleBanner = 'click_driftbottle_banner',
+  ReplyDriftbottle = 'reply_driftbottle',
+  WriteDriftbottleMail = 'write_driftbottle_mail',
+  ReceiveDriftbottleMail = 'receive_driftbottle_mail',
 }
 
 // dimensions
