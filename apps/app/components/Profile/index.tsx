@@ -21,6 +21,7 @@ import { useAtomValue } from 'jotai'
 import { MAIL_SERVER_URL } from '../../constants'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { copyText } from '../../utils'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 import SvgMailme from '../../assets/profile/mail-me.svg'
 import SvgCopy from '../../assets/profile/copy.svg'
@@ -30,7 +31,7 @@ import SvgMore from '../../assets/profile/more.svg'
 
 import SvgEtherscan from '../../assets/profile/business/etherscan.svg'
 import SvgArrow from '../../assets/profile/business/arrow.svg'
-import { userPropertiesAtom } from '../../hooks/useLogin'
+import { ShareCard } from './card'
 // import SvgCheer from '../../assets/profile/business/cheer.svg'
 // import SvgLens from '../../assets/profile/business/lens.svg'
 // import SvgTree from '../../assets/profile/business/tree.svg'
@@ -277,10 +278,12 @@ export const ProfileComponent: React.FC = () => {
       </Container>
 
       <Center>
-        <Button>
-          <SvgMailme /> Mail me
+        <Button w="250px">
+          <SvgMailme /> <Box pl="10px">Mail me</Box>
         </Button>
       </Center>
+
+      <ShareCard address={address} mailAddress={mailAddress} />
     </>
   )
 }
