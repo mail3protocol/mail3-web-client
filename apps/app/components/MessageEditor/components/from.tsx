@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react'
 import { Avatar } from 'ui'
 import { useAtomValue } from 'jotai'
 import ChangeFromAddressSvg from '../../../assets/change-from-address.svg'
-import { removeMailSuffix, truncateEmailMiddle } from '../../../utils'
+import { removeMailSuffix, truncateMiddle0xMail } from '../../../utils'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
 import { Alias } from '../../../api'
 
@@ -61,18 +61,18 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
           outline: 'none',
         }}
       >
-        <Flex align="center">
-          {emailAddress ? (
+        {emailAddress ? (
+          <Flex align="center">
             <Avatar
               address={removeMailSuffix(emailAddress)}
               w="24px"
               h="24px"
             />
-          ) : null}
-          <Box as="span" ml="4px">
-            {truncateEmailMiddle(emailAddress)}
-          </Box>
-        </Flex>
+            <Box as="span" ml="4px">
+              {truncateMiddle0xMail(emailAddress)}
+            </Box>
+          </Flex>
+        ) : null}
       </MenuButton>
       <MenuList
         border="none"
