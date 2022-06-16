@@ -38,6 +38,7 @@ export function useSubmitMessage() {
     ccAddresses,
     bccAddresses,
     onReset,
+    labels,
   } = useSubject()
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -49,7 +50,8 @@ export function useSubmitMessage() {
   const toast = useToast()
   const { attachments } = useAttachment()
   const { isEnableCardSignature } = useCardSignature()
-  const trackReplyDriftbottle = useTrackClick(TrackEvent.ReplyDriftbottle)
+  const trackReplyDriftbottleMail = useTrackClick(TrackEvent.ReplyDriftbottle)
+  const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
@@ -65,6 +67,12 @@ export function useSubmitMessage() {
     const { html: replacedAttachmentImageHtml, attachments: imageAttachments } =
       outputHtmlWithAttachmentImages(html)
     html = replacedAttachmentImageHtml
+    const isSendToDriftBottle = toAddresses.some(
+      (address) => address === DRIFT_BOTTLE_ADDRESS
+    )
+    const isReplyDriftbottleMail = labels.some(
+      (label) => label === 'Driftbottle'
+    )
     try {
       await api.submitMessage({
         from: {
@@ -79,11 +87,11 @@ export function useSubmitMessage() {
           .filter((a) => a.contentDisposition !== 'inline')
           .concat(imageAttachments),
       })
-      const isSendToDriftBottle = toAddresses.some(
-        (address) => address === DRIFT_BOTTLE_ADDRESS
-      )
       if (isSendToDriftBottle) {
-        trackReplyDriftbottle()
+        trackSendDriftbottleMail()
+      }
+      if (isReplyDriftbottleMail) {
+        trackReplyDriftbottleMail()
       }
       await removeDraft(api)
     } catch (err: any) {

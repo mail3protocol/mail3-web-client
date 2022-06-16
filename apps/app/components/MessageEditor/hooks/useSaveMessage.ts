@@ -10,8 +10,14 @@ const savingMessageAtom = atomWithReset(false)
 
 export function useSaveMessage() {
   const api = useAPI()
-  const { subject, toAddresses, fromAddress, ccAddresses, bccAddresses } =
-    useSubject()
+  const {
+    subject,
+    toAddresses,
+    fromAddress,
+    ccAddresses,
+    bccAddresses,
+    labels,
+  } = useSubject()
   const router = useRouter()
   const [isLoading, setIsLoading] = useAtom(savingMessageAtom)
   const onResetSavingAtom = useResetAtom(savingMessageAtom)
@@ -30,6 +36,9 @@ export function useSaveMessage() {
         cc: ccAddresses.map((address) => ({ address })),
         bcc: bccAddresses.map((address) => ({ address })),
         html,
+        labels: {
+          add: labels,
+        },
         attachments,
       })
       await removeDraft(api)

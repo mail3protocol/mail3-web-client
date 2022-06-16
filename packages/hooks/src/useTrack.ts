@@ -65,8 +65,8 @@ export enum TrackEvent {
   // driftbottle
   ClickDriftbottleBanner = 'click_driftbottle_banner',
   ReplyDriftbottle = 'reply_driftbottle',
-  WriteDriftbottleMail = 'write_driftbottle_mail',
-  ReceiveDriftbottleMail = 'receive_driftbottle_mail',
+  SendDriftbottleMail = 'send_driftbottle_mail',
+  OpenDriftbottleMail = 'open_driftbottle_mail',
 }
 
 // dimensions
