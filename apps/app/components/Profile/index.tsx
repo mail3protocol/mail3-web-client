@@ -1,8 +1,19 @@
-import { Box, Center, HStack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Center,
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+  Wrap,
+  WrapItem,
+} from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import { Avatar, Button } from 'ui'
 import { MAIL_SERVER_URL } from '../../constants'
 
@@ -22,27 +33,6 @@ enum ButtonType {
   Copy,
   Share,
   Twitter,
-}
-
-const buttonConfig: Record<
-  ButtonType,
-  {
-    Icon: any
-    hoverText: string
-  }
-> = {
-  [ButtonType.Copy]: {
-    Icon: SvgCopy,
-    hoverText: 'Share profile card',
-  },
-  [ButtonType.Share]: {
-    Icon: SvgShare,
-    hoverText: 'Share profile card',
-  },
-  [ButtonType.Twitter]: {
-    Icon: SvgTwitter,
-    hoverText: 'Share profile card',
-  },
 }
 
 const Container = styled(Box)`
@@ -100,11 +90,32 @@ const Container = styled(Box)`
 `
 
 export const ProfileComponent: React.FC = () => {
-  const [t] = useTranslation('common')
+  // const [t] = useTranslation('common')
 
   const router = useRouter()
   const { id } = router.query as {
     id: string
+  }
+
+  const buttonConfig: Record<
+    ButtonType,
+    {
+      Icon: any
+      text: string
+    }
+  > = {
+    [ButtonType.Share]: {
+      Icon: SvgShare,
+      text: 'Share profile card',
+    },
+    [ButtonType.Copy]: {
+      Icon: SvgCopy,
+      text: 'Copy profile URL',
+    },
+    [ButtonType.Twitter]: {
+      Icon: SvgTwitter,
+      text: 'Share on Twitter',
+    },
   }
 
   const actionMap = {
@@ -127,35 +138,79 @@ export const ProfileComponent: React.FC = () => {
         </Box>
         <Box className="button-list">
           <Box className="button-wrap-mobile">
-            <Box
-              as="button"
-              onClick={() => {
-                // show pop
-                console.log('show pop')
-              }}
-              p="10px"
-            >
-              <SvgMore />
-            </Box>
+            <Popover offset={[0, 10]} arrowSize={18}>
+              <PopoverTrigger>
+                <Box p="10px">
+                  <SvgMore />
+                </Box>
+              </PopoverTrigger>
+              <PopoverContent
+                width="auto"
+                boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25);"
+                borderRadius="20px"
+              >
+                <PopoverArrow />
+                <PopoverBody>
+                  <Wrap p="14px" direction="column">
+                    {[
+                      ButtonType.Twitter,
+                      ButtonType.Copy,
+                      ButtonType.Share,
+                    ].map((type: ButtonType) => {
+                      const { Icon, text } = buttonConfig[type]
+                      const onClick = actionMap[type]
+
+                      return (
+                        <WrapItem key={type} p="5px 0">
+                          <Center as="button">
+                            <Box>
+                              <Icon />
+                            </Box>
+                            <Text pl="10px">{text}</Text>
+                          </Center>
+                        </WrapItem>
+                      )
+                    })}
+                  </Wrap>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Box>
           <HStack className="button-wrap-pc">
             {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Share].map(
-              (type: ButtonType, index) => {
-                const { Icon, hoverText } = buttonConfig[type]
+              (type: ButtonType) => {
+                const { Icon, text } = buttonConfig[type]
                 const onClick = actionMap[type]
                 return (
-                  <Box
-                    as="button"
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={index}
-                    p="10px"
-                    onClick={() => {
-                      if (onClick) onClick()
-                      console.log(hoverText)
-                    }}
+                  <Popover
+                    arrowSize={8}
+                    key={type}
+                    trigger="hover"
+                    placement="top-end"
+                    size="md"
                   >
-                    <Icon />
-                  </Box>
+                    <PopoverTrigger>
+                      <Box
+                        as="button"
+                        p="10px"
+                        onClick={() => {
+                          if (onClick) onClick()
+                        }}
+                      >
+                        <Icon />
+                      </Box>
+                    </PopoverTrigger>
+                    <PopoverContent width="auto">
+                      <PopoverArrow />
+                      <PopoverBody
+                        whiteSpace="nowrap"
+                        fontSize="14px"
+                        justifyContent="center"
+                      >
+                        {text}
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
                 )
               }
             )}
