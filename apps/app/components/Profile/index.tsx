@@ -90,11 +90,11 @@ const Container = styled(Box)`
 `
 
 export const ProfileComponent: React.FC = () => {
-  // const [t] = useTranslation('common')
+  const [t] = useTranslation('settings')
 
   const router = useRouter()
   const { id } = router.query as {
-    id: string
+    id: string | undefined
   }
 
   const buttonConfig: Record<
@@ -106,15 +106,15 @@ export const ProfileComponent: React.FC = () => {
   > = {
     [ButtonType.Share]: {
       Icon: SvgShare,
-      text: 'Share profile card',
+      text: t('profile.share'),
     },
     [ButtonType.Copy]: {
       Icon: SvgCopy,
-      text: 'Copy profile URL',
+      text: t('profile.copy'),
     },
     [ButtonType.Twitter]: {
       Icon: SvgTwitter,
-      text: 'Share on Twitter',
+      text: t('profile.twitter'),
     },
   }
 
@@ -162,7 +162,7 @@ export const ProfileComponent: React.FC = () => {
 
                       return (
                         <WrapItem key={type} p="5px 0">
-                          <Center as="button">
+                          <Center as="button" onClick={onClick}>
                             <Box>
                               <Icon />
                             </Box>

@@ -12,8 +12,7 @@ export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
     props: {
       ...(await serverSideTranslations(locale as string, [
         'common',
-        'mailboxes',
-        'preview',
+        'settings',
       ])),
     },
   })

@@ -35,5 +35,10 @@
             "title": "Edit Card",
             "desc": "Please go to <a>CyberConnect</a> to edit your avatar."
         }
+    },
+    "profile": {
+        "share": "Share profile card",
+        "copy": "Copy profile URL",
+        "twitter": "Share on Twitter"
     }
 }
