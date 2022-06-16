@@ -15,7 +15,12 @@ import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { Avatar, Button } from 'ui'
+import { useMemo, useRef } from 'react'
+import { useToast } from 'hooks'
+import { useAtomValue } from 'jotai'
 import { MAIL_SERVER_URL } from '../../constants'
+import { useEmailAddress } from '../../hooks/useEmailAddress'
+import { copyText } from '../../utils'
 
 import SvgMailme from '../../assets/profile/mail-me.svg'
 import SvgCopy from '../../assets/profile/copy.svg'
@@ -25,6 +30,7 @@ import SvgMore from '../../assets/profile/more.svg'
 
 import SvgEtherscan from '../../assets/profile/business/etherscan.svg'
 import SvgArrow from '../../assets/profile/business/arrow.svg'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 // import SvgCheer from '../../assets/profile/business/cheer.svg'
 // import SvgLens from '../../assets/profile/business/lens.svg'
 // import SvgTree from '../../assets/profile/business/tree.svg'
@@ -91,50 +97,66 @@ const Container = styled(Box)`
 
 export const ProfileComponent: React.FC = () => {
   const [t] = useTranslation('settings')
-
+  const [t2] = useTranslation('common')
   const router = useRouter()
-  const { id } = router.query as {
-    id: string | undefined
-  }
+  const queryAddress = router.query?.address ?? []
+
+  const userProps = useAtomValue(userPropertiesAtom)
+  const emailAddress = useEmailAddress()
+  const toast = useToast()
+
+  const popoverRef = useRef<HTMLElement>(null)
 
   const buttonConfig: Record<
     ButtonType,
     {
       Icon: any
-      text: string
+      label: string
     }
   > = {
     [ButtonType.Share]: {
       Icon: SvgShare,
-      text: t('profile.share'),
+      label: t('profile.share'),
     },
     [ButtonType.Copy]: {
       Icon: SvgCopy,
-      text: t('profile.copy'),
+      label: t('profile.copy'),
     },
     [ButtonType.Twitter]: {
       Icon: SvgTwitter,
-      text: t('profile.twitter'),
+      label: t('profile.twitter'),
     },
   }
 
-  const actionMap = {
-    [ButtonType.Copy]: () => {},
-    [ButtonType.Twitter]: () => {},
-    [ButtonType.Share]: () => {},
-  }
+  const address = useMemo(() => {
+    if (queryAddress?.length) return queryAddress[0]
+    return userProps?.defaultAddress || emailAddress
+  }, [queryAddress, userProps?.defaultAddress, emailAddress])
 
-  const address = `${id}@${MAIL_SERVER_URL}`
+  const mailAddress = `${address}@${MAIL_SERVER_URL}`
+
+  const actionMap = useMemo(
+    () => ({
+      [ButtonType.Copy]: async () => {
+        await copyText(mailAddress)
+        toast(t2('navbar.copied'))
+        popoverRef?.current?.blur()
+      },
+      [ButtonType.Twitter]: () => {
+        popoverRef?.current?.blur()
+      },
+      [ButtonType.Share]: () => {
+        popoverRef?.current?.blur()
+      },
+    }),
+    [address]
+  )
 
   return (
     <>
       <Container>
         <Box className="avatar">
-          <Avatar
-            address="0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"
-            w="72px"
-            h="72px"
-          />
+          <Avatar address={address} w="72px" h="72px" />
         </Box>
         <Box className="button-list">
           <Box className="button-wrap-mobile">
@@ -145,6 +167,7 @@ export const ProfileComponent: React.FC = () => {
                 </Box>
               </PopoverTrigger>
               <PopoverContent
+                ref={popoverRef}
                 width="auto"
                 boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25);"
                 borderRadius="20px"
@@ -157,16 +180,23 @@ export const ProfileComponent: React.FC = () => {
                       ButtonType.Copy,
                       ButtonType.Share,
                     ].map((type: ButtonType) => {
-                      const { Icon, text } = buttonConfig[type]
+                      const { Icon, label } = buttonConfig[type]
                       const onClick = actionMap[type]
 
                       return (
-                        <WrapItem key={type} p="5px 0">
+                        <WrapItem
+                          key={type}
+                          p="5px"
+                          borderRadius="10px"
+                          _hover={{
+                            bg: '#E7E7E7',
+                          }}
+                        >
                           <Center as="button" onClick={onClick}>
                             <Box>
                               <Icon />
                             </Box>
-                            <Text pl="10px">{text}</Text>
+                            <Text pl="10px">{label}</Text>
                           </Center>
                         </WrapItem>
                       )
@@ -179,7 +209,7 @@ export const ProfileComponent: React.FC = () => {
           <HStack className="button-wrap-pc">
             {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Share].map(
               (type: ButtonType) => {
-                const { Icon, text } = buttonConfig[type]
+                const { Icon, label } = buttonConfig[type]
                 const onClick = actionMap[type]
                 return (
                   <Popover
@@ -190,13 +220,7 @@ export const ProfileComponent: React.FC = () => {
                     size="md"
                   >
                     <PopoverTrigger>
-                      <Box
-                        as="button"
-                        p="10px"
-                        onClick={() => {
-                          if (onClick) onClick()
-                        }}
-                      >
+                      <Box as="button" p="10px" onClick={onClick}>
                         <Icon />
                       </Box>
                     </PopoverTrigger>
@@ -207,7 +231,7 @@ export const ProfileComponent: React.FC = () => {
                         fontSize="14px"
                         justifyContent="center"
                       >
-                        {text}
+                        {label}
                       </PopoverBody>
                     </PopoverContent>
                   </Popover>
@@ -217,7 +241,7 @@ export const ProfileComponent: React.FC = () => {
           </HStack>
         </Box>
         <Box className="address">
-          <Text className="p">{address}</Text>
+          <Text className="p">{mailAddress}</Text>
         </Box>
         <Center mt="25px">
           <HStack spacing="24px">
