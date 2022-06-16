@@ -62,6 +62,7 @@ interface ServerSideProps {
   // 👇👇 array string is split by `,`
   to: string[] | null
   forceTo: string[] | null // only `forceTo` without `messageInfo.to`
+  origin: 'driftbottle' | null
 }
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> =
@@ -78,6 +79,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> =
       forceTo: query.force_to
         ? filterEmails((query.force_to as string).split(','))
         : null,
+      origin: query.origin ? query.origin : null,
     },
   }))
 
@@ -86,6 +88,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   id,
   to,
   forceTo,
+  origin,
 }) => {
   const api = useAPI()
   const userProperties = useAtomValue(userPropertiesAtom)
@@ -102,6 +105,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     setBccAddresses,
     setFromAddress,
     onReset,
+    setLabels,
   } = useSubject()
   const {
     setAttachmentExtraInfo,
@@ -160,7 +164,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
       return 'Write Mail'
     }
     if (action === 'forward') {
-      return 'Foward Mail'
+      return 'Forward Mail'
     }
     if (action === 'reply') {
       return 'Reply Mail'
@@ -201,6 +205,12 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
         if (!messageInfo) return
         setSubject(getSubject(messageInfo))
         setToAddresses(getTo(messageInfo))
+        if (messageInfo.labels) {
+          setLabels(messageInfo.labels)
+        }
+        setLabels((l) =>
+          l.concat(origin === 'driftbottle' ? ['Driftbottle'] : [])
+        )
         if (action !== 'reply' && action !== 'forward') {
           if (messageInfo.cc) {
             setCcAddresses(messageInfo.cc.map((item) => item.address))
@@ -257,6 +267,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   useEffect(() => {
     if (id) return
     setToAddresses(getTo())
+    setLabels((l) => l.concat(origin === 'driftbottle' ? ['Driftbottle'] : []))
   }, [])
 
   const messageContent = queryMessageInfoAndContentData?.data?.messageContent

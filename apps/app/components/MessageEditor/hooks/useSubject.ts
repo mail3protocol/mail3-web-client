@@ -7,6 +7,7 @@ const toAddressesAtom = atomWithReset<string[]>([])
 const ccAddressesAtom = atomWithReset<string[]>([])
 const bccAddressesAtom = atomWithReset<string[]>([])
 const fromAddressAtom = atomWithReset<string | null>(null)
+const labelsAtom = atomWithReset<string[]>([])
 
 export function useSubject() {
   // atom 👇
@@ -15,6 +16,7 @@ export function useSubject() {
   const [ccAddresses, setCcAddresses] = useAtom(ccAddressesAtom)
   const [bccAddresses, setBccAddresses] = useAtom(bccAddressesAtom)
   const [fromAddress, setFromAddress] = useAtom(fromAddressAtom)
+  const [labels, setLabels] = useAtom(labelsAtom)
 
   // reset 👇
   const resetSubject = useResetAtom(subjectAtom)
@@ -22,6 +24,7 @@ export function useSubject() {
   const resetCcAddresses = useResetAtom(ccAddressesAtom)
   const resetBccAddresses = useResetAtom(bccAddressesAtom)
   const resetFromAddress = useResetAtom(fromAddressAtom)
+  const resetLabels = useResetAtom(labelsAtom)
 
   const onReset = useCallback(() => {
     resetSubject()
@@ -29,6 +32,7 @@ export function useSubject() {
     resetCcAddresses()
     resetBccAddresses()
     resetFromAddress()
+    resetLabels()
   }, [])
 
   return {
@@ -43,5 +47,7 @@ export function useSubject() {
     setBccAddresses,
     fromAddress,
     setFromAddress,
+    labels,
+    setLabels,
   }
 }

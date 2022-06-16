@@ -486,6 +486,7 @@ export const PreviewComponent: React.FC = () => {
                   force_to: driftBottleFrom,
                   id,
                   action: 'reply',
+                  origin: 'driftbottle',
                 },
               }}
               passHref

@@ -19,8 +19,6 @@ import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 import SVGWrite from '../../assets/mailbox/write.svg'
 import { DriftbottleBanner } from '../DriftbottleBanner'
-import { DRIFT_BOTTLE_ADDRESS } from '../../constants'
-import { userPropertiesAtom } from '../../hooks/useLogin'
 
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -109,8 +107,6 @@ export const InboxComponent: React.FC = () => {
     [api]
   )
 
-  const userProperties = useAtomValue(userPropertiesAtom)
-
   const {
     data: newsInfiniteData,
     hasNextPage,
@@ -129,20 +125,6 @@ export const InboxComponent: React.FC = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     refetchInterval: 5000,
-    onSuccess(d) {
-      const messages = d.pages.map((page) => page.messages).flat()
-      const newDriftBottleCount = messages.filter(
-        (message) => message.from.address === DRIFT_BOTTLE_ADDRESS
-      ).length
-      try {
-        gtag?.('set', 'user_properties', {
-          receive_driftbottle_mail: `${newDriftBottleCount}`,
-          ...userProperties,
-        })
-      } catch {
-        //
-      }
-    },
   })
 
   const newMessages = useMemo(() => {
