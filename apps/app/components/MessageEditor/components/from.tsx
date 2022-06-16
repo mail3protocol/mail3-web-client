@@ -68,7 +68,17 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
               w="24px"
               h="24px"
             />
-            <Box as="span" ml="4px">
+            <Box
+              as="span"
+              ml="4px"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              noOfLines={1}
+              textOverflow="ellipsis"
+              flex={1}
+              display="inline-block"
+              w="full"
+            >
               {truncateMiddle0xMail(emailAddress)}
             </Box>
           </Flex>
