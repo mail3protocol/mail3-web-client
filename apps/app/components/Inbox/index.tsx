@@ -17,6 +17,7 @@ import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 import SVGWrite from '../../assets/mailbox/write.svg'
+import { DriftbottleBanner } from '../DriftbottleBanner'
 
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -153,6 +154,7 @@ export const InboxComponent: React.FC = () => {
 
   return (
     <NewPageContainer>
+      <DriftbottleBanner />
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -192,7 +194,6 @@ export const InboxComponent: React.FC = () => {
           }}
         />
       )}
-
       <Box paddingTop={{ base: '25px', md: '35px' }}>
         <FlexButtonBox>
           <InboxNav currentType={InboxNavType.Inbox} />

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Avatar } from 'ui'
+import { Avatar, Button } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
@@ -15,6 +15,7 @@ import {
 } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
+import NextLink from 'next/link'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -29,12 +30,13 @@ import { Loading } from '../Loading'
 import { Attachment } from './Attachment'
 import {
   formatDateString,
+  getDriftBottleFrom,
   isMail3Address,
   removeMailSuffix,
   truncateMiddle0xMail,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
-import { MAIL_SERVER_URL } from '../../constants'
+import { DRIFT_BOTTLE_ADDRESS, MAIL_SERVER_URL } from '../../constants'
 import { RenderHTML } from './parser'
 
 interface MeesageDetailState
@@ -147,9 +149,14 @@ export const PreviewComponent: React.FC = () => {
 
   const content = useMemo(() => data?.html ?? '', [data])
 
+  const isDriftBottleAddress = data?.info?.from.address === DRIFT_BOTTLE_ADDRESS
+
+  const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
+      isDisabled: isDriftBottleAddress,
       onClick: () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
@@ -261,7 +268,7 @@ export const PreviewComponent: React.FC = () => {
     }
 
     return list.map((key) => buttonConfig[key])
-  }, [api, id, origin])
+  }, [api, id, origin, data?.info])
 
   const onClickAvatar = (address: string) => {
     const realAddress = removeMailSuffix(address).toLowerCase()
@@ -347,7 +354,6 @@ export const PreviewComponent: React.FC = () => {
           </AvatarGroup>
         </Box>
       </Center>
-
       <Container>
         <Box>
           <Text
@@ -471,6 +477,25 @@ export const PreviewComponent: React.FC = () => {
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
         </Box>
+        {isDriftBottleAddress && driftBottleFrom ? (
+          <Center pt="16px">
+            <NextLink
+              href={{
+                pathname: RoutePath.NewMessage,
+                query: {
+                  force_to: driftBottleFrom,
+                  id,
+                  action: 'reply',
+                },
+              }}
+              passHref
+            >
+              <Button as="a" variant="outline">
+                {t('reply-driftbottle-sender')}
+              </Button>
+            </NextLink>
+          </Center>
+        ) : null}
       </Container>
     </>
   )

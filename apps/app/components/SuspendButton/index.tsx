@@ -1,4 +1,4 @@
-import { Box, Center, HStack, StyleProps } from '@chakra-ui/react'
+import { Box, Button, HStack, StyleProps } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 
@@ -8,6 +8,7 @@ import TrashSVG from '../../assets/preview/trash-white.svg'
 
 interface listItem {
   type: SuspendButtonType
+  isDisabled?: boolean
   onClick: () => void
 }
 
@@ -56,14 +57,17 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
   },
 }
 
-const ButtonItem = styled(Center)`
+const ButtonItem = styled(Button)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-direction: column;
-  padding: 15px;
+  padding: 14px 16px 8px;
+  height: 80px;
   :hover {
     background: #1f1f1f;
   }
   position: relative;
-  cursor: pointer;
   transition: background 0.2s ease;
 
   .line {
@@ -90,11 +94,12 @@ export const SuspendButton: React.FC<Props> = (props) => {
     >
       <HStack
         borderRadius="32px"
-        background="#000"
+        bg="#000"
         fontSize="18px"
-        spacing="0px"
+        spacing="0"
         color="#fff"
         overflow="hidden"
+        px="34px"
       >
         {list.map((item) => {
           const { onClick, type } = item
@@ -102,12 +107,18 @@ export const SuspendButton: React.FC<Props> = (props) => {
           const { Icon, name, useLine, propsStyle } = config
 
           return (
-            <ButtonItem key={type} onClick={onClick} {...propsStyle}>
+            <ButtonItem
+              key={type}
+              onClick={onClick}
+              variant="unstyled"
+              disabled={item.isDisabled}
+              {...propsStyle}
+            >
               {useLine && <Box className="line" />}
               <Box>
                 <Icon />
               </Box>
-              <Box>{name}</Box>
+              <Box fontWeight="bold">{name}</Box>
             </ButtonItem>
           )
         })}
