@@ -143,7 +143,21 @@ export const ProfileComponent: React.FC = () => {
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {
-        popoverRef?.current?.blur()
+        const shareConfig = {
+          text: 'Hey, contact me using my Mail3 email address.',
+          url: 'https://mail3.me/mai3dao.eth@mail3.me',
+          hashtags: ['mail3', 'mail3dao'],
+        }
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          shareConfig.text
+        )}&url=${encodeURIComponent(
+          shareConfig.url
+        )}&hashtags=${shareConfig.hashtags.join(',')}`
+
+        window.open(
+          url,
+          'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
+        )
       },
       [ButtonType.Share]: () => {
         popoverRef?.current?.blur()
