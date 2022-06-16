@@ -6,7 +6,7 @@ The web client of [Mail3](https://mail3.me).
 
 ### Prerequisites
 
-You will need node >= 14 and yarn >= 1.22 to build and run Mibao. Run command:
+You will need node >= 14 and yarn >= 1.22 to build and run this project. Run command:
 
 ```bash
 $ yarn
