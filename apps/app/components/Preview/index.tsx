@@ -99,6 +99,7 @@ export const PreviewComponent: React.FC = () => {
       return {
         info,
         html: content.html,
+        plain: content.plain,
       }
     },
     {
@@ -145,7 +146,11 @@ export const PreviewComponent: React.FC = () => {
     return undefined
   }, [data])
 
-  const content = useMemo(() => data?.html ?? '', [data])
+  const content = useMemo(() => {
+    if (data?.html) return data.html
+    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
+    return ''
+  }, [data])
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
