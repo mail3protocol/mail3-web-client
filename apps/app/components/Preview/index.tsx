@@ -125,10 +125,9 @@ export const PreviewComponent: React.FC = () => {
             trackShowYourNft()
           }
         }
-        if (
-          !d.info?.flags.includes(MessageFlagType.Seen) &&
-          d.info?.from.address === DRIFT_BOTTLE_ADDRESS
-        ) {
+        const isSeen = d.info?.flags.includes(MessageFlagType.Seen)
+        const isFromDriftBottle = d.info?.from.address === DRIFT_BOTTLE_ADDRESS
+        if (!isSeen && isFromDriftBottle) {
           trackOpenDriftbottle()
         }
         api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
