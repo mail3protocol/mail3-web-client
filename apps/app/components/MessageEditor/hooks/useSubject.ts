@@ -16,7 +16,6 @@ export function useSubject() {
   const [ccAddresses, setCcAddresses] = useAtom(ccAddressesAtom)
   const [bccAddresses, setBccAddresses] = useAtom(bccAddressesAtom)
   const [fromAddress, setFromAddress] = useAtom(fromAddressAtom)
-  const [labels, setLabels] = useAtom(labelsAtom)
 
   // reset 👇
   const resetSubject = useResetAtom(subjectAtom)
@@ -47,7 +46,5 @@ export function useSubject() {
     setBccAddresses,
     fromAddress,
     setFromAddress,
-    labels,
-    setLabels,
   }
 }

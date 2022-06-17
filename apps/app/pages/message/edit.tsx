@@ -97,7 +97,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   id,
   to,
   forceTo,
-  origin,
 }) => {
   const api = useAPI()
   const [t] = useTranslation('edit-message')
@@ -115,7 +114,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     setBccAddresses,
     setFromAddress,
     onReset,
-    setLabels,
   } = useSubject()
   const {
     setAttachmentExtraInfo,
@@ -215,12 +213,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
         if (!messageInfo) return
         setSubject(getSubject(messageInfo))
         setToAddresses(getTo(messageInfo))
-        if (messageInfo.labels) {
-          setLabels(messageInfo.labels)
-        }
-        setLabels((l) =>
-          l.concat(origin === 'driftbottle' ? ['Driftbottle'] : [])
-        )
         if (action !== 'reply' && action !== 'forward') {
           if (messageInfo.cc) {
             setCcAddresses(messageInfo.cc.map((item) => item.address))
@@ -277,7 +269,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   useEffect(() => {
     if (id) return
     setToAddresses(getTo())
-    setLabels((l) => l.concat(origin === 'driftbottle' ? ['Driftbottle'] : []))
   }, [])
 
   const messageContent = queryMessageInfoAndContentData?.data?.messageContent

@@ -38,7 +38,6 @@ export function useSubmitMessage() {
     ccAddresses,
     bccAddresses,
     onReset,
-    labels,
   } = useSubject()
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -70,9 +69,7 @@ export function useSubmitMessage() {
     const isSendToDriftBottle = toAddresses.some(
       (address) => address === DRIFT_BOTTLE_ADDRESS
     )
-    const isReplyDriftbottleMail = labels.some(
-      (label) => label === 'Driftbottle'
-    )
+    const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
     try {
       await api.submitMessage({
         from: {
