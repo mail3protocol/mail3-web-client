@@ -5844,7 +5844,7 @@ html-react-parser@^1.4.14:
 
 html2canvas-objectfit-fix@^1.2.0:
   version "1.2.0"
-  resolved "https://registry.npmjs.org/html2canvas-objectfit-fix/-/html2canvas-objectfit-fix-1.2.0.tgz#968237d8e3ae5eb60c824c25bac22fe258c217dd"
+  resolved "https://registry.yarnpkg.com/html2canvas-objectfit-fix/-/html2canvas-objectfit-fix-1.2.0.tgz#968237d8e3ae5eb60c824c25bac22fe258c217dd"
   integrity sha512-eBQPJyJJPgAlgtMioB42Kv+wHXGgfjUyPdYWZKbF8jUlss4J6xdj5tJM8n2uZ/94NU2UEooN97ypGdzbFE562A==
   dependencies:
     css-line-break "1.1.1"
