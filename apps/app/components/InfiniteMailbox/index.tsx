@@ -17,7 +17,6 @@ import {
 import { Box } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { LinkProps } from 'next/link'
-import { TrackEvent, useTrackClick } from 'hooks'
 import { MailboxesMessagesResponse } from '../../api'
 import { BoxListProps, Mailbox, MessageItem } from '../Mailbox'
 import { Mailboxes } from '../../api/mailboxes'
@@ -107,8 +106,6 @@ const InfiniteBox: ForwardRefRenderFunction<
 
   const loaderEl = useMemo(() => loader || <Box>Loading</Box>, [loader])
 
-  const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
-
   const dataMsg: MessageItem[] = useMemo(() => {
     if (!data) return []
     const dataList = data.pages.map((item: any) => item.messages)
@@ -196,7 +193,6 @@ const InfiniteBox: ForwardRefRenderFunction<
             onClickBody={(id) => {
               if (!onClickBody) return
               onClickBody(id)
-              trackOpenDriftbottle()
             }}
             getHref={getHref}
             mailboxType={mailboxType}

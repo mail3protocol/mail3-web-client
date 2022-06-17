@@ -91,6 +91,7 @@ export const PreviewComponent: React.FC = () => {
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
+  const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
   const { data } = useQuery(
     ['preview', id],
     async () => {
@@ -123,6 +124,12 @@ export const PreviewComponent: React.FC = () => {
           ) {
             trackShowYourNft()
           }
+        }
+        if (
+          !d.info?.flags.includes(MessageFlagType.Seen) &&
+          d.info?.subject.startsWith('[🌊drift bottle]')
+        ) {
+          trackOpenDriftbottle()
         }
         api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
       },
