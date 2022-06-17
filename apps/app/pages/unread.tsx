@@ -1,5 +1,6 @@
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { useAPI } from '../hooks/useAPI'
 import { getAuthenticateProps } from '../hooks/useLogin'
@@ -14,18 +15,21 @@ export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
 
 const UnRead: NextPage = () => {
   const api = useAPI()
+  const router = useRouter()
   useQuery(
-    ['newsQuery'],
+    ['unread', router.query.from],
     async () => {
-      const { data } = await api.getMessagesNew(0)
+      const { data } = await api.getUnreadMessagesCount(
+        router.query.from as string
+      )
       return data.total
     },
     {
       onSuccess(total) {
-        window.parent.postMessage({ total })
+        window.parent.postMessage({ target: 'mail3-unread', total })
       },
       onError() {
-        window.parent.postMessage({ total: -2 })
+        window.parent.postMessage({ target: 'mail3-unread', total: -2 })
       },
     }
   )
