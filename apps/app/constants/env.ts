@@ -37,5 +37,4 @@ export const OFFICE_ADDRESS_LIST = [
 ]
 
 export const DRIFT_BOTTLE_ADDRESS =
-  process.env.NEXT_PUBLIC_DRIFT_BOTTLE_ADDRESS ||
-  `driftbottle.eth@${MAIL_SERVER_URL}`
+  process.env.NEXT_PUBLIC_DRIFT_BOTTLE_ADDRESS || `driftbottle.eth@mail3.me`
