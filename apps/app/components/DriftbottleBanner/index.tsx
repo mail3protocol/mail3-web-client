@@ -63,14 +63,13 @@ export const DriftbottleBanner: React.FC = () => {
   return (
     <AspectRatio
       position="relative"
-      w={{ base: 'calc(100% - 40px)', md: 'full' }}
+      w="full"
       ratio={{
         base:
           DriftingBottleBannerMobileImage.width /
           DriftingBottleBannerMobileImage.height,
         md: DriftingBottleBannerImage.width / DriftingBottleBannerImage.height,
       }}
-      mx={{ base: '20px', md: 0 }}
       mt="24px"
     >
       <NextLink href={`${RoutePath.NewMessage}?action=driftbottle`} passHref>

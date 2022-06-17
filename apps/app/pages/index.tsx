@@ -9,6 +9,7 @@ import { LandingPage } from '../components/LandingPage'
 import { parseCookies, useIsAuthenticated } from '../hooks/useLogin'
 import { InboxComponent } from '../components/Inbox'
 import { RoutePath } from '../route/path'
+import { DriftbottleBanner } from '../components/DriftbottleBanner'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
@@ -58,6 +59,7 @@ const Home: NextPage<{ isAuth: boolean }> = ({ isAuth }) => {
       <PageContainer>
         <Navbar />
         {!isAuth && <LandingPage />}
+        <DriftbottleBanner />
       </PageContainer>
       {isAuth && <InboxComponent />}
     </>
