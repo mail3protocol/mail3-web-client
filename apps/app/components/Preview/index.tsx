@@ -15,6 +15,8 @@ import {
 } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { GetMessage } from 'models/src/getMessage'
+import { GetMessageContent } from 'models/src/getMessageContent'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -36,6 +38,8 @@ import {
 import { EmptyStatus } from '../MailboxStatus'
 import { MAIL_SERVER_URL } from '../../constants'
 import { RenderHTML } from './parser'
+import { Query } from '../../api/query'
+import { catchApiResponse } from '../../utils/api'
 
 interface MeesageDetailState
   extends Pick<
@@ -90,16 +94,24 @@ export const PreviewComponent: React.FC = () => {
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const { data } = useQuery(
-    ['preview', id],
+    [Query.GetMessageInfoAndContent, id],
     async () => {
-      if (typeof id !== 'string') return {}
-      const { data: info } = await api.getMessageInfo(id)
-      const { data: content } = await api.getMessageContent(info.text.id)
-
+      const messageInfo = id
+        ? await catchApiResponse<GetMessage.Response>(
+            api.getMessageInfo(id as string)
+          )
+        : null
+      const messageContent = messageInfo?.text.id
+        ? await catchApiResponse<GetMessageContent.Response>(
+            api.getMessageContent(messageInfo?.text.id)
+          )
+        : null
       return {
-        info,
-        html: content.html,
-        plain: content.plain,
+        info: messageInfo,
+        html: messageContent?.html,
+        plain: messageContent?.plain,
+        messageInfo,
+        messageContent,
       }
     },
     {
