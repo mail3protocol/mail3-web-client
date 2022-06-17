@@ -10,6 +10,7 @@ import { useQuery } from 'react-query'
 import { AxiosResponse } from 'axios'
 import { GetMessage } from 'models/src/getMessage'
 import Head from 'next/head'
+import { useTranslation } from 'next-i18next'
 import { MessageEditor } from '../../components/MessageEditor'
 import { Navbar } from '../../components/Navbar'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
@@ -54,6 +55,14 @@ ${signContent}
 `)
 }
 
+function getDriftbottleTemplate(content: string, signContent: string) {
+  return `<p>${content}
+  <br>
+  <br>
+  ${signContent}
+</p>`
+}
+
 export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
 
 interface ServerSideProps {
@@ -91,6 +100,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   origin,
 }) => {
   const api = useAPI()
+  const [t] = useTranslation('edit-message')
   const userProperties = useAtomValue(userPropertiesAtom)
   const signatureStatus = userProperties?.signature_status as SignatureStatus
   const isEnableSignatureText =
@@ -276,6 +286,9 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
       isEnableSignatureText && userProperties?.text_signature
         ? userProperties?.text_signature
         : ''
+    if (action === 'driftbottle') {
+      return getDriftbottleTemplate(t('drift_bottle_template'), signContent)
+    }
     if (!messageContent) {
       return getDefaultTemplate(signContent)
     }
