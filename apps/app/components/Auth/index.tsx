@@ -25,7 +25,7 @@ import {
 } from 'hooks'
 import { Button } from 'ui'
 import { useRouter } from 'next/router'
-import { truncateMiddle } from '../../utils'
+import { truncateMiddle } from 'shared'
 import WalletSvg from '../../assets/wallet.svg'
 import LeftArrowSvg from '../../assets/left-arrow.svg'
 import {

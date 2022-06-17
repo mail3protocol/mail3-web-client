@@ -1,20 +1,5 @@
+import { verifyEmail, truncateMiddle } from 'shared'
 import { MAIL_SERVER_URL } from '../constants'
-
-export function verifyEmail(email: string) {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return re.test(String(email).toLowerCase())
-}
-
-export function truncateMiddle(
-  str = '',
-  takeLength = 6,
-  tailLength = takeLength,
-  pad = '...'
-): string {
-  if (takeLength + tailLength >= str.length) return str
-  return `${str.slice(0, takeLength)}${pad}${str.slice(-tailLength)}`
-}
 
 export function copyTextFallback(data: string): void {
   const input = document.createElement('input')
@@ -37,10 +22,6 @@ export async function copyText(s: string) {
   } catch (error) {
     copyTextFallback(s)
   }
-}
-
-export function isEthAddress(s: string) {
-  return s.startsWith('0x') && s.length === 42
 }
 
 export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 6) {
@@ -76,19 +57,3 @@ export const isMail3Address = (address: string) =>
   [MAIL_SERVER_URL, 'imibao.net'].some((item) =>
     address.toLowerCase().endsWith(item)
   )
-
-export const isENS = (address: string) => address.endsWith('.eth')
-
-export const truncateMiddle0xMail = (
-  mailAddress: string,
-  takeLength = 6,
-  tailLength = 4
-) => {
-  if (!verifyEmail(mailAddress)) return mailAddress
-  const splitMailAddress = mailAddress.split('@')
-  const address = splitMailAddress[0]
-  const suffix = splitMailAddress[1]
-  if (isENS(address) || !isEthAddress(address)) return mailAddress
-
-  return `${truncateMiddle(address, takeLength, tailLength)}@${suffix}`
-}
