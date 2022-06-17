@@ -20,7 +20,7 @@ import { useToast } from 'hooks'
 import { useAtomValue } from 'jotai'
 import { MAIL_SERVER_URL } from '../../constants'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
-import { copyText } from '../../utils'
+import { copyText, verifyEmail } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
 import SvgMailme from '../../assets/profile/mail-me.svg'
@@ -32,6 +32,7 @@ import SvgMore from '../../assets/profile/more.svg'
 import SvgEtherscan from '../../assets/profile/business/etherscan.svg'
 import SvgArrow from '../../assets/profile/business/arrow.svg'
 import { ShareCard } from './card'
+import { onRenderElementToImage } from '../../utils/editor'
 // import SvgCheer from '../../assets/profile/business/cheer.svg'
 // import SvgLens from '../../assets/profile/business/lens.svg'
 // import SvgTree from '../../assets/profile/business/tree.svg'
@@ -107,6 +108,7 @@ export const ProfileComponent: React.FC = () => {
   const toast = useToast()
 
   const popoverRef = useRef<HTMLElement>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
 
   const buttonConfig: Record<
     ButtonType,
@@ -132,9 +134,11 @@ export const ProfileComponent: React.FC = () => {
   const address = useMemo(() => {
     if (queryAddress?.length) return queryAddress[0]
     return userProps?.defaultAddress || emailAddress
-  }, [queryAddress, userProps?.defaultAddress, emailAddress])
+  }, [queryAddress, userProps, emailAddress])
 
-  const mailAddress = `${address}@${MAIL_SERVER_URL}`
+  const mailAddress = verifyEmail(address)
+    ? address
+    : `${address}@${MAIL_SERVER_URL}`
 
   const actionMap = useMemo(
     () => ({
@@ -161,6 +165,13 @@ export const ProfileComponent: React.FC = () => {
         )
       },
       [ButtonType.Share]: () => {
+        if (!cardRef?.current) return
+        onRenderElementToImage(cardRef.current).then((res) => {
+          const a = document.createElement('a')
+          a.href = res
+          a.download = 'profile.png'
+          a.click()
+        })
         popoverRef?.current?.blur()
       },
     }),
@@ -283,7 +294,7 @@ export const ProfileComponent: React.FC = () => {
         </Button>
       </Center>
 
-      <ShareCard address={address} mailAddress={mailAddress} />
+      <ShareCard ref={cardRef} address={address} mailAddress={mailAddress} />
     </>
   )
 }
