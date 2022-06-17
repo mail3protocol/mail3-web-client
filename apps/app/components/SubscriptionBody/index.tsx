@@ -3,7 +3,13 @@ import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { Button } from 'ui'
-import { TrackEvent, TrackKey, useDidMount, useTrackClick } from 'hooks'
+import {
+  MediaSubscriptionsItem,
+  TrackEvent,
+  TrackKey,
+  useDidMount,
+  useTrackClick,
+} from 'hooks'
 import SubTop from '../../assets/subscription/top.png'
 import SVGBell from '../../assets/subscription/bell.svg'
 import SVGBellCur from '../../assets/subscription/bell-cur.svg'
@@ -158,6 +164,7 @@ const dataAtom = atomWithStorage<Array<ListItem>>('subscriptionData', data)
 
 export const SubscriptionBody: React.FC = () => {
   const trackBell = useTrackClick(TrackEvent.ClickSubscriptionBell)
+  const trackMedia = useTrackClick(TrackEvent.MediaSubscriptions)
   const [list, setList] = useAtom(dataAtom)
   const [isShow, setIsShow] = useState(false)
 
@@ -167,9 +174,11 @@ export const SubscriptionBody: React.FC = () => {
 
   const handleClick: HandleClick = (index, type) => {
     const newList = [...list]
-    trackBell({
-      [TrackKey.SubscriptionBell]: newList[index].name,
+    trackBell()
+    trackMedia({
+      [TrackKey.MediaSubscriptions]: MediaSubscriptionsItem[index],
     })
+
     if (type === 'follow') {
       // doing follow
       newList[index].isSub = true

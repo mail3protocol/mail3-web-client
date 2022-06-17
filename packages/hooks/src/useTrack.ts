@@ -44,6 +44,7 @@ export enum TrackEvent {
 
   // subscriptions
   ClickSubscriptionBell = 'click_subscription_bell',
+  MediaSubscriptions = 'media_subscriptions',
   // mailboxes
   ClickWrite = 'click_write',
 
@@ -83,6 +84,7 @@ export enum TrackKey {
 
   // subscriptions
   SubscriptionBell = 'click_subscription_bell',
+  MediaSubscriptions = 'media_subscriptions',
   // testing
   TestingEntry = 'beta1_check_eligilibity',
 }
@@ -138,6 +140,17 @@ export enum MailDetailPageItem {
   Delete = 'Delete',
 }
 
+export const MediaSubscriptionsItem: Record<number, string> = {
+  0: 'Mail3',
+  1: 'Bankless',
+  2: 'The Defiant',
+  3: 'Week in Ethereum News',
+  4: 'Mirror Curator DAO',
+  5: 'Arthur Hayes',
+  6: 'CryptoJobsList',
+  7: 'Web3 Jobs',
+}
+
 export interface TrackProps {
   [TrackKey.DesiredWallet]?: DesiredWallet
   [TrackKey.CollectedAddress]?: string
@@ -146,6 +159,7 @@ export interface TrackProps {
   [TrackKey.HomeCommunity]?: HomeCommunity
   [TrackKey.MailDetailPage]?: MailDetailPageItem
   [TrackKey.SubscriptionBell]?: string
+  [TrackKey.MediaSubscriptions]?: string
   [TrackKey.PersonnalCenter]?: PersonnalCenter
   [TrackKey.Mail3MenuItem]?: Mail3MenuItem
 }
