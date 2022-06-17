@@ -9,7 +9,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import '../styles/globals.css'
-import { GOOGLE_ANALYTICS_ID } from '../constants'
+import { GOOGLE_ANALYTICS_MODE, GOOGLE_ANALYTICS_ID } from '../constants'
 
 function Mail3({
   Component,
@@ -84,7 +84,7 @@ function Mail3({
           gtag('js', new Date());
 
           gtag('config', '${GOOGLE_ANALYTICS_ID}', { debug_mode: ${
-            process.env.NODE_ENV !== 'production'
+            process.env.NODE_ENV !== 'production' || GOOGLE_ANALYTICS_MODE
           } });
         `}
         </Script>
