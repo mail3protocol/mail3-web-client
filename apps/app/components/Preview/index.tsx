@@ -491,7 +491,14 @@ export const PreviewComponent: React.FC = () => {
               }}
               passHref
             >
-              <Button as="a" variant="outline">
+              <Button
+                as="a"
+                variant="solid"
+                bg="#4E52F5"
+                _hover={{
+                  bg: '#4E52F5',
+                }}
+              >
                 {t('reply-driftbottle-sender')}
               </Button>
             </NextLink>
