@@ -1,8 +1,11 @@
-import { AspectRatio, Box, Image, Icon, Link } from '@chakra-ui/react'
+import { AspectRatio, Box, Image, Icon, Link, Button } from '@chakra-ui/react'
 import React from 'react'
 import NextLink from 'next/link'
 import styled from '@emotion/styled'
 import { TrackEvent, useTrackClick } from 'hooks'
+import { CloseIcon } from '@chakra-ui/icons'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import DriftingBottleBannerImage from '../../assets/banner.png'
 import DriftingBottleBannerMobileImage from '../../assets/banner-mobile.png'
 import GoToEditDriftingBottleButtonSvg from '../../assets/go-to-send-driftingbottle.svg'
@@ -35,10 +38,28 @@ export const AnimationContainer = styled(Link)`
   }
 `
 
+const isClosedBannerAtom = atomWithStorage<boolean>(
+  'is_close_banner_atom',
+  false,
+  {
+    removeItem(key) {
+      sessionStorage.removeItem(key)
+    },
+    getItem(key) {
+      return sessionStorage.getItem(key) === 'true'
+    },
+    setItem(key, value) {
+      sessionStorage.setItem(key, `${value ? 'true' : 'false'}`)
+    },
+  }
+)
+
 export const DriftbottleBanner: React.FC = () => {
   const trackClickDriftbottleBanner = useTrackClick(
     TrackEvent.ClickDriftbottleBanner
   )
+  const [isClosedBanner, setIsCloseBanner] = useAtom(isClosedBannerAtom)
+  if (isClosedBanner) return null
   return (
     <AspectRatio
       position="relative"
@@ -57,12 +78,29 @@ export const DriftbottleBanner: React.FC = () => {
           w="full"
           h="full"
           bg="#fff"
-          rounded="24px"
+          rounded={{ base: '16px', md: '24px' }}
           shadow="0 0 10px 4px rgba(25, 25, 100, 0.1)"
           onClick={() => {
             trackClickDriftbottleBanner()
           }}
         >
+          <Button
+            variant="unstyled"
+            position="absolute"
+            top="20px"
+            right="20px"
+            w="16px"
+            h="16px"
+            minW="unset"
+            minH="unset"
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              setIsCloseBanner(true)
+            }}
+          >
+            <CloseIcon w="16px" h="16px" />
+          </Button>
           <Image
             src={DriftingBottleBannerImage.src}
             display={{ base: 'none', md: 'block' }}
