@@ -127,7 +127,7 @@ export const PreviewComponent: React.FC = () => {
         }
         if (
           !d.info?.flags.includes(MessageFlagType.Seen) &&
-          d.info?.subject.startsWith('[🌊drift bottle]')
+          d.info?.from.address === DRIFT_BOTTLE_ADDRESS
         ) {
           trackOpenDriftbottle()
         }
