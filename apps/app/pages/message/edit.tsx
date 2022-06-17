@@ -7,9 +7,9 @@ import { SubmitMessage } from 'models/src/submitMessage'
 import { useAtomValue } from 'jotai'
 import { SignatureStatus, useDidMount } from 'hooks'
 import { useQuery } from 'react-query'
-import { AxiosResponse } from 'axios'
 import { GetMessage } from 'models/src/getMessage'
 import Head from 'next/head'
+import { GetMessageContent } from 'models/src/getMessageContent'
 import { MessageEditor } from '../../components/MessageEditor'
 import { Navbar } from '../../components/Navbar'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
@@ -22,6 +22,8 @@ import { useAPI } from '../../hooks/useAPI'
 import { convertBlobToBase64 } from '../../utils/file'
 import { useSaveMessage } from '../../components/MessageEditor/hooks/useSaveMessage'
 import { replaceHtmlAttachImageSrc } from '../../utils/editor'
+import { Query } from '../../api/query'
+import { catchApiResponse } from '../../utils/api'
 
 function getDefaultTemplate(content: string) {
   return `<p>
@@ -146,17 +148,21 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
     }
     return 'Edit Mail'
   }, [action, id])
+
+  const queryMessageAndContentKeyId = useMemo(() => id, [])
+
   const queryMessageInfoAndContentData = useQuery(
-    ['INIT_EDIT_MESSAGE_QUERY'],
+    [Query.GetMessageInfoAndContent, queryMessageAndContentKeyId],
     async () => {
-      function apiHandle<T>(p: Promise<AxiosResponse<T>>) {
-        return p.then((r) => r.data).catch(() => null)
-      }
       const messageInfo = id
-        ? await apiHandle(api.getMessageInfo(id as string))
+        ? await catchApiResponse<GetMessage.Response>(
+            api.getMessageInfo(id as string)
+          )
         : null
       const messageContent = messageInfo?.text.id
-        ? await apiHandle(api.getMessageContent(messageInfo?.text.id))
+        ? await catchApiResponse<GetMessageContent.Response>(
+            api.getMessageContent(messageInfo?.text.id)
+          )
         : null
       return {
         messageInfo,
@@ -164,12 +170,11 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
       }
     },
     {
-      enabled: !!id,
+      enabled: !!queryMessageAndContentKeyId,
       refetchOnReconnect: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       retry: false,
-      cacheTime: 0,
       async onSuccess(d) {
         const { messageInfo } = d
         if (isLoadedSubjectInfo) return
