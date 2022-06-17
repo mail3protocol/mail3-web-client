@@ -1,10 +1,11 @@
-import { Box, Center, HStack, Text } from '@chakra-ui/react'
+import { Box, Center, HStack, Image, Text } from '@chakra-ui/react'
 import React from 'react'
 import styled from '@emotion/styled'
 import QrCode from 'qrcode.react'
 import { Avatar, Button } from 'ui'
 import LogoSvg from 'assets/svg/logo-pure.svg'
 
+import PngBorder from '../../assets/profile/border.png'
 import SvgEtherscan from '../../assets/profile/business/etherscan.svg'
 import SvgArrow from '../../assets/profile/business/arrow.svg'
 import SvgMailme from '../../assets/profile/mail-me.svg'
@@ -22,9 +23,9 @@ const Container = styled(Box)`
   left: 10px;
   position: absolute;
   border-radius: 20px;
-  border: 1px solid red;
 
   .address {
+    max-width: 90%;
     margin-top: 15px;
     background: #f3f3f3;
     border-radius: 16px;
@@ -52,6 +53,15 @@ const Container = styled(Box)`
     transform: translateX(-50%);
     position: absolute;
   }
+
+  .border {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    position: absolute;
+  }
 `
 
 export const ShareCard: React.FC<ShareCardProps> = ({
@@ -59,6 +69,7 @@ export const ShareCard: React.FC<ShareCardProps> = ({
   mailAddress,
 }) => (
   <Container>
+    <Image src={PngBorder.src} className="border" alt="" />
     <Center flexDirection="column">
       <Box pt="20px">
         <LogoSvg />
