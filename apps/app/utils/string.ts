@@ -97,10 +97,11 @@ export function filterEmails(strings: string[]) {
 }
 
 export function getDriftBottleFrom(str: string): string | undefined {
-  const removedTagStr = str.replace(/<[^>]*>?/gm, '')
+  const removedTagStr = str.replace(/<[^>]*>?/gm, ' ')
   return removedTagStr
     .match(
-      /Drift\sbottle\sfrom\s\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/g
+      /Drift\sbottle\sfrom(\s*)\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/g
     )?.[0]
     .substring(18)
+    .trim()
 }
