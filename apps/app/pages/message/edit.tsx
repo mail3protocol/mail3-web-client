@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { CONTAINER_MAX_WIDTH } from 'ui'
@@ -130,6 +130,70 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
     return messageInfo.to.map((item) => item.address)
   }
 
+  async function setSubjectAndOtherByMessageInfo(
+    messageInfo?: GetMessage.Response | null
+  ) {
+    if (!messageInfo) return
+    if (isLoadedSubjectInfo) return
+    setIsLoadedSubjectInfo(true)
+    if (userProperties?.defaultAddress) {
+      setFromAddress(userProperties.defaultAddress as string)
+    }
+    if (!messageInfo) return
+    setSubject(getSubject(messageInfo))
+    setToAddresses(getTo(messageInfo))
+    if (action !== 'reply' && action !== 'forward') {
+      if (messageInfo.cc) {
+        setCcAddresses(messageInfo.cc.map((item) => item.address))
+      }
+      if (messageInfo.bcc) {
+        setBccAddresses(messageInfo.bcc.map((item) => item.address))
+      }
+    }
+    if (!messageInfo.attachments) return
+    setAttachments(
+      messageInfo.attachments.map((a) => ({
+        filename: a.filename,
+        contentType: a.contentType,
+        cid: a.contentId,
+        content: '',
+        contentDisposition: a.inline ? 'inline' : 'attachment',
+      }))
+    )
+    setAttachmentExtraInfo(
+      messageInfo.attachments.reduce<{
+        [key: string]: AttachmentExtraInfo
+      }>(
+        (acc, cur) => ({
+          ...acc,
+          [cur.contentId]: { downloadProgress: 0 },
+        }),
+        {}
+      )
+    )
+    setIsLoadingAttachments(true)
+    await Promise.all(
+      messageInfo.attachments.map((attachment, i) =>
+        api
+          .downloadAttachment(messageInfo.id, attachment.id)
+          .then((res) => convertBlobToBase64(res.data))
+          .then((base64) => {
+            setAttachmentExtraInfo((o) => ({
+              ...o,
+              [attachment.contentId]: { downloadProgress: 1 },
+            }))
+            setAttachments((a) => {
+              // eslint-disable-next-line no-param-reassign,prefer-destructuring
+              a[i].content = base64.split(',')[1]
+              return a.concat([])
+            })
+          })
+          .catch(() => {})
+      )
+    )
+    setIsLoadingAttachments(false)
+  }
+
   useDidMount(() => {
     onReset()
     onResetAttachments()
@@ -175,71 +239,19 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       retry: false,
-      async onSuccess(d) {
-        const { messageInfo } = d
-        if (isLoadedSubjectInfo) return
-        setIsLoadedSubjectInfo(true)
-        if (userProperties?.defaultAddress) {
-          setFromAddress(userProperties.defaultAddress as string)
-        }
-        if (!messageInfo) return
-        setSubject(getSubject(messageInfo))
-        setToAddresses(getTo(messageInfo))
-        if (action !== 'reply' && action !== 'forward') {
-          if (messageInfo.cc) {
-            setCcAddresses(messageInfo.cc.map((item) => item.address))
-          }
-          if (messageInfo.bcc) {
-            setBccAddresses(messageInfo.bcc.map((item) => item.address))
-          }
-        }
-        if (!messageInfo.attachments) return
-        setAttachments(
-          messageInfo.attachments.map((a) => ({
-            filename: a.filename,
-            contentType: a.contentType,
-            cid: a.contentId,
-            content: '',
-            contentDisposition: a.inline ? 'inline' : 'attachment',
-          }))
-        )
-        setAttachmentExtraInfo(
-          messageInfo.attachments.reduce<{
-            [key: string]: AttachmentExtraInfo
-          }>(
-            (acc, cur) => ({
-              ...acc,
-              [cur.contentId]: { downloadProgress: 0 },
-            }),
-            {}
-          )
-        )
-        setIsLoadingAttachments(true)
-        await Promise.all(
-          messageInfo.attachments.map((attachment, i) =>
-            api
-              .downloadAttachment(messageInfo.id, attachment.id)
-              .then((res) => convertBlobToBase64(res.data))
-              .then((base64) => {
-                setAttachmentExtraInfo((o) => ({
-                  ...o,
-                  [attachment.contentId]: { downloadProgress: 1 },
-                }))
-                setAttachments((a) => {
-                  // eslint-disable-next-line no-param-reassign,prefer-destructuring
-                  a[i].content = base64.split(',')[1]
-                  return a.concat([])
-                })
-              })
-              .catch(() => {})
-          )
-        )
-        setIsLoadingAttachments(false)
-      },
     }
   )
 
   const messageContent = queryMessageInfoAndContentData?.data?.messageContent
+  const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
+
+  const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
+  useEffect(() => {
+    if (isFirstLoadMessage) return
+    setIsFirstLoadMessage(true)
+    setSubjectAndOtherByMessageInfo(messageInfo)
+  }, [messageInfo])
+
   const defaultContent = useMemo(() => {
     const signContent =
       isEnableSignatureText && userProperties?.text_signature
