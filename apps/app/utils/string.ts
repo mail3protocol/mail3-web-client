@@ -87,7 +87,19 @@ export const truncateMiddle0xMail = (
   if (!verifyEmail(mailAddress)) return mailAddress
   const splitMailAddress = mailAddress.split('@')
   const address = splitMailAddress[0]
-  if (isENS(address)) return mailAddress
   const suffix = splitMailAddress[1]
+  if (isENS(address)) return mailAddress
+  if (!isEthAddress(address)) return mailAddress
+
   return `${truncateMiddle(address, takeLength, tailLength)}@${suffix}`
 }
+
+// const a = '0xClass.eth@mail3.me'
+// const b = '0x17efdccfc61a03ae6620f35e502215edde20c13d@mail3.me'
+// const c = 'classclassclassclassclassclass.eth@google.com'
+// const d = '12345678910@gmail.com'
+
+// console.log(a, truncateMiddle0xMail(a))
+// console.log(b, truncateMiddle0xMail(b))
+// console.log(c, truncateMiddle0xMail(c))
+// console.log(d, truncateMiddle0xMail(d))
