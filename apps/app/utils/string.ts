@@ -77,17 +77,17 @@ export const isMail3Address = (address: string) =>
     address.toLowerCase().endsWith(item)
   )
 
-export const is0xAddress = (address: string) => address.startsWith('0x')
+export const isENS = (address: string) => address.endsWith('.eth')
 
 export const truncateMiddle0xMail = (
-  address: string,
+  mailAddress: string,
   takeLength = 6,
   tailLength = 4
 ) => {
-  if (!verifyEmail(address)) return address
-  if (!is0xAddress(address)) return address
-  const splitAddress = address.split('@')
-  const realAddress = splitAddress[0]
-  const suffix = splitAddress[1]
-  return `${truncateMiddle(realAddress, takeLength, tailLength)}@${suffix}`
+  if (!verifyEmail(mailAddress)) return mailAddress
+  const splitMailAddress = mailAddress.split('@')
+  const address = splitMailAddress[0]
+  if (isENS(address)) return mailAddress
+  const suffix = splitMailAddress[1]
+  return `${truncateMiddle(address, takeLength, tailLength)}@${suffix}`
 }
