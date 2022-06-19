@@ -2,6 +2,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer } from 'ui'
 import Head from 'next/head'
+import { LoginInfo, useDidMount } from 'hooks'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Navbar } from '../components/Navbar'
@@ -9,6 +10,7 @@ import { LandingPage } from '../components/LandingPage'
 import { parseCookies, useIsAuthenticated } from '../hooks/useLogin'
 import { InboxComponent } from '../components/Inbox'
 import { RoutePath } from '../route/path'
+import { useSetLoginInfo } from '../hooks/useLoginInfo'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
@@ -16,6 +18,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
 }) => {
   let isAuth = false
+  let loginInfo: LoginInfo | null = null
   if (res) {
     const cookie = parseCookies(req)
     if (typeof cookie?.jwt !== 'string') {
@@ -27,10 +30,16 @@ export const getServerSideProps: GetServerSideProps = async ({
       res.end()
     } else {
       isAuth = true
+      loginInfo = {
+        address: cookie.address,
+        uuid: cookie.uuid,
+        jwt: cookie.jwt,
+      }
     }
   }
   return {
     props: {
+      loginInfo,
       isAuth,
       ...(await serverSideTranslations(locale as string, [
         'common',
@@ -41,14 +50,24 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 }
 
-const Home: NextPage<{ isAuth: boolean }> = ({ isAuth }) => {
+const Home: NextPage<{ isAuth: boolean; loginInfo: LoginInfo }> = ({
+  isAuth,
+  loginInfo,
+}) => {
   const isAuthenticated = useIsAuthenticated()
   const router = useRouter()
+  const setLoginInfo = useSetLoginInfo()
   useEffect(() => {
     if (!isAuthenticated) {
       router.push(RoutePath.Testing)
     }
   }, [isAuthenticated])
+
+  useDidMount(() => {
+    if (loginInfo) {
+      setLoginInfo(loginInfo)
+    }
+  })
 
   return (
     <>

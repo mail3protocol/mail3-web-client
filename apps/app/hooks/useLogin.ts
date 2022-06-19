@@ -33,7 +33,6 @@ export const useSetLoginCookie = () => {
     const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-      secure: process.env.NODE_ENV === 'production',
     }
     setCookie(COOKIE_KEY, info, option)
   }, [])

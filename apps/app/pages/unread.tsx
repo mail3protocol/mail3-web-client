@@ -1,35 +1,47 @@
+import { useDidMount } from 'hooks'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
-import { useAPI } from '../hooks/useAPI'
-import { getAuthenticateProps } from '../hooks/useLogin'
+import { API } from '../api'
+import { useLoginInfo } from '../hooks/useLoginInfo'
 
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, ['common'])),
-    },
-  })
-)
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale as string, ['common'])),
+  },
+})
 
 const UnRead: NextPage = () => {
-  const api = useAPI()
   const router = useRouter()
+  const fromAddress = router.query.from
+  const loginInfo = useLoginInfo()
+  useDidMount(() => {
+    if (loginInfo == null) {
+      window.parent.postMessage({ target: 'mail3-check-mail', total: -2 }, '*')
+    }
+  })
   useQuery(
-    ['unread', router.query.from],
+    ['unread', fromAddress, loginInfo],
     async () => {
-      const { data } = await api.getUnreadMessagesCount(
-        router.query.from as string
-      )
+      const api = new API(loginInfo?.address, loginInfo?.jwt)
+      if (typeof fromAddress === 'string') {
+        const { data } = await api.getUnreadMessagesCount(fromAddress)
+        return data.total
+      }
+      const { data } = await api.getMessagesSeen(0)
       return data.total
     },
     {
+      enabled: loginInfo != null,
       onSuccess(total) {
-        window.parent.postMessage({ target: 'mail3-unread', total })
+        window.parent.postMessage({ target: 'mail3-check-mail', total }, '*')
       },
       onError() {
-        window.parent.postMessage({ target: 'mail3-unread', total: -2 })
+        window.parent.postMessage(
+          { target: 'mail3-check-mail', total: -2 },
+          '*'
+        )
       },
     }
   )
