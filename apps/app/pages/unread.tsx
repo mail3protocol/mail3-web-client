@@ -1,6 +1,7 @@
 import { useDidMount } from 'hooks'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { API } from '../api'
@@ -29,7 +30,7 @@ const UnRead: NextPage = () => {
         const { data } = await api.getUnreadMessagesCount(fromAddress)
         return data.total
       }
-      const { data } = await api.getMessagesSeen(0)
+      const { data } = await api.getMessagesNew(0)
       return data.total
     },
     {
@@ -45,7 +46,11 @@ const UnRead: NextPage = () => {
       },
     }
   )
-  return null
+  return (
+    <Head>
+      <title>Mail3: Mail Me Button</title>
+    </Head>
+  )
 }
 
 export default UnRead
