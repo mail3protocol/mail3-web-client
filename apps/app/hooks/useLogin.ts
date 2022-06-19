@@ -25,6 +25,7 @@ import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
+import { useSetLoginInfo } from './useLoginInfo'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -173,6 +174,7 @@ export const useInitUserProperties = () => {
   const isAuth = useIsAuthenticated()
   const userProps = useAtomValue(userPropertiesAtom)
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  const setLoginInfo = useSetLoginInfo()
   useDidMount(() => {
     if (userProps && isAuth) {
       try {
@@ -196,6 +198,7 @@ export const useInitUserProperties = () => {
         //
       }
       setUserProperties(null)
+      setLoginInfo(null)
     }
   }, [isAuth])
 }
