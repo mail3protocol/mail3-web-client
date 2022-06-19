@@ -91,3 +91,17 @@ export const truncateMiddle0xMail = (
   const suffix = splitAddress[1]
   return `${truncateMiddle(realAddress, takeLength, tailLength)}@${suffix}`
 }
+
+export function filterEmails(strings: string[]) {
+  return strings.filter((str) => verifyEmail(str))
+}
+
+export function getDriftBottleFrom(str: string): string | undefined {
+  const removedTagStr = str.replace(/<[^>]*>?/gm, ' ')
+  return removedTagStr
+    .match(
+      /Drift\sbottle\sfrom(\s*)\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/g
+    )?.[0]
+    .substring(18)
+    .trim()
+}

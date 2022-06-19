@@ -11,6 +11,7 @@ import { parseCookies, useIsAuthenticated } from '../hooks/useLogin'
 import { InboxComponent } from '../components/Inbox'
 import { RoutePath } from '../route/path'
 import { useSetLoginInfo } from '../hooks/useLoginInfo'
+import { DriftbottleBanner } from '../components/DriftbottleBanner'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
@@ -77,6 +78,7 @@ const Home: NextPage<{ isAuth: boolean; loginInfo: LoginInfo }> = ({
       <PageContainer>
         <Navbar />
         {!isAuth && <LandingPage />}
+        <DriftbottleBanner />
       </PageContainer>
       {isAuth && <InboxComponent />}
     </>

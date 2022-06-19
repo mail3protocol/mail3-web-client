@@ -1,7 +1,7 @@
 import { useHelpers } from '@remirror/react'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useToast } from 'hooks'
+import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
@@ -13,6 +13,7 @@ import {
   outputHtmlWithAttachmentImages,
 } from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
+import { DRIFT_BOTTLE_ADDRESS } from '../../../constants'
 
 export const ID_NAME = 'id'
 export const ACTION_NAME = 'action'
@@ -48,6 +49,8 @@ export function useSubmitMessage() {
   const toast = useToast()
   const { attachments } = useAttachment()
   const { isEnableCardSignature } = useCardSignature()
+  const trackReplyDriftbottleMail = useTrackClick(TrackEvent.ReplyDriftbottle)
+  const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
@@ -63,6 +66,10 @@ export function useSubmitMessage() {
     const { html: replacedAttachmentImageHtml, attachments: imageAttachments } =
       outputHtmlWithAttachmentImages(html)
     html = replacedAttachmentImageHtml
+    const isSendToDriftBottle = toAddresses.some(
+      (address) => address === DRIFT_BOTTLE_ADDRESS
+    )
+    const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
     try {
       await api.submitMessage({
         from: {
@@ -77,6 +84,12 @@ export function useSubmitMessage() {
           .filter((a) => a.contentDisposition !== 'inline')
           .concat(imageAttachments),
       })
+      if (isSendToDriftBottle) {
+        trackSendDriftbottleMail()
+      }
+      if (isReplyDriftbottleMail) {
+        trackReplyDriftbottleMail()
+      }
       await removeDraft(api)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
