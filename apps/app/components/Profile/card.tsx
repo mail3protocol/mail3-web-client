@@ -11,7 +11,6 @@ import SvgArrow from '../../assets/profile/business/arrow.svg'
 import SvgMailme from '../../assets/profile/mail-me.svg'
 
 interface ShareCardProps {
-  address: string
   mailAddress: string
 }
 
@@ -21,6 +20,8 @@ const Container = styled(Box)`
   width: 375px;
   top: -9999px;
   left: -9999px;
+  /* top: 10px; */
+  /* left: 10px; */
   position: absolute;
   border-radius: 20px;
 
@@ -66,40 +67,44 @@ const Container = styled(Box)`
 `
 
 export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
-  ({ address, mailAddress }, ref) => (
-    <Container ref={ref}>
-      <Image src={PngBorder.src} className="border" alt="" />
-      <Center flexDirection="column">
-        <Box pt="20px">
-          <LogoSvg />
-        </Box>
-        <Box mt="35px">
-          <Avatar address={address} w="72px" h="72px" />
-        </Box>
-        <Box className="address">
-          <Text className="p">{mailAddress}</Text>
-        </Box>
-        <HStack spacing="24px" mt="16px">
-          {[SvgArrow, SvgEtherscan].map((Item, index) => (
-            <Box
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              w="24px"
-              h="24px"
-            >
-              <Item />
-            </Box>
-          ))}
-        </HStack>
+  ({ mailAddress }, ref) => {
+    const address = mailAddress.substring(0, mailAddress.indexOf('@'))
 
-        <Box className="qrCode">
-          <QrCode value={`https://mail3.me/${address}`} size={130} />
-        </Box>
+    return (
+      <Container ref={ref}>
+        <Image src={PngBorder.src} className="border" alt="" />
+        <Center flexDirection="column">
+          <Box pt="20px">
+            <LogoSvg />
+          </Box>
+          <Box mt="35px">
+            <Avatar address={address} w="72px" h="72px" />
+          </Box>
+          <Box className="address">
+            <Text className="p">{mailAddress}</Text>
+          </Box>
+          <HStack spacing="24px" mt="16px">
+            {[SvgArrow, SvgEtherscan].map((Item, index) => (
+              <Box
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                w="24px"
+                h="24px"
+              >
+                <Item />
+              </Box>
+            ))}
+          </HStack>
 
-        <Button className="button">
-          <SvgMailme /> <Box pl="10px">Mail me</Box>
-        </Button>
-      </Center>
-    </Container>
-  )
+          <Box className="qrCode">
+            <QrCode value={`https://mail3.me/${address}`} size={130} />
+          </Box>
+
+          <Button className="button">
+            <SvgMailme /> <Box pl="10px">Mail me</Box>
+          </Button>
+        </Center>
+      </Container>
+    )
+  }
 )

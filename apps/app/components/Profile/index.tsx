@@ -20,7 +20,7 @@ import { useToast } from 'hooks'
 import { useAtomValue } from 'jotai'
 import { MAIL_SERVER_URL } from '../../constants'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
-import { copyText, verifyEmail } from '../../utils'
+import { copyText, removeMailSuffix, verifyEmail } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
 import SvgMailme from '../../assets/profile/mail-me.svg'
@@ -182,7 +182,7 @@ export const ProfileComponent: React.FC = () => {
     <>
       <Container>
         <Box className="avatar">
-          <Avatar address={address} w="72px" h="72px" />
+          <Avatar address={removeMailSuffix(mailAddress)} w="72px" h="72px" />
         </Box>
         <Box className="button-list">
           <Box className="button-wrap-mobile">
@@ -294,7 +294,7 @@ export const ProfileComponent: React.FC = () => {
         </Button>
       </Center>
 
-      <ShareCard ref={cardRef} address={address} mailAddress={mailAddress} />
+      <ShareCard ref={cardRef} mailAddress={mailAddress} />
     </>
   )
 }
