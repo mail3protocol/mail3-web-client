@@ -72,10 +72,12 @@ function Mail3({
         />
         <link rel="apple-touch-icon" href="/icons/icon-144x144.png" />
       </Head>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-WH0BKBPFWP"
-        strategy="afterInteractive"
-      />
+      {GOOGLE_ANALYTICS_ID ? (
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-WH0BKBPFWP"
+          strategy="afterInteractive"
+        />
+      ) : null}
       {GOOGLE_ANALYTICS_ID ? (
         <Script id="google-analytics" strategy="afterInteractive">
           {`
