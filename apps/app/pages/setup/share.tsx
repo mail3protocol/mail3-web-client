@@ -102,7 +102,7 @@ const SetupShare: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Mail3: Share</title>
+        <title>Mail3: Setup Share Profile</title>
       </Head>
       <PageContainer>
         <Navbar />
