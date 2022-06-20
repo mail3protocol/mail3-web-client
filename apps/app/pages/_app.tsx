@@ -74,7 +74,7 @@ function Mail3({
       </Head>
       {GOOGLE_ANALYTICS_ID ? (
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-WH0BKBPFWP"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
           strategy="afterInteractive"
         />
       ) : null}

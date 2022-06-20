@@ -75,7 +75,7 @@ function Mail3({ Component, pageProps }: AppProps) {
       </Head>
       {GOOGLE_ANALYTICS_ID ? (
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-1PW4LM5ETS"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
           strategy="afterInteractive"
         />
       ) : null}
