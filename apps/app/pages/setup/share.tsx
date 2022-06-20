@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
@@ -18,10 +18,11 @@ import {
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Head from 'next/head'
 import styled from '@emotion/styled'
+import { useAtomValue } from 'jotai/utils'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
-import { getAuthenticateProps } from '../../hooks/useLogin'
+import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
 
 import SvgCopy from '../../assets/profile/copy.svg'
 import SvgShare from '../../assets/profile/share.svg'
@@ -77,6 +78,31 @@ const SetupShare: NextPage = () => {
   const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
   const cardRef = useRef<HTMLDivElement>(null)
   const { downloadScreenshot } = useScreenshot()
+  const userProps = useAtomValue(userPropertiesAtom)
+
+  const mailAddress = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
+
+  const onShareTwitter = () => {
+    const shareConfig = {
+      text: 'Hey, contact me using my Mail3 email address.',
+      url: `https://mail3.me/${mailAddress}`,
+      hashtags: ['mail3', 'mail3dao'],
+    }
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      shareConfig.text
+    )}&url=${encodeURIComponent(
+      shareConfig.url
+    )}&hashtags=${shareConfig.hashtags.join(',')}`
+
+    window.open(
+      url,
+      'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
+    )
+  }
+
   const onSharePic = () => {
     if (!cardRef?.current) return
     downloadScreenshot(cardRef.current, 'share.png')
@@ -160,7 +186,7 @@ const SetupShare: NextPage = () => {
                 <VStack w="207px" spacing="20px">
                   <Flex
                     as="button"
-                    onClick={() => {}}
+                    onClick={onShareTwitter}
                     className="button-item twitter"
                   >
                     <SvgTwitter />
