@@ -16,7 +16,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { Avatar, Button } from 'ui'
 import { useMemo, useRef } from 'react'
-import { useToast } from 'hooks'
+import { useScreenshot, useToast } from 'hooks'
 import { useAtomValue } from 'jotai'
 import { MAIL_SERVER_URL } from '../../constants'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
@@ -32,7 +32,6 @@ import SvgMore from '../../assets/profile/more.svg'
 import SvgEtherscan from '../../assets/profile/business/etherscan.svg'
 import SvgArrow from '../../assets/profile/business/arrow.svg'
 import { ShareCard } from './card'
-import { onRenderElementToImage } from '../../utils/editor'
 // import SvgCheer from '../../assets/profile/business/cheer.svg'
 // import SvgLens from '../../assets/profile/business/lens.svg'
 // import SvgTree from '../../assets/profile/business/tree.svg'
@@ -106,6 +105,7 @@ export const ProfileComponent: React.FC = () => {
   const userProps = useAtomValue(userPropertiesAtom)
   const emailAddress = useEmailAddress()
   const toast = useToast()
+  const { downloadScreenshot } = useScreenshot()
 
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -164,14 +164,14 @@ export const ProfileComponent: React.FC = () => {
           'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
         )
       },
-      [ButtonType.Share]: () => {
+      [ButtonType.Share]: async () => {
         if (!cardRef?.current) return
-        onRenderElementToImage(cardRef.current).then((res) => {
-          const a = document.createElement('a')
-          a.href = res
-          a.download = 'profile.png'
-          a.click()
-        })
+        try {
+          downloadScreenshot(cardRef.current, 'share.png')
+        } catch (error) {
+          toast('Download screenshot Error!')
+        }
+
         popoverRef?.current?.blur()
       },
     }),

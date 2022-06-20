@@ -13,7 +13,8 @@
         "@walletconnect/jsonrpc-provider": "^1.0.3",
         "@web3-react/core": "8.0.23-beta.0",
         "@web3-react/metamask": "8.0.19-beta.0",
-        "@web3-react/walletconnect": "8.0.26-beta.0"
+        "@web3-react/walletconnect": "8.0.26-beta.0",
+        "html2canvas-objectfit-fix": "^1.2.0"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",

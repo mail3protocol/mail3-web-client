@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
-import { TrackEvent, useTrackClick } from 'hooks'
+import { TrackEvent, useScreenshot, useTrackClick } from 'hooks'
 import {
   Box,
   Center,
@@ -75,6 +75,13 @@ const Footer = styled(Box)`
 const SetupShare: NextPage = () => {
   const [t] = useTranslation('settings')
   const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const { downloadScreenshot } = useScreenshot()
+  const onSharePic = () => {
+    if (!cardRef?.current) return
+    downloadScreenshot(cardRef.current, 'share.png')
+  }
+
   return (
     <>
       <Head>
@@ -159,7 +166,11 @@ const SetupShare: NextPage = () => {
                     <SvgTwitter />
                     <Box ml="5px">{t('setup.share.twitter')}</Box>
                   </Flex>
-                  <Flex as="button" onClick={() => {}} className="button-item">
+                  <Flex
+                    as="button"
+                    onClick={onSharePic}
+                    className="button-item"
+                  >
                     <SvgShare /> <Box ml="5px">{t('setup.share.card')}</Box>
                   </Flex>
                 </VStack>
@@ -189,6 +200,11 @@ const SetupShare: NextPage = () => {
           </Footer>
         </SettingContainer>
       </PageContainer>
+
+      <ShareCard
+        ref={cardRef}
+        mailAddress="0x50D96aD72c7abF7fCfBEFDE24ddC33BeEeb08c43@mail3.me"
+      />
     </>
   )
 }
