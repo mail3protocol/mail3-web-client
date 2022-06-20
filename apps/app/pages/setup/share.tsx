@@ -5,14 +5,15 @@ import { Button, PageContainer } from 'ui'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { TrackEvent, useTrackClick } from 'hooks'
-import { Center, Heading, Text } from '@chakra-ui/react'
+import { Box, Center, Flex, Heading, Spacer, Text } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Head from 'next/head'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
-import { SettingSignature } from '../../components/Settings/SettingSignature'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { getAuthenticateProps } from '../../hooks/useLogin'
+
+import SvgCopy from '../../assets/profile/copy.svg'
 
 export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
   async ({ locale }) => ({
@@ -25,13 +26,13 @@ export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
   })
 )
 
-const SetupSignaturePage: NextPage = () => {
+const SetupShare: NextPage = () => {
   const [t] = useTranslation('settings')
   const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
   return (
     <>
       <Head>
-        <title>Mail3: Setup Signature</title>
+        <title>Mail3: Share</title>
       </Head>
       <PageContainer>
         <Navbar />
@@ -43,9 +44,9 @@ const SetupSignaturePage: NextPage = () => {
             mt={['20px', '20px', '40px']}
           >
             <Heading fontSize={['20px', '20px', '28px']}>
-              {t('setup.signature.title')}
+              {t('setup.share.title')}
             </Heading>
-            <Link href={RoutePath.SetupShare} passHref>
+            <Link href={RoutePath.Inbox} passHref>
               <Button
                 bg="black"
                 color="white"
@@ -65,11 +66,35 @@ const SetupSignaturePage: NextPage = () => {
               </Button>
             </Link>
           </Center>
-          <SettingSignature />
+          <Flex justifyContent="center">
+            <Box w="600px">
+              <Flex
+                width="100%"
+                p="11px 16px"
+                color="#000"
+                border="1px solid #E7E7E7"
+                borderRadius="8px"
+                justify="space-between"
+              >
+                <Text fontSize="14px" wordBreak="break-all">
+                  0x50D96aD72c7abF7fCfBEFDE24ddC33BeEeb08c43@mail3.me
+                </Text>
+                <Spacer />
+                <Flex
+                  as="button"
+                  fontSize={{ base: 0, md: '12px' }}
+                  alignItems="center"
+                >
+                  <SvgCopy />
+                  <Box ml="5px">Copy</Box>
+                </Flex>
+              </Flex>
+            </Box>
+          </Flex>
         </SettingContainer>
       </PageContainer>
     </>
   )
 }
 
-export default SetupSignaturePage
+export default SetupShare

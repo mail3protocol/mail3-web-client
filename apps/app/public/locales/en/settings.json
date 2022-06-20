@@ -6,6 +6,11 @@
         "signature": {
             "title": "Show your own signature"
         },
+        "share": {
+            "title": "Share your Mail3 address",
+            "twiter": "Share on Twitter",
+            "card": "Share profile card"
+        },
         "next": "Next"
     },
     "settings": {
