@@ -12,6 +12,7 @@ import SvgMailme from '../../assets/profile/mail-me.svg'
 
 interface ShareCardProps {
   mailAddress: string
+  isPic?: boolean
 }
 
 const Container = styled(Box)`
@@ -24,6 +25,13 @@ const Container = styled(Box)`
   /* left: 10px; */
   position: absolute;
   border-radius: 20px;
+
+  &.is-picture {
+    top: 0;
+    left: 0;
+    position: relative;
+    pointer-events: none;
+  }
 
   .address {
     max-width: 90%;
@@ -67,11 +75,11 @@ const Container = styled(Box)`
 `
 
 export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
-  ({ mailAddress }, ref) => {
+  ({ mailAddress, isPic }, ref) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
 
     return (
-      <Container ref={ref}>
+      <Container ref={ref} className={isPic ? 'is-picture' : ''}>
         <Image src={PngBorder.src} className="border" alt="" />
         <Center flexDirection="column">
           <Box pt="20px">
