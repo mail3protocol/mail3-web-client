@@ -92,13 +92,16 @@ export const DriftbottleBanner: React.FC = () => {
             h="16px"
             minW="unset"
             minH="unset"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
             onClick={(e) => {
               e.stopPropagation()
               e.preventDefault()
               setIsCloseBanner(true)
             }}
           >
-            <CloseIcon w="16px" h="16px" />
+            <CloseIcon w="inherit" h="inherit" />
           </Button>
           <Image
             src={DriftingBottleBannerImage.src}
