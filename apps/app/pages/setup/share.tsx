@@ -19,6 +19,7 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import Head from 'next/head'
 import styled from '@emotion/styled'
 import { useAtomValue } from 'jotai/utils'
+import { shareToTwitter } from 'shared'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
@@ -86,21 +87,11 @@ const SetupShare: NextPage = () => {
   )
 
   const onShareTwitter = () => {
-    const shareConfig = {
+    shareToTwitter({
       text: 'Hey, contact me using my Mail3 email address.',
       url: `https://mail3.me/${mailAddress}`,
       hashtags: ['mail3', 'mail3dao'],
-    }
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      shareConfig.text
-    )}&url=${encodeURIComponent(
-      shareConfig.url
-    )}&hashtags=${shareConfig.hashtags.join(',')}`
-
-    window.open(
-      url,
-      'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
-    )
+    })
   }
 
   const onSharePic = () => {

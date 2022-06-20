@@ -18,9 +18,10 @@ import { Avatar, Button } from 'ui'
 import { useMemo, useRef } from 'react'
 import { useScreenshot, useToast } from 'hooks'
 import { useAtomValue } from 'jotai'
+import { verifyEmail, shareToTwitter } from 'shared'
 import { MAIL_SERVER_URL } from '../../constants'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
-import { copyText, removeMailSuffix, verifyEmail } from '../../utils'
+import { copyText, removeMailSuffix } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
 import SvgMailme from '../../assets/profile/mail-me.svg'
@@ -148,21 +149,11 @@ export const ProfileComponent: React.FC = () => {
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {
-        const shareConfig = {
+        shareToTwitter({
           text: 'Hey, contact me using my Mail3 email address.',
           url: 'https://mail3.me/mai3dao.eth@mail3.me',
           hashtags: ['mail3', 'mail3dao'],
-        }
-        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          shareConfig.text
-        )}&url=${encodeURIComponent(
-          shareConfig.url
-        )}&hashtags=${shareConfig.hashtags.join(',')}`
-
-        window.open(
-          url,
-          'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
-        )
+        })
       },
       [ButtonType.Share]: async () => {
         if (!cardRef?.current) return
