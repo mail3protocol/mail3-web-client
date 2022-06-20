@@ -15,6 +15,7 @@ import {
 } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { truncateMailAddress } from 'shared'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -27,12 +28,7 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
 import { Attachment } from './Attachment'
-import {
-  formatDateString,
-  isMail3Address,
-  removeMailSuffix,
-  truncateMiddle0xMail,
-} from '../../utils'
+import { formatDateString, isMail3Address, removeMailSuffix } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
 import { MAIL_SERVER_URL } from '../../constants'
 import { RenderHTML } from './parser'
@@ -99,6 +95,7 @@ export const PreviewComponent: React.FC = () => {
       return {
         info,
         html: content.html,
+        plain: content.plain,
       }
     },
     {
@@ -145,7 +142,11 @@ export const PreviewComponent: React.FC = () => {
     return undefined
   }, [data])
 
-  const content = useMemo(() => data?.html ?? '', [data])
+  const content = useMemo(() => {
+    if (data?.html) return data.html
+    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
+    return ''
+  }, [data])
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
@@ -301,7 +302,7 @@ export const PreviewComponent: React.FC = () => {
   }
 
   const getNameAddress = (item: AddressResponse) => {
-    const address = truncateMiddle0xMail(item.address)
+    const address = truncateMailAddress(item.address)
     if (item.name) return `${item.name} <${address}>`
     return `<${address}>`
   }
@@ -410,7 +411,7 @@ export const PreviewComponent: React.FC = () => {
                     verticalAlign="middle"
                     ml={{ base: 0, md: '5px' }}
                   >
-                    {`<${truncateMiddle0xMail(detail.from.address)}>`}
+                    {`<${truncateMailAddress(detail.from.address)}>`}
                   </Text>
                 </Box>
                 <Box />
