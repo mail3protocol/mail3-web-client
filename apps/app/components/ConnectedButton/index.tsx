@@ -30,6 +30,7 @@ import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
 import { copyText, truncateMiddle } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
+import { MAIL_SERVER_URL } from '../../constants'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
@@ -63,7 +64,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         icon: <CopySvg />,
         async onClick() {
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
-          const addr = userProps?.defaultAddress || emailAddress
+          const addr = userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
