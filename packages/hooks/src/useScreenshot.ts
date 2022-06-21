@@ -1,4 +1,4 @@
-import html2canvas from 'html2canvas-objectfit-fix'
+import html2canvas from 'html2canvas'
 import { useState } from 'react'
 
 interface useScreenshotReturn {
@@ -12,15 +12,14 @@ type useScreenshotProps = () => useScreenshotReturn
 export const useScreenshot: useScreenshotProps = () => {
   const [image, setImage] = useState('')
 
-  const takeScreenshot = async (element: HTMLDivElement) => {
-    const boundingClientRect = element.getBoundingClientRect()
-    return html2canvas(element, {
+  const takeScreenshot = async (element: HTMLDivElement) =>
+    html2canvas(element, {
       useCORS: true,
       allowTaint: true,
-      height: element.offsetHeight,
-      width: element.offsetWidth,
-      x: boundingClientRect.x,
-      y: boundingClientRect.y,
+      height: 566,
+      width: 375,
+      x: 0,
+      y: 0,
       scale: 2,
       backgroundColor: null,
     }).then((canvas) => {
@@ -28,7 +27,6 @@ export const useScreenshot: useScreenshotProps = () => {
       setImage(base64)
       return base64
     })
-  }
 
   const downloadScreenshot: useScreenshotReturn['downloadScreenshot'] = async (
     element,

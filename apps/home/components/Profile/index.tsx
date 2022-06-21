@@ -10,7 +10,6 @@ import {
   Text,
   Wrap,
   WrapItem,
-  Image,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
@@ -25,8 +24,8 @@ import SvgShare from 'assets/profile/share.svg'
 import SvgTwitter from 'assets/profile/twitter.svg'
 import SvgMore from 'assets/profile/more.svg'
 
-import SvgEtherscan from 'assets/profile/business/etherscan.svg?url'
-import SvgArrow from 'assets/profile/business/arrow.svg?url'
+import SvgEtherscan from 'assets/profile/business/etherscan.svg'
+import SvgArrow from 'assets/profile/business/arrow.svg'
 
 enum ButtonType {
   Copy,
@@ -253,14 +252,14 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </Box>
         <Center mt="25px">
           <HStack spacing="24px">
-            {[SvgArrow, SvgEtherscan].map((item, index) => (
+            {[SvgArrow, SvgEtherscan].map((Item, index) => (
               <Box
                 // eslint-disable-next-line react/no-array-index-key
                 key={index}
                 w={{ base: '24px', md: '36px' }}
                 h={{ base: '24px', md: '36px' }}
               >
-                <Image src={item} width="100%" height="100%" />
+                <Item />
               </Box>
             ))}
           </HStack>
@@ -274,14 +273,14 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       </Center>
 
       <ProfileCard ref={cardRef} mailAddress={mailAddress}>
-        {[SvgArrow, SvgEtherscan].map((item, index) => (
+        {[SvgArrow, SvgEtherscan].map((Item, index) => (
           <Box
             // eslint-disable-next-line react/no-array-index-key
             key={index}
             w="24px"
             h="24px"
           >
-            <Image src={item} width="100%" height="100%" />
+            <Item />
           </Box>
         ))}
       </ProfileCard>
