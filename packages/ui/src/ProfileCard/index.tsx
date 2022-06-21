@@ -3,14 +3,18 @@ import React, { forwardRef } from 'react'
 import styled from '@emotion/styled'
 import QrCode from 'qrcode.react'
 import { Avatar, Button } from 'ui'
+// @ts-ignore
 import LogoSvg from 'assets/svg/logo-pure.svg'
-
+// @ts-ignore
 import PngBorder from 'assets/profile/border.png'
+// @ts-ignore
 import SvgEtherscan from 'assets/profile/business/etherscan.svg'
+// @ts-ignore
 import SvgArrow from 'assets/profile/business/arrow.svg'
+// @ts-ignore
 import SvgMailme from 'assets/profile/mail-me.svg'
 
-interface ShareCardProps {
+interface ProfileCardProps {
   mailAddress: string
   isPic?: boolean
 }
@@ -74,7 +78,7 @@ const Container = styled(Box)`
   }
 `
 
-export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
+export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
   ({ mailAddress, isPic }, ref) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
 

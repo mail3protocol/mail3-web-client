@@ -14,7 +14,7 @@ import {
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
-import { Avatar, Button } from 'ui'
+import { Avatar, Button, ProfileCard } from 'ui'
 import { useMemo, useRef } from 'react'
 import { useScreenshot, useToast } from 'hooks'
 import { useAtomValue } from 'jotai'
@@ -32,7 +32,6 @@ import { userPropertiesAtom } from '../../hooks/useLogin'
 import { copyText, removeMailSuffix } from '../../utils'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { MAIL_SERVER_URL } from '../../constants'
-import { ShareCard } from './card'
 
 enum ButtonType {
   Copy,
@@ -282,7 +281,7 @@ export const ProfileComponent: React.FC = () => {
         </Button>
       </Center>
 
-      <ShareCard ref={cardRef} mailAddress={mailAddress} />
+      <ProfileCard ref={cardRef} mailAddress={mailAddress} />
     </>
   )
 }

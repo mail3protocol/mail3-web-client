@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Button, PageContainer } from 'ui'
+import { Button, PageContainer, ProfileCard } from 'ui'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { TrackEvent, useScreenshot, useToast, useTrackClick } from 'hooks'
@@ -28,7 +28,6 @@ import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
 
-import { ShareCard } from '../../components/Profile/card'
 import { copyText } from '../../utils'
 
 export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
@@ -185,7 +184,7 @@ const SetupShare: NextPage = () => {
               >
                 <Box w="228px" h="343px">
                   <Box transform={`scale(${228 / 375})`} transformOrigin="0 0">
-                    <ShareCard mailAddress={mailAddress} isPic />
+                    <ProfileCard mailAddress={mailAddress} isPic />
                   </Box>
                 </Box>
                 <VStack w="207px" spacing="20px">
@@ -232,7 +231,7 @@ const SetupShare: NextPage = () => {
         </SettingContainer>
       </PageContainer>
 
-      <ShareCard ref={cardRef} mailAddress={mailAddress} />
+      <ProfileCard ref={cardRef} mailAddress={mailAddress} />
     </>
   )
 }
