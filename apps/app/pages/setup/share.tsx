@@ -163,7 +163,7 @@ const SetupShare: NextPage = () => {
                 justify="space-between"
               >
                 <Text fontSize="14px" wordBreak="break-all">
-                  0x50D96aD72c7abF7fCfBEFDE24ddC33BeEeb08c43@mail3.me
+                  {mailAddress}
                 </Text>
                 <Spacer />
                 <Flex
@@ -185,10 +185,7 @@ const SetupShare: NextPage = () => {
               >
                 <Box w="228px" h="343px">
                   <Box transform={`scale(${228 / 375})`} transformOrigin="0 0">
-                    <ShareCard
-                      mailAddress="0x50D96aD72c7abF7fCfBEFDE24ddC33BeEeb08c43@mail3.me"
-                      isPic
-                    />
+                    <ShareCard mailAddress={mailAddress} isPic />
                   </Box>
                 </Box>
                 <VStack w="207px" spacing="20px">
@@ -235,10 +232,7 @@ const SetupShare: NextPage = () => {
         </SettingContainer>
       </PageContainer>
 
-      <ShareCard
-        ref={cardRef}
-        mailAddress="0x50D96aD72c7abF7fCfBEFDE24ddC33BeEeb08c43@mail3.me"
-      />
+      <ShareCard ref={cardRef} mailAddress={mailAddress} />
     </>
   )
 }
