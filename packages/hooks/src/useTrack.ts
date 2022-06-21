@@ -6,6 +6,12 @@ export enum TrackEvent {
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
 
+  // setup
+  ClickShareYourNext = 'click_share_your_mail3_address_next',
+  ClickGuideTwitter = 'click_guide_share_on_twitter',
+  ClickGuideCard = 'click_guide_share_profile_card',
+  ClickGuideCopy = 'click_guide_copy_profile_url',
+
   // navbar
   ClickPersonalCenter = 'click_personalcenter',
   ClickMail3Menu = 'click_mail3_menu',

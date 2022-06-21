@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
-import { TrackEvent, useScreenshot, useTrackClick } from 'hooks'
+import { TrackEvent, useScreenshot, useToast, useTrackClick } from 'hooks'
 import {
   Box,
   Center,
@@ -29,6 +29,7 @@ import SvgCopy from '../../assets/profile/copy.svg'
 import SvgShare from '../../assets/profile/share.svg'
 import SvgTwitter from '../../assets/profile/twitter-blue.svg'
 import { ShareCard } from '../../components/Profile/card'
+import { copyText } from '../../utils'
 
 export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
   async ({ locale }) => ({
@@ -76,17 +77,25 @@ const Footer = styled(Box)`
 
 const SetupShare: NextPage = () => {
   const [t] = useTranslation('settings')
-  const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
-  const cardRef = useRef<HTMLDivElement>(null)
+  const [t2] = useTranslation('common')
+  const toast = useToast()
+  const trackNext = useTrackClick(TrackEvent.ClickShareYourNext)
+  const trackCopy = useTrackClick(TrackEvent.ClickGuideCopy)
+  const trackTwitter = useTrackClick(TrackEvent.ClickGuideTwitter)
+  const trackDownload = useTrackClick(TrackEvent.ClickGuideDownloadCard)
   const { downloadScreenshot } = useScreenshot()
+
   const userProps = useAtomValue(userPropertiesAtom)
 
-  const mailAddress = useMemo(
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const mailAddress: string = useMemo(
     () => userProps?.defaultAddress ?? 'unknown',
     [userProps]
   )
 
   const onShareTwitter = () => {
+    trackTwitter()
     shareToTwitter({
       text: 'Hey, contact me using my Mail3 email address.',
       url: `https://mail3.me/${mailAddress}`,
@@ -95,8 +104,15 @@ const SetupShare: NextPage = () => {
   }
 
   const onSharePic = () => {
+    trackDownload()
     if (!cardRef?.current) return
     downloadScreenshot(cardRef.current, 'share.png')
+  }
+
+  const onCopy = async () => {
+    trackCopy()
+    await copyText(mailAddress)
+    toast(t2('navbar.copied'))
   }
 
   return (
@@ -154,6 +170,7 @@ const SetupShare: NextPage = () => {
                   as="button"
                   fontSize={{ base: 0, md: '12px' }}
                   alignItems="center"
+                  onClick={onCopy}
                 >
                   <SvgCopy />
                   <Box ml="5px">Copy</Box>
