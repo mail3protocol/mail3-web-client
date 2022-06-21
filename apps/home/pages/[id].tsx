@@ -13,6 +13,7 @@ import universalCookie from 'cookie'
 import { Avatar, LinkButton } from 'ui'
 import { useRouter } from 'next/router'
 import { truncateMiddle } from 'shared'
+import Head from 'next/head'
 import { isEthAddress } from '../utils/eth'
 
 import { MAIL_SERVER_URL } from '../constants/env'
@@ -154,6 +155,9 @@ const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
 
   return (
     <>
+      <Head>
+        <title>Mail3: Profile Page</title>
+      </Head>
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
       </Flex>
