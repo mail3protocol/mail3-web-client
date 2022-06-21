@@ -5,10 +5,10 @@ import QrCode from 'qrcode.react'
 import { Avatar, Button } from 'ui'
 import LogoSvg from 'assets/svg/logo-pure.svg'
 
-import PngBorder from '../../assets/profile/border.png'
-import SvgEtherscan from '../../assets/profile/business/etherscan.svg'
-import SvgArrow from '../../assets/profile/business/arrow.svg'
-import SvgMailme from '../../assets/profile/mail-me.svg'
+import PngBorder from 'assets/profile/border.png'
+import SvgEtherscan from 'assets/profile/business/etherscan.svg'
+import SvgArrow from 'assets/profile/business/arrow.svg'
+import SvgMailme from 'assets/profile/mail-me.svg'
 
 interface ShareCardProps {
   mailAddress: string

@@ -19,23 +19,20 @@ import { useMemo, useRef } from 'react'
 import { useScreenshot, useToast } from 'hooks'
 import { useAtomValue } from 'jotai'
 import { verifyEmail, shareToTwitter } from 'shared'
-import { MAIL_SERVER_URL } from '../../constants'
-import { useEmailAddress } from '../../hooks/useEmailAddress'
-import { copyText, removeMailSuffix } from '../../utils'
+
+import SvgMailme from 'assets/profile/mail-me.svg'
+import SvgCopy from 'assets/profile/copy.svg'
+import SvgShare from 'assets/profile/share.svg'
+import SvgTwitter from 'assets/profile/twitter.svg'
+import SvgMore from 'assets/profile/more.svg'
+
+import SvgEtherscan from 'assets/profile/business/etherscan.svg'
+import SvgArrow from 'assets/profile/business/arrow.svg'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-
-import SvgMailme from '../../assets/profile/mail-me.svg'
-import SvgCopy from '../../assets/profile/copy.svg'
-import SvgShare from '../../assets/profile/share.svg'
-import SvgTwitter from '../../assets/profile/twitter.svg'
-import SvgMore from '../../assets/profile/more.svg'
-
-import SvgEtherscan from '../../assets/profile/business/etherscan.svg'
-import SvgArrow from '../../assets/profile/business/arrow.svg'
+import { copyText, removeMailSuffix } from '../../utils'
+import { useEmailAddress } from '../../hooks/useEmailAddress'
+import { MAIL_SERVER_URL } from '../../constants'
 import { ShareCard } from './card'
-// import SvgCheer from '../../assets/profile/business/cheer.svg'
-// import SvgLens from '../../assets/profile/business/lens.svg'
-// import SvgTree from '../../assets/profile/business/tree.svg'
 
 enum ButtonType {
   Copy,
