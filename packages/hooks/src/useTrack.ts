@@ -9,7 +9,7 @@ export enum TrackEvent {
   // setup
   ClickShareYourNext = 'click_share_your_mail3_address_next',
   ClickGuideTwitter = 'click_guide_share_on_twitter',
-  ClickGuideCard = 'click_guide_share_profile_card',
+  ClickGuideDownloadCard = 'click_guide_share_profile_card',
   ClickGuideCopy = 'click_guide_copy_profile_url',
 
   // navbar
