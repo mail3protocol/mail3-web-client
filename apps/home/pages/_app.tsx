@@ -73,10 +73,12 @@ function Mail3({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="theme-color" content="#fff" />
       </Head>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-1PW4LM5ETS"
-        strategy="afterInteractive"
-      />
+      {GOOGLE_ANALYTICS_ID ? (
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
+          strategy="afterInteractive"
+        />
+      ) : null}
       {GOOGLE_ANALYTICS_ID ? (
         <Script id="google-analytics" strategy="afterInteractive">
           {`
