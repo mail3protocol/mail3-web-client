@@ -44,7 +44,7 @@ const Container = styled(Box)`
     .p {
       font-style: normal;
       font-weight: 600;
-      font-size: 20px;
+      font-size: 19px;
       line-height: 1;
     }
   }
