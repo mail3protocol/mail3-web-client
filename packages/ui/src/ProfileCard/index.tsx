@@ -32,6 +32,11 @@ const Container = styled(Box)`
     left: 0;
     position: relative;
     pointer-events: none;
+    box-shadow: 1px 1px 10px #ccc;
+
+    .border {
+      display: none;
+    }
   }
 
   .address {
