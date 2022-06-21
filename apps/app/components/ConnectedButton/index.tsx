@@ -64,7 +64,8 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         icon: <CopySvg />,
         async onClick() {
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
-          const addr = userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
+          const addr =
+            userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()
