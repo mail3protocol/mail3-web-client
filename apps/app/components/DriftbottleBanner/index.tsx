@@ -13,15 +13,6 @@ import { RoutePath } from '../../route/path'
 
 export const AnimationContainer = styled(Link)`
   display: block;
-  @keyframes DriftbottleBannerAnimation {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.3;
-    }
-  }
   @keyframes DriftbottleBannerButtonAnimation {
     0%,
     100% {
@@ -31,7 +22,6 @@ export const AnimationContainer = styled(Link)`
       transform: scale(1.05);
     }
   }
-  animation: DriftbottleBannerAnimation 2s infinite linear;
   &:hover {
     opacity: 1;
     animation: unset;
