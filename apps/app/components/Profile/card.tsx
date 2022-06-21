@@ -105,7 +105,10 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
           </HStack>
 
           <Box className="qrCode">
-            <QrCode value={`https://mail3.me/${address}`} size={130} />
+            <QrCode
+              value={`https://mail3.me/${address}?utm_medium=qrcode`}
+              size={130}
+            />
           </Box>
 
           <Button className="button">
