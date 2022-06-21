@@ -24,7 +24,7 @@ export async function copyText(s: string) {
   }
 }
 
-export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 6) {
+export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 4) {
   if (!verifyEmail(str)) return str
   let i = str.length - 1
   for (; i >= 0; i--) {
