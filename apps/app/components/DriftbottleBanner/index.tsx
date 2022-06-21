@@ -88,8 +88,8 @@ export const DriftbottleBanner: React.FC = () => {
             position="absolute"
             top="20px"
             right="20px"
-            w="16px"
-            h="16px"
+            w={{ base: '12px', md: '16px' }}
+            h={{ base: '12px', md: '16px' }}
             minW="unset"
             minH="unset"
             display="flex"
