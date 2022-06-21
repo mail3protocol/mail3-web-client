@@ -2,6 +2,7 @@ import { useHelpers } from '@remirror/react'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { defer, lastValueFrom, retry } from 'rxjs'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
@@ -24,7 +25,9 @@ export async function removeDraft(api: API) {
   const id = searchParams.get(ID_NAME)
   const action = searchParams.get(ACTION_NAME)
   if (id && action === null) {
-    await api.deleteMessage(id, { force: true })
+    await lastValueFrom(
+      defer(() => api.deleteMessage(id, { force: true })).pipe(retry(3))
+    ).catch(() => null)
   }
 }
 
@@ -91,6 +94,8 @@ export function useSubmitMessage() {
         trackReplyDriftbottleMail()
       }
       await removeDraft(api)
+      onReset()
+      await router.push(RoutePath.Sent)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
         textProps: {
@@ -103,8 +108,6 @@ export function useSubmitMessage() {
       })
       console.error({ err })
     } finally {
-      onReset()
-      await router.push(RoutePath.Sent)
       setIsLoading(false)
     }
   }

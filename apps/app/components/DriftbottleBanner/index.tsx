@@ -13,15 +13,6 @@ import { RoutePath } from '../../route/path'
 
 export const AnimationContainer = styled(Link)`
   display: block;
-  @keyframes DriftbottleBannerAnimation {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.3;
-    }
-  }
   @keyframes DriftbottleBannerButtonAnimation {
     0%,
     100% {
@@ -31,7 +22,6 @@ export const AnimationContainer = styled(Link)`
       transform: scale(1.05);
     }
   }
-  animation: DriftbottleBannerAnimation 2s infinite linear;
   &:hover {
     opacity: 1;
     animation: unset;
@@ -88,17 +78,20 @@ export const DriftbottleBanner: React.FC = () => {
             position="absolute"
             top="20px"
             right="20px"
-            w="16px"
-            h="16px"
+            w={{ base: '12px', md: '16px' }}
+            h={{ base: '12px', md: '16px' }}
             minW="unset"
             minH="unset"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
             onClick={(e) => {
               e.stopPropagation()
               e.preventDefault()
               setIsCloseBanner(true)
             }}
           >
-            <CloseIcon w="16px" h="16px" />
+            <CloseIcon w="inherit" h="inherit" />
           </Button>
           <Image
             src={DriftingBottleBannerImage.src}
