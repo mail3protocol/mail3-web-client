@@ -23,6 +23,8 @@ import { shareToTwitter } from 'shared'
 import SvgCopy from 'assets/profile/copy.svg'
 import SvgShare from 'assets/profile/share.svg'
 import SvgTwitter from 'assets/profile/twitter-blue.svg'
+import SvgEtherscan from 'assets/profile/business/etherscan.svg'
+import SvgArrow from 'assets/profile/business/arrow.svg'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
@@ -114,6 +116,17 @@ const SetupShare: NextPage = () => {
     toast(t2('navbar.copied'))
   }
 
+  const Icons = [SvgArrow, SvgEtherscan].map((Item, index) => (
+    <Box
+      // eslint-disable-next-line react/no-array-index-key
+      key={index}
+      w="24px"
+      h="24px"
+    >
+      <Item />
+    </Box>
+  ))
+
   return (
     <>
       <Head>
@@ -184,7 +197,9 @@ const SetupShare: NextPage = () => {
               >
                 <Box w="228px" h="343px">
                   <Box transform={`scale(${228 / 375})`} transformOrigin="0 0">
-                    <ProfileCard mailAddress={mailAddress} isPic />
+                    <ProfileCard mailAddress={mailAddress} isPic>
+                      {Icons}
+                    </ProfileCard>
                   </Box>
                 </Box>
                 <VStack w="207px" spacing="20px">
@@ -231,7 +246,9 @@ const SetupShare: NextPage = () => {
         </SettingContainer>
       </PageContainer>
 
-      <ProfileCard ref={cardRef} mailAddress={mailAddress} />
+      <ProfileCard ref={cardRef} mailAddress={mailAddress}>
+        {Icons}
+      </ProfileCard>
     </>
   )
 }

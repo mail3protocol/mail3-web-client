@@ -8,15 +8,12 @@ import LogoSvg from 'assets/svg/logo-pure.svg'
 // @ts-ignore
 import PngBorder from 'assets/profile/border.png'
 // @ts-ignore
-import SvgEtherscan from 'assets/profile/business/etherscan.svg'
-// @ts-ignore
-import SvgArrow from 'assets/profile/business/arrow.svg'
-// @ts-ignore
 import SvgMailme from 'assets/profile/mail-me.svg'
 
 interface ProfileCardProps {
   mailAddress: string
   isPic?: boolean
+  children?: React.ReactNode
 }
 
 const Container = styled(Box)`
@@ -79,7 +76,7 @@ const Container = styled(Box)`
 `
 
 export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
-  ({ mailAddress, isPic }, ref) => {
+  ({ mailAddress, isPic, children }, ref) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
 
     return (
@@ -96,16 +93,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
             <Text className="p">{mailAddress}</Text>
           </Box>
           <HStack spacing="24px" mt="16px">
-            {[SvgArrow, SvgEtherscan].map((Item, index) => (
-              <Box
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                w="24px"
-                h="24px"
-              >
-                <Item />
-              </Box>
-            ))}
+            {children}
           </HStack>
 
           <Box className="qrCode">

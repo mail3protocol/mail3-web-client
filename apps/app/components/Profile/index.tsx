@@ -281,7 +281,18 @@ export const ProfileComponent: React.FC = () => {
         </Button>
       </Center>
 
-      <ProfileCard ref={cardRef} mailAddress={mailAddress} />
+      <ProfileCard ref={cardRef} mailAddress={mailAddress} isPic>
+        {[SvgArrow, SvgEtherscan].map((Item, index) => (
+          <Box
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            w="24px"
+            h="24px"
+          >
+            <Item />
+          </Box>
+        ))}
+      </ProfileCard>
     </>
   )
 }
