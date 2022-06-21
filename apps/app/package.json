@@ -45,7 +45,8 @@
         "react-query": "^3.34.16",
         "remirror": "^1.0.85",
         "rxjs": "^7.5.5",
-        "ui": "*"
+        "ui": "*",
+        "shared": "*"
     },
     "devDependencies": {
         "@svgr/webpack": "6.2.1",
