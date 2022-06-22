@@ -18,6 +18,7 @@ import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Button, ConnectWallet } from 'ui'
 import classNames from 'classnames'
 import landingBg from 'assets/svg/landing-bg.svg?url'
+import { truncateMiddle } from 'shared'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { Mascot } from './Mascot'
 import FirstIconSvg from '../../assets/whitelist/first.svg'
@@ -25,7 +26,6 @@ import SecondIconSvg from '../../assets/whitelist/second.svg'
 import DiscordSvg from '../../assets/discord.svg'
 import DiscordWhiteSvg from '../../assets/discord-white.svg'
 import TwitterSvg from '../../assets/twitter.svg'
-import { truncateMiddle } from '../../utils'
 import {
   DISCORD_URL,
   MORE_DETAILS_LINK,

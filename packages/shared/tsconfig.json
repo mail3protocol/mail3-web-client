@@ -1,0 +1,10 @@
+{
+    "extends": "tsconfig/next.json",
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src/*.ts",
+        "src/*.tsx"
+    ]
+}

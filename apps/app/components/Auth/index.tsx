@@ -25,7 +25,7 @@ import {
 } from 'hooks'
 import { Button } from 'ui'
 import { useRouter } from 'next/router'
-import { truncateMiddle } from '../../utils'
+import { truncateMiddle } from 'shared'
 import WalletSvg from '../../assets/wallet.svg'
 import LeftArrowSvg from '../../assets/left-arrow.svg'
 import {
@@ -181,7 +181,7 @@ export const AuthModal: React.FC = () => {
             >
               <Flex w="100%" alignItems="center" justifyContent="space-between">
                 <Text fontWeight={600} fontSize="16px">
-                  {truncateMiddle(account, 6, 6)}
+                  {truncateMiddle(account, 6, 4)}
                 </Text>
                 <WalletSvg />
               </Flex>

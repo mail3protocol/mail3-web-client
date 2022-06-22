@@ -23,7 +23,7 @@ import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
-import { GOOGLE_ANALYTICS_ID } from '../constants'
+import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
 import { useSetLoginInfo } from './useLoginInfo'
 import { getUtmQueryString } from '../utils'
@@ -143,21 +143,22 @@ export const useSetGlobalTrack = () => {
         ])
         const sigStatus = getSigStatus(userInfo)
         const defaultAddress =
-          aliases.aliases.find((a) => a.is_default)?.address || emailAddress
+          aliases.aliases.find((a) => a.is_default)?.address ||
+          `${account}@${MAIL_SERVER_URL}`
         const config = {
           defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
           [GlobalDimensions.ConnectedWalletName]: walletName,
-          [GlobalDimensions.WalletAddress]: account,
+          [GlobalDimensions.WalletAddress]: `@${account}`,
           [GlobalDimensions.SignatureStatus]: sigStatus,
-          crm_id: account,
+          crm_id: `@${account}`,
           text_signature: userInfo.text_signature,
           aliases: aliases.aliases,
         }
         try {
           gtag?.('set', 'user_properties', config)
           gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
-            user_id: account,
+            user_id: `@${account}`,
           })
         } catch (error) {
           //
