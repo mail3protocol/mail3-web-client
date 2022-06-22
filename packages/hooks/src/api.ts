@@ -12,6 +12,12 @@ export class API {
     this.axios = axios.create({
       baseURL,
     })
+    this.axios.interceptors.response.use(
+      (res) => res,
+      (error) => {
+        throw error
+      }
+    )
   }
 
   public async getNonce(): Promise<AxiosResponse<{ nonce: number }>> {
