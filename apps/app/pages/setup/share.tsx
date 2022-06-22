@@ -180,7 +180,7 @@ const SetupShare: NextPage = () => {
                 justify="space-between"
               >
                 <Text fontSize="14px" wordBreak="break-all">
-                  {mailAddress}
+                  {profileUrl}
                 </Text>
                 <Spacer />
                 <Flex
