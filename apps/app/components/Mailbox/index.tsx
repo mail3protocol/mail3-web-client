@@ -5,13 +5,10 @@ import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
 import Link, { LinkProps } from 'next/link'
 import { useMemo } from 'react'
+import { truncateMailAddress } from 'shared'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
-import {
-  formatDateString,
-  removeMailSuffix,
-  truncateMiddle0xMail,
-} from '../../utils'
+import { formatDateString, removeMailSuffix } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
 
 export enum AvatarBadgeType {
@@ -232,8 +229,8 @@ const Item: React.FC<BoxItemProps> = ({
     )
   }
 
-  const desc = `${truncateMiddle0xMail(from?.address)} - ${to
-    ?.map((item) => `${truncateMiddle0xMail(item?.address)}`)
+  const desc = `${truncateMailAddress(from?.address)} - ${to
+    ?.map((item) => `${truncateMailAddress(item?.address)}`)
     ?.join(';')}`
 
   return (

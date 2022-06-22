@@ -21,6 +21,7 @@ import {
   useToast,
   useTrackClick,
 } from 'hooks'
+import { truncateMiddle } from 'shared'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { RoutePath } from '../../route/path'
@@ -28,8 +29,9 @@ import SetupSvg from '../../assets/setup.svg'
 import ProfileSvg from '../../assets/profile.svg'
 import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
-import { copyText, truncateMiddle } from '../../utils'
+import { copyText } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
+import { MAIL_SERVER_URL } from '../../constants'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
@@ -63,7 +65,8 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         icon: <CopySvg />,
         async onClick() {
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
-          const addr = userProps?.defaultAddress || emailAddress
+          const addr =
+            userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
           toast(t('navbar.copied'))
           popoverRef?.current?.blur()

@@ -1,6 +1,11 @@
 const withPWA = require('next-pwa')
 const withPlugins = require('next-compose-plugins')
-const withTM = require('next-transpile-modules')(['ui', 'assets', 'hooks'])
+const withTM = require('next-transpile-modules')([
+  'ui',
+  'assets',
+  'hooks',
+  'shared',
+])
 const runtimeCaching = require('next-pwa/cache')
 const { withSentryConfig } = require('@sentry/nextjs')
 const { i18n } = require('./next-i18next.config')

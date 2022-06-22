@@ -15,6 +15,9 @@ import {
 } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { truncateMailAddress } from 'shared'
+import { GetMessage } from 'models/src/getMessage'
+import { GetMessageContent } from 'models/src/getMessageContent'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -27,15 +30,12 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
 import { Attachment } from './Attachment'
-import {
-  formatDateString,
-  isMail3Address,
-  removeMailSuffix,
-  truncateMiddle0xMail,
-} from '../../utils'
+import { formatDateString, isMail3Address, removeMailSuffix } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
 import { MAIL_SERVER_URL } from '../../constants'
 import { RenderHTML } from './parser'
+import { Query } from '../../api/query'
+import { catchApiResponse } from '../../utils/api'
 
 interface MeesageDetailState
   extends Pick<
@@ -90,16 +90,24 @@ export const PreviewComponent: React.FC = () => {
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const { data } = useQuery(
-    ['preview', id],
+    [Query.GetMessageInfoAndContent, id],
     async () => {
-      if (typeof id !== 'string') return {}
-      const { data: info } = await api.getMessageInfo(id)
-      const { data: content } = await api.getMessageContent(info.text.id)
-
+      const messageInfo = id
+        ? await catchApiResponse<GetMessage.Response>(
+            api.getMessageInfo(id as string)
+          )
+        : null
+      const messageContent = messageInfo?.text.id
+        ? await catchApiResponse<GetMessageContent.Response>(
+            api.getMessageContent(messageInfo?.text.id)
+          )
+        : null
       return {
-        info,
-        html: content.html,
-        plain: content.plain,
+        info: messageInfo,
+        html: messageContent?.html,
+        plain: messageContent?.plain,
+        messageInfo,
+        messageContent,
       }
     },
     {
@@ -306,7 +314,7 @@ export const PreviewComponent: React.FC = () => {
   }
 
   const getNameAddress = (item: AddressResponse) => {
-    const address = truncateMiddle0xMail(item.address)
+    const address = truncateMailAddress(item.address)
     if (item.name) return `${item.name} <${address}>`
     return `<${address}>`
   }
@@ -415,7 +423,7 @@ export const PreviewComponent: React.FC = () => {
                     verticalAlign="middle"
                     ml={{ base: 0, md: '5px' }}
                   >
-                    {`<${truncateMiddle0xMail(detail.from.address)}>`}
+                    {`<${truncateMailAddress(detail.from.address)}>`}
                   </Text>
                 </Box>
                 <Box />
