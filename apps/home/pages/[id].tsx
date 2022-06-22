@@ -1,4 +1,10 @@
-import { COOKIE_KEY, useDidMount, useLoginAccount } from 'hooks'
+import {
+  COOKIE_KEY,
+  TrackEvent,
+  useDidMount,
+  useLoginAccount,
+  useTrackClick,
+} from 'hooks'
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import NextLink from 'next/link'
@@ -40,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       errorCode,
-      address: cookie?.address,
+      address: cookie?.address ?? '',
       ...(await serverSideTranslations(locale as string, [
         'common',
         'navbar',
@@ -74,6 +80,10 @@ const NavbarContainer = styled(Flex)`
 
 const Navbar: React.FC<{ address: string }> = ({ address }) => {
   const [t] = useTranslation('profile')
+  const [isMounted, setIsMounted] = useState(false)
+
+  const trackLaunch = useTrackClick(TrackEvent.ClickProfileLaunchApp)
+
   const emailAddress = useMemo(
     () =>
       address
@@ -85,7 +95,6 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
         : '',
     [address]
   )
-  const [isMounted, setIsMounted] = useState(false)
   useDidMount(() => {
     setIsMounted(true)
   })
@@ -130,6 +139,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
                 _hover={{
                   bg: 'brand.300',
                 }}
+                onClick={() => trackLaunch()}
               >
                 {t('connect-wallet')}
               </Button>

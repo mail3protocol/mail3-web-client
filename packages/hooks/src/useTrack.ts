@@ -12,6 +12,14 @@ export enum TrackEvent {
   ClickGuideDownloadCard = 'click_guide_share_profile_card',
   ClickGuideCopy = 'click_guide_copy_profile_url',
 
+  // profile
+  ClickProfileLaunchApp = 'click_profile_launch_app',
+  ClickProfileTwitter = 'click_profile_share_on_twitter',
+  ClickProfileCopy = 'click_profile_copy_profile_url',
+  ClickProfileDownloadCard = 'click_profile_share_profile_card',
+  ClickProfileMailMe = 'click_profile_mail_me',
+  ClickProfileScoialPlatform = 'click_profile_social_platform',
+
   // navbar
   ClickPersonalCenter = 'click_personalcenter',
   ClickMail3Menu = 'click_mail3_menu',
@@ -83,6 +91,8 @@ export enum TrackKey {
 
   // home
   HomeCommunity = 'Mail3_offical_click_community',
+  // home profile
+  ProfileScoialPlatform = 'visit_social_platform',
 
   // mail detail
   MailDetailPage = 'click_mail_details_page_item',
@@ -91,6 +101,11 @@ export enum TrackKey {
   SubscriptionBell = 'click_subscription_bell',
   // testing
   TestingEntry = 'beta1_check_eligilibity',
+}
+
+export enum ProfileScoialPlatformItem {
+  CyberConnect = 'CyberConnect',
+  Etherscan = 'Etherscan',
 }
 
 export enum PersonnalCenter {
@@ -153,6 +168,7 @@ export interface TrackProps {
   [TrackKey.MailDetailPage]?: MailDetailPageItem
   [TrackKey.SubscriptionBell]?: string
   [TrackKey.PersonnalCenter]?: PersonnalCenter
+  [TrackKey.ProfileScoialPlatform]?: ProfileScoialPlatformItem
   [TrackKey.Mail3MenuItem]?: Mail3MenuItem
 }
 

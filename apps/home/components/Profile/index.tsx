@@ -15,7 +15,14 @@ import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { Avatar, Button, ProfileCard } from 'ui'
 import { useMemo, useRef } from 'react'
-import { useScreenshot, useToast } from 'hooks'
+import {
+  ProfileScoialPlatformItem,
+  TrackEvent,
+  TrackKey,
+  useScreenshot,
+  useToast,
+  useTrackClick,
+} from 'hooks'
 import { copyText, shareToTwitter } from 'shared'
 
 import SvgMailme from 'assets/profile/mail-me.svg'
@@ -25,12 +32,17 @@ import SvgTwitter from 'assets/profile/twitter.svg'
 import SvgMore from 'assets/profile/more.svg'
 
 import SvgEtherscan from 'assets/profile/business/etherscan.svg'
-import SvgArrow from 'assets/profile/business/arrow.svg'
+import SvgCyber from 'assets/profile/business/arrow.svg'
 
 enum ButtonType {
   Copy,
-  Share,
+  Card,
   Twitter,
+}
+
+enum ScoialPlatform {
+  CyberConnect = 'CyberConnect',
+  Etherscan = 'Etherscan',
 }
 
 const Container = styled(Box)`
@@ -100,6 +112,13 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 }) => {
   const [t] = useTranslation('settings')
   const [t2] = useTranslation('common')
+  const trackTwitter = useTrackClick(TrackEvent.ClickProfileTwitter)
+  const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
+  const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
+  const trackMailme = useTrackClick(TrackEvent.ClickProfileMailMe)
+  const trackScoialDimensions = useTrackClick(
+    TrackEvent.ClickProfileScoialPlatform
+  )
 
   const toast = useToast()
   const { downloadScreenshot } = useScreenshot()
@@ -114,7 +133,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       label: string
     }
   > = {
-    [ButtonType.Share]: {
+    [ButtonType.Card]: {
       Icon: SvgShare,
       label: t('profile.share'),
     },
@@ -128,21 +147,38 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     },
   }
 
+  const ScoialConfig: Record<
+    ScoialPlatform,
+    {
+      Icon: any
+    }
+  > = {
+    [ScoialPlatform.CyberConnect]: {
+      Icon: SvgCyber,
+    },
+    [ScoialPlatform.Etherscan]: {
+      Icon: SvgEtherscan,
+    },
+  }
+
   const actionMap = useMemo(
     () => ({
       [ButtonType.Copy]: async () => {
+        trackCopy()
         await copyText(mailAddress)
         toast(t2('navbar.copied'))
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {
+        trackTwitter()
         shareToTwitter({
           text: 'Hey, contact me using my Mail3 email address.',
           url: 'https://mail3.me/mai3dao.eth@mail3.me',
           hashtags: ['mail3', 'mail3dao'],
         })
       },
-      [ButtonType.Share]: async () => {
+      [ButtonType.Card]: async () => {
+        trackCard()
         if (!cardRef?.current) return
         try {
           downloadScreenshot(cardRef.current, 'share.png')
@@ -155,6 +191,14 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     }),
     [mailAddress]
   )
+
+  const getHref = (type: ScoialPlatform) => {
+    if (type === ScoialPlatform.CyberConnect) {
+      return `https://app.cyberconnect.me/address/${address}`
+    }
+
+    return `https://etherscan.io/address/${address}`
+  }
 
   return (
     <>
@@ -182,39 +226,37 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                 <PopoverArrow />
                 <PopoverBody>
                   <Wrap p="14px" direction="column">
-                    {[
-                      ButtonType.Twitter,
-                      ButtonType.Copy,
-                      ButtonType.Share,
-                    ].map((type: ButtonType) => {
-                      const { Icon, label } = buttonConfig[type]
-                      const onClick = actionMap[type]
+                    {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
+                      (type: ButtonType) => {
+                        const { Icon, label } = buttonConfig[type]
+                        const onClick = actionMap[type]
 
-                      return (
-                        <WrapItem
-                          key={type}
-                          p="5px"
-                          borderRadius="10px"
-                          _hover={{
-                            bg: '#E7E7E7',
-                          }}
-                        >
-                          <Center as="button" onClick={onClick}>
-                            <Box>
-                              <Icon />
-                            </Box>
-                            <Text pl="10px">{label}</Text>
-                          </Center>
-                        </WrapItem>
-                      )
-                    })}
+                        return (
+                          <WrapItem
+                            key={type}
+                            p="5px"
+                            borderRadius="10px"
+                            _hover={{
+                              bg: '#E7E7E7',
+                            }}
+                          >
+                            <Center as="button" onClick={onClick}>
+                              <Box>
+                                <Icon />
+                              </Box>
+                              <Text pl="10px">{label}</Text>
+                            </Center>
+                          </WrapItem>
+                        )
+                      }
+                    )}
                   </Wrap>
                 </PopoverBody>
               </PopoverContent>
             </Popover>
           </Box>
           <HStack className="button-wrap-pc">
-            {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Share].map(
+            {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
               (type: ButtonType) => {
                 const { Icon, label } = buttonConfig[type]
                 const onClick = actionMap[type]
@@ -252,37 +294,67 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </Box>
         <Center mt="25px">
           <HStack spacing="24px">
-            {[SvgArrow, SvgEtherscan].map((Item, index) => (
-              <Box
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                w={{ base: '24px', md: '36px' }}
-                h={{ base: '24px', md: '36px' }}
-              >
-                <Item />
-              </Box>
-            ))}
+            {[ScoialPlatform.CyberConnect, ScoialPlatform.Etherscan].map(
+              (itemKey: ScoialPlatform, index) => {
+                const { Icon } = ScoialConfig[itemKey]
+                return (
+                  <Box
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index}
+                    w={{ base: '24px', md: '36px' }}
+                    h={{ base: '24px', md: '36px' }}
+                    as="a"
+                    href={getHref(itemKey)}
+                    target="_blank"
+                    onClick={() => {
+                      if (itemKey === ScoialPlatform.CyberConnect) {
+                        trackScoialDimensions({
+                          [TrackKey.ProfileScoialPlatform]:
+                            ProfileScoialPlatformItem.CyberConnect,
+                        })
+                      }
+
+                      if (itemKey === ScoialPlatform.Etherscan) {
+                        trackScoialDimensions({
+                          [TrackKey.ProfileScoialPlatform]:
+                            ProfileScoialPlatformItem.Etherscan,
+                        })
+                      }
+                    }}
+                  >
+                    <Icon />
+                  </Box>
+                )
+              }
+            )}
           </HStack>
         </Center>
       </Container>
 
       <Center>
-        <Button w="250px">
+        <Button
+          w="250px"
+          onClick={() => {
+            trackMailme()
+          }}
+        >
           <SvgMailme /> <Box pl="10px">Mail me</Box>
         </Button>
       </Center>
 
       <ProfileCard ref={cardRef} mailAddress={mailAddress}>
-        {[SvgArrow, SvgEtherscan].map((Item, index) => (
-          <Box
-            // eslint-disable-next-line react/no-array-index-key
-            key={index}
-            w="24px"
-            h="24px"
-          >
-            <Item />
-          </Box>
-        ))}
+        {[ScoialConfig.CyberConnect, ScoialConfig.Etherscan].map(
+          ({ Icon }, index) => (
+            <Box
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              w="24px"
+              h="24px"
+            >
+              <Icon />
+            </Box>
+          )
+        )}
       </ProfileCard>
     </>
   )
