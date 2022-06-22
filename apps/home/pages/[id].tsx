@@ -12,8 +12,9 @@ import LogoSvg from 'assets/svg/logo-pure.svg'
 import universalCookie from 'cookie'
 import { Avatar, LinkButton } from 'ui'
 import { useRouter } from 'next/router'
+import { truncateMiddle } from 'shared'
 import { isEthAddress } from '../utils/eth'
-import { truncateMiddle } from '../utils/string'
+
 import { MAIL_SERVER_URL } from '../constants/env'
 
 function parseCookies(req?: IncomingMessage) {

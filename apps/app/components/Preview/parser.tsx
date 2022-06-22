@@ -52,7 +52,11 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     return []
   }, [from.address])
 
-  const cleanHtml = DOMPurify.sanitize(html, { ADD_TAGS: addTags })
+  const cleanHtml = useMemo(() => {
+    const content = DOMPurify.sanitize(html, { ADD_TAGS: addTags })
+    // because react not support style !important.
+    return content.replace(/ !important;/g, ';')
+  }, [html])
 
   return <Box>{parse(cleanHtml, options)}</Box>
 }

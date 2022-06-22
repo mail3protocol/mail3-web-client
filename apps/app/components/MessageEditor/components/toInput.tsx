@@ -8,12 +8,8 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Avatar } from 'ui'
-import {
-  isEthAddress,
-  removeMailSuffix,
-  truncateMiddle0xMail,
-  verifyEmail,
-} from '../../../utils'
+import { verifyEmail, truncateMailAddress, isPrimitiveEthAddress } from 'shared'
+import { removeMailSuffix } from '../../../utils'
 import { MAIL_SERVER_URL } from '../../../constants'
 
 export interface ToInputProps {
@@ -27,8 +23,8 @@ export const ToInput: React.FC<ToInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState('')
   const onAddAddress = (value: string) => {
-    if (value !== '' && (isEthAddress(value) || verifyEmail(value))) {
-      const addingAddress = isEthAddress(value)
+    if (value !== '' && (isPrimitiveEthAddress(value) || verifyEmail(value))) {
+      const addingAddress = isPrimitiveEthAddress(value)
         ? `${value}@${MAIL_SERVER_URL}`
         : value
       onChange?.([...addresses, addingAddress])
@@ -95,7 +91,7 @@ export const ToInput: React.FC<ToInputProps> = ({
             rounded="100px"
           />
           <TagLabel pl="4px" color="#6F6F6F">
-            {truncateMiddle0xMail(address)}
+            {truncateMailAddress(address)}
           </TagLabel>
           <TagCloseButton
             w="13px"
