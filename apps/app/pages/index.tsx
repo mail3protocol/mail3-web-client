@@ -12,11 +12,13 @@ import { InboxComponent } from '../components/Inbox'
 import { RoutePath } from '../route/path'
 import { useSetLoginInfo } from '../hooks/useLoginInfo'
 import { DriftbottleBanner } from '../components/DriftbottleBanner'
+import { getUtmQueryString } from '../utils'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
   res,
   req,
+  query,
 }) => {
   let isAuth = false
   let loginInfo: LoginInfo | null = null
@@ -24,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     const cookie = parseCookies(req)
     if (typeof cookie?.jwt !== 'string') {
       res.writeHead(307, {
-        Location: '/testing',
+        Location: `/testing${getUtmQueryString(query)}`,
         'Cache-Control': 'no-cache, no-store',
         Pragma: 'no-cache',
       })
