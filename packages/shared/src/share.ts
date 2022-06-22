@@ -8,7 +8,7 @@ export const shareToTwitter = (config: {
     : ''
   const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     config.text
-  )}&url=${encodeURIComponent(config.url)}}${hashtagString}`
+  )}&url=${encodeURIComponent(config.url)}${hashtagString}`
 
   window.open(
     url,

@@ -110,7 +110,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
 }) => {
-  const [t] = useTranslation('settings')
+  const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
   const trackTwitter = useTrackClick(TrackEvent.ClickProfileTwitter)
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
@@ -172,8 +172,8 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       [ButtonType.Twitter]: () => {
         trackTwitter()
         shareToTwitter({
-          text: 'Hey, contact me using my Mail3 email address.',
-          url: 'https://mail3.me/mai3dao.eth@mail3.me',
+          text: 'Hey, contact me using my Mail3 email address',
+          url: `https://mail3.me/${address}`,
           hashtags: ['mail3', 'mail3dao'],
         })
       },
@@ -189,7 +189,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         popoverRef?.current?.blur()
       },
     }),
-    [mailAddress]
+    [mailAddress, address]
   )
 
   const getHref = (type: ScoialPlatform) => {
