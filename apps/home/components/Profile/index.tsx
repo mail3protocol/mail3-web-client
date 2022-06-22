@@ -161,11 +161,16 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     },
   }
 
+  const profileUrl: string = useMemo(
+    () => `https://mail3.me/${address}`,
+    [address]
+  )
+
   const actionMap = useMemo(
     () => ({
       [ButtonType.Copy]: async () => {
         trackCopy()
-        await copyText(mailAddress)
+        await copyText(profileUrl)
         toast(t2('navbar.copied'))
         popoverRef?.current?.blur()
       },
@@ -173,7 +178,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         trackTwitter()
         shareToTwitter({
           text: 'Hey, contact me using my Mail3 email address',
-          url: `https://mail3.me/${address}`,
+          url: profileUrl,
           hashtags: ['mail3', 'mail3dao'],
         })
       },

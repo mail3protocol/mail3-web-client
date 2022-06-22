@@ -95,11 +95,16 @@ const SetupShare: NextPage = () => {
     [userProps]
   )
 
+  const profileUrl: string = useMemo(() => {
+    const ads = mailAddress.substring(0, mailAddress.indexOf('@'))
+    return `https://mail3.me/${ads}`
+  }, [mailAddress])
+
   const onShareTwitter = () => {
     trackTwitter()
     shareToTwitter({
       text: 'Hey, contact me using my Mail3 email address.',
-      url: `https://mail3.me/${mailAddress}`,
+      url: profileUrl,
       hashtags: ['mail3', 'mail3dao'],
     })
   }
@@ -112,7 +117,7 @@ const SetupShare: NextPage = () => {
 
   const onCopy = async () => {
     trackCopy()
-    await copyText(mailAddress)
+    await copyText(profileUrl)
     toast(t2('navbar.copied'))
   }
 
