@@ -327,4 +327,8 @@ export class API {
   public async applyToExperienceNewFeature(featureName: 'community-mail') {
     return this.axios.post(`/account/feature_experiences/${featureName}`)
   }
+
+  public async updateAliasList() {
+    return this.axios.get(`/account/aliases`)
+  }
 }

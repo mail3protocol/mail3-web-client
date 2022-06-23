@@ -13,6 +13,9 @@ import {
   Text,
   Tooltip,
   VStack,
+  Icon,
+  Button as RowButton,
+  Box,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import NextLink from 'next/link'
@@ -25,13 +28,14 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
-import { useAccount, useDialog } from 'hooks'
+import { useAccount, useDialog, useToast } from 'hooks'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { truncateMiddle, isPrimitiveEthAddress } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
+import RefreshSvg from '../../assets/refresh.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { MAIL_SERVER_URL } from '../../constants'
@@ -142,9 +146,15 @@ export const SettingAddress: React.FC = () => {
   const account = useAccount()
   const api = useAPI()
   const [activeAcount, setActiveAccount] = useState(account)
+  const [isRefreshing, setIsRefeshing] = useState(false)
+  const toast = useToast()
   const dialog = useDialog()
 
-  const { data: ensNames, isLoading } = useQuery(
+  const {
+    data: ensNames,
+    isLoading,
+    refetch,
+  } = useQuery(
     [Query.ENS_NAMES, account],
     async () => {
       const { data } = await api.getAliases()
@@ -165,6 +175,18 @@ export const SettingAddress: React.FC = () => {
       },
     }
   )
+
+  const onRefreshEnsDomains = async () => {
+    setIsRefeshing(true)
+    try {
+      await api.updateAliasList()
+      await refetch()
+    } catch (e: any) {
+      toast(t('address.refresh_failed') + e.toString())
+    } finally {
+      setIsRefeshing(false)
+    }
+  }
 
   const setUserInfo = useUpdateAtom(userPropertiesAtom)
   const onDefaultAccountChange =
@@ -245,7 +267,25 @@ export const SettingAddress: React.FC = () => {
         {restAliases.length && !isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
-              {t('address.ens-name')}
+              <Stack
+                direction="row"
+                spacing="16px"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Box h="24px" lineHeight="24px">
+                  {t('address.ens-name')}
+                </Box>
+                <RowButton
+                  variant="link"
+                  colorScheme="deepBlue"
+                  leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
+                  onClick={onRefreshEnsDomains}
+                  isLoading={isRefreshing}
+                >
+                  {t('address.refresh')}
+                </RowButton>
+              </Stack>
             </FormLabel>
             <VStack spacing="10px">
               {restAliases.map((a) => (
