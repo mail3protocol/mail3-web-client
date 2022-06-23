@@ -6,9 +6,9 @@ import { TrackEvent, useTrackClick } from 'hooks'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import DriftingBottleBannerImage from '../../assets/banner.png'
-import DriftingBottleBannerMobileImage from '../../assets/banner-mobile.png'
-import GoToEditDriftingBottleButtonSvg from '../../assets/go-to-send-driftingbottle.svg'
+import DriftingBottleBannerImage from '../../assets/driftibottle/banner.png'
+import DriftingBottleBannerMobileImage from '../../assets/driftibottle/banner-mobile.png'
+import GoToEditDriftingBottleButtonSvg from '../../assets/driftibottle/go-to-send-driftingbottle.svg'
 import { RoutePath } from '../../route/path'
 
 export const AnimationContainer = styled(Link)`

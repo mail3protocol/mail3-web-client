@@ -11,8 +11,8 @@ import { parseCookies, useIsAuthenticated } from '../hooks/useLogin'
 import { InboxComponent } from '../components/Inbox'
 import { RoutePath } from '../route/path'
 import { useSetLoginInfo } from '../hooks/useLoginInfo'
-import { DriftbottleBanner } from '../components/DriftbottleBanner'
 import { getUtmQueryString } from '../utils'
+import { DriftbottleBanner } from '../components/DriftbottleBanner'
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,

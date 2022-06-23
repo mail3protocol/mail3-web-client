@@ -3,6 +3,7 @@ import { SubmitMessage } from 'models/src/submitMessage'
 import { UploadMessage } from 'models/src/uploadMessage'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
+import { noop } from 'hooks'
 import { SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
@@ -117,7 +118,7 @@ export class API {
 
   private axios: Axios
 
-  constructor(account = '', jwt = '') {
+  constructor(account = '', jwt = '', clearCookie: () => void = noop) {
     this.account = account
     this.jwt = jwt
     this.axios = axios.create({
@@ -126,6 +127,16 @@ export class API {
         Authorization: `Bearer ${this.jwt}`,
       },
     })
+    this.axios.interceptors.response.use(
+      (res) => res,
+      (error: any) => {
+        const res = error?.response
+        if (res.status === 401 && res.statusText === 'Unauthorized') {
+          clearCookie()
+        }
+        throw error
+      }
+    )
   }
 
   public getAddress() {

@@ -238,7 +238,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
       return 'Write Mail'
     }
     if (action === 'forward') {
-      return 'Foward Mail'
+      return 'Forward Mail'
     }
     if (action === 'reply') {
       return 'Reply Mail'
