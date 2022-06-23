@@ -167,7 +167,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   return (
     <Box>
       {isOfficeMail ? (
-        { content }
+        <div>{content}</div>
       ) : (
         <UnofficialMailBody>{content}</UnofficialMailBody>
       )}
