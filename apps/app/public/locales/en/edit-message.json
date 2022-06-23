@@ -30,5 +30,6 @@
         "saved": "Draft Saved",
         "failed": "Draft Save Failed"
     },
-    "succeeded": "succeeded"
+    "succeeded": "succeeded",
+    "drift_bottle_template": "Write down your emotions, thoughts, questions, and even heartfelt secrets. The drift bottle will float with these to another user, and you will have a chance to get a response"
 }

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useAccount } from 'hooks'
-import { truncateMiddle } from '../utils'
+import { truncateMiddle } from 'shared'
 import { MAIL_SERVER_URL } from '../constants'
 
 export const useEmailAddress = () => {

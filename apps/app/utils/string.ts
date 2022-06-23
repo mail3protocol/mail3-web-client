@@ -1,20 +1,5 @@
+import { verifyEmail, truncateMiddle } from 'shared'
 import { MAIL_SERVER_URL } from '../constants'
-
-export function verifyEmail(email: string) {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return re.test(String(email).toLowerCase())
-}
-
-export function truncateMiddle(
-  str = '',
-  takeLength = 6,
-  tailLength = takeLength,
-  pad = '...'
-): string {
-  if (takeLength + tailLength >= str.length) return str
-  return `${str.slice(0, takeLength)}${pad}${str.slice(-tailLength)}`
-}
 
 export function copyTextFallback(data: string): void {
   const input = document.createElement('input')
@@ -39,11 +24,7 @@ export async function copyText(s: string) {
   }
 }
 
-export function isEthAddress(s: string) {
-  return s.startsWith('0x') && s.length === 42
-}
-
-export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 6) {
+export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 4) {
   if (!verifyEmail(str)) return str
   let i = str.length - 1
   for (; i >= 0; i--) {
@@ -90,4 +71,18 @@ export const truncateMiddle0xMail = (
   const realAddress = splitAddress[0]
   const suffix = splitAddress[1]
   return `${truncateMiddle(realAddress, takeLength, tailLength)}@${suffix}`
+}
+
+export function filterEmails(strings: string[]) {
+  return strings.filter((str) => verifyEmail(str))
+}
+
+export function getDriftBottleFrom(str: string): string | undefined {
+  const removedTagStr = str.replace(/<[^>]*>?/gm, ' ')
+  return removedTagStr
+    .match(
+      /Drift\sbottle\sfrom(\s*)\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/g
+    )?.[0]
+    .substring(18)
+    .trim()
 }

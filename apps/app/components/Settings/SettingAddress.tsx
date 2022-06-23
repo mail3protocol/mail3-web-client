@@ -28,12 +28,12 @@ import { Button } from 'ui'
 import { useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
+import { truncateMiddle, isPrimitiveEthAddress } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { isEthAddress, truncateMiddle } from '../../utils'
 import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
@@ -189,7 +189,7 @@ export const SettingAddress: React.FC = () => {
   const aliases = useMemo(() => {
     if (ensNames?.aliases) {
       return ensNames?.aliases.sort((a) => {
-        if (isEthAddress(a.address)) {
+        if (isPrimitiveEthAddress(a.address)) {
           return -1
         }
         return 0
