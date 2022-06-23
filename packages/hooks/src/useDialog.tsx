@@ -23,7 +23,7 @@ import {
   ModalOverlay,
   Button,
 } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import { useCloseOnChangePathname } from './useCloseOnChangePathname'
 
 export const noop: (...args: any) => any = () => {}
 
@@ -45,7 +45,7 @@ export interface ConfirmDialogOptions {
   modalBodyProps?: ModalBodyProps
   showCloseButton?: boolean
   okButtonProps?: ButtonProps
-  closeOnChangePathname?: boolean // default is true
+  isCloseOnChangePathname?: boolean // default is true
 }
 
 export interface ConfirmDialogProps extends ConfirmDialogOptions {
@@ -182,14 +182,10 @@ export const ConfirmDialog: React.FC = () => {
     modalProps,
     showCloseButton = type !== 'text',
     okButtonProps,
-    closeOnChangePathname,
+    isCloseOnChangePathname,
   } = options
 
-  const router = useRouter()
-  useEffect(() => {
-    if (closeOnChangePathname === false) return
-    onClose()
-  }, [closeOnChangePathname, router.pathname])
+  useCloseOnChangePathname(onClose, isCloseOnChangePathname)
 
   return (
     <Modal
