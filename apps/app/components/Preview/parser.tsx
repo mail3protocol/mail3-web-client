@@ -1,10 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import parse, {
-  DOMNode,
-  Element,
-  HTMLReactParserOptions,
-} from 'html-react-parser'
+import parse, { DOMNode, Element } from 'html-react-parser'
 import DOMPurify from 'dompurify'
 import ReactShadowRoot from 'react-shadow-root'
 import { createPortal } from 'react-dom'
@@ -48,7 +44,7 @@ export const Iframe: React.FC<IframeProps> = (props) => {
 
   return (
     <iframe
-      title="iframe"
+      title="Message Content"
       {...rest}
       ref={setContentRef}
       onLoad={() => {
@@ -143,7 +139,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   return (
     <Box>
       {isOfficeMail ? (
-        <Box>{content}</Box>
+        { content }
       ) : (
         <UnofficialMailBody>{content}</UnofficialMailBody>
       )}
