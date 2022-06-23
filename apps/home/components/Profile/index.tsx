@@ -270,7 +270,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     arrowSize={8}
                     key={type}
                     trigger="hover"
-                    placement="top-end"
+                    placement="top-start"
                     size="md"
                   >
                     <PopoverTrigger>
