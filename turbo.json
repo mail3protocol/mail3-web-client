@@ -16,6 +16,8 @@
         "dev": {
             "cache": false
         },
+        "test": {
+        },
         "app#build": {
             "dependsOn": [
                 "^build",

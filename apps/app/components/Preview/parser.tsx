@@ -158,8 +158,10 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
       ADD_TAGS: addTags,
       ADD_ATTR: ['target'],
     })
+    // TODO can be better
+    const removeImportant = cleanHtml.replace(/ !important;/g, ';')
 
-    return parse(cleanHtml, { replace })
+    return parse(removeImportant, { replace })
   }, [html, addTags])
 
   return (
