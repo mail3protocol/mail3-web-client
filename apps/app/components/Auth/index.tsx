@@ -22,6 +22,7 @@ import {
   useTrackClick,
   TrackEvent,
   TrackKey,
+  zilpay,
 } from 'hooks'
 import { Button } from 'ui'
 import { useRouter } from 'next/router'
@@ -53,7 +54,18 @@ export const AuthModal: React.FC = () => {
   const isAuthModalOpen = useIsAuthModalOpen()
   const router = useRouter()
   const onBack = useAuthModalOnBack()
+  const onSignZilpay = async (nonce: number) => {
+    if (!zilpay.isConnected) {
+      toast(t('auth.errors.wallet-not-connected'))
+      return null
+    }
+    const message = buildSignMessaege(nonce, signatureDesc)
+    return zilpay.signMessage(message)
+  }
   const onSign = async (nonce: number) => {
+    if (account.startsWith('zil')) {
+      return onSignZilpay(nonce)
+    }
     if (provider == null) {
       toast(t('auth.errors.wallet-not-connected'))
       return null

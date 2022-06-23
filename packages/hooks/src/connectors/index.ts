@@ -11,6 +11,7 @@ import { useDidMount } from '../useDidMount'
 import { metaMask, metaMaskhooks } from './MetaMask'
 import { walletConnect, walletConnectHooks } from './WalletConnect'
 import { useLoginAccount } from '../useLoginInfo'
+import { zilpay } from './zilpay'
 
 export const SupportedConnectors = getSelectedConnector(
   [metaMask, metaMaskhooks],
@@ -23,6 +24,7 @@ export * from './WalletConnect'
 export enum ConnectorName {
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
+  ZilPay = 'ZilPay',
 }
 
 const lastConectorNameAtom = atomWithStorage<ConnectorName | undefined>(
@@ -52,8 +54,13 @@ export const useAccount = () => {
     return loginAccount
   }
 
-  if (lastConectorName && account) {
-    return account
+  if (lastConectorName) {
+    if (lastConectorName === ConnectorName.ZilPay && zilpay.isConnected()) {
+      return zilpay.getBech32Address()
+    }
+    if (account) {
+      return account
+    }
   }
 
   return ''
@@ -126,3 +133,5 @@ export const useConnectWalletDialog = () => {
     },
   }
 }
+
+export * from './zilpay'

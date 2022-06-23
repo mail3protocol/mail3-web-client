@@ -1,7 +1,12 @@
 import { useCallback } from 'react'
 import axios from 'axios'
 import { useSignUpAPI } from './api'
-import { useProvider } from './connectors'
+import {
+  ConnectorName,
+  useLastConectorName,
+  useProvider,
+  zilpay,
+} from './connectors'
 
 export const buildSignMessaege = (nonce: number, desc: string) => `${desc}
 
@@ -39,10 +44,8 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
   const api = useSignUpAPI(serverURL)
   const provider = useProvider()
   const getNonce = useGetNonce(serverURL)
+  const lastConectorName = useLastConectorName()
   return useCallback(async () => {
-    if (provider == null) {
-      throw new Error('Please connect a wallet')
-    }
     const { isRegistered, nonce } = await getNonce()
     // if it's already registered, return code 200 and nonce
     if (isRegistered) {
@@ -52,7 +55,19 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
       }
     }
     const message = buildSignMessaege(nonce, signatureDesc)
-    const signature = await provider.getSigner().signMessage(message)
+    let signature = ''
+    if (lastConectorName === ConnectorName.ZilPay) {
+      if (!zilpay.isConnected) {
+        throw new Error('Please connect a wallet')
+      }
+      const signData = await zilpay.signMessage(message)
+      signature = signData.signature
+    } else {
+      if (provider == null) {
+        throw new Error('Please connect a wallet')
+      }
+      signature = await provider.getSigner().signMessage(message)
+    }
     try {
       await api.signUp(message, signature)
     } catch (error) {
@@ -75,5 +90,5 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
       message,
       signature,
     }
-  }, [api, provider, getNonce])
+  }, [api, provider, getNonce, lastConectorName])
 }

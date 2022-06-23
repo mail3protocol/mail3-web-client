@@ -24,12 +24,16 @@ export class API {
     return this.axios.get(`/address_nonces/${this.address}`)
   }
 
-  public async signUp(message: string, signature: string) {
-    return this.axios.post('/registrations', {
+  public async signUp(message: string, signature: string, pubkey?: string) {
+    const data: Record<string, string> = {
       address: this.address,
       message,
       signature,
-    })
+    }
+    if (pubkey) {
+      data.pubkey = pubkey
+    }
+    return this.axios.post('/registrations', data)
   }
 }
 

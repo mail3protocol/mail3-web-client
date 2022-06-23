@@ -38,6 +38,7 @@ import PolkadotPng from 'assets/wallets/polkadot.png'
 import CoinbasePng from 'assets/wallets/coinbase.png'
 import TronPng from 'assets/wallets/tron.png'
 import AvalanchePng from 'assets/wallets/avalanche.png'
+import ZilpayPng from 'assets/wallets/zilpay.png'
 
 import {
   useDialog,
@@ -56,6 +57,7 @@ import {
   DesiredWallet,
   TrackKey,
   COOKIE_KEY,
+  zilpay,
 } from 'hooks'
 import Image from 'next/image'
 import type { StaticImageData } from 'next/image'
@@ -373,6 +375,31 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                   removeCookie(COOKIE_KEY, { path: '/' })
                   setLastConnector(ConnectorName.WalletConnect)
                   onClose()
+                }
+              }}
+            />
+            <ConnectButton
+              text={t('connect.zilpay')}
+              icon={generateIcon(ZilpayPng)}
+              isDisabled={connectorName === ConnectorName.ZilPay && isConnected}
+              isConnected={
+                connectorName === ConnectorName.ZilPay && isConnected
+              }
+              onClick={async () => {
+                trackWallet({
+                  [TrackKey.DesiredWallet]: DesiredWallet.ZilPay,
+                })
+                try {
+                  await zilpay.connect()
+                  setLastConnector(ConnectorName.ZilPay)
+                  onClose()
+                } catch (error: any) {
+                  onClose()
+                  dialog({
+                    type: 'warning',
+                    title: t('connect.notice'),
+                    description: error?.message,
+                  })
                 }
               }}
             />
