@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import parse, {
   DOMNode,
@@ -6,6 +6,8 @@ import parse, {
   HTMLReactParserOptions,
 } from 'html-react-parser'
 import DOMPurify from 'dompurify'
+import ReactShadowRoot from 'react-shadow-root'
+import { createPortal } from 'react-dom'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
 import { OFFICE_ADDRESS_LIST } from '../../constants'
@@ -15,6 +17,79 @@ interface htmlParserProps {
   messageId: string
   attachments: AttachmentItemResponse[] | null
   from: AddressResponse
+}
+
+interface IframeProps extends React.IframeHTMLAttributes<HTMLIFrameElement> {
+  getHeight: (h: number) => void
+}
+
+export const Iframe: React.FC<IframeProps> = (props) => {
+  const { children, getHeight, ...rest } = props
+  const [contentRef, setContentRef] = useState<HTMLIFrameElement | null>(null)
+  const mountNode = contentRef?.contentWindow?.document?.body
+
+  const content = (
+    <>
+      <style>{` html { overflow:hidden;} `}</style>
+      {children}
+    </>
+  )
+  console.log(content)
+  return (
+    <iframe
+      title="iframe"
+      {...rest}
+      ref={setContentRef}
+      onLoad={() => {
+        const h = contentRef?.contentWindow?.document.body.scrollHeight
+        getHeight(h ?? 100)
+      }}
+    >
+
+      {mountNode && createPortal(content, mountNode)}
+    </iframe>
+  )
+}
+
+const shadowRootStyle = `
+  :host {
+    display: block;
+  }
+
+  main {
+    display: block;
+    overflow: hidden;
+    min-height: 1rem;
+  }
+
+  iframe {
+    border: none;
+    width: 100%;
+    height: 0;
+    margin: 0;
+  }
+}
+
+`
+export const UnofficialMailBody: React.FC = ({ children }) => {
+  const [height, setHeight] = useState<number>(0)
+
+  return (
+    <ReactShadowRoot>
+      <style>{shadowRootStyle}</style>
+      <main style={{ height: `${height}px` }}>
+        <Iframe
+          getHeight={(h: number) => {
+            setHeight(h)
+          }}
+          src="about:blank"
+          style={{ height: '100%' }}
+        >
+          {children}
+        </Iframe>
+      </main>
+    </ReactShadowRoot>
+  )
 }
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
@@ -44,15 +119,26 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     replace,
   }
 
+  const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+    (address) => from.address === address
+  )
+
   const addTags = useMemo(() => {
-    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
-      (address) => from.address === address
-    )
     if (isOfficeMail) return ['iframe']
     return []
   }, [from.address])
 
   const cleanHtml = DOMPurify.sanitize(html, { ADD_TAGS: addTags })
 
-  return <Box>{parse(cleanHtml, options)}</Box>
+  const content = useMemo(() => parse(cleanHtml, options), [cleanHtml, options])
+
+  return (
+    <Box>
+      {isOfficeMail ? (
+        <Box>{content}</Box>
+      ) : (
+        <UnofficialMailBody>{content}</UnofficialMailBody>
+      )}
+    </Box>
+  )
 }

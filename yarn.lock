@@ -7484,6 +7484,11 @@ react-remove-scroll@2.4.1:
     use-callback-ref "^1.2.3"
     use-sidecar "^1.0.1"
 
+react-shadow-root@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/react-shadow-root/-/react-shadow-root-6.2.0.tgz#35f8516fd9957a68e01971f57604ad7e5c42f7f6"
+  integrity sha512-ruFCVvbzFjWordVAZnrIcVNZpHz7whpNW2sRrAYBPmRpE9uTyN0Xt/1lkw52ktAmoSUkEptF2hjfISHmPirKTg==
+
 react-style-singleton@^2.1.0:
   version "2.1.1"
   resolved "https://registry.npmjs.org/react-style-singleton/-/react-style-singleton-2.1.1.tgz"
