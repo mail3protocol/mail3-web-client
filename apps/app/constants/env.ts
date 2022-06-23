@@ -35,3 +35,9 @@ export const OFFICE_ADDRESS_LIST = [
   `no-reply-pls.eth@${MAIL_SERVER_URL}`,
   `mail3.eth@${MAIL_SERVER_URL}`,
 ]
+
+export const DRIFT_BOTTLE_ADDRESS =
+  process.env.NEXT_PUBLIC_DRIFT_BOTTLE_ADDRESS || `driftbottle.eth@mail3.me`
+
+export const GOOGLE_ANALYTICS_MODE =
+  process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MODE === 'true' || false

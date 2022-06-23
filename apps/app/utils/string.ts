@@ -57,3 +57,32 @@ export const isMail3Address = (address: string) =>
   [MAIL_SERVER_URL, 'imibao.net'].some((item) =>
     address.toLowerCase().endsWith(item)
   )
+
+export const is0xAddress = (address: string) => address.startsWith('0x')
+
+export const truncateMiddle0xMail = (
+  address: string,
+  takeLength = 6,
+  tailLength = 4
+) => {
+  if (!verifyEmail(address)) return address
+  if (!is0xAddress(address)) return address
+  const splitAddress = address.split('@')
+  const realAddress = splitAddress[0]
+  const suffix = splitAddress[1]
+  return `${truncateMiddle(realAddress, takeLength, tailLength)}@${suffix}`
+}
+
+export function filterEmails(strings: string[]) {
+  return strings.filter((str) => verifyEmail(str))
+}
+
+export function getDriftBottleFrom(str: string): string | undefined {
+  const removedTagStr = str.replace(/<[^>]*>?/gm, ' ')
+  return removedTagStr
+    .match(
+      /Drift\sbottle\sfrom(\s*)\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/g
+    )?.[0]
+    .substring(18)
+    .trim()
+}
