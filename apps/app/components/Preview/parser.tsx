@@ -102,6 +102,13 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   messageId,
   from,
 }) => {
+  useEffect(
+    () => () => {
+      DOMPurify.removeAllHooks()
+    },
+    []
+  )
+
   const replace = useCallback(
     (dom: DOMNode) => {
       if (dom instanceof Element) {
@@ -132,7 +139,26 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   }, [from.address])
 
   const content = useMemo(() => {
-    const cleanHtml = DOMPurify.sanitize(html, { ADD_TAGS: addTags })
+    DOMPurify.removeHook('afterSanitizeAttributes')
+    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+      // set all elements owning target to target=_blank
+      if ('target' in node) {
+        node.setAttribute('target', '_blank')
+        node.setAttribute('rel', 'noopener noreferrer')
+      }
+
+      if (
+        !node.hasAttribute('target') &&
+        (node.hasAttribute('xlink:href') || node.hasAttribute('href'))
+      ) {
+        node.setAttribute('xlink:show', 'new')
+      }
+    })
+    const cleanHtml = DOMPurify.sanitize(html, {
+      ADD_TAGS: addTags,
+      ADD_ATTR: ['target'],
+    })
+
     return parse(cleanHtml, { replace })
   }, [html, addTags])
 
