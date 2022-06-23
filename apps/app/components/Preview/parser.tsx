@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import parse, {
   DOMNode,
@@ -28,13 +28,24 @@ export const Iframe: React.FC<IframeProps> = (props) => {
   const [contentRef, setContentRef] = useState<HTMLIFrameElement | null>(null)
   const mountNode = contentRef?.contentWindow?.document?.body
 
-  const content = (
-    <>
-      <style>{` html { overflow:hidden;} `}</style>
-      {children}
-    </>
-  )
-  console.log(content)
+  useEffect(() => {
+    const iframeInnerStyle = `
+      html {
+        overflow: hidden;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        word-break: break-all;
+      }
+    `
+    const domStyle = document.createElement('style')
+    domStyle.innerHTML = iframeInnerStyle
+    contentRef?.contentWindow?.document.head.appendChild(domStyle)
+  }, [contentRef])
+
   return (
     <iframe
       title="iframe"
@@ -42,11 +53,10 @@ export const Iframe: React.FC<IframeProps> = (props) => {
       ref={setContentRef}
       onLoad={() => {
         const h = contentRef?.contentWindow?.document.body.scrollHeight
-        getHeight(h ?? 100)
+        getHeight(h ?? 200)
       }}
     >
-
-      {mountNode && createPortal(content, mountNode)}
+      {mountNode && createPortal(children, mountNode)}
     </iframe>
   )
 }
@@ -59,7 +69,7 @@ const shadowRootStyle = `
   main {
     display: block;
     overflow: hidden;
-    min-height: 1rem;
+    min-height: 200px;
   }
 
   iframe {
@@ -68,8 +78,6 @@ const shadowRootStyle = `
     height: 0;
     margin: 0;
   }
-}
-
 `
 export const UnofficialMailBody: React.FC = ({ children }) => {
   const [height, setHeight] = useState<number>(0)
@@ -98,26 +106,25 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   messageId,
   from,
 }) => {
-  const replace = (dom: DOMNode) => {
-    if (dom instanceof Element) {
-      if (dom.attribs?.src?.startsWith('cid:') && attachments) {
-        return (
-          <AttachmentImage
-            attachments={attachments}
-            messageId={messageId}
-            attribs={dom.attribs}
-          />
-        )
+  const replace = useCallback(
+    (dom: DOMNode) => {
+      if (dom instanceof Element) {
+        if (dom.attribs?.src?.startsWith('cid:') && attachments) {
+          return (
+            <AttachmentImage
+              attachments={attachments}
+              messageId={messageId}
+              attribs={dom.attribs}
+            />
+          )
+        }
+        return dom
       }
+
       return dom
-    }
-
-    return dom
-  }
-
-  const options: HTMLReactParserOptions = {
-    replace,
-  }
+    },
+    [attachments, messageId]
+  )
 
   const isOfficeMail = OFFICE_ADDRESS_LIST.some(
     (address) => from.address === address
@@ -128,9 +135,10 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     return []
   }, [from.address])
 
-  const cleanHtml = DOMPurify.sanitize(html, { ADD_TAGS: addTags })
-
-  const content = useMemo(() => parse(cleanHtml, options), [cleanHtml, options])
+  const content = useMemo(() => {
+    const cleanHtml = DOMPurify.sanitize(html, { ADD_TAGS: addTags })
+    return parse(cleanHtml, { replace })
+  }, [html, addTags])
 
   return (
     <Box>
