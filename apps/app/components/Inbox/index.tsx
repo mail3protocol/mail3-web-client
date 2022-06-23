@@ -122,7 +122,7 @@ export const InboxComponent: React.FC = () => {
     refetchOnReconnect: true,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    refetchInterval: 5000,
+    refetchInterval: 30000,
   })
 
   const newMessages = useMemo(() => {
@@ -192,7 +192,6 @@ export const InboxComponent: React.FC = () => {
           }}
         />
       )}
-
       <Box paddingTop={{ base: '25px', md: '35px' }}>
         <FlexButtonBox>
           <InboxNav currentType={InboxNavType.Inbox} />
