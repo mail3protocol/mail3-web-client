@@ -103,10 +103,7 @@ export const AuthModal: React.FC = () => {
             trackTestingConnect({ [TrackKey.TestingEntry]: true })
           }
           closeAuthModal()
-          if (
-            router.pathname !== RoutePath.WhiteList &&
-            router.pathname !== RoutePath.Testing
-          ) {
+          if (router.pathname !== RoutePath.WhiteList) {
             router.push(RoutePath.Setup)
           }
           break
