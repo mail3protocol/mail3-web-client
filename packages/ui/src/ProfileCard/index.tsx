@@ -7,8 +7,7 @@ import { Avatar, Button } from 'ui'
 import LogoSvg from 'assets/svg/logo-pure.svg'
 // @ts-ignore
 import PngBorder from 'assets/profile/border.png'
-// @ts-ignore
-import SvgMailme from 'assets/profile/mail-me.svg'
+import PngMailMeButton from 'assets/profile/mail-me-button.png'
 
 interface ProfileCardProps {
   mailAddress: string
@@ -110,7 +109,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
           </Box>
 
           <Button className="button">
-            <SvgMailme /> <Box pl="10px">Mail me</Box>
+            <Image src={PngMailMeButton.src} w="100%" height="100%" />
           </Button>
         </Center>
       </Container>

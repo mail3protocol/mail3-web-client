@@ -30,7 +30,6 @@ import SvgCopy from 'assets/profile/copy.svg'
 import SvgShare from 'assets/profile/share.svg'
 import SvgTwitter from 'assets/profile/twitter.svg'
 import SvgMore from 'assets/profile/more.svg'
-
 import SvgEtherscan from 'assets/profile/business/etherscan.svg'
 import SvgCyber from 'assets/profile/business/arrow.svg'
 
@@ -106,6 +105,11 @@ interface ProfileComponentProps {
   address: string
 }
 
+let homeUrl = ''
+if (typeof window !== 'undefined') {
+  homeUrl = `${window?.location?.origin}`
+}
+
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
@@ -160,8 +164,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       Icon: SvgEtherscan,
     },
   }
-
-  const homeUrl = `${window.location.origin}`
 
   const profileUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
 
