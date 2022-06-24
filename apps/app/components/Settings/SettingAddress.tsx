@@ -28,7 +28,13 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
-import { useAccount, useDialog, useToast } from 'hooks'
+import {
+  useAccount,
+  useDialog,
+  useToast,
+  useTrackClick,
+  TrackEvent,
+} from 'hooks'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { truncateMiddle, isPrimitiveEthAddress } from 'shared'
@@ -149,6 +155,7 @@ export const SettingAddress: React.FC = () => {
   const [isRefreshing, setIsRefeshing] = useState(false)
   const toast = useToast()
   const dialog = useDialog()
+  const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
 
   const {
     data: ensNames,
@@ -178,6 +185,7 @@ export const SettingAddress: React.FC = () => {
 
   const onRefreshEnsDomains = async () => {
     setIsRefeshing(true)
+    trackClickENSRefresh()
     try {
       await api.updateAliasList()
       await refetch()

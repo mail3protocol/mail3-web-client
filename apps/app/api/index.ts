@@ -343,6 +343,6 @@ export class API {
   }
 
   public async updateAliasList() {
-    return this.axios.get(`/account/aliases`)
+    return this.axios.put(`/account/aliases`)
   }
 }
