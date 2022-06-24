@@ -190,7 +190,9 @@ export const SettingAddress: React.FC = () => {
       await api.updateAliasList()
       await refetch()
     } catch (e: any) {
-      toast(t('address.refresh_failed') + e.toString())
+      if (e.response.data.reason !== 'EMPTY_ENS_LIST') {
+        toast(t('address.refresh_failed') + e.toString())
+      }
     } finally {
       setIsRefeshing(false)
     }
@@ -231,6 +233,18 @@ export const SettingAddress: React.FC = () => {
   const [firstAlias, ...restAliases] = aliases
 
   const router = useRouter()
+
+  const refreshButton = (
+    <RowButton
+      variant="link"
+      colorScheme="deepBlue"
+      leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
+      onClick={onRefreshEnsDomains}
+      isLoading={isRefreshing}
+    >
+      {t('address.refresh')}
+    </RowButton>
+  )
 
   return (
     <Container>
@@ -284,15 +298,7 @@ export const SettingAddress: React.FC = () => {
                 <Box h="24px" lineHeight="24px">
                   {t('address.ens-name')}
                 </Box>
-                <RowButton
-                  variant="link"
-                  colorScheme="deepBlue"
-                  leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
-                  onClick={onRefreshEnsDomains}
-                  isLoading={isRefreshing}
-                >
-                  {t('address.refresh')}
-                </RowButton>
+                {refreshButton}
               </Stack>
             </FormLabel>
             <VStack spacing="10px">
@@ -311,14 +317,24 @@ export const SettingAddress: React.FC = () => {
           </>
         ) : null}
         <Text fontSize="16px" fontWeight={700} mt="32px" mb="32px">
-          <Trans
-            ns="settings"
-            i18nKey="address.registe-ens"
-            t={t}
-            components={{
-              a: <Link isExternal href={ENS_DOMAIN} color="#4E52F5" />,
-            }}
-          />
+          <Stack
+            direction="row"
+            spacing="16px"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            <Box h="24px" lineHeight="24px">
+              <Trans
+                ns="settings"
+                i18nKey="address.registe-ens"
+                t={t}
+                components={{
+                  a: <Link isExternal href={ENS_DOMAIN} color="#4E52F5" />,
+                }}
+              />
+            </Box>
+            {restAliases.length <= 0 ? refreshButton : null}
+          </Stack>
         </Text>
       </FormControl>
       <Flex className="mascot">
