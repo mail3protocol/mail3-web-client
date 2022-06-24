@@ -22,6 +22,18 @@ export interface AvatarProps extends RawAvatarProps {
 const isEthAddress = (address?: string) =>
   address && (address.startsWith('0x') || address?.endsWith('.eth'))
 
+const isSupportedAddress = (address?: string) => {
+  if (address) {
+    if (isEthAddress(address)) {
+      return true
+    }
+    if (address.startsWith('zil')) {
+      return true
+    }
+  }
+  return false
+}
+
 const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
   'avatar_addresses',
   {},
@@ -72,7 +84,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         body: JSON.stringify({ query: avatarQuery(address) }),
       }).then((res) => res.json()),
     {
-      enabled: avatar == null && !!isEthAddress(address),
+      enabled: avatar == null && isSupportedAddress(address),
       refetchIntervalInBackground: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
@@ -93,7 +105,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   )
 
   if (avatar === EMPTY_PLACE_HOLDER_SRC) {
-    return isEthAddress(address) ? (
+    return isSupportedAddress(address) ? (
       <WrapItem
         w={width}
         h={width}

@@ -56,12 +56,14 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
     }
     const message = buildSignMessaege(nonce, signatureDesc)
     let signature = ''
+    let pubkey = ''
     if (lastConectorName === ConnectorName.ZilPay) {
       if (!zilpay.isConnected) {
         throw new Error('Please connect a wallet')
       }
       const signData = await zilpay.signMessage(message)
       signature = signData.signature
+      pubkey = signData.publicKey
     } else {
       if (provider == null) {
         throw new Error('Please connect a wallet')
@@ -69,7 +71,7 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
       signature = await provider.getSigner().signMessage(message)
     }
     try {
-      await api.signUp(message, signature)
+      await api.signUp(message, signature, pubkey)
     } catch (error) {
       if (axios.isAxiosError(error) && error?.response?.data.code === 400) {
         return {
@@ -89,6 +91,7 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
       nonce,
       message,
       signature,
+      pubkey,
     }
   }, [api, provider, getNonce, lastConectorName])
 }

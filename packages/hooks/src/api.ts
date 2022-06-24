@@ -31,7 +31,7 @@ export class API {
       signature,
     }
     if (pubkey) {
-      data.pubkey = pubkey
+      data.pub_key = pubkey
     }
     return this.axios.post('/registrations', data)
   }
