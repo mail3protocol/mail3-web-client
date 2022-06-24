@@ -22,7 +22,7 @@ import { truncateMiddle } from 'shared'
 import Head from 'next/head'
 import { isEthAddress } from '../utils/eth'
 
-import { MAIL_SERVER_URL } from '../constants/env'
+import { APP_URL, MAIL_SERVER_URL } from '../constants/env'
 import { ProfileComponent } from '../components/Profile'
 
 function parseCookies(req?: IncomingMessage) {
@@ -112,7 +112,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
               <Button
                 as="a"
                 target="_blank"
-                href="https://app.mail3.me"
+                href={APP_URL}
                 variant="outline"
                 borderRadius="40px"
                 bg="transparent"
@@ -131,7 +131,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
               <Button
                 as="a"
                 target="_blank"
-                href="https://app.mail3.me"
+                href={APP_URL}
                 borderRadius="40px"
                 bg="brand.500"
                 w="200px"
