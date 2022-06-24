@@ -60,7 +60,8 @@ const Container = styled(Box)`
   }
 
   .address {
-    max-width: 90%;
+    max-width: 310px;
+    min-width: 280px;
     /* margin-top: 15px; */
     /* background: #f3f3f3; */
     /* border-radius: 16px; */
