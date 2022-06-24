@@ -38,7 +38,7 @@ import {
   removeMailSuffix,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
-import { DRIFT_BOTTLE_ADDRESS, MAIL_SERVER_URL } from '../../constants'
+import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
@@ -295,7 +295,7 @@ export const PreviewComponent: React.FC = () => {
 
   const onClickAvatar = (address: string) => {
     const realAddress = removeMailSuffix(address).toLowerCase()
-    window.location.href = `https://${MAIL_SERVER_URL}/${realAddress}`
+    window.location.href = `${HOME_URL}/${realAddress}`
   }
 
   const avatarList = useMemo(() => {

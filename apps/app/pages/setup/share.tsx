@@ -31,6 +31,7 @@ import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
 
 import { copyText } from '../../utils'
+import { HOME_URL } from '../../constants'
 
 export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
   async ({ locale }) => ({
@@ -97,7 +98,7 @@ const SetupShare: NextPage = () => {
 
   const profileUrl: string = useMemo(() => {
     const ads = mailAddress.substring(0, mailAddress.indexOf('@'))
-    return `https://mail3.me/${ads}`
+    return `${HOME_URL}/${ads}`
   }, [mailAddress])
 
   const onShareTwitter = () => {
@@ -202,7 +203,11 @@ const SetupShare: NextPage = () => {
               >
                 <Box w="228px" h="343px">
                   <Box transform={`scale(${228 / 375})`} transformOrigin="0 0">
-                    <ProfileCard mailAddress={mailAddress} isPic>
+                    <ProfileCard
+                      mailAddress={mailAddress}
+                      isPic
+                      homeUrl={HOME_URL}
+                    >
                       {Icons}
                     </ProfileCard>
                   </Box>
@@ -251,7 +256,7 @@ const SetupShare: NextPage = () => {
         </SettingContainer>
       </PageContainer>
 
-      <ProfileCard ref={cardRef} mailAddress={mailAddress}>
+      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={HOME_URL}>
         {Icons}
       </ProfileCard>
     </>

@@ -13,6 +13,7 @@ import SvgMailme from 'assets/profile/mail-me.svg'
 interface ProfileCardProps {
   mailAddress: string
   isPic?: boolean
+  homeUrl: string
   children?: React.ReactNode
 }
 
@@ -81,7 +82,7 @@ const Container = styled(Box)`
 `
 
 export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
-  ({ mailAddress, isPic, children }, ref) => {
+  ({ mailAddress, isPic, children, homeUrl }, ref) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
 
     return (
@@ -103,7 +104,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
 
           <Box className="qrCode">
             <QrCode
-              value={`https://mail3.me/${address}?utm_medium=qrcode`}
+              value={`${homeUrl}/${address}?utm_medium=qrcode`}
               size={130}
             />
           </Box>

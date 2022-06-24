@@ -161,10 +161,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     },
   }
 
-  const profileUrl: string = useMemo(
-    () => `https://mail3.me/${address}`,
-    [address]
-  )
+  const homeUrl = `${window.location.origin}`
+
+  const profileUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
 
   const actionMap = useMemo(
     () => ({
@@ -347,7 +346,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </Button>
       </Center>
 
-      <ProfileCard ref={cardRef} mailAddress={mailAddress}>
+      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
         {[ScoialConfig.CyberConnect, ScoialConfig.Etherscan].map(
           ({ Icon }, index) => (
             <Box
