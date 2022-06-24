@@ -8,7 +8,7 @@ import type {
 } from '@chakra-ui/react'
 import { atom } from 'jotai'
 import { selectAtom, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
   Alert,
   AlertIcon,
@@ -23,6 +23,7 @@ import {
   ModalOverlay,
   Button,
 } from '@chakra-ui/react'
+import { useCloseOnChangePathname } from './useCloseOnChangePathname'
 
 export const noop: (...args: any) => any = () => {}
 
@@ -44,6 +45,7 @@ export interface ConfirmDialogOptions {
   modalBodyProps?: ModalBodyProps
   showCloseButton?: boolean
   okButtonProps?: ButtonProps
+  isCloseOnChangePathname?: boolean // default is true
 }
 
 export interface ConfirmDialogProps extends ConfirmDialogOptions {
@@ -180,7 +182,10 @@ export const ConfirmDialog: React.FC = () => {
     modalProps,
     showCloseButton = type !== 'text',
     okButtonProps,
+    isCloseOnChangePathname,
   } = options
+
+  useCloseOnChangePathname(onClose, isCloseOnChangePathname)
 
   return (
     <Modal
