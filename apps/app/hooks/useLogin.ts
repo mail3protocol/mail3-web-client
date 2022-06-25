@@ -249,7 +249,7 @@ export const useWalletChange = () => {
     const w = window as any
     const { ethereum } = w
     let zilpaySubscriber: any
-    if (zilpay.isInstalled()) {
+    if (zilpay.isInstalled() && w.zilpay) {
       zilpaySubscriber = zilpay
         .getObservableAccount()
         .subscribe(handleZilpayAccountChanged)
