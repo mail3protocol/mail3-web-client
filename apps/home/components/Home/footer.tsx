@@ -12,6 +12,7 @@ import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
 import LogoWithWhiteFontColorSvg from 'assets/svg/logo-with-white-font.svg'
 import { useTrackClick, TrackEvent, TrackKey, HomeCommunity } from 'hooks'
+import dynamic from 'next/dynamic'
 import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
 import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
 import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
@@ -21,6 +22,8 @@ import {
   MIRROR_URL,
   TWITTER_URL,
 } from '../../constants/env'
+
+const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
 export const Footer = () => {
   const trackClickCommunity = useTrackClick(TrackEvent.HomeClickCommunity)
@@ -149,6 +152,7 @@ export const Footer = () => {
               >
                 <Box>Contact Us</Box>
               </Link>
+              <Mail3MeButton />
             </Stack>
           </Box>
         </Grid>
