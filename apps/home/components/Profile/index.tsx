@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
-import { Avatar, Button, ProfileCard } from 'ui'
+import { Avatar, ProfileCard } from 'ui'
 import { useMemo, useRef } from 'react'
 import {
   ProfileScoialPlatformItem,
@@ -24,8 +24,8 @@ import {
   useTrackClick,
 } from 'hooks'
 import { copyText, shareToTwitter } from 'shared'
+import '@mail3/mail3-me'
 
-import SvgMailme from 'assets/profile/mail-me.svg'
 import SvgCopy from 'assets/profile/copy.svg'
 import SvgShare from 'assets/profile/share.svg'
 import SvgTwitter from 'assets/profile/twitter.svg'
@@ -338,14 +338,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       </Container>
 
       <Center>
-        <Button
-          w="250px"
-          onClick={() => {
-            // trackMailme()
-          }}
-        >
-          <SvgMailme /> <Box pl="10px">Mail me</Box>
-        </Button>
+        <mail3-me css="width: 200px;" icon_style="width: 20px;" />
       </Center>
 
       <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
