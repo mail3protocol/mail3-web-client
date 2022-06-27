@@ -23,6 +23,8 @@ export const isPrimitiveEthAddress = (address: string) =>
 export const isEthAddress = (address: string) =>
   isPrimitiveEthAddress(address) || isEnsDomain(address)
 
+export const isZilpayAddress = (address: string) => address.startsWith('zil')
+
 export const truncateMailAddress = (
   mailAddress: string,
   takeLength = 6,
