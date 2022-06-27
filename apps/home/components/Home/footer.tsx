@@ -19,6 +19,7 @@ import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
 import {
   CONTACT_US_URL,
   DISCORD_URL,
+  GITHUB_URL,
   MIRROR_URL,
   TWITTER_URL,
 } from '../../constants/env'
@@ -30,7 +31,7 @@ export const Footer = () => {
   const trackClickContactus = useTrackClick(TrackEvent.HomeClickContact)
   return (
     <Center
-      h={{ base: 'auto', md: '245px' }}
+      h={{ base: 'auto', lg: '245px' }}
       bg="#000"
       color="#fff"
       px="33px"
@@ -40,24 +41,24 @@ export const Footer = () => {
         w="full"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         justify="space-between"
-        direction={{ base: 'column', md: 'row' }}
+        direction={{ base: 'column', lg: 'row' }}
       >
-        <Box mb={{ base: '20px', md: 0 }}>
+        <Box mb={{ base: '20px', lg: 0 }}>
           <Icon
             as={LogoWithWhiteFontColorSvg}
-            w={{ base: '139px', md: '289px' }}
+            w={{ base: '139px', lg: '289px' }}
             h="auto"
           />
-          <Box fontSize={{ base: '12px', md: '24px' }} letterSpacing="0.04em">
+          <Box fontSize={{ base: '12px', lg: '24px' }} letterSpacing="0.04em">
             For all crytpo natives
           </Box>
         </Box>
         <Grid
           templateColumns={{
             base: 'repeat(2, 50%)',
-            md: 'repeat(3, 33.3%)',
+            lg: 'repeat(4, 25%)',
           }}
-          w={{ base: 'auto', md: '500px' }}
+          w={{ base: 'auto', lg: '650px' }}
           flexWrap="wrap"
           rowGap="32px"
         >
@@ -153,6 +154,16 @@ export const Footer = () => {
                 <Box>Contact Us</Box>
               </Link>
               <Mail3MeButton />
+            </Stack>
+          </Box>
+          <Box>
+            <Heading fontSize="18px" lineHeight="23px">
+              Developer
+            </Heading>
+            <Stack mt={{ base: '6px', md: '24px' }}>
+              <Link href={GITHUB_URL} target="_blank">
+                <Box>Github</Box>
+              </Link>
             </Stack>
           </Box>
         </Grid>
