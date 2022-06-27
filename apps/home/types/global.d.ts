@@ -1,10 +1,5 @@
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
 
-declare module '*.svg?url' {
-  const path: string
-  export default path
-}
-
 declare global {
   namespace JSX {
     interface IntrinsicElements {
