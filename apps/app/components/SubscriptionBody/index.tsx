@@ -175,11 +175,11 @@ export const SubscriptionBody: React.FC = () => {
   const handleClick: HandleClick = (index, type) => {
     const newList = [...list]
     trackBell()
+    trackMedia({
+      [TrackKey.MediaSubscriptions]: MediaSubscriptionsItem[index],
+    })
 
     if (type === 'follow') {
-      trackMedia({
-        [TrackKey.MediaSubscriptions]: MediaSubscriptionsItem[index],
-      })
       // doing follow
       newList[index].isSub = true
     } else {
