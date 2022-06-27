@@ -253,9 +253,13 @@ export const useWalletChange = () => {
     const { ethereum } = w
     let zilpaySubscriber: any
     if (w.zilPay && zilpay.isInstalled()) {
-      zilpaySubscriber = zilpay
-        .getObservableAccount()
-        .subscribe(handleZilpayAccountChanged)
+      try {
+        zilpaySubscriber = zilpay
+          .getObservableAccount()
+          .subscribe(handleZilpayAccountChanged)
+      } catch (error) {
+        //
+      }
     }
     if (ethereum && ethereum.on) {
       ethereum.on('disconnect', handleDisconnect)
