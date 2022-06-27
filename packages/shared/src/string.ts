@@ -34,7 +34,7 @@ export const truncateMailAddress = (
     const splitMailAddress = mailAddress.split('@')
     const address = splitMailAddress[0]
     const suffix = splitMailAddress[1]
-    if (isPrimitiveEthAddress(address))
+    if (isPrimitiveEthAddress(address) || isZilpayAddress(address))
       return `${truncateMiddle(address, takeLength, tailLength)}@${suffix}`
   }
 

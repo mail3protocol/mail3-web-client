@@ -64,7 +64,6 @@ function Mail3({
 
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link
           href="/icons/icon-144x144.png"
           rel="icon"
