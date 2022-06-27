@@ -1,4 +1,6 @@
 import { verifyEmail, truncateMiddle } from 'shared'
+import querystring from 'query-string'
+import type { ParsedUrlQuery } from 'querystring'
 import { MAIL_SERVER_URL } from '../constants'
 
 export function copyTextFallback(data: string): void {
@@ -35,6 +37,22 @@ export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 4) {
   return truncateMiddle(str, takeLength, str.length - i + tailLength)
 }
 
+export const getUtmQueryString = (query: ParsedUrlQuery) => {
+  const newQuery: ParsedUrlQuery = {}
+  const keys = Object.keys(query)
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    if (key.startsWith('utm')) {
+      newQuery[key] = query[key]
+    }
+  }
+  const qs = querystring.stringify(newQuery)
+  if (qs) {
+    return `?${qs}`
+  }
+  return qs
+}
+
 export function removeMailSuffix(emailAddress: string) {
   if (!verifyEmail(emailAddress)) return emailAddress
   let i = emailAddress.length - 1
@@ -57,3 +75,32 @@ export const isMail3Address = (address: string) =>
   [MAIL_SERVER_URL, 'imibao.net'].some((item) =>
     address.toLowerCase().endsWith(item)
   )
+
+export const is0xAddress = (address: string) => address.startsWith('0x')
+
+export const truncateMiddle0xMail = (
+  address: string,
+  takeLength = 6,
+  tailLength = 4
+) => {
+  if (!verifyEmail(address)) return address
+  if (!is0xAddress(address)) return address
+  const splitAddress = address.split('@')
+  const realAddress = splitAddress[0]
+  const suffix = splitAddress[1]
+  return `${truncateMiddle(realAddress, takeLength, tailLength)}@${suffix}`
+}
+
+export function filterEmails(strings: string[]) {
+  return strings.filter((str) => verifyEmail(str))
+}
+
+export function getDriftBottleFrom(str: string): string | undefined {
+  const removedTagStr = str.replace(/<[^>]*>?/gm, ' ').replace(/(&nbsp;)/g, ' ')
+  return removedTagStr
+    .match(
+      /Drift\sbottle\sfrom(\s*)\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/g
+    )?.[0]
+    .substring(18)
+    .trim()
+}

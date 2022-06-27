@@ -26,6 +26,8 @@ import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
+import { useSetLoginInfo } from './useLoginInfo'
+import { getUtmQueryString } from '../utils'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -34,7 +36,6 @@ export const useSetLoginCookie = () => {
     const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-      secure: process.env.NODE_ENV === 'production',
     }
     setCookie(COOKIE_KEY, info, option)
   }, [])
@@ -176,6 +177,7 @@ export const useInitUserProperties = () => {
   const isAuth = useIsAuthenticated()
   const userProps = useAtomValue(userPropertiesAtom)
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  const setLoginInfo = useSetLoginInfo()
   useDidMount(() => {
     if (userProps && isAuth) {
       try {
@@ -199,6 +201,7 @@ export const useInitUserProperties = () => {
         //
       }
       setUserProperties(null)
+      setLoginInfo(null)
     }
   }, [isAuth])
 }
@@ -309,12 +312,12 @@ export const useAuthModalOnBack = () => {
 export const getAuthenticateProps =
   (cb?: GetServerSideProps) => async (context: GetServerSidePropsContext) => {
     const props = await cb?.(context)
-    const { req, res } = context
+    const { req, res, query } = context
     const data = parseCookies(req)
     if (res) {
       if (typeof data.jwt !== 'string') {
         res.writeHead(307, {
-          Location: '/',
+          Location: `/testing${getUtmQueryString(query)}`,
           'Cache-Control': 'no-cache, no-store',
           Pragma: 'no-cache',
         })

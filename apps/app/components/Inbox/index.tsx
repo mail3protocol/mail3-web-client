@@ -192,7 +192,6 @@ export const InboxComponent: React.FC = () => {
           }}
         />
       )}
-
       <Box paddingTop={{ base: '25px', md: '35px' }}>
         <FlexButtonBox>
           <InboxNav currentType={InboxNavType.Inbox} />

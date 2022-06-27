@@ -9,6 +9,7 @@ import { SignatureStatus, useDidMount } from 'hooks'
 import { useQuery } from 'react-query'
 import { GetMessage } from 'models/src/getMessage'
 import Head from 'next/head'
+import { useTranslation } from 'next-i18next'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { MessageEditor } from '../../components/MessageEditor'
 import { Navbar } from '../../components/Navbar'
@@ -22,6 +23,8 @@ import { useAPI } from '../../hooks/useAPI'
 import { convertBlobToBase64 } from '../../utils/file'
 import { useSaveMessage } from '../../components/MessageEditor/hooks/useSaveMessage'
 import { replaceHtmlAttachImageSrc } from '../../utils/editor'
+import { DRIFT_BOTTLE_ADDRESS } from '../../constants'
+import { filterEmails } from '../../utils'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 
@@ -54,9 +57,23 @@ ${signContent}
 `)
 }
 
+function getDriftbottleTemplate(content: string, signContent: string) {
+  return `<p>${content}
+  <br>
+  <br>
+  ${signContent}
+</p>`
+}
+
+export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
+
 interface ServerSideProps {
-  action: SubmitMessage.ReferenceAction | null
+  action: Action | null
   id: string | null
+  // 👇👇 array string is split by `,`
+  to: string[] | null
+  forceTo: string[] | null // only `forceTo` without `messageInfo.to`
+  origin: 'driftbottle' | null
 }
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> =
@@ -69,11 +86,22 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> =
       ])),
       action: query.action ? query.action : null,
       id: query.id ? query.id : null,
+      to: query.to ? filterEmails((query.to as string).split(',')) : null,
+      forceTo: query.force_to
+        ? filterEmails((query.force_to as string).split(','))
+        : null,
+      origin: query.origin ? query.origin : null,
     },
   }))
 
-const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
+const NewMessagePage: NextPage<ServerSideProps> = ({
+  action,
+  id,
+  to,
+  forceTo,
+}) => {
   const api = useAPI()
+  const [t] = useTranslation('edit-message')
   const userProperties = useAtomValue(userPropertiesAtom)
   const signatureStatus = userProperties?.signature_status as SignatureStatus
   const isEnableSignatureText =
@@ -120,14 +148,19 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
     return messageInfo.subject
   }
 
-  function getTo(messageInfo: GetMessage.Response) {
-    if (!messageInfo.to || action === 'forward') {
-      return []
+  function getTo(messageInfo?: GetMessage.Response) {
+    if (forceTo) {
+      return forceTo
     }
-    if (action === 'reply') {
-      return [messageInfo.from.address]
+    if (action === 'driftbottle') {
+      return [DRIFT_BOTTLE_ADDRESS]
     }
-    return messageInfo.to.map((item) => item.address)
+    function getToAddressByMessageInfo() {
+      if (!messageInfo || !messageInfo.to || action === 'forward') return []
+      if (action === 'reply') return [messageInfo.from.address]
+      return messageInfo.to.map((item) => item.address)
+    }
+    return getToAddressByMessageInfo().concat(to || [])
   }
 
   async function setSubjectAndOtherByMessageInfo(
@@ -205,7 +238,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
       return 'Write Mail'
     }
     if (action === 'forward') {
-      return 'Foward Mail'
+      return 'Forward Mail'
     }
     if (action === 'reply') {
       return 'Reply Mail'
@@ -246,17 +279,26 @@ const NewMessagePage: NextPage<ServerSideProps> = ({ action, id }) => {
   const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
 
   const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
+
   useEffect(() => {
     if (isFirstLoadMessage) return
     setIsFirstLoadMessage(true)
     setSubjectAndOtherByMessageInfo(messageInfo)
   }, [messageInfo])
 
+  useEffect(() => {
+    if (id) return
+    setToAddresses(getTo())
+  }, [])
+
   const defaultContent = useMemo(() => {
     const signContent =
       isEnableSignatureText && userProperties?.text_signature
         ? userProperties?.text_signature
         : ''
+    if (action === 'driftbottle') {
+      return getDriftbottleTemplate(t('drift_bottle_template'), signContent)
+    }
     if (!messageContent) {
       return getDefaultTemplate(signContent)
     }

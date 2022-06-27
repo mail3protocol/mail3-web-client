@@ -269,6 +269,20 @@ export class API {
     })
   }
 
+  public async getUnreadMessagesCount(
+    fromAddress: string
+  ): Promise<AxiosResponse<MailboxesMessagesResponse>> {
+    return this.axios.post('/mailbox/account/search', {
+      path: Mailboxes.INBOX,
+      pageSize: 20,
+      page: 0,
+      search: {
+        unseen: true,
+        from: fromAddress,
+      },
+    })
+  }
+
   public async getMessagesSeen(
     page: number,
     pageSize: number = 20

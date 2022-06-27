@@ -3,7 +3,16 @@ import { SubmitMessage } from './submitMessage'
 export namespace UploadMessage {
   export interface RequestBody {
     path: string
-    flags?: string[]
+    flags?: {
+      add?: string[]
+      delete?: string[]
+      set?: string[]
+    }
+    labels?: {
+      add?: string[]
+      delete?: string[]
+      set?: string[]
+    }
     reference?: SubmitMessage.Reference
     from: SubmitMessage.Address
     to?: SubmitMessage.Address[]

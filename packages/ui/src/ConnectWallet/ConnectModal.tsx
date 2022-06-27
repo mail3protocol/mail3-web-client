@@ -58,6 +58,7 @@ import {
   TrackKey,
   COOKIE_KEY,
   zilpay,
+  useCloseOnChangePathname,
 } from 'hooks'
 import Image from 'next/image'
 import type { StaticImageData } from 'next/image'
@@ -278,6 +279,8 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
   )
 
   const [, , removeCookie] = useCookies([COOKIE_KEY])
+
+  useCloseOnChangePathname(onClose)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
