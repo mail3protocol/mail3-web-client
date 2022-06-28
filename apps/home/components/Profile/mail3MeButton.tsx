@@ -15,9 +15,9 @@ const bodyStyle = `
   border-radius: 40px;
 `
 
-const Mail3MeButton: React.FC = () => (
+const Mail3MeButton: React.FC<{ to: string }> = ({ to }) => (
   <div id="mail3-me-button-wrap">
-    <mail3-me css={bodyStyle} icon_style={iconStyle} />
+    <mail3-me css={bodyStyle} icon_style={iconStyle} to={to} />
   </div>
 )
 

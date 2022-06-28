@@ -354,7 +354,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       </Container>
 
       <Center>
-        <Mail3MeButton />
+        <Mail3MeButton to={mailAddress} />
       </Center>
 
       <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
