@@ -79,6 +79,9 @@ const Container = styled(Box)`
       // fix html2canvas bug
       margin-top: -10px;
       padding-bottom: 10px;
+      span {
+        margin-left: -5px;
+      }
     }
 
     .address-border {
@@ -133,6 +136,7 @@ const Container = styled(Box)`
 export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
   ({ mailAddress, isPic, isDev, children, homeUrl }, ref) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
+    const mailSuffix = mailAddress.substring(mailAddress.indexOf('@'))
 
     return (
       <Container
@@ -155,7 +159,10 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
               <Image src={PngSeal.src} className="seal" />
             </Box>
             <Box className="address">
-              <Text className="p">{mailAddress}</Text>
+              <Text className="p">
+                {address}
+                <span>{` ${mailSuffix}`}</span>
+              </Text>
               <Box className="address-border">
                 <Image w="100%" h="100%" src={PngAddressBorder.src} alt="" />
               </Box>
