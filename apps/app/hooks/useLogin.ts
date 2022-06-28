@@ -16,6 +16,7 @@ import {
   SignatureStatus,
   useDidMount,
   useAccountIsActivating,
+  zilpay,
 } from 'hooks'
 import { useRouter } from 'next/router'
 import { atom, useAtomValue } from 'jotai'
@@ -49,8 +50,8 @@ export const useLogin = () => {
   const api = useAPI()
   const setLoginInfo = useSetLoginCookie()
   return useCallback(
-    async (message: string, sig: string) => {
-      const { data } = await api.login(message, sig)
+    async (message: string, sig: string, pubkey?: string) => {
+      const { data } = await api.login(message, sig, pubkey)
       const loginInfo = {
         address: api.getAddress(),
         jwt: data.jwt,
@@ -211,7 +212,6 @@ export const useWalletChange = () => {
   const { onOpen: openConnectWalletModal } = useConnectWalletDialog()
   const account = useAccount()
   const isConnecting = useAccountIsActivating()
-
   const handleAccountChanged = useCallback(
     ([acc]) => {
       // disconected
@@ -229,7 +229,19 @@ export const useWalletChange = () => {
     },
     [account, isConnecting]
   )
-
+  const handleZilpayAccountChanged = useCallback(
+    (acc: any) => {
+      if (acc == null) {
+        removeCookie(COOKIE_KEY, { path: '/' })
+        return
+      }
+      if (acc?.bech32 === account) {
+        return
+      }
+      removeCookie(COOKIE_KEY, { path: '/' })
+    },
+    [account]
+  )
   const handleDisconnect = useCallback(() => {
     removeCookie(COOKIE_KEY, { path: '/' })
     closeAuthModal()
@@ -239,11 +251,24 @@ export const useWalletChange = () => {
   useEffect(() => {
     const w = window as any
     const { ethereum } = w
+    let zilpaySubscriber: any
+    if (w.zilPay && zilpay.isInstalled()) {
+      try {
+        zilpaySubscriber = zilpay
+          .getObservableAccount()
+          .subscribe(handleZilpayAccountChanged)
+      } catch (error) {
+        //
+      }
+    }
     if (ethereum && ethereum.on) {
       ethereum.on('disconnect', handleDisconnect)
       ethereum.on('accountsChanged', handleAccountChanged)
     }
     return () => {
+      if (zilpaySubscriber) {
+        zilpaySubscriber?.unsubscribe?.()
+      }
       if (ethereum && ethereum.off) {
         ethereum.off('disconnect', handleDisconnect)
         ethereum.off('accountsChanged', handleAccountChanged)

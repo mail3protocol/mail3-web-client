@@ -23,6 +23,8 @@ export const isPrimitiveEthAddress = (address: string) =>
 export const isEthAddress = (address: string) =>
   isPrimitiveEthAddress(address) || isEnsDomain(address)
 
+export const isZilpayAddress = (address: string) => address.startsWith('zil')
+
 export const truncateMailAddress = (
   mailAddress: string,
   takeLength = 6,
@@ -32,7 +34,7 @@ export const truncateMailAddress = (
     const splitMailAddress = mailAddress.split('@')
     const address = splitMailAddress[0]
     const suffix = splitMailAddress[1]
-    if (isPrimitiveEthAddress(address))
+    if (isPrimitiveEthAddress(address) || isZilpayAddress(address))
       return `${truncateMiddle(address, takeLength, tailLength)}@${suffix}`
   }
 

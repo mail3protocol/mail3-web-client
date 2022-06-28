@@ -153,12 +153,14 @@ export class API {
 
   public async login(
     message: string,
-    signature: string
+    signature: string,
+    pubkey?: string
   ): Promise<AxiosResponse<LoginResponse>> {
     return this.axios.post('/sessions', {
       message,
       signature,
       address: this.account,
+      pub_key: pubkey,
     })
   }
 
