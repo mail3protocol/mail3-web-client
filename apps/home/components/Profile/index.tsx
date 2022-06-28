@@ -106,6 +106,7 @@ const Container = styled(Box)`
 interface ProfileComponentProps {
   mailAddress: string
   address: string
+  mailSuffix: string
 }
 
 let homeUrl = ''
@@ -116,6 +117,7 @@ if (typeof window !== 'undefined') {
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
+  mailSuffix,
 }) => {
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
@@ -312,7 +314,10 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
           </HStack>
         </Box>
         <Box className="address">
-          <Text className="p">{mailAddress}</Text>
+          <Text className="p">
+            {address}
+            <span style={{ marginLeft: '-5px' }}>{` @${mailSuffix}`}</span>
+          </Text>
         </Box>
         <Center mt="25px">
           <HStack spacing="24px">
