@@ -67,6 +67,8 @@ export enum TrackEvent {
   ReplyDriftbottle = 'reply_driftbottle_mail',
   SendDriftbottleMail = 'send_driftbottle_mail',
   OpenDriftbottleMail = 'open_driftbottle_mail',
+
+  ClickENSRefresh = 'click_ENS_refresh',
 }
 
 // dimensions
