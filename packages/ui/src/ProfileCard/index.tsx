@@ -6,7 +6,7 @@ import { Avatar, Button } from 'ui'
 import classNames from 'classnames'
 
 import LogoSvg from 'assets/svg/logo-pure.svg'
-import PngMailMeButton from 'assets/profile/mail-me-button.png'
+import PngMailMeButton from './assets/mail3-button.png'
 import PngBorder from './assets/border.png'
 import PngAddressBorder from './assets/address-border.png'
 import PngSeal from './assets/seal.png'
