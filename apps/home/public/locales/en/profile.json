@@ -1,4 +1,9 @@
 {
     "mail-me": "Mail me",
-    "connect-wallet": "Launch App"
+    "connect-wallet": "Launch App",
+    "profile": {
+        "share": "Share profile card",
+        "copy": "Copy profile URL",
+        "twitter": "Share on Twitter"
+    }
 }
