@@ -16,8 +16,8 @@ import dynamic from 'next/dynamic'
 import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
 import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
 import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
+import GithubSvg from '../../assets/svg/socialMedia/github.svg'
 import {
-  CONTACT_US_URL,
   DISCORD_URL,
   GITHUB_URL,
   MIRROR_URL,
@@ -50,7 +50,7 @@ export const Footer = () => {
             h="auto"
           />
           <Box fontSize={{ base: '12px', lg: '24px' }} letterSpacing="0.04em">
-            For all crytpo natives
+            For all crypto natives
           </Box>
         </Box>
         <Grid
@@ -138,6 +138,24 @@ export const Footer = () => {
           </Box>
           <Box>
             <Heading fontSize="18px" lineHeight="23px">
+              Developers
+            </Heading>
+            <Stack mt={{ base: '6px', md: '24px' }}>
+              <Link
+                href={GITHUB_URL}
+                target="_blank"
+                display="flex"
+                alignItems="center"
+              >
+                <Icon as={GithubSvg} w="20px" h="auto" mr="10px" />
+                <Box as="span" display={{ base: 'none', md: 'inline' }}>
+                  Github
+                </Box>
+              </Link>
+            </Stack>
+          </Box>
+          <Box>
+            <Heading fontSize="18px" lineHeight="23px">
               Support
             </Heading>
             <Stack
@@ -146,23 +164,11 @@ export const Footer = () => {
               fontSize="16px"
             >
               <Link
-                href={CONTACT_US_URL}
                 onClick={() => {
                   trackClickContactus()
                 }}
               >
-                <Box>Contact Us</Box>
-              </Link>
-              <Mail3MeButton />
-            </Stack>
-          </Box>
-          <Box>
-            <Heading fontSize="18px" lineHeight="23px">
-              Developer
-            </Heading>
-            <Stack mt={{ base: '6px', md: '24px' }}>
-              <Link href={GITHUB_URL} target="_blank">
-                <Box>Github</Box>
+                <Mail3MeButton />
               </Link>
             </Stack>
           </Box>
