@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   BoldExtension,
   ImageExtension,
@@ -26,14 +26,14 @@ import {
 import { Stack, Button, Flex, Grid } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
-import { Subject } from 'rxjs'
-import { debounceTime } from 'rxjs/operators'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { useRouter } from 'next/router'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
+import { useSubject } from '../../hooks/useSubject'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -90,12 +90,39 @@ const TextEditor = () => {
 
 const Footer = () => {
   const { isDisabledSendButton, isLoading, onSubmit } = useSubmitMessage()
+  const { subject, toAddresses, ccAddresses, bccAddresses } = useSubject()
   const { getHTML } = useHelpers()
   const { onSave } = useSaveMessage()
   const { t } = useTranslation('edit-message')
   const trackClickSave = useTrackClick(TrackEvent.AppEditMessageClickSave)
   const trackClickSend = useTrackClick(TrackEvent.AppEditMessageClickSend)
   const toast = useToast()
+  const router = useRouter()
+  const initialHtml = useMemo(() => getHTML(), []) // initial content
+  useEffect(() => {
+    const onSaveWithCondition = async () => {
+      const html = getHTML()
+      if (
+        !subject &&
+        toAddresses.length <= 0 &&
+        ccAddresses.length <= 0 &&
+        bccAddresses.length <= 0 &&
+        initialHtml === getHTML()
+      ) {
+        return
+      }
+      await onSave(html)
+    }
+    const handleRouteChange = (url?: string) => {
+      onSaveWithCondition()
+      return url
+    }
+    router.events.on('routeChangeStart', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+    }
+  }, [subject, toAddresses, ccAddresses, bccAddresses])
+
   return (
     <Stack
       direction="row"
@@ -203,33 +230,10 @@ export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
     selection: 'start',
     stringHandler: 'html',
   })
-  const { onSave } = useSaveMessage()
-  const [saveSubject, setSaveSubject] = useState<Subject<() => void> | null>(
-    null
-  )
-  useEffect(() => {
-    const s = new Subject<() => void>()
-    const subscriber = s.pipe(debounceTime(5000)).subscribe((fn) => {
-      fn()
-    })
-    setSaveSubject(s)
-    return () => {
-      s.unsubscribe()
-      subscriber.unsubscribe()
-    }
-  }, [])
 
   return (
     <RemirrorTheme className="remirror-theme" direction="column" flex={1}>
-      <Remirror
-        manager={manager}
-        initialContent={state}
-        onChange={(e) => {
-          saveSubject?.next(() =>
-            onSave(e.helpers.getHTML()).catch(() => false)
-          )
-        }}
-      >
+      <Remirror manager={manager} initialContent={state}>
         <Menu />
         <Grid
           pb="20px"
