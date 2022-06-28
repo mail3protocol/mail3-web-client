@@ -357,12 +357,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         <Mail3MeButton />
       </Center>
 
-      <ProfileCard
-        ref={cardRef}
-        mailAddress={mailAddress}
-        homeUrl={homeUrl}
-        isDev
-      >
+      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
         {[ScoialConfig.CyberConnect, ScoialConfig.Etherscan].map(
           ({ Icon }, index) => (
             <Box
