@@ -46,6 +46,7 @@ import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
+import { Alias } from '../../api'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -151,11 +152,12 @@ export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
   const account = useAccount()
   const api = useAPI()
-  const [activeAcount, setActiveAccount] = useState(account)
+  const [activeAccount, setActiveAccount] = useState(account)
   const [isRefreshing, setIsRefeshing] = useState(false)
   const toast = useToast()
   const dialog = useDialog()
   const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
+  const setUserProperties = useUpdateAtom(userPropertiesAtom)
 
   const {
     data: ensNames,
@@ -173,12 +175,14 @@ export const SettingAddress: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        for (let i = 0; i < d.aliases.length; i++) {
-          const alias = d.aliases[i]
-          if (alias.is_default) {
-            setActiveAccount(alias.uuid)
-          }
-        }
+        const defaultAlias: Alias =
+          d.aliases.find((alias) => alias.is_default) || d.aliases[0]
+        setActiveAccount(defaultAlias.uuid)
+        setUserProperties((config) => ({
+          ...config,
+          aliases: d.aliases,
+          defaultAddress: defaultAlias.address,
+        }))
       },
     }
   )
@@ -201,7 +205,7 @@ export const SettingAddress: React.FC = () => {
   const setUserInfo = useUpdateAtom(userPropertiesAtom)
   const onDefaultAccountChange =
     (uuid: string, address: string) => async () => {
-      const prevActiveAccount = activeAcount
+      const prevActiveAccount = activeAccount
       try {
         setActiveAccount(uuid)
         await api.setDefaultSentAddress(uuid)
@@ -284,7 +288,7 @@ export const SettingAddress: React.FC = () => {
           key={firstAlias?.address}
           address={firstAlias?.address ?? account}
           isLoading={isLoading}
-          isChecked={firstAlias?.uuid === activeAcount || aliases.length === 1}
+          isChecked={firstAlias?.uuid === activeAccount || aliases.length === 1}
         />
         {restAliases.length && !isLoading ? (
           <>
@@ -310,7 +314,7 @@ export const SettingAddress: React.FC = () => {
                   account={a.address}
                   onChange={onDefaultAccountChange}
                   key={a.address}
-                  isChecked={a.uuid === activeAcount}
+                  isChecked={a.uuid === activeAccount}
                 />
               ))}
             </VStack>
