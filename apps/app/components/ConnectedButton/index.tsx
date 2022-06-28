@@ -52,7 +52,12 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         },
       },
       {
-        href: `${HOME_URL}/${address}`,
+        href: `${HOME_URL}/${
+          userProps?.defaultAddress.substring(
+            0,
+            userProps.defaultAddress.indexOf('@')
+          ) || address
+        }`,
         label: t('navbar.profile'),
         icon: <ProfileSvg />,
         isExternal: true,
