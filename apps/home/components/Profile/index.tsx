@@ -24,7 +24,6 @@ import {
   useTrackClick,
 } from 'hooks'
 import { copyText, shareToTwitter } from 'shared'
-import '@mail3/mail3-me'
 
 import SvgCopy from 'assets/profile/copy.svg'
 import SvgShare from 'assets/profile/share.svg'
@@ -32,6 +31,9 @@ import SvgTwitter from 'assets/profile/twitter.svg'
 import SvgMore from 'assets/profile/more.svg'
 import SvgEtherscan from 'assets/profile/business/etherscan.svg'
 import SvgCyber from 'assets/profile/business/arrow.svg'
+import dynamic from 'next/dynamic'
+
+const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
 enum ButtonType {
   Copy,
@@ -338,7 +340,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       </Container>
 
       <Center>
-        <mail3-me css="width: 200px;" icon_style="width: 20px;" />
+        <Mail3MeButton />
       </Center>
 
       <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
