@@ -163,8 +163,7 @@ const data = realData.map((e, i) => ({
 const dataAtom = atomWithStorage<Array<ListItem>>('subscriptionData', data)
 
 export const SubscriptionBody: React.FC = () => {
-  const trackBell = useTrackClick(TrackEvent.ClickSubscriptionBell)
-  const trackMedia = useTrackClick(TrackEvent.MediaSubscriptions)
+  const trackMedia = useTrackClick(TrackEvent.ClickSubscriptionBell)
   const [list, setList] = useAtom(dataAtom)
   const [isShow, setIsShow] = useState(false)
 
@@ -174,8 +173,6 @@ export const SubscriptionBody: React.FC = () => {
 
   const handleClick: HandleClick = (index, type) => {
     const newList = [...list]
-    trackBell()
-
     if (type === 'follow') {
       trackMedia({
         [TrackKey.MediaSubscriptions]: MediaSubscriptionsItem[index],
