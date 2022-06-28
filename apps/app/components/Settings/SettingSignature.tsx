@@ -323,7 +323,7 @@ export const SettingSignature: React.FC = () => {
       )}
       {router.pathname !== RoutePath.SettingSignature ? (
         <Center className="footer" w="full">
-          <NextLink href={RoutePath.Inbox} passHref>
+          <NextLink href={RoutePath.SetupShare} passHref>
             <Button
               bg="black"
               color="white"

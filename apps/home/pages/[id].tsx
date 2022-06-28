@@ -1,4 +1,10 @@
-import { COOKIE_KEY, useDidMount, useLoginAccount } from 'hooks'
+import {
+  COOKIE_KEY,
+  TrackEvent,
+  useDidMount,
+  useLoginAccount,
+  useTrackClick,
+} from 'hooks'
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import NextLink from 'next/link'
@@ -7,15 +13,17 @@ import ErrorPage from 'next/error'
 import type { IncomingMessage } from 'http'
 import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
-import { Center, Flex, Button, Text } from '@chakra-ui/react'
+import { Flex, Button, Text } from '@chakra-ui/react'
 import LogoSvg from 'assets/svg/logo-pure.svg'
 import universalCookie from 'cookie'
 import { Avatar, LinkButton } from 'ui'
 import { useRouter } from 'next/router'
 import { truncateMiddle } from 'shared'
+import Head from 'next/head'
 import { isEthAddress } from '../utils/eth'
 
-import { MAIL_SERVER_URL } from '../constants/env'
+import { APP_URL, MAIL_SERVER_URL } from '../constants/env'
+import { ProfileComponent } from '../components/Profile'
 
 function parseCookies(req?: IncomingMessage) {
   try {
@@ -38,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       errorCode,
-      address: cookie?.address,
+      address: cookie?.address ?? '',
       ...(await serverSideTranslations(locale as string, [
         'common',
         'navbar',
@@ -72,6 +80,10 @@ const NavbarContainer = styled(Flex)`
 
 const Navbar: React.FC<{ address: string }> = ({ address }) => {
   const [t] = useTranslation('profile')
+  const [isMounted, setIsMounted] = useState(false)
+
+  const trackLaunch = useTrackClick(TrackEvent.ClickProfileLaunchApp)
+
   const emailAddress = useMemo(
     () =>
       address
@@ -83,7 +95,6 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
         : '',
     [address]
   )
-  const [isMounted, setIsMounted] = useState(false)
   useDidMount(() => {
     setIsMounted(true)
   })
@@ -101,7 +112,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
               <Button
                 as="a"
                 target="_blank"
-                href="https://app.mail3.me"
+                href={APP_URL}
                 variant="outline"
                 borderRadius="40px"
                 bg="transparent"
@@ -120,7 +131,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
               <Button
                 as="a"
                 target="_blank"
-                href="https://app.mail3.me"
+                href={APP_URL}
                 borderRadius="40px"
                 bg="brand.500"
                 w="200px"
@@ -128,6 +139,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
                 _hover={{
                   bg: 'brand.300',
                 }}
+                onClick={() => trackLaunch()}
               >
                 {t('connect-wallet')}
               </Button>
@@ -139,54 +151,32 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
   )
 }
 
-const btnBg = `linear-gradient(90.96deg, #898CFF 0.41%, #FFF500 29.76%, #FFA800 68.07%, #97F54E 100.92%)`
-
 const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
   errorCode,
   address,
 }) => {
   const account = useLoginAccount()
   const router = useRouter()
-  const [t] = useTranslation('profile')
+  const { id } = router.query as { id: string }
 
   if (errorCode) {
     return <ErrorPage statusCode={errorCode} />
   }
 
   return (
-    <Flex padding={0} flexDirection="column" position="relative">
-      <Navbar address={account || address} />
-      <iframe
-        src={`https://app.cyberconnect.me/address/${router.query.id}`}
-        title={`CyberConnect@${account}`}
-        frameBorder="0"
-        style={{
-          overflow: 'hidden',
-          height: 'calc(100vh - 60px)',
-          width: '100%',
-        }}
-        height="calc(100vh - 60px)"
-        width="100%"
+    <>
+      <Head>
+        <title>Mail3: Profile Page</title>
+      </Head>
+      <Flex padding={0} flexDirection="column" position="relative">
+        <Navbar address={account || address} />
+      </Flex>
+      <ProfileComponent
+        mailAddress={`${id}@${MAIL_SERVER_URL}`}
+        mailSuffix={MAIL_SERVER_URL}
+        address={id}
       />
-      <Center position="fixed" bottom="50px" w="100%">
-        <Button
-          color="white"
-          bg={btnBg}
-          _hover={{ bg: btnBg }}
-          w="300px"
-          borderRadius="40px"
-          as="a"
-          target="_blank"
-          href={
-            account
-              ? `https://app.mail3.me/message/new?to=${router.query.id}@${MAIL_SERVER_URL}`
-              : 'https://app.mail3.me'
-          }
-        >
-          {t('mail-me')}
-        </Button>
-      </Center>
-    </Flex>
+    </>
   )
 }
 

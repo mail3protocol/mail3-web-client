@@ -12,22 +12,26 @@ import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
 import LogoWithWhiteFontColorSvg from 'assets/svg/logo-with-white-font.svg'
 import { useTrackClick, TrackEvent, TrackKey, HomeCommunity } from 'hooks'
+import dynamic from 'next/dynamic'
 import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
 import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
 import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
+import GithubSvg from '../../assets/svg/socialMedia/github.svg'
 import {
-  CONTACT_US_URL,
   DISCORD_URL,
+  GITHUB_URL,
   MIRROR_URL,
   TWITTER_URL,
 } from '../../constants/env'
+
+const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
 export const Footer = () => {
   const trackClickCommunity = useTrackClick(TrackEvent.HomeClickCommunity)
   const trackClickContactus = useTrackClick(TrackEvent.HomeClickContact)
   return (
     <Center
-      h={{ base: 'auto', md: '245px' }}
+      h={{ base: 'auto', lg: '245px' }}
       bg="#000"
       color="#fff"
       px="33px"
@@ -37,24 +41,24 @@ export const Footer = () => {
         w="full"
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         justify="space-between"
-        direction={{ base: 'column', md: 'row' }}
+        direction={{ base: 'column', lg: 'row' }}
       >
-        <Box mb={{ base: '20px', md: 0 }}>
+        <Box mb={{ base: '20px', lg: 0 }}>
           <Icon
             as={LogoWithWhiteFontColorSvg}
-            w={{ base: '139px', md: '289px' }}
+            w={{ base: '139px', lg: '289px' }}
             h="auto"
           />
-          <Box fontSize={{ base: '12px', md: '24px' }} letterSpacing="0.04em">
-            For all crytpo natives
+          <Box fontSize={{ base: '12px', lg: '24px' }} letterSpacing="0.04em">
+            For all crypto natives
           </Box>
         </Box>
         <Grid
           templateColumns={{
             base: 'repeat(2, 50%)',
-            md: 'repeat(3, 33.3%)',
+            lg: 'repeat(4, 25%)',
           }}
-          w={{ base: 'auto', md: '500px' }}
+          w={{ base: 'auto', lg: '650px' }}
           flexWrap="wrap"
           rowGap="32px"
         >
@@ -134,6 +138,24 @@ export const Footer = () => {
           </Box>
           <Box>
             <Heading fontSize="18px" lineHeight="23px">
+              Developers
+            </Heading>
+            <Stack mt={{ base: '6px', md: '24px' }}>
+              <Link
+                href={GITHUB_URL}
+                target="_blank"
+                display="flex"
+                alignItems="center"
+              >
+                <Icon as={GithubSvg} w="20px" h="auto" mr="10px" />
+                <Box as="span" display={{ base: 'none', md: 'inline' }}>
+                  Github
+                </Box>
+              </Link>
+            </Stack>
+          </Box>
+          <Box>
+            <Heading fontSize="18px" lineHeight="23px">
               Support
             </Heading>
             <Stack
@@ -142,12 +164,11 @@ export const Footer = () => {
               fontSize="16px"
             >
               <Link
-                href={CONTACT_US_URL}
                 onClick={() => {
                   trackClickContactus()
                 }}
               >
-                <Box>Contact Us</Box>
+                <Mail3MeButton />
               </Link>
             </Stack>
           </Box>

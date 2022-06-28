@@ -12,7 +12,7 @@
         "assets": "*",
         "boring-avatars": "1.5.8",
         "hooks": "*",
-        "qrcode.react": "^3.0.1"
+        "qrcode.react": "^3.0.2"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",

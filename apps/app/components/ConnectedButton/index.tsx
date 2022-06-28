@@ -31,7 +31,7 @@ import CopySvg from '../../assets/copy.svg'
 import ChangeWalletSvg from '../../assets/change-wallet.svg'
 import { copyText } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import { MAIL_SERVER_URL } from '../../constants'
+import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
 
 export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
@@ -52,7 +52,12 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         },
       },
       {
-        href: `https://mail3.me/${address}`,
+        href: `${HOME_URL}/${
+          userProps?.defaultAddress.substring(
+            0,
+            userProps.defaultAddress.indexOf('@')
+          ) || address
+        }`,
         label: t('navbar.profile'),
         icon: <ProfileSvg />,
         isExternal: true,
