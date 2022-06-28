@@ -14,11 +14,12 @@ import {
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { Avatar, ProfileCard } from 'ui'
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import {
   ProfileScoialPlatformItem,
   TrackEvent,
   TrackKey,
+  useDidMount,
   useScreenshot,
   useToast,
   useTrackClick,
@@ -118,6 +119,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 }) => {
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
+
   const trackTwitter = useTrackClick(TrackEvent.ClickProfileTwitter)
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
   const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
@@ -131,6 +133,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
+  const [isDid, setIsDid] = useState(false)
 
   const buttonConfig: Record<
     ButtonType,
@@ -189,7 +192,12 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         trackCard()
         if (!cardRef?.current) return
         try {
-          downloadScreenshot(cardRef.current, 'share.png')
+          downloadScreenshot(cardRef.current, 'share.png', {
+            ignoreElements: (dom) => {
+              if (dom.id === 'mail3-me-button-wrap') return true
+              return false
+            },
+          })
         } catch (error) {
           toast('Download screenshot Error!')
         }
@@ -207,6 +215,12 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
     return `https://etherscan.io/address/${address}`
   }
+
+  useDidMount(() => {
+    setIsDid(true)
+  })
+
+  if (!isDid) return null
 
   return (
     <>
@@ -343,7 +357,12 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         <Mail3MeButton />
       </Center>
 
-      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
+      <ProfileCard
+        ref={cardRef}
+        mailAddress={mailAddress}
+        homeUrl={homeUrl}
+        isDev
+      >
         {[ScoialConfig.CyberConnect, ScoialConfig.Etherscan].map(
           ({ Icon }, index) => (
             <Box
