@@ -2152,7 +2152,7 @@
 
 "@mail3/mail3-me@^0.1.1":
   version "0.1.1"
-  resolved "https://registry.npmjs.org/@mail3/mail3-me/-/mail3-me-0.1.1.tgz#5959458bbdb9c339bf162e2d452d2cb9472f3184"
+  resolved "https://registry.yarnpkg.com/@mail3/mail3-me/-/mail3-me-0.1.1.tgz#5959458bbdb9c339bf162e2d452d2cb9472f3184"
   integrity sha512-OyCyb2Jv8NXjVZdrx3HAhsnyz/QDAl9p4t18PkWJhwrYBzFyc4sYIxhh7BC7mzXfN6M8HPqEcJwOHg+ijCPokA==
 
 "@mdn/browser-compat-data@^3.3.14":
