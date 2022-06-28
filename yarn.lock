@@ -2150,6 +2150,11 @@
   resolved "https://registry.npmjs.org/@lingui/detect-locale/-/detect-locale-3.13.3.tgz#5afe43b590066dd3d7801542c5945ae35af62ac3"
   integrity sha512-GhJKjnpGh5N0Y96XJNjeGOEiVyO7b0Kwddv8cY5ORA0yS0+gCETAdlECeP0YrJBrzIVUeddpQTyaexAUDmeY+A==
 
+"@mail3/mail3-me@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/@mail3/mail3-me/-/mail3-me-0.1.1.tgz#5959458bbdb9c339bf162e2d452d2cb9472f3184"
+  integrity sha512-OyCyb2Jv8NXjVZdrx3HAhsnyz/QDAl9p4t18PkWJhwrYBzFyc4sYIxhh7BC7mzXfN6M8HPqEcJwOHg+ijCPokA==
+
 "@mdn/browser-compat-data@^3.3.14":
   version "3.3.14"
   resolved "https://registry.npmjs.org/@mdn/browser-compat-data/-/browser-compat-data-3.3.14.tgz"

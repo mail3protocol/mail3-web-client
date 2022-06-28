@@ -17,6 +17,8 @@ export const MEDIUM_URL =
   process.env.NEXT_PUBLIC_MEDIUM_URL || 'https://medium.com/@mail3'
 export const CONTACT_US_URL =
   process.env.NEXT_PUBLIC_CONTACT_US_URL || 'mailto:mail3.eth@mail3.me'
+export const GITHUB_URL =
+  process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/mail3protocol'
 
 export const GOOGLE_ANALYTICS_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 
