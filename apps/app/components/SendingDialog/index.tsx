@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next'
 import NextLink from 'next/link'
 import { CloseIcon } from '@chakra-ui/icons'
 import { AnimatePresence, motion } from 'framer-motion'
+import { timer } from 'rxjs'
 import { useMonitorSending } from '../../hooks/useSending'
 import LoadingSvg from '../../assets/loading.svg'
 import SucceedSvg from '../../assets/succeed.svg'
@@ -22,7 +23,7 @@ export const SendingDialog: React.FC = () => {
   const { sendingList } = useMonitorSending()
   const isSending = sendingList.length > 0
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [isMessageSent, setIsMessageSent] = useState(isSending)
+  const [isMessageSent, setIsMessageSent] = useState(false)
 
   useEffect(() => {
     if (isSending) {
@@ -31,6 +32,18 @@ export const SendingDialog: React.FC = () => {
       setIsMessageSent(true)
     }
   }, [isSending])
+
+  useEffect(() => {
+    if (isMessageSent) {
+      const timerSubscriber = timer(3000).subscribe(() => {
+        setIsMessageSent(false)
+      })
+      return () => {
+        timerSubscriber.unsubscribe()
+      }
+    }
+    return () => {}
+  }, [isMessageSent])
 
   return (
     <AnimatePresence>
