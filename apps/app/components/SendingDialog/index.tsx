@@ -51,7 +51,8 @@ export const SendingDialog: React.FC = () => {
         <Flex
           position="fixed"
           w="full"
-          bottom="80px"
+          top={{ base: '76px', md: 'unset' }}
+          bottom={{ base: 'unset', md: '80px' }}
           left="0"
           as={motion.div}
           initial={{ opacity: 0, y: 100 }}
