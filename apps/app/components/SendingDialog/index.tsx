@@ -7,6 +7,7 @@ import {
   Button,
   Box,
   Center,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import NextLink from 'next/link'
@@ -21,22 +22,21 @@ import { RoutePath } from '../../route/path'
 export const SendingDialog: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const { sendingList } = useMonitorSending()
-  const isSending = sendingList.length > 0
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isMessageSent, setIsMessageSent] = useState(false)
 
   useEffect(() => {
-    if (isSending) {
+    if (sendingList.length > 0) {
       onOpen()
     } else if (isOpen) {
       setIsMessageSent(true)
     }
-  }, [isSending])
+  }, [sendingList])
 
   useEffect(() => {
     if (isMessageSent) {
       const timerSubscriber = timer(3000).subscribe(() => {
-        setIsMessageSent(false)
+        onClose()
       })
       return () => {
         timerSubscriber.unsubscribe()
@@ -44,6 +44,8 @@ export const SendingDialog: React.FC = () => {
     }
     return () => {}
   }, [isMessageSent])
+
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   return (
     <AnimatePresence>
@@ -55,9 +57,17 @@ export const SendingDialog: React.FC = () => {
           bottom={{ base: 'unset', md: '80px' }}
           left="0"
           as={motion.div}
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 100 }}
+          {...(isMobile
+            ? {
+                initial: { opacity: 0, y: -100 },
+                animate: { opacity: 1, y: 0 },
+                exit: { opacity: 0, y: -100 },
+              }
+            : {
+                initial: { opacity: 0, y: 100 },
+                animate: { opacity: 1, y: 0 },
+                exit: { opacity: 0, y: 100 },
+              })}
         >
           <Flex
             h="52px"
