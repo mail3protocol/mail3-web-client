@@ -185,9 +185,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       [ButtonType.Twitter]: () => {
         trackTwitter()
         shareToTwitter({
-          text: 'Hey, contact me using my Mail3 email address',
+          text: 'Hey, contact me using my Mail3 email address @mail3dao',
           url: profileUrl,
-          hashtags: ['mail3', 'mail3dao'],
+          hashtags: ['web3', 'mail3'],
         })
       },
       [ButtonType.Card]: async () => {
