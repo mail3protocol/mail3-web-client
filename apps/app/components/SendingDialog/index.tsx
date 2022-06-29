@@ -22,7 +22,7 @@ import { RoutePath } from '../../route/path'
 
 export const SendingDialog: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const { sendingList } = useSending()
+  const { sendingList, clearSendingList } = useSending()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isMessageSent, setIsMessageSent] = useState(false)
 
@@ -32,7 +32,9 @@ export const SendingDialog: React.FC = () => {
       const subscriber = concat(
         timer(2000).pipe(tap(() => setIsMessageSent(true))),
         timer(3000).pipe(tap(() => onClose()))
-      ).subscribe()
+      ).subscribe(() => {
+        clearSendingList()
+      })
       return () => {
         subscriber.unsubscribe()
       }
