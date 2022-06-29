@@ -13,37 +13,32 @@ import { useTranslation } from 'next-i18next'
 import NextLink from 'next/link'
 import { CloseIcon } from '@chakra-ui/icons'
 import { AnimatePresence, motion } from 'framer-motion'
-import { timer } from 'rxjs'
-import { useMonitorSending } from '../../hooks/useSending'
+import { concat, timer } from 'rxjs'
+import { tap } from 'rxjs/operators'
+import { useSending } from '../../hooks/useSending'
 import LoadingSvg from '../../assets/loading.svg'
 import SucceedSvg from '../../assets/succeed.svg'
 import { RoutePath } from '../../route/path'
 
 export const SendingDialog: React.FC = () => {
   const [t] = useTranslation('mailboxes')
-  const { sendingList } = useMonitorSending()
+  const { sendingList } = useSending()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isMessageSent, setIsMessageSent] = useState(false)
 
   useEffect(() => {
     if (sendingList.length > 0) {
       onOpen()
-    } else if (isOpen) {
-      setIsMessageSent(true)
-    }
-  }, [sendingList])
-
-  useEffect(() => {
-    if (isMessageSent) {
-      const timerSubscriber = timer(3000).subscribe(() => {
-        onClose()
-      })
+      const subscriber = concat(
+        timer(2000).pipe(tap(() => setIsMessageSent(true))),
+        timer(3000).pipe(tap(() => onClose()))
+      ).subscribe()
       return () => {
-        timerSubscriber.unsubscribe()
+        subscriber.unsubscribe()
       }
     }
     return () => {}
-  }, [isMessageSent])
+  }, [sendingList])
 
   const isMobile = useBreakpointValue({ base: true, md: false })
 
