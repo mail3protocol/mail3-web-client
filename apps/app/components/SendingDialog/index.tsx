@@ -13,7 +13,7 @@ import { useTranslation } from 'next-i18next'
 import NextLink from 'next/link'
 import { CloseIcon } from '@chakra-ui/icons'
 import { AnimatePresence, motion } from 'framer-motion'
-import { concat, timer } from 'rxjs'
+import { switchMap, timer } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { useSending } from '../../hooks/useSending'
 import LoadingSvg from '../../assets/loading.svg'
@@ -29,12 +29,14 @@ export const SendingDialog: React.FC = () => {
   useEffect(() => {
     if (sendingList.length > 0) {
       onOpen()
-      const subscriber = concat(
-        timer(2000).pipe(tap(() => setIsMessageSent(true))),
-        timer(3000).pipe(tap(() => onClose()))
-      ).subscribe(() => {
-        clearSendingList()
-      })
+      const subscriber = timer(2000)
+        .pipe(
+          tap(() => setIsMessageSent(true)),
+          switchMap(() => timer(3000).pipe(tap(() => onClose())))
+        )
+        .subscribe(() => {
+          clearSendingList()
+        })
       return () => {
         subscriber.unsubscribe()
       }
@@ -107,7 +109,10 @@ export const SendingDialog: React.FC = () => {
               display="inline-flex"
               justifyContent="center"
               alignItems="center"
-              onClick={onClose}
+              onClick={() => {
+                onClose()
+                clearSendingList()
+              }}
             >
               <CloseIcon w="10px" h="10px" />
             </Button>
