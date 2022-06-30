@@ -426,6 +426,7 @@ export const PreviewComponent: React.FC = () => {
                       fontSize={{ base: '20px', md: '24px' }}
                       lineHeight="1"
                       display="inline-block"
+                      verticalAlign="bottom"
                     >
                       {detail.from.name}
                     </Text>
