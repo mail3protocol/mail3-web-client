@@ -23,7 +23,7 @@ import {
   useRemirror,
   useRemirrorContext,
 } from '@remirror/react'
-import { Stack, Button, Flex, Grid } from '@chakra-ui/react'
+import { Stack, Button, Flex, Grid, useDisclosure } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { Subject } from 'rxjs'
@@ -34,6 +34,7 @@ import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
+import { IpfsModal } from '../../../IpfsModal'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -96,72 +97,93 @@ const Footer = () => {
   const trackClickSave = useTrackClick(TrackEvent.AppEditMessageClickSave)
   const trackClickSend = useTrackClick(TrackEvent.AppEditMessageClickSend)
   const toast = useToast()
+  const isUploadedIpfsKey = false
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
   return (
-    <Stack
-      direction="row"
-      spacing="16px"
-      justify="center"
-      px="20px"
-      position="sticky"
-      pt="20px"
-      pb={{
-        base: '20px',
-        md: '40px',
-      }}
-      bottom="0"
-      left="0"
-      w="full"
-      mt="auto"
-      alignItems="center"
-      bg="#fff"
-    >
-      <Attach />
-      <Button
-        w="138px"
-        lineHeight="40px"
-        rounded="100px"
-        variant="outline"
-        colorScheme="BlackAlpha"
-        fontSize="14px"
-        onClick={() => {
-          trackClickSave()
-          onSave(getHTML())
-            .then(() => {
-              toast(t('draft.saved'))
-            })
-            .catch((err) => {
-              toast(t('draft.failed'))
-              console.error(err)
-            })
+    <>
+      <IpfsModal
+        isOpen={isOpenIpfsModal}
+        onClose={() => console.log('close')}
+        onAfterSignature={async () => {
+          onCloseIpfsModal()
+          // TODO: Upload ipfs key
+          await onSubmit()
         }}
+      />
+      <Stack
+        direction="row"
+        spacing="16px"
+        justify="center"
+        px="20px"
+        position="sticky"
+        pt="20px"
+        pb={{
+          base: '20px',
+          md: '40px',
+        }}
+        bottom="0"
+        left="0"
+        w="full"
+        mt="auto"
+        alignItems="center"
+        bg="#fff"
       >
-        {t('save')}
-      </Button>
-      <Button
-        w="138px"
-        lineHeight="40px"
-        rounded="100px"
-        variant="solid"
-        bg="brand.500"
-        color="white"
-        borderRadius="40px"
-        _hover={{
-          bg: 'brand.100',
-        }}
-        _active={{
-          bg: 'brand.500',
-        }}
-        fontSize="14px"
-        disabled={isDisabledSendButton}
-        isLoading={isLoading}
-        onClick={() => {
-          trackClickSend()
-          onSubmit()
-        }}
-      >
-        {t('send')}
-      </Button>
-    </Stack>
+        <Attach />
+        <Button
+          w="138px"
+          lineHeight="40px"
+          rounded="100px"
+          variant="outline"
+          colorScheme="BlackAlpha"
+          fontSize="14px"
+          onClick={() => {
+            trackClickSave()
+            onSave(getHTML())
+              .then(() => {
+                toast(t('draft.saved'))
+              })
+              .catch((err) => {
+                toast(t('draft.failed'))
+                console.error(err)
+              })
+          }}
+        >
+          {t('save')}
+        </Button>
+        <Button
+          w="138px"
+          lineHeight="40px"
+          rounded="100px"
+          variant="solid"
+          bg="brand.500"
+          color="white"
+          borderRadius="40px"
+          _hover={{
+            bg: 'brand.100',
+          }}
+          _active={{
+            bg: 'brand.500',
+          }}
+          fontSize="14px"
+          disabled={isDisabledSendButton}
+          isLoading={isLoading}
+          onClick={() => {
+            trackClickSend()
+            if (isUploadedIpfsKey) {
+              onSubmit()
+            } else {
+              onOpenIpfsModal()
+            }
+          }}
+        >
+          {t('send')}
+        </Button>
+      </Stack>
+    </>
   )
 }
 

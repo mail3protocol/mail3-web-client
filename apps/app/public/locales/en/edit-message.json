@@ -31,5 +31,10 @@
         "failed": "Draft Save Failed"
     },
     "succeeded": "succeeded",
-    "drift_bottle_template": "Write down your emotions, thoughts, questions, and even heartfelt secrets. The drift bottle will float with these to another user, and you will have a chance to get a response"
+    "drift_bottle_template": "Write down your emotions, thoughts, questions, and even heartfelt secrets. The drift bottle will float with these to another user, and you will have a chance to get a response",
+    "ipfs_modal": {
+        "title": "Enable IPFS Storage",
+        "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
+        "generate_key": "Generate key"
+    }
 }
