@@ -90,6 +90,7 @@ export const AuthModal: React.FC = () => {
             if (router.pathname === RoutePath.Testing) {
               trackTestingConnect({ [TrackKey.TestingEntry]: true })
             }
+            router.push(RoutePath.Home)
           }
           break
         }
