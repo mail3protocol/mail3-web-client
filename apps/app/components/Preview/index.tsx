@@ -121,6 +121,7 @@ export const PreviewComponent: React.FC = () => {
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      cacheTime: Infinity,
       onSuccess(d) {
         if (typeof id !== 'string') return
         const messageInfo = d.info
