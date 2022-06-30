@@ -9,6 +9,7 @@ import {
   MailDetailPageItem,
   TrackEvent,
   TrackKey,
+  useAccount,
   useDialog,
   useToast,
   useTrackClick,
@@ -42,6 +43,7 @@ import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
+import { IpfsInfoTable } from '../IpfsInfoTable'
 
 interface MeesageDetailState
   extends Pick<
@@ -96,6 +98,7 @@ export const PreviewComponent: React.FC = () => {
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
+  const account = useAccount()
   const { data } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
@@ -314,6 +317,8 @@ export const PreviewComponent: React.FC = () => {
     return arr
   }, [detail])
 
+  const hasIpfsInfo = true
+
   if (!id) {
     return (
       <Container>
@@ -499,6 +504,7 @@ export const PreviewComponent: React.FC = () => {
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
+          {hasIpfsInfo ? <IpfsInfoTable ethAddress={account} /> : null}
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (
           <Center pt="16px">
