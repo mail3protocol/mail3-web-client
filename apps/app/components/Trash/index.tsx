@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next'
 import React, { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
-// import { Button } from 'ui'
 import styled from '@emotion/styled'
 import { useDialog, useToast } from 'hooks'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
@@ -12,8 +11,8 @@ import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
-// import SVGIconEmpty from '../../assets/icon-empty.svg'
 import SVGTrash from '../../assets/trash.svg'
+import { GotoInbox } from '../GotoInbox'
 
 const TextBox = styled(Box)`
   margin-top: 10px;
@@ -46,6 +45,7 @@ export const TrashComponent: React.FC = () => {
 
   return (
     <NewPageContainer>
+      <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -82,7 +82,7 @@ export const TrashComponent: React.FC = () => {
         />
       )}
 
-      <Flex alignItems="center" pt="30px" pl={{ base: '20px', md: 0 }}>
+      <Flex alignItems="center" pt="24px" pl={{ base: '20px', md: 0 }}>
         <Wrap>
           <WrapItem alignItems="center">
             <SVGTrash />

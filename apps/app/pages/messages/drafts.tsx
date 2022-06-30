@@ -6,6 +6,7 @@ import Head from 'next/head'
 import { DraftsComponent } from '../../components/Drafts'
 import { Navbar } from '../../components/Navbar'
 import { getAuthenticateProps } from '../../hooks/useLogin'
+import { GotoInbox } from '../../components/GotoInbox'
 
 export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
   async ({ locale }) => ({

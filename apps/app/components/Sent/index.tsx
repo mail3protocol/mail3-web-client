@@ -11,6 +11,7 @@ import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { EmptyStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { GotoInbox } from '../GotoInbox'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -36,6 +37,7 @@ export const SentComponent: React.FC = () => {
 
   return (
     <NewPageContainer>
+      <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -55,7 +57,7 @@ export const SentComponent: React.FC = () => {
         />
       )}
       <MailboxContainer>
-        <Box padding={{ md: '20px 64px', base: '30px 0 0 0' }}>
+        <Box padding={{ md: '20px 64px', base: '24px 0 0 0' }}>
           <TitleBox pl={{ base: '20px', md: 0 }}>{t('sent.title')}</TitleBox>
           <InfiniteMailbox
             ref={refBoxList}

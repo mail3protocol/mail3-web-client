@@ -13,6 +13,7 @@ import SVGNone from '../../assets/mailbox/none.svg'
 import { Loading } from '../Loading'
 import { ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { GotoInbox } from '../GotoInbox'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
@@ -36,6 +37,7 @@ export const DraftsComponent: React.FC = () => {
 
   return (
     <NewPageContainer>
+      <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -71,7 +73,7 @@ export const DraftsComponent: React.FC = () => {
           }}
         />
       )}
-      <Flex alignItems="center" pt="30px" pl={{ base: '20px', md: 0 }}>
+      <Flex alignItems="center" pt="24px" pl={{ base: '20px', md: 0 }}>
         <Wrap>
           <WrapItem alignItems="center">
             <SVGDrafts />
