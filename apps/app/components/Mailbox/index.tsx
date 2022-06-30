@@ -231,15 +231,15 @@ const Item: React.FC<BoxItemProps> = ({
 
   const desc = useMemo(() => {
     if (mailboxType === Mailboxes.Sent || mailboxType === Mailboxes.Drafts) {
-      return receiverList
-        .map((item) => {
-          const [addr] = item.address.split('@')
-          if (isPrimitiveEthAddress(addr)) {
-            return truncateMiddle(addr, 6, 4)
-          }
-          return addr
-        })
-        .join('; ')
+      const list = receiverList.map((item) => {
+        const [addr] = item.address.split('@')
+        if (isPrimitiveEthAddress(addr)) {
+          return truncateMiddle(addr, 6, 4)
+        }
+        return addr
+      })
+
+      return `${list.join('; ')}${list.length > 1 ? ';' : ''}`
     }
 
     if (from.name) {
@@ -309,7 +309,7 @@ const Item: React.FC<BoxItemProps> = ({
               lineHeight={1.3}
               noOfLines={{ base: 3, md: 1 }}
             >
-              {`${desc}${desc ? ';' : ''}`}
+              {desc}
             </Text>
           </Flex>
           <Box
