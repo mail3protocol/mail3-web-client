@@ -309,7 +309,7 @@ const Item: React.FC<BoxItemProps> = ({
               lineHeight={1.3}
               noOfLines={{ base: 3, md: 1 }}
             >
-              {desc}
+              {`${desc}${desc ? ';' : ''}`}
             </Text>
           </Flex>
           <Box
