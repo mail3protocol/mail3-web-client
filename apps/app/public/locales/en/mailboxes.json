@@ -49,5 +49,10 @@
             "fail": "Restore is fail, try again."
         }
     },
-    "reply-driftbottle-sender": "Reply"
+    "reply-driftbottle-sender": "Reply",
+    "sending": {
+        "sending": "Sending...",
+        "succeed": "Message Sent",
+        "view_message": "View Message"
+    }
 }
