@@ -15,7 +15,7 @@ export interface LoginResponse {
 export interface Alias {
   uuid: string
   address: string
-  is_default: string
+  is_default: boolean
 }
 
 export interface AliasResponse {

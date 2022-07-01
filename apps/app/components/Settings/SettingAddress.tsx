@@ -225,7 +225,8 @@ export const SettingAddress: React.FC = () => {
   const aliases = useMemo(() => {
     if (ensNames?.aliases) {
       return ensNames?.aliases.sort((a) => {
-        if (isPrimitiveEthAddress(a.address)) {
+        const [addr] = a.address.split('@')
+        if (isPrimitiveEthAddress(addr)) {
           return -1
         }
         return 0

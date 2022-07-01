@@ -45,7 +45,7 @@ const SetupSignaturePage: NextPage = () => {
             <Heading fontSize={['20px', '20px', '28px']}>
               {t('setup.signature.title')}
             </Heading>
-            <Link href={RoutePath.Inbox} passHref>
+            <Link href={RoutePath.SetupShare} passHref>
               <Button
                 bg="black"
                 color="white"
