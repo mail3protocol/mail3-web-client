@@ -98,7 +98,14 @@ export const SendingDialog: React.FC = () => {
             </Box>
             {isMessageSent ? (
               <NextLink href={RoutePath.Sent} passHref>
-                <Link color="#4E51F4" textDecoration="underline" ml="16px">
+                <Link
+                  color="#4E51F4"
+                  textDecoration="underline"
+                  ml="16px"
+                  onClick={() => {
+                    clearSendingList()
+                  }}
+                >
                   {t('sending.view_message')}
                 </Link>
               </NextLink>
