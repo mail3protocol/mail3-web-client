@@ -332,7 +332,7 @@ export const PreviewComponent: React.FC = () => {
   }
 
   const getNameAddress = (item: AddressResponse) => {
-    const address = truncateMailAddress(item.address)
+    const { address } = item
     if (item.name) return `${item.name} <${address}>`
     return `<${address}>`
   }
@@ -440,7 +440,7 @@ export const PreviewComponent: React.FC = () => {
                     ml={{ base: 0, md: '5px' }}
                     mt={{ base: '5px', md: 0 }}
                   >
-                    {`<${truncateMailAddress(detail.from.address)}>`}
+                    {`<${detail.from.address}>`}
                   </Text>
                 </Box>
                 <Box />
