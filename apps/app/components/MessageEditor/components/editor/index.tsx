@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   BoldExtension,
   ImageExtension,
@@ -23,7 +23,7 @@ import {
   useRemirror,
   useRemirrorContext,
 } from '@remirror/react'
-import { Stack, Button, Flex, Grid } from '@chakra-ui/react'
+import { Stack, Button, Flex, Grid, useDisclosure } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
@@ -34,6 +34,7 @@ import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
 import { useSubject } from '../../hooks/useSubject'
+import { LeaveEditorModal } from '../leaveEditorModal'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -89,7 +90,8 @@ const TextEditor = () => {
 }
 
 const Footer = () => {
-  const { isDisabledSendButton, isLoading, onSubmit } = useSubmitMessage()
+  const { isDisabledSendButton, isLoading, isSubmitted, onSubmit } =
+    useSubmitMessage()
   const { subject, toAddresses, ccAddresses, bccAddresses } = useSubject()
   const { getHTML } = useHelpers()
   const { onSave } = useSaveMessage()
@@ -99,22 +101,31 @@ const Footer = () => {
   const toast = useToast()
   const router = useRouter()
   const initialHtml = useMemo(() => getHTML(), []) // initial content
+  const {
+    isOpen: isOpenLeaveEditorModal,
+    onOpen: onOpenLeaveEditorModal,
+    onClose: onCloseLeaveEditorModal,
+  } = useDisclosure()
+  const [leavingUrl, setLeavingUrl] = useState('')
+  const [isAllowLeave, setIsAllowLeave] = useState(false)
+  const [isLeaving, setIsLeaving] = useState(false)
   useEffect(() => {
-    const onSaveWithCondition = async () => {
-      const html = getHTML()
-      if (
+    const isShowLeavingModal = () =>
+      !(
         !subject &&
         toAddresses.length <= 0 &&
         ccAddresses.length <= 0 &&
         bccAddresses.length <= 0 &&
         initialHtml === getHTML()
-      ) {
-        return
+      )
+    const handleRouteChange = (url: string): string | undefined => {
+      if (isShowLeavingModal() && !isSubmitted && !isAllowLeave) {
+        setLeavingUrl(url)
+        onOpenLeaveEditorModal()
+        router.events.emit('routeChangeError')
+        // eslint-disable-next-line no-throw-literal
+        throw `Route change to "${url}"`
       }
-      await onSave(html)
-    }
-    const handleRouteChange = (url?: string) => {
-      onSaveWithCondition()
       return url
     }
     const handleBeforeunload = (e: Event) => {
@@ -128,74 +139,95 @@ const Footer = () => {
       router.events.off('routeChangeStart', handleRouteChange)
       window.removeEventListener('beforeunload', handleBeforeunload)
     }
-  }, [subject, toAddresses, ccAddresses, bccAddresses])
+  }, [subject, toAddresses, ccAddresses, bccAddresses, isAllowLeave])
 
   return (
-    <Stack
-      direction="row"
-      spacing="16px"
-      justify="center"
-      px="20px"
-      position="sticky"
-      pt="20px"
-      pb={{
-        base: '20px',
-        md: '40px',
-      }}
-      bottom="0"
-      left="0"
-      w="full"
-      mt="auto"
-      alignItems="center"
-      bg="#fff"
-    >
-      <Attach />
-      <Button
-        w="138px"
-        lineHeight="40px"
-        rounded="100px"
-        variant="outline"
-        colorScheme="BlackAlpha"
-        fontSize="14px"
-        onClick={() => {
-          trackClickSave()
-          onSave(getHTML())
-            .then(() => {
-              toast(t('draft.saved'))
-            })
-            .catch((err) => {
-              toast(t('draft.failed'))
-              console.error(err)
-            })
+    <>
+      <LeaveEditorModal
+        isOpen={isOpenLeaveEditorModal}
+        onClose={onCloseLeaveEditorModal}
+        isSaving={isLeaving}
+        onClickSaveButton={async () => {
+          await setIsLeaving(true)
+          try {
+            await setIsAllowLeave(true)
+            await onSave(getHTML())
+            await router.push(leavingUrl)
+            onCloseLeaveEditorModal()
+          } catch (err) {
+            toast(t('draft.failed'))
+            console.error(err)
+          } finally {
+            await setIsLeaving(false)
+          }
         }}
+      />
+      <Stack
+        direction="row"
+        spacing="16px"
+        justify="center"
+        px="20px"
+        position="sticky"
+        pt="20px"
+        pb={{
+          base: '20px',
+          md: '40px',
+        }}
+        bottom="0"
+        left="0"
+        w="full"
+        mt="auto"
+        alignItems="center"
+        bg="#fff"
       >
-        {t('save')}
-      </Button>
-      <Button
-        w="138px"
-        lineHeight="40px"
-        rounded="100px"
-        variant="solid"
-        bg="brand.500"
-        color="white"
-        borderRadius="40px"
-        _hover={{
-          bg: 'brand.100',
-        }}
-        _active={{
-          bg: 'brand.500',
-        }}
-        fontSize="14px"
-        disabled={isDisabledSendButton}
-        isLoading={isLoading}
-        onClick={() => {
-          trackClickSend()
-          onSubmit()
-        }}
-      >
-        {t('send')}
-      </Button>
-    </Stack>
+        <Attach />
+        <Button
+          w="138px"
+          lineHeight="40px"
+          rounded="100px"
+          variant="outline"
+          colorScheme="BlackAlpha"
+          fontSize="14px"
+          onClick={() => {
+            trackClickSave()
+            onSave(getHTML())
+              .then(() => {
+                toast(t('draft.saved'))
+              })
+              .catch((err) => {
+                toast(t('draft.failed'))
+                console.error(err)
+              })
+          }}
+        >
+          {t('save')}
+        </Button>
+        <Button
+          w="138px"
+          lineHeight="40px"
+          rounded="100px"
+          variant="solid"
+          bg="brand.500"
+          color="white"
+          borderRadius="40px"
+          _hover={{
+            bg: 'brand.100',
+          }}
+          _active={{
+            bg: 'brand.500',
+          }}
+          fontSize="14px"
+          disabled={isDisabledSendButton}
+          isLoading={isLoading}
+          onClick={() => {
+            trackClickSend()
+            onSubmit()
+          }}
+        >
+          {t('send')}
+        </Button>
+      </Stack>
+    </>
   )
 }
 
