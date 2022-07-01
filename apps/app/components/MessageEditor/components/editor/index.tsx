@@ -28,7 +28,6 @@ import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { useRouter } from 'next/router'
-import { fromEvent } from 'rxjs'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
@@ -118,17 +117,16 @@ const Footer = () => {
       onSaveWithCondition()
       return url
     }
-    const beforeunloadSubscriber = fromEvent(window, 'beforeunload').subscribe(
-      (e) => {
-        e.preventDefault()
-        // @ts-ignore
-        e.returnValue = ''
-      }
-    )
+    const handleBeforeunload = (e: Event) => {
+      e.preventDefault()
+      // @ts-ignore
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handleBeforeunload)
     router.events.on('routeChangeStart', handleRouteChange)
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
-      beforeunloadSubscriber.unsubscribe()
+      window.removeEventListener('beforeunload', handleBeforeunload)
     }
   }, [subject, toAddresses, ccAddresses, bccAddresses])
 
