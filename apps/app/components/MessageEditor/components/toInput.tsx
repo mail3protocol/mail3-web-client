@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Avatar } from 'ui'
-import { verifyEmail, truncateMailAddress, isPrimitiveEthAddress } from 'shared'
+import { verifyEmail, isPrimitiveEthAddress } from 'shared'
 import { removeMailSuffix } from '../../../utils'
 import { MAIL_SERVER_URL } from '../../../constants'
 
@@ -76,22 +76,27 @@ export const ToInput: React.FC<ToInputProps> = ({
         <Tag
           key={`${address}`}
           lineHeight="24px"
-          h="24px"
+          minH="24px"
           fontSize="12px"
           rounded="32px"
           p="4px"
           pr="10px"
           mr="8px"
           bg="#F3F3F3"
+          maxW="min(300px, 80vh)"
+          minW="200px"
+          display="grid"
+          gridTemplateColumns="16px calc(100% - 16px - 13px) 13px"
         >
           <Avatar
             address={removeMailSuffix(address)}
             w="16px"
+            minW="16px"
             h="16px"
             rounded="100px"
           />
-          <TagLabel pl="4px" color="#6F6F6F">
-            {truncateMailAddress(address)}
+          <TagLabel pl="4px" color="#6F6F6F" whiteSpace="pre-line">
+            {address}
           </TagLabel>
           <TagCloseButton
             w="13px"
