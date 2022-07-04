@@ -10,6 +10,7 @@ import {
 import styled from '@emotion/styled'
 import React from 'react'
 import { useTranslation } from 'next-i18next'
+import { TrackEvent, useTrackClick } from 'hooks'
 
 const StyledTableContainer = styled(TableContainer)`
   td:first-child {
@@ -72,6 +73,10 @@ export const IpfsInfoTable: React.FC<{
   const ipfsLink = ipfs ? '/' : undefined
   const ethAddressLink = ethAddress ? '/' : undefined
   const contentDigestLink = contentDigest ? '/' : undefined
+  const trackClickDInfoBlockchainLink = useTrackClick(
+    TrackEvent.clickDInfoBlockchainLink
+  )
+  const trackClickDInfoIpfsLink = useTrackClick(TrackEvent.clickDInfoIpfsLink)
 
   return (
     <StyledTableContainer
@@ -87,7 +92,7 @@ export const IpfsInfoTable: React.FC<{
         <Tbody>
           <Tr>
             <Td>
-              <Link href={ipfsLink}>
+              <Link href={ipfsLink} onClick={() => trackClickDInfoIpfsLink()}>
                 {t('ipfs.ipfs_link')}
                 <ExternalLink />
               </Link>
@@ -98,7 +103,10 @@ export const IpfsInfoTable: React.FC<{
           </Tr>
           <Tr>
             <Td>
-              <Link href={ethAddressLink}>
+              <Link
+                href={ethAddressLink}
+                onClick={() => trackClickDInfoBlockchainLink()}
+              >
                 {t('ipfs.eth_address')}
                 <ExternalLink />
               </Link>

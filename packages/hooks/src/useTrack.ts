@@ -84,6 +84,10 @@ export enum TrackEvent {
   OpenDriftbottleMail = 'open_driftbottle_mail',
 
   ClickENSRefresh = 'click_ENS_refresh',
+
+  // ipfs
+  clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
+  clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
 }
 
 // dimensions
