@@ -1,6 +1,10 @@
 export namespace DidFilterModel {
   export type parameters = Array<string>
 
+  export enum chain {
+    Ethereum = 'ethereum',
+  }
+
   export enum method {
     None = '',
     BalanceOfBatch = 'balanceOfBatch',
@@ -8,6 +12,7 @@ export namespace DidFilterModel {
     OwnerOf = 'ownerOf',
     EthGetBalance = 'eth_getBalance',
     Members = 'members',
+    EthGetBlockByNumber = 'eth_getBlockByNumber',
   }
 
   export enum standardContractType {
@@ -15,5 +20,6 @@ export namespace DidFilterModel {
     ERC20 = 'ERC20',
     ERC721 = 'ERC721',
     ERC1155 = 'ERC1155',
+    Timestamp = 'timestamp',
   }
 }
