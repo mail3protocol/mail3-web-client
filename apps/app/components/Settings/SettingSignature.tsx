@@ -24,6 +24,7 @@ import { useObservableCallback, useSubscription } from 'observable-hooks'
 import { pluck, debounceTime, tap } from 'rxjs/operators'
 import { useRouter } from 'next/router'
 import { useUpdateAtom } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -32,6 +33,7 @@ import EditSvg from '../../assets/edit.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
+import { removeMailSuffix } from '../../utils'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -110,6 +112,7 @@ export const SettingSignature: React.FC = () => {
     }
   )
   const toast = useToast()
+  const userInfo = useAtomValue(userPropertiesAtom)
   const setUserInfo = useUpdateAtom(userPropertiesAtom)
   const onChangeSignStatus = () => {
     const sigStatus = getSigStatus({
@@ -272,7 +275,9 @@ export const SettingSignature: React.FC = () => {
             position="relative"
             w="100%"
           >
-            <CardSignature account={account} />
+            <CardSignature
+              account={removeMailSuffix(userInfo?.defaultAddress || account)}
+            />
             <HStack
               spacing="6px"
               className="edit-button"
@@ -318,7 +323,7 @@ export const SettingSignature: React.FC = () => {
       )}
       {router.pathname !== RoutePath.SettingSignature ? (
         <Center className="footer" w="full">
-          <NextLink href={RoutePath.Inbox} passHref>
+          <NextLink href={RoutePath.SetupShare} passHref>
             <Button
               bg="black"
               color="white"

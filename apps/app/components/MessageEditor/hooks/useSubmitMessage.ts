@@ -1,7 +1,8 @@
 import { useHelpers } from '@remirror/react'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useToast } from 'hooks'
+import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { defer, lastValueFrom, retry } from 'rxjs'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
@@ -13,6 +14,8 @@ import {
   outputHtmlWithAttachmentImages,
 } from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
+import { DRIFT_BOTTLE_ADDRESS } from '../../../constants'
+import { useSending } from '../../../hooks/useSending'
 
 export const ID_NAME = 'id'
 export const ACTION_NAME = 'action'
@@ -23,7 +26,9 @@ export async function removeDraft(api: API) {
   const id = searchParams.get(ID_NAME)
   const action = searchParams.get(ACTION_NAME)
   if (id && action === null) {
-    await api.deleteMessage(id, { force: true })
+    await lastValueFrom(
+      defer(() => api.deleteMessage(id, { force: true })).pipe(retry(3))
+    ).catch(() => null)
   }
 }
 
@@ -48,6 +53,9 @@ export function useSubmitMessage() {
   const toast = useToast()
   const { attachments } = useAttachment()
   const { isEnableCardSignature } = useCardSignature()
+  const trackReplyDriftbottleMail = useTrackClick(TrackEvent.ReplyDriftbottle)
+  const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
+  const { addSendingMessage } = useSending()
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
@@ -63,8 +71,12 @@ export function useSubmitMessage() {
     const { html: replacedAttachmentImageHtml, attachments: imageAttachments } =
       outputHtmlWithAttachmentImages(html)
     html = replacedAttachmentImageHtml
+    const isSendToDriftBottle = toAddresses.some(
+      (address) => address === DRIFT_BOTTLE_ADDRESS
+    )
+    const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
     try {
-      await api.submitMessage({
+      const submitMessageResult = await api.submitMessage({
         from: {
           address: fromAddress,
         },
@@ -77,7 +89,16 @@ export function useSubmitMessage() {
           .filter((a) => a.contentDisposition !== 'inline')
           .concat(imageAttachments),
       })
+      addSendingMessage({ messageId: submitMessageResult.data.messageId })
+      if (isSendToDriftBottle) {
+        trackSendDriftbottleMail()
+      }
+      if (isReplyDriftbottleMail) {
+        trackReplyDriftbottleMail()
+      }
       await removeDraft(api)
+      onReset()
+      await router.push(RoutePath.Inbox)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
         textProps: {
@@ -90,8 +111,6 @@ export function useSubmitMessage() {
       })
       console.error({ err })
     } finally {
-      onReset()
-      await router.push(RoutePath.Sent)
       setIsLoading(false)
     }
   }

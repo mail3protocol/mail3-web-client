@@ -9,7 +9,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import '../styles/globals.css'
-import { GOOGLE_ANALYTICS_ID } from '../constants'
+import { GOOGLE_ANALYTICS_MODE, GOOGLE_ANALYTICS_ID } from '../constants'
 
 function Mail3({
   Component,
@@ -72,10 +72,12 @@ function Mail3({
         />
         <link rel="apple-touch-icon" href="/icons/icon-144x144.png" />
       </Head>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-WH0BKBPFWP"
-        strategy="afterInteractive"
-      />
+      {GOOGLE_ANALYTICS_ID ? (
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
+          strategy="afterInteractive"
+        />
+      ) : null}
       {GOOGLE_ANALYTICS_ID ? (
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -84,7 +86,7 @@ function Mail3({
           gtag('js', new Date());
 
           gtag('config', '${GOOGLE_ANALYTICS_ID}', { debug_mode: ${
-            process.env.NODE_ENV !== 'production'
+            process.env.NODE_ENV !== 'production' || GOOGLE_ANALYTICS_MODE
           } });
         `}
         </Script>

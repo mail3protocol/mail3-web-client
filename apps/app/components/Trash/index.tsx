@@ -117,6 +117,7 @@ export const TrashComponent: React.FC = () => {
             <Text>{t('trash.auto-delete')}</Text>
           </TextBox>
           <InfiniteMailbox
+            mailboxType={Mailboxes.Trash}
             ref={refBoxList}
             enableQuery
             queryFn={queryFn}

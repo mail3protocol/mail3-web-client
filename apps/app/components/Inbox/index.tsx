@@ -17,6 +17,7 @@ import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 import SVGWrite from '../../assets/mailbox/write.svg'
+import { SendingDialog } from '../SendingDialog'
 
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -122,7 +123,8 @@ export const InboxComponent: React.FC = () => {
     refetchOnReconnect: true,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    refetchInterval: 5000,
+    refetchInterval: 30000,
+    cacheTime: Infinity,
   })
 
   const newMessages = useMemo(() => {
@@ -192,7 +194,6 @@ export const InboxComponent: React.FC = () => {
           }}
         />
       )}
-
       <Box paddingTop={{ base: '25px', md: '35px' }}>
         <FlexButtonBox>
           <InboxNav currentType={InboxNavType.Inbox} />
@@ -292,6 +293,7 @@ export const InboxComponent: React.FC = () => {
           </Box>
         </MailboxContainer>
       </Box>
+      <SendingDialog />
     </NewPageContainer>
   )
 }

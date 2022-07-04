@@ -48,5 +48,11 @@
             "ok": "The message has been restore.",
             "fail": "Restore is fail, try again."
         }
+    },
+    "reply-driftbottle-sender": "Reply",
+    "sending": {
+        "sending": "Sending...",
+        "succeed": "Message Sent",
+        "view_message": "View Message"
     }
 }

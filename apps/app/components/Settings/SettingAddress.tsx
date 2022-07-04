@@ -13,6 +13,9 @@ import {
   Text,
   Tooltip,
   VStack,
+  Icon,
+  Button as RowButton,
+  Box,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import NextLink from 'next/link'
@@ -25,17 +28,25 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'next-i18next'
 import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
-import { useAccount, useDialog } from 'hooks'
+import {
+  useAccount,
+  useDialog,
+  useToast,
+  useTrackClick,
+  TrackEvent,
+} from 'hooks'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
+import { truncateMiddle, isPrimitiveEthAddress } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
+import RefreshSvg from '../../assets/refresh.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { isEthAddress, truncateMiddle } from '../../utils'
 import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
+import { Alias } from '../../api'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -141,10 +152,18 @@ export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
   const account = useAccount()
   const api = useAPI()
-  const [activeAcount, setActiveAccount] = useState(account)
+  const [activeAccount, setActiveAccount] = useState(account)
+  const [isRefreshing, setIsRefeshing] = useState(false)
+  const toast = useToast()
   const dialog = useDialog()
+  const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
+  const setUserProperties = useUpdateAtom(userPropertiesAtom)
 
-  const { data: ensNames, isLoading } = useQuery(
+  const {
+    data: ensNames,
+    isLoading,
+    refetch,
+  } = useQuery(
     [Query.ENS_NAMES, account],
     async () => {
       const { data } = await api.getAliases()
@@ -156,20 +175,37 @@ export const SettingAddress: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        for (let i = 0; i < d.aliases.length; i++) {
-          const alias = d.aliases[i]
-          if (alias.is_default) {
-            setActiveAccount(alias.uuid)
-          }
-        }
+        const defaultAlias: Alias =
+          d.aliases.find((alias) => alias.is_default) || d.aliases[0]
+        setActiveAccount(defaultAlias.uuid)
+        setUserProperties((config) => ({
+          ...config,
+          aliases: d.aliases,
+          defaultAddress: defaultAlias.address,
+        }))
       },
     }
   )
 
+  const onRefreshEnsDomains = async () => {
+    setIsRefeshing(true)
+    trackClickENSRefresh()
+    try {
+      await api.updateAliasList()
+      await refetch()
+    } catch (e: any) {
+      if (e.response.data.reason !== 'EMPTY_ENS_LIST') {
+        toast(t('address.refresh_failed') + e.toString())
+      }
+    } finally {
+      setIsRefeshing(false)
+    }
+  }
+
   const setUserInfo = useUpdateAtom(userPropertiesAtom)
   const onDefaultAccountChange =
     (uuid: string, address: string) => async () => {
-      const prevActiveAccount = activeAcount
+      const prevActiveAccount = activeAccount
       try {
         setActiveAccount(uuid)
         await api.setDefaultSentAddress(uuid)
@@ -189,7 +225,8 @@ export const SettingAddress: React.FC = () => {
   const aliases = useMemo(() => {
     if (ensNames?.aliases) {
       return ensNames?.aliases.sort((a) => {
-        if (isEthAddress(a.address)) {
+        const [addr] = a.address.split('@')
+        if (isPrimitiveEthAddress(addr)) {
           return -1
         }
         return 0
@@ -201,6 +238,18 @@ export const SettingAddress: React.FC = () => {
   const [firstAlias, ...restAliases] = aliases
 
   const router = useRouter()
+
+  const refreshButton = (
+    <RowButton
+      variant="link"
+      colorScheme="deepBlue"
+      leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
+      onClick={onRefreshEnsDomains}
+      isLoading={isRefreshing}
+    >
+      {t('address.refresh')}
+    </RowButton>
+  )
 
   return (
     <Container>
@@ -240,12 +289,22 @@ export const SettingAddress: React.FC = () => {
           key={firstAlias?.address}
           address={firstAlias?.address ?? account}
           isLoading={isLoading}
-          isChecked={firstAlias?.uuid === activeAcount || aliases.length === 1}
+          isChecked={firstAlias?.uuid === activeAccount || aliases.length === 1}
         />
         {restAliases.length && !isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
-              {t('address.ens-name')}
+              <Stack
+                direction="row"
+                spacing="16px"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Box h="24px" lineHeight="24px">
+                  {t('address.ens-name')}
+                </Box>
+                {refreshButton}
+              </Stack>
             </FormLabel>
             <VStack spacing="10px">
               {restAliases.map((a) => (
@@ -256,21 +315,31 @@ export const SettingAddress: React.FC = () => {
                   account={a.address}
                   onChange={onDefaultAccountChange}
                   key={a.address}
-                  isChecked={a.uuid === activeAcount}
+                  isChecked={a.uuid === activeAccount}
                 />
               ))}
             </VStack>
           </>
         ) : null}
         <Text fontSize="16px" fontWeight={700} mt="32px" mb="32px">
-          <Trans
-            ns="settings"
-            i18nKey="address.registe-ens"
-            t={t}
-            components={{
-              a: <Link isExternal href={ENS_DOMAIN} color="#4E52F5" />,
-            }}
-          />
+          <Stack
+            direction="row"
+            spacing="16px"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            <Box h="24px" lineHeight="24px">
+              <Trans
+                ns="settings"
+                i18nKey="address.registe-ens"
+                t={t}
+                components={{
+                  a: <Link isExternal href={ENS_DOMAIN} color="#4E52F5" />,
+                }}
+              />
+            </Box>
+            {restAliases.length <= 0 ? refreshButton : null}
+          </Stack>
         </Text>
       </FormControl>
       <Flex className="mascot">

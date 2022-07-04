@@ -6,6 +6,11 @@
         "signature": {
             "title": "Show your own signature"
         },
+        "share": {
+            "title": "Share your Mail3 address",
+            "twitter": "Share on Twitter",
+            "card": "Share profile card"
+        },
         "next": "Next"
     },
     "settings": {
@@ -23,7 +28,9 @@
         "default": "Default",
         "default-hover": "This address will be the default address for sending emails.",
         "registe-ens": "Register <a>new</a> ENS name",
-        "request-failed": "Request change default address failed, please try again later."
+        "request-failed": "Request change default address failed, please try again later.",
+        "refresh": "Refresh",
+        "refresh_failed": "Refresh Failed: "
     },
     "signature": {
         "desc": "Your signature will be automatically inserted when you write a new email.",
@@ -35,5 +42,10 @@
             "title": "Edit Card",
             "desc": "Please go to <a>CyberConnect</a> to edit your avatar."
         }
+    },
+    "profile": {
+        "share": "Share profile card",
+        "copy": "Copy profile URL",
+        "twitter": "Share on Twitter"
     }
 }

@@ -15,6 +15,7 @@ import { useTranslation, Trans } from 'next-i18next'
 import { useAccount, useTrackClick, TrackEvent } from 'hooks'
 import { Button, ConnectWallet } from 'ui'
 import NextLink from 'next/link'
+import { truncateMiddle } from 'shared'
 import {
   DISCORD_URL,
   MORE_DETAILS_LINK,
@@ -29,7 +30,7 @@ import {
   useIsAuthModalOpen,
 } from '../../hooks/useLogin'
 import { MascotSvg } from '../Whitelist/Mascot'
-import { truncateMiddle } from '../../utils'
+
 import DiscordSvg from '../../assets/discord-o.svg'
 import TwitterSvg from '../../assets/twitter-o.svg'
 import { RoutePath } from '../../route/path'

@@ -6,6 +6,20 @@ export enum TrackEvent {
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
 
+  // setup
+  ClickShareYourNext = 'click_share_your_mail3_address_next',
+  ClickGuideTwitter = 'click_guide_share_on_twitter',
+  ClickGuideDownloadCard = 'click_guide_share_profile_card',
+  ClickGuideCopy = 'click_guide_copy_profile_url',
+
+  // profile
+  ClickProfileLaunchApp = 'click_profile_launch_app',
+  ClickProfileTwitter = 'click_profile_share_on_twitter',
+  ClickProfileCopy = 'click_profile_copy_profile_url',
+  ClickProfileDownloadCard = 'click_profile_share_profile_card',
+  ClickProfileMailMe = 'click_profile_mail_me',
+  ClickProfileScoialPlatform = 'click_profile_social_platform',
+
   // navbar
   ClickPersonalCenter = 'click_personalcenter',
   ClickMail3Menu = 'click_mail3_menu',
@@ -44,6 +58,7 @@ export enum TrackEvent {
 
   // subscriptions
   ClickSubscriptionBell = 'click_subscription_bell',
+  MediaSubscriptions = 'media_subscriptions',
   // mailboxes
   ClickWrite = 'click_write',
 
@@ -61,6 +76,14 @@ export enum TrackEvent {
   AppEditMessageClickCC = 'click_cc',
   AppEditMessageClickBCC = 'click_bcc',
   AppEditMessageClickMobileCCAndBCC = 'click_mobile_cc_bcc',
+
+  // driftbottle
+  ClickDriftbottleBanner = 'click_driftbottle_banner',
+  ReplyDriftbottle = 'reply_driftbottle_mail',
+  SendDriftbottleMail = 'send_driftbottle_mail',
+  OpenDriftbottleMail = 'open_driftbottle_mail',
+
+  ClickENSRefresh = 'click_ENS_refresh',
 }
 
 // dimensions
@@ -77,14 +100,22 @@ export enum TrackKey {
 
   // home
   HomeCommunity = 'Mail3_offical_click_community',
+  // home profile
+  ProfileScoialPlatform = 'visit_social_platform',
 
   // mail detail
   MailDetailPage = 'click_mail_details_page_item',
 
   // subscriptions
   SubscriptionBell = 'click_subscription_bell',
+  MediaSubscriptions = 'media_subscriptions',
   // testing
   TestingEntry = 'beta1_check_eligilibity',
+}
+
+export enum ProfileScoialPlatformItem {
+  CyberConnect = 'CyberConnect',
+  Etherscan = 'Etherscan',
 }
 
 export enum PersonnalCenter {
@@ -138,6 +169,17 @@ export enum MailDetailPageItem {
   Delete = 'Delete',
 }
 
+export const MediaSubscriptionsItem: Record<number, string> = {
+  0: 'Mail3',
+  1: 'Bankless',
+  2: 'The Defiant',
+  3: 'Week in Ethereum News',
+  4: 'Mirror Curator DAO',
+  5: 'Arthur Hayes',
+  6: 'CryptoJobsList',
+  7: 'Web3 Jobs',
+}
+
 export interface TrackProps {
   [TrackKey.DesiredWallet]?: DesiredWallet
   [TrackKey.CollectedAddress]?: string
@@ -146,7 +188,9 @@ export interface TrackProps {
   [TrackKey.HomeCommunity]?: HomeCommunity
   [TrackKey.MailDetailPage]?: MailDetailPageItem
   [TrackKey.SubscriptionBell]?: string
+  [TrackKey.MediaSubscriptions]?: string
   [TrackKey.PersonnalCenter]?: PersonnalCenter
+  [TrackKey.ProfileScoialPlatform]?: ProfileScoialPlatformItem
   [TrackKey.Mail3MenuItem]?: Mail3MenuItem
 }
 

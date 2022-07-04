@@ -23,8 +23,10 @@ import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
-import { GOOGLE_ANALYTICS_ID } from '../constants'
+import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
+import { useSetLoginInfo } from './useLoginInfo'
+import { getUtmQueryString } from '../utils'
 
 export const useSetLoginCookie = () => {
   const [, setCookie] = useCookies([COOKIE_KEY])
@@ -33,7 +35,6 @@ export const useSetLoginCookie = () => {
     const option: Parameters<typeof setCookie>[2] = {
       path: '/',
       expires: now.add(14, 'day').toDate(),
-      secure: process.env.NODE_ENV === 'production',
     }
     setCookie(COOKIE_KEY, info, option)
   }, [])
@@ -142,21 +143,22 @@ export const useSetGlobalTrack = () => {
         ])
         const sigStatus = getSigStatus(userInfo)
         const defaultAddress =
-          aliases.aliases.find((a) => a.is_default)?.address || emailAddress
+          aliases.aliases.find((a) => a.is_default)?.address ||
+          `${account}@${MAIL_SERVER_URL}`
         const config = {
           defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
           [GlobalDimensions.ConnectedWalletName]: walletName,
-          [GlobalDimensions.WalletAddress]: account,
+          [GlobalDimensions.WalletAddress]: `@${account}`,
           [GlobalDimensions.SignatureStatus]: sigStatus,
-          crm_id: account,
+          crm_id: `@${account}`,
           text_signature: userInfo.text_signature,
           aliases: aliases.aliases,
         }
         try {
           gtag?.('set', 'user_properties', config)
           gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
-            user_id: account,
+            user_id: `@${account}`,
           })
         } catch (error) {
           //
@@ -174,6 +176,7 @@ export const useInitUserProperties = () => {
   const isAuth = useIsAuthenticated()
   const userProps = useAtomValue(userPropertiesAtom)
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  const setLoginInfo = useSetLoginInfo()
   useDidMount(() => {
     if (userProps && isAuth) {
       try {
@@ -197,6 +200,7 @@ export const useInitUserProperties = () => {
         //
       }
       setUserProperties(null)
+      setLoginInfo(null)
     }
   }, [isAuth])
 }
@@ -287,12 +291,12 @@ export const useAuthModalOnBack = () => {
 export const getAuthenticateProps =
   (cb?: GetServerSideProps) => async (context: GetServerSidePropsContext) => {
     const props = await cb?.(context)
-    const { req, res } = context
+    const { req, res, query } = context
     const data = parseCookies(req)
     if (res) {
       if (typeof data.jwt !== 'string') {
         res.writeHead(307, {
-          Location: '/',
+          Location: `/testing${getUtmQueryString(query)}`,
           'Cache-Control': 'no-cache, no-store',
           Pragma: 'no-cache',
         })
