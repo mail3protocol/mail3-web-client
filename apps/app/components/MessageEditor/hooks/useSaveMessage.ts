@@ -1,9 +1,10 @@
+import { useRouter } from 'next/router'
 import { atomWithReset, useResetAtom } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
-import { removeDraft } from './useSubmitMessage'
+import { ID_NAME, removeDraft } from './useSubmitMessage'
 
 const savingMessageAtom = atomWithReset(false)
 
@@ -11,6 +12,7 @@ export function useSaveMessage() {
   const api = useAPI()
   const { subject, toAddresses, fromAddress, ccAddresses, bccAddresses } =
     useSubject()
+  const router = useRouter()
   const [isLoading, setIsLoading] = useAtom(savingMessageAtom)
   const onResetSavingAtom = useResetAtom(savingMessageAtom)
   const { attachments } = useAttachment()
@@ -18,7 +20,7 @@ export function useSaveMessage() {
     if (!fromAddress || isLoading) return
     setIsLoading(true)
     try {
-      await api.uploadMessage({
+      const res = await api.uploadMessage({
         path: 'Drafts',
         from: {
           address: fromAddress,
@@ -31,6 +33,17 @@ export function useSaveMessage() {
         attachments,
       })
       await removeDraft(api)
+      await router.replace(
+        router.pathname,
+        {
+          query: {
+            [ID_NAME]: res.data.id,
+          },
+        },
+        {
+          shallow: true,
+        }
+      )
     } finally {
       setIsLoading(false)
     }
@@ -38,5 +51,6 @@ export function useSaveMessage() {
   return {
     onSave,
     onResetSavingAtom,
+    isSaving: isLoading,
   }
 }

@@ -15,8 +15,17 @@ export const LeaveEditorModal: React.FC<{
   isOpen: boolean
   onClose: () => void
   onClickSaveButton: () => void
-  isSaving?: boolean
-}> = ({ isOpen, onClose, onClickSaveButton, isSaving }) => {
+  onClickDoNotSaveButton: () => void
+  doNotSaveButtonLoading?: boolean
+  saveButtonLoading?: boolean
+}> = ({
+  isOpen,
+  onClose,
+  onClickDoNotSaveButton,
+  onClickSaveButton,
+  doNotSaveButtonLoading,
+  saveButtonLoading,
+}) => {
   const { t } = useTranslation('edit-message')
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -28,15 +37,21 @@ export const LeaveEditorModal: React.FC<{
         <ModalCloseButton />
 
         <ModalFooter>
-          <Stack direction="row" spacing="10px" w="full">
-            <Button onClick={onClose} variant="outline" w="50%" fontSize="14px">
-              {t('cancel')}
+          <Stack direction="column" spacing="10px" w="full">
+            <Button
+              onClick={onClickDoNotSaveButton}
+              variant="outline"
+              w="full"
+              fontSize="14px"
+              isLoading={doNotSaveButtonLoading}
+            >
+              {t("don't_save_and_exit")}
             </Button>
             <Button
-              w="50%"
+              w="full"
               onClick={onClickSaveButton}
               fontSize="14px"
-              isLoading={isSaving}
+              isLoading={saveButtonLoading}
             >
               {t('save_and_quit')}
             </Button>

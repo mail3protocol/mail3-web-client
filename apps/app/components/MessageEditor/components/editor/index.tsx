@@ -94,7 +94,7 @@ const Footer = () => {
     useSubmitMessage()
   const { subject, toAddresses, ccAddresses, bccAddresses } = useSubject()
   const { getHTML } = useHelpers()
-  const { onSave } = useSaveMessage()
+  const { onSave, isSaving } = useSaveMessage()
   const { t } = useTranslation('edit-message')
   const trackClickSave = useTrackClick(TrackEvent.AppEditMessageClickSave)
   const trackClickSend = useTrackClick(TrackEvent.AppEditMessageClickSend)
@@ -108,7 +108,8 @@ const Footer = () => {
   } = useDisclosure()
   const [leavingUrl, setLeavingUrl] = useState('')
   const [isAllowLeave, setIsAllowLeave] = useState(false)
-  const [isLeaving, setIsLeaving] = useState(false)
+  const [isLeavingWithSave, setIsLeavingWithSave] = useState(false)
+  const [isLeavingWithoutSave, setIsLeavingWithoutSave] = useState(false)
   useEffect(() => {
     const isShowLeavingModal = () =>
       !(
@@ -119,7 +120,14 @@ const Footer = () => {
         initialHtml === getHTML()
       )
     const handleRouteChange = (url: string): string | undefined => {
-      if (isShowLeavingModal() && !isSubmitted && !isAllowLeave) {
+      if (
+        isShowLeavingModal() &&
+        !isSubmitted &&
+        !isAllowLeave &&
+        !isSaving &&
+        !isLeavingWithSave &&
+        !isLeavingWithoutSave
+      ) {
         setLeavingUrl(url)
         onOpenLeaveEditorModal()
         router.events.emit('routeChangeError')
@@ -139,16 +147,34 @@ const Footer = () => {
       router.events.off('routeChangeStart', handleRouteChange)
       window.removeEventListener('beforeunload', handleBeforeunload)
     }
-  }, [subject, toAddresses, ccAddresses, bccAddresses, isAllowLeave])
+  }, [
+    subject,
+    toAddresses,
+    ccAddresses,
+    bccAddresses,
+    isAllowLeave,
+    isSaving,
+    isLeavingWithSave,
+    isLeavingWithoutSave,
+  ])
 
   return (
     <>
       <LeaveEditorModal
         isOpen={isOpenLeaveEditorModal}
         onClose={onCloseLeaveEditorModal}
-        isSaving={isLeaving}
+        onClickDoNotSaveButton={async () => {
+          await setIsLeavingWithoutSave(true)
+          await new Promise((r) => {
+            setTimeout(r, 200)
+          })
+          await router.push(leavingUrl)
+          await setIsLeavingWithoutSave(false)
+        }}
+        doNotSaveButtonLoading={isLeavingWithoutSave}
+        saveButtonLoading={isLeavingWithSave}
         onClickSaveButton={async () => {
-          await setIsLeaving(true)
+          await setIsLeavingWithSave(true)
           try {
             await setIsAllowLeave(true)
             await onSave(getHTML())
@@ -158,7 +184,7 @@ const Footer = () => {
             toast(t('draft.failed'))
             console.error(err)
           } finally {
-            await setIsLeaving(false)
+            await setIsLeavingWithSave(false)
           }
         }}
       />
@@ -188,6 +214,7 @@ const Footer = () => {
           variant="outline"
           colorScheme="BlackAlpha"
           fontSize="14px"
+          isLoading={isSaving}
           onClick={() => {
             trackClickSave()
             onSave(getHTML())

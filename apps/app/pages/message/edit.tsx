@@ -172,7 +172,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     if (userProperties?.defaultAddress) {
       setFromAddress(userProperties.defaultAddress as string)
     }
-    if (!messageInfo) return
     setSubject(getSubject(messageInfo))
     setToAddresses(getTo(messageInfo))
     if (action !== 'reply' && action !== 'forward') {
@@ -246,6 +245,8 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     return 'Edit Mail'
   }, [action, id])
 
+  const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
+
   const queryMessageAndContentKeyId = useMemo(() => id, [])
 
   const queryMessageInfoAndContentData = useQuery(
@@ -278,11 +279,11 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   const messageContent = queryMessageInfoAndContentData?.data?.messageContent
   const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
 
-  const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
-
   useEffect(() => {
     if (isFirstLoadMessage) return
-    setIsFirstLoadMessage(true)
+    if (messageInfo || !queryMessageAndContentKeyId) {
+      setIsFirstLoadMessage(true)
+    }
     setSubjectAndOtherByMessageInfo(messageInfo)
   }, [messageInfo])
 
