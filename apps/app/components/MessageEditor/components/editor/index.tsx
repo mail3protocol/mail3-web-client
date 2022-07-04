@@ -29,12 +29,15 @@ import { useTranslation } from 'next-i18next'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { useQuery } from 'react-query'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
 import { IpfsModal } from '../../../IpfsModal'
+import { Query } from '../../../../api/query'
+import { useAPI } from '../../../../hooks/useAPI'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -90,6 +93,7 @@ const TextEditor = () => {
 }
 
 const Footer = () => {
+  const api = useAPI()
   const { isDisabledSendButton, isLoading, onSubmit } = useSubmitMessage()
   const { getHTML } = useHelpers()
   const { onSave } = useSaveMessage()
@@ -97,20 +101,31 @@ const Footer = () => {
   const trackClickSave = useTrackClick(TrackEvent.AppEditMessageClickSave)
   const trackClickSend = useTrackClick(TrackEvent.AppEditMessageClickSend)
   const toast = useToast()
-  const isUploadedIpfsKey = false
   const {
     isOpen: isOpenIpfsModal,
     onOpen: onOpenIpfsModal,
     onClose: onCloseIpfsModal,
   } = useDisclosure()
+  const { data: isUploadedIpfsKey } = useQuery(
+    [Query.GetMessageEncryptionKeyState],
+    () =>
+      api
+        .getMessageEncryptionKeyState()
+        .then((res) => res.data.state === 'set'),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  )
+
   return (
     <>
       <IpfsModal
         isOpen={isOpenIpfsModal}
-        onClose={() => console.log('close')}
+        onClose={onCloseIpfsModal}
         onAfterSignature={async () => {
           onCloseIpfsModal()
-          // TODO: Upload ipfs key
           await onSubmit()
         }}
       />

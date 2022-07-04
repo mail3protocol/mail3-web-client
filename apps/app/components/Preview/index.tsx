@@ -179,6 +179,15 @@ export const PreviewComponent: React.FC = () => {
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
+  const messageId = data?.messageInfo?.messageId
+  const { data: messageOnChainIdentifierData } = useQuery(
+    [Query.GetMessageOnChainIdentifier, messageId],
+    async () => {
+      if (!messageId) return null
+      return (await api.getMessageOnChainIdentifier(messageId)).data
+    }
+  )
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
@@ -504,7 +513,13 @@ export const PreviewComponent: React.FC = () => {
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
-          {hasIpfsInfo ? <IpfsInfoTable ethAddress={account} /> : null}
+          {hasIpfsInfo ? (
+            <IpfsInfoTable
+              ethAddress={account}
+              ipfs={messageOnChainIdentifierData?.url}
+              contentDigest={messageOnChainIdentifierData?.contentDigest}
+            />
+          ) : null}
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (
           <Center pt="16px">

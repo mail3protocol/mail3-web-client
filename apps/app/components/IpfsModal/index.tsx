@@ -15,6 +15,7 @@ import { NotConnectWallet, useConnectWalletDialog, useSignMessage } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
 import MobileIpfsGuidePng from '../../assets/ipfs-guide/mobile.png'
+import { useAPI } from '../../hooks/useAPI'
 
 const stringToBeSigned = `Generate MESSAGE ENCRYPTION key for me and I authorize current dApp to access my MESSAGE ENCRYPTION key. (This operation won’t affect your digital assets.)
 
@@ -25,12 +26,14 @@ export const IpfsModal: React.FC<{
   onClose: () => void
   onAfterSignature?: (signatureStr: string) => void
 }> = ({ isOpen, onClose, onAfterSignature }) => {
+  const api = useAPI()
   const { t } = useTranslation('edit-message')
   const signMessage = useSignMessage()
   const { onOpen: onOpenWalletDialog } = useConnectWalletDialog()
   const onGenerateKey = useCallback(async () => {
     try {
       const signedString = await signMessage(stringToBeSigned)
+      await api.updateMessageEncryptionKey(signedString)
       onAfterSignature?.(signedString)
     } catch (e) {
       if (e instanceof NotConnectWallet) {
