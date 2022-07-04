@@ -51,5 +51,6 @@ export function useSaveMessage() {
   return {
     onSave,
     onResetSavingAtom,
+    isSaving: isLoading,
   }
 }

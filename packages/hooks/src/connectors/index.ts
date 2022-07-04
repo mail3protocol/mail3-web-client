@@ -41,22 +41,28 @@ Connectors.set(ConnectorName.WalletConnect, walletConnect)
 export const useSetLastConnector = () => useUpdateAtom(lastConectorNameAtom)
 export const useLastConectorName = () => useAtomValue(lastConectorNameAtom)
 
-export const useAccount = () => {
+export const useConnectedAccount = () => {
   const lastConectorName = useAtomValue(lastConectorNameAtom)
-  const loginAccount = useLoginAccount()
-  const account = SupportedConnectors.useSelectedAccount(
+  const account = SupportedConnectors.useSelectedAccounts(
     Connectors.get(lastConectorName) ?? metaMask
   )
+
+  if (lastConectorName && account?.[0]) {
+    return account?.[0]
+  }
+
+  return ''
+}
+
+export const useAccount = () => {
+  const loginAccount = useLoginAccount()
+  const connectedAccount = useConnectedAccount()
 
   if (loginAccount) {
     return loginAccount
   }
 
-  if (lastConectorName && account) {
-    return account
-  }
-
-  return ''
+  return connectedAccount
 }
 
 export const useAccountIsActivating = () => {
@@ -101,13 +107,15 @@ export const useEagerConnect = (forceConnect = false) => {
   const lastConectorName = useLastConectorName()
   const connector = useConnector()
   useDidMount(() => {
-    if (lastConectorName && connector) {
-      if (forceConnect) {
-        connector.activate()
-      } else {
-        connector?.connectEagerly?.()
+    setTimeout(() => {
+      if (lastConectorName && connector) {
+        if (forceConnect) {
+          connector.activate()
+        } else {
+          connector?.connectEagerly?.()
+        }
       }
-    }
+    }, 500)
   })
 }
 
