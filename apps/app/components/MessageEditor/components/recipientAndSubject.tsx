@@ -79,7 +79,7 @@ export const RecipientAndSubject: React.FC = () => {
 
   return (
     <>
-      <Item h="38px" px={ItemPx}>
+      <Item px={ItemPx}>
         <ItemField>{t('from')}</ItemField>
         <From
           onChange={(e) => {
