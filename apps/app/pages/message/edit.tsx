@@ -27,6 +27,7 @@ import { DRIFT_BOTTLE_ADDRESS } from '../../constants'
 import { filterEmails } from '../../utils'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
+import { GotoInbox } from '../../components/GotoInbox'
 
 function getDefaultTemplate(content: string) {
   return `<p>
@@ -342,6 +343,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
         >
           <Navbar />
         </Box>
+        <GotoInbox />
         <MessageEditor
           defaultContent={contentWithAttachmentImage}
           isEnableCardSignature={
