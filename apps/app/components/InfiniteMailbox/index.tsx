@@ -93,6 +93,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     refetchOnReconnect: true,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
+    cacheTime: Infinity,
     ...queryOptions,
     enabled: enableQuery,
   })
