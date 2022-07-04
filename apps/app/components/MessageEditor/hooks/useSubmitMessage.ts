@@ -55,6 +55,7 @@ export function useSubmitMessage() {
   const { isEnableCardSignature } = useCardSignature()
   const trackReplyDriftbottleMail = useTrackClick(TrackEvent.ReplyDriftbottle)
   const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const { addSendingMessage } = useSending()
   const onSubmit = async () => {
     if (!fromAddress) return
@@ -90,6 +91,7 @@ export function useSubmitMessage() {
           .concat(imageAttachments),
       })
       addSendingMessage({ messageId: submitMessageResult.data.messageId })
+      setIsSubmitted(true)
       if (isSendToDriftBottle) {
         trackSendDriftbottleMail()
       }
@@ -117,6 +119,7 @@ export function useSubmitMessage() {
   return {
     isDisabledSendButton,
     isLoading,
+    isSubmitted,
     onSubmit,
   }
 }
