@@ -12,6 +12,7 @@ import { Loading } from '../Loading'
 import { EmptyStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 import { GotoInbox } from '../GotoInbox'
+import { Query } from '../../api/query'
 
 const TitleBox = styled(Box)`
   font-weight: 700;
@@ -63,7 +64,7 @@ export const SentComponent: React.FC = () => {
             ref={refBoxList}
             enableQuery
             queryFn={queryFn}
-            queryKey={['Sent']}
+            queryKey={[Query.Sent]}
             loader={<Loading />}
             emptyElement={<EmptyStatus />}
             noMoreElement={<ThisBottomStatus />}
