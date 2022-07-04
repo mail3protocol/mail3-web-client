@@ -16,6 +16,8 @@ import {
   SignatureStatus,
   useDidMount,
   useAccountIsActivating,
+  useLoginAccount,
+  useConnectedAccount,
 } from 'hooks'
 import { useRouter } from 'next/router'
 import { atom, useAtomValue } from 'jotai'
@@ -209,7 +211,8 @@ export const useWalletChange = () => {
   const closeAuthModal = useCloseAuthModal()
   const [, , removeCookie] = useCookies([COOKIE_KEY])
   const { onOpen: openConnectWalletModal } = useConnectWalletDialog()
-  const account = useAccount()
+  const account = useConnectedAccount()
+  const loginAccount = useLoginAccount()
   const isConnecting = useAccountIsActivating()
 
   const handleAccountChanged = useCallback(
@@ -225,9 +228,16 @@ export const useWalletChange = () => {
       if (acc?.toLowerCase() === account?.toLowerCase()) {
         return
       }
+      if (
+        loginAccount &&
+        account &&
+        loginAccount.toLowerCase() !== account?.toLowerCase()
+      ) {
+        return
+      }
       removeCookie(COOKIE_KEY, { path: '/' })
     },
-    [account, isConnecting]
+    [account, isConnecting, loginAccount]
   )
 
   const handleDisconnect = useCallback(() => {
