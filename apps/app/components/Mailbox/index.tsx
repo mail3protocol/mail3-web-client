@@ -5,7 +5,11 @@ import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
 import Link, { LinkProps } from 'next/link'
 import { useMemo } from 'react'
-import { truncateMailAddress } from 'shared'
+import {
+  isPrimitiveEthAddress,
+  truncateMailAddress,
+  truncateMiddle,
+} from 'shared'
 import ChooseSVG from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
 import { formatDateString, removeMailSuffix } from '../../utils'
@@ -127,7 +131,7 @@ const Item: React.FC<BoxItemProps> = ({
 }) => {
   const [t] = useTranslation('mailboxes')
 
-  const avatarList = useMemo(() => {
+  const receiverList = useMemo(() => {
     if (!to) return []
     const exists: Array<string> = []
 
@@ -165,15 +169,15 @@ const Item: React.FC<BoxItemProps> = ({
   )
 
   if (
-    avatarList.length &&
+    receiverList.length &&
     (mailboxType === Mailboxes.Sent || mailboxType === Mailboxes.Drafts)
   ) {
     AvatarBox = (
       <Flex w="48px">
-        <Box transform={avatarList.length > 1 ? 'translateX(-20%)' : ''}>
+        <Box transform={receiverList.length > 1 ? 'translateX(-20%)' : ''}>
           <Avatar
             cursor="pointer"
-            address={removeMailSuffix(avatarList[0].address)}
+            address={removeMailSuffix(receiverList[0].address)}
             w="48px"
             h="48px"
             showBorder
@@ -187,11 +191,11 @@ const Item: React.FC<BoxItemProps> = ({
           />
         </Box>
 
-        {avatarList.length === 2 ? (
+        {receiverList.length === 2 ? (
           <Box transform="translateX(-80%)">
             <Avatar
               cursor="pointer"
-              address={removeMailSuffix(avatarList[1].address)}
+              address={removeMailSuffix(receiverList[1].address)}
               w="48px"
               h="48px"
               showBorder
@@ -206,7 +210,7 @@ const Item: React.FC<BoxItemProps> = ({
           </Box>
         ) : null}
 
-        {avatarList.length > 2 ? (
+        {receiverList.length > 2 ? (
           <Circle
             as="button"
             size="48px"
@@ -222,16 +226,43 @@ const Item: React.FC<BoxItemProps> = ({
             }}
             transform="translateX(-80%)"
           >
-            <p>{avatarList.length - 1}</p>
+            <p>{receiverList.length - 1}</p>
           </Circle>
         ) : null}
       </Flex>
     )
   }
 
-  const desc = `${truncateMailAddress(from?.address)} - ${to
-    ?.map((item) => `${truncateMailAddress(item?.address)}`)
-    ?.join(';')}`
+  const desc = useMemo(() => {
+    if (mailboxType === Mailboxes.Sent || mailboxType === Mailboxes.Drafts) {
+      const list = receiverList.map((item) => {
+        const [addr] = item.address.split('@')
+        if (isPrimitiveEthAddress(addr)) {
+          return truncateMiddle(addr, 6, 4)
+        }
+        return addr
+      })
+
+      return `${list.join('; ')}${list.length > 1 ? ';' : ''}`
+    }
+
+    if (mailboxType === Mailboxes.Trash) {
+      return `${truncateMailAddress(from?.address)} - ${to
+        ?.map((item) => `${truncateMailAddress(item?.address)}`)
+        ?.join(';')}`
+    }
+
+    if (from.name) {
+      return from.name
+    }
+
+    const [addr] = from.address.split('@')
+    if (isPrimitiveEthAddress(addr)) {
+      return truncateMiddle(addr, 6, 4)
+    }
+
+    return addr
+  }, [from, receiverList])
 
   return (
     <ItemFlex

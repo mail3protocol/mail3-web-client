@@ -50,6 +50,11 @@
         }
     },
     "reply-driftbottle-sender": "Reply",
+    "sending": {
+        "sending": "Sending...",
+        "succeed": "Message Sent",
+        "view_message": "View Message"
+    },
     "ipfs": {
         "ipfs_link": "IPFS LINK",
         "eth_address": "ETHEREUM ADDRESS",

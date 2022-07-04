@@ -440,7 +440,7 @@ export const PreviewComponent: React.FC = () => {
                       fontSize={{ base: '20px', md: '24px' }}
                       lineHeight="1"
                       display="inline-block"
-                      verticalAlign="middle"
+                      verticalAlign="bottom"
                     >
                       {detail.from.name}
                     </Text>
@@ -448,10 +448,10 @@ export const PreviewComponent: React.FC = () => {
                   <Text
                     color="#6F6F6F"
                     fontWeight={400}
-                    fontSize={{ base: '12px', md: '14px' }}
+                    fontSize={{ base: '12px', md: '16px' }}
                     display={{ base: 'block', md: 'inline-block' }}
-                    verticalAlign="middle"
                     ml={{ base: 0, md: '5px' }}
+                    mt={{ base: '5px', md: 0 }}
                   >
                     {`<${truncateMailAddress(detail.from.address)}>`}
                   </Text>

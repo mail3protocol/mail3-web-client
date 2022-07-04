@@ -17,6 +17,7 @@ import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 import SVGWrite from '../../assets/mailbox/write.svg'
+import { SendingDialog } from '../SendingDialog'
 
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -291,6 +292,7 @@ export const InboxComponent: React.FC = () => {
           </Box>
         </MailboxContainer>
       </Box>
+      <SendingDialog />
     </NewPageContainer>
   )
 }
