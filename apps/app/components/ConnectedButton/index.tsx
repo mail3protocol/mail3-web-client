@@ -44,6 +44,14 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const btns: ButtonListItemProps[] = useMemo(
     () => [
       {
+        href: RoutePath.Filter,
+        label: `Set DID Filter`,
+        icon: <SetupSvg />,
+        onClick() {
+          // trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Settings })
+        },
+      },
+      {
         href: RoutePath.SettingSignature,
         label: t('navbar.settings'),
         icon: <SetupSvg />,

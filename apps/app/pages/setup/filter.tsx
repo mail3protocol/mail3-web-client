@@ -136,7 +136,7 @@ const SetupFilter: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Mail3: Setup Share Profile</title>
+        <title>Mail3: Filter Spam Based On Web3 DID</title>
       </Head>
       <PageContainer>
         <Navbar />
@@ -148,7 +148,7 @@ const SetupFilter: NextPage = () => {
             mt={['20px', '20px', '40px']}
           >
             <Heading fontSize={['20px', '20px', '28px']}>
-              {t('setup.share.title')}
+              Filter Spam Based On Web3 DID
             </Heading>
             <Link href={RoutePath.Inbox} passHref>
               <Button
@@ -170,68 +170,7 @@ const SetupFilter: NextPage = () => {
               </Button>
             </Link>
           </Center>
-          <Container justifyContent="center">
-            <Box w="600px">
-              <Flex
-                width="100%"
-                p="11px 16px"
-                color="#000"
-                border="1px solid #E7E7E7"
-                borderRadius="8px"
-                justify="space-between"
-              >
-                <Text fontSize="14px" wordBreak="break-all">
-                  {profileUrl}
-                </Text>
-                <Spacer />
-                <Flex
-                  as="button"
-                  fontSize={{ base: 0, md: '12px' }}
-                  alignItems="center"
-                  onClick={onCopy}
-                >
-                  <SvgCopy />
-                  <Box ml="5px">Copy</Box>
-                </Flex>
-              </Flex>
-              <Stack
-                align="center"
-                justify="center"
-                mt="24px"
-                direction={{ base: 'column-reverse', md: 'row' }}
-                spacing="20px"
-              >
-                <Box w="228px" h="343px">
-                  <Box transform={`scale(${228 / 375})`} transformOrigin="0 0">
-                    <ProfileCard
-                      mailAddress={mailAddress}
-                      isPic
-                      homeUrl={HOME_URL}
-                    >
-                      {Icons}
-                    </ProfileCard>
-                  </Box>
-                </Box>
-                <VStack w="207px" spacing="20px">
-                  <Flex
-                    as="button"
-                    onClick={onShareTwitter}
-                    className="button-item twitter"
-                  >
-                    <SvgTwitter />
-                    <Box ml="5px">{t('setup.share.twitter')}</Box>
-                  </Flex>
-                  <Flex
-                    as="button"
-                    onClick={onSharePic}
-                    className="button-item"
-                  >
-                    <SvgShare /> <Box ml="5px">{t('setup.share.card')}</Box>
-                  </Flex>
-                </VStack>
-              </Stack>
-            </Box>
-          </Container>
+          <Container justifyContent="center">did filter</Container>
 
           <Footer>
             <Link href={RoutePath.Inbox} passHref>
@@ -255,10 +194,6 @@ const SetupFilter: NextPage = () => {
           </Footer>
         </SettingContainer>
       </PageContainer>
-
-      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={HOME_URL}>
-        {Icons}
-      </ProfileCard>
     </>
   )
 }
