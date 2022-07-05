@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next'
 import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
 import MobileIpfsGuidePng from '../../assets/ipfs-guide/mobile.png'
 import { useAPI } from '../../hooks/useAPI'
+import { digestMessage } from '../../utils'
 
 const stringToBeSigned = `Generate MESSAGE ENCRYPTION key for me and I authorize current dApp to access my MESSAGE ENCRYPTION key. (This operation won’t affect your digital assets.)
 
@@ -33,7 +34,10 @@ export const IpfsModal: React.FC<{
   const onGenerateKey = useCallback(async () => {
     try {
       const signedString = await signMessage(stringToBeSigned)
-      await api.updateMessageEncryptionKey(signedString)
+      const signedStringWithSha256 = `0x${await digestMessage(signedString, {
+        algorithm: 'SHA-256',
+      })}`
+      await api.updateMessageEncryptionKey(signedStringWithSha256)
       onAfterSignature?.(signedString)
     } catch (e) {
       if (e instanceof NotConnectWallet) {
