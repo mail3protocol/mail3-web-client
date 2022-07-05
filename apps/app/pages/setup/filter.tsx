@@ -1,37 +1,18 @@
-import React, { useMemo, useRef } from 'react'
+import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Button, PageContainer, ProfileCard } from 'ui'
+import { Button, PageContainer } from 'ui'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
-import { TrackEvent, useScreenshot, useToast, useTrackClick } from 'hooks'
-import {
-  Box,
-  Center,
-  Flex,
-  Heading,
-  Spacer,
-  Stack,
-  Text,
-  VStack,
-} from '@chakra-ui/react'
+import { TrackEvent, useTrackClick } from 'hooks'
+import { Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Head from 'next/head'
 import styled from '@emotion/styled'
-import { useAtomValue } from 'jotai/utils'
-import { shareToTwitter } from 'shared'
-import SvgCopy from 'assets/profile/copy.svg'
-import SvgShare from 'assets/profile/share.svg'
-import SvgTwitter from 'assets/profile/twitter-blue.svg'
-import SvgEtherscan from 'assets/profile/business/etherscan.svg'
-import SvgArrow from 'assets/profile/business/arrow.svg'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
-import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
-
-import { copyText } from '../../utils'
-import { HOME_URL } from '../../constants'
+import { getAuthenticateProps } from '../../hooks/useLogin'
 
 export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
   async ({ locale }) => ({
@@ -79,59 +60,7 @@ const Footer = styled(Box)`
 
 const SetupFilter: NextPage = () => {
   const [t] = useTranslation('settings')
-  const [t2] = useTranslation('common')
-  const toast = useToast()
   const trackNext = useTrackClick(TrackEvent.ClickShareYourNext)
-  const trackCopy = useTrackClick(TrackEvent.ClickGuideCopy)
-  const trackTwitter = useTrackClick(TrackEvent.ClickGuideTwitter)
-  const trackDownload = useTrackClick(TrackEvent.ClickGuideDownloadCard)
-  const { downloadScreenshot } = useScreenshot()
-
-  const userProps = useAtomValue(userPropertiesAtom)
-
-  const cardRef = useRef<HTMLDivElement>(null)
-
-  const mailAddress: string = useMemo(
-    () => userProps?.defaultAddress ?? 'unknown',
-    [userProps]
-  )
-
-  const profileUrl: string = useMemo(() => {
-    const ads = mailAddress.substring(0, mailAddress.indexOf('@'))
-    return `${HOME_URL}/${ads}`
-  }, [mailAddress])
-
-  const onShareTwitter = () => {
-    trackTwitter()
-    shareToTwitter({
-      text: 'Hey, contact me using my Mail3 email address @mail3dao',
-      url: profileUrl,
-      hashtags: ['web3', 'mail3'],
-    })
-  }
-
-  const onSharePic = () => {
-    trackDownload()
-    if (!cardRef?.current) return
-    downloadScreenshot(cardRef.current, 'share.png')
-  }
-
-  const onCopy = async () => {
-    trackCopy()
-    await copyText(profileUrl)
-    toast(t2('navbar.copied'))
-  }
-
-  const Icons = [SvgArrow, SvgEtherscan].map((Item, index) => (
-    <Box
-      // eslint-disable-next-line react/no-array-index-key
-      key={index}
-      w="24px"
-      h="24px"
-    >
-      <Item />
-    </Box>
-  ))
 
   return (
     <>
