@@ -20,7 +20,7 @@ import NextLink from 'next/link'
 import { truncateMailAddress } from 'shared'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
-import { interval, from as fromPipe, defer, switchMap } from 'rxjs'
+import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -196,11 +196,12 @@ export const PreviewComponent: React.FC = () => {
         .pipe(
           switchMap(() =>
             fromPipe(defer(() => refetchMessageOnChainIdentifier()))
+          ),
+          takeWhile(
+            (res) => res.data?.url !== '' && res.data?.contentDigest !== ''
           )
         )
-        .subscribe((res) => {
-          console.log(new Date().getTime(), res)
-        })
+        .subscribe()
       return () => {
         subscriber.unsubscribe()
       }
