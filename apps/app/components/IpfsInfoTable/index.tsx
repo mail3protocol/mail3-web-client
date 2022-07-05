@@ -70,9 +70,10 @@ export const IpfsInfoTable: React.FC<{
   function pendingBackupText(str?: string) {
     return !str ? t('ipfs.pending') : str
   }
-  const ipfsLink = ipfs ? '/' : undefined
-  const ethAddressLink = ethAddress ? '/' : undefined
-  const contentDigestLink = contentDigest ? '/' : undefined
+  const ipfsLink = ipfs || undefined
+  const ethAddressLink = ethAddress
+    ? `https://etherscan.io/address/${ethAddress}`
+    : undefined
   const trackClickDInfoBlockchainLink = useTrackClick(
     TrackEvent.clickDInfoBlockchainLink
   )
@@ -92,7 +93,11 @@ export const IpfsInfoTable: React.FC<{
         <Tbody>
           <Tr>
             <Td>
-              <Link href={ipfsLink} onClick={() => trackClickDInfoIpfsLink()}>
+              <Link
+                href={ipfsLink}
+                onClick={() => trackClickDInfoIpfsLink()}
+                target="_blank"
+              >
                 {t('ipfs.ipfs_link')}
                 <ExternalLink />
               </Link>
@@ -106,6 +111,7 @@ export const IpfsInfoTable: React.FC<{
               <Link
                 href={ethAddressLink}
                 onClick={() => trackClickDInfoBlockchainLink()}
+                target="_blank"
               >
                 {t('ipfs.eth_address')}
                 <ExternalLink />
@@ -116,17 +122,8 @@ export const IpfsInfoTable: React.FC<{
             </Td>
           </Tr>
           <Tr>
-            <Td>
-              <Link href={contentDigestLink}>
-                {t('ipfs.content_digest')}
-                <ExternalLink />
-              </Link>
-            </Td>
-            <Td>
-              <Link href={contentDigestLink}>
-                {pendingBackupText(contentDigest)}
-              </Link>
-            </Td>
+            <Td>{t('ipfs.content_digest')}</Td>
+            <Td>{pendingBackupText(contentDigest)}</Td>
           </Tr>
         </Tbody>
       </Table>

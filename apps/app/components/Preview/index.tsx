@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Avatar, Button } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
@@ -20,6 +20,7 @@ import NextLink from 'next/link'
 import { truncateMailAddress } from 'shared'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
+import { interval, from as fromPipe, defer, switchMap } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -180,13 +181,32 @@ export const PreviewComponent: React.FC = () => {
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
   const messageId = data?.messageInfo?.messageId
-  const { data: messageOnChainIdentifierData } = useQuery(
-    [Query.GetMessageOnChainIdentifier, messageId],
-    async () => {
-      if (!messageId) return null
-      return (await api.getMessageOnChainIdentifier(messageId)).data
+  const {
+    data: messageOnChainIdentifierData,
+    refetch: refetchMessageOnChainIdentifier,
+    error: messageOnChainIdentifierError,
+  } = useQuery([Query.GetMessageOnChainIdentifier, messageId], async () => {
+    if (!messageId) return null
+    return (await api.getMessageOnChainIdentifier(messageId)).data
+  })
+
+  useEffect(() => {
+    if (!messageOnChainIdentifierError && !messageOnChainIdentifierData) {
+      const subscriber = interval(2000)
+        .pipe(
+          switchMap(() =>
+            fromPipe(defer(() => refetchMessageOnChainIdentifier()))
+          )
+        )
+        .subscribe((res) => {
+          console.log(new Date().getTime(), res)
+        })
+      return () => {
+        subscriber.unsubscribe()
+      }
     }
-  )
+    return () => {}
+  }, [messageOnChainIdentifierData, messageOnChainIdentifierError])
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
