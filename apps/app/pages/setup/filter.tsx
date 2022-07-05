@@ -37,9 +37,51 @@ const Container = styled(Flex)`
     align-items: center;
     justify-content: center;
   }
-  .button-item.twitter {
-    color: #ffffff;
+
+  .h2 {
+    font-weight: 700;
+    font-size: 16px;
+    span {
+      background: radial-gradient(
+        100% 100% at 80% 50%,
+        #de1af075 0%,
+        rgba(46, 255, 205, 1) 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .content {
+    width: 476px;
+    background: rgba(244, 251, 241, 0.5);
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .button-item {
+    width: 270px;
     border: none;
+
+    padding: 2px;
+    border-radius: 46px;
+
+    .button-item-bg {
+      background-color: #fff;
+      color: #000;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 46px;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .button-item.ens {
+    background: #4e51f4;
+  }
+
+  .button-item.eth {
     background: linear-gradient(
       90.02deg,
       #ffb1b1 0.01%,
@@ -99,7 +141,63 @@ const SetupFilter: NextPage = () => {
               </Button>
             </Link>
           </Center>
-          <Container justifyContent="center">did filter</Container>
+
+          <Container
+            justifyContent="center"
+            direction="column"
+            alignItems="center"
+          >
+            <Box className="h2">With Mail3, you control who can reach you.</Box>
+            <Box
+              maxW="600px"
+              textAlign="center"
+              lineHeight="20px"
+              fontSize="16px"
+              m="8px"
+            >
+              Before someone land an email in your inbox, <br /> you can decide
+              if you want to receive emails from them or not.
+            </Box>
+            <Flex
+              className="content"
+              direction="column"
+              align="center"
+              p="20px 0"
+            >
+              <Box className="h2">
+                Use <span>Web3 DID</span> to filter senders automaticly
+              </Box>
+              <Box m="10px">Get emails from who...</Box>
+              <Box className="button-item ens">
+                <Center className="button-item-bg">HOLD ENS</Center>
+              </Box>
+              <Box m="10px">or</Box>
+              <Box className="button-item eth">
+                <Center className="button-item-bg">
+                  HOLD at least 0.01 ETH
+                </Center>
+              </Box>
+
+              <Link href={RoutePath.Inbox} passHref>
+                <Button
+                  mt="20px"
+                  bg="black"
+                  color="white"
+                  h="50px"
+                  onClick={() => trackNext()}
+                  _hover={{
+                    bg: 'brand.50',
+                  }}
+                  as="a"
+                  rightIcon={<ChevronRightIcon color="white" />}
+                >
+                  <Center flexDirection="column">
+                    <Text>Set up</Text>
+                  </Center>
+                </Button>
+              </Link>
+            </Flex>
+          </Container>
 
           <Footer>
             <Link href={RoutePath.Inbox} passHref>
