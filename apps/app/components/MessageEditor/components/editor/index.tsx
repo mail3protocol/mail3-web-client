@@ -106,7 +106,10 @@ const Footer = () => {
     onOpen: onOpenIpfsModal,
     onClose: onCloseIpfsModal,
   } = useDisclosure()
-  const { data: isUploadedIpfsKey } = useQuery(
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery(
     [Query.GetMessageEncryptionKeyState],
     () =>
       api
@@ -121,14 +124,17 @@ const Footer = () => {
 
   return (
     <>
-      <IpfsModal
-        isOpen={isOpenIpfsModal}
-        onClose={onCloseIpfsModal}
-        onAfterSignature={async () => {
-          onCloseIpfsModal()
-          await onSubmit()
-        }}
-      />
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async () => {
+            onCloseIpfsModal()
+            await onSubmit()
+          }}
+        />
+      ) : null}
       <Stack
         direction="row"
         spacing="16px"

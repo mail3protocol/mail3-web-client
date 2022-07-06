@@ -11,7 +11,12 @@ import {
 } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
 import { Button } from 'ui'
-import { NotConnectWallet, useConnectWalletDialog, useSignMessage } from 'hooks'
+import {
+  NotConnectWallet,
+  useConnectWalletDialog,
+  useEagerConnect,
+  useSignMessage,
+} from 'hooks'
 import { useTranslation } from 'next-i18next'
 import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
 import MobileIpfsGuidePng from '../../assets/ipfs-guide/mobile.png'
@@ -26,10 +31,12 @@ export const IpfsModal: React.FC<{
   isOpen: boolean
   onClose: () => void
   onAfterSignature?: (signatureStr: string) => void
-}> = ({ isOpen, onClose, onAfterSignature }) => {
+  isForceConnectWallet?: boolean
+}> = ({ isOpen, onClose, onAfterSignature, isForceConnectWallet = true }) => {
   const api = useAPI()
   const { t } = useTranslation('edit-message')
   const signMessage = useSignMessage()
+  useEagerConnect(isForceConnectWallet)
   const { onOpen: onOpenWalletDialog } = useConnectWalletDialog()
   const onGenerateKey = useCallback(async () => {
     try {
