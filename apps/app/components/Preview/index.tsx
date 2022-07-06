@@ -191,14 +191,21 @@ export const PreviewComponent: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!messageOnChainIdentifierError && !messageOnChainIdentifierData) {
+    const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
+    const contentDigestIsEmtpuStr =
+      messageOnChainIdentifierData?.contentDigest === ''
+    if (
+      !messageOnChainIdentifierError &&
+      ipfsUrlIsEmtpyStr &&
+      contentDigestIsEmtpuStr
+    ) {
       const subscriber = interval(2000)
         .pipe(
           switchMap(() =>
             fromPipe(defer(() => refetchMessageOnChainIdentifier()))
           ),
           takeWhile(
-            (res) => res.data?.url !== '' && res.data?.contentDigest !== ''
+            (res) => res.data?.url === '' && res.data?.contentDigest === ''
           )
         )
         .subscribe()
