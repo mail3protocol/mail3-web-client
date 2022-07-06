@@ -72,7 +72,7 @@ export const IpfsModal: React.FC<{
           {t('ipfs_modal.title')}
         </ModalHeader>
         <ModalBody>
-          <Text maxW="495px" mx="auto" whiteSpace="pre">
+          <Text maxW="495px" mx="auto" whiteSpace="pre-line" textAlign="center">
             {t('ipfs_modal.content')}
           </Text>
           <Center

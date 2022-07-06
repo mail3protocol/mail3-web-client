@@ -185,20 +185,26 @@ export const PreviewComponent: React.FC = () => {
     data: messageOnChainIdentifierData,
     refetch: refetchMessageOnChainIdentifier,
     error: messageOnChainIdentifierError,
-  } = useQuery([Query.GetMessageOnChainIdentifier, messageId], async () => {
-    if (!messageId) return null
-    return (await api.getMessageOnChainIdentifier(messageId)).data
-  })
+    isLoading: isLoadingMessageOnChainIdentifier,
+  } = useQuery(
+    [Query.GetMessageOnChainIdentifier, messageId],
+    async () => {
+      if (!messageId) return null
+      return (await api.getMessageOnChainIdentifier(messageId)).data
+    },
+    {
+      retry: false,
+    }
+  )
+
+  const isShowIpfsTable =
+    !messageOnChainIdentifierError && !isLoadingMessageOnChainIdentifier
 
   useEffect(() => {
     const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
-    const contentDigestIsEmtpuStr =
+    const contentDigestIsEmtpyStr =
       messageOnChainIdentifierData?.contentDigest === ''
-    if (
-      !messageOnChainIdentifierError &&
-      ipfsUrlIsEmtpyStr &&
-      contentDigestIsEmtpuStr
-    ) {
+    if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
       const subscriber = interval(2000)
         .pipe(
           switchMap(() =>
@@ -214,7 +220,7 @@ export const PreviewComponent: React.FC = () => {
       }
     }
     return () => {}
-  }, [messageOnChainIdentifierData, messageOnChainIdentifierError])
+  }, [messageOnChainIdentifierData])
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
@@ -353,8 +359,6 @@ export const PreviewComponent: React.FC = () => {
     })
     return arr
   }, [detail])
-
-  const hasIpfsInfo = true
 
   if (!id) {
     return (
@@ -541,7 +545,7 @@ export const PreviewComponent: React.FC = () => {
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
-          {hasIpfsInfo ? (
+          {isShowIpfsTable ? (
             <IpfsInfoTable
               ethAddress={account}
               ipfs={messageOnChainIdentifierData?.url}
