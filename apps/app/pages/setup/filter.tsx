@@ -89,6 +89,12 @@ const Container = styled(Flex)`
       #916bff 99.99%
     );
   }
+
+  @media (max-width: 600px) {
+    .h2 {
+      font-size: 14px;
+    }
+  }
 `
 
 const Footer = styled(Box)`
@@ -118,7 +124,7 @@ const SetupFilter: NextPage = () => {
             mb="20px"
             mt={['20px', '20px', '40px']}
           >
-            <Heading fontSize={['20px', '20px', '28px']}>
+            <Heading fontSize={{ base: '20px', md: '28px' }}>
               Filter Spam Based On Web3 DID
             </Heading>
             <Link href={RoutePath.Inbox} passHref>
@@ -152,7 +158,7 @@ const SetupFilter: NextPage = () => {
               maxW="600px"
               textAlign="center"
               lineHeight="20px"
-              fontSize="16px"
+              fontSize={{ base: '12px', md: '16px' }}
               m="8px"
             >
               Before someone land an email in your inbox, <br /> you can decide
