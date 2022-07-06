@@ -66,6 +66,12 @@ const Container = styled(Flex)`
     padding: 2px;
     border-radius: 46px;
 
+    background: linear-gradient(
+      90.02deg,
+      #ffb1b1 0.01%,
+      #ffcd4b 50.26%,
+      #916bff 99.99%
+    );
     .button-item-bg {
       background-color: #fff;
       color: #000;
@@ -74,23 +80,25 @@ const Container = styled(Flex)`
       border-radius: 46px;
       height: 100%;
       width: 100%;
+
+      div {
+        background: linear-gradient(
+          90.02deg,
+          #ffb1b1 0.01%,
+          #ffcd4b 50.26%,
+          #916bff 99.99%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
     }
   }
 
-  .button-item.ens {
-    background: #4e51f4;
-  }
-
-  .button-item.eth {
-    background: linear-gradient(
-      90.02deg,
-      #ffb1b1 0.01%,
-      #ffcd4b 50.26%,
-      #916bff 99.99%
-    );
-  }
-
   @media (max-width: 600px) {
+    .content {
+      width: 345px;
+    }
     .h2 {
       font-size: 14px;
     }
@@ -159,7 +167,7 @@ const SetupFilter: NextPage = () => {
               textAlign="center"
               lineHeight="20px"
               fontSize={{ base: '12px', md: '16px' }}
-              m="8px"
+              m="8px 0 20px 0"
             >
               Before someone land an email in your inbox, <br /> you can decide
               if you want to receive emails from them or not.
@@ -175,21 +183,24 @@ const SetupFilter: NextPage = () => {
               </Box>
               <Box m="10px">Get emails from who...</Box>
               <Box className="button-item ens">
-                <Center className="button-item-bg">HOLD ENS</Center>
+                <Center className="button-item-bg">
+                  <Box w="100%">HOLD ENS</Box>
+                </Center>
               </Box>
               <Box m="10px">or</Box>
               <Box className="button-item eth">
                 <Center className="button-item-bg">
-                  HOLD at least 0.01 ETH
+                  <Box w="100%">HOLD at least 0.01 ETH</Box>
                 </Center>
               </Box>
-
+              <Box>or</Box>
               <Link href={RoutePath.Inbox} passHref>
                 <Button
+                  w="270px"
                   mt="20px"
                   bg="black"
                   color="white"
-                  h="50px"
+                  h="40px"
                   onClick={() => trackNext()}
                   _hover={{
                     bg: 'brand.50',
