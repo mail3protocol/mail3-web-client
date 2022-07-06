@@ -314,10 +314,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
           </HStack>
         </Box>
         <Box className="address">
-          <Text className="p">
-            {address}
-            <span style={{ marginLeft: '-5px' }}>{` @${mailSuffix}`}</span>
-          </Text>
+          <Text className="p">{`${address}@${mailSuffix}`}</Text>
         </Box>
         <Center mt="25px">
           <HStack spacing="24px">
