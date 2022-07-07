@@ -167,7 +167,7 @@ const SetupFilter: NextPage = () => {
               textAlign="center"
               lineHeight="20px"
               fontSize={{ base: '12px', md: '16px' }}
-              m="8px 0 20px 0"
+              m={{ base: '0 0 20px 0', md: '8px 0 20px 0' }}
             >
               Before someone land an email in your inbox, <br /> you can decide
               if you want to receive emails from them or not.
