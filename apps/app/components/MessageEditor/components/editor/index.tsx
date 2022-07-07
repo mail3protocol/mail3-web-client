@@ -115,6 +115,7 @@ const Footer = () => {
   const [isAllowLeave, setIsAllowLeave] = useState(false)
   const [isLeavingWithSave, setIsLeavingWithSave] = useState(false)
   const [isLeavingWithoutSave, setIsLeavingWithoutSave] = useState(false)
+
   useEffect(() => {
     const isShowLeavingModal = () =>
       !(
