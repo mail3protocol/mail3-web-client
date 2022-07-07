@@ -1,10 +1,23 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer, Button } from 'ui'
 import styled from '@emotion/styled'
-import { Box, Center } from '@chakra-ui/react'
+import {
+  Box,
+  Center,
+  Grid,
+  GridItem,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+  Flex,
+  Spacer,
+  Input,
+} from '@chakra-ui/react'
 import Head from 'next/head'
+import { CloseIcon } from '@chakra-ui/icons'
 import { Navbar } from '../components/Navbar'
 import { getAuthenticateProps } from '../hooks/useLogin'
 
@@ -96,6 +109,13 @@ export const ContentWrap = styled(Box)`
     }
   }
 
+  .rule-item {
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 16px;
+    min-height: 200px;
+  }
+
   @media (max-width: 600px) {
     margin-top: 0px;
     border-top-right-radius: 0;
@@ -115,6 +135,8 @@ export const ContentWrap = styled(Box)`
 `
 
 const Filter: NextPage = () => {
+  const [input, setInput] = useState('')
+
   const relus = useMemo(() => {
     const relu = {
       type: 'nft',
@@ -122,6 +144,11 @@ const Filter: NextPage = () => {
     }
     return [relu, relu, relu]
   }, [])
+
+  const handleInputChange = (e) => {
+    console.log(e.target.value)
+    setInput(e.target.value)
+  }
 
   return (
     <>
@@ -181,7 +208,48 @@ const Filter: NextPage = () => {
 
               <Box className="area-item">
                 <Box className="small-title">Requirements logic：</Box>
-                <Box className="rule-generator-area" />
+                <Box className="rule-generator-area">
+                  <Grid
+                    templateColumns="repeat(2, minmax(0px, 1fr))"
+                    gap="10px"
+                  >
+                    <GridItem className="rule-item">
+                      <Box>
+                        <Flex
+                          p="10px 20px"
+                          background="#4ADE80"
+                          borderRadius="16px 16px 0px 0px"
+                          borderBottom="1px solid #000000"
+                          color="#fff"
+                          fontSize="14px"
+                        >
+                          <Box>NFT</Box>
+                          <Spacer />
+                          <Box as="button">
+                            <CloseIcon />
+                          </Box>
+                        </Flex>
+                        <FormControl isInvalid={!input}>
+                          <FormLabel htmlFor="email">Email</FormLabel>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={input}
+                            placeholder="min"
+                            onChange={handleInputChange}
+                          />
+                          {input ? null : (
+                            <FormErrorMessage>
+                              Email is required.
+                            </FormErrorMessage>
+                          )}
+                        </FormControl>
+                      </Box>
+                    </GridItem>
+
+                    <GridItem className="rule-item" />
+                  </Grid>
+                </Box>
               </Box>
 
               <Box>
