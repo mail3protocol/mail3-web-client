@@ -47,6 +47,7 @@ const Container = styled(Flex)`
         #de1af075 0%,
         rgba(46, 255, 205, 1) 100%
       );
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
