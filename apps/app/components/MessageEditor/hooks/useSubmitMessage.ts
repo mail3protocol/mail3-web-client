@@ -57,6 +57,7 @@ export function useSubmitMessage() {
   const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { addSendingMessage } = useSending()
+
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
