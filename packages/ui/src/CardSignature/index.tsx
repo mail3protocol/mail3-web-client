@@ -26,21 +26,39 @@ export const CardSignature = React.forwardRef<
   HTMLDivElement,
   SignatureCardProps
 >(({ account, ...props }, ref) => (
-  <Center position="relative" w="200px" h="188px" ref={ref} {...props}>
+  <Center
+    position="relative"
+    w="200px"
+    h="188px"
+    ref={ref}
+    zIndex={0}
+    {...props}
+  >
     <Flex
       flexDirection="column"
-      bg={`url(${stampBg})`}
       w="128px"
       h="168px"
       padding="10px"
       alignItems="center"
+      position="relative"
     >
-      <Avatar isSquare w="100px" h="100px" address={account} />
+      <RowImage
+        src={stampBg}
+        position="absolute"
+        w="inherit"
+        h="inherit"
+        top="0"
+        left="0"
+        zIndex={0}
+      />
+      <Flex position="relative" zIndex={1}>
+        <Avatar isSquare w="100px" h="100px" address={account} />
+      </Flex>
     </Flex>
-    <Flex position="absolute" bottom="0" left="-10px">
+    <Flex position="absolute" bottom="0" left="-10px" zIndex={2}>
       <RowImage src={StampPng.src} width="163px" height="144px" />
     </Flex>
-    <Flex position="absolute" bottom="45px" right="45px">
+    <Flex position="absolute" bottom="45px" right="45px" zIndex={2}>
       <Text
         fontSize="12px"
         w="95px"
@@ -52,7 +70,7 @@ export const CardSignature = React.forwardRef<
         <br />@{MAIL_SERVER_URL}
       </Text>
     </Flex>
-    <Flex position="absolute" bottom="5px">
+    <Flex position="absolute" bottom="5px" zIndex={2}>
       <QrCode value={`https://mail3.me/${account}`} size={32} fgColor="blue" />
     </Flex>
   </Center>
