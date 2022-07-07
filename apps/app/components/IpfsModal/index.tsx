@@ -54,14 +54,7 @@ export const IpfsModal: React.FC<{
   }, [onAfterSignature, signMessage])
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      closeOnOverlayClick={false}
-      closeOnEsc={false}
-      returnFocusOnClose={false}
-      isCentered
-    >
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
         maxW="641px"

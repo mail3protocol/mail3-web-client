@@ -1,52 +1,7 @@
-import {
-  Icon,
-  Link,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Tr,
-} from '@chakra-ui/react'
-import styled from '@emotion/styled'
+import { Box, Grid, Icon, Link } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'next-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
-
-const StyledTableContainer = styled(TableContainer)`
-  td:first-child {
-    background-color: rgb(245, 245, 255);
-    border-right: 1px solid #e7e7e7;
-  }
-  td {
-    background-color: rgb(250, 250, 255);
-    border-color: #e7e7e7;
-    font-size: 12px;
-    padding: 10px 12px;
-  }
-  tr td {
-    border-bottom: 1px solid #e7e7e7;
-  }
-  tr:last-child td {
-    border-bottom: none;
-  }
-  a {
-    display: block;
-    width: 100%;
-    white-space: nowrap;
-  }
-  td:last-child a {
-    white-space: pre-line;
-    word-break: break-all;
-  }
-  a:hover {
-    cursor: wait;
-  }
-  a[href]:hover {
-    color: #000;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-`
 
 export const ExternalLink = () => (
   <Icon w="10px" h="10px" viewBox="0 0 10 10" ml="8px">
@@ -80,53 +35,82 @@ export const IpfsInfoTable: React.FC<{
   const trackClickDInfoIpfsLink = useTrackClick(TrackEvent.clickDInfoIpfsLink)
 
   return (
-    <StyledTableContainer
-      maxW="718px"
-      w="full"
-      rounded="8px"
+    <Grid
+      templateColumns="160px calc(100% - 160px)"
+      templateRows="min(40px, auto) min(40px, auto) min(40px, auto)"
+      bg="rgb(250, 250, 255)"
       border="1px solid #E7E7E7"
       overflow="hidden"
       color="#6F6F6F"
-      mt="26px"
+      fontSize="12px"
+      rounded="8px"
+      maxW="718px"
+      css={`
+        div {
+          padding: 10px 12px;
+          border-bottom: 1px solid #e7e7e7;
+        }
+        div:nth-child(odd) {
+          background-color: rgb(245, 245, 255);
+          border-right: 1px solid #e7e7e7;
+        }
+        div:nth-last-child(1),
+        div:nth-last-child(2) {
+          border-bottom: none;
+        }
+        a {
+          width: 100%;
+        }
+        a:hover {
+          cursor: wait;
+        }
+        a[href]:hover {
+          color: #000;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      `}
     >
-      <Table variant="unstyled">
-        <Tbody>
-          <Tr>
-            <Td>
-              <Link
-                href={ipfsLink}
-                onClick={() => trackClickDInfoIpfsLink()}
-                target="_blank"
-              >
-                {t('ipfs.ipfs_link')}
-                <ExternalLink />
-              </Link>
-            </Td>
-            <Td>
-              <Link href={ipfsLink}>{pendingBackupText(ipfs)}</Link>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>
-              <Link
-                href={ethAddressLink}
-                onClick={() => trackClickDInfoBlockchainLink()}
-                target="_blank"
-              >
-                {t('ipfs.eth_address')}
-                <ExternalLink />
-              </Link>
-            </Td>
-            <Td>
-              <Link href={ethAddressLink}>{pendingBackupText(ethAddress)}</Link>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>{t('ipfs.content_digest')}</Td>
-            <Td>{pendingBackupText(contentDigest)}</Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    </StyledTableContainer>
+      <Box>
+        <Link
+          href={ethAddressLink}
+          onClick={() => trackClickDInfoBlockchainLink()}
+          target="_blank"
+        >
+          {t('ipfs.eth_address')}
+          <ExternalLink />
+        </Link>
+      </Box>
+      <Box>
+        <Link
+          href={ethAddressLink}
+          onClick={() => trackClickDInfoBlockchainLink()}
+          target="_blank"
+        >
+          {pendingBackupText(ethAddress)}
+        </Link>
+      </Box>
+      <Box>
+        <Link
+          href={ipfsLink}
+          onClick={() => trackClickDInfoIpfsLink()}
+          target="_blank"
+        >
+          {t('ipfs.ipfs_link')}
+          <ExternalLink />
+        </Link>
+      </Box>
+      <Box>
+        <Link
+          href={ipfsLink}
+          onClick={() => trackClickDInfoIpfsLink()}
+          target="_blank"
+        >
+          {pendingBackupText(ipfs)}
+        </Link>
+      </Box>
+      <Box>{t('ipfs.content_digest')}</Box>
+      <Box>{pendingBackupText(contentDigest)}</Box>
+    </Grid>
   )
 }

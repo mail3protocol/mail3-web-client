@@ -57,7 +57,7 @@
     },
     "ipfs": {
         "ipfs_link": "IPFS LINK",
-        "eth_address": "ETHEREUM ADDRESS",
+        "eth_address": "SENDER ETHEREUM ADDRESS",
         "content_digest": "CONTENT DIGEST",
         "pending": "PENDING"
     }
