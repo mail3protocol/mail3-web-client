@@ -57,26 +57,29 @@ export function useSubmitMessage() {
   const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { addSendingMessage } = useSending()
+
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
-    window.scroll(0, 0)
-    setIsLoading(true)
-    let html = getHTML()
-    if (isEnableCardSignature) {
-      const cardSignatureContent = await onRenderElementToImage(
-        document.getElementById(CARD_SIGNATURE_ID) as HTMLDivElement
-      )
-      html += `<p style="text-align: center"><img src="${cardSignatureContent}" alt="card-signature" style="width: 200px; height: auto"></p>`
-    }
-    const { html: replacedAttachmentImageHtml, attachments: imageAttachments } =
-      outputHtmlWithAttachmentImages(html)
-    html = replacedAttachmentImageHtml
-    const isSendToDriftBottle = toAddresses.some(
-      (address) => address === DRIFT_BOTTLE_ADDRESS
-    )
-    const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
     try {
+      window.scroll(0, 0)
+      setIsLoading(true)
+      let html = getHTML()
+      if (isEnableCardSignature) {
+        const cardSignatureContent = await onRenderElementToImage(
+          document.getElementById(CARD_SIGNATURE_ID) as HTMLDivElement
+        )
+        html += `<p style="text-align: center"><img src="${cardSignatureContent}" alt="card-signature" style="width: 200px; height: auto"></p>`
+      }
+      const {
+        html: replacedAttachmentImageHtml,
+        attachments: imageAttachments,
+      } = outputHtmlWithAttachmentImages(html)
+      html = replacedAttachmentImageHtml
+      const isSendToDriftBottle = toAddresses.some(
+        (address) => address === DRIFT_BOTTLE_ADDRESS
+      )
+      const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
       const submitMessageResult = await api.submitMessage({
         from: {
           address: fromAddress,
