@@ -9,7 +9,6 @@ import {
   MailDetailPageItem,
   TrackEvent,
   TrackKey,
-  useAccount,
   useDialog,
   useToast,
   useTrackClick,
@@ -98,7 +97,6 @@ export const PreviewComponent: React.FC = () => {
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
-  const account = useAccount()
   const { data } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
@@ -547,7 +545,9 @@ export const PreviewComponent: React.FC = () => {
           ) : null}
           {isShowIpfsTable ? (
             <IpfsInfoTable
-              ethAddress={account}
+              ethAddress={removeMailSuffix(
+                data?.messageInfo?.from.address || ''
+              )}
               ipfs={messageOnChainIdentifierData?.url}
               contentDigest={messageOnChainIdentifierData?.contentDigest}
             />
