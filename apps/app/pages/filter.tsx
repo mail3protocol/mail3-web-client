@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { PageContainer } from 'ui'
+import { PageContainer, Button } from 'ui'
 import styled from '@emotion/styled'
 import { Box, Center } from '@chakra-ui/react'
 import Head from 'next/head'
 import { Navbar } from '../components/Navbar'
-import { MailboxContainer } from '../components/Inbox'
 import { getAuthenticateProps } from '../hooks/useLogin'
 
 export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
@@ -32,7 +31,6 @@ export const ContentWrap = styled(Box)`
   .wrap {
     max-width: 848px;
     margin: 0 auto;
-    text-align: center;
   }
 
   .h2 {
@@ -88,6 +86,16 @@ export const ContentWrap = styled(Box)`
     }
   }
 
+  .area-item {
+    margin-top: 24px;
+
+    .small-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+  }
+
   @media (max-width: 600px) {
     margin-top: 0px;
     border-top-right-radius: 0;
@@ -106,57 +114,92 @@ export const ContentWrap = styled(Box)`
   }
 `
 
-const Subscription: NextPage = () => (
-  <>
-    <Head>
-      <title>Mail3: DiD Filter</title>
-    </Head>
-    <PageContainer>
-      <Navbar />
-    </PageContainer>
-    <NewPageContainer>
-      <Box paddingTop={{ base: '25px', md: '35px' }}>
-        <ContentWrap minH="700px">
-          <Box className="wrap">
-            <Box pt={{ base: '20px', md: '20px' }}>
-              <Box fontSize={{ base: '20px', md: '28px' }} fontWeight="700">
-                DID Filter
+const Filter: NextPage = () => {
+  const relus = useMemo(() => {
+    const relu = {
+      type: 'nft',
+      desc: '【NFT】Chain：Ethereum；NFT：HAHAHAHA；',
+    }
+    return [relu, relu, relu]
+  }, [])
+
+  return (
+    <>
+      <Head>
+        <title>Mail3: DiD Filter</title>
+      </Head>
+      <PageContainer>
+        <Navbar />
+      </PageContainer>
+      <NewPageContainer>
+        <Box paddingTop={{ base: '25px', md: '35px' }}>
+          <ContentWrap minH="700px">
+            <Box className="wrap">
+              <Box pt={{ base: '20px', md: '20px' }} textAlign="center">
+                <Box fontSize={{ base: '20px', md: '28px' }} fontWeight="700">
+                  DID Filter
+                </Box>
+                <Box className="h2">
+                  Use <span>Web3 DID</span> to filter senders automaticly
+                </Box>
+                <Box fontSize="14px">Get emails from who...</Box>
               </Box>
-              <Box className="h2">
-                Use <span>Web3 DID</span> to filter senders automaticly
-              </Box>
-              <Box fontSize="14px">Get emails from who...</Box>
-            </Box>
-            <Center className="rules-area">
-              <Center color="#6F6F6F" width="100%" height="70px">
-                No smart filtering logic is currently set
+              <Center className="rules-area">
+                {relus.length ? (
+                  relus.map((item, index) => {
+                    const { desc, type } = item
+                    return (
+                      <>
+                        <Box className="rule rule-green">
+                          【NFT】Chain：Ethereum；NFT：HAHAHAHA；
+                        </Box>
+                        {index !== relus.length - 1 ? (
+                          <Box className="condition">or</Box>
+                        ) : null}
+                      </>
+                    )
+                  })
+                ) : (
+                  <Center color="#6F6F6F" width="100%" height="70px">
+                    No smart filtering logic is currently set
+                  </Center>
+                )}
               </Center>
 
-              {/* <Box className="rule rule-green">
-                【NFT】Chain：Ethereum；NFT：HAHAHAHA；
+              <Box className="area-item">
+                <Box className="small-title">Requirements logic：</Box>
+                <Center
+                  w="166px"
+                  h="40px"
+                  borderRadius="38px"
+                  background="#4E52F5"
+                  color="#fff"
+                >
+                  OR
+                </Center>
               </Box>
-              <Box className="condition">ro</Box>
-              <Box className="rule rule-purple">
-                【ERC20】Chain：Ethereum；Token：HALO；Amount 》1000
-              </Box>
-              <Box className="condition">ro</Box>
-              <Box className="rule rule-purple">
-                【ERC20】Chain：Ethereum；Token：HALO；Amount 》1000
-              </Box>
-              <Box className="condition">ro</Box>
-              <Box className="rule rule-purple">
-                【ERC20】Chain：Ethereum；Token：HALO；Amount 》1000
-              </Box>
-              <Box className="condition">ro</Box>
-              <Box className="rule rule-purple">
-                【ERC20】Chain：Ethereum；Token：HALO；Amount 》1000
-              </Box> */}
-            </Center>
-          </Box>
-        </ContentWrap>
-      </Box>
-    </NewPageContainer>
-  </>
-)
 
-export default Subscription
+              <Box className="area-item">
+                <Box className="small-title">Requirements logic：</Box>
+                <Box className="rule-generator-area" />
+              </Box>
+
+              <Box>
+                <Button
+                  w="138px"
+                  onClick={() => {
+                    console.log('save')
+                  }}
+                >
+                  Save
+                </Button>
+              </Box>
+            </Box>
+          </ContentWrap>
+        </Box>
+      </NewPageContainer>
+    </>
+  )
+}
+
+export default Filter
