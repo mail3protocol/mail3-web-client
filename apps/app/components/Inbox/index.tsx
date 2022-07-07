@@ -124,6 +124,7 @@ export const InboxComponent: React.FC = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     refetchInterval: 30000,
+    cacheTime: Infinity,
   })
 
   const newMessages = useMemo(() => {

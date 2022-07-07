@@ -22,7 +22,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
 
-  useEagerConnect()
+  // useEagerConnect()
 
   return (
     <>

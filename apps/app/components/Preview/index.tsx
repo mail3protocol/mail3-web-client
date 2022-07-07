@@ -17,7 +17,6 @@ import {
 import { useTranslation } from 'next-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
-import { truncateMailAddress } from 'shared'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
@@ -125,6 +124,7 @@ export const PreviewComponent: React.FC = () => {
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      cacheTime: Infinity,
       onSuccess(d) {
         if (typeof id !== 'string') return
         const messageInfo = d.info
@@ -377,7 +377,7 @@ export const PreviewComponent: React.FC = () => {
   }
 
   const getNameAddress = (item: AddressResponse) => {
-    const address = truncateMailAddress(item.address)
+    const { address } = item
     if (item.name) return `${item.name} <${address}>`
     return `<${address}>`
   }
@@ -485,7 +485,7 @@ export const PreviewComponent: React.FC = () => {
                     ml={{ base: 0, md: '5px' }}
                     mt={{ base: '5px', md: 0 }}
                   >
-                    {`<${truncateMailAddress(detail.from.address)}>`}
+                    {`<${detail.from.address}>`}
                   </Text>
                 </Box>
                 <Box />
