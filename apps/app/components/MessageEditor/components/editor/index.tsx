@@ -305,7 +305,7 @@ export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
           pb="20px"
           flex={1}
           templateColumns={{ base: '100%', md: 'calc(100% - 200px) 200px' }}
-          templateRows={{ base: 'auto 188px', md: '100%' }}
+          templateRows={{ base: 'calc(100% - 188px) 188px', md: '100%' }}
         >
           <TextEditor />
           <SelectCardSignature />
