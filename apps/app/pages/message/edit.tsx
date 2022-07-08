@@ -188,7 +188,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
       messageInfo.attachments.map((a) => ({
         filename: a.filename,
         contentType: a.contentType,
-        cid: a.contentId,
+        cid: a.contentId.trim(),
         content: '',
         contentDisposition: a.inline ? 'inline' : 'attachment',
       }))

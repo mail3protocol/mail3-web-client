@@ -104,3 +104,17 @@ export function getDriftBottleFrom(str: string): string | undefined {
     .substring(18)
     .trim()
 }
+
+export async function digestMessage(
+  message: string,
+  options?: {
+    algorithm: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512'
+  }
+) {
+  const algorithm = options?.algorithm || 'SHA-256'
+  // eslint-disable-next-line compat/compat
+  const msgUint8 = new TextEncoder().encode(message)
+  const hashBuffer = await crypto.subtle.digest(algorithm, msgUint8)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+}
