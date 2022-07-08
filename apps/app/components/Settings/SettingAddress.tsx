@@ -18,14 +18,13 @@ import {
   Box,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import NextLink from 'next/link'
 import {
   ChevronRightIcon,
   CheckCircleIcon,
   QuestionOutlineIcon,
 } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
-import { useTranslation, Trans } from 'next-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
 import {
@@ -35,18 +34,19 @@ import {
   useTrackClick,
   TrackEvent,
 } from 'hooks'
+import { useLocation } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import { useRouter } from 'next/router'
 import { truncateMiddle, isPrimitiveEthAddress } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
-import RefreshSvg from '../../assets/refresh.svg'
+import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { Alias } from '../../api'
+import { RouterLink } from '../RouterLink'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -237,7 +237,7 @@ export const SettingAddress: React.FC = () => {
 
   const [firstAlias, ...restAliases] = aliases
 
-  const router = useRouter()
+  const router = useLocation()
 
   const refreshButton = (
     <RowButton
@@ -347,7 +347,7 @@ export const SettingAddress: React.FC = () => {
       </Flex>
       {(router.pathname as any) !== RoutePath.Settings ? (
         <Center className="footer" w="full">
-          <NextLink href={RoutePath.SetupSignature} passHref>
+          <RouterLink href={RoutePath.SetupSignature} passHref>
             <Button
               bg="black"
               color="white"
@@ -363,7 +363,7 @@ export const SettingAddress: React.FC = () => {
                 <Text>{t('setup.next')}</Text>
               </Center>
             </Button>
-          </NextLink>
+          </RouterLink>
         </Center>
       ) : null}
     </Container>

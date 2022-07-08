@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router'
+import { useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
 export function useCloseOnChangePathname(onClose: () => void, enable = true) {
-  const router = useRouter()
+  const location = useLocation()
   useEffect(() => {
     if (!enable) return
     onClose()
-  }, [enable, router.pathname])
+  }, [enable, location.pathname])
 }

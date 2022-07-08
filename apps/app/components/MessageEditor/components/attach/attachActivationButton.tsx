@@ -1,6 +1,6 @@
 import { Box, Button, ButtonProps, Center, Icon } from '@chakra-ui/react'
 import React from 'react'
-import AttachSvg from '../../../../assets/upload-attach.svg'
+import { ReactComponent as AttachSvg } from '../../../../assets/upload-attach.svg'
 
 export const AttachActivationButton: React.FC<
   { fileCount?: number } & ButtonProps

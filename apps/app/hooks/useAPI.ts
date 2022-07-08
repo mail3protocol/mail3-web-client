@@ -1,14 +1,13 @@
-import { COOKIE_KEY, useAccount, useJWT } from 'hooks'
+import { useAccount, useJWT, useSetLoginInfo } from 'hooks'
 import { useMemo } from 'react'
-import { useCookies } from 'react-cookie'
 import { API } from '../api'
 
 export const useAPI = () => {
   const account = useAccount()
   const jwt = useJWT()
-  const [, , removeCookie] = useCookies([COOKIE_KEY])
+  const setLoginInfo = useSetLoginInfo()
   const clearCookie = () => {
-    removeCookie(COOKIE_KEY, { path: '/' })
+    setLoginInfo(null)
   }
   return useMemo(() => new API(account, jwt, clearCookie), [account, jwt])
 }

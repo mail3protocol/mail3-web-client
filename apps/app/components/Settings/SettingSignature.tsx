@@ -13,27 +13,27 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import NextLink from 'next/link'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { useTranslation, Trans } from 'next-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import React, { useCallback, useState } from 'react'
 import { Button, CardSignature } from 'ui'
 import { GlobalDimensions, useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
+import { useLocation } from 'react-router-dom'
 import { useObservableCallback, useSubscription } from 'observable-hooks'
 import { pluck, debounceTime, tap } from 'rxjs/operators'
-import { useRouter } from 'next/router'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import unhappySetupMascot from '../../assets/unhappy-setup-mascot.png'
-import EditSvg from '../../assets/edit.svg'
+import { ReactComponent as EditSvg } from '../../assets/edit.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
+import { RouterLink } from '../RouterLink'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -201,7 +201,7 @@ export const SettingSignature: React.FC = () => {
   )
 
   useSubscription(onTextareaChange$, onTextSignatureChange)
-  const router = useRouter()
+  const router = useLocation()
   return (
     <Container>
       <Stack
@@ -323,7 +323,7 @@ export const SettingSignature: React.FC = () => {
       )}
       {router.pathname !== RoutePath.SettingSignature ? (
         <Center className="footer" w="full">
-          <NextLink href={RoutePath.SetupShare} passHref>
+          <RouterLink href={RoutePath.SetupShare} passHref>
             <Button
               bg="black"
               color="white"
@@ -339,7 +339,7 @@ export const SettingSignature: React.FC = () => {
                 <Text>{t('setup.next')}</Text>
               </Center>
             </Button>
-          </NextLink>
+          </RouterLink>
         </Center>
       ) : null}
     </Container>

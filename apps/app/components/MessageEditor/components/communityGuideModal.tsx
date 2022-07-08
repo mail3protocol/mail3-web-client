@@ -14,7 +14,7 @@ import {
 import { Button } from 'ui'
 import React, { useState } from 'react'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import DesktopImage1 from '../../../assets/commuity-guide/desktop1.png'
 import DesktopImage2 from '../../../assets/commuity-guide/desktop2.png'
 import MobileImage1 from '../../../assets/commuity-guide/mobile1.png'

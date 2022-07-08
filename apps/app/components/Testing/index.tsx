@@ -11,10 +11,9 @@ import {
   StackProps,
   Stack,
 } from '@chakra-ui/react'
-import { useTranslation, Trans } from 'next-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import { useAccount, useTrackClick, TrackEvent } from 'hooks'
 import { Button, ConnectWallet } from 'ui'
-import NextLink from 'next/link'
 import { truncateMiddle } from 'shared'
 import {
   DISCORD_URL,
@@ -31,9 +30,10 @@ import {
 } from '../../hooks/useLogin'
 import { MascotSvg } from '../Whitelist/Mascot'
 
-import DiscordSvg from '../../assets/discord-o.svg'
-import TwitterSvg from '../../assets/twitter-o.svg'
+import { ReactComponent as DiscordSvg } from '../../assets/discord-o.svg'
+import { ReactComponent as TwitterSvg } from '../../assets/twitter-o.svg'
 import { RoutePath } from '../../route/path'
+import { RouterLink } from '../RouterLink'
 
 const Container = styled(Flex)`
   height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);
@@ -260,11 +260,11 @@ export const Testing: React.FC = () => {
           />
         </Box>
         {mascotIndex === 2 ? (
-          <NextLink href={RoutePath.Inbox} passHref>
+          <RouterLink href={RoutePath.Inbox} passHref>
             <Button mt="20px" w="185px" onClick={() => trackEnterApp()}>
               {t('enter-app')}
             </Button>
-          </NextLink>
+          </RouterLink>
         ) : null}
         <MascotSvg imageIndex={mascotIndex} />
         <Text fontWeight={700} fontSize="20px" mt="20px">

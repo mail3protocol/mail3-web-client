@@ -1,18 +1,9 @@
 import React from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
 import { Center, Link, Icon } from '@chakra-ui/react'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer } from 'ui'
-import LogoSvg from 'assets/svg/logo-pure.svg'
-import Head from 'next/head'
+import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
 import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
 import { Testing } from '../components/Testing'
-
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale as string, ['testing', 'common'])),
-  },
-})
 
 const Navbar = () => (
   <Center h={`${NAVBAR_HEIGHT}px`}>
@@ -22,16 +13,14 @@ const Navbar = () => (
   </Center>
 )
 
-const TestingPage: NextPage = () => (
+export const TestingPage = () => (
   <>
-    <Head>
+    {/* <Head>
       <title>Mail3: Beta</title>
-    </Head>
+    </Head> */}
     <PageContainer>
       <Navbar />
       <Testing />
     </PageContainer>
   </>
 )
-
-export default TestingPage

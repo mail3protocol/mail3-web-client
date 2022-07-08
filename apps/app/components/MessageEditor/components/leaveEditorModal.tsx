@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { Button } from 'ui'
 import React from 'react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 
 export const LeaveEditorModal: React.FC<{
   isOpen: boolean

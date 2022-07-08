@@ -22,8 +22,9 @@ import {
   WrapItem,
   Wrap,
   TextProps,
+  Image,
 } from '@chakra-ui/react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import React, { useState, useRef, useMemo } from 'react'
 import detectEthereumProvider from '@metamask/detect-provider'
 import MetamaskPng from 'assets/wallets/metamask.png'
@@ -55,12 +56,9 @@ import {
   TrackEvent,
   DesiredWallet,
   TrackKey,
-  COOKIE_KEY,
   useCloseOnChangePathname,
+  useSetLoginInfo,
 } from 'hooks'
-import Image from 'next/image'
-import type { StaticImageData } from 'next/image'
-import { useCookies } from 'react-cookie'
 import { Button } from '../Button'
 
 export interface ConnectModalProps {
@@ -78,7 +76,7 @@ interface ConnectButtonProps extends ButtonProps {
   textProps?: TextProps
 }
 
-const generateIcon = (src: StaticImageData, w = '24px') => (
+const generateIcon = (src: string, w = '24px') => (
   <Image src={src} width={w} height={w} />
 )
 
@@ -276,7 +274,8 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
     []
   )
 
-  const [, , removeCookie] = useCookies([COOKIE_KEY])
+  const setLoginInfo = useSetLoginInfo()
+  const logout = () => setLoginInfo(null)
 
   useCloseOnChangePathname(onClose)
 
@@ -337,7 +336,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                       })
                     }
                   } else {
-                    removeCookie(COOKIE_KEY, { path: '/' })
+                    logout()
                     setLastConnector(ConnectorName.MetaMask)
                     onClose()
                   }
@@ -373,7 +372,7 @@ export const ConenctModal: React.FC<ConnectModalProps> = ({
                     })
                   }
                 } else {
-                  removeCookie(COOKIE_KEY, { path: '/' })
+                  logout()
                   setLastConnector(ConnectorName.WalletConnect)
                   onClose()
                 }

@@ -1,38 +1,29 @@
 import React from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
-import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { Center, Heading, Text } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import Head from 'next/head'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingSignature } from '../../components/Settings/SettingSignature'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
-import { getAuthenticateProps } from '../../hooks/useLogin'
+import { useRedirectHome } from '../../hooks/useRedirectHome'
+import { RouterLink } from '../../components/RouterLink'
 
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'settings',
-        'common',
-      ])),
-    },
-  })
-)
-
-const SetupSignaturePage: NextPage = () => {
+export const SetupSignaturePage = () => {
   const [t] = useTranslation('settings')
   const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
+  const { isAuth, redirectHome } = useRedirectHome()
+  if (!isAuth) {
+    return redirectHome()
+  }
+
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Mail3: Setup Signature</title>
-      </Head>
+      </Head> */}
       <PageContainer>
         <Navbar />
         <SettingContainer>
@@ -45,7 +36,7 @@ const SetupSignaturePage: NextPage = () => {
             <Heading fontSize={['20px', '20px', '28px']}>
               {t('setup.signature.title')}
             </Heading>
-            <Link href={RoutePath.SetupShare} passHref>
+            <RouterLink href={RoutePath.SetupShare} passHref>
               <Button
                 bg="black"
                 color="white"
@@ -63,7 +54,7 @@ const SetupSignaturePage: NextPage = () => {
                   <Text>{t('setup.next')}</Text>
                 </Center>
               </Button>
-            </Link>
+            </RouterLink>
           </Center>
           <SettingSignature />
         </SettingContainer>
@@ -71,5 +62,3 @@ const SetupSignaturePage: NextPage = () => {
     </>
   )
 }
-
-export default SetupSignaturePage

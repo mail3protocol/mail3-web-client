@@ -2,9 +2,9 @@ import { Box, Button, HStack, StyleProps } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 
-import ReplySVG from '../../assets/preview/reply-white.svg'
-import ForwardSVG from '../../assets/preview/forward-white.svg'
-import TrashSVG from '../../assets/preview/trash-white.svg'
+import { ReactComponent as ReplySVG} from '../../assets/preview/reply-white.svg'
+import { ReactComponent as ForwardSVG} from '../../assets/preview/forward-white.svg'
+import { ReactComponent TrashSVG} from '../../assets/preview/trash-white.svg'
 
 interface listItem {
   type: SuspendButtonType

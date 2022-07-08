@@ -23,7 +23,7 @@ import React, {
 } from 'react'
 import { TrackEvent, useDialog, useTrackClick } from 'hooks'
 import { SubmitMessage } from 'models/src/submitMessage'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { AttachActivationButton } from './attachActivationButton'
 import { FilesPanel } from './filesPanel'
 import { convertFileToBase64, kbToMb } from '../../../../utils/file'

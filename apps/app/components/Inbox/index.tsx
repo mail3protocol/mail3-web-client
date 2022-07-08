@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
 import { useInfiniteQuery } from 'react-query'
-import { useRouter } from 'next/router'
+import { useNavigate } from 'react-router-dom'
 import { Button, PageContainer } from 'ui'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
@@ -16,7 +16,7 @@ import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
-import SVGWrite from '../../assets/mailbox/write.svg'
+import { ReactComponent as SVGWrite } from '../../assets/mailbox/write.svg'
 import { SendingDialog } from '../SendingDialog'
 
 export const NewPageContainer = styled(PageContainer)`
@@ -85,7 +85,7 @@ type messagesState = Array<MessageItem> | null
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
-  const router = useRouter()
+  const navi = useNavigate()
   const toast = useToast()
   const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
 
@@ -201,7 +201,7 @@ export const InboxComponent: React.FC = () => {
             className="btn-write"
             onClick={() => {
               trackWriteButton()
-              router.push(RoutePath.NewMessage)
+              navi(RoutePath.NewMessage)
             }}
           >
             <SVGWrite /> <Box ml="10px">Write</Box>

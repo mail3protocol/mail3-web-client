@@ -1,6 +1,5 @@
 import { AspectRatio, Box, Image, Icon, Link, Button } from '@chakra-ui/react'
 import React from 'react'
-import NextLink from 'next/link'
 import styled from '@emotion/styled'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { CloseIcon } from '@chakra-ui/icons'
@@ -8,8 +7,9 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import DriftingBottleBannerImage from '../../assets/driftibottle/banner.png'
 import DriftingBottleBannerMobileImage from '../../assets/driftibottle/banner-mobile.png'
-import GoToEditDriftingBottleButtonSvg from '../../assets/driftibottle/go-to-send-driftingbottle.svg'
+import { ReactComponent as GoToEditDriftingBottleButtonSvg } from '../../assets/driftibottle/go-to-send-driftingbottle.svg'
 import { RoutePath } from '../../route/path'
+import { RouterLink } from '../RouterLink'
 
 export const AnimationContainer = styled(Link)`
   display: block;
@@ -62,7 +62,7 @@ export const DriftbottleBanner: React.FC = () => {
       }}
       mt="24px"
     >
-      <NextLink href={`${RoutePath.NewMessage}?action=driftbottle`} passHref>
+      <RouterLink href={`${RoutePath.NewMessage}?action=driftbottle`} passHref>
         <AnimationContainer
           w="full"
           h="full"
@@ -111,7 +111,7 @@ export const DriftbottleBanner: React.FC = () => {
             <Icon as={GoToEditDriftingBottleButtonSvg} w="full" h="full" />
           </Box>
         </AnimationContainer>
-      </NextLink>
+      </RouterLink>
     </AspectRatio>
   )
 }

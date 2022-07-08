@@ -1,8 +1,14 @@
+/* eslint-disable compat/compat */
 import React, { useMemo } from 'react'
 import { Avatar, Button } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
+import {
+  createSearchParams,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import styled from '@emotion/styled'
 import {
   ConfirmDialog,
@@ -13,9 +19,8 @@ import {
   useToast,
   useTrackClick,
 } from 'hooks'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
-import NextLink from 'next/link'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
@@ -83,12 +88,12 @@ export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [t2] = useTranslation('common')
 
-  const router = useRouter()
+  const [searchParams] = useSearchParams()
+  const { id: _id } = useParams()
+  const id = _id as string
+  const navi = useNavigate()
+  const origin = searchParams.get('origin')
   const toast = useToast()
-  const { id, origin } = router.query as {
-    id: string | undefined
-    origin: string
-  }
   const api = useAPI()
   const dialog = useDialog()
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
@@ -184,12 +189,12 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
-        router.push({
+        navi({
           pathname: RoutePath.NewMessage,
-          query: {
+          search: createSearchParams({
             id,
             action: 'reply',
-          },
+          }).toString(),
         })
       },
     },
@@ -199,12 +204,12 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
-        router.push({
+        navi({
           pathname: RoutePath.NewMessage,
-          query: {
+          search: createSearchParams({
             id,
             action: 'forward',
-          },
+          }).toString(),
         })
       },
     },
@@ -220,7 +225,7 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.deleteMessage(id, { force: false })
           toast(t('status.trash.ok'), { status: 'success' })
-          router.back()
+          navi(-1)
         } catch (error) {
           toast(t('status.trash.fail'))
         }
@@ -252,7 +257,7 @@ export const PreviewComponent: React.FC = () => {
             try {
               await api.deleteMessage(id, { force: true })
               toast(t('status.delete.ok'))
-              router.back()
+              navi(-1)
             } catch (error) {
               toast(t('status.delete.fail'))
             }
@@ -271,7 +276,9 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.moveMessage(id, Mailboxes.INBOX)
           toast(t('status.restore.ok'))
-          router.replace(`${RoutePath.Message}/${id}`)
+          navi(`${RoutePath.Message}/${id}`, {
+            replace: true,
+          })
         } catch (error) {
           toast(t('status.restore.fail'))
         }
@@ -347,7 +354,7 @@ export const PreviewComponent: React.FC = () => {
           left="0px"
           border={{ base: 0, md: '2px solid #292D32' }}
           onClick={() => {
-            router.back()
+            navi(-1)
           }}
         >
           <ChevronLeftIcon w="26px" h="26px" />
@@ -502,29 +509,27 @@ export const PreviewComponent: React.FC = () => {
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (
           <Center pt="16px">
-            <NextLink
-              href={{
-                pathname: RoutePath.NewMessage,
-                query: {
+            <Button
+              variant="solid"
+              bg="#4E52F5"
+              _hover={{
+                bg: '#4E52F5',
+              }}
+              onClick={() => {
+                const search = createSearchParams({
                   force_to: driftBottleFrom,
                   id,
                   action: 'reply',
                   origin: 'driftbottle',
-                },
+                }).toString()
+                navi({
+                  pathname: RoutePath.NewMessage,
+                  search,
+                })
               }}
-              passHref
             >
-              <Button
-                as="a"
-                variant="solid"
-                bg="#4E52F5"
-                _hover={{
-                  bg: '#4E52F5',
-                }}
-              >
-                {t('reply-driftbottle-sender')}
-              </Button>
-            </NextLink>
+              {t('reply-driftbottle-sender')}
+            </Button>
           </Center>
         ) : null}
       </Container>

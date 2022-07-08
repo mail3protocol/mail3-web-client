@@ -1,10 +1,10 @@
 import React from 'react'
 import { Box, HStack, Wrap, WrapItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import Link from 'next/link'
-import SVGInbox from '../../../assets/inbox.svg'
-import SVGSub from '../../../assets/subscrption.svg'
+import { ReactComponent as SVGInbox } from '../../../assets/inbox.svg'
+import { ReactComponent as SVGSub } from '../../../assets/subscrption.svg'
 import { RoutePath } from '../../../route/path'
+import { RouterLink } from '../../RouterLink'
 
 export enum InboxNavType {
   Inbox = 'Inbox',
@@ -66,7 +66,7 @@ export const InboxNav: React.FC<{ currentType: InboxNavType }> = ({
       const isCur = type === currentType
 
       return (
-        <Link
+        <RouterLink
           // eslint-disable-next-line react/no-array-index-key
           key={index}
           href={
@@ -77,7 +77,7 @@ export const InboxNav: React.FC<{ currentType: InboxNavType }> = ({
         >
           <a
             onClick={() => {
-              // report point
+              // track
             }}
           >
             <Wrap className={isCur ? 'wrap cur' : 'wrap'} align="center">
@@ -87,7 +87,7 @@ export const InboxNav: React.FC<{ currentType: InboxNavType }> = ({
               </WrapItem>
             </Wrap>
           </a>
-        </Link>
+        </RouterLink>
       )
     })}
   </HStackContainer>

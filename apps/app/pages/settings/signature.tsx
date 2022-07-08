@@ -1,36 +1,27 @@
 import React from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer } from 'ui'
-import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { Center, Heading } from '@chakra-ui/react'
-import Head from 'next/head'
 import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { Tabs, Tab } from '../../components/Tabs'
 import { SettingSignature } from '../../components/Settings/SettingSignature'
-import { getAuthenticateProps } from '../../hooks/useLogin'
+import { useRedirectHome } from '../../hooks/useRedirectHome'
+import { RouterLink } from '../../components/RouterLink'
 
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'settings',
-        'common',
-      ])),
-    },
-  })
-)
-
-const SettingsSignaturePage: NextPage = () => {
+export const SettingsSignaturePage = () => {
   const [t] = useTranslation('settings')
+  const { isAuth, redirectHome } = useRedirectHome()
+
+  if (!isAuth) {
+    return redirectHome()
+  }
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Mail3: Setting Signature</title>
-      </Head>
+      </Head> */}
       <PageContainer>
         <Navbar />
         <SettingContainer>
@@ -45,16 +36,16 @@ const SettingsSignaturePage: NextPage = () => {
             </Heading>
           </Center>
           <Tabs mb="32px">
-            <Link href={RoutePath.Settings} passHref>
+            <RouterLink href={RoutePath.Settings}>
               <Tab as="a" isActive={false}>
                 {t('settings.tabs.address')}
               </Tab>
-            </Link>
-            <Link href={RoutePath.SettingSignature} passHref>
+            </RouterLink>
+            <RouterLink href={RoutePath.SettingSignature}>
               <Tab as="a" isActive>
                 {t('settings.tabs.signature')}
               </Tab>
-            </Link>
+            </RouterLink>
           </Tabs>
           <SettingSignature />
         </SettingContainer>
@@ -62,5 +53,3 @@ const SettingsSignaturePage: NextPage = () => {
     </>
   )
 }
-
-export default SettingsSignaturePage

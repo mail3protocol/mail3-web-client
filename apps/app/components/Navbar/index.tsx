@@ -11,11 +11,10 @@ import {
   Button,
   Icon,
 } from '@chakra-ui/react'
-import Link from 'next/link'
 import styled from '@emotion/styled'
 import LogoSvg from 'assets/svg/logo-pure.svg'
-import DownTriangleSvg from 'assets/svg/triangle-down.svg'
-import { useTranslation } from 'next-i18next'
+import { ReactComponent as DownTriangleSvg } from 'assets/svg/triangle-down.svg'
+import { useTranslation } from 'react-i18next'
 import { ConnectWallet } from 'ui'
 import {
   Mail3MenuItem,
@@ -24,16 +23,17 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
-import InboxWhiteSvg from '../../assets/inbox-white.svg'
-import DraftSvg from '../../assets/drafts.svg'
-import TrashSvg from '../../assets/trash.svg'
-import SentSvg from '../../assets/sent.svg'
-import SubscrptionSvg from '../../assets/subscrption.svg'
+import { ReactComponent as InboxWhiteSvg } from '../../assets/inbox-white.svg'
+import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
+import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
+import { ReactComponent as SentSvg } from '../../assets/sent.svg'
+import { ReactComponent as SubscrptionSvg } from '../../assets/subscrption.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { Auth, AuthModal } from '../Auth'
+import { RouterLink } from '../RouterLink'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -106,7 +106,7 @@ const Logo = () => {
         <PopoverArrow />
         <PopoverBody padding="20px 16px 30px 16px">
           <Center flexDirection="row" mb="14px">
-            <Link href={RoutePath.Inbox} passHref>
+            <RouterLink href={RoutePath.Inbox} passHref>
               <Button
                 bg="black"
                 color="white"
@@ -128,8 +128,8 @@ const Logo = () => {
                   <Text>{t('navbar.inbox')}</Text>
                 </Center>
               </Button>
-            </Link>
-            <Link href={RoutePath.Subscription} passHref>
+            </RouterLink>
+            <RouterLink href={RoutePath.Subscription} passHref>
               <Button
                 flex="1"
                 ml="9px"
@@ -152,7 +152,7 @@ const Logo = () => {
                   <Text>{t('navbar.subscriptions')}</Text>
                 </Center>
               </Button>
-            </Link>
+            </RouterLink>
           </Center>
           <Text color="#7e7e7e" fontWeight={700} fontSize="18px" mb="6px">
             {t('navbar.other-stuff')}

@@ -1,6 +1,6 @@
 import { useHelpers } from '@remirror/react'
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useNavigate } from 'react-router-dom'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { defer, lastValueFrom, retry } from 'rxjs'
 import { useAPI } from '../../../hooks/useAPI'
@@ -44,7 +44,7 @@ export function useSubmitMessage() {
     onReset,
   } = useSubject()
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const navi = useNavigate()
   const isDisabledSendButton = [
     !fromAddress,
     toAddresses.length <= 0,
@@ -100,7 +100,7 @@ export function useSubmitMessage() {
       }
       await removeDraft(api)
       onReset()
-      await router.push(RoutePath.Inbox)
+      navi(RoutePath.Inbox)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
         textProps: {

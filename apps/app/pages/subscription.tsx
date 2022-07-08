@@ -1,30 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer } from 'ui'
 import styled from '@emotion/styled'
+import { useNavigate } from 'react-router-dom'
 import { Box } from '@chakra-ui/react'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { Navbar } from '../components/Navbar'
 import { FlexButtonBox, MailboxContainer } from '../components/Inbox'
 import { InboxNav, InboxNavType } from '../components/Inbox/Nav'
 import { RoutePath } from '../route/path'
 import { SubscriptionBody } from '../components/SubscriptionBody'
-import SVGWrite from '../assets/mailbox/write.svg'
-import { getAuthenticateProps } from '../hooks/useLogin'
-
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'common',
-        'subscription',
-      ])),
-    },
-  })
-)
+import { ReactComponent as SVGWrite } from '../assets/mailbox/write.svg'
 
 const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -80,15 +65,15 @@ const Sticky: React.FC<StickyProps> = ({ children }) => {
   )
 }
 
-const Subscription: NextPage = () => {
-  const router = useRouter()
+export const SubscriptionPage = () => {
+  const navi = useNavigate()
   const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Mail3: Subscription</title>
-      </Head>
+      </Head> */}
       <Sticky>
         <PageContainer>
           <Navbar />
@@ -102,7 +87,7 @@ const Subscription: NextPage = () => {
               className="btn-write"
               onClick={() => {
                 trackWriteButton()
-                router.push(RoutePath.NewMessage)
+                navi(RoutePath.NewMessage)
               }}
             >
               <SVGWrite /> <Box ml="10px">Write</Box>
@@ -119,5 +104,3 @@ const Subscription: NextPage = () => {
     </>
   )
 }
-
-export default Subscription

@@ -2,18 +2,19 @@ import { Avatar } from 'ui'
 import { Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import classNames from 'classnames'
-import { useTranslation } from 'next-i18next'
-import Link, { LinkProps } from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { useMemo } from 'react'
 import {
   isPrimitiveEthAddress,
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
-import ChooseSVG from '../../assets/mailbox/choose.svg'
+import { LinkProps } from 'react-router-dom'
+import { ReactComponent as ChooseSVG } from '../../assets/mailbox/choose.svg'
 import { MailboxMessageItemResponse } from '../../api'
 import { formatDateString, removeMailSuffix } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
+import { RouterLink } from '../RouterLink'
 
 export enum AvatarBadgeType {
   None,
@@ -40,7 +41,7 @@ export interface BoxListProps {
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: Record<string, boolean>
   hiddenMap?: Record<string, boolean>
-  getHref: (id: string) => LinkProps['href']
+  getHref: (id: string) => LinkProps['to']
   mailboxType?: Mailboxes
 }
 
@@ -54,7 +55,7 @@ export interface BoxItemProps extends MailboxMessageItemResponse {
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: BoxListProps['chooseMap']
-  href: LinkProps['href']
+  href: LinkProps['to']
   mailboxType?: Mailboxes
 }
 
@@ -292,7 +293,7 @@ const Item: React.FC<BoxItemProps> = ({
           AvatarBox
         )}
       </Box>
-      <Link href={href} passHref>
+      <RouterLink href={href} passHref>
         <Flex
           as="a"
           marginLeft="20px"
@@ -332,7 +333,7 @@ const Item: React.FC<BoxItemProps> = ({
             {formatDateString(date)}
           </Box>
         </Flex>
-      </Link>
+      </RouterLink>
     </ItemFlex>
   )
 }

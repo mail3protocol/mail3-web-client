@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Avatar } from 'ui'
 import { useAtomValue } from 'jotai'
-import ChangeFromAddressSvg from '../../../assets/change-from-address.svg'
+import { ReactComponent as ChangeFromAddressSvg } from '../../../assets/change-from-address.svg'
 import { removeMailSuffix } from '../../../utils'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
 import { Alias } from '../../../api'

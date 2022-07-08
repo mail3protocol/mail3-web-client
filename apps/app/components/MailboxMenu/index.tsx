@@ -3,11 +3,11 @@ import React from 'react'
 import styled from '@emotion/styled'
 
 import { CloseIcon } from '@chakra-ui/icons'
-import ReplySVG from '../../assets/preview/reply-white.svg'
-import ForwardSVG from '../../assets/preview/forward-white.svg'
-import TrashSVG from '../../assets/mailbox/menu/trash.svg'
-import EyeSVG from '../../assets/mailbox/menu/eye.svg'
-import EyeCloseSVG from '../../assets/mailbox/menu/eye-close.svg'
+import { ReactComponent as ReplySVG } from '../../assets/preview/reply-white.svg'
+import { ReactComponent as ForwardSVG } from '../../assets/preview/forward-white.svg'
+import { ReactComponent as TrashSVG } from '../../assets/mailbox/menu/trash.svg'
+import { ReactComponent as EyeSVG } from '../../assets/mailbox/menu/eye.svg'
+import { ReactComponent as EyeCloseSVG } from '../../assets/mailbox/menu/eye-close.svg'
 
 type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 

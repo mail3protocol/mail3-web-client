@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import type { GetServerSideProps, NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Box } from '@chakra-ui/react'
 import { SubmitMessage } from 'models/src/submitMessage'
@@ -8,13 +6,13 @@ import { useAtomValue } from 'jotai'
 import { SignatureStatus, useDidMount } from 'hooks'
 import { useQuery } from 'react-query'
 import { GetMessage } from 'models/src/getMessage'
-import Head from 'next/head'
-import { useTranslation } from 'next-i18next'
+import { useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { MessageEditor } from '../../components/MessageEditor'
 import { Navbar } from '../../components/Navbar'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
-import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 import {
   AttachmentExtraInfo,
   useAttachment,
@@ -28,6 +26,7 @@ import { filterEmails } from '../../utils'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import { GotoInbox } from '../../components/GotoInbox'
+import { useRedirectHome } from '../../hooks/useRedirectHome'
 
 function getDefaultTemplate(content: string) {
   return `<p>
@@ -68,39 +67,15 @@ function getDriftbottleTemplate(content: string, signContent: string) {
 
 export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
 
-interface ServerSideProps {
-  action: Action | null
-  id: string | null
-  // 👇👇 array string is split by `,`
-  to: string[] | null
-  forceTo: string[] | null // only `forceTo` without `messageInfo.to`
-  origin: 'driftbottle' | null
-}
-
-export const getServerSideProps: GetServerSideProps<ServerSideProps> =
-  getAuthenticateProps(async ({ locale, query }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'edit-message',
-        'connect',
-        'common',
-      ])),
-      action: query.action ? query.action : null,
-      id: query.id ? query.id : null,
-      to: query.to ? filterEmails((query.to as string).split(',')) : null,
-      forceTo: query.force_to
-        ? filterEmails((query.force_to as string).split(','))
-        : null,
-      origin: query.origin ? query.origin : null,
-    },
-  }))
-
-const NewMessagePage: NextPage<ServerSideProps> = ({
-  action,
-  id,
-  to,
-  forceTo,
-}) => {
+export const NewMessagePage = () => {
+  const [searchParams] = useSearchParams()
+  const action = searchParams.get('action')
+  const id = searchParams.get('id')
+  const _to = searchParams.get('to')
+  const to = _to ? filterEmails(_to.split(',')) : null
+  const _forceTo = searchParams.get('force_to')
+  const forceTo = _forceTo ? filterEmails(_forceTo.split(',')) : null
+  const { isAuth, redirectHome } = useRedirectHome()
   const api = useAPI()
   const [t] = useTranslation('edit-message')
   const userProperties = useAtomValue(userPropertiesAtom)
@@ -245,6 +220,8 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     }
     return 'Edit Mail'
   }, [action, id])
+  // @todo: use title
+  console.log(title)
 
   const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
 
@@ -322,11 +299,15 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     return replaceHtmlAttachImageSrc(defaultContent, attachments)
   }, [defaultContent, isLoadingAttachments])
 
+  if (!isAuth) {
+    return redirectHome()
+  }
+
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Mail3: {title}</title>
-      </Head>
+      </Head> */}
       <Box
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         px={{
@@ -359,5 +340,3 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     </>
   )
 }
-
-export default NewMessagePage

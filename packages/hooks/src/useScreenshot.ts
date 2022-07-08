@@ -1,4 +1,4 @@
-import html2canvas, { Options } from 'html2canvas'
+import html2canvas, { Options } from 'html2canvas-objectfit-fix'
 import { useState } from 'react'
 
 interface useScreenshotReturn {

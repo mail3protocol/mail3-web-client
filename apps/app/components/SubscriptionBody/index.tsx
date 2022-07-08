@@ -11,8 +11,8 @@ import {
   useTrackClick,
 } from 'hooks'
 import SubTop from '../../assets/subscription/top.png'
-import SVGBell from '../../assets/subscription/bell.svg'
-import SVGBellCur from '../../assets/subscription/bell-cur.svg'
+import { ReactComponent as SVGBell } from '../../assets/subscription/bell.svg'
+import { ReactComponent as SVGBellCur } from '../../assets/subscription/bell-cur.svg'
 
 import Mail3 from '../../assets/subscription/logo/Mail3.png'
 import Bankless from '../../assets/subscription/logo/Bankless.png'

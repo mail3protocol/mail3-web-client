@@ -1,21 +1,11 @@
-import { useDidMount } from 'hooks'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { useDidMount, useLoginInfo } from 'hooks'
+import { useSearchParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { API } from '../api'
-import { useLoginInfo } from '../hooks/useLoginInfo'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale as string, ['common'])),
-  },
-})
-
-const UnRead: NextPage = () => {
-  const router = useRouter()
-  const fromAddress = router.query.from
+export const UnReadPage = () => {
+  const [searchParams] = useSearchParams()
+  const fromAddress = searchParams.get('from')
   const loginInfo = useLoginInfo()
   useDidMount(() => {
     if (loginInfo == null) {
@@ -46,11 +36,10 @@ const UnRead: NextPage = () => {
       },
     }
   )
-  return (
-    <Head>
-      <title>Mail3: Mail Me Button</title>
-    </Head>
-  )
+  return null
+  // return (
+  //   <Head>
+  //     <title>Mail3: Mail Me Button</title>
+  //   </Head>
+  // )
 }
-
-export default UnRead

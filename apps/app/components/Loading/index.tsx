@@ -1,6 +1,5 @@
-import { Center } from '@chakra-ui/react'
+import { Center, Image } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import Image from 'next/image'
 import React from 'react'
 
 import GIFLoading from '../../assets/mailbox/loading.gif'
