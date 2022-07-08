@@ -18,6 +18,7 @@ import { ChevronLeftIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
+import { useAtomValue } from 'jotai'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import {
@@ -37,10 +38,15 @@ import {
   removeMailSuffix,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
-import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
+import {
+  DRIFT_BOTTLE_ADDRESS,
+  HOME_URL,
+  OFFICE_ADDRESS_LIST,
+} from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 interface MeesageDetailState
   extends Pick<
@@ -83,6 +89,7 @@ export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [t2] = useTranslation('common')
 
+  const userProps = useAtomValue(userPropertiesAtom)
   const router = useRouter()
   const toast = useToast()
   const { id, origin } = router.query as {
@@ -298,11 +305,32 @@ export const PreviewComponent: React.FC = () => {
     window.location.href = `${HOME_URL}/${realAddress}`
   }
 
+  const mailAddress: string = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
+
+  const toMessage = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => detail?.from.address === address
+    )
+
+    if (isOfficeMail && detail && detail.to === null) {
+      return [
+        {
+          address: mailAddress,
+        },
+      ]
+    }
+
+    return detail?.to || []
+  }, [detail])
+
   const avatarList = useMemo(() => {
-    if (!detail?.to) return []
+    if (!detail) return []
     const exists: Array<string> = []
 
-    let arr = [detail.from, ...detail.to]
+    let arr = [detail.from, ...toMessage]
     if (detail.cc) arr = [...arr, ...detail.cc]
     if (detail.bcc) arr = [...arr, ...detail.bcc]
 
