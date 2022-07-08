@@ -38,3 +38,7 @@ yarn-error.log*
 
 # Sentry
 .sentryclirc
+
+/dist
+
+stats.html

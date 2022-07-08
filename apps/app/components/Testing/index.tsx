@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation, Trans } from 'react-i18next'
 import { useAccount, useTrackClick, TrackEvent } from 'hooks'
-import { Button, ConnectWallet } from 'ui'
+import { Button } from 'ui'
 import { truncateMiddle } from 'shared'
 import {
   DISCORD_URL,
@@ -34,6 +34,7 @@ import { ReactComponent as DiscordSvg } from '../../assets/discord-o.svg'
 import { ReactComponent as TwitterSvg } from '../../assets/twitter-o.svg'
 import { RoutePath } from '../../route/path'
 import { RouterLink } from '../RouterLink'
+import { ConnectWallet } from '../ConnectWallet'
 
 const Container = styled(Flex)`
   height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);

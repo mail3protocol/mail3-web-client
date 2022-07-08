@@ -11,6 +11,7 @@ import { SetupSharePage } from '../pages/setup/share'
 import { SubscriptionPage } from '../pages/subscription'
 import { UnReadPage } from '../pages/unread'
 import { TestingPage } from '../pages/testing'
+import { MessagePage } from '../pages/message/[id]'
 
 interface Mail3RouterProps extends RouteProps {
   key: string
@@ -37,8 +38,8 @@ export const routes: Mail3RouterProps[] = [
   {
     path: RoutePath.Message,
     key: 'message',
-    params: 'id',
-    element: <NewMessagePage />,
+    params: '/:id',
+    element: <MessagePage />,
   },
   {
     path: RoutePath.Sent,
@@ -61,7 +62,7 @@ export const routes: Mail3RouterProps[] = [
     element: <SetupAddressPage />,
   },
   {
-    path: RoutePath.SettingSignature,
+    path: RoutePath.SetupSignature,
     key: 'setup-signature',
     element: <SettingsSignaturePage />,
   },

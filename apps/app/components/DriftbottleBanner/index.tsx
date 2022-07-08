@@ -55,10 +55,8 @@ export const DriftbottleBanner: React.FC = () => {
       position="relative"
       w="full"
       ratio={{
-        base:
-          DriftingBottleBannerMobileImage.width /
-          DriftingBottleBannerMobileImage.height,
-        md: DriftingBottleBannerImage.width / DriftingBottleBannerImage.height,
+        base: 1340 / 400,
+        md: 2400 / 400,
       }}
       mt="24px"
     >
@@ -94,11 +92,11 @@ export const DriftbottleBanner: React.FC = () => {
             <CloseIcon w="inherit" h="inherit" />
           </Button>
           <Image
-            src={DriftingBottleBannerImage.src}
+            src={DriftingBottleBannerImage}
             display={{ base: 'none', md: 'block' }}
           />
           <Image
-            src={DriftingBottleBannerMobileImage.src}
+            src={DriftingBottleBannerMobileImage}
             display={{ base: 'block', md: 'none' }}
           />
           <Box

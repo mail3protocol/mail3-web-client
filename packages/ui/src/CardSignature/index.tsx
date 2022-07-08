@@ -1,12 +1,12 @@
 import React from 'react'
 import { Flex, Center, Text, Image as RowImage } from '@chakra-ui/react'
-// @ts-ignore
-import stampBg from 'assets/svg/stamp-bg.svg?url'
-// @ts-ignore
+import stampBg from 'assets/svg/stamp-bg.svg'
 import StampPng from 'assets/png/stamp.png'
 import QrCode from 'qrcode.react'
 import { MAIL_SERVER_URL } from 'app/constants'
 import { Avatar } from '../Avatar'
+
+const stampPng = StampPng as any
 
 export interface SignatureCardProps {
   account: string
@@ -38,7 +38,7 @@ export const CardSignature = React.forwardRef<
       <Avatar isSquare w="100px" h="100px" address={account} />
     </Flex>
     <Flex position="absolute" bottom="0" left="-10px">
-      <RowImage src={StampPng.src} width="163px" height="144px" />
+      <RowImage src={stampPng} width="163px" height="144px" />
     </Flex>
     <Flex position="absolute" bottom="45px" right="45px">
       <Text

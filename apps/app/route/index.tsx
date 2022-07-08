@@ -7,7 +7,11 @@ export const Routers: React.FC = () => (
     <Suspense fallback={null}>
       <Routes>
         {routes.map((route) => (
-          <Route {...route} key={route.key} />
+          <Route
+            {...route}
+            key={route.key}
+            path={`${route.path}${route.params ?? ''}`}
+          />
         ))}
       </Routes>
     </Suspense>

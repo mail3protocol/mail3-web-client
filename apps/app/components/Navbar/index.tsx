@@ -12,10 +12,9 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import LogoSvg from 'assets/svg/logo-pure.svg'
+import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
 import { ReactComponent as DownTriangleSvg } from 'assets/svg/triangle-down.svg'
 import { useTranslation } from 'react-i18next'
-import { ConnectWallet } from 'ui'
 import {
   Mail3MenuItem,
   TrackEvent,
@@ -34,6 +33,7 @@ import { ConnectedButton } from '../ConnectedButton'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { Auth, AuthModal } from '../Auth'
 import { RouterLink } from '../RouterLink'
+import { ConnectWallet } from '../ConnectWallet'
 
 export interface NavbarProps {
   showInbox?: boolean

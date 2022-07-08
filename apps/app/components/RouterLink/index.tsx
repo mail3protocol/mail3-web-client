@@ -11,7 +11,8 @@ export const RouterLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
   ({ href, children, ...rest }, ref) => {
     const child: any = React.Children.only(children)
     const internalOnClick = useLinkClickHandler(href)
-    const { onClick, ...othersProps } = rest
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { onClick, passHref: _, ...othersProps } = rest
     function handleClick(
       event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
     ) {
@@ -27,6 +28,7 @@ export const RouterLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
     const childProps = {
       ...othersProps,
       onClick: handleClick,
+      href,
       ref,
     }
     return React.cloneElement(child, childProps)

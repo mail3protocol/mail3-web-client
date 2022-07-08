@@ -59,7 +59,7 @@ import {
   useCloseOnChangePathname,
   useSetLoginInfo,
 } from 'hooks'
-import { Button } from '../Button'
+import { Button } from 'ui/src/Button'
 
 export interface ConnectModalProps {
   isOpen: boolean

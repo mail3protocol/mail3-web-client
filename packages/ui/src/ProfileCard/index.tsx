@@ -5,7 +5,7 @@ import QrCode from 'qrcode.react'
 import { Avatar, Button } from 'ui'
 import classNames from 'classnames'
 
-import LogoSvg from 'assets/svg/logo-pure.svg'
+import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
 import PngMailMeButton from './assets/mail3-button.png'
 import PngBorder from './assets/border.png'
 import PngAddressBorder from './assets/address-border.png'
@@ -146,7 +146,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
           'is-dev': isDev,
         })}
       >
-        <Image src={PngBorder.src} className="border" alt="" />
+        <Image src={PngBorder} className="border" alt="" />
         <Box className="content">
           <Center flexDirection="column">
             <Box pt="35px">
@@ -156,7 +156,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
               <Box position="relative" zIndex={2}>
                 <Avatar address={address} w="72px" h="72px" />
               </Box>
-              <Image src={PngSeal.src} className="seal" />
+              <Image src={PngSeal} className="seal" />
             </Box>
             <Box className="address">
               <Text className="p">
@@ -164,7 +164,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
                 <span>{` ${mailSuffix}`}</span>
               </Text>
               <Box className="address-border">
-                <Image w="100%" h="100%" src={PngAddressBorder.src} alt="" />
+                <Image w="100%" h="100%" src={PngAddressBorder} alt="" />
               </Box>
             </Box>
             <HStack spacing="24px" mt="16px">
@@ -179,7 +179,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
             </Box>
 
             <Button className="button">
-              <Image src={PngMailMeButton.src} w="100%" height="100%" />
+              <Image src={PngMailMeButton} w="100%" height="100%" />
             </Button>
           </Center>
         </Box>

@@ -6,9 +6,9 @@ import {
   useConnectWalletDialog,
   useEagerConnect,
 } from 'hooks'
+import { Button } from 'ui/src/Button'
 import { ButtonProps } from '@chakra-ui/react'
 import { ConenctModal } from './ConnectModal'
-import { Button } from '../Button'
 
 export interface ConnectWalletProps extends ButtonProps {
   renderConnected: (address: string) => React.ReactNode
@@ -22,7 +22,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
 
-  // useEagerConnect()
+  useEagerConnect()
 
   return (
     <>
