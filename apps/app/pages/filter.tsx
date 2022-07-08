@@ -11,13 +11,14 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  FormHelperText,
   Flex,
   Spacer,
   Input,
+  Divider,
+  Select,
 } from '@chakra-ui/react'
 import Head from 'next/head'
-import { CloseIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons'
 import { Navbar } from '../components/Navbar'
 import { getAuthenticateProps } from '../hooks/useLogin'
 
@@ -114,6 +115,10 @@ export const ContentWrap = styled(Box)`
     border: 1px solid #000000;
     border-radius: 16px;
     min-height: 200px;
+  }
+
+  .form-wrap {
+    padding: 20px;
   }
 
   @media (max-width: 600px) {
@@ -229,21 +234,39 @@ const Filter: NextPage = () => {
                             <CloseIcon />
                           </Box>
                         </Flex>
-                        <FormControl isInvalid={!input}>
-                          <FormLabel htmlFor="email">Email</FormLabel>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={input}
-                            placeholder="min"
-                            onChange={handleInputChange}
-                          />
-                          {input ? null : (
-                            <FormErrorMessage>
-                              Email is required.
-                            </FormErrorMessage>
-                          )}
-                        </FormControl>
+                        <Box className="form-wrap">
+                          <FormControl isRequired>
+                            <FormLabel htmlFor="Chain-1">Chain</FormLabel>
+                            <Input id="Chain-1" placeholder="Chain" />
+                          </FormControl>
+                          <Divider />
+                          <FormControl>
+                            <FormLabel htmlFor="country">Country</FormLabel>
+                            <Select
+                              icon={<ChevronDownIcon />}
+                              id="country"
+                              placeholder="Select country"
+                            >
+                              <option>United Arab Emirates</option>
+                              <option>Nigeria</option>
+                            </Select>
+                          </FormControl>
+                          <FormControl isInvalid={!input}>
+                            <FormLabel htmlFor="email">Email</FormLabel>
+                            <Input
+                              id="email"
+                              type="email"
+                              value={input}
+                              placeholder="min"
+                              onChange={handleInputChange}
+                            />
+                            {input ? null : (
+                              <FormErrorMessage>
+                                Email is required.
+                              </FormErrorMessage>
+                            )}
+                          </FormControl>
+                        </Box>
                       </Box>
                     </GridItem>
 
