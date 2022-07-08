@@ -29,7 +29,6 @@ export const IpfsInfoTable: React.FC<{
   const ethAddressLink = ethAddress
     ? `https://etherscan.io/address/${ethAddress}`
     : undefined
-
   const trackClickDInfoBlockchainLink = useTrackClick(
     TrackEvent.clickDInfoBlockchainLink
   )
