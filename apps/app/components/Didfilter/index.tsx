@@ -13,6 +13,11 @@ import {
   Spacer,
   Input,
   Divider,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react'
 import { Select, GroupBase } from 'chakra-react-select'
 
@@ -131,14 +136,14 @@ interface SelectOption {
 
 interface FormItemSelectProps {
   type: DidFilterModel.RuleType
+  itemIndex?: number
   ruleId?: string
-  itemId?: string
 }
 
 const FormItemSelect: React.FC<FormItemSelectProps> = ({
   type,
   ruleId,
-  itemId,
+  itemIndex,
 }) => {
   const { data, isLoading } = useQuery<Array<string>>(
     [type],
@@ -166,25 +171,28 @@ const FormItemSelect: React.FC<FormItemSelectProps> = ({
   )
 
   const itemName = type
-  const domId = `select-${ruleId}-${itemId}`
+  const domId = `select-${ruleId}-${itemIndex}`
 
   return (
-    <FormControl>
+    <FormControl mt="16px" isRequired>
       <FormLabel htmlFor={domId}>{itemName}</FormLabel>
-      <Select<SelectOption, true, GroupBase<SelectOption>>
-        name={itemName}
-        options={options}
-        placeholder="Search or paste address"
-        closeMenuOnSelect
-        isClearable
-        isLoading={isLoading}
-      />
+      <Box border="1px solid #000000" borderRadius="6px">
+        <Select<SelectOption, true, GroupBase<SelectOption>>
+          name={itemName}
+          options={options}
+          placeholder="Search or paste address"
+          closeMenuOnSelect
+          isClearable
+          isLoading={isLoading}
+        />
+      </Box>
     </FormControl>
   )
 }
 
 const GeneratorItem: React.FC<any> = ({ chain, nft }, { ruleId, onClose }) => {
   const type = DidFilterModel.RuleType.NFT
+  let itemIndex = 0
 
   return (
     <Box>
@@ -204,24 +212,29 @@ const GeneratorItem: React.FC<any> = ({ chain, nft }, { ruleId, onClose }) => {
       </Flex>
       <Box className="form-wrap">
         <FormControl isRequired>
-          <FormLabel htmlFor="Chain-1">Chain</FormLabel>
-          <Input id="Chain-1" placeholder="Chain" />
+          <FormLabel htmlFor={`${type}-${++itemIndex}`}>Chain</FormLabel>
+          <Box border="1px solid #000000" borderRadius="6px">
+            <Input
+              id={`Chain-${itemIndex}`}
+              placeholder="Chain"
+              value={DidFilterModel.chain.Ethereum}
+              pointerEvents="none"
+              border="none"
+            />
+          </Box>
         </FormControl>
-        <Divider />
-        <FormItemSelect type={type} />
-        {/* <FormControl isInvalid={!input}>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <Input
-            id="email"
-            type="email"
-            value={input}
-            placeholder="min"
-            onChange={handleInputChange}
-          />
-          {input ? null : (
-            <FormErrorMessage>Email is required.</FormErrorMessage>
-          )}
-        </FormControl> */}
+        <Divider mt="16px" />
+        <FormItemSelect type={type} itemIndex={++itemIndex} />
+        <FormControl mt="16px" isRequired>
+          <FormLabel htmlFor="amount">Minimum amount</FormLabel>
+          <NumberInput min={1}>
+            <NumberInputField id="amount" />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
       </Box>
     </Box>
   )

@@ -2,7 +2,7 @@ export namespace DidFilterModel {
   export type parameters = Array<string>
 
   export enum chain {
-    Ethereum = 'ethereum',
+    Ethereum = 'Ethereum',
   }
 
   export enum method {
