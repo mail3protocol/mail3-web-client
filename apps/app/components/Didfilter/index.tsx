@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Button } from 'ui'
 import styled from '@emotion/styled'
 import {
@@ -13,9 +13,10 @@ import {
   Spacer,
   Input,
   Divider,
-  Select,
 } from '@chakra-ui/react'
-import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons'
+import { AsyncSelect, GroupBase } from 'chakra-react-select'
+
+import { CloseIcon } from '@chakra-ui/icons'
 import { useQuery } from 'react-query'
 
 const ContentWrap = styled(Box)`
@@ -121,28 +122,29 @@ const ContentWrap = styled(Box)`
   }
 `
 
-const FormItemSelect = ({ type, ruleId, itemId}) => {
-  const { data: optionData, isLoading } = useQuery(
-    ['chain', 'nft or token'],
-    async () => {
-      const res = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(['United', 'United2', 'United3'])
-        }, 2000)
-      })
-      return res as []
-    },
-    {
-      refetchOnMount: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  )
+interface SelectOption {
+  label: string
+  value: string
+}
 
-  const options = useMemo(() => {
-    console.log(optionData)
-    return optionData ?? []
-  }, [optionData])
+const FormItemSelect: React.FC<any> = ({ type, ruleId, itemId }) => {
+
+
+
+
+
+
+  const getOptions = () =>
+    new Promise<Array<SelectOption>>((resolve) =>
+      // eslint-disable-next-line no-promise-executor-return
+      setTimeout(() => {
+        const res = ['item1', 'item2', 'item3'].map((item) => ({
+          value: item,
+          label: item,
+        }))
+        resolve(res)
+      }, 2000)
+    )
 
   const itemName = `NFT`
   const domId = `select-${ruleId}-${itemId}`
@@ -150,46 +152,49 @@ const FormItemSelect = ({ type, ruleId, itemId}) => {
   return (
     <FormControl>
       <FormLabel htmlFor={domId}>{itemName}</FormLabel>
-      <Select
+      {/* <Select
         icon={<ChevronDownIcon />}
         id={domId}
         placeholder={`Select ${itemName}`}
       >
-        {options.map((item, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <option key={index}>{item}</option>
-        ))}
-      </Select>
+      </Select> */}
+      <AsyncSelect<SelectOption, true, GroupBase<SelectOption>>
+        name={itemName}
+        placeholder="Search or paste address"
+        closeMenuOnSelect
+        defaultOptions
+        cacheOptions
+        loadOptions={getOptions}
+      />
     </FormControl>
   )
 }
 
-const GeneratorItem = ({ form, ruleId, onClose }) => {
-  const { chain, nft } = form
+const GeneratorItem: React.FC<any> = ({ form, ruleId, onClose }) => (
+  // const { chain, nft } = form
 
-  return (
-    <Box>
-      <Flex
-        p="10px 20px"
-        background="#4ADE80"
-        borderRadius="16px 16px 0px 0px"
-        borderBottom="1px solid #000000"
-        color="#fff"
-        fontSize="14px"
-      >
-        <Box>NFT</Box>
-        <Spacer />
-        <Box as="button">
-          <CloseIcon />
-        </Box>
-      </Flex>
-      <Box className="form-wrap">
-        <FormControl isRequired>
-          <FormLabel htmlFor="Chain-1">Chain</FormLabel>
-          <Input id="Chain-1" placeholder="Chain" />
-        </FormControl>
-        <Divider />
-        {/* <FormControl>
+  <Box>
+    <Flex
+      p="10px 20px"
+      background="#4ADE80"
+      borderRadius="16px 16px 0px 0px"
+      borderBottom="1px solid #000000"
+      color="#fff"
+      fontSize="14px"
+    >
+      <Box fontWeight="700">NFT</Box>
+      <Spacer />
+      <Box as="button">
+        <CloseIcon />
+      </Box>
+    </Flex>
+    <Box className="form-wrap">
+      <FormControl isRequired>
+        <FormLabel htmlFor="Chain-1">Chain</FormLabel>
+        <Input id="Chain-1" placeholder="Chain" />
+      </FormControl>
+      <Divider />
+      {/* <FormControl>
           <FormLabel htmlFor="country">Country</FormLabel>
           <Select
             icon={<ChevronDownIcon />}
@@ -200,7 +205,8 @@ const GeneratorItem = ({ form, ruleId, onClose }) => {
             <option>Nigeria</option>
           </Select>
         </FormControl> */}
-        <FormControl isInvalid={!input}>
+      <FormItemSelect />
+      {/* <FormControl isInvalid={!input}>
           <FormLabel htmlFor="email">Email</FormLabel>
           <Input
             id="email"
@@ -212,11 +218,10 @@ const GeneratorItem = ({ form, ruleId, onClose }) => {
           {input ? null : (
             <FormErrorMessage>Email is required.</FormErrorMessage>
           )}
-        </FormControl>
-      </Box>
+        </FormControl> */}
     </Box>
-  )
-}
+  </Box>
+)
 
 const DidFilter: React.FC = () => {
   const [input, setInput] = useState('')
@@ -285,7 +290,9 @@ const DidFilter: React.FC = () => {
           <Box className="small-title">Requirements logic：</Box>
           <Box className="rule-generator-area">
             <Grid templateColumns="repeat(2, minmax(0px, 1fr))" gap="10px">
-              <GridItem className="rule-item" />
+              <GridItem className="rule-item">
+                <GeneratorItem />
+              </GridItem>
             </Grid>
           </Box>
         </Box>

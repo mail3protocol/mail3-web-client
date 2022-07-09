@@ -24,6 +24,7 @@
         "@sentry/nextjs": "^6.19.7",
         "assets": "*",
         "axios": "^0.26.1",
+        "chakra-react-select": "^3.3.8",
         "classnames": "^2.3.1",
         "cookie": "^0.5.0",
         "dayjs": "^1.11.2",
@@ -47,8 +48,8 @@
         "react-shadow-root": "^6.2.0",
         "remirror": "^1.0.85",
         "rxjs": "^7.5.5",
-        "ui": "*",
-        "shared": "*"
+        "shared": "*",
+        "ui": "*"
     },
     "devDependencies": {
         "@svgr/webpack": "6.2.1",
