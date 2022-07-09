@@ -15,8 +15,14 @@ export namespace DidFilterModel {
     EthGetBlockByNumber = 'eth_getBlockByNumber',
   }
 
+  export enum RuleType {
+    NFT = 'NFT',
+    Token = 'Token',
+  }
+
   export enum standardContractType {
     None = '',
+    NFT = 'NFT',
     ERC20 = 'ERC20',
     ERC721 = 'ERC721',
     ERC1155 = 'ERC1155',

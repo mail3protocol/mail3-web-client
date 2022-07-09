@@ -14,10 +14,11 @@ import {
   Input,
   Divider,
 } from '@chakra-ui/react'
-import { AsyncSelect, GroupBase } from 'chakra-react-select'
+import { Select, GroupBase } from 'chakra-react-select'
 
 import { CloseIcon } from '@chakra-ui/icons'
 import { useQuery } from 'react-query'
+import { DidFilterModel } from '../../api/didFilterModel'
 
 const ContentWrap = styled(Box)`
   margin: 20px auto;
@@ -125,88 +126,90 @@ const ContentWrap = styled(Box)`
 interface SelectOption {
   label: string
   value: string
+  icon?: string
 }
 
-const FormItemSelect: React.FC<any> = ({ type, ruleId, itemId }) => {
+interface FormItemSelectProps {
+  type: DidFilterModel.RuleType
+  ruleId?: string
+  itemId?: string
+}
 
+const FormItemSelect: React.FC<FormItemSelectProps> = ({
+  type,
+  ruleId,
+  itemId,
+}) => {
+  const { data, isLoading } = useQuery<Array<string>>(
+    [type],
+    () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          const res = ['item1', 'item2', 'item3']
+          resolve(res)
+        }, 2000)
+      }),
+    {
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
 
+  const options = useMemo(
+    () =>
+      data?.map((item) => ({
+        value: item,
+        label: item,
+      })) ?? [],
+    [data]
+  )
 
-
-
-
-  const getOptions = () =>
-    new Promise<Array<SelectOption>>((resolve) =>
-      // eslint-disable-next-line no-promise-executor-return
-      setTimeout(() => {
-        const res = ['item1', 'item2', 'item3'].map((item) => ({
-          value: item,
-          label: item,
-        }))
-        resolve(res)
-      }, 2000)
-    )
-
-  const itemName = `NFT`
+  const itemName = type
   const domId = `select-${ruleId}-${itemId}`
 
   return (
     <FormControl>
       <FormLabel htmlFor={domId}>{itemName}</FormLabel>
-      {/* <Select
-        icon={<ChevronDownIcon />}
-        id={domId}
-        placeholder={`Select ${itemName}`}
-      >
-      </Select> */}
-      <AsyncSelect<SelectOption, true, GroupBase<SelectOption>>
+      <Select<SelectOption, true, GroupBase<SelectOption>>
         name={itemName}
+        options={options}
         placeholder="Search or paste address"
         closeMenuOnSelect
-        defaultOptions
-        cacheOptions
-        loadOptions={getOptions}
+        isClearable
+        isLoading={isLoading}
       />
     </FormControl>
   )
 }
 
-const GeneratorItem: React.FC<any> = ({ form, ruleId, onClose }) => (
-  // const { chain, nft } = form
+const GeneratorItem: React.FC<any> = ({ chain, nft }, { ruleId, onClose }) => {
+  const type = DidFilterModel.RuleType.NFT
 
-  <Box>
-    <Flex
-      p="10px 20px"
-      background="#4ADE80"
-      borderRadius="16px 16px 0px 0px"
-      borderBottom="1px solid #000000"
-      color="#fff"
-      fontSize="14px"
-    >
-      <Box fontWeight="700">NFT</Box>
-      <Spacer />
-      <Box as="button">
-        <CloseIcon />
-      </Box>
-    </Flex>
-    <Box className="form-wrap">
-      <FormControl isRequired>
-        <FormLabel htmlFor="Chain-1">Chain</FormLabel>
-        <Input id="Chain-1" placeholder="Chain" />
-      </FormControl>
-      <Divider />
-      {/* <FormControl>
-          <FormLabel htmlFor="country">Country</FormLabel>
-          <Select
-            icon={<ChevronDownIcon />}
-            id="country"
-            placeholder="Select country"
-          >
-            <option>United Arab Emirates</option>
-            <option>Nigeria</option>
-          </Select>
-        </FormControl> */}
-      <FormItemSelect />
-      {/* <FormControl isInvalid={!input}>
+  return (
+    <Box>
+      <Flex
+        p="10px 20px"
+        background="#4ADE80"
+        borderRadius="16px 16px 0px 0px"
+        borderBottom="1px solid #000000"
+        color="#fff"
+        fontSize="14px"
+      >
+        <Box fontWeight="700">NFT</Box>
+        <Spacer />
+        <Box as="button">
+          <CloseIcon />
+        </Box>
+      </Flex>
+      <Box className="form-wrap">
+        <FormControl isRequired>
+          <FormLabel htmlFor="Chain-1">Chain</FormLabel>
+          <Input id="Chain-1" placeholder="Chain" />
+        </FormControl>
+        <Divider />
+        <FormItemSelect type={type} />
+        {/* <FormControl isInvalid={!input}>
           <FormLabel htmlFor="email">Email</FormLabel>
           <Input
             id="email"
@@ -219,9 +222,10 @@ const GeneratorItem: React.FC<any> = ({ form, ruleId, onClose }) => (
             <FormErrorMessage>Email is required.</FormErrorMessage>
           )}
         </FormControl> */}
+      </Box>
     </Box>
-  </Box>
-)
+  )
+}
 
 const DidFilter: React.FC = () => {
   const [input, setInput] = useState('')
