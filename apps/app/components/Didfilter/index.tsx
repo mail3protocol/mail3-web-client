@@ -176,7 +176,7 @@ const FormItemSelect: React.FC<FormItemSelectProps> = ({
   return (
     <FormControl mt="16px" isRequired>
       <FormLabel htmlFor={domId}>{itemName}</FormLabel>
-      <Box border="1px solid #000000" borderRadius="6px">
+      <Box>
         <Select<SelectOption, true, GroupBase<SelectOption>>
           name={itemName}
           options={options}
@@ -184,6 +184,28 @@ const FormItemSelect: React.FC<FormItemSelectProps> = ({
           closeMenuOnSelect
           isClearable
           isLoading={isLoading}
+          chakraStyles={{
+            menu: (provided) => ({
+              ...provided,
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+              borderWidth: '1px',
+              borderColor: '#000',
+              _hover: { borderColor: '#000' },
+              borderBottomRadius: 'md',
+            }),
+            menuList: (provided) => ({
+              ...provided,
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+              borderWidth: 0,
+            }),
+            control: (provided) => ({
+              ...provided,
+              borderColor: '#000',
+              _hover: { borderColor: '#000' },
+            }),
+          }}
         />
       </Box>
     </FormControl>
@@ -226,7 +248,11 @@ const GeneratorItem: React.FC<any> = ({ chain, nft }, { ruleId, onClose }) => {
         <FormControl mt="16px" isRequired>
           <FormLabel htmlFor="amount">Minimum amount</FormLabel>
           <NumberInput min={1}>
-            <NumberInputField id="amount" borderColor="#000" />
+            <NumberInputField
+              id="amount"
+              borderColor="#000"
+              _hover={{ borderColor: '#000' }}
+            />
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
