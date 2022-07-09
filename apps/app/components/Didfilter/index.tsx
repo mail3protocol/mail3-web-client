@@ -213,22 +213,20 @@ const GeneratorItem: React.FC<any> = ({ chain, nft }, { ruleId, onClose }) => {
       <Box className="form-wrap">
         <FormControl isRequired>
           <FormLabel htmlFor={`${type}-${++itemIndex}`}>Chain</FormLabel>
-          <Box border="1px solid #000000" borderRadius="6px">
-            <Input
-              id={`Chain-${itemIndex}`}
-              placeholder="Chain"
-              value={DidFilterModel.chain.Ethereum}
-              pointerEvents="none"
-              border="none"
-            />
-          </Box>
+          <Input
+            id={`Chain-${itemIndex}`}
+            placeholder="Chain"
+            value={DidFilterModel.chain.Ethereum}
+            pointerEvents="none"
+            borderColor="#000000"
+          />
         </FormControl>
         <Divider mt="16px" />
         <FormItemSelect type={type} itemIndex={++itemIndex} />
         <FormControl mt="16px" isRequired>
           <FormLabel htmlFor="amount">Minimum amount</FormLabel>
           <NumberInput min={1}>
-            <NumberInputField id="amount" />
+            <NumberInputField id="amount" borderColor="#000" />
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
