@@ -6,7 +6,7 @@ import { useAtomValue } from 'jotai'
 import { SignatureStatus, useDidMount } from 'hooks'
 import { useQuery } from 'react-query'
 import { GetMessage } from 'models/src/getMessage'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { MessageEditor } from '../../components/MessageEditor'
@@ -66,11 +66,18 @@ function getDriftbottleTemplate(content: string, signContent: string) {
 
 export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
 
+export interface MessageData {
+  messageInfo: GetMessage.Response
+  messageContent: GetMessageContent.Response
+}
+
 export const NewMessagePage = () => {
   const [searchParams] = useSearchParams()
   const action = searchParams.get('action')
   const id = searchParams.get('id')
   const _to = searchParams.get('to')
+  const location = useLocation()
+  const messageData = location.state as MessageData | undefined
   const to = _to ? filterEmails(_to.split(',')) : null
   const _forceTo = searchParams.get('force_to')
   const forceTo = _forceTo ? filterEmails(_forceTo.split(',')) : null
@@ -245,7 +252,7 @@ export const NewMessagePage = () => {
       }
     },
     {
-      enabled: !!queryMessageAndContentKeyId,
+      enabled: !!queryMessageAndContentKeyId && messageData != null,
       refetchOnReconnect: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -253,8 +260,12 @@ export const NewMessagePage = () => {
     }
   )
 
-  const messageContent = queryMessageInfoAndContentData?.data?.messageContent
-  const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
+  const messageContent =
+    messageData?.messageContent ??
+    queryMessageInfoAndContentData?.data?.messageContent
+  const messageInfo =
+    messageData?.messageInfo ??
+    queryMessageInfoAndContentData?.data?.messageInfo
 
   useEffect(() => {
     if (isFirstLoadMessage) return
@@ -323,7 +334,9 @@ export const NewMessagePage = () => {
             signatureStatus === SignatureStatus.BothEnabled
           }
           isLoading={
-            queryMessageInfoAndContentData.isLoading || isLoadingAttachments
+            messageData
+              ? false
+              : queryMessageInfoAndContentData.isLoading || isLoadingAttachments
           }
         />
       </Box>

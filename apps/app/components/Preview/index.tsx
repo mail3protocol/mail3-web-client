@@ -189,13 +189,21 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
-        navi({
-          pathname: RoutePath.NewMessage,
-          search: createSearchParams({
-            id,
-            action: 'reply',
-          }).toString(),
-        })
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'reply',
+            }).toString(),
+          },
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+              messsageContent: data?.messageContent,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Forward]: {
@@ -204,13 +212,21 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
-        navi({
-          pathname: RoutePath.NewMessage,
-          search: createSearchParams({
-            id,
-            action: 'forward',
-          }).toString(),
-        })
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'forward',
+            }).toString(),
+          },
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+              messsageContent: data?.messageContent,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Trash]: {
