@@ -7,17 +7,17 @@ import {
   PopoverArrow,
   Box,
   PopoverAnchor,
+  usePopoverContext,
 } from '@chakra-ui/react'
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue } from 'jotai'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import {
   PersonnalCenter,
   TrackEvent,
   TrackKey,
   useConnectWalletDialog,
-  useDidMount,
   useToast,
   useTrackClick,
 } from 'hooks'
@@ -33,14 +33,14 @@ import { copyText } from '../../utils'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
 
-export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
-  const emailAddress = useEmailAddress()
-  const [t] = useTranslation('common')
-  const toast = useToast()
-  const popoverRef = useRef<HTMLElement>(null)
-  const { onOpen } = useConnectWalletDialog()
+const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
+  const context = usePopoverContext()
   const userProps = useAtomValue(userPropertiesAtom)
   const trackItem = useTrackClick(TrackEvent.ClickPersonalCenter)
+  const [t] = useTranslation('common')
+  const emailAddress = useEmailAddress()
+  const { onOpen } = useConnectWalletDialog()
+  const toast = useToast()
   const btns: ButtonListItemProps[] = useMemo(
     () => [
       {
@@ -48,6 +48,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.settings'),
         icon: <SetupSvg />,
         onClick() {
+          context.onClose()
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Settings })
         },
       },
@@ -62,6 +63,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         icon: <ProfileSvg />,
         isExternal: true,
         onClick() {
+          context.onClose()
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Profile })
         },
       },
@@ -69,12 +71,12 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
+          context.onClose()
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
           const addr =
             userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
           toast(t('navbar.copied'))
-          popoverRef?.current?.blur()
         },
       },
       {
@@ -90,12 +92,13 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
     ],
     [address, userProps, emailAddress]
   )
+  return <ButtonList items={btns} />
+}
 
-  const [mounted, setMounted] = useState(false)
-
-  useDidMount(() => {
-    setMounted(true)
-  })
+export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
+  const emailAddress = useEmailAddress()
+  const popoverRef = useRef<HTMLElement>(null)
+  const userProps = useAtomValue(userPropertiesAtom)
 
   const addr = useMemo(() => {
     const defaultAddress = userProps?.defaultAddress
@@ -105,10 +108,6 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
     }
     return emailAddress
   }, [userProps, emailAddress])
-
-  if (!mounted) {
-    return null
-  }
 
   return (
     <Popover
@@ -150,7 +149,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
       >
         <PopoverArrow />
         <PopoverBody padding="20px 16px 20px 16px">
-          <ButtonList items={btns} />
+          <PopoverBodyWrapper address={address} />
         </PopoverBody>
       </PopoverContent>
     </Popover>
