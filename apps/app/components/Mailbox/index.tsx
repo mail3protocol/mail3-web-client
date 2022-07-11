@@ -11,7 +11,10 @@ import {
 } from 'shared'
 import { LinkProps } from 'react-router-dom'
 import { ReactComponent as ChooseSVG } from '../../assets/mailbox/choose.svg'
-import { MailboxMessageItemResponse } from '../../api'
+import {
+  MailboxMessageItemResponse,
+  MailboxMessageDetailResponse,
+} from '../../api'
 import { formatDateString, removeMailSuffix } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
 import { RouterLink } from '../RouterLink'
@@ -57,7 +60,14 @@ export interface BoxItemProps extends MailboxMessageItemResponse {
   chooseMap?: BoxListProps['chooseMap']
   href: LinkProps['to']
   mailboxType?: Mailboxes
+  state?: any
 }
+
+export interface MeesageDetailState
+  extends Pick<
+    MailboxMessageDetailResponse,
+    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc' | 'bcc'
+  > {}
 
 const CircleE = styled(Circle)`
   background: #ffffff;
@@ -129,6 +139,7 @@ const Item: React.FC<BoxItemProps> = ({
   chooseMap,
   href,
   mailboxType,
+  state,
 }) => {
   const [t] = useTranslation('mailboxes')
 
@@ -293,7 +304,7 @@ const Item: React.FC<BoxItemProps> = ({
           AvatarBox
         )}
       </Box>
-      <RouterLink href={href} passHref>
+      <RouterLink href={href} passHref state={state}>
         <Flex
           as="a"
           marginLeft="20px"
@@ -359,6 +370,16 @@ export const Mailbox: React.FC<BoxListProps> = ({
 
       const href = getHref ? getHref(id) : ''
 
+      const state: MeesageDetailState = {
+        date: item.date,
+        subject: item.subject,
+        to: item.to,
+        cc: item.cc,
+        bcc: item.bcc,
+        from: item.from,
+        attachments: item.attachments,
+      }
+
       return (
         <Item
           key={id}
@@ -373,6 +394,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
           }}
           href={href}
           mailboxType={mailboxType}
+          state={state}
         />
       )
     })}
