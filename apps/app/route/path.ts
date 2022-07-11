@@ -14,4 +14,5 @@ export enum RoutePath {
   Subscription = '/subscription',
   Message = '/message',
   Testing = '/testing',
+  Unread = '/unread',
 }

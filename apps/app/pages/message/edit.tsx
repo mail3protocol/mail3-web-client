@@ -10,7 +10,6 @@ import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { MessageEditor } from '../../components/MessageEditor'
-import { Navbar } from '../../components/Navbar'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import {
@@ -316,15 +315,6 @@ export const NewMessagePage = () => {
         }}
         mx="auto"
       >
-        <Box
-          w="full"
-          px={{
-            base: '20px',
-            md: '0',
-          }}
-        >
-          <Navbar />
-        </Box>
         <GotoInbox />
         <MessageEditor
           defaultContent={contentWithAttachmentImage}

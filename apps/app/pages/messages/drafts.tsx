@@ -1,7 +1,5 @@
 import React from 'react'
-import { PageContainer } from 'ui'
 import { DraftsComponent } from '../../components/Drafts'
-import { Navbar } from '../../components/Navbar'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 
 export const DraftsPage = () => {
@@ -14,9 +12,6 @@ export const DraftsPage = () => {
       {/* <Head>
         <title>Mail3: Drafts</title>
       </Head> */}
-      <PageContainer>
-        <Navbar />
-      </PageContainer>
       <DraftsComponent />
     </>
   )

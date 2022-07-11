@@ -1,7 +1,6 @@
 import React from 'react'
 import { PageContainer } from 'ui'
 import { PreviewComponent } from '../../components/Preview'
-import { Navbar } from '../../components/Navbar'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 
 export const MessagePage = () => {
@@ -15,7 +14,6 @@ export const MessagePage = () => {
         <title>Mail3: Read Mail</title>
       </Head> */}
       <PageContainer>
-        <Navbar />
         <PreviewComponent />
       </PageContainer>
     </>

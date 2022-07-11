@@ -1,11 +1,12 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Layout } from '../components/Layout'
 import { routes } from './routes'
 
 export const Routers: React.FC = () => (
   <BrowserRouter>
-    <Suspense fallback={null}>
-      <Routes>
+    <Routes>
+      <Route path="/" element={<Layout />}>
         {routes.map((route) => (
           <Route
             {...route}
@@ -13,7 +14,7 @@ export const Routers: React.FC = () => (
             path={`${route.path}${route.params ?? ''}`}
           />
         ))}
-      </Routes>
-    </Suspense>
+      </Route>
+    </Routes>
   </BrowserRouter>
 )

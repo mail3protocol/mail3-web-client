@@ -4,7 +4,7 @@ import {
   ConfirmDialog,
   useAccount,
   useConnectWalletDialog,
-  useEagerConnect,
+  // useEagerConnect,
 } from 'hooks'
 import { Button } from 'ui/src/Button'
 import { ButtonProps } from '@chakra-ui/react'
@@ -22,7 +22,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
 
-  useEagerConnect()
+  // useEagerConnect()
 
   return (
     <>

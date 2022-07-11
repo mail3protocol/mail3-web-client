@@ -2,7 +2,6 @@ import React from 'react'
 import { PageContainer } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { Center, Heading } from '@chakra-ui/react'
-import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { Tabs, Tab } from '../../components/Tabs'
@@ -23,7 +22,6 @@ export const SettingsSignaturePage = () => {
         <title>Mail3: Setting Signature</title>
       </Head> */}
       <PageContainer>
-        <Navbar />
         <SettingContainer>
           <Center
             position="relative"

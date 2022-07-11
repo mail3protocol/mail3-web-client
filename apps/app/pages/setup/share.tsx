@@ -21,7 +21,6 @@ import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter-blue.svg'
 import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
 import { ReactComponent as SvgArrow } from 'assets/profile/business/arrow.svg'
-import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { userPropertiesAtom } from '../../hooks/useLogin'
@@ -130,7 +129,6 @@ export const SetupSharePage = () => {
         <title>Mail3: Setup Share Profile</title>
       </Head> */}
       <PageContainer>
-        <Navbar />
         <SettingContainer>
           <Center
             position="relative"

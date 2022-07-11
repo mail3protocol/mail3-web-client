@@ -82,7 +82,7 @@ export const routes: Mail3RouterProps[] = [
     element: <SubscriptionPage />,
   },
   {
-    path: '/unread',
+    path: RoutePath.Unread,
     key: 'unread',
     element: <UnReadPage />,
   },

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { Center, Heading, Text } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingSignature } from '../../components/Settings/SettingSignature'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
@@ -25,7 +24,6 @@ export const SetupSignaturePage = () => {
         <title>Mail3: Setup Signature</title>
       </Head> */}
       <PageContainer>
-        <Navbar />
         <SettingContainer>
           <Center
             position="relative"

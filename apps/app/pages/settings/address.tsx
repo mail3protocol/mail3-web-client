@@ -2,7 +2,6 @@ import React from 'react'
 import { PageContainer } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { Center, Heading } from '@chakra-ui/react'
-import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingAddress } from '../../components/Settings/SettingAddress'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
@@ -23,7 +22,6 @@ export const SettingsAddressPage = () => {
         <title>Mail3: Setting Address</title>
       </Head> */}
       <PageContainer>
-        <Navbar />
         <SettingContainer>
           <Center
             position="relative"
