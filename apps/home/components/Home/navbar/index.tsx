@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
-import LogoSvg from 'assets/svg/logo.svg'
-import HomeNavbarSvg from '../../../assets/svg/home-navbar-menu.svg'
+import { ReactComponent as LogoSvg } from 'assets/svg/logo.svg'
+import { ReactComponent as HomeNavbarSvg } from '../../../assets/svg/home-navbar-menu.svg'
 import { Buttons, Menus } from './menu'
 import { RainbowBar } from '../rainbowBar'
 

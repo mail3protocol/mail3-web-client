@@ -3,7 +3,6 @@ import { Flex, Center, Text, Image as RowImage } from '@chakra-ui/react'
 import stampBg from 'assets/svg/stamp-bg.svg'
 import StampPng from 'assets/png/stamp.png'
 import QrCode from 'qrcode.react'
-import { MAIL_SERVER_URL } from 'app/constants'
 import { Avatar } from '../Avatar'
 
 const stampPng = StampPng as any
@@ -49,7 +48,8 @@ export const CardSignature = React.forwardRef<
         lineHeight="10px"
       >
         {truncateMiddle(account, 6, 4)}
-        <br />@{MAIL_SERVER_URL}
+        <br />
+        @mail3.me
       </Text>
     </Flex>
     <Flex position="absolute" bottom="5px">

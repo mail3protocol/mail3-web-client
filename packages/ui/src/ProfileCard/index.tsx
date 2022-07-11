@@ -6,10 +6,16 @@ import { Avatar, Button } from 'ui'
 import classNames from 'classnames'
 
 import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
-import PngMailMeButton from './assets/mail3-button.png'
-import PngBorder from './assets/border.png'
-import PngAddressBorder from './assets/address-border.png'
-import PngSeal from './assets/seal.png'
+import _PngMailMeButton from './assets/mail3-button.png'
+import _PngBorder from './assets/border.png'
+import _PngAddressBorder from './assets/address-border.png'
+import _PngSeal from './assets/seal.png'
+import { unifyImage } from '../utils'
+
+const PngMailMeButton = unifyImage(_PngMailMeButton)
+const PngBorder = unifyImage(_PngBorder)
+const PngAddressBorder = unifyImage(_PngAddressBorder)
+const PngSeal = unifyImage(_PngSeal)
 
 interface ProfileCardProps {
   mailAddress: string

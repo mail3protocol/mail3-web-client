@@ -26,12 +26,12 @@ import {
 } from 'hooks'
 import { copyText, shareToTwitter } from 'shared'
 
-import SvgCopy from 'assets/profile/copy.svg'
-import SvgShare from 'assets/profile/share.svg'
-import SvgTwitter from 'assets/profile/twitter.svg'
-import SvgMore from 'assets/profile/more.svg'
-import SvgEtherscan from 'assets/profile/business/etherscan.svg'
-import SvgCyber from 'assets/profile/business/arrow.svg'
+import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
+import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
+import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
+import { ReactComponent as SvgMore } from 'assets/profile/more.svg'
+import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
+import { ReactComponent as SvgCyber } from 'assets/profile/business/arrow.svg'
 import dynamic from 'next/dynamic'
 
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
