@@ -232,7 +232,13 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </Box>
         <Box className="button-list">
           <Box className="button-wrap-mobile">
-            <Popover offset={[0, 10]} arrowSize={18} autoFocus closeOnBlur>
+            <Popover
+              offset={[0, 10]}
+              arrowSize={18}
+              autoFocus
+              closeOnBlur
+              strategy="fixed"
+            >
               <PopoverTrigger>
                 <Box p="10px">
                   <SvgMore />
