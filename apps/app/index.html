@@ -54,13 +54,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/pages/main.tsx"></script>
-    <script strategy="afterInteractive" vite-if="<{ VITE_GOOGLE_ANALYTICS_ID }> !== undefiend" src="<{ VITE_GOOGLE_ANALYTICS_ID }>"></script>
-    <script vite-if="<{ VITE_GOOGLE_ANALYTICS_ID }> !== undefiend">
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){window.dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', '<{ VITE_GOOGLE_ANALYTICS_ID }>');
-    </script>
   </body>
 </html>

@@ -4,6 +4,7 @@ import { PageContainer } from 'ui'
 import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
 import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
 import { Testing } from '../components/Testing'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 const Navbar = () => (
   <Center h={`${NAVBAR_HEIGHT}px`}>
@@ -13,14 +14,12 @@ const Navbar = () => (
   </Center>
 )
 
-export const TestingPage = () => (
-  <>
-    {/* <Head>
-      <title>Mail3: Beta</title>
-    </Head> */}
+export const TestingPage = () => {
+  useDocumentTitle('Beta')
+  return (
     <PageContainer>
       <Navbar />
       <Testing />
     </PageContainer>
-  </>
-)
+  )
+}

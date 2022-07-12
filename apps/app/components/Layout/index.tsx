@@ -12,6 +12,10 @@ const hideNavbarPaths: Set<string> = new Set([
 
 export const Layout: React.FC = () => {
   const location = useLocation()
+
+  // useEffect(() => {
+  //   gtag('event', 'page_view')
+  // }, [location.pathname])
   return (
     <>
       {hideNavbarPaths.has(location.pathname) ? null : (

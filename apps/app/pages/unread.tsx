@@ -2,6 +2,7 @@ import { useDidMount, useLoginInfo } from 'hooks'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { API } from '../api'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export const UnReadPage = () => {
   const [searchParams] = useSearchParams()
@@ -36,10 +37,6 @@ export const UnReadPage = () => {
       },
     }
   )
+  useDocumentTitle('Mail Me Button')
   return null
-  // return (
-  //   <Head>
-  //     <title>Mail3: Mail Me Button</title>
-  //   </Head>
-  // )
 }
