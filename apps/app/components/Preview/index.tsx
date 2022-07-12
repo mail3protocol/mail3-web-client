@@ -545,9 +545,7 @@ export const PreviewComponent: React.FC = () => {
           ) : null}
           {isShowIpfsTable ? (
             <IpfsInfoTable
-              ethAddress={removeMailSuffix(
-                data?.messageInfo?.from.address || ''
-              )}
+              ethAddress={messageOnChainIdentifierData?.owner_identifier}
               ipfs={messageOnChainIdentifierData?.url}
               contentDigest={messageOnChainIdentifierData?.contentDigest}
             />
