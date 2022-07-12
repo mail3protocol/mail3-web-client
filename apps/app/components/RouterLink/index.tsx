@@ -5,12 +5,13 @@ interface RouterLinkProps
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   href: LinkProps['to']
   passHref?: boolean
+  state?: any
 }
 
 export const RouterLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
-  ({ href, children, ...rest }, ref) => {
+  ({ href, state, children, ...rest }, ref) => {
     const child: any = React.Children.only(children)
-    const internalOnClick = useLinkClickHandler(href)
+    const internalOnClick = useLinkClickHandler(href, { state })
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { onClick, passHref: _, ...othersProps } = rest
     function handleClick(

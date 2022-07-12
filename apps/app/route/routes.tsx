@@ -12,6 +12,7 @@ import { SubscriptionPage } from '../pages/subscription'
 import { UnReadPage } from '../pages/unread'
 import { TestingPage } from '../pages/testing'
 import { MessagePage } from '../pages/message/[id]'
+import { TrashPage } from '../pages/messages/trash'
 
 interface Mail3RouterProps extends RouteProps {
   key: string
@@ -45,6 +46,11 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Sent,
     key: 'sent',
     element: <SentPage />,
+  },
+  {
+    path: RoutePath.Trash,
+    key: 'trash',
+    element: <TrashPage />,
   },
   {
     path: RoutePath.Settings,

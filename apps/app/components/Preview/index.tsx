@@ -5,6 +5,7 @@ import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import {
   createSearchParams,
+  useLocation,
   useNavigate,
   useParams,
   useSearchParams,
@@ -25,12 +26,7 @@ import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
-import {
-  MessageFlagAction,
-  MessageFlagType,
-  MailboxMessageDetailResponse,
-  AddressResponse,
-} from '../../api'
+import { MessageFlagAction, MessageFlagType, AddressResponse } from '../../api'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
@@ -46,12 +42,7 @@ import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
-
-interface MeesageDetailState
-  extends Pick<
-    MailboxMessageDetailResponse,
-    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc' | 'bcc'
-  > {}
+import type { MeesageDetailState } from '../Mailbox'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -91,6 +82,8 @@ export const PreviewComponent: React.FC = () => {
   const [searchParams] = useSearchParams()
   const { id: _id } = useParams()
   const id = _id as string
+  const location = useLocation()
+  const state = location.state as MeesageDetailState | undefined
   const navi = useNavigate()
   const origin = searchParams.get('origin')
   const toast = useToast()
@@ -148,13 +141,18 @@ export const PreviewComponent: React.FC = () => {
         if (!isSeen && isFromDriftBottle) {
           trackOpenDriftbottle()
         }
-        api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
+        if (!isSeen) {
+          api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
+        }
       },
       enabled: typeof id === 'string',
     }
   )
 
   const detail: MeesageDetailState | undefined = useMemo(() => {
+    if (state) {
+      return state
+    }
     if (data?.info) {
       const { date, subject, to, cc, from, attachments, bcc } = data.info
 
@@ -169,7 +167,7 @@ export const PreviewComponent: React.FC = () => {
       }
     }
     return undefined
-  }, [data])
+  }, [data, state])
 
   const content = useMemo(() => {
     if (data?.html) return data.html
@@ -189,13 +187,21 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
-        navi({
-          pathname: RoutePath.NewMessage,
-          search: createSearchParams({
-            id,
-            action: 'reply',
-          }).toString(),
-        })
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'reply',
+            }).toString(),
+          },
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+              messsageContent: data?.messageContent,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Forward]: {
@@ -204,13 +210,21 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
-        navi({
-          pathname: RoutePath.NewMessage,
-          search: createSearchParams({
-            id,
-            action: 'forward',
-          }).toString(),
-        })
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'forward',
+            }).toString(),
+          },
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+              messsageContent: data?.messageContent,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Trash]: {
@@ -495,14 +509,18 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          <PreviewContent>
-            <RenderHTML
-              html={content}
-              attachments={detail.attachments}
-              messageId={id}
-              from={detail.from}
-            />
-          </PreviewContent>
+          {!content ? (
+            <Loading />
+          ) : (
+            <PreviewContent>
+              <RenderHTML
+                html={content}
+                attachments={detail.attachments}
+                messageId={id}
+                from={detail.from}
+              />
+            </PreviewContent>
+          )}
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
