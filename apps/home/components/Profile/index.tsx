@@ -125,7 +125,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const trackTwitter = useTrackClick(TrackEvent.ClickProfileTwitter)
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
   const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
-  // const trackMailme = useTrackClick(TrackEvent.ClickProfileMailMe)
   const trackScoialDimensions = useTrackClick(
     TrackEvent.ClickProfileScoialPlatform
   )
