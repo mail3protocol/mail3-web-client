@@ -1,8 +1,5 @@
 {
     "extends": "tsconfig/next.json",
-    "compilerOptions": {
-        "module": "es2020",
-    },
     "include": [
         "next-env.d.ts",
         "global.d.ts",

@@ -1,5 +1,8 @@
 {
     "extends": "tsconfig/next.json",
+    "compilerOptions": {
+        "module": "esnext",
+    },
     "include": [
         "vite.env.d.ts",
         "next-env.d.ts",
