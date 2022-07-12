@@ -201,7 +201,7 @@ export const PreviewComponent: React.FC = () => {
   useEffect(() => {
     const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
     const contentDigestIsEmtpyStr =
-      messageOnChainIdentifierData?.contentDigest === ''
+      messageOnChainIdentifierData?.content_digest === ''
     if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
       const subscriber = interval(2000)
         .pipe(
@@ -209,7 +209,7 @@ export const PreviewComponent: React.FC = () => {
             fromPipe(defer(() => refetchMessageOnChainIdentifier()))
           ),
           takeWhile(
-            (res) => res.data?.url === '' && res.data?.contentDigest === ''
+            (res) => res.data?.url === '' && res.data?.content_digest === ''
           )
         )
         .subscribe()
@@ -547,7 +547,7 @@ export const PreviewComponent: React.FC = () => {
             <IpfsInfoTable
               ethAddress={messageOnChainIdentifierData?.owner_identifier}
               ipfs={messageOnChainIdentifierData?.url}
-              contentDigest={messageOnChainIdentifierData?.contentDigest}
+              contentDigest={messageOnChainIdentifierData?.content_digest}
             />
           ) : null}
         </Box>

@@ -1,5 +1,5 @@
 export interface MessageOnChainIdentifierResponse {
-  contentDigest: string
+  content_digest: string
   owner_identifier: string
   url: string
 }
