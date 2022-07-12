@@ -203,7 +203,7 @@ export const PreviewComponent: React.FC = () => {
     const contentDigestIsEmtpyStr =
       messageOnChainIdentifierData?.content_digest === ''
     if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
-      const subscriber = interval(2000)
+      const subscriber = interval(3000)
         .pipe(
           switchMap(() =>
             fromPipe(defer(() => refetchMessageOnChainIdentifier()))
