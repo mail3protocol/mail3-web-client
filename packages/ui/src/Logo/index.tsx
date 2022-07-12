@@ -7,9 +7,9 @@ export interface LogoProps extends FlexProps {
 }
 
 /**
- * Example:
+ * # Example:
  *
- * # arrangement
+ * ## arrangement
  * like flex direction:
  *  - 'row'
  *  - 'column'
@@ -30,7 +30,7 @@ export interface LogoProps extends FlexProps {
  * <Logo direction="column" />
  * ```
  *
- * # Font color and icon color
+ * ## Font color and icon color
  * ```tsx
  * <Logo
  *   textProps={{ color: '#fff' }}
