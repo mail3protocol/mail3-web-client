@@ -4322,11 +4322,6 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-base64-arraybuffer@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/base64-arraybuffer/-/base64-arraybuffer-0.2.0.tgz#4b944fac0191aa5907afe2d8c999ccc57ce80f45"
-  integrity sha512-7emyCsu1/xiBXgQZrscw/8KPRT44I4Yq9Pe6EGs3aPRTsWuggML1/1DTuZUuIaJPIm1FTDUVXl4x/yW8s0kQDQ==
-
 base64-arraybuffer@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#1c37589a7c4b0746e34bd1feb951da2df01c1bdc"
@@ -4778,13 +4773,6 @@ css-in-js-utils@^3.1.0:
   integrity sha512-fJAcud6B3rRu+KHYk+Bwf+WFL2MDCJJ1XG9x137tJQ0xYxor7XziQtuGFbWNdqrvF4Tk26O3H73nfVqXt/fW1A==
   dependencies:
     hyphenate-style-name "^1.0.3"
-
-css-line-break@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/css-line-break/-/css-line-break-1.1.1.tgz#d5e9bdd297840099eb0503c7310fd34927a026ef"
-  integrity sha512-1feNVaM4Fyzdj4mKPIQNL2n70MmuYzAXZ1aytlROFX1JsOo070OsugwGjj7nl6jnDJWHDM8zRZswkmeYVWZJQA==
-  dependencies:
-    base64-arraybuffer "^0.2.0"
 
 css-line-break@^2.1.0:
   version "2.1.0"
@@ -6017,14 +6005,7 @@ html-react-parser@^1.4.14:
     react-property "2.0.0"
     style-to-js "1.1.1"
 
-html2canvas-objectfit-fix@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/html2canvas-objectfit-fix/-/html2canvas-objectfit-fix-1.2.0.tgz#968237d8e3ae5eb60c824c25bac22fe258c217dd"
-  integrity sha512-eBQPJyJJPgAlgtMioB42Kv+wHXGgfjUyPdYWZKbF8jUlss4J6xdj5tJM8n2uZ/94NU2UEooN97ypGdzbFE562A==
-  dependencies:
-    css-line-break "1.1.1"
-
-html2canvas@^1.4.1:
+html2canvas@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/html2canvas/-/html2canvas-1.4.1.tgz#7cef1888311b5011d507794a066041b14669a543"
   integrity sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==
