@@ -172,17 +172,8 @@ const Footer = () => {
   const {
     data: isUploadedIpfsKey,
     isLoading: isLoadingIsUploadedIpfsKeyState,
-  } = useQuery(
-    [Query.GetMessageEncryptionKeyState],
-    () =>
-      api
-        .getMessageEncryptionKeyState()
-        .then((res) => res.data.state === 'set'),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
+  } = useQuery([Query.GetMessageEncryptionKeyState], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
   )
 
   return (
