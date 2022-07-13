@@ -16,6 +16,11 @@ const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
 
+const IS_SAFARI =
+  navigator.vendor?.includes('Apple') &&
+  !navigator.userAgent.includes('CriOS') &&
+  !navigator.userAgent.includes('FxiOS')
+
 export interface AvatarProps extends RawAvatarProps {
   address: string
   skeletonProps?: SkeletonProps
@@ -111,7 +116,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         onClick={onClick}
         cursor={onClick ? 'pointer' : undefined}
       >
-        {!IS_IPHONE ? (
+        {!IS_IPHONE || !IS_SAFARI ? (
           <BoringAvatar
             name={address.toLowerCase()}
             variant="marble"
