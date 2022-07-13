@@ -4,9 +4,10 @@ import react from '@vitejs/plugin-react'
 import svgrPlugin from 'vite-plugin-svgr'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
+// import nodePolyfills from 'rollup-plugin-polyfill-node'
 import { visualizer } from 'rollup-plugin-visualizer'
 import radar from 'vite-plugin-radar'
+import inject from '@rollup/plugin-inject'
 
 // https://vitejs.dev/config/
 export default defineConfig((c) => {
@@ -35,7 +36,7 @@ export default defineConfig((c) => {
     },
     build: {
       rollupOptions: {
-        plugins: [nodePolyfills()],
+        plugins: [inject({ Buffer: ['Buffer', 'Buffer'] })],
       },
       commonjsOptions: {
         transformMixedEsModules: true,
