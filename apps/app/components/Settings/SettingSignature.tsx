@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import {
   Center,
   Flex,
@@ -34,6 +35,7 @@ import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
 import { RouterLink } from '../RouterLink'
+import { IS_SAFARI } from '../../constants'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -216,6 +218,12 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.text')}</Text>
             {isLoading ? (
               <Spinner />
+            ) : IS_SAFARI ? (
+              <Switch
+                colorScheme="deepBlue"
+                isChecked={isTextEnable}
+                onChange={onTextEnableChange}
+              />
             ) : (
               <>
                 <Switch
@@ -251,6 +259,12 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.card')}</Text>
             {isLoading ? (
               <Spinner />
+            ) : IS_SAFARI ? (
+              <Switch
+                colorScheme="deepBlue"
+                isChecked={isCardEnable}
+                onChange={onCardEnableChange}
+              />
             ) : (
               <>
                 <Switch
