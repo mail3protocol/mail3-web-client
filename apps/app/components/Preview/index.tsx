@@ -22,6 +22,7 @@ import {
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { useAtomValue } from 'jotai'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
@@ -38,10 +39,15 @@ import {
   removeMailSuffix,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
-import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
+import {
+  DRIFT_BOTTLE_ADDRESS,
+  HOME_URL,
+  OFFICE_ADDRESS_LIST,
+} from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 import type { MeesageDetailState } from '../Mailbox'
 
 const Container = styled(Box)`
@@ -93,6 +99,7 @@ export const PreviewComponent: React.FC = () => {
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
+  const userProps = useAtomValue(userPropertiesAtom)
   const { data } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
@@ -319,11 +326,32 @@ export const PreviewComponent: React.FC = () => {
     window.location.href = `${HOME_URL}/${realAddress}`
   }
 
+  const mailAddress: string = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
+
+  const toMessage = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => detail?.from.address === address
+    )
+
+    if (isOfficeMail && detail && detail.to === null) {
+      return [
+        {
+          address: mailAddress,
+        },
+      ]
+    }
+
+    return detail?.to || []
+  }, [detail])
+
   const avatarList = useMemo(() => {
-    if (!detail?.to) return []
+    if (!detail) return []
     const exists: Array<string> = []
 
-    let arr = [detail.from, ...detail.to]
+    let arr = [detail.from, ...toMessage]
     if (detail.cc) arr = [...arr, ...detail.cc]
     if (detail.bcc) arr = [...arr, ...detail.bcc]
 
