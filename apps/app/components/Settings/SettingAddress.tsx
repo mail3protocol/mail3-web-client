@@ -44,7 +44,7 @@ import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { IS_SAFARI, MAIL_SERVER_URL } from '../../constants'
+import { IS_IPHONE, MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { Alias } from '../../api'
 import { RouterLink } from '../RouterLink'
@@ -114,7 +114,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
     <Text fontSize="14px">{emailAddress}</Text>
     {isLoading ? (
       <Spinner />
-    ) : IS_SAFARI ? (
+    ) : IS_IPHONE ? (
       <Switch
         colorScheme="deepBlue"
         isReadOnly={isChecked}

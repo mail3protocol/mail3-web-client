@@ -45,7 +45,6 @@ export const DRIFT_BOTTLE_ADDRESS =
 export const GOOGLE_ANALYTICS_MODE =
   import.meta.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MODE === 'true' || false
 
-export const IS_SAFARI =
-  navigator.vendor?.includes('Apple') &&
-  !navigator.userAgent.includes('CriOS') &&
-  !navigator.userAgent.includes('FxiOS')
+export const IS_IPHONE =
+  navigator.userAgent.toLowerCase().includes('iphone') &&
+  !navigator.vendor.includes('Google')

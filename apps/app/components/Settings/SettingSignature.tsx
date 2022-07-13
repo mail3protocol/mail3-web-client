@@ -35,7 +35,7 @@ import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
 import { RouterLink } from '../RouterLink'
-import { IS_SAFARI } from '../../constants'
+import { IS_IPHONE } from '../../constants'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -218,7 +218,7 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.text')}</Text>
             {isLoading ? (
               <Spinner />
-            ) : IS_SAFARI ? (
+            ) : IS_IPHONE ? (
               <Switch
                 colorScheme="deepBlue"
                 isChecked={isTextEnable}
@@ -259,7 +259,7 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.card')}</Text>
             {isLoading ? (
               <Spinner />
-            ) : IS_SAFARI ? (
+            ) : IS_IPHONE ? (
               <Switch
                 colorScheme="deepBlue"
                 isChecked={isCardEnable}
