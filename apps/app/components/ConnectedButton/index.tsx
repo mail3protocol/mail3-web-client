@@ -63,20 +63,21 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
           const addr =
             userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
-          toast(t('navbar.copied'))
+          toast(`${t('navbar.copied-to-clipboard')}：${addr}`)
         },
       },
       {
-        href: `${HOME_URL}/${
-          userProps?.defaultAddress.substring(
-            0,
-            userProps.defaultAddress.indexOf('@')
-          ) || address
-        }`,
         label: t('navbar.profile-link'),
         icon: <ProfileSvg />,
-        isExternal: true,
-        onClick() {
+        async onClick() {
+          const href = `${HOME_URL}/${
+            userProps?.defaultAddress.substring(
+              0,
+              userProps.defaultAddress.indexOf('@')
+            ) || address
+          }`
+          await copyText(href)
+          toast(`${t('navbar.copied-to-clipboard')}：${href}`)
           context.onClose()
           trackItem({
             [TrackKey.PersonnalCenter]: PersonnalCenter.MyProfileLink,
