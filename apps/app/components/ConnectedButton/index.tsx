@@ -66,8 +66,8 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
           await copyText(addr)
           toast(
             <Flex>
-              {t('navbar.copied-to-clipboard')}:
-              <Box fontWeight="bold"> {addr}</Box>
+              {t('navbar.copied-to-clipboard')}
+              <Box fontWeight="bold">{addr}</Box>
             </Flex>
           )
         },
