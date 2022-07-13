@@ -27,12 +27,16 @@ import { Stack, Button, Flex, Grid, useDisclosure } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
+import { IpfsModal } from '../../../IpfsModal'
+import { Query } from '../../../../api/query'
+import { useAPI } from '../../../../hooks/useAPI'
 import { useSubject } from '../../hooks/useSubject'
 import { LeaveEditorModal } from '../leaveEditorModal'
 
@@ -90,6 +94,7 @@ const TextEditor = () => {
 }
 
 const Footer = () => {
+  const api = useAPI()
   const { isDisabledSendButton, isLoading, isSubmitted, onSubmit } =
     useSubmitMessage()
   const { subject, toAddresses, ccAddresses, bccAddresses } = useSubject()
@@ -110,6 +115,7 @@ const Footer = () => {
   const [isAllowLeave, setIsAllowLeave] = useState(false)
   const [isLeavingWithSave, setIsLeavingWithSave] = useState(false)
   const [isLeavingWithoutSave, setIsLeavingWithoutSave] = useState(false)
+
   useEffect(() => {
     const isShowLeavingModal = () =>
       !(
@@ -158,8 +164,31 @@ const Footer = () => {
     isLeavingWithoutSave,
   ])
 
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery([Query.GetMessageEncryptionKeyState], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  )
+
   return (
     <>
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async () => {
+            onCloseIpfsModal()
+            await onSubmit()
+          }}
+        />
+      ) : null}
       <LeaveEditorModal
         isOpen={isOpenLeaveEditorModal}
         onClose={onCloseLeaveEditorModal}
@@ -248,7 +277,11 @@ const Footer = () => {
           isLoading={isLoading}
           onClick={() => {
             trackClickSend()
-            onSubmit()
+            if (isUploadedIpfsKey) {
+              onSubmit()
+            } else {
+              onOpenIpfsModal()
+            }
           }}
         >
           {t('send')}

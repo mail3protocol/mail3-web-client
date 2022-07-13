@@ -17,7 +17,7 @@ import {
   useAccount,
   useProvider,
   useSignup,
-  buildSignMessaege,
+  buildSignMessage,
   useToast,
   useTrackClick,
   TrackEvent,
@@ -58,7 +58,7 @@ export const AuthModal: React.FC = () => {
       toast(t('auth.errors.wallet-not-connected'))
       return null
     }
-    const message = buildSignMessaege(nonce, signatureDesc)
+    const message = buildSignMessage(nonce, signatureDesc)
     const signature = await provider.getSigner().signMessage(message)
 
     return {

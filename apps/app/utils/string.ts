@@ -1,4 +1,4 @@
-import { verifyEmail, truncateMiddle } from 'shared'
+import { truncateMiddle, verifyEmail } from 'shared'
 import querystring from 'query-string'
 import type { ParsedUrlQuery } from 'querystring'
 import { MAIL_SERVER_URL } from '../constants'
