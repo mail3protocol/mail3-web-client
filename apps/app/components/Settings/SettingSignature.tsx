@@ -237,6 +237,7 @@ export const SettingSignature: React.FC = () => {
           <Textarea
             as="div"
             contentEditable
+            height="auto"
             placeholder="Here is a sample placeholder"
             dangerouslySetInnerHTML={{
               __html: textSignature,
@@ -294,7 +295,11 @@ export const SettingSignature: React.FC = () => {
                         a: (
                           <Link
                             isExternal
-                            href={generateCyberConnectLink(account)}
+                            href={generateCyberConnectLink(
+                              removeMailSuffix(
+                                userInfo?.defaultAddress || account
+                              )
+                            )}
                             color="#4E52F5"
                           />
                         ),
@@ -315,8 +320,8 @@ export const SettingSignature: React.FC = () => {
           <Mascot
             src={
               isCardEnable && isTextEnable
-                ? happySetupMascot.src
-                : unhappySetupMascot.src
+                ? happySetupMascot
+                : unhappySetupMascot
             }
           />
         </Flex>

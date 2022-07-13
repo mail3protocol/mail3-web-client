@@ -260,7 +260,14 @@ export const SettingAddress: React.FC = () => {
         <Text fontSize={['14px', '14px', '18px']}>{t('address.desc')}</Text>
       </header>
       <FormControl maxW="480px">
-        <FormLabel fontSize="16px" mb="8px">
+        <FormLabel
+          fontSize="16px"
+          mb="8px"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+          }}
+        >
           <Stack
             direction="row"
             spacing="16px"
@@ -343,7 +350,7 @@ export const SettingAddress: React.FC = () => {
         </Text>
       </FormControl>
       <Flex className="mascot">
-        <Mascot src={happySetupMascot.src} />
+        <Mascot src={happySetupMascot} />
       </Flex>
       {(router.pathname as any) !== RoutePath.Settings ? (
         <Center className="footer" w="full">
