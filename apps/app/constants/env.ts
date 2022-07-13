@@ -44,3 +44,8 @@ export const DRIFT_BOTTLE_ADDRESS =
 
 export const GOOGLE_ANALYTICS_MODE =
   import.meta.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MODE === 'true' || false
+
+export const IS_MOBILE =
+  navigator.userAgent.match(
+    /Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i
+  ) !== null
