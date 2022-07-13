@@ -13,10 +13,12 @@ import { useQuery } from 'react-query'
 import BoringAvatar from 'boring-avatars'
 
 const IS_IPHONE =
+  typeof navigator !== 'undefined' &&
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
 
 const IS_SAFARI =
+  typeof navigator !== 'undefined' &&
   navigator.vendor?.includes('Apple') &&
   !navigator.userAgent.includes('CriOS') &&
   !navigator.userAgent.includes('FxiOS')
