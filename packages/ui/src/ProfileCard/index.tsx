@@ -32,7 +32,7 @@ const Container = styled(Box)`
   left: -9999px;
   position: absolute;
   border-radius: 20px;
-  background-image: url(${PngBorder.src});
+  background-image: url(${PngBorder});
   background-repeat: no-repeat;
   background-size: 100%;
 
