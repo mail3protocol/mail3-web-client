@@ -28,6 +28,7 @@ import { copyText } from '../../utils'
 import { HOME_URL } from '../../constants'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 import { RouterLink } from '../../components/RouterLink'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 const Container = styled(Flex)`
   .button-item {
@@ -87,6 +88,8 @@ export const SetupSharePage = () => {
     return `${HOME_URL}/${ads}`
   }, [mailAddress])
 
+  useDocumentTitle('Share')
+
   if (!isAuth) {
     return redirectHome()
   }
@@ -125,9 +128,6 @@ export const SetupSharePage = () => {
 
   return (
     <>
-      {/* <Head>
-        <title>Mail3: Setup Share Profile</title>
-      </Head> */}
       <PageContainer>
         <SettingContainer>
           <Center

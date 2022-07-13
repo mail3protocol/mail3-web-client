@@ -10,6 +10,7 @@ import { InboxNav, InboxNavType } from '../components/Inbox/Nav'
 import { RoutePath } from '../route/path'
 import { SubscriptionBody } from '../components/SubscriptionBody'
 import { ReactComponent as SVGWrite } from '../assets/mailbox/write.svg'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -68,7 +69,7 @@ const Sticky: React.FC<StickyProps> = ({ children }) => {
 export const SubscriptionPage = () => {
   const navi = useNavigate()
   const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
-
+  useDocumentTitle('Subscription')
   return (
     <>
       {/* <Head>

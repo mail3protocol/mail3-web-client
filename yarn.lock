@@ -3207,7 +3207,7 @@
   dependencies:
     type-fest "^1.2.2"
 
-"@rollup/plugin-inject@^4.0.0":
+"@rollup/plugin-inject@^4.0.0", "@rollup/plugin-inject@^4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-inject/-/plugin-inject-4.0.4.tgz#fbeee66e9a700782c4f65c8b0edbafe58678fbc2"
   integrity sha512-4pbcU4J/nS+zuHk+c+OL3WtmEQhqxlZ9uqfjQMQDOHOPld7PsCd8k5LWs8h5wjwJN7MgnAn768F2sDxEP4eNFQ==
@@ -4463,6 +4463,14 @@ buffer@^5.4.3:
   dependencies:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
+
+buffer@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
 
 builtin-modules@^3.0.0:
   version "3.3.0"
@@ -6069,7 +6077,7 @@ idb-keyval@^5.0.2:
   dependencies:
     safari-14-idb-fix "^1.0.6"
 
-ieee754@^1.1.13:
+ieee754@^1.1.13, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -8653,10 +8661,10 @@ v8-compile-cache@^2.0.3:
   resolved "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz"
   integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
 
-vite-plugin-html-env@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/vite-plugin-html-env/-/vite-plugin-html-env-1.2.0.tgz#b441087801b17a638a4576de06020926b14a5d96"
-  integrity sha512-oPj9ronKu5AZ848LTeCL0pcHv8eayY5g2O3dDZmx/Sit4hoSyy7zhTq+Ibty/0ATnq0WOviV1OjwZR2Pu10uJQ==
+vite-plugin-radar@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/vite-plugin-radar/-/vite-plugin-radar-0.4.2.tgz#752967b9302bd5182d8ea528db241d392e100878"
+  integrity sha512-da1mm6nF47PAQyxaMQ7GQgLSgznR1uWnbz7J3mPHHSV9HUMx1ngn4MCB8Jppt/Xmdk99xA6s9z1m4+wJvPrvMQ==
 
 vite-plugin-svgr@^2.2.0:
   version "2.2.0"
