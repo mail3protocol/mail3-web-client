@@ -120,8 +120,8 @@ export enum ProfileScoialPlatformItem {
 
 export enum PersonnalCenter {
   Settings = 'Settings',
-  Profile = 'Profile',
-  CopyAddress = 'CopyAddress',
+  MyProfileLink = 'My Profile Link',
+  MyMail3Address = 'My mail3 Address',
   ChangeWallet = 'ChangeWallet',
 }
 
