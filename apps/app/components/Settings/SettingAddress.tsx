@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import {
   Center,
   Checkbox,
@@ -44,7 +43,7 @@ import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { IS_MOBILE, MAIL_SERVER_URL } from '../../constants'
+import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { Alias } from '../../api'
 import { RouterLink } from '../RouterLink'
@@ -114,21 +113,24 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
     <Text fontSize="14px">{emailAddress}</Text>
     {isLoading ? (
       <Spinner />
-    ) : !IS_MOBILE ? (
-      <Switch
-        colorScheme="deepBlue"
-        isReadOnly={isChecked}
-        isChecked={isChecked}
-        onChange={onChange(uuid, address)}
-      />
     ) : (
-      <Checkbox
-        colorScheme="deepBlue"
-        isReadOnly={isChecked}
-        top="2px"
-        isChecked={isChecked}
-        onChange={onChange(uuid, address)}
-      />
+      <>
+        <Switch
+          colorScheme="deepBlue"
+          isReadOnly={isChecked}
+          isChecked={isChecked}
+          onChange={onChange(uuid, address)}
+          display={['none', 'none', 'block']}
+        />
+        <Checkbox
+          colorScheme="deepBlue"
+          isReadOnly={isChecked}
+          top="2px"
+          isChecked={isChecked}
+          onChange={onChange(uuid, address)}
+          display={['block', 'block', 'none']}
+        />
+      </>
     )}
   </Flex>
 )

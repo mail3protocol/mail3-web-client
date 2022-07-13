@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import {
   Center,
   Flex,
@@ -35,7 +34,6 @@ import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
 import { RouterLink } from '../RouterLink'
-import { IS_MOBILE } from '../../constants'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -218,19 +216,22 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.text')}</Text>
             {isLoading ? (
               <Spinner />
-            ) : !IS_MOBILE ? (
-              <Switch
-                colorScheme="deepBlue"
-                isChecked={isTextEnable}
-                onChange={onTextEnableChange}
-              />
             ) : (
-              <Checkbox
-                colorScheme="deepBlue"
-                isChecked={isTextEnable}
-                top="2px"
-                onChange={onTextEnableChange}
-              />
+              <>
+                <Switch
+                  colorScheme="deepBlue"
+                  isChecked={isTextEnable}
+                  onChange={onTextEnableChange}
+                  display={['none', 'none', 'block']}
+                />
+                <Checkbox
+                  colorScheme="deepBlue"
+                  isChecked={isTextEnable}
+                  top="2px"
+                  onChange={onTextEnableChange}
+                  display={['block', 'block', 'none']}
+                />
+              </>
             )}
           </Flex>
           <Textarea
@@ -250,21 +251,22 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.card')}</Text>
             {isLoading ? (
               <Spinner />
-            ) : !IS_MOBILE ? (
-              <Switch
-                colorScheme="deepBlue"
-                isChecked={isCardEnable}
-                onChange={onCardEnableChange}
-                display={['none', 'none', 'block']}
-              />
             ) : (
-              <Checkbox
-                colorScheme="deepBlue"
-                isChecked={isCardEnable}
-                onChange={onCardEnableChange}
-                top="2px"
-                display={['block', 'block', 'none']}
-              />
+              <>
+                <Switch
+                  colorScheme="deepBlue"
+                  isChecked={isCardEnable}
+                  onChange={onCardEnableChange}
+                  display={['none', 'none', 'block']}
+                />
+                <Checkbox
+                  colorScheme="deepBlue"
+                  isChecked={isCardEnable}
+                  onChange={onCardEnableChange}
+                  top="2px"
+                  display={['block', 'block', 'none']}
+                />
+              </>
             )}
           </Flex>
           <Center
