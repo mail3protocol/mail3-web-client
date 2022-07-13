@@ -8,6 +8,7 @@ import {
   Box,
   PopoverAnchor,
   usePopoverContext,
+  Flex,
 } from '@chakra-ui/react'
 import { Button, Avatar } from 'ui'
 import { useTranslation } from 'react-i18next'
@@ -63,7 +64,12 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
           const addr =
             userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
-          toast(`${t('navbar.copied-to-clipboard')}：${addr}`)
+          toast(
+            <Flex>
+              {t('navbar.copied-to-clipboard')}:
+              <Box fontWeight="bold"> {addr}</Box>
+            </Flex>
+          )
         },
       },
       {
@@ -77,7 +83,12 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
             ) || address
           }`
           await copyText(href)
-          toast(`${t('navbar.copied-to-clipboard')}：${href}`)
+          toast(
+            <Flex>
+              {t('navbar.copied-to-clipboard')}
+              <Box fontWeight="bold">{`${href}`}</Box>
+            </Flex>
+          )
           context.onClose()
           trackItem({
             [TrackKey.PersonnalCenter]: PersonnalCenter.MyProfileLink,

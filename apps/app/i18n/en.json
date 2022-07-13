@@ -12,7 +12,7 @@
             "copy-address": "My mail3 Address",
             "change-wallet": "Change Wallet",
             "copied": "Copied",
-            "copied-to-clipboard": "Copied to clipboard"
+            "copied-to-clipboard": "Copied to clipboard："
         },
         "connect": {
             "metamask": "MetaMask",
