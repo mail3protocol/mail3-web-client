@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import {
   Center,
   Flex,
@@ -34,6 +35,7 @@ import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
 import { RouterLink } from '../RouterLink'
+import { IS_IPHONE } from '../../constants'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -216,6 +218,12 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.text')}</Text>
             {isLoading ? (
               <Spinner />
+            ) : IS_IPHONE ? (
+              <Switch
+                colorScheme="deepBlue"
+                isChecked={isTextEnable}
+                onChange={onTextEnableChange}
+              />
             ) : (
               <>
                 <Switch
@@ -237,6 +245,7 @@ export const SettingSignature: React.FC = () => {
           <Textarea
             as="div"
             contentEditable
+            height="auto"
             placeholder="Here is a sample placeholder"
             dangerouslySetInnerHTML={{
               __html: textSignature,
@@ -250,6 +259,12 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.card')}</Text>
             {isLoading ? (
               <Spinner />
+            ) : IS_IPHONE ? (
+              <Switch
+                colorScheme="deepBlue"
+                isChecked={isCardEnable}
+                onChange={onCardEnableChange}
+              />
             ) : (
               <>
                 <Switch
@@ -294,7 +309,11 @@ export const SettingSignature: React.FC = () => {
                         a: (
                           <Link
                             isExternal
-                            href={generateCyberConnectLink(account)}
+                            href={generateCyberConnectLink(
+                              removeMailSuffix(
+                                userInfo?.defaultAddress || account
+                              )
+                            )}
                             color="#4E52F5"
                           />
                         ),
@@ -315,8 +334,8 @@ export const SettingSignature: React.FC = () => {
           <Mascot
             src={
               isCardEnable && isTextEnable
-                ? happySetupMascot.src
-                : unhappySetupMascot.src
+                ? happySetupMascot
+                : unhappySetupMascot
             }
           />
         </Flex>

@@ -53,6 +53,11 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      if (typeof global === 'undefined') {
+        global = globalThis;
+      }
+    </script>
     <script type="module" src="/pages/main.tsx"></script>
   </body>
 </html>
