@@ -299,3 +299,12 @@ export const useAuthModalOnBack = () => {
     onOpen()
   }, [connector])
 }
+
+export const useLogout = () => {
+  const connector = useConnector()
+  const setUserInfo = useSetLoginInfo()
+  return useCallback(async () => {
+    await connector?.deactivate()
+    setUserInfo(null)
+  }, [connector])
+}
