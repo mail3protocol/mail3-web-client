@@ -148,7 +148,10 @@ export const PreviewComponent: React.FC = () => {
         const isFromDriftBottle = fromAddress === DRIFT_BOTTLE_ADDRESS
         const isOfficialMail =
           fromAddress && OFFICE_ADDRESS_LIST.has(fromAddress)
-        if (isOfficialMail) {
+        if (
+          isOfficialMail &&
+          messageInfo?.subject.includes('Mail3 New Feature')
+        ) {
           trackOfficalMail()
         }
         if (!isSeen && isFromDriftBottle) {
