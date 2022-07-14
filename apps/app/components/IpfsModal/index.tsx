@@ -12,10 +12,11 @@ import {
 import React, { useCallback } from 'react'
 import { Button } from 'ui'
 import {
-  NotConnectWallet,
-  useConnectWalletDialog,
+  useConnector,
   useEagerConnect,
+  useProvider,
   useSignMessage,
+  useToast,
 } from 'hooks'
 import { useTranslation } from 'next-i18next'
 import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
@@ -35,11 +36,17 @@ export const IpfsModal: React.FC<{
 }> = ({ isOpen, onClose, onAfterSignature, isForceConnectWallet = true }) => {
   const api = useAPI()
   const { t } = useTranslation('edit-message')
+  const provider = useProvider()
   const signMessage = useSignMessage()
   useEagerConnect(isForceConnectWallet)
-  const { onOpen: onOpenWalletDialog } = useConnectWalletDialog()
+  const connector = useConnector()
+  const toast = useToast()
   const onGenerateKey = useCallback(async () => {
     try {
+      if (provider == null) {
+        toast(t('need_to_open_wallet'))
+        await connector?.activate()
+      }
       const signedString = await signMessage(stringToBeSigned)
       const signedStringWithSha256 = `0x${await digestMessage(signedString, {
         algorithm: 'SHA-256',
@@ -47,9 +54,7 @@ export const IpfsModal: React.FC<{
       await api.updateMessageEncryptionKey(signedStringWithSha256)
       onAfterSignature?.(signedString)
     } catch (e) {
-      if (e instanceof NotConnectWallet) {
-        onOpenWalletDialog()
-      }
+      console.error(e)
     }
   }, [onAfterSignature, signMessage])
 
