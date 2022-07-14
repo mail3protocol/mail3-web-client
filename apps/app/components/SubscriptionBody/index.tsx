@@ -125,12 +125,12 @@ const Item = (props: ItemProps) => {
     <>
       {isNew && (
         <Box position="absolute" top="-2px" left="-7px">
-          <Center w="75px" h="29px" bg={`url(${SubTop.src})`}>
+          <Center w="75px" h="29px" bg={`url(${SubTop})`}>
             News
           </Center>
         </Box>
       )}
-      <Avatar src={avatarSrc.src} />
+      <Avatar src={avatarSrc} />
       <Box>
         <Center>
           <Box marginLeft="5px" fontWeight="700" fontSize="18px">

@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Image } from '@chakra-ui/react'
+import { Box, Flex, Image } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import React from 'react'
 
@@ -83,9 +83,9 @@ export const NoNewStatus = () => {
         >
           {t('inbox.no-new')}
         </Box>
-        <Center>
+        <Box mr="40px">
           <Image src={IMGNewNone} />
-        </Center>
+        </Box>
       </Box>
     </Flex>
   )

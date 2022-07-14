@@ -125,7 +125,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const trackTwitter = useTrackClick(TrackEvent.ClickProfileTwitter)
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
   const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
-  // const trackMailme = useTrackClick(TrackEvent.ClickProfileMailMe)
   const trackScoialDimensions = useTrackClick(
     TrackEvent.ClickProfileScoialPlatform
   )
@@ -232,7 +231,13 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </Box>
         <Box className="button-list">
           <Box className="button-wrap-mobile">
-            <Popover offset={[0, 10]} arrowSize={18} autoFocus closeOnBlur>
+            <Popover
+              offset={[0, 10]}
+              arrowSize={18}
+              autoFocus
+              closeOnBlur
+              strategy="fixed"
+            >
               <PopoverTrigger>
                 <Box p="10px">
                   <SvgMore />
