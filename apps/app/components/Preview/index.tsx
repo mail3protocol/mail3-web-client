@@ -38,7 +38,11 @@ import {
   removeMailSuffix,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
-import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
+import {
+  DRIFT_BOTTLE_ADDRESS,
+  HOME_URL,
+  OFFICE_ADDRESS_LIST,
+} from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
@@ -95,6 +99,7 @@ export const PreviewComponent: React.FC = () => {
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
+  const trackOfficalMail = useTrackClick(TrackEvent.OpenOfficialMail)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
   const { data } = useQuery(
     [Query.GetMessageInfoAndContent, id],
@@ -139,7 +144,13 @@ export const PreviewComponent: React.FC = () => {
           }
         }
         const isSeen = d.info?.flags.includes(MessageFlagType.Seen)
-        const isFromDriftBottle = d.info?.from.address === DRIFT_BOTTLE_ADDRESS
+        const fromAddress = d.info?.from.address
+        const isFromDriftBottle = fromAddress === DRIFT_BOTTLE_ADDRESS
+        const isOfficialMail =
+          fromAddress && OFFICE_ADDRESS_LIST.has(fromAddress)
+        if (isOfficialMail) {
+          trackOfficalMail()
+        }
         if (!isSeen && isFromDriftBottle) {
           trackOpenDriftbottle()
         }

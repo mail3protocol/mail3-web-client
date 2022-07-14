@@ -64,6 +64,7 @@ export enum TrackEvent {
 
   // mail detail
   ClickMailDetailsPageItem = 'click_mail_details_page_item',
+  OpenOfficialMail = 'open_update_mail',
 
   // app_edit_message
   AppEditMessageChangeFrom = 'click_from',

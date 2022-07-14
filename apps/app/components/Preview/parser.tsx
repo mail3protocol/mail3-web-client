@@ -129,9 +129,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     [attachments, messageId]
   )
 
-  const isOfficeMail = OFFICE_ADDRESS_LIST.some(
-    (address) => from.address === address
-  )
+  const isOfficeMail = OFFICE_ADDRESS_LIST.has(from.address)
 
   const addTags = useMemo(() => {
     if (isOfficeMail) return ['iframe']
