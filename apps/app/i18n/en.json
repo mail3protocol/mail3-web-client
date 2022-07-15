@@ -12,7 +12,8 @@
             "copy-address": "My mail³ Address",
             "change-wallet": "Change Wallet",
             "copied": "Copied",
-            "copied-to-clipboard": "Copied to clipboard："
+            "copied-to-clipboard": "Copied to clipboard：",
+            "logout": "Logout"
         },
         "connect": {
             "metamask": "MetaMask",

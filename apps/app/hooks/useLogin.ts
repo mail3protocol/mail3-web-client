@@ -16,6 +16,7 @@ import {
   ConnectorName,
   metaMaskStore,
   walletConnectStore,
+  useSetLastConnector,
 } from 'hooks'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
@@ -297,5 +298,16 @@ export const useAuthModalOnBack = () => {
     await connector?.deactivate()
     closeAuthModal()
     onOpen()
+  }, [connector])
+}
+
+export const useLogout = () => {
+  const connector = useConnector()
+  const setUserInfo = useSetLoginInfo()
+  const setLastConnector = useSetLastConnector()
+  return useCallback(async () => {
+    await connector?.deactivate()
+    setUserInfo(null)
+    setLastConnector(undefined)
   }, [connector])
 }
