@@ -1,7 +1,7 @@
 export enum TrackEvent {
   // settings
   ClickImageSignature = 'click_image_signature_edit',
-  ClickRegisterENS = 'click_register_new_ens',
+  ClickRegisterENS = 'click_register_new_ENS',
   ClickCyperConnect = 'click_image_signature_edit_cyberconnect',
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
@@ -45,13 +45,13 @@ export enum TrackEvent {
   TestingEnterApp = 'beta1_click_enterapp',
 
   // home
-  HomeLaunchApp = 'mail3_offical_click_launchapp',
+  HomeLaunchApp = 'Mail3_offical_click_launchapp',
   HomeClickWhiteList = 'mail3_offical_click_whitelist',
   HomeClickJoinWhiteList = 'mail3_offical_click_jointhewhitelist',
   HomeClickTestingGo = 'mail3_offical_click_testinggo',
   HomeClickWhitePaper = 'mail3_offical_click_litepaper',
   HomeClickCommunity = 'mail3_offical_click_community',
-  HomeClickGetIn = 'mail3_offical_click_getin',
+  HomeClickGetIn = 'Mail3_offical_click_getin',
   HomeClickContact = 'mail3_offical_click_contactus',
   HomeClickGoTesting = 'Mail3_offical_click_testinggo',
   HomeClickBlackCube = 'mail3_offical_click_blackcube',

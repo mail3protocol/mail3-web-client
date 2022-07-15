@@ -18,7 +18,13 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import { useTranslation, Trans } from 'react-i18next'
 import React, { useCallback, useState } from 'react'
 import { Button } from 'ui'
-import { GlobalDimensions, useAccount, useDialog } from 'hooks'
+import {
+  GlobalDimensions,
+  useAccount,
+  useDialog,
+  useTrackClick,
+  TrackEvent,
+} from 'hooks'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import { useObservableCallback, useSubscription } from 'observable-hooks'
@@ -95,6 +101,9 @@ export const SettingSignature: React.FC = () => {
   const [isTextEnable, setIsTextEnable] = useState(false)
   const [isCardEnable, setIsCardEnable] = useState(false)
   const [textSignature, setTextSignature] = useState('')
+  const trackImageEdit = useTrackClick(TrackEvent.ClickImageSignature)
+  const trackCyberConnect = useTrackClick(TrackEvent.ClickCyperConnect)
+  const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
 
   const { isLoading } = useQuery(
     [Query.Signatures, account],
@@ -298,6 +307,7 @@ export const SettingSignature: React.FC = () => {
               spacing="6px"
               className="edit-button"
               onClick={() => {
+                trackImageEdit()
                 dialog({
                   type: 'warning',
                   title: t('signature.edit-dialog.title'),
@@ -310,6 +320,7 @@ export const SettingSignature: React.FC = () => {
                         a: (
                           <Link
                             isExternal
+                            onClick={() => trackCyberConnect()}
                             href={generateCyberConnectLink(
                               removeMailSuffix(
                                 userInfo?.defaultAddress || account
@@ -349,6 +360,7 @@ export const SettingSignature: React.FC = () => {
               color="white"
               w="250px"
               height="50px"
+              onClick={() => trackNext()}
               _hover={{
                 bg: 'brand.50',
               }}

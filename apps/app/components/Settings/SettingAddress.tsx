@@ -166,6 +166,8 @@ export const SettingAddress: React.FC = () => {
   const dialog = useDialog()
   const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
+  const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
   const {
     data: ensNames,
@@ -349,7 +351,14 @@ export const SettingAddress: React.FC = () => {
                 i18nKey="address.registe-ens"
                 t={t}
                 components={{
-                  a: <Link isExternal href={ENS_DOMAIN} color="#4E52F5" />,
+                  a: (
+                    <Link
+                      isExternal
+                      onClick={() => trackClickRegisterENS()}
+                      href={ENS_DOMAIN}
+                      color="#4E52F5"
+                    />
+                  ),
                 }}
               />
             </Box>
@@ -368,6 +377,7 @@ export const SettingAddress: React.FC = () => {
               color="white"
               w="250px"
               height="50px"
+              onClick={() => trackNext()}
               _hover={{
                 bg: 'brand.50',
               }}

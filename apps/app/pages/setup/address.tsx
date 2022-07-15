@@ -39,7 +39,9 @@ export const SetupAddressPage = () => {
               flex="1"
               className="next-header"
               position="absolute"
-              onClick={() => trackNext()}
+              onClick={() => {
+                trackNext()
+              }}
               right="60px"
               _hover={{
                 bg: 'brand.50',
