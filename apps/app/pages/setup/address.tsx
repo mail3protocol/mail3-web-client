@@ -40,8 +40,6 @@ export const SetupAddressPage = () => {
               className="next-header"
               position="absolute"
               onClick={() => {
-                // eslint-disable-next-line no-debugger
-                debugger
                 trackNext()
               }}
               right="60px"

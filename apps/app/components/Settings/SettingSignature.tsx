@@ -102,6 +102,7 @@ export const SettingSignature: React.FC = () => {
   const [textSignature, setTextSignature] = useState('')
   const trackImageEdit = useTrackClick(TrackEvent.ClickImageSignature)
   const trackCyberConnect = useTrackClick(TrackEvent.ClickCyperConnect)
+  const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
 
   const { isLoading } = useQuery(
     [Query.Signatures, account],
@@ -358,6 +359,7 @@ export const SettingSignature: React.FC = () => {
               color="white"
               w="250px"
               height="50px"
+              onClick={() => trackNext()}
               _hover={{
                 bg: 'brand.50',
               }}

@@ -167,6 +167,7 @@ export const SettingAddress: React.FC = () => {
   const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
+  const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
   const {
     data: ensNames,
@@ -376,6 +377,7 @@ export const SettingAddress: React.FC = () => {
               color="white"
               w="250px"
               height="50px"
+              onClick={() => trackNext()}
               _hover={{
                 bg: 'brand.50',
               }}
