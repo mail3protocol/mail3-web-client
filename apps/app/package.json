@@ -34,6 +34,7 @@
         "html-react-parser": "^1.4.14",
         "html2canvas": "1.4.1",
         "i18next": "^21.8.13",
+        "idb-keyval": "^6.2.0",
         "jotai": "^1.6.1",
         "observable-hooks": "^4.2.0",
         "pretty-bytes": "^6.0.0",

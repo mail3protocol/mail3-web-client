@@ -35,6 +35,9 @@ export const OFFICE_ADDRESS_LIST = [
   'no-reply-pls.eth@mail3.me',
   'no-reply-pls.eth@imibao.net',
 
+  'MAILER-DAEMON@mail.imibao.net',
+  'MAILER-DAEMON@mail.mail3.me',
+
   `no-reply-pls.eth@${MAIL_SERVER_URL}`,
   `mail3.eth@${MAIL_SERVER_URL}`,
 ]

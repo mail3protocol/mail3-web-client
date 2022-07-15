@@ -40,6 +40,9 @@ export const Iframe: React.FC<IframeProps> = (props) => {
     const domStyle = document.createElement('style')
     domStyle.innerHTML = iframeInnerStyle
     contentRef?.contentWindow?.document.head.appendChild(domStyle)
+
+    const h = contentRef?.contentWindow?.document.body.scrollHeight
+    getHeight(h ?? 200)
   }, [contentRef])
 
   return (

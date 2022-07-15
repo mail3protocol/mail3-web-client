@@ -125,9 +125,7 @@ export const DraftsComponent: React.FC = () => {
             }}
             getHref={(id) => ({
               pathname: RoutePath.NewMessage,
-              query: {
-                id,
-              },
+              search: `id=${id}`,
             })}
             mailboxType={Mailboxes.Drafts}
           />

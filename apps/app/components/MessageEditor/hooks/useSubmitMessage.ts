@@ -70,7 +70,7 @@ export function useSubmitMessage() {
       html += `<p style="text-align: center"><img src="${cardSignatureContent}" alt="card-signature" style="width: 200px; height: auto"></p>`
     }
     const { html: replacedAttachmentImageHtml, attachments: imageAttachments } =
-      outputHtmlWithAttachmentImages(html)
+      await outputHtmlWithAttachmentImages(html)
     html = replacedAttachmentImageHtml
     const isSendToDriftBottle = toAddresses.some(
       (address) => address === DRIFT_BOTTLE_ADDRESS
