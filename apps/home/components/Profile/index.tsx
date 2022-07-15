@@ -321,7 +321,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         <Box className="address">
           <Text className="p">
             {address}
-            <span style={{ marginLeft: '-5px' }}>{` @${mailSuffix}`}</span>
+            <span>{`@${mailSuffix}`}</span>
           </Text>
         </Box>
         <Center mt="25px">
