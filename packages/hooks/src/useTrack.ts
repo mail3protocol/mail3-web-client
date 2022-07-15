@@ -122,7 +122,8 @@ export enum PersonnalCenter {
   Settings = 'Settings',
   MyProfileLink = 'My Profile Link',
   MyMail3Address = 'My mail3 Address',
-  ChangeWallet = 'ChangeWallet',
+  ChangeWallet = 'Change Wallet',
+  Logout = 'Logout',
 }
 
 export enum Mail3MenuItem {

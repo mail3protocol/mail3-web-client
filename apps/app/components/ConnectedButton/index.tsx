@@ -114,6 +114,9 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.logout'),
         icon: <LogoutSvg />,
         onClick() {
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.Logout,
+          })
           context.onClose()
           logout()
         },
