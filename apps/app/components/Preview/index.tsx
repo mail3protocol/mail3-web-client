@@ -179,7 +179,7 @@ export const PreviewComponent: React.FC = () => {
   const content = useMemo(() => {
     if (data?.html) return data.html
     if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
-    return ''
+    return 'The mail is empty.'
   }, [data])
 
   const isDriftBottleAddress = data?.info?.from.address === DRIFT_BOTTLE_ADDRESS
