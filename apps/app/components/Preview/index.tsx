@@ -350,7 +350,6 @@ export const PreviewComponent: React.FC = () => {
   const avatarList = useMemo(() => {
     if (!detail) return []
     const exists: Array<string> = []
-
     let arr = [detail.from, ...toMessage]
     if (detail.cc) arr = [...arr, ...detail.cc]
     if (detail.bcc) arr = [...arr, ...detail.bcc]
@@ -361,7 +360,7 @@ export const PreviewComponent: React.FC = () => {
       return true
     })
     return arr
-  }, [detail])
+  }, [detail, toMessage])
 
   if (!id) {
     return (
@@ -509,8 +508,8 @@ export const PreviewComponent: React.FC = () => {
                 lineHeight={{ base: '16px', md: '24px' }}
                 marginTop={{ base: '12px', md: '5px' }}
               >
-                {detail.to ? (
-                  <span>to {detail.to.map(getNameAddress).join('; ')}; </span>
+                {toMessage.length ? (
+                  <span>to {toMessage.map(getNameAddress).join('; ')}; </span>
                 ) : null}
                 {detail.cc ? (
                   <span>cc {detail.cc.map(getNameAddress).join('; ')}; </span>
