@@ -67,7 +67,6 @@ export const RecipientAndSubject: React.FC = () => {
       }
     }
   }, [isFoldCcAndBcc])
-  const trackChangeFrom = useTrackClick(TrackEvent.AppEditMessageChangeFrom)
   const trackClickCC = useTrackClick(TrackEvent.AppEditMessageClickCC)
   const trackClickCommunity = useTrackClick(
     TrackEvent.AppEditMessageClickCommunity
@@ -83,7 +82,6 @@ export const RecipientAndSubject: React.FC = () => {
         <ItemField>{t('from')}</ItemField>
         <From
           onChange={(e) => {
-            trackChangeFrom()
             setFromAddress(e)
           }}
         />

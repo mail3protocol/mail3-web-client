@@ -35,6 +35,7 @@ import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
 import { useSubject } from '../../hooks/useSubject'
 import { LeaveEditorModal } from '../leaveEditorModal'
+import { useBlocker } from '../../../../hooks/useBlocker'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -110,55 +111,29 @@ const Footer = () => {
   const [isAllowLeave, setIsAllowLeave] = useState(false)
   const [isLeavingWithSave, setIsLeavingWithSave] = useState(false)
   const [isLeavingWithoutSave, setIsLeavingWithoutSave] = useState(false)
+  const isChangeContent = () =>
+    !(
+      !subject &&
+      toAddresses.length <= 0 &&
+      ccAddresses.length <= 0 &&
+      bccAddresses.length <= 0 &&
+      initialHtml === getHTML()
+    )
+  useBlocker((tx) => {
+    setLeavingUrl(tx.location.pathname)
+    onOpenLeaveEditorModal()
+  }, isChangeContent() && !isSubmitted && !isAllowLeave && !isSaving && !isLeavingWithSave && !isLeavingWithoutSave)
   useEffect(() => {
-    const isShowLeavingModal = () =>
-      !(
-        !subject &&
-        toAddresses.length <= 0 &&
-        ccAddresses.length <= 0 &&
-        bccAddresses.length <= 0 &&
-        initialHtml === getHTML()
-      )
-    const handleRouteChange = (url: string): string | undefined => {
-      if (
-        isShowLeavingModal() &&
-        !isSubmitted &&
-        !isAllowLeave &&
-        !isSaving &&
-        !isLeavingWithSave &&
-        !isLeavingWithoutSave
-      ) {
-        setLeavingUrl(url)
-        onOpenLeaveEditorModal()
-        // router.events.emit('routeChangeError')
-        // eslint-disable-next-line no-throw-literal
-        throw `Route change to "${url}"`
-      }
-      return url
-    }
-    // @todo: prevent route change
-    console.log(handleRouteChange)
     const handleBeforeunload = (e: Event) => {
       e.preventDefault()
       // @ts-ignore
       e.returnValue = ''
     }
     window.addEventListener('beforeunload', handleBeforeunload)
-    // router.events.on('routeChangeStart', handleRouteChange)
     return () => {
-      // router.events.off('routeChangeStart', handleRouteChange)
       window.removeEventListener('beforeunload', handleBeforeunload)
     }
-  }, [
-    subject,
-    toAddresses,
-    ccAddresses,
-    bccAddresses,
-    isAllowLeave,
-    isSaving,
-    isLeavingWithSave,
-    isLeavingWithoutSave,
-  ])
+  }, [])
 
   return (
     <>
@@ -170,7 +145,7 @@ const Footer = () => {
           await new Promise((r) => {
             setTimeout(r, 200)
           })
-          navi(leavingUrl)
+          navi(leavingUrl, { replace: true })
           await setIsLeavingWithoutSave(false)
         }}
         doNotSaveButtonLoading={isLeavingWithoutSave}
@@ -180,7 +155,7 @@ const Footer = () => {
           try {
             await setIsAllowLeave(true)
             await onSave(getHTML())
-            navi(leavingUrl)
+            navi(leavingUrl, { replace: true })
             onCloseLeaveEditorModal()
           } catch (err) {
             toast(t('draft.failed'))

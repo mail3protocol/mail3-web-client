@@ -1,4 +1,4 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Center, Flex, Heading, Spinner } from '@chakra-ui/react'
 import React, { useEffect, lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
@@ -29,6 +29,12 @@ export const MessageEditor: React.FC<MessageEditorProps> = ({
   useEffect(() => {
     setIsEnableCardSignature(isEnableCardSignature)
   }, [isEnableCardSignature])
+
+  const loadingEl = (
+    <Center minH="200px">
+      <Spinner />
+    </Center>
+  )
 
   return (
     <FocusThemeContainer
@@ -74,10 +80,12 @@ export const MessageEditor: React.FC<MessageEditorProps> = ({
       </Heading>
       <RecipientAndSubject />
       {!isLoading ? (
-        <Suspense fallback={null}>
+        <Suspense fallback={loadingEl}>
           <Editor content={defaultContent} />
         </Suspense>
-      ) : null}
+      ) : (
+        loadingEl
+      )}
     </FocusThemeContainer>
   )
 }

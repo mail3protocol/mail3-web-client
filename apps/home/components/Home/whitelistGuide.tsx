@@ -24,7 +24,10 @@ export const WhitelistGuide = () => {
         Now, hit the Mail3 Beta
       </Heading>
       <LogoAnimation w="270px" mt="7px" />
-      <NextLink href={TESTING_URL} passHref>
+      <NextLink
+        href={`${TESTING_URL}/?utm_source=offical_click_getin`}
+        passHref
+      >
         <Button w="176px" mt="40px" onClick={() => trackClickGetIn()}>
           OK，Get in
         </Button>
