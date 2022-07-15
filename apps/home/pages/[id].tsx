@@ -149,11 +149,7 @@ const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
       </Flex>
-      <ProfileComponent
-        mailAddress={`${id}@${MAIL_SERVER_URL}`}
-        mailSuffix={MAIL_SERVER_URL}
-        address={id}
-      />
+      <ProfileComponent mailAddress={`${id}@${MAIL_SERVER_URL}`} address={id} />
     </>
   )
 }
