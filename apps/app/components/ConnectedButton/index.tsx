@@ -28,9 +28,10 @@ import { RoutePath } from '../../route/path'
 import { ReactComponent as SetupSvg } from '../../assets/setup.svg'
 import { ReactComponent as ProfileSvg } from '../../assets/profile.svg'
 import { ReactComponent as CopySvg } from '../../assets/copy.svg'
+import { ReactComponent as LogoutSvg } from '../../assets/logout.svg'
 import { ReactComponent as ChangeWalletSvg } from '../../assets/change-wallet.svg'
-import { copyText } from '../../utils'
-import { userPropertiesAtom } from '../../hooks/useLogin'
+import { copyText, removeMailSuffix } from '../../utils'
+import { useLogout, userPropertiesAtom } from '../../hooks/useLogin'
 import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
 
 const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
@@ -41,6 +42,7 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
   const emailAddress = useEmailAddress()
   const { onOpen } = useConnectWalletDialog()
   const toast = useToast()
+  const logout = useLogout()
   const btns: ButtonListItemProps[] = useMemo(
     () => [
       {
@@ -89,6 +91,14 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
           onOpen()
         },
       },
+      {
+        label: t('navbar.logout'),
+        icon: <LogoutSvg />,
+        onClick() {
+          context.onClose()
+          logout()
+        },
+      },
     ],
     [address, userProps, emailAddress]
   )
@@ -127,7 +137,13 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
           >
             <PopoverAnchor>
               <Box>
-                <Avatar w="32px" h="32px" address={address} />
+                <Avatar
+                  w="32px"
+                  h="32px"
+                  address={removeMailSuffix(
+                    userProps?.defaultAddress || address
+                  )}
+                />
               </Box>
             </PopoverAnchor>
             <Text ml="6px" fontSize="12px" fontWeight="normal">

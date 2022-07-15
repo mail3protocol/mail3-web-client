@@ -10,9 +10,13 @@ import {
   useDidMount,
   useAccountIsActivating,
   useLoginAccount,
-  useConnectedAccount,
+  // useConnectedAccount,
   useSetLoginInfo,
   useLoginInfo,
+  ConnectorName,
+  metaMaskStore,
+  walletConnectStore,
+  useSetLastConnector,
 } from 'hooks'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
@@ -81,6 +85,17 @@ export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.WhiteList,
   RoutePath.Testing,
 ])
+
+export const useCurrentWalletStore = () => {
+  const walletName = useLastConectorName()
+  if (walletName === ConnectorName.MetaMask) {
+    return metaMaskStore
+  }
+  if (walletName === ConnectorName.WalletConnect) {
+    return walletConnectStore
+  }
+  return metaMaskStore
+}
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
   'mail3_user_properties',
@@ -196,13 +211,13 @@ export const useWalletChange = () => {
   const closeAuthModal = useCloseAuthModal()
   const setLoginInfo = useSetLoginInfo()
   const { onOpen: openConnectWalletModal } = useConnectWalletDialog()
-  const account = useConnectedAccount()
   const loginAccount = useLoginAccount()
   const isConnecting = useAccountIsActivating()
-
+  const store = useCurrentWalletStore()
   const handleAccountChanged = useCallback(
     ([acc]) => {
-      // disconected
+      const [account] = store.getState().accounts ?? []
+
       if (acc === undefined) {
         setLoginInfo(null)
         return
@@ -222,7 +237,7 @@ export const useWalletChange = () => {
       }
       setLoginInfo(null)
     },
-    [account, isConnecting, loginAccount]
+    [isConnecting, loginAccount]
   )
 
   const handleDisconnect = useCallback(() => {
@@ -283,5 +298,16 @@ export const useAuthModalOnBack = () => {
     await connector?.deactivate()
     closeAuthModal()
     onOpen()
+  }, [connector])
+}
+
+export const useLogout = () => {
+  const connector = useConnector()
+  const setUserInfo = useSetLoginInfo()
+  const setLastConnector = useSetLastConnector()
+  return useCallback(async () => {
+    await connector?.deactivate()
+    setUserInfo(null)
+    setLastConnector(undefined)
   }, [connector])
 }

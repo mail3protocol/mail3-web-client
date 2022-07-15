@@ -26,6 +26,7 @@ import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import { GotoInbox } from '../../components/GotoInbox'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 function getDefaultTemplate(content: string) {
   return `<p>
@@ -226,8 +227,7 @@ export const NewMessagePage = () => {
     }
     return 'Edit Mail'
   }, [action, id])
-  // @todo: use title
-  console.log(title)
+  useDocumentTitle(title)
 
   const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
 
