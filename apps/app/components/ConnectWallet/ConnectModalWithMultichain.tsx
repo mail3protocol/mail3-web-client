@@ -159,18 +159,18 @@ export const ConnectModalWithMultichain: React.FC<{
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
       <ModalOverlay />
-      <ModalContent maxWidth="520px" rounded="24px" pt="24px" pb="32px">
+      <ModalContent
+        maxWidth="520px"
+        rounded={{ base: 0, md: '24px' }}
+        pt="24px"
+        pb="32px"
+      >
         <ModalCloseButton />
         <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
           Connect Your Wallet
         </Heading>
         <Tabs variant="unstyled" index={tabIndex} onChange={setTabIndex}>
-          <TabList
-            mx="30px"
-            borderBottom="0.683333px solid #E0E0E0"
-            overflowX="auto"
-            overflowY="hidden"
-          >
+          <TabList px="30px" overflowX="auto" overflowY="hidden">
             {chains.map((chain, index) => (
               <Tab
                 key={chain.name}
@@ -207,6 +207,7 @@ export const ConnectModalWithMultichain: React.FC<{
             ))}
           </TabList>
         </Tabs>
+        <Box as="hr" borderColor="#E0E0E0" mx="30px" />
         <Box bg="#F3F3F3">
           <Text
             fontSize="12px"
