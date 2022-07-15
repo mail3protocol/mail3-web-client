@@ -11,7 +11,8 @@
             "profile": "Web3 Profile",
             "copy-address": "Copy Mail Address",
             "change-wallet": "Change Wallet",
-            "copied": "Copied"
+            "copied": "Copied",
+            "logout": "Logout"
         },
         "connect": {
             "metamask": "MetaMask",
