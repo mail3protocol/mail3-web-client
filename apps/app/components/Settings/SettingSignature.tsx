@@ -17,7 +17,7 @@ import styled from '@emotion/styled'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { useTranslation, Trans } from 'react-i18next'
 import React, { useCallback, useState } from 'react'
-import { Button, CardSignature } from 'ui'
+import { Button } from 'ui'
 import { GlobalDimensions, useAccount, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -36,6 +36,7 @@ import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
 import { RouterLink } from '../RouterLink'
 import { IS_IPHONE } from '../../constants'
+import { CardSignature } from '../CardSignature'
 
 const Container = styled(Center)`
   flex-direction: column;

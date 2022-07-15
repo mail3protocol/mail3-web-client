@@ -9,7 +9,7 @@ import {
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
-import { LinkProps } from 'react-router-dom'
+import { Link as RouterLink, LinkProps } from 'react-router-dom'
 import { ReactComponent as ChooseSVG } from '../../assets/mailbox/choose.svg'
 import {
   MailboxMessageItemResponse,
@@ -17,7 +17,6 @@ import {
 } from '../../api'
 import { formatDateString, removeMailSuffix } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
-import { RouterLink } from '../RouterLink'
 
 export enum AvatarBadgeType {
   None,
@@ -304,47 +303,47 @@ const Item: React.FC<BoxItemProps> = ({
           AvatarBox
         )}
       </Box>
-      <RouterLink href={href} passHref state={state}>
-        <Flex
-          as="a"
-          marginLeft="20px"
-          align={{ base: 'flex-start', md: 'center' }}
-          flexDirection={{ base: 'column', md: 'row' }}
-          w="100%"
-          onClick={onClick}
-          cursor="pointer"
-        >
-          <Flex flex={1} wrap="wrap" alignContent="center">
-            <Text
-              width="100%"
-              wordBreak="break-all"
-              fontWeight="600"
-              fontSize="16px"
-              noOfLines={1}
-            >
-              {subject || t('no-subject')}
-            </Text>
-            <Text
-              wordBreak="break-all"
-              fontWeight="400"
-              fontSize="14px"
-              pt="5px"
-              lineHeight={1.3}
-              noOfLines={{ base: 3, md: 1 }}
-            >
-              {desc}
-            </Text>
-          </Flex>
-          <Box
-            className="date"
-            fontSize="14px"
-            mt={{ base: '20px' }}
-            ml={{ md: '20px' }}
+      <Flex
+        as={RouterLink}
+        to={href}
+        state={state}
+        marginLeft="20px"
+        align={{ base: 'flex-start', md: 'center' }}
+        flexDirection={{ base: 'column', md: 'row' }}
+        w="100%"
+        onClick={onClick}
+        cursor="pointer"
+      >
+        <Flex flex={1} wrap="wrap" alignContent="center">
+          <Text
+            width="100%"
+            wordBreak="break-all"
+            fontWeight="600"
+            fontSize="16px"
+            noOfLines={1}
           >
-            {formatDateString(date)}
-          </Box>
+            {subject || t('no-subject')}
+          </Text>
+          <Text
+            wordBreak="break-all"
+            fontWeight="400"
+            fontSize="14px"
+            pt="5px"
+            lineHeight={1.3}
+            noOfLines={{ base: 3, md: 1 }}
+          >
+            {desc}
+          </Text>
         </Flex>
-      </RouterLink>
+        <Box
+          className="date"
+          fontSize="14px"
+          mt={{ base: '20px' }}
+          ml={{ md: '20px' }}
+        >
+          {formatDateString(date)}
+        </Box>
+      </Flex>
     </ItemFlex>
   )
 }
