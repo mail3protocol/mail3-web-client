@@ -15,8 +15,6 @@ export const PlaceholderButton: React.FC<
   return (
     <Box position="relative">
       <ConnectButton
-        color="#6F6F6F"
-        borderColor="#6F6F6F"
         onClick={() => {
           if (timeoutRef.current) {
             clearTimeout(timeoutRef.current)

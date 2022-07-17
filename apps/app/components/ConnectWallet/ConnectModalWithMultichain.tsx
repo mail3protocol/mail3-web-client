@@ -13,7 +13,7 @@ import {
   Image,
 } from '@chakra-ui/react'
 import React, { ReactNode, useMemo, useState } from 'react'
-import { ConnectorName } from 'hooks'
+import { ConnectorName, useCloseOnChangePathname } from 'hooks'
 import PhantomPng from 'assets/wallets/phantom.png'
 import BloctoPng from 'assets/wallets/blocto.png'
 import SolflarePng from 'assets/wallets/solflare.png'
@@ -22,6 +22,7 @@ import TronPng from 'assets/wallets/tron.png'
 import CoinbasePng from 'assets/wallets/coinbase.png'
 import KeplrPng from 'assets/wallets/keplr.png'
 import PolkawalletPng from 'assets/wallets/polkadot.png'
+import { AnimatePresence, motion } from 'framer-motion'
 import { MetamaskButton } from './MetamaskButton'
 import { WalletConnectButton } from './WalletConnectButton'
 import AvaxIconPath from '../../assets/chain-icons/avax.png'
@@ -38,6 +39,36 @@ interface ChainItem {
   icon: string
   description: ReactNode
   walletButtons: ReactNode[]
+}
+
+const variantsTransition = {
+  x: { type: 'spring', stiffness: 300, damping: 30 },
+  opacity: { duration: 0.2 },
+}
+
+enum Direction {
+  Left = -1,
+  Right = 1,
+}
+
+const variants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 1000 : -1000,
+    opacity: 0,
+    transition: variantsTransition,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+    transition: variantsTransition,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 1000 : -1000,
+    opacity: 0,
+    transition: variantsTransition,
+  }),
 }
 
 export const ConnectModalWithMultichain: React.FC<{
@@ -155,6 +186,12 @@ export const ConnectModalWithMultichain: React.FC<{
   )
   const [tabIndex, setTabIndex] = useState(0)
   const currentChain = chains[tabIndex]
+  const swipeConfidenceThreshold = 10000
+  const [direction, setDirection] = useState(0)
+  const swipePower = (offset: number, velocity: number) =>
+    Math.abs(offset) * velocity
+
+  useCloseOnChangePathname(onClose)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
@@ -169,7 +206,18 @@ export const ConnectModalWithMultichain: React.FC<{
         <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
           Connect Your Wallet
         </Heading>
-        <Tabs variant="unstyled" index={tabIndex} onChange={setTabIndex}>
+        <Tabs
+          variant="unstyled"
+          index={tabIndex}
+          onChange={(newTabIndex) => {
+            setTabIndex((index) => {
+              setDirection(
+                newTabIndex > index ? Direction.Right : Direction.Left
+              )
+              return newTabIndex
+            })
+          }}
+        >
           <TabList px="30px" overflowX="auto" overflowY="hidden">
             {chains.map((chain, index) => (
               <Tab
@@ -216,11 +264,56 @@ export const ConnectModalWithMultichain: React.FC<{
             textAlign="center"
             my="24px"
           >
-            {currentChain.description}
+            {currentChain?.description}
           </Text>
-          <VStack spacing="16px" align="center" minH="223px" mb="24px">
-            {currentChain.walletButtons}
-          </VStack>
+          <Box
+            overflowX="hidden"
+            overflowY="auto"
+            minH="223px"
+            position="relative"
+            mb="24px"
+            transition="200ms"
+            style={{
+              height: `${(currentChain?.walletButtons?.length || 3) * 54}px`,
+            }}
+          >
+            <AnimatePresence initial={false} custom={direction}>
+              <VStack
+                key={tabIndex}
+                as={motion.div}
+                spacing="16px"
+                align="center"
+                w="full"
+                h="full"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                position="absolute"
+                top="0"
+                left="0"
+                // @ts-ignore
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = swipePower(offset.x, velocity.x)
+                  const start = 0
+                  const end = chains.length - 1
+                  if (swipe < -swipeConfidenceThreshold) {
+                    setDirection(Direction.Right)
+                    setTabIndex((index) => (index === end ? start : index + 1))
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    setDirection(Direction.Left)
+                    setTabIndex((index) => (index === start ? end : index - 1))
+                  }
+                }}
+              >
+                {currentChain?.walletButtons}
+              </VStack>
+            </AnimatePresence>
+          </Box>
         </Box>
       </ModalContent>
     </Modal>
