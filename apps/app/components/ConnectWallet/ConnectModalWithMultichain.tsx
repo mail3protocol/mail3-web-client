@@ -87,8 +87,11 @@ export const ConnectModalWithMultichain: React.FC<{
         icon: EthIconPath,
         description: 'EVM compatible chain: Ethereum, Polygon, BSC',
         walletButtons: [
-          <MetamaskButton key={ConnectorName.MetaMask} />,
-          <WalletConnectButton key={ConnectorName.WalletConnect} />,
+          <MetamaskButton key={ConnectorName.MetaMask} onClose={onClose} />,
+          <WalletConnectButton
+            key={ConnectorName.WalletConnect}
+            onClose={onClose}
+          />,
         ],
       },
       {
