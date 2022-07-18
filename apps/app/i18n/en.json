@@ -8,10 +8,11 @@
             "subscriptions": "Subscription",
             "other-stuff": "Other Stuff",
             "settings": "Settings",
-            "profile": "Web3 Profile",
-            "copy-address": "Copy Mail Address",
+            "profile-link": "My Profile Link",
+            "copy-address": "My mail³ Address",
             "change-wallet": "Change Wallet",
             "copied": "Copied",
+            "copied-to-clipboard": "Copied to clipboard：",
             "logout": "Logout"
         },
         "connect": {

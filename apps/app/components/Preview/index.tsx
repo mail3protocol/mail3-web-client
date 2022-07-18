@@ -21,6 +21,7 @@ import {
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { useAtomValue } from 'jotai'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
@@ -38,10 +39,15 @@ import {
   removeMailSuffix,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
-import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
+import {
+  DRIFT_BOTTLE_ADDRESS,
+  HOME_URL,
+  OFFICE_ADDRESS_LIST,
+} from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 import type { MeesageDetailState } from '../Mailbox'
 import { IpfsInfoTable } from '../IpfsInfoTable'
 
@@ -90,10 +96,14 @@ export const PreviewComponent: React.FC = () => {
   const toast = useToast()
   const api = useAPI()
   const dialog = useDialog()
+
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
+  const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
+
+  const userProps = useAtomValue(userPropertiesAtom)
   const { data, isLoading: isLoadingContent } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
@@ -108,7 +118,6 @@ export const PreviewComponent: React.FC = () => {
           )
         : null
       return {
-        info: messageInfo,
         html: messageContent?.html,
         plain: messageContent?.plain,
         messageInfo,
@@ -121,28 +130,26 @@ export const PreviewComponent: React.FC = () => {
       refetchOnWindowFocus: false,
       cacheTime: Infinity,
       onSuccess(d) {
-        if (typeof id !== 'string') return
-        const messageInfo = d.info
+        const { messageInfo } = d
+
         if (messageInfo?.unseen) {
+          const { from, subject } = messageInfo
+          const { address } = from
           if (
-            messageInfo.from.address.startsWith('mail3dao.eth') &&
-            messageInfo.subject.startsWith('Join Mail3 DAO!')
+            address.startsWith('mail3dao.eth') &&
+            subject.startsWith('Join Mail3 DAO!')
           ) {
             trackJoinDao()
           }
-          if (
-            messageInfo.from.address.startsWith('mail3.eth') &&
-            messageInfo.subject.startsWith('Show your mail3')
-          ) {
-            trackShowYourNft()
+
+          if (address.startsWith('mail3.eth')) {
+            if (subject.startsWith('Show your mail3')) trackShowYourNft()
+            if (subject.startsWith('Mail3 New Feature')) trackOpenUpdateMail()
           }
-        }
-        const isSeen = d.info?.flags.includes(MessageFlagType.Seen)
-        const isFromDriftBottle = d.info?.from.address === DRIFT_BOTTLE_ADDRESS
-        if (!isSeen && isFromDriftBottle) {
-          trackOpenDriftbottle()
-        }
-        if (!isSeen) {
+
+          const isFromDriftBottle = address === DRIFT_BOTTLE_ADDRESS
+          if (isFromDriftBottle) trackOpenDriftbottle()
+
           api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
         }
       },
@@ -154,8 +161,8 @@ export const PreviewComponent: React.FC = () => {
     if (state) {
       return state
     }
-    if (data?.info) {
-      const { date, subject, to, cc, from, attachments, bcc } = data.info
+    if (data?.messageInfo) {
+      const { date, subject, to, cc, from, attachments, bcc } = data.messageInfo
 
       return {
         date,
@@ -168,7 +175,7 @@ export const PreviewComponent: React.FC = () => {
       }
     }
     return undefined
-  }, [data, state])
+  }, [data?.messageInfo, state])
 
   const content = useMemo(() => {
     if (data?.html) return data.html
@@ -176,7 +183,8 @@ export const PreviewComponent: React.FC = () => {
     return ''
   }, [data])
 
-  const isDriftBottleAddress = data?.info?.from.address === DRIFT_BOTTLE_ADDRESS
+  const isDriftBottleAddress =
+    data?.messageInfo?.from.address === DRIFT_BOTTLE_ADDRESS
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
@@ -357,18 +365,38 @@ export const PreviewComponent: React.FC = () => {
     }
 
     return list.map((key) => buttonConfig[key])
-  }, [api, id, origin, data?.info])
+  }, [api, id, origin, data?.messageInfo])
 
   const onClickAvatar = (address: string) => {
     const realAddress = removeMailSuffix(address).toLowerCase()
     window.location.href = `${HOME_URL}/${realAddress}`
   }
 
-  const avatarList = useMemo(() => {
-    if (!detail?.to) return []
-    const exists: Array<string> = []
+  const mailAddress: string = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
 
-    let arr = [detail.from, ...detail.to]
+  const toMessage = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => detail?.from.address === address
+    )
+
+    if (isOfficeMail && detail && detail.to === null) {
+      return [
+        {
+          address: mailAddress,
+        },
+      ]
+    }
+
+    return detail?.to || []
+  }, [detail])
+
+  const avatarList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = []
+    let arr = [detail.from, ...toMessage]
     if (detail.cc) arr = [...arr, ...detail.cc]
     if (detail.bcc) arr = [...arr, ...detail.bcc]
 
@@ -378,7 +406,7 @@ export const PreviewComponent: React.FC = () => {
       return true
     })
     return arr
-  }, [detail])
+  }, [detail, toMessage])
 
   if (!id) {
     return (
@@ -526,8 +554,8 @@ export const PreviewComponent: React.FC = () => {
                 lineHeight={{ base: '16px', md: '24px' }}
                 marginTop={{ base: '12px', md: '5px' }}
               >
-                {detail.to ? (
-                  <span>to {detail.to.map(getNameAddress).join('; ')}; </span>
+                {toMessage.length ? (
+                  <span>to {toMessage.map(getNameAddress).join('; ')}; </span>
                 ) : null}
                 {detail.cc ? (
                   <span>cc {detail.cc.map(getNameAddress).join('; ')}; </span>

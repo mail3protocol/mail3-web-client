@@ -1,10 +1,9 @@
-import { TrackEvent, useDidMount, useLoginAccount, useTrackClick } from 'hooks'
+import { useDidMount, useLoginAccount } from 'hooks'
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import NextLink from 'next/link'
 import React, { useMemo, useState } from 'react'
 import ErrorPage from 'next/error'
-import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { Flex, Button, Text } from '@chakra-ui/react'
 import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
@@ -57,10 +56,7 @@ const NavbarContainer = styled(Flex)`
 `
 
 const Navbar: React.FC<{ address: string }> = ({ address }) => {
-  const [t] = useTranslation('profile')
   const [isMounted, setIsMounted] = useState(false)
-
-  const trackLaunch = useTrackClick(TrackEvent.ClickProfileLaunchApp)
 
   const emailAddress = useMemo(
     () =>
@@ -105,23 +101,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
                   {emailAddress}
                 </Text>
               </Button>
-            ) : (
-              <Button
-                as="a"
-                target="_blank"
-                href={APP_URL}
-                borderRadius="40px"
-                bg="brand.500"
-                w="200px"
-                color="white"
-                _hover={{
-                  bg: 'brand.300',
-                }}
-                onClick={() => trackLaunch()}
-              >
-                {t('connect-wallet')}
-              </Button>
-            )}
+            ) : null}
           </Flex>
         ) : null}
       </Flex>

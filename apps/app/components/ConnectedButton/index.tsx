@@ -55,30 +55,49 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
         },
       },
       {
-        href: `${HOME_URL}/${
-          userProps?.defaultAddress.substring(
-            0,
-            userProps.defaultAddress.indexOf('@')
-          ) || address
-        }`,
-        label: t('navbar.profile'),
-        icon: <ProfileSvg />,
-        isExternal: true,
-        onClick() {
-          context.onClose()
-          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Profile })
-        },
-      },
-      {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
           context.onClose()
-          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.MyMail3Address,
+          })
           const addr =
             userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
-          toast(t('navbar.copied'))
+          toast(
+            <Box>
+              {t('navbar.copied-to-clipboard')}
+              <Box as="span" fontWeight="bold" wordBreak="break-all">
+                {addr}
+              </Box>
+            </Box>
+          )
+        },
+      },
+      {
+        label: t('navbar.profile-link'),
+        icon: <ProfileSvg />,
+        async onClick() {
+          const href = `${HOME_URL}/${
+            userProps?.defaultAddress.substring(
+              0,
+              userProps.defaultAddress.indexOf('@')
+            ) || address
+          }`
+          await copyText(href)
+          toast(
+            <Box>
+              {t('navbar.copied-to-clipboard')}
+              <Box as="span" fontWeight="bold" wordBreak="break-all">
+                {href}
+              </Box>
+            </Box>
+          )
+          context.onClose()
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.MyProfileLink,
+          })
         },
       },
       {
@@ -95,6 +114,9 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.logout'),
         icon: <LogoutSvg />,
         onClick() {
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.Logout,
+          })
           context.onClose()
           logout()
         },
