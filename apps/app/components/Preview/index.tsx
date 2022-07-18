@@ -95,10 +95,13 @@ export const PreviewComponent: React.FC = () => {
   const toast = useToast()
   const api = useAPI()
   const dialog = useDialog()
+
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
+  const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
+
   const userProps = useAtomValue(userPropertiesAtom)
   const { data } = useQuery(
     [Query.GetMessageInfoAndContent, id],
@@ -114,7 +117,6 @@ export const PreviewComponent: React.FC = () => {
           )
         : null
       return {
-        info: messageInfo,
         html: messageContent?.html,
         plain: messageContent?.plain,
         messageInfo,
@@ -127,28 +129,26 @@ export const PreviewComponent: React.FC = () => {
       refetchOnWindowFocus: false,
       cacheTime: Infinity,
       onSuccess(d) {
-        if (typeof id !== 'string') return
-        const messageInfo = d.info
+        const { messageInfo } = d
+
         if (messageInfo?.unseen) {
+          const { from, subject } = messageInfo
+          const { address } = from
           if (
-            messageInfo.from.address.startsWith('mail3dao.eth') &&
-            messageInfo.subject.startsWith('Join Mail3 DAO!')
+            address.startsWith('mail3dao.eth') &&
+            subject.startsWith('Join Mail3 DAO!')
           ) {
             trackJoinDao()
           }
-          if (
-            messageInfo.from.address.startsWith('mail3.eth') &&
-            messageInfo.subject.startsWith('Show your mail3')
-          ) {
-            trackShowYourNft()
+
+          if (address.startsWith('mail3.eth')) {
+            if (subject.startsWith('Show your mail3')) trackShowYourNft()
+            if (subject.startsWith('Mail3 New Feature')) trackOpenUpdateMail()
           }
-        }
-        const isSeen = d.info?.flags.includes(MessageFlagType.Seen)
-        const isFromDriftBottle = d.info?.from.address === DRIFT_BOTTLE_ADDRESS
-        if (!isSeen && isFromDriftBottle) {
-          trackOpenDriftbottle()
-        }
-        if (!isSeen) {
+
+          const isFromDriftBottle = address === DRIFT_BOTTLE_ADDRESS
+          if (isFromDriftBottle) trackOpenDriftbottle()
+
           api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
         }
       },
@@ -160,8 +160,8 @@ export const PreviewComponent: React.FC = () => {
     if (state) {
       return state
     }
-    if (data?.info) {
-      const { date, subject, to, cc, from, attachments, bcc } = data.info
+    if (data?.messageInfo) {
+      const { date, subject, to, cc, from, attachments, bcc } = data.messageInfo
 
       return {
         date,
@@ -174,7 +174,7 @@ export const PreviewComponent: React.FC = () => {
       }
     }
     return undefined
-  }, [data, state])
+  }, [data?.messageInfo, state])
 
   const content = useMemo(() => {
     if (data?.html) return data.html
@@ -182,7 +182,8 @@ export const PreviewComponent: React.FC = () => {
     return 'The mail is empty.'
   }, [data])
 
-  const isDriftBottleAddress = data?.info?.from.address === DRIFT_BOTTLE_ADDRESS
+  const isDriftBottleAddress =
+    data?.messageInfo?.from.address === DRIFT_BOTTLE_ADDRESS
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
@@ -319,7 +320,7 @@ export const PreviewComponent: React.FC = () => {
     }
 
     return list.map((key) => buttonConfig[key])
-  }, [api, id, origin, data?.info])
+  }, [api, id, origin, data?.messageInfo])
 
   const onClickAvatar = (address: string) => {
     const realAddress = removeMailSuffix(address).toLowerCase()

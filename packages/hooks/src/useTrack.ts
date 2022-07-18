@@ -27,6 +27,7 @@ export enum TrackEvent {
   // mail tracking
   OpenJoinMail3Dao = 'open_join_mail3_dao',
   OpenShowYourMail3NFT = 'open_show_your_mail3_nft',
+  OpenUpdateMail = 'open_update_mail',
   // connect wallet
   ConnectWallet = 'Mail3_app_home_click_connectwallet',
 
