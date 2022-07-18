@@ -22,6 +22,8 @@ import TronPng from 'assets/wallets/tron.png'
 import CoinbasePng from 'assets/wallets/coinbase.png'
 import KeplrPng from 'assets/wallets/keplr.png'
 import PolkawalletPng from 'assets/wallets/polkadot.png'
+import PlugPng from 'assets/wallets/plug.png'
+import ZilpayPng from 'assets/wallets/zilpay.png'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MetamaskButton } from './MetamaskButton'
 import { WalletConnectButton } from './WalletConnectButton'
@@ -165,13 +167,13 @@ export const ConnectModalWithMultichain: React.FC<{
             trackDesiredWalletKey="Plug"
             key={ConnectorName.Plug}
             text="Plug"
-            icon={generateIcon(PhantomPng)}
+            icon={generateIcon(PlugPng)}
           />,
           <PlaceholderButton
             trackDesiredWalletKey="Zilpay"
             key={ConnectorName.Zilpay}
             text="Zilpay"
-            icon={generateIcon(PhantomPng)}
+            icon={generateIcon(ZilpayPng)}
           />,
           <PlaceholderButton
             trackDesiredWalletKey="Polkawallet"
