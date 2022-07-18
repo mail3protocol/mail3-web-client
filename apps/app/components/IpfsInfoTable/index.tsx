@@ -1,6 +1,6 @@
 import { Box, Grid, Icon, Link } from '@chakra-ui/react'
 import React from 'react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
 
 export const ExternalLink = () => (
@@ -21,9 +21,9 @@ export const IpfsInfoTable: React.FC<{
   ethAddress?: string
   contentDigest?: string
 }> = ({ ipfs, ethAddress, contentDigest }) => {
-  const [t] = useTranslation('mailboxes')
+  const [t] = useTranslation('ipfs')
   function pendingBackupText(str?: string) {
-    return !str ? t('ipfs.pending') : str
+    return !str ? t('pending') : str
   }
   const ipfsLink = ipfs || undefined
   const ethAddressLink = ethAddress
@@ -77,7 +77,7 @@ export const IpfsInfoTable: React.FC<{
           onClick={() => trackClickDInfoBlockchainLink()}
           target="_blank"
         >
-          {t('ipfs.eth_address')}
+          {t('eth_address')}
           <ExternalLink />
         </Link>
       </Box>
@@ -96,7 +96,7 @@ export const IpfsInfoTable: React.FC<{
           onClick={() => trackClickDInfoIpfsLink()}
           target="_blank"
         >
-          {t('ipfs.ipfs_link')}
+          {t('ipfs_link')}
           <ExternalLink />
         </Link>
       </Box>
@@ -109,7 +109,7 @@ export const IpfsInfoTable: React.FC<{
           {pendingBackupText(ipfs)}
         </Link>
       </Box>
-      <Box>{t('ipfs.content_digest')}</Box>
+      <Box>{t('content_digest')}</Box>
       <Box>{pendingBackupText(contentDigest)}</Box>
     </Grid>
   )

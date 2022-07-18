@@ -94,7 +94,7 @@ export const PreviewComponent: React.FC = () => {
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
-  const { data } = useQuery(
+  const { data, isLoading: isLoadingContent } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
       const messageInfo = id
@@ -198,7 +198,9 @@ export const PreviewComponent: React.FC = () => {
   )
 
   const isShowIpfsTable =
-    !messageOnChainIdentifierError && !isLoadingMessageOnChainIdentifier
+    !messageOnChainIdentifierError &&
+    !isLoadingMessageOnChainIdentifier &&
+    !isLoadingContent
 
   useEffect(() => {
     const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
@@ -552,7 +554,7 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          {!content ? (
+          {isLoadingContent ? (
             <Loading />
           ) : (
             <PreviewContent>
