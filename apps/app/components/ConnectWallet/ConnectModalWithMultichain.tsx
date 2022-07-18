@@ -11,6 +11,7 @@ import {
   Box,
   Text,
   Image,
+  Flex,
 } from '@chakra-ui/react'
 import React, { ReactNode, useMemo, useState } from 'react'
 import { ConnectorName, useCloseOnChangePathname } from 'hooks'
@@ -201,7 +202,7 @@ export const ConnectModalWithMultichain: React.FC<{
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
       <ModalOverlay />
       <ModalContent
-        maxWidth="520px"
+        maxW="520px"
         rounded={{ base: 0, md: '24px' }}
         pt="24px"
         pb="32px"
@@ -222,41 +223,48 @@ export const ConnectModalWithMultichain: React.FC<{
             })
           }}
         >
-          <TabList px="30px" overflowX="auto" overflowY="hidden">
-            {chains.map((chain, index) => (
-              <Tab
-                key={chain.name}
-                color={tabIndex === index ? '#000' : '#6F6F6F'}
-                fontSize="14px"
-                fontWeight={600}
-                position="relative"
-                pl="0"
-                pb="7px"
-                pr="16px"
-                flexShrink={0}
-              >
-                <Image
-                  src={chain.icon}
-                  alt={chain.name}
-                  w="16px"
-                  h="16px"
-                  objectFit="contain"
-                  mr="2px"
-                />
-                {chain.name}
-                <Box
-                  position="absolute"
-                  bottom="5px"
-                  left="18px"
-                  h="3px"
-                  w="calc(100% - 18px - 16px)"
-                  bg="#000"
-                  rounded="5px"
-                  opacity={tabIndex === index ? 1 : 0}
-                  transition="200ms"
-                />
-              </Tab>
-            ))}
+          <TabList>
+            <Flex
+              w="auto"
+              maxW="full"
+              overflowX="auto"
+              overflowY="hidden"
+              mx="auto"
+            >
+              {chains.map((chain, index) => (
+                <Tab
+                  key={chain.name}
+                  color={tabIndex === index ? '#000' : '#6F6F6F'}
+                  fontSize="14px"
+                  fontWeight={600}
+                  position="relative"
+                  px="8px"
+                  pb="7px"
+                  flexShrink={0}
+                >
+                  <Image
+                    src={chain.icon}
+                    alt={chain.name}
+                    w="16px"
+                    h="16px"
+                    objectFit="contain"
+                    mr="2px"
+                  />
+                  {chain.name}
+                  <Box
+                    position="absolute"
+                    bottom="5px"
+                    left="26px"
+                    h="3px"
+                    w="calc(100% - 18px - 16px)"
+                    bg="#000"
+                    rounded="5px"
+                    opacity={tabIndex === index ? 1 : 0}
+                    transition="200ms"
+                  />
+                </Tab>
+              ))}
+            </Flex>
           </TabList>
         </Tabs>
         <Box as="hr" borderColor="#E0E0E0" mx="30px" />
