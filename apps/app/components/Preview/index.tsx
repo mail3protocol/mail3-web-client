@@ -1,5 +1,4 @@
-/* eslint-disable compat/compat */
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Avatar, Button } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
@@ -24,6 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
+import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
 import { MessageFlagAction, MessageFlagType, AddressResponse } from '../../api'
@@ -43,6 +43,7 @@ import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import type { MeesageDetailState } from '../Mailbox'
+import { IpfsInfoTable } from '../IpfsInfoTable'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -178,6 +179,48 @@ export const PreviewComponent: React.FC = () => {
   const isDriftBottleAddress = data?.info?.from.address === DRIFT_BOTTLE_ADDRESS
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
+
+  const messageId = data?.messageInfo?.messageId
+  const {
+    data: messageOnChainIdentifierData,
+    refetch: refetchMessageOnChainIdentifier,
+    error: messageOnChainIdentifierError,
+    isLoading: isLoadingMessageOnChainIdentifier,
+  } = useQuery(
+    [Query.GetMessageOnChainIdentifier, messageId],
+    async () => {
+      if (!messageId) return null
+      return (await api.getMessageOnChainIdentifier(messageId)).data
+    },
+    {
+      retry: false,
+    }
+  )
+
+  const isShowIpfsTable =
+    !messageOnChainIdentifierError && !isLoadingMessageOnChainIdentifier
+
+  useEffect(() => {
+    const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
+    const contentDigestIsEmtpyStr =
+      messageOnChainIdentifierData?.content_digest === ''
+    if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
+      const subscriber = interval(3000)
+        .pipe(
+          switchMap(() =>
+            fromPipe(defer(() => refetchMessageOnChainIdentifier()))
+          ),
+          takeWhile(
+            (res) => res.data?.url === '' && res.data?.content_digest === ''
+          )
+        )
+        .subscribe()
+      return () => {
+        subscriber.unsubscribe()
+      }
+    }
+    return () => {}
+  }, [messageOnChainIdentifierData])
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
@@ -523,6 +566,13 @@ export const PreviewComponent: React.FC = () => {
           )}
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
+          ) : null}
+          {isShowIpfsTable ? (
+            <IpfsInfoTable
+              ethAddress={messageOnChainIdentifierData?.owner_identifier}
+              ipfs={messageOnChainIdentifierData?.url}
+              contentDigest={messageOnChainIdentifierData?.content_digest}
+            />
           ) : null}
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (

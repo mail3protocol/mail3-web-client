@@ -85,3 +85,14 @@ export async function outputHtmlWithAttachmentImages(html: string) {
     attachments,
   }
 }
+
+export function removeDuplicationAttachments(
+  attachments: SubmitMessage.Attachment[]
+) {
+  const idSet = new Set(attachments.map((a) => a.cid))
+  return attachments.filter((attachment) => {
+    const has = idSet.has(attachment.cid)
+    idSet.delete(attachment.cid)
+    return has
+  })
+}

@@ -20,7 +20,8 @@ export const CONTACT_US_URL =
 export const GITHUB_URL =
   process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/mail3protocol'
 
-export const GOOGLE_ANALYTICS_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
+export const GOOGLE_ANALYTICS_ID =
+  process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID ?? 'G-1PW4LM5ETS'
 
 export const MAIL_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
