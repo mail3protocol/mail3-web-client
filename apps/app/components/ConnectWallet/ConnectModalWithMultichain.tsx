@@ -25,6 +25,7 @@ import PolkawalletPng from 'assets/wallets/polkadot.png'
 import PlugPng from 'assets/wallets/plug.png'
 import ZilpayPng from 'assets/wallets/zilpay.png'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { MetamaskButton } from './MetamaskButton'
 import { WalletConnectButton } from './WalletConnectButton'
 import AvaxIconPath from '../../assets/chain-icons/avax.png'
@@ -77,6 +78,7 @@ export const ConnectModalWithMultichain: React.FC<{
   isOpen: boolean
   onClose: () => void
 }> = ({ isOpen, onClose }) => {
+  const [t] = useTranslation('common')
   const chains: ChainItem[] = useMemo(
     () => [
       {
@@ -206,7 +208,7 @@ export const ConnectModalWithMultichain: React.FC<{
       >
         <ModalCloseButton />
         <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
-          Connect Your Wallet
+          {t('connect.dialog-title')}
         </Heading>
         <Tabs
           variant="unstyled"

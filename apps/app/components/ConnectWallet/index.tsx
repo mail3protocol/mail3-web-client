@@ -40,7 +40,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
       )}
       <ConfirmDialog />
       <ConnectModalWithMultichain isOpen={isOpen} onClose={onClose} />
-      {/* <ConenctModal isOpen={isOpen} onClose={onClose} /> */}
     </>
   )
 }
