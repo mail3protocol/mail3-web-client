@@ -28,11 +28,15 @@ import { Stack, Button, Flex, Grid, useDisclosure } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { useQuery } from 'react-query'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
+import { IpfsModal } from '../../../IpfsModal'
+import { Query } from '../../../../api/query'
+import { useAPI } from '../../../../hooks/useAPI'
 import { useSubject } from '../../hooks/useSubject'
 import { LeaveEditorModal } from '../leaveEditorModal'
 import { useBlocker } from '../../../../hooks/useBlocker'
@@ -91,6 +95,7 @@ const TextEditor = () => {
 }
 
 const Footer = () => {
+  const api = useAPI()
   const { isDisabledSendButton, isLoading, isSubmitted, onSubmit } =
     useSubmitMessage()
   const { subject, toAddresses, ccAddresses, bccAddresses } = useSubject()
@@ -135,8 +140,31 @@ const Footer = () => {
     }
   }, [])
 
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery([Query.GetMessageEncryptionKeyState], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  )
+
   return (
     <>
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async () => {
+            onCloseIpfsModal()
+            await onSubmit()
+          }}
+        />
+      ) : null}
       <LeaveEditorModal
         isOpen={isOpenLeaveEditorModal}
         onClose={onCloseLeaveEditorModal}
@@ -225,7 +253,11 @@ const Footer = () => {
           isLoading={isLoading}
           onClick={() => {
             trackClickSend()
-            onSubmit()
+            if (isUploadedIpfsKey) {
+              onSubmit()
+            } else {
+              onOpenIpfsModal()
+            }
           }}
         >
           {t('send')}
@@ -282,7 +314,7 @@ const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
           pb="20px"
           flex={1}
           templateColumns={{ base: '100%', md: 'calc(100% - 200px) 200px' }}
-          templateRows={{ base: 'auto 188px', md: '100%' }}
+          templateRows={{ base: 'calc(100% - 188px) 188px', md: '100%' }}
         >
           <TextEditor />
           <SelectCardSignature />

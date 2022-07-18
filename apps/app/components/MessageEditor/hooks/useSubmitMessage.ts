@@ -12,6 +12,7 @@ import { API } from '../../../api'
 import {
   onRenderElementToImage,
   outputHtmlWithAttachmentImages,
+  removeDuplicationAttachments,
 } from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
 import { DRIFT_BOTTLE_ADDRESS } from '../../../constants'
@@ -57,26 +58,29 @@ export function useSubmitMessage() {
   const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { addSendingMessage } = useSending()
+
   const onSubmit = async () => {
     if (!fromAddress) return
     if (isLoading) return
-    window.scroll(0, 0)
-    setIsLoading(true)
-    let html = getHTML()
-    if (isEnableCardSignature) {
-      const cardSignatureContent = await onRenderElementToImage(
-        document.getElementById(CARD_SIGNATURE_ID) as HTMLDivElement
-      )
-      html += `<p style="text-align: center"><img src="${cardSignatureContent}" alt="card-signature" style="width: 200px; height: auto"></p>`
-    }
-    const { html: replacedAttachmentImageHtml, attachments: imageAttachments } =
-      await outputHtmlWithAttachmentImages(html)
-    html = replacedAttachmentImageHtml
-    const isSendToDriftBottle = toAddresses.some(
-      (address) => address === DRIFT_BOTTLE_ADDRESS
-    )
-    const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
     try {
+      window.scroll(0, 0)
+      setIsLoading(true)
+      let html = getHTML()
+      if (isEnableCardSignature) {
+        const cardSignatureContent = await onRenderElementToImage(
+          document.getElementById(CARD_SIGNATURE_ID) as HTMLDivElement
+        )
+        html += `<p style="text-align: center"><img src="${cardSignatureContent}" alt="card-signature" style="width: 200px; height: auto"></p>`
+      }
+      const {
+        html: replacedAttachmentImageHtml,
+        attachments: imageAttachments,
+      } = await outputHtmlWithAttachmentImages(html)
+      html = replacedAttachmentImageHtml
+      const isSendToDriftBottle = toAddresses.some(
+        (address) => address === DRIFT_BOTTLE_ADDRESS
+      )
+      const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
       const submitMessageResult = await api.submitMessage({
         from: {
           address: fromAddress,
@@ -86,9 +90,11 @@ export function useSubmitMessage() {
         cc: ccAddresses.map((address) => ({ address })),
         bcc: bccAddresses.map((address) => ({ address })),
         html,
-        attachments: attachments
-          .filter((a) => a.contentDisposition !== 'inline')
-          .concat(imageAttachments),
+        attachments: removeDuplicationAttachments(
+          attachments
+            .filter((a) => a.contentDisposition !== 'inline')
+            .concat(imageAttachments)
+        ),
       })
       addSendingMessage({ messageId: submitMessageResult.data.messageId })
       setIsSubmitted(true)
