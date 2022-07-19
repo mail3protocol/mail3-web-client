@@ -206,6 +206,11 @@ export const ConnectModalWithMultichain: React.FC<{
 
   useCloseOnChangePathname(onClose)
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const maximumLengthOfWalletButtons = useMemo(
+    () => Math.max(...chains.map((chain) => chain.walletButtons.length)),
+    [chains]
+  )
+  const currentWalletButtonsLength = currentChain?.walletButtons?.length || 3
 
   const contentEl = (
     <>
@@ -285,7 +290,11 @@ export const ConnectModalWithMultichain: React.FC<{
           mb="24px"
           transition="200ms"
           style={{
-            height: `${(currentChain?.walletButtons?.length || 3) * 54}px`,
+            height: `${
+              (isMobile
+                ? maximumLengthOfWalletButtons
+                : currentWalletButtonsLength) * 54
+            }px`,
           }}
         >
           <AnimatePresence initial={false} custom={direction}>
