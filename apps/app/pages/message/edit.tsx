@@ -194,14 +194,8 @@ export const NewMessagePage = () => {
             api.getMessageInfo(id as string)
           )
         : null
-      const messageContent = messageInfo?.text.id
-        ? await catchApiResponse<GetMessageContent.Response>(
-            api.getMessageContent(messageInfo?.text.id)
-          )
-        : null
       return {
         messageInfo,
-        messageContent,
       }
     },
     {
@@ -213,12 +207,10 @@ export const NewMessagePage = () => {
     }
   )
 
-  const messageContent =
-    messageData?.messageContent ??
-    queryMessageInfoAndContentData?.data?.messageContent
   const messageInfo =
     messageData?.messageInfo ??
     queryMessageInfoAndContentData?.data?.messageInfo
+  const messageContent = messageInfo?.text
 
   useEffect(() => {
     if (isFirstLoadMessage) return

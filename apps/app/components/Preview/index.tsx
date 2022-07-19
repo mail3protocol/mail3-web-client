@@ -23,7 +23,6 @@ import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { useAtomValue } from 'jotai'
 import { GetMessage } from 'models/src/getMessage'
-import { GetMessageContent } from 'models/src/getMessageContent'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
@@ -112,16 +111,10 @@ export const PreviewComponent: React.FC = () => {
             api.getMessageInfo(id as string)
           )
         : null
-      const messageContent = messageInfo?.text.id
-        ? await catchApiResponse<GetMessageContent.Response>(
-            api.getMessageContent(messageInfo?.text.id)
-          )
-        : null
       return {
-        html: messageContent?.html,
-        plain: messageContent?.plain,
+        html: messageInfo?.text.html,
+        plain: messageInfo?.text.plain,
         messageInfo,
-        messageContent,
       }
     },
     {
@@ -131,7 +124,6 @@ export const PreviewComponent: React.FC = () => {
       cacheTime: Infinity,
       onSuccess(d) {
         const { messageInfo } = d
-
         if (messageInfo?.unseen) {
           const { from, subject } = messageInfo
           const { address } = from
@@ -251,7 +243,6 @@ export const PreviewComponent: React.FC = () => {
           {
             state: {
               messageInfo: data?.messageInfo,
-              messsageContent: data?.messageContent,
             },
           }
         )
@@ -274,7 +265,6 @@ export const PreviewComponent: React.FC = () => {
           {
             state: {
               messageInfo: data?.messageInfo,
-              messsageContent: data?.messageContent,
             },
           }
         )
