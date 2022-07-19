@@ -13,9 +13,8 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
-import { CONTAINER_MAX_WIDTH } from 'ui'
+import { Logo, CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
-import { ReactComponent as LogoSvg } from 'assets/svg/logo.svg'
 import { ReactComponent as HomeNavbarSvg } from '../../../assets/svg/home-navbar-menu.svg'
 import { Buttons, Menus } from './menu'
 import { RainbowBar } from '../rainbowBar'
@@ -47,7 +46,7 @@ export const Navbar: React.FC = () => {
           justify="space-between"
           align="center"
         >
-          <Icon as={LogoSvg} w="112px" h="auto" />
+          <Logo w="112px" />
           <Flex align="center">
             <Stack direction="row" spacing="8px">
               <Buttons isWhiteList={isShowWhiteListStage} />
@@ -91,7 +90,7 @@ export const Navbar: React.FC = () => {
               borderBottom="1px solid #E7E7E7"
               px="16px"
             >
-              <Icon as={LogoSvg} w="100px" h="auto" />
+              <Logo />
             </Flex>
           </DrawerHeader>
           <DrawerBody p="0">

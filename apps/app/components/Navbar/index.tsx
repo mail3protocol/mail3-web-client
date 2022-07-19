@@ -9,11 +9,9 @@ import {
   PopoverBody,
   PopoverArrow,
   Button,
-  Icon,
   usePopoverContext,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
 import { ReactComponent as DownTriangleSvg } from 'assets/svg/triangle-down.svg'
 import { useTranslation } from 'react-i18next'
 import {
@@ -23,6 +21,7 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
+import { Logo as UiLogo } from 'ui'
 import { ReactComponent as InboxWhiteSvg } from '../../assets/inbox-white.svg'
 import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
 import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
@@ -142,19 +141,18 @@ const LogoPopoverBody: React.FC = () => {
 
 const Logo = () => {
   const isConnected = !!useAccount()
+  const logoEl = <UiLogo textProps={{ color: '#231815' }} />
   const popoverTrigger = isConnected ? (
     <PopoverTrigger>
       <Center>
         <LogoButton variant="empty" _focus={{ boxShadow: 'none' }} padding="0">
-          <Icon as={LogoSvg} w="auto" h="auto" />
+          {logoEl}
           <DownTriangleSvg className="triangle" />
         </LogoButton>
       </Center>
     </PopoverTrigger>
   ) : (
-    <Center width="100px">
-      <Icon as={LogoSvg} w="auto" h="auto" />
-    </Center>
+    <Center width="100px">{logoEl}</Center>
   )
   return (
     <Popover arrowSize={18} autoFocus offset={[0, 10]} closeOnBlur>

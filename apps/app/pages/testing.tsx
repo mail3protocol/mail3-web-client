@@ -1,7 +1,6 @@
 import React from 'react'
-import { Center, Link, Icon } from '@chakra-ui/react'
-import { PageContainer } from 'ui'
-import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
+import { Center, Link } from '@chakra-ui/react'
+import { Logo, PageContainer } from 'ui'
 import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
 import { Testing } from '../components/Testing'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -9,7 +8,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 const Navbar = () => (
   <Center h={`${NAVBAR_HEIGHT}px`}>
     <Link isExternal href={HOME_URL}>
-      <Icon as={LogoSvg} w="124px" h="auto" />
+      <Logo textProps={{ color: '#231815' }} />
     </Link>
   </Center>
 )

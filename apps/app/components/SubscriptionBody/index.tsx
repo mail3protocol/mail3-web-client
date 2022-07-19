@@ -36,7 +36,7 @@ const imgs = [
 
 const dataMD = `
 | n | name | url | class | desc |
-| 1 | Mail3 | / | 项目方动态 | All about Mail3! |
+| 1 | Mail³ | / | 项目方动态 | All about Mail³! |
 | 2 | Bankless | https://newsletter.banklesshq.com/ | 综合 | The ultimate guide to DeFi, NFTs, Ethereum, and Bitcoin.  |
 | 3 | The Defiant  | https://newsletter.thedefiant.io/ | / | Curate, digest, and analyze all the major developments in DeFi |
 | 4 | Week in Ethereum News | https://weekinethereumnews.com/ | / | Ethereum News and Links |

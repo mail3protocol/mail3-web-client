@@ -6,8 +6,7 @@ import React, { useMemo, useState } from 'react'
 import ErrorPage from 'next/error'
 import styled from '@emotion/styled'
 import { Flex, Button, Text } from '@chakra-ui/react'
-import { ReactComponent as LogoSvg } from 'assets/svg/logo-pure.svg'
-import { Avatar, LinkButton } from 'ui'
+import { Avatar, LinkButton, Logo } from 'ui'
 import { useRouter } from 'next/router'
 import { truncateMiddle } from 'shared'
 import Head from 'next/head'
@@ -77,7 +76,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
       <Flex className="nav">
         <NextLink href="/" passHref>
           <LinkButton>
-            <LogoSvg />
+            <Logo />
           </LinkButton>
         </NextLink>
         {isMounted ? (

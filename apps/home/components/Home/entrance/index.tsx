@@ -1,10 +1,10 @@
-import { Flex, Box, Grid, Heading, FlexProps, Icon } from '@chakra-ui/react'
+import { Flex, Box, Grid, Heading, FlexProps } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import LogoNoColor from 'assets/svg/logo-no-color.svg'
-import { ReactComponent as LogoSvg } from 'assets/svg/logo.svg'
 import { TrackEvent, useInnerSize, useTrackClick } from 'hooks'
 import { debounceTime, delay, fromEvent } from 'rxjs'
+import { Logo } from 'ui'
 import { sleep } from '../../../utils'
 
 const MOBILE_SIZE = 768
@@ -209,11 +209,9 @@ export const Entrance: React.FC<
               xl: `${20 * 60}px`,
             }}
           >
-            <Icon
-              as={LogoSvg}
-              w={{ base: '100px', md: '170px' }}
-              h="auto"
-              mb="auto"
+            <Logo
+              iconProps={{ w: '35px', h: '35px' }}
+              textProps={{ w: '105px', h: '35px' }}
             />
             <Box w="auto" display={{ base: 'block', md: 'none' }}>
               {heading}
