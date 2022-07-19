@@ -8,7 +8,7 @@ import {
 } from 'hooks'
 import { Button } from 'ui/src/Button'
 import { ButtonProps } from '@chakra-ui/react'
-import { ConenctModal } from './ConnectModal'
+import { ConnectModalWithMultichain } from './ConnectModalWithMultichain'
 
 export interface ConnectWalletProps extends ButtonProps {
   renderConnected: (address: string) => React.ReactNode
@@ -39,7 +39,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
         </Button>
       )}
       <ConfirmDialog />
-      <ConenctModal isOpen={isOpen} onClose={onClose} />
+      <ConnectModalWithMultichain isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
