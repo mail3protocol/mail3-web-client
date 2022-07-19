@@ -359,7 +359,6 @@ export const SettingAddress: React.FC = () => {
                 <Box h="24px" lineHeight="24px">
                   {t('address.ens-name')}
                 </Box>
-                {refreshButton}
               </Stack>
             </FormLabel>
             <Box className="switch-wrap">
@@ -392,7 +391,7 @@ export const SettingAddress: React.FC = () => {
                       <Box>
                         <Trans
                           ns="settings"
-                          i18nKey="address.registe-ens"
+                          i18nKey="address.register-ens"
                           t={t}
                           components={{
                             a: (
@@ -406,7 +405,6 @@ export const SettingAddress: React.FC = () => {
                           }}
                         />
                       </Box>
-                      {ensAliases.length <= 0 ? refreshButton : null}
                     </Stack>
                   </Text>
                 </Center>
@@ -425,9 +423,8 @@ export const SettingAddress: React.FC = () => {
                 alignItems="center"
               >
                 <Box h="24px" lineHeight="24px">
-                  {t('address.ens-name')}
+                  {t('address.bit-name')}
                 </Box>
-                {refreshButton}
               </Stack>
             </FormLabel>
             <Box className="switch-wrap">
@@ -460,7 +457,7 @@ export const SettingAddress: React.FC = () => {
                       <Box>
                         <Trans
                           ns="settings"
-                          i18nKey="address.registe-ens"
+                          i18nKey="address.register-bit"
                           t={t}
                           components={{
                             a: (
@@ -474,7 +471,6 @@ export const SettingAddress: React.FC = () => {
                           }}
                         />
                       </Box>
-                      {bitAliases.length <= 0 ? refreshButton : null}
                     </Stack>
                   </Text>
                 </Center>
