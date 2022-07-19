@@ -12,7 +12,7 @@ import {
 import React from 'react'
 import styled from '@emotion/styled'
 import Illustration2Png from '../../assets/png/illustration/2.png'
-import Illustration3Svg from '../../assets/svg/illustration/3.svg'
+import { ReactComponent as Illustration3Svg } from '../../assets/svg/illustration/3.svg'
 
 export const LetterContentContainer = styled(Box)`
   font-size: 20px;

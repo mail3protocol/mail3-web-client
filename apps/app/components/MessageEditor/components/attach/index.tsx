@@ -23,12 +23,12 @@ import React, {
 } from 'react'
 import { TrackEvent, useDialog, useTrackClick } from 'hooks'
 import { SubmitMessage } from 'models/src/submitMessage'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { AttachActivationButton } from './attachActivationButton'
 import { FilesPanel } from './filesPanel'
 import { convertFileToBase64, kbToMb } from '../../../../utils/file'
 import { useAttachment } from '../../hooks/useAttachment'
-import { digestMessage } from '../../../../utils'
+import { generateAttachmentContentId } from '../../../../utils'
 
 export const FILENAME_BASE64_CHATS_LIMIT = 5242880
 export const FILESIZE_LIMIT = FILENAME_BASE64_CHATS_LIMIT * (3 / 4)
@@ -47,7 +47,7 @@ export const Attach: React.FC<{
         Array.from(e.target.files || []).map<Promise<SubmitMessage.Attachment>>(
           async (file) => {
             const content = (await convertFileToBase64(file)).split(',')[1]
-            const cid = await digestMessage(content, { algorithm: 'SHA-1' })
+            const cid = await generateAttachmentContentId(content)
             return {
               filename: file.name,
               contentDisposition: 'attachment',

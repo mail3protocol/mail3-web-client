@@ -1,22 +1,12 @@
-import {
-  COOKIE_KEY,
-  TrackEvent,
-  useDidMount,
-  useLoginAccount,
-  useTrackClick,
-} from 'hooks'
+import { useDidMount, useLoginAccount } from 'hooks'
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import NextLink from 'next/link'
 import React, { useMemo, useState } from 'react'
 import ErrorPage from 'next/error'
-import type { IncomingMessage } from 'http'
-import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
 import { Flex, Button, Text } from '@chakra-ui/react'
-import LogoSvg from 'assets/svg/logo-pure.svg'
-import universalCookie from 'cookie'
-import { Avatar, LinkButton } from 'ui'
+import { Avatar, LinkButton, Logo } from 'ui'
 import { useRouter } from 'next/router'
 import { truncateMiddle } from 'shared'
 import Head from 'next/head'
@@ -25,28 +15,14 @@ import { isEthAddress } from '../utils/eth'
 import { APP_URL, MAIL_SERVER_URL } from '../constants/env'
 import { ProfileComponent } from '../components/Profile'
 
-function parseCookies(req?: IncomingMessage) {
-  try {
-    const cookies = universalCookie.parse(
-      req ? req.headers.cookie || '' : document.cookie
-    )
-    const cookie = cookies?.[COOKIE_KEY] ?? '{}'
-    return JSON.parse(cookie)
-  } catch (error) {
-    return {}
-  }
-}
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { locale, resolvedUrl, req } = context
+  const { locale, resolvedUrl } = context
   const [address] = resolvedUrl.slice(1).split('?')
-  const cookie = parseCookies(req)
   const errorCode =
     isEthAddress(address) || address?.endsWith('.eth') ? false : 404
   return {
     props: {
       errorCode,
-      address: cookie?.address ?? '',
       ...(await serverSideTranslations(locale as string, [
         'common',
         'navbar',
@@ -79,10 +55,7 @@ const NavbarContainer = styled(Flex)`
 `
 
 const Navbar: React.FC<{ address: string }> = ({ address }) => {
-  const [t] = useTranslation('profile')
   const [isMounted, setIsMounted] = useState(false)
-
-  const trackLaunch = useTrackClick(TrackEvent.ClickProfileLaunchApp)
 
   const emailAddress = useMemo(
     () =>
@@ -103,7 +76,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
       <Flex className="nav">
         <NextLink href="/" passHref>
           <LinkButton>
-            <LogoSvg />
+            <Logo />
           </LinkButton>
         </NextLink>
         {isMounted ? (
@@ -127,23 +100,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
                   {emailAddress}
                 </Text>
               </Button>
-            ) : (
-              <Button
-                as="a"
-                target="_blank"
-                href={APP_URL}
-                borderRadius="40px"
-                bg="brand.500"
-                w="200px"
-                color="white"
-                _hover={{
-                  bg: 'brand.300',
-                }}
-                onClick={() => trackLaunch()}
-              >
-                {t('connect-wallet')}
-              </Button>
-            )}
+            ) : null}
           </Flex>
         ) : null}
       </Flex>
@@ -171,11 +128,7 @@ const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
       </Flex>
-      <ProfileComponent
-        mailAddress={`${id}@${MAIL_SERVER_URL}`}
-        mailSuffix={MAIL_SERVER_URL}
-        address={id}
-      />
+      <ProfileComponent mailAddress={`${id}@${MAIL_SERVER_URL}`} address={id} />
     </>
   )
 }

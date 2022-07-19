@@ -14,7 +14,7 @@ import {
 import { Button } from 'ui'
 import React, { useState } from 'react'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import DesktopImage1 from '../../../assets/commuity-guide/desktop1.png'
 import DesktopImage2 from '../../../assets/commuity-guide/desktop2.png'
 import MobileImage1 from '../../../assets/commuity-guide/mobile1.png'
@@ -89,12 +89,12 @@ export const CommunityGuideModal: React.FC<{
                   {t('community_guide_modal.text.1')}
                 </Box>
                 <Image
-                  src={DesktopImage1.src}
+                  src={DesktopImage1}
                   w="full"
                   display={{ base: 'none', md: 'block' }}
                 />
                 <Image
-                  src={MobileImage1.src}
+                  src={MobileImage1}
                   h="full"
                   w="full"
                   objectFit="contain"
@@ -125,14 +125,14 @@ export const CommunityGuideModal: React.FC<{
                   {t('community_guide_modal.text.2')}
                 </Box>
                 <Image
-                  src={DesktopImage2.src}
+                  src={DesktopImage2}
                   h="full"
                   w="full"
                   objectFit="contain"
                   display={{ base: 'none', md: 'block' }}
                 />
                 <Image
-                  src={MobileImage2.src}
+                  src={MobileImage2}
                   h="full"
                   w="full"
                   objectFit="contain"

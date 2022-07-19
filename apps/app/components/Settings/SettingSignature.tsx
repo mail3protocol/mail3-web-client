@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import {
   Center,
   Flex,
@@ -13,27 +14,35 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import NextLink from 'next/link'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { useTranslation, Trans } from 'next-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import React, { useCallback, useState } from 'react'
-import { Button, CardSignature } from 'ui'
-import { GlobalDimensions, useAccount, useDialog } from 'hooks'
+import { Button } from 'ui'
+import {
+  GlobalDimensions,
+  useAccount,
+  useDialog,
+  useTrackClick,
+  TrackEvent,
+} from 'hooks'
 import { useQuery } from 'react-query'
+import { useLocation } from 'react-router-dom'
 import { useObservableCallback, useSubscription } from 'observable-hooks'
 import { pluck, debounceTime, tap } from 'rxjs/operators'
-import { useRouter } from 'next/router'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import unhappySetupMascot from '../../assets/unhappy-setup-mascot.png'
-import EditSvg from '../../assets/edit.svg'
+import { ReactComponent as EditSvg } from '../../assets/edit.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
+import { RouterLink } from '../RouterLink'
+import { IS_IPHONE } from '../../constants'
+import { CardSignature } from '../CardSignature'
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -92,6 +101,9 @@ export const SettingSignature: React.FC = () => {
   const [isTextEnable, setIsTextEnable] = useState(false)
   const [isCardEnable, setIsCardEnable] = useState(false)
   const [textSignature, setTextSignature] = useState('')
+  const trackImageEdit = useTrackClick(TrackEvent.ClickImageSignature)
+  const trackCyberConnect = useTrackClick(TrackEvent.ClickCyperConnect)
+  const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
 
   const { isLoading } = useQuery(
     [Query.Signatures, account],
@@ -201,7 +213,7 @@ export const SettingSignature: React.FC = () => {
   )
 
   useSubscription(onTextareaChange$, onTextSignatureChange)
-  const router = useRouter()
+  const router = useLocation()
   return (
     <Container>
       <Stack
@@ -216,6 +228,12 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.text')}</Text>
             {isLoading ? (
               <Spinner />
+            ) : IS_IPHONE ? (
+              <Switch
+                colorScheme="deepBlue"
+                isChecked={isTextEnable}
+                onChange={onTextEnableChange}
+              />
             ) : (
               <>
                 <Switch
@@ -237,6 +255,7 @@ export const SettingSignature: React.FC = () => {
           <Textarea
             as="div"
             contentEditable
+            height="auto"
             placeholder="Here is a sample placeholder"
             dangerouslySetInnerHTML={{
               __html: textSignature,
@@ -250,6 +269,12 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.card')}</Text>
             {isLoading ? (
               <Spinner />
+            ) : IS_IPHONE ? (
+              <Switch
+                colorScheme="deepBlue"
+                isChecked={isCardEnable}
+                onChange={onCardEnableChange}
+              />
             ) : (
               <>
                 <Switch
@@ -282,6 +307,7 @@ export const SettingSignature: React.FC = () => {
               spacing="6px"
               className="edit-button"
               onClick={() => {
+                trackImageEdit()
                 dialog({
                   type: 'warning',
                   title: t('signature.edit-dialog.title'),
@@ -294,7 +320,12 @@ export const SettingSignature: React.FC = () => {
                         a: (
                           <Link
                             isExternal
-                            href={generateCyberConnectLink(account)}
+                            onClick={() => trackCyberConnect()}
+                            href={generateCyberConnectLink(
+                              removeMailSuffix(
+                                userInfo?.defaultAddress || account
+                              )
+                            )}
                             color="#4E52F5"
                           />
                         ),
@@ -315,20 +346,21 @@ export const SettingSignature: React.FC = () => {
           <Mascot
             src={
               isCardEnable && isTextEnable
-                ? happySetupMascot.src
-                : unhappySetupMascot.src
+                ? happySetupMascot
+                : unhappySetupMascot
             }
           />
         </Flex>
       )}
       {router.pathname !== RoutePath.SettingSignature ? (
         <Center className="footer" w="full">
-          <NextLink href={RoutePath.SetupShare} passHref>
+          <RouterLink href={RoutePath.SetupShare} passHref>
             <Button
               bg="black"
               color="white"
               w="250px"
               height="50px"
+              onClick={() => trackNext()}
               _hover={{
                 bg: 'brand.50',
               }}
@@ -339,7 +371,7 @@ export const SettingSignature: React.FC = () => {
                 <Text>{t('setup.next')}</Text>
               </Center>
             </Button>
-          </NextLink>
+          </RouterLink>
         </Center>
       ) : null}
     </Container>

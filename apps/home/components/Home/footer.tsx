@@ -8,15 +8,14 @@ import {
   Link,
   Stack,
 } from '@chakra-ui/react'
-import { CONTAINER_MAX_WIDTH } from 'ui'
+import { CONTAINER_MAX_WIDTH, Logo } from 'ui'
 import React from 'react'
-import LogoWithWhiteFontColorSvg from 'assets/svg/logo-with-white-font.svg'
 import { useTrackClick, TrackEvent, TrackKey, HomeCommunity } from 'hooks'
 import dynamic from 'next/dynamic'
-import TwitterIconSvg from '../../assets/svg/socialMedia/twitter.svg'
-import DiscordIconSvg from '../../assets/svg/socialMedia/discord.svg'
-import MirrorIconSvg from '../../assets/svg/socialMedia/mirror.svg'
-import GithubSvg from '../../assets/svg/socialMedia/github.svg'
+import { ReactComponent as TwitterIconSvg } from '../../assets/svg/socialMedia/twitter.svg'
+import { ReactComponent as DiscordIconSvg } from '../../assets/svg/socialMedia/discord.svg'
+import { ReactComponent as MirrorIconSvg } from '../../assets/svg/socialMedia/mirror.svg'
+import { ReactComponent as GithubSvg } from '../../assets/svg/socialMedia/github.svg'
 import {
   DISCORD_URL,
   GITHUB_URL,
@@ -44,11 +43,20 @@ export const Footer = () => {
         direction={{ base: 'column', lg: 'row' }}
       >
         <Box mb={{ base: '20px', lg: 0 }}>
-          <Icon
-            as={LogoWithWhiteFontColorSvg}
-            w={{ base: '139px', lg: '289px' }}
-            h="auto"
-          />
+          <Box>
+            <Logo
+              w={{ base: '139px', lg: '289px' }}
+              iconProps={{
+                w: { base: '32px', lg: '45px' },
+                h: { base: '32px', lg: '45px' },
+              }}
+              textProps={{
+                w: { base: '95px', lg: '122px' },
+                h: { base: '27px', lg: '40px' },
+              }}
+              mb="auto"
+            />
+          </Box>
           <Box fontSize={{ base: '12px', lg: '24px' }} letterSpacing="0.04em">
             For all crypto natives
           </Box>

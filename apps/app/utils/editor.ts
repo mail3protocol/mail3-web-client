@@ -1,16 +1,13 @@
-import html2canvas from 'html2canvas-objectfit-fix'
+import html2canvas from 'html2canvas'
 import { SubmitMessage } from 'models/src/submitMessage'
-import { digestMessage } from './string'
+import { generateAttachmentContentId } from './string'
 
 export async function onRenderElementToImage(element: HTMLDivElement) {
-  const boundingClientRect = element.getBoundingClientRect()
   return html2canvas(element, {
     useCORS: true,
     allowTaint: true,
     height: element.offsetHeight,
     width: element.offsetWidth,
-    x: boundingClientRect.x,
-    y: boundingClientRect.y,
     scale: 2,
     backgroundColor: null,
   }).then((canvas) => canvas.toDataURL())
@@ -71,7 +68,7 @@ export async function outputHtmlWithAttachmentImages(html: string) {
       const contentType = split[0].substring(5)
       const content = split[1]
       // eslint-disable-next-line no-await-in-loop
-      const cid = await digestMessage(content, { algorithm: 'SHA-1' })
+      const cid = await generateAttachmentContentId(content)
       attachments.push({
         filename: `${cid}${suffixNameMap[contentType]}`,
         contentType,

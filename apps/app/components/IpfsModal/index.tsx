@@ -17,7 +17,7 @@ import {
   useEagerConnect,
   useSignMessage,
 } from 'hooks'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
 import MobileIpfsGuidePng from '../../assets/ipfs-guide/mobile.png'
 import { useAPI } from '../../hooks/useAPI'
@@ -34,7 +34,7 @@ export const IpfsModal: React.FC<{
   isForceConnectWallet?: boolean
 }> = ({ isOpen, onClose, onAfterSignature, isForceConnectWallet = true }) => {
   const api = useAPI()
-  const { t } = useTranslation('edit-message')
+  const { t } = useTranslation('ipfs_modal')
   const signMessage = useSignMessage()
   useEagerConnect(isForceConnectWallet)
   const { onOpen: onOpenWalletDialog } = useConnectWalletDialog()
@@ -69,11 +69,11 @@ export const IpfsModal: React.FC<{
           fontSize="24px"
           p="0"
         >
-          {t('ipfs_modal.title')}
+          {t('title')}
         </ModalHeader>
         <ModalBody>
           <Text maxW="495px" mx="auto" whiteSpace="pre-line" textAlign="center">
-            {t('ipfs_modal.content')}
+            {t('content')}
           </Text>
           <Center
             bg="rgba(244, 251, 241, 0.5)"
@@ -84,11 +84,11 @@ export const IpfsModal: React.FC<{
             mt="16px"
           >
             <Image
-              src={DesktopIpfsGuidePng.src}
+              src={DesktopIpfsGuidePng}
               display={{ base: 'none', md: 'block' }}
             />
             <Image
-              src={MobileIpfsGuidePng.src}
+              src={MobileIpfsGuidePng}
               display={{ base: 'block', md: 'none' }}
             />
           </Center>
@@ -96,7 +96,7 @@ export const IpfsModal: React.FC<{
 
         <ModalFooter display="flex" justifyContent="center" p="0" mt="24px">
           <Button w="246px" lineHeight="46px" h="46px" onClick={onGenerateKey}>
-            {t('ipfs_modal.generate_key')}
+            {t('generate_key')}
           </Button>
         </ModalFooter>
       </ModalContent>

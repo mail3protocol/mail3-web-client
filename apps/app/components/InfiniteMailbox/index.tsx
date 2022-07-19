@@ -14,9 +14,9 @@ import {
   QueryKey,
   InfiniteData,
 } from 'react-query'
+import { LinkProps } from 'react-router-dom'
 import { Box } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { LinkProps } from 'next/link'
 import { MailboxesMessagesResponse } from '../../api'
 import { BoxListProps, Mailbox, MessageItem } from '../Mailbox'
 import { Mailboxes } from '../../api/mailboxes'
@@ -49,7 +49,7 @@ interface InfiniteMailboxProps<
   onGetIsLoading?: (isLoading: boolean) => void
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
-  getHref: (id: string) => LinkProps['href']
+  getHref: (id: string) => LinkProps['to']
   mailboxType?: Mailboxes
 }
 

@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { From } from './from'
 import { ToInput } from './toInput'
@@ -67,7 +67,6 @@ export const RecipientAndSubject: React.FC = () => {
       }
     }
   }, [isFoldCcAndBcc])
-  const trackChangeFrom = useTrackClick(TrackEvent.AppEditMessageChangeFrom)
   const trackClickCC = useTrackClick(TrackEvent.AppEditMessageClickCC)
   const trackClickCommunity = useTrackClick(
     TrackEvent.AppEditMessageClickCommunity
@@ -83,7 +82,6 @@ export const RecipientAndSubject: React.FC = () => {
         <ItemField>{t('from')}</ItemField>
         <From
           onChange={(e) => {
-            trackChangeFrom()
             setFromAddress(e)
           }}
         />

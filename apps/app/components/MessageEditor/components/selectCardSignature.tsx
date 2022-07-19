@@ -8,8 +8,8 @@ import {
   Box,
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { CardSignature } from 'ui'
 import React from 'react'
+import { CardSignature } from '../../CardSignature'
 import { useCardSignature } from '../hooks/useCardSignature'
 import { useSubject } from '../hooks/useSubject'
 import { removeMailSuffix } from '../../../utils'

@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Image, Stack } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
-import HomeGridBgBottomSvgPath from '../../assets/svg/home-grid-bg-bottom.svg?url'
+import HomeGridBgBottomSvgPath from '../../assets/svg/home-grid-bg-bottom.svg'
 
 export const Ecosystem = () => (
   <Flex

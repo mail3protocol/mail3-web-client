@@ -43,10 +43,13 @@ export namespace GetMessage {
     attachments: Attachment[]
     text: {
       id: string
+      hasMore: boolean
       encodedSize: {
         plan: number
         html: number
       }
+      plain: string
+      html: string
     }
     bounces: Bounces[] | null
     isAutoReply?: boolean
