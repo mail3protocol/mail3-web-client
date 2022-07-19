@@ -152,17 +152,17 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
 )
 
 const generateEmailAddress = (s = '') => {
-  const [, domain] = s.split('.eth')
-  if (domain) {
-    return s
-  }
   const [address, rest] = s.split('@')
-  return `${truncateMiddle(address, 6, 4)}@${
-    rest || MAIL_SERVER_URL
-  }`.toLowerCase()
+  if (isPrimitiveEthAddress(address))
+    return `${truncateMiddle(address, 6, 4)}@${
+      rest || MAIL_SERVER_URL
+    }`.toLowerCase()
+
+  return s
 }
 
 const ENS_DOMAIN = 'https://app.ens.domains'
+const BIT_DOMAIN = 'https://www.did.id/'
 
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
@@ -178,11 +178,11 @@ export const SettingAddress: React.FC = () => {
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
   const {
-    data: ensNames,
+    data: aliasDate,
     isLoading,
     refetch,
   } = useQuery(
-    [Query.ENS_NAMES, account],
+    [Query.Alias, account],
     async () => {
       const { data } = await api.getAliases()
       return data
@@ -241,19 +241,43 @@ export const SettingAddress: React.FC = () => {
     }
 
   const aliases = useMemo(() => {
-    if (ensNames?.aliases) {
-      return ensNames?.aliases.sort((a) => {
-        const [addr] = a.address.split('@')
-        if (isPrimitiveEthAddress(addr)) {
-          return -1
-        }
-        return 0
-      })
+    const aliasMap: {
+      primitive: Alias | null
+      ens: Alias[]
+      bit: Alias[]
+    } = {
+      primitive: null,
+      ens: [],
+      bit: [],
     }
-    return []
-  }, [ensNames])
 
-  const [firstAlias, ...restAliases] = aliases
+    if (aliasDate?.aliases) {
+      aliasDate?.aliases.forEach((item) => {
+        const { address } = item
+        if (/\.bit@/.test(address)) {
+          aliasMap.bit.push(item)
+          return
+        }
+        if (/\.eth@/.test(address)) {
+          aliasMap.ens.push(item)
+          return
+        }
+        const [addr] = address.split('@')
+        if (isPrimitiveEthAddress(addr)) {
+          aliasMap.primitive = item
+        }
+      })
+      return aliasMap
+    }
+
+    return aliasMap
+  }, [aliasDate])
+
+  const {
+    primitive: primitiveAlias,
+    ens: ensAliases,
+    bit: bitAliases,
+  } = aliases
 
   const router = useLocation()
 
@@ -306,17 +330,24 @@ export const SettingAddress: React.FC = () => {
             </Tooltip>
           </Stack>
         </FormLabel>
-        <EmailSwitch
-          uuid={firstAlias?.uuid ?? 'first_alias'}
-          emailAddress={generateEmailAddress(firstAlias?.address ?? account)}
-          account={firstAlias?.address}
-          onChange={onDefaultAccountChange}
-          key={firstAlias?.address}
-          address={firstAlias?.address ?? account}
-          isLoading={isLoading}
-          isChecked={firstAlias?.uuid === activeAccount || aliases.length === 1}
-        />
-        {restAliases.length && !isLoading ? (
+        {primitiveAlias ? (
+          <EmailSwitch
+            uuid={primitiveAlias.uuid ?? 'first_alias'}
+            emailAddress={generateEmailAddress(
+              primitiveAlias.address ?? account
+            )}
+            account={primitiveAlias.address}
+            onChange={onDefaultAccountChange}
+            key={primitiveAlias.address}
+            address={primitiveAlias.address ?? account}
+            isLoading={isLoading}
+            isChecked={
+              primitiveAlias.uuid === activeAccount ||
+              aliasDate?.aliases?.length === 1
+            }
+          />
+        ) : null}
+        {ensAliases.length && !isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
               <Stack
@@ -334,7 +365,7 @@ export const SettingAddress: React.FC = () => {
             <Box className="switch-wrap">
               <Box p="16px 8px 16px 8px">
                 <VStack spacing="10px">
-                  {restAliases.map((a) => (
+                  {ensAliases.map((a) => (
                     <EmailSwitch
                       uuid={a.uuid}
                       address={a.address}
@@ -375,7 +406,7 @@ export const SettingAddress: React.FC = () => {
                           }}
                         />
                       </Box>
-                      {restAliases.length <= 0 ? refreshButton : null}
+                      {ensAliases.length <= 0 ? refreshButton : null}
                     </Stack>
                   </Text>
                 </Center>
@@ -384,7 +415,7 @@ export const SettingAddress: React.FC = () => {
           </>
         ) : null}
 
-        {restAliases.length && !isLoading ? (
+        {bitAliases.length && !isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
               <Stack
@@ -402,7 +433,7 @@ export const SettingAddress: React.FC = () => {
             <Box className="switch-wrap">
               <Box p="16px 8px 16px 8px">
                 <VStack spacing="10px">
-                  {restAliases.map((a) => (
+                  {bitAliases.map((a) => (
                     <EmailSwitch
                       uuid={a.uuid}
                       address={a.address}
@@ -436,14 +467,14 @@ export const SettingAddress: React.FC = () => {
                               <Link
                                 isExternal
                                 onClick={() => trackClickRegisterENS()}
-                                href={ENS_DOMAIN}
+                                href={BIT_DOMAIN}
                                 color="#4E52F5"
                               />
                             ),
                           }}
                         />
                       </Box>
-                      {restAliases.length <= 0 ? refreshButton : null}
+                      {bitAliases.length <= 0 ? refreshButton : null}
                     </Stack>
                   </Text>
                 </Center>
