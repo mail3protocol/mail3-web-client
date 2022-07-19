@@ -48,6 +48,20 @@ export const DRIFT_BOTTLE_ADDRESS =
 export const GOOGLE_ANALYTICS_MODE =
   import.meta.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MODE === 'true' || false
 
+export const GITHUB_URL =
+  import.meta.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/mail3protocol'
+
+export const GITHUB_MAIL3_ME_BUTTON_URL =
+  import.meta.env.NEXT_PUBLIC_GITHUB_MAIL3_ME_BUTTON_URL ||
+  'https://github.com/mail3protocol/mail3-me-button'
+
+export const MIRROR_URL =
+  import.meta.env.NEXT_PUBLIC_MIRROR_URL || 'https://mirror.xyz/mail3.eth'
+
+export const MAIL3_ME_BUTTON_MIRROR_URL =
+  import.meta.env.NEXT_PUBLIC_MAIL3_ME_BUTTON_MIRRIR_URL ||
+  'https://mirror.xyz/mail3.eth/nTiZI4w3vB1BBjwc8ZLUHCJ2FPhaYJd-l7v62Tv_FY0'
+
 export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')

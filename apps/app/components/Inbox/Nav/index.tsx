@@ -1,43 +1,35 @@
-import React from 'react'
-import { Box, HStack, Wrap, WrapItem } from '@chakra-ui/react'
+import React, { ReactNode } from 'react'
+import { Box, Flex, HStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
+import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as SVGInbox } from '../../../assets/inbox.svg'
 import { ReactComponent as SVGSub } from '../../../assets/subscrption.svg'
+import { ReactComponent as DevelopersSvg } from '../../../assets/developes.svg'
 import { RoutePath } from '../../../route/path'
 import { RouterLink } from '../../RouterLink'
 
 export enum InboxNavType {
   Inbox = 'Inbox',
   Subscription = 'Subscription',
+  Developers = 'Developers',
 }
 
 interface NavItem {
-  icon: any
+  type: InboxNavType
+  icon: ReactNode
   title: string
-}
-
-const navMap: Record<InboxNavType, NavItem> = {
-  [InboxNavType.Inbox]: {
-    icon: <SVGInbox />,
-    title: 'Inbox',
-  },
-  [InboxNavType.Subscription]: {
-    icon: <SVGSub />,
-    title: 'Subscription',
-  },
+  to: RoutePath
 }
 
 const HStackContainer = styled(HStack)`
+  overflow-y: hidden;
+  overflow-x: auto;
   .wrap {
     font-weight: 700;
     font-size: 24px;
     line-height: 30px;
-    color: #6f6f6f;
     cursor: pointer;
-  }
-
-  .wrap.cur {
-    color: #000;
   }
 
   .box-cur {
@@ -57,38 +49,50 @@ const HStackContainer = styled(HStack)`
   }
 `
 
-export const InboxNav: React.FC<{ currentType: InboxNavType }> = ({
-  currentType,
-}) => (
-  <HStackContainer spacing={{ md: '80px', base: '40px' }}>
-    {Object.keys(navMap).map((type, index) => {
-      const { icon, title } = navMap[type as keyof typeof InboxNavType]
-      const isCur = type === currentType
+export const InboxNav: React.FC = () => {
+  const { pathname } = useLocation()
+  const [t] = useTranslation('inbox-nav')
+  const navItems: NavItem[] = [
+    {
+      type: InboxNavType.Inbox,
+      icon: <SVGInbox />,
+      title: t('inbox'),
+      to: RoutePath.Home,
+    },
+    {
+      type: InboxNavType.Subscription,
+      icon: <SVGSub />,
+      title: t('subscription'),
+      to: RoutePath.Subscription,
+    },
+    {
+      type: InboxNavType.Developers,
+      icon: <DevelopersSvg />,
+      title: t('developers'),
+      to: RoutePath.Developers,
+    },
+  ]
 
-      return (
-        <RouterLink
-          // eslint-disable-next-line react/no-array-index-key
-          key={index}
-          href={
-            type === InboxNavType.Subscription
-              ? RoutePath.Subscription
-              : RoutePath.Home
-          }
-        >
-          <a
-            onClick={() => {
-              // track
-            }}
-          >
-            <Wrap className={isCur ? 'wrap cur' : 'wrap'} align="center">
-              <WrapItem>{icon}</WrapItem>
-              <WrapItem>
-                <Box className={isCur ? 'box-cur' : ''}>{title}</Box>
-              </WrapItem>
-            </Wrap>
-          </a>
-        </RouterLink>
-      )
-    })}
-  </HStackContainer>
-)
+  return (
+    <HStackContainer spacing={{ md: '80px', base: '40px' }} height="40px">
+      {navItems.map(({ icon, title, type, to }) => {
+        const isActive = to === pathname
+        return (
+          <RouterLink key={type} href={to}>
+            <Flex
+              as="a"
+              className="wrap"
+              color={isActive ? '#000' : '#6f6f6f'}
+              align="center"
+            >
+              {icon}
+              <Box className={isActive ? 'box-cur' : ''} ml="5px">
+                {title}
+              </Box>
+            </Flex>
+          </RouterLink>
+        )
+      })}
+    </HStackContainer>
+  )
+}

@@ -14,6 +14,7 @@ import { TestingPage } from '../pages/testing'
 import { MessagePage } from '../pages/message/[id]'
 import { TrashPage } from '../pages/messages/trash'
 import { SetupSignaturePage } from '../pages/setup/signature'
+import { Developers } from '../pages/developers'
 
 interface Mail3RouterProps extends RouteProps {
   key: string
@@ -87,6 +88,11 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Subscription,
     key: 'subscription',
     element: <SubscriptionPage />,
+  },
+  {
+    path: RoutePath.Developers,
+    key: 'developers',
+    element: <Developers />,
   },
   {
     path: RoutePath.Unread,

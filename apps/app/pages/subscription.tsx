@@ -1,15 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, PageContainer } from 'ui'
+import { PageContainer } from 'ui'
 import styled from '@emotion/styled'
-import { useNavigate } from 'react-router-dom'
-import { Box } from '@chakra-ui/react'
-import { TrackEvent, useTrackClick } from 'hooks'
+import { Box, Flex } from '@chakra-ui/react'
 import { Navbar } from '../components/Navbar'
-import { FlexButtonBox, MailboxContainer } from '../components/Inbox'
-import { InboxNav, InboxNavType } from '../components/Inbox/Nav'
-import { RoutePath } from '../route/path'
+import { MailboxContainer } from '../components/Inbox'
+import { InboxNav } from '../components/Inbox/Nav'
 import { SubscriptionBody } from '../components/SubscriptionBody'
-import { ReactComponent as SVGWrite } from '../assets/mailbox/write.svg'
+import { GoToWriteMailButton } from '../components/GoToWriteMailButton'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 const NewPageContainer = styled(PageContainer)`
@@ -67,8 +64,6 @@ const Sticky: React.FC<StickyProps> = ({ children }) => {
 }
 
 export const SubscriptionPage = () => {
-  const navi = useNavigate()
-  const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
   useDocumentTitle('Subscription')
   return (
     <>
@@ -82,18 +77,10 @@ export const SubscriptionPage = () => {
       </Sticky>
       <NewPageContainer>
         <Box paddingTop={{ base: '25px', md: '35px' }}>
-          <FlexButtonBox>
-            <InboxNav currentType={InboxNavType.Subscription} />
-            <Button
-              className="btn-write"
-              onClick={() => {
-                trackWriteButton()
-                navi(RoutePath.NewMessage)
-              }}
-            >
-              <SVGWrite /> <Box ml="10px">Write</Box>
-            </Button>
-          </FlexButtonBox>
+          <Flex justify="space-between" pl="20px">
+            <InboxNav />
+            <GoToWriteMailButton />
+          </Flex>
 
           <MailboxContainer minH="700px">
             <Box padding={{ base: '20px 30px 60px', md: '40px 64px' }}>

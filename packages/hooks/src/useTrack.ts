@@ -89,6 +89,10 @@ export enum TrackEvent {
   // ipfs
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
   clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
+
+  // mmb
+  ClickMmbMirror = 'click_mmb_mirror',
+  ClickMmbGithub = 'click_mmb_github',
 }
 
 // dimensions

@@ -215,6 +215,22 @@
         "connect-wallet": "Connect Wallet",
         "enter-app": "Enter App"
     },
+    "developers": {
+        "title": "For Developers",
+        "example-title": "mail³ me button",
+        "example-description": "Embed decentralized communication features for your own product",
+        "github": {
+            "0": "Check out the mail",
+            "1": "3",
+            "2": " me button access on Github"
+        },
+        "mirror": "View our best access cases on mirror"
+    },
+    "inbox-nav": {
+        "inbox": "Inbox",
+        "subscription": "Subscription",
+        "developers": "Developers"
+    },
     "ipfs": {
         "ipfs_link": "IPFS LINK",
         "eth_address": "SENDER ETHEREUM ADDRESS",
