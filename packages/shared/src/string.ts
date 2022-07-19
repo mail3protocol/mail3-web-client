@@ -14,11 +14,9 @@ export function truncateMiddle(
   return `${str.slice(0, takeLength)}${pad}${str.slice(-tailLength)}`
 }
 
-export const isEnsDomain = (address: string) =>
-  /[0-9a-fA-F]+.eth$/.test(address)
+export const isEnsDomain = (address: string) => /\.eth$/.test(address)
 
-export const isBitDomain = (address: string) =>
-  /[0-9a-fA-F]+.bit$/.test(address)
+export const isBitDomain = (address: string) => /\.bit$/.test(address)
 
 export const isPrimitiveEthAddress = (address: string) =>
   /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)

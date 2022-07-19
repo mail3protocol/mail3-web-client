@@ -38,7 +38,12 @@ import {
 } from 'hooks'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import { truncateMiddle, isPrimitiveEthAddress } from 'shared'
+import {
+  truncateMiddle,
+  isPrimitiveEthAddress,
+  isEnsDomain,
+  isBitDomain,
+} from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -253,16 +258,15 @@ export const SettingAddress: React.FC = () => {
 
     if (aliasDate?.aliases) {
       aliasDate?.aliases.forEach((item) => {
-        const { address } = item
-        if (/\.bit@/.test(address)) {
+        const [addr] = item.address.split('@')
+        if (isBitDomain(addr)) {
           aliasMap.bit.push(item)
           return
         }
-        if (/\.eth@/.test(address)) {
+        if (isEnsDomain(addr)) {
           aliasMap.ens.push(item)
           return
         }
-        const [addr] = address.split('@')
         if (isPrimitiveEthAddress(addr)) {
           aliasMap.primitive = item
         }
