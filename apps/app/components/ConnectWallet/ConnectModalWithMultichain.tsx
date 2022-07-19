@@ -12,6 +12,11 @@ import {
   Text,
   Image,
   Flex,
+  useBreakpointValue,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from '@chakra-ui/react'
 import React, { ReactNode, useMemo, useState } from 'react'
 import { ConnectorName, useCloseOnChangePathname } from 'hooks'
@@ -200,136 +205,160 @@ export const ConnectModalWithMultichain: React.FC<{
     Math.abs(offset) * velocity
 
   useCloseOnChangePathname(onClose)
+  const isMobile = useBreakpointValue({ base: true, md: false })
+
+  const contentEl = (
+    <>
+      <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
+        {t('connect.dialog-title')}
+      </Heading>
+      <Tabs
+        variant="unstyled"
+        index={tabIndex}
+        onChange={(newTabIndex) => {
+          setTabIndex((index) => {
+            setDirection(newTabIndex > index ? Direction.Right : Direction.Left)
+            return newTabIndex
+          })
+        }}
+      >
+        <TabList>
+          <Flex
+            w="auto"
+            maxW="full"
+            overflowX="auto"
+            overflowY="hidden"
+            mx="auto"
+          >
+            {chains.map((chain, index) => (
+              <Tab
+                key={chain.name}
+                color={tabIndex === index ? '#000' : '#6F6F6F'}
+                fontSize="14px"
+                fontWeight={600}
+                position="relative"
+                px="8px"
+                pb="7px"
+                flexShrink={0}
+              >
+                <Image
+                  src={chain.icon}
+                  alt={chain.name}
+                  w="16px"
+                  h="16px"
+                  objectFit="contain"
+                  mr="2px"
+                />
+                {chain.name}
+                <Box
+                  position="absolute"
+                  bottom="5px"
+                  left="26px"
+                  h="3px"
+                  w="calc(100% - 18px - 16px)"
+                  bg="#000"
+                  rounded="5px"
+                  opacity={tabIndex === index ? 1 : 0}
+                  transition="200ms"
+                />
+              </Tab>
+            ))}
+          </Flex>
+        </TabList>
+      </Tabs>
+      <Box as="hr" borderColor="#E0E0E0" mx="30px" />
+      <Box bg="#F3F3F3">
+        <Text
+          fontSize="12px"
+          lineHeight="18px"
+          color="#6F6F6F"
+          textAlign="center"
+          my="24px"
+        >
+          {currentChain?.description}
+        </Text>
+        <Box
+          overflowX="hidden"
+          overflowY="hidden"
+          minH="223px"
+          position="relative"
+          mb="24px"
+          transition="200ms"
+          style={{
+            height: `${(currentChain?.walletButtons?.length || 3) * 54}px`,
+          }}
+        >
+          <AnimatePresence initial={false} custom={direction}>
+            <VStack
+              key={tabIndex}
+              as={motion.div}
+              spacing="16px"
+              align="center"
+              w="full"
+              h="full"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              position="absolute"
+              top="0"
+              left="0"
+              // @ts-ignore
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipe = swipePower(offset.x, velocity.x)
+                const start = 0
+                const end = chains.length - 1
+                if (swipe < -swipeConfidenceThreshold) {
+                  setDirection(Direction.Right)
+                  setTabIndex((index) => (index === end ? start : index + 1))
+                } else if (swipe > swipeConfidenceThreshold) {
+                  setDirection(Direction.Left)
+                  setTabIndex((index) => (index === start ? end : index - 1))
+                }
+              }}
+            >
+              {currentChain?.walletButtons}
+            </VStack>
+          </AnimatePresence>
+        </Box>
+      </Box>
+      <Box
+        textAlign="center"
+        mt="17px"
+        maxW="324px"
+        w="full"
+        mx="auto"
+        fontSize="12px"
+        lineHeight="16px"
+        color="#6F6F6F"
+      >
+        {t('connect.footer')}
+      </Box>
+    </>
+  )
+
+  if (isMobile) {
+    return (
+      <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent pt="24px" pb="32px">
+          <DrawerCloseButton />
+          {contentEl}
+        </DrawerContent>
+      </Drawer>
+    )
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} autoFocus={false} isCentered>
       <ModalOverlay />
-      <ModalContent
-        maxW="520px"
-        rounded={{ base: 0, md: '24px' }}
-        pt="24px"
-        pb="32px"
-      >
+      <ModalContent maxW="520px" rounded="24px" pt="24px" pb="32px">
         <ModalCloseButton />
-        <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
-          {t('connect.dialog-title')}
-        </Heading>
-        <Tabs
-          variant="unstyled"
-          index={tabIndex}
-          onChange={(newTabIndex) => {
-            setTabIndex((index) => {
-              setDirection(
-                newTabIndex > index ? Direction.Right : Direction.Left
-              )
-              return newTabIndex
-            })
-          }}
-        >
-          <TabList>
-            <Flex
-              w="auto"
-              maxW="full"
-              overflowX="auto"
-              overflowY="hidden"
-              mx="auto"
-            >
-              {chains.map((chain, index) => (
-                <Tab
-                  key={chain.name}
-                  color={tabIndex === index ? '#000' : '#6F6F6F'}
-                  fontSize="14px"
-                  fontWeight={600}
-                  position="relative"
-                  px="8px"
-                  pb="7px"
-                  flexShrink={0}
-                >
-                  <Image
-                    src={chain.icon}
-                    alt={chain.name}
-                    w="16px"
-                    h="16px"
-                    objectFit="contain"
-                    mr="2px"
-                  />
-                  {chain.name}
-                  <Box
-                    position="absolute"
-                    bottom="5px"
-                    left="26px"
-                    h="3px"
-                    w="calc(100% - 18px - 16px)"
-                    bg="#000"
-                    rounded="5px"
-                    opacity={tabIndex === index ? 1 : 0}
-                    transition="200ms"
-                  />
-                </Tab>
-              ))}
-            </Flex>
-          </TabList>
-        </Tabs>
-        <Box as="hr" borderColor="#E0E0E0" mx="30px" />
-        <Box bg="#F3F3F3">
-          <Text
-            fontSize="12px"
-            lineHeight="18px"
-            color="#6F6F6F"
-            textAlign="center"
-            my="24px"
-          >
-            {currentChain?.description}
-          </Text>
-          <Box
-            overflowX="hidden"
-            overflowY="auto"
-            minH="223px"
-            position="relative"
-            mb="24px"
-            transition="200ms"
-            style={{
-              height: `${(currentChain?.walletButtons?.length || 3) * 54}px`,
-            }}
-          >
-            <AnimatePresence initial={false} custom={direction}>
-              <VStack
-                key={tabIndex}
-                as={motion.div}
-                spacing="16px"
-                align="center"
-                w="full"
-                h="full"
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                position="absolute"
-                top="0"
-                left="0"
-                // @ts-ignore
-                onDragEnd={(e, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x)
-                  const start = 0
-                  const end = chains.length - 1
-                  if (swipe < -swipeConfidenceThreshold) {
-                    setDirection(Direction.Right)
-                    setTabIndex((index) => (index === end ? start : index + 1))
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    setDirection(Direction.Left)
-                    setTabIndex((index) => (index === start ? end : index - 1))
-                  }
-                }}
-              >
-                {currentChain?.walletButtons}
-              </VStack>
-            </AnimatePresence>
-          </Box>
-        </Box>
+        {contentEl}
       </ModalContent>
     </Modal>
   )

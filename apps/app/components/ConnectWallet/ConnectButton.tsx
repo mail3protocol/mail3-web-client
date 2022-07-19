@@ -42,12 +42,12 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
     <Button
       variant="outline"
       w="250px"
-      px="4px"
+      px="8px"
       {...props}
       onClick={isConnected ? undefined : onClick}
     >
       <Flex w="100%" alignItems="center" {...flexProps}>
-        <HStack spacing="6px" alignItems="center">
+        <HStack spacing="20px" alignItems="center">
           {icon}
           <Text {...textProps}>{text}</Text>
         </HStack>
