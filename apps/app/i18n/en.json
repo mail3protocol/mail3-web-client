@@ -179,7 +179,7 @@
             "ens-name": "ENS Name",
             "default": "Default",
             "default-hover": "This address will be the default address for sending emails.",
-            "registe-ens": "Register <a>new</a> ENS name",
+            "registe-ens": "Register <a>new</a> ENS",
             "request-failed": "Request change default address failed, please try again later.",
             "refresh": "Refresh",
             "refresh_failed": "Refresh Failed: "

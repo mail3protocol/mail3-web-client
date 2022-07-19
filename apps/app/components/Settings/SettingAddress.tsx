@@ -17,6 +17,7 @@ import {
   Icon,
   Button as RowButton,
   Box,
+  Spacer,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import {
@@ -80,6 +81,13 @@ const Container = styled(Center)`
       margin-top: 10px;
     }
   }
+
+  .switch-wrap {
+    background: rgba(243, 243, 243, 0.5);
+    border: 1px solid #e7e7e7;
+    border-radius: 16px;
+    overflow: hidden;
+  }
 `
 
 interface EmailSwitchProps {
@@ -103,9 +111,9 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
 }) => (
   <Flex
     justifyContent="space-between"
-    boxShadow={
-      isChecked ? `0px 0px 10px 4px rgba(25, 25, 100, 0.1)` : undefined
-    }
+    // boxShadow={
+    //   isChecked ? `0px 0px 10px 4px rgba(25, 25, 100, 0.1)` : undefined
+    // }
     borderRadius="8px"
     border={isChecked ? '1px solid #4E52F5' : '1px solid #e7e7e7'}
     padding="10px 16px 10px 16px"
@@ -323,48 +331,126 @@ export const SettingAddress: React.FC = () => {
                 {refreshButton}
               </Stack>
             </FormLabel>
-            <VStack spacing="10px">
-              {restAliases.map((a) => (
-                <EmailSwitch
-                  uuid={a.uuid}
-                  address={a.address}
-                  emailAddress={generateEmailAddress(a.address)}
-                  account={a.address}
-                  onChange={onDefaultAccountChange}
-                  key={a.address}
-                  isChecked={a.uuid === activeAccount}
-                />
-              ))}
-            </VStack>
+            <Box className="switch-wrap">
+              <Box p="16px 8px 16px 8px">
+                <VStack spacing="10px">
+                  {restAliases.map((a) => (
+                    <EmailSwitch
+                      uuid={a.uuid}
+                      address={a.address}
+                      emailAddress={generateEmailAddress(a.address)}
+                      account={a.address}
+                      onChange={onDefaultAccountChange}
+                      key={a.address}
+                      isChecked={a.uuid === activeAccount}
+                    />
+                  ))}
+                </VStack>
+              </Box>
+              <Flex h="44px" bg="#fff" p="0 18px">
+                {refreshButton}
+                <Spacer />
+                <Center alignItems="center">
+                  <Text fontSize="14px" fontWeight={500}>
+                    <Stack
+                      direction="row"
+                      spacing="16px"
+                      justifyContent="flex-start"
+                      alignItems="center"
+                    >
+                      <Box>
+                        <Trans
+                          ns="settings"
+                          i18nKey="address.registe-ens"
+                          t={t}
+                          components={{
+                            a: (
+                              <Link
+                                isExternal
+                                onClick={() => trackClickRegisterENS()}
+                                href={ENS_DOMAIN}
+                                color="#4E52F5"
+                              />
+                            ),
+                          }}
+                        />
+                      </Box>
+                      {restAliases.length <= 0 ? refreshButton : null}
+                    </Stack>
+                  </Text>
+                </Center>
+              </Flex>
+            </Box>
           </>
         ) : null}
-        <Text fontSize="16px" fontWeight={700} mt="32px" mb="32px">
-          <Stack
-            direction="row"
-            spacing="16px"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            <Box h="24px" lineHeight="24px">
-              <Trans
-                ns="settings"
-                i18nKey="address.registe-ens"
-                t={t}
-                components={{
-                  a: (
-                    <Link
-                      isExternal
-                      onClick={() => trackClickRegisterENS()}
-                      href={ENS_DOMAIN}
-                      color="#4E52F5"
+
+        {restAliases.length && !isLoading ? (
+          <>
+            <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
+              <Stack
+                direction="row"
+                spacing="16px"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Box h="24px" lineHeight="24px">
+                  {t('address.ens-name')}
+                </Box>
+                {refreshButton}
+              </Stack>
+            </FormLabel>
+            <Box className="switch-wrap">
+              <Box p="16px 8px 16px 8px">
+                <VStack spacing="10px">
+                  {restAliases.map((a) => (
+                    <EmailSwitch
+                      uuid={a.uuid}
+                      address={a.address}
+                      emailAddress={generateEmailAddress(a.address)}
+                      account={a.address}
+                      onChange={onDefaultAccountChange}
+                      key={a.address}
+                      isChecked={a.uuid === activeAccount}
                     />
-                  ),
-                }}
-              />
+                  ))}
+                </VStack>
+              </Box>
+              <Flex h="44px" bg="#fff" p="0 18px">
+                {refreshButton}
+                <Spacer />
+                <Center alignItems="center">
+                  <Text fontSize="14px" fontWeight={500}>
+                    <Stack
+                      direction="row"
+                      spacing="16px"
+                      justifyContent="flex-start"
+                      alignItems="center"
+                    >
+                      <Box>
+                        <Trans
+                          ns="settings"
+                          i18nKey="address.registe-ens"
+                          t={t}
+                          components={{
+                            a: (
+                              <Link
+                                isExternal
+                                onClick={() => trackClickRegisterENS()}
+                                href={ENS_DOMAIN}
+                                color="#4E52F5"
+                              />
+                            ),
+                          }}
+                        />
+                      </Box>
+                      {restAliases.length <= 0 ? refreshButton : null}
+                    </Stack>
+                  </Text>
+                </Center>
+              </Flex>
             </Box>
-            {restAliases.length <= 0 ? refreshButton : null}
-          </Stack>
-        </Text>
+          </>
+        ) : null}
       </FormControl>
       <Flex className="mascot">
         <Mascot src={happySetupMascot} />
