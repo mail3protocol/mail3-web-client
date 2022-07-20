@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 
 import { CloseIcon } from '@chakra-ui/icons'
 import { atom, useAtomValue } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
 import { ReactComponent as ReplySVG } from '../../assets/preview/reply-white.svg'
 import { ReactComponent as ForwardSVG } from '../../assets/preview/forward-white.svg'
 import { ReactComponent as TrashSVG } from '../../assets/mailbox/menu/trash.svg'
@@ -35,7 +36,7 @@ export const bulkLoadingAtom = atom({
 
 interface MailboxMenuProps {
   type: MailboxMenuType
-  actionMap: PartialRecord<BulkActionType, () => void>
+  actionMap: PartialRecord<BulkActionType, () => Promise<void>>
   onClose?: () => void
 }
 
@@ -88,11 +89,12 @@ const bulkConfig: Record<
 }
 
 const BulkAtion: React.FC<{
-  onClick?: () => void
+  onClick?: () => Promise<void>
   type: BulkActionType
 }> = ({ onClick, type }) => {
   const { Icon, name } = bulkConfig[type]
   const loadingMap: Record<number, boolean> = useAtomValue(bulkLoadingAtom)
+  const setBulkLoadingMap = useUpdateAtom(bulkLoadingAtom)
   const isLoading = loadingMap[type]
 
   return (
@@ -103,8 +105,22 @@ const BulkAtion: React.FC<{
       disabled={isLoading}
       isLoading={isLoading}
       loadingText="deleting..."
-      onClick={() => {
-        if (onClick) onClick()
+      onClick={async () => {
+        if (onClick) {
+          // loading true
+          setBulkLoadingMap((state) => {
+            const newState = { ...state }
+            newState[BulkActionType.Delete] = true
+            return newState
+          })
+          await onClick()
+          // loading false
+          setBulkLoadingMap((state) => {
+            const newState = { ...state }
+            newState[BulkActionType.Delete] = false
+            return newState
+          })
+        }
       }}
     >
       {name}
