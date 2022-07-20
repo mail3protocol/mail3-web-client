@@ -3,9 +3,9 @@ import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
 import { useInfiniteQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
 import { Button, PageContainer } from 'ui'
-import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { useToast } from 'hooks'
+import { useUpdateAtom } from 'jotai/utils'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { MailboxMessageItemResponse } from '../../api'
@@ -14,7 +14,12 @@ import { InboxNav } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import {
+  BulkActionType,
+  bulkLoadingAtom,
+  MailboxMenu,
+  MailboxMenuType,
+} from '../MailboxMenu'
 
 import { SendingDialog } from '../SendingDialog'
 import { GoToWriteMailButton } from '../GoToWriteMailButton'
@@ -93,7 +98,7 @@ export const InboxComponent: React.FC = () => {
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
   const [hiddenMap, setHiddenMap] = useState<Record<string, boolean>>({})
-
+  const setBulkLoadingMap = useUpdateAtom(bulkLoadingAtom)
   const refSeenBoxList = useRef<InfiniteHandle>(null)
 
   const queryFnNews = useCallback(
@@ -165,7 +170,17 @@ export const InboxComponent: React.FC = () => {
 
               if (!ids.length) return
               try {
+                setBulkLoadingMap((state) => {
+                  const newState = { ...state }
+                  newState[BulkActionType.Delete] = true
+                  return newState
+                })
                 await api.batchDeleteMessage(ids)
+                setBulkLoadingMap((state) => {
+                  const newState = { ...state }
+                  newState[BulkActionType.Delete] = false
+                  return newState
+                })
                 if (newIds.length) {
                   const map: Record<string, boolean> = {}
                   newIds.forEach((key) => {
@@ -181,6 +196,11 @@ export const InboxComponent: React.FC = () => {
                 refSeenBoxList?.current?.setHiddenIds(seenIds)
                 toast(t('status.trash.ok'), { status: 'success' })
               } catch (error) {
+                setBulkLoadingMap((state) => {
+                  const newState = { ...state }
+                  newState[BulkActionType.Delete] = false
+                  return newState
+                })
                 toast(t('status.trash.fail'))
               }
             },

@@ -3,6 +3,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 
 import { CloseIcon } from '@chakra-ui/icons'
+import { atom, useAtomValue } from 'jotai'
 import { ReactComponent as ReplySVG } from '../../assets/preview/reply-white.svg'
 import { ReactComponent as ForwardSVG } from '../../assets/preview/forward-white.svg'
 import { ReactComponent as TrashSVG } from '../../assets/mailbox/menu/trash.svg'
@@ -27,6 +28,10 @@ export enum BulkActionType {
   MarkUnSeen,
   MarkSeen,
 }
+
+export const bulkLoadingAtom = atom({
+  [BulkActionType.Delete]: false,
+})
 
 interface MailboxMenuProps {
   type: MailboxMenuType
@@ -87,11 +92,17 @@ const BulkAtion: React.FC<{
   type: BulkActionType
 }> = ({ onClick, type }) => {
   const { Icon, name } = bulkConfig[type]
+  const loadingMap: Record<number, boolean> = useAtomValue(bulkLoadingAtom)
+  const isLoading = loadingMap[type]
+
   return (
     <Button
       height="50px"
       leftIcon={<Icon />}
       variant="solid"
+      disabled={isLoading}
+      isLoading={isLoading}
+      loadingText="deleting..."
       onClick={() => {
         if (onClick) onClick()
       }}
