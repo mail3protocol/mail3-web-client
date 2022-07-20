@@ -104,7 +104,6 @@ const BulkAtion: React.FC<{
       variant="solid"
       disabled={isLoading}
       isLoading={isLoading}
-      loadingText="deleting..."
       onClick={async () => {
         if (onClick) {
           // loading true
