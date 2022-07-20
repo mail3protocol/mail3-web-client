@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'react-i18next'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Button } from 'ui'
 import {
   useAccount,
@@ -169,12 +169,20 @@ const generateEmailAddress = (s = '') => {
 const ENS_DOMAIN = 'https://app.ens.domains'
 const BIT_DOMAIN = 'https://www.did.id/'
 
+enum AliasType {
+  ENS = 'ENS',
+  BIT = 'BIT',
+}
+
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
   const account = useAccount()
   const api = useAPI()
   const [activeAccount, setActiveAccount] = useState(account)
-  const [isRefreshing, setIsRefeshing] = useState(false)
+  const [isRefreshingMap, setIsRefeshingMap] = useState({
+    [AliasType.BIT]: false,
+    [AliasType.ENS]: false,
+  })
   const toast = useToast()
   const dialog = useDialog()
   const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
@@ -210,8 +218,12 @@ export const SettingAddress: React.FC = () => {
     }
   )
 
-  const onRefreshEnsDomains = async () => {
-    setIsRefeshing(true)
+  const onRefreshDomains = async (type: AliasType) => {
+    setIsRefeshingMap((state) => {
+      const newState = state
+      newState[type] = true
+      return newState
+    })
     trackClickENSRefresh()
     try {
       await api.updateAliasList()
@@ -221,7 +233,11 @@ export const SettingAddress: React.FC = () => {
         toast(t('address.refresh_failed') + e.toString())
       }
     } finally {
-      setIsRefeshing(false)
+      setIsRefeshingMap((state) => {
+        const newState = state
+        newState[type] = false
+        return newState
+      })
     }
   }
 
@@ -285,16 +301,19 @@ export const SettingAddress: React.FC = () => {
 
   const router = useLocation()
 
-  const refreshButton = (
-    <RowButton
-      variant="link"
-      colorScheme="deepBlue"
-      leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
-      onClick={onRefreshEnsDomains}
-      isLoading={isRefreshing}
-    >
-      {t('address.refresh')}
-    </RowButton>
+  const RefreshButton = useCallback(
+    ({ type }: { type: AliasType }) => (
+      <RowButton
+        variant="link"
+        colorScheme="deepBlue"
+        leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
+        onClick={() => onRefreshDomains(type)}
+        isLoading={isRefreshingMap[type]}
+      >
+        {t('address.refresh')}
+      </RowButton>
+    ),
+    [onRefreshDomains, isRefreshingMap]
   )
 
   return (
@@ -382,7 +401,7 @@ export const SettingAddress: React.FC = () => {
                 </VStack>
               </Box>
               <Flex h="44px" bg="#fff" p="0 18px">
-                {refreshButton}
+                <RefreshButton type={AliasType.ENS} />
                 <Spacer />
                 <Center alignItems="center">
                   <Text fontSize="14px" fontWeight={500}>
@@ -448,7 +467,7 @@ export const SettingAddress: React.FC = () => {
                 </VStack>
               </Box>
               <Flex h="44px" bg="#fff" p="0 18px">
-                {refreshButton}
+                <RefreshButton type={AliasType.BIT} />
                 <Spacer />
                 <Center alignItems="center">
                   <Text fontSize="14px" fontWeight={500}>

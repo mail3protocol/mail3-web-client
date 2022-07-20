@@ -9,6 +9,8 @@ import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdent
 import { SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
+type mailAddress = `${string}@${string}`
+
 export interface LoginResponse {
   uuid: string
   jwt: string
@@ -16,7 +18,7 @@ export interface LoginResponse {
 
 export interface Alias {
   uuid: string
-  address: string
+  address: mailAddress
   is_default: boolean
 }
 
