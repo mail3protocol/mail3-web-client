@@ -7,10 +7,12 @@ export interface AttachmentExtraInfo {
   downloadProgress?: number
 }
 
-const attachmentsAtom = atomWithReset<SubmitMessage.Attachment[]>([])
-const attachmentExtraInfoAtom = atomWithReset<{
+export interface AttachmentExtraInfoObject {
   [key: string]: AttachmentExtraInfo
-}>({})
+}
+
+const attachmentsAtom = atomWithReset<SubmitMessage.Attachment[]>([])
+const attachmentExtraInfoAtom = atomWithReset<AttachmentExtraInfoObject>({})
 
 export function useAttachment() {
   const [attachments, setAttachments] = useAtom(attachmentsAtom)

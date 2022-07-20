@@ -96,3 +96,8 @@ export function removeDuplicationAttachments(
     return has
   })
 }
+
+export function hasFilenameSpecialCharacters(filename: string) {
+  const reg = /[/|>|<|\||:|&]/gi
+  return reg.test(filename)
+}
