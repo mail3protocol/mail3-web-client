@@ -168,7 +168,7 @@ const generateEmailAddress = (s = '') => {
 }
 
 const ENS_DOMAIN = 'https://app.ens.domains'
-const BIT_DOMAIN = 'https://www.did.id/'
+const BIT_DOMAIN = 'https://app.did.id/explorer?inviter=mail3.bit'
 
 enum AliasType {
   ENS = 'ENS',
