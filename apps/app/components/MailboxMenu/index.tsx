@@ -106,19 +106,15 @@ const BulkAtion: React.FC<{
       isLoading={isLoading}
       onClick={async () => {
         if (onClick) {
-          // loading true
-          setBulkLoadingMap((state) => {
-            const newState = { ...state }
-            newState[BulkActionType.Delete] = true
-            return newState
-          })
+          setBulkLoadingMap((state) => ({
+            ...state,
+            [BulkActionType.Delete]: true,
+          }))
           await onClick()
-          // loading false
-          setBulkLoadingMap((state) => {
-            const newState = { ...state }
-            newState[BulkActionType.Delete] = false
-            return newState
-          })
+          setBulkLoadingMap((state) => ({
+            ...state,
+            [BulkActionType.Delete]: false,
+          }))
         }
       }}
     >
