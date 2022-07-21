@@ -10,24 +10,24 @@ import {
   Text,
   Box,
 } from '@chakra-ui/react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import React, { useState } from 'react'
 import {
   SignupResponseCode,
   useAccount,
   useProvider,
   useSignup,
-  buildSignMessaege,
+  buildSignMessage,
   useToast,
   useTrackClick,
   TrackEvent,
   TrackKey,
 } from 'hooks'
 import { Button } from 'ui'
-import { useRouter } from 'next/router'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { truncateMiddle } from 'shared'
-import WalletSvg from '../../assets/wallet.svg'
-import LeftArrowSvg from '../../assets/left-arrow.svg'
+import { ReactComponent as WalletSvg } from '../../assets/wallet.svg'
+import { ReactComponent as LeftArrowSvg } from '../../assets/left-arrow.svg'
 import {
   useAuth,
   useAuthModalOnBack,
@@ -51,14 +51,15 @@ export const AuthModal: React.FC = () => {
   const login = useLogin()
   const closeAuthModal = useCloseAuthModal()
   const isAuthModalOpen = useIsAuthModalOpen()
-  const router = useRouter()
+  const router = useLocation()
+  const navi = useNavigate()
   const onBack = useAuthModalOnBack()
   const onSign = async (nonce: number) => {
     if (provider == null) {
       toast(t('auth.errors.wallet-not-connected'))
       return null
     }
-    const message = buildSignMessaege(nonce, signatureDesc)
+    const message = buildSignMessage(nonce, signatureDesc)
     const signature = await provider.getSigner().signMessage(message)
 
     return {
@@ -90,7 +91,7 @@ export const AuthModal: React.FC = () => {
             if (router.pathname === RoutePath.Testing) {
               trackTestingConnect({ [TrackKey.TestingEntry]: true })
             }
-            router.push(RoutePath.Home)
+            navi(RoutePath.Home)
           }
           break
         }
@@ -105,7 +106,7 @@ export const AuthModal: React.FC = () => {
           }
           closeAuthModal()
           if (router.pathname !== RoutePath.WhiteList) {
-            router.push(RoutePath.Setup)
+            navi(RoutePath.Setup)
           }
           break
         }

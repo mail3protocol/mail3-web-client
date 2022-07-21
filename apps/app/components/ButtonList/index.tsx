@@ -1,5 +1,5 @@
 import { Button, Stack, Text, Link as ChakraLink } from '@chakra-ui/react'
-import Link from 'next/link'
+import { RouterLink } from '../RouterLink'
 
 export interface ButtonListItemProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -51,9 +51,9 @@ export const ButtonListItem: React.FC<ButtonListItemProps> = ({
   }
 
   return href ? (
-    <Link href={href} passHref>
+    <RouterLink href={href} passHref>
       {item}
-    </Link>
+    </RouterLink>
   ) : (
     item
   )

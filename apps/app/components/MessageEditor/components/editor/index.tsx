@@ -23,18 +23,23 @@ import {
   useRemirror,
   useRemirrorContext,
 } from '@remirror/react'
+import { useNavigate } from 'react-router-dom'
 import { Stack, Button, Flex, Grid, useDisclosure } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
-import { useRouter } from 'next/router'
+import { useQuery } from 'react-query'
 import { Menu } from '../menus'
 import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
+import { IpfsModal } from '../../../IpfsModal'
+import { Query } from '../../../../api/query'
+import { useAPI } from '../../../../hooks/useAPI'
 import { useSubject } from '../../hooks/useSubject'
 import { LeaveEditorModal } from '../leaveEditorModal'
+import { useBlocker } from '../../../../hooks/useBlocker'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -90,6 +95,7 @@ const TextEditor = () => {
 }
 
 const Footer = () => {
+  const api = useAPI()
   const { isDisabledSendButton, isLoading, isSubmitted, onSubmit } =
     useSubmitMessage()
   const { subject, toAddresses, ccAddresses, bccAddresses } = useSubject()
@@ -99,67 +105,66 @@ const Footer = () => {
   const trackClickSave = useTrackClick(TrackEvent.AppEditMessageClickSave)
   const trackClickSend = useTrackClick(TrackEvent.AppEditMessageClickSend)
   const toast = useToast()
-  const router = useRouter()
   const initialHtml = useMemo(() => getHTML(), []) // initial content
   const {
     isOpen: isOpenLeaveEditorModal,
     onOpen: onOpenLeaveEditorModal,
     onClose: onCloseLeaveEditorModal,
   } = useDisclosure()
+  const navi = useNavigate()
   const [leavingUrl, setLeavingUrl] = useState('')
   const [isAllowLeave, setIsAllowLeave] = useState(false)
   const [isLeavingWithSave, setIsLeavingWithSave] = useState(false)
   const [isLeavingWithoutSave, setIsLeavingWithoutSave] = useState(false)
+  const isChangeContent = () =>
+    !(
+      !subject &&
+      toAddresses.length <= 0 &&
+      ccAddresses.length <= 0 &&
+      bccAddresses.length <= 0 &&
+      initialHtml === getHTML()
+    )
+  useBlocker((tx) => {
+    setLeavingUrl(tx.location.pathname)
+    onOpenLeaveEditorModal()
+  }, isChangeContent() && !isSubmitted && !isAllowLeave && !isSaving && !isLeavingWithSave && !isLeavingWithoutSave)
   useEffect(() => {
-    const isShowLeavingModal = () =>
-      !(
-        !subject &&
-        toAddresses.length <= 0 &&
-        ccAddresses.length <= 0 &&
-        bccAddresses.length <= 0 &&
-        initialHtml === getHTML()
-      )
-    const handleRouteChange = (url: string): string | undefined => {
-      if (
-        isShowLeavingModal() &&
-        !isSubmitted &&
-        !isAllowLeave &&
-        !isSaving &&
-        !isLeavingWithSave &&
-        !isLeavingWithoutSave
-      ) {
-        setLeavingUrl(url)
-        onOpenLeaveEditorModal()
-        router.events.emit('routeChangeError')
-        // eslint-disable-next-line no-throw-literal
-        throw `Route change to "${url}"`
-      }
-      return url
-    }
     const handleBeforeunload = (e: Event) => {
       e.preventDefault()
       // @ts-ignore
       e.returnValue = ''
     }
     window.addEventListener('beforeunload', handleBeforeunload)
-    router.events.on('routeChangeStart', handleRouteChange)
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange)
       window.removeEventListener('beforeunload', handleBeforeunload)
     }
-  }, [
-    subject,
-    toAddresses,
-    ccAddresses,
-    bccAddresses,
-    isAllowLeave,
-    isSaving,
-    isLeavingWithSave,
-    isLeavingWithoutSave,
-  ])
+  }, [])
+
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery([Query.GetMessageEncryptionKeyState], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  )
 
   return (
     <>
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async () => {
+            onCloseIpfsModal()
+            await onSubmit()
+          }}
+        />
+      ) : null}
       <LeaveEditorModal
         isOpen={isOpenLeaveEditorModal}
         onClose={onCloseLeaveEditorModal}
@@ -168,7 +173,7 @@ const Footer = () => {
           await new Promise((r) => {
             setTimeout(r, 200)
           })
-          await router.push(leavingUrl)
+          navi(leavingUrl, { replace: true })
           await setIsLeavingWithoutSave(false)
         }}
         doNotSaveButtonLoading={isLeavingWithoutSave}
@@ -178,7 +183,7 @@ const Footer = () => {
           try {
             await setIsAllowLeave(true)
             await onSave(getHTML())
-            await router.push(leavingUrl)
+            navi(leavingUrl, { replace: true })
             onCloseLeaveEditorModal()
           } catch (err) {
             toast(t('draft.failed'))
@@ -248,7 +253,11 @@ const Footer = () => {
           isLoading={isLoading}
           onClick={() => {
             trackClickSend()
-            onSubmit()
+            if (isUploadedIpfsKey) {
+              onSubmit()
+            } else {
+              onOpenIpfsModal()
+            }
           }}
         >
           {t('send')}
@@ -262,7 +271,7 @@ export interface EditorProps {
   content?: string
 }
 
-export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
+const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
@@ -315,3 +324,5 @@ export const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
     </RemirrorTheme>
   )
 }
+
+export default Editor

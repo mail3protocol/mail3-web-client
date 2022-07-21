@@ -26,12 +26,12 @@ import {
 } from 'hooks'
 import { copyText, shareToTwitter } from 'shared'
 
-import SvgCopy from 'assets/profile/copy.svg'
-import SvgShare from 'assets/profile/share.svg'
-import SvgTwitter from 'assets/profile/twitter.svg'
-import SvgMore from 'assets/profile/more.svg'
-import SvgEtherscan from 'assets/profile/business/etherscan.svg'
-import SvgCyber from 'assets/profile/business/arrow.svg'
+import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
+import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
+import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
+import { ReactComponent as SvgMore } from 'assets/profile/more.svg'
+import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
+import { ReactComponent as SvgCyber } from 'assets/profile/business/arrow.svg'
 import dynamic from 'next/dynamic'
 
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
@@ -106,7 +106,6 @@ const Container = styled(Box)`
 interface ProfileComponentProps {
   mailAddress: string
   address: string
-  mailSuffix: string
 }
 
 let homeUrl = ''
@@ -117,7 +116,6 @@ if (typeof window !== 'undefined') {
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
-  mailSuffix,
 }) => {
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
@@ -125,7 +123,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const trackTwitter = useTrackClick(TrackEvent.ClickProfileTwitter)
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
   const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
-  // const trackMailme = useTrackClick(TrackEvent.ClickProfileMailMe)
   const trackScoialDimensions = useTrackClick(
     TrackEvent.ClickProfileScoialPlatform
   )
@@ -232,7 +229,13 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </Box>
         <Box className="button-list">
           <Box className="button-wrap-mobile">
-            <Popover offset={[0, 10]} arrowSize={18} autoFocus closeOnBlur>
+            <Popover
+              offset={[0, 10]}
+              arrowSize={18}
+              autoFocus
+              closeOnBlur
+              strategy="fixed"
+            >
               <PopoverTrigger>
                 <Box p="10px">
                   <SvgMore />
@@ -314,7 +317,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
           </HStack>
         </Box>
         <Box className="address">
-          <Text className="p">{`${address}@${mailSuffix}`}</Text>
+          <Text className="p">{mailAddress}</Text>
         </Box>
         <Center mt="25px">
           <HStack spacing="24px">

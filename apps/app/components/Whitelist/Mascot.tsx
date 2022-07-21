@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { Box } from '@chakra-ui/react'
-import Mascot1Svg from '../../assets/mascot/1.svg'
-import Mascot2Svg from '../../assets/mascot/2.svg'
-import Mascot3Svg from '../../assets/mascot/3.svg'
+import { ReactComponent as Mascot1Svg } from '../../assets/mascot/1.svg'
+import { ReactComponent as Mascot2Svg } from '../../assets/mascot/2.svg'
+import { ReactComponent as Mascot3Svg } from '../../assets/mascot/3.svg'
 
 const Mascot1 = styled(Mascot1Svg)`
   position: absolute;

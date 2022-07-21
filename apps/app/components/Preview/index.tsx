@@ -1,8 +1,14 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Avatar, Button } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import styled from '@emotion/styled'
 import {
   ConfirmDialog,
@@ -13,19 +19,14 @@ import {
   useToast,
   useTrackClick,
 } from 'hooks'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
-import NextLink from 'next/link'
+import { useAtomValue } from 'jotai'
 import { GetMessage } from 'models/src/getMessage'
-import { GetMessageContent } from 'models/src/getMessageContent'
+import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
-import {
-  MessageFlagAction,
-  MessageFlagType,
-  MailboxMessageDetailResponse,
-  AddressResponse,
-} from '../../api'
+import { MessageFlagAction, MessageFlagType, AddressResponse } from '../../api'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
@@ -37,16 +38,17 @@ import {
   removeMailSuffix,
 } from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
-import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
+import {
+  DRIFT_BOTTLE_ADDRESS,
+  HOME_URL,
+  OFFICE_ADDRESS_LIST,
+} from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
-
-interface MeesageDetailState
-  extends Pick<
-    MailboxMessageDetailResponse,
-    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc' | 'bcc'
-  > {}
+import { userPropertiesAtom } from '../../hooks/useLogin'
+import type { MeesageDetailState } from '../Mailbox'
+import { IpfsInfoTable } from '../IpfsInfoTable'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -83,19 +85,25 @@ export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [t2] = useTranslation('common')
 
-  const router = useRouter()
+  const [searchParams] = useSearchParams()
+  const { id: _id } = useParams()
+  const id = _id as string
+  const location = useLocation()
+  const state = location.state as MeesageDetailState | undefined
+  const navi = useNavigate()
+  const origin = searchParams.get('origin')
   const toast = useToast()
-  const { id, origin } = router.query as {
-    id: string | undefined
-    origin: string
-  }
   const api = useAPI()
   const dialog = useDialog()
+
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
-  const { data } = useQuery(
+  const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
+
+  const userProps = useAtomValue(userPropertiesAtom)
+  const { data, isLoading: isLoadingContent } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
       const messageInfo = id
@@ -103,17 +111,10 @@ export const PreviewComponent: React.FC = () => {
             api.getMessageInfo(id as string)
           )
         : null
-      const messageContent = messageInfo?.text.id
-        ? await catchApiResponse<GetMessageContent.Response>(
-            api.getMessageContent(messageInfo?.text.id)
-          )
-        : null
       return {
-        info: messageInfo,
-        html: messageContent?.html,
-        plain: messageContent?.plain,
+        html: messageInfo?.text.html,
+        plain: messageInfo?.text.plain,
         messageInfo,
-        messageContent,
       }
     },
     {
@@ -122,36 +123,38 @@ export const PreviewComponent: React.FC = () => {
       refetchOnWindowFocus: false,
       cacheTime: Infinity,
       onSuccess(d) {
-        if (typeof id !== 'string') return
-        const messageInfo = d.info
+        const { messageInfo } = d
         if (messageInfo?.unseen) {
+          const { from, subject } = messageInfo
+          const { address } = from
           if (
-            messageInfo.from.address.startsWith('mail3dao.eth') &&
-            messageInfo.subject.startsWith('Join Mail3 DAO!')
+            address.startsWith('mail3dao.eth') &&
+            subject.startsWith('Join Mail3 DAO!')
           ) {
             trackJoinDao()
           }
-          if (
-            messageInfo.from.address.startsWith('mail3.eth') &&
-            messageInfo.subject.startsWith('Show your mail3')
-          ) {
-            trackShowYourNft()
+
+          if (address.startsWith('mail3.eth')) {
+            if (subject.startsWith('Show your mail3')) trackShowYourNft()
+            if (subject.startsWith('Mail3 New Feature')) trackOpenUpdateMail()
           }
+
+          const isFromDriftBottle = address === DRIFT_BOTTLE_ADDRESS
+          if (isFromDriftBottle) trackOpenDriftbottle()
+
+          api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
         }
-        const isSeen = d.info?.flags.includes(MessageFlagType.Seen)
-        const isFromDriftBottle = d.info?.from.address === DRIFT_BOTTLE_ADDRESS
-        if (!isSeen && isFromDriftBottle) {
-          trackOpenDriftbottle()
-        }
-        api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
       },
       enabled: typeof id === 'string',
     }
   )
 
   const detail: MeesageDetailState | undefined = useMemo(() => {
-    if (data?.info) {
-      const { date, subject, to, cc, from, attachments, bcc } = data.info
+    if (state) {
+      return state
+    }
+    if (data?.messageInfo) {
+      const { date, subject, to, cc, from, attachments, bcc } = data.messageInfo
 
       return {
         date,
@@ -164,7 +167,7 @@ export const PreviewComponent: React.FC = () => {
       }
     }
     return undefined
-  }, [data])
+  }, [data?.messageInfo, state])
 
   const content = useMemo(() => {
     if (data?.html) return data.html
@@ -172,9 +175,54 @@ export const PreviewComponent: React.FC = () => {
     return ''
   }, [data])
 
-  const isDriftBottleAddress = data?.info?.from.address === DRIFT_BOTTLE_ADDRESS
+  const isDriftBottleAddress =
+    data?.messageInfo?.from.address === DRIFT_BOTTLE_ADDRESS
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
+
+  const messageId = data?.messageInfo?.messageId
+  const {
+    data: messageOnChainIdentifierData,
+    refetch: refetchMessageOnChainIdentifier,
+    error: messageOnChainIdentifierError,
+    isLoading: isLoadingMessageOnChainIdentifier,
+  } = useQuery(
+    [Query.GetMessageOnChainIdentifier, messageId],
+    async () => {
+      if (!messageId) return null
+      return (await api.getMessageOnChainIdentifier(messageId)).data
+    },
+    {
+      retry: false,
+    }
+  )
+
+  const isShowIpfsTable =
+    !messageOnChainIdentifierError &&
+    !isLoadingMessageOnChainIdentifier &&
+    !isLoadingContent
+
+  useEffect(() => {
+    const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
+    const contentDigestIsEmtpyStr =
+      messageOnChainIdentifierData?.content_digest === ''
+    if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
+      const subscriber = interval(3000)
+        .pipe(
+          switchMap(() =>
+            fromPipe(defer(() => refetchMessageOnChainIdentifier()))
+          ),
+          takeWhile(
+            (res) => res.data?.url === '' && res.data?.content_digest === ''
+          )
+        )
+        .subscribe()
+      return () => {
+        subscriber.unsubscribe()
+      }
+    }
+    return () => {}
+  }, [messageOnChainIdentifierData])
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
@@ -184,13 +232,20 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
-        router.push({
-          pathname: RoutePath.NewMessage,
-          query: {
-            id,
-            action: 'reply',
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'reply',
+            }).toString(),
           },
-        })
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Forward]: {
@@ -199,13 +254,20 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
-        router.push({
-          pathname: RoutePath.NewMessage,
-          query: {
-            id,
-            action: 'forward',
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'forward',
+            }).toString(),
           },
-        })
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Trash]: {
@@ -220,7 +282,7 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.deleteMessage(id, { force: false })
           toast(t('status.trash.ok'), { status: 'success' })
-          router.back()
+          navi(-1)
         } catch (error) {
           toast(t('status.trash.fail'))
         }
@@ -252,7 +314,7 @@ export const PreviewComponent: React.FC = () => {
             try {
               await api.deleteMessage(id, { force: true })
               toast(t('status.delete.ok'))
-              router.back()
+              navi(-1)
             } catch (error) {
               toast(t('status.delete.fail'))
             }
@@ -271,7 +333,9 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.moveMessage(id, Mailboxes.INBOX)
           toast(t('status.restore.ok'))
-          router.replace(`${RoutePath.Message}/${id}`)
+          navi(`${RoutePath.Message}/${id}`, {
+            replace: true,
+          })
         } catch (error) {
           toast(t('status.restore.fail'))
         }
@@ -291,18 +355,38 @@ export const PreviewComponent: React.FC = () => {
     }
 
     return list.map((key) => buttonConfig[key])
-  }, [api, id, origin, data?.info])
+  }, [api, id, origin, data?.messageInfo])
 
   const onClickAvatar = (address: string) => {
     const realAddress = removeMailSuffix(address).toLowerCase()
     window.location.href = `${HOME_URL}/${realAddress}`
   }
 
-  const avatarList = useMemo(() => {
-    if (!detail?.to) return []
-    const exists: Array<string> = []
+  const mailAddress: string = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
 
-    let arr = [detail.from, ...detail.to]
+  const toMessage = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => detail?.from.address === address
+    )
+
+    if (isOfficeMail && detail && detail.to === null) {
+      return [
+        {
+          address: mailAddress,
+        },
+      ]
+    }
+
+    return detail?.to || []
+  }, [detail])
+
+  const avatarList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = []
+    let arr = [detail.from, ...toMessage]
     if (detail.cc) arr = [...arr, ...detail.cc]
     if (detail.bcc) arr = [...arr, ...detail.bcc]
 
@@ -312,7 +396,7 @@ export const PreviewComponent: React.FC = () => {
       return true
     })
     return arr
-  }, [detail])
+  }, [detail, toMessage])
 
   if (!id) {
     return (
@@ -347,7 +431,7 @@ export const PreviewComponent: React.FC = () => {
           left="0px"
           border={{ base: 0, md: '2px solid #292D32' }}
           onClick={() => {
-            router.back()
+            navi(-1)
           }}
         >
           <ChevronLeftIcon w="26px" h="26px" />
@@ -460,8 +544,8 @@ export const PreviewComponent: React.FC = () => {
                 lineHeight={{ base: '16px', md: '24px' }}
                 marginTop={{ base: '12px', md: '5px' }}
               >
-                {detail.to ? (
-                  <span>to {detail.to.map(getNameAddress).join('; ')}; </span>
+                {toMessage.length ? (
+                  <span>to {toMessage.map(getNameAddress).join('; ')}; </span>
                 ) : null}
                 {detail.cc ? (
                   <span>cc {detail.cc.map(getNameAddress).join('; ')}; </span>
@@ -488,43 +572,52 @@ export const PreviewComponent: React.FC = () => {
           padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
           borderBottom="1px solid #ccc"
         >
-          <PreviewContent>
-            <RenderHTML
-              html={content}
-              attachments={detail.attachments}
-              messageId={id}
-              from={detail.from}
-            />
-          </PreviewContent>
+          {isLoadingContent ? (
+            <Loading />
+          ) : (
+            <PreviewContent>
+              <RenderHTML
+                html={content}
+                attachments={detail.attachments}
+                messageId={id}
+                from={detail.from}
+              />
+            </PreviewContent>
+          )}
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
+          ) : null}
+          {isShowIpfsTable ? (
+            <IpfsInfoTable
+              ethAddress={messageOnChainIdentifierData?.owner_identifier}
+              ipfs={messageOnChainIdentifierData?.url}
+              contentDigest={messageOnChainIdentifierData?.content_digest}
+            />
           ) : null}
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (
           <Center pt="16px">
-            <NextLink
-              href={{
-                pathname: RoutePath.NewMessage,
-                query: {
+            <Button
+              variant="solid"
+              bg="#4E52F5"
+              _hover={{
+                bg: '#4E52F5',
+              }}
+              onClick={() => {
+                const search = createSearchParams({
                   force_to: driftBottleFrom,
                   id,
                   action: 'reply',
                   origin: 'driftbottle',
-                },
+                }).toString()
+                navi({
+                  pathname: RoutePath.NewMessage,
+                  search,
+                })
               }}
-              passHref
             >
-              <Button
-                as="a"
-                variant="solid"
-                bg="#4E52F5"
-                _hover={{
-                  bg: '#4E52F5',
-                }}
-              >
-                {t('reply-driftbottle-sender')}
-              </Button>
-            </NextLink>
+              {t('reply-driftbottle-sender')}
+            </Button>
           </Center>
         ) : null}
       </Container>

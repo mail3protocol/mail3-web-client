@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Box, Flex, Stack } from '@chakra-ui/react'
+import { Box, BoxProps, Flex, Stack } from '@chakra-ui/react'
 import React, { useEffect, useRef } from 'react'
 import { fromEvent } from 'rxjs'
 
@@ -87,7 +87,11 @@ export const RollingBackgroundCanvas = () => {
   return <canvas ref={canvasRef} style={{ width: '100%' }} />
 }
 
-export const RollingBackground = () => (
+export const RollingBackground: React.FC<
+  BoxProps & {
+    count?: number
+  }
+> = ({ count = 5, ...props }) => (
   <Box
     w="full"
     h="100vh"
@@ -96,6 +100,7 @@ export const RollingBackground = () => (
     fontWeight="bold"
     fontSize="120px"
     color="#E1E1E1"
+    {...props}
   >
     {[false, true].map((isReverse) => (
       <RollingSubtitlesWithAnimation
@@ -107,7 +112,7 @@ export const RollingBackground = () => (
           direction="column"
           transform={isReverse ? 'translateY(300px)' : ''}
         >
-          {new Array(5)
+          {new Array(count)
             .fill(0)
             .map((_, i) => i)
             .map((stackItemIndex) => (

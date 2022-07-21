@@ -9,16 +9,16 @@ import {
   Center,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { useTranslation } from 'next-i18next'
-import NextLink from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { CloseIcon } from '@chakra-ui/icons'
 import { AnimatePresence, motion } from 'framer-motion'
 import { switchMap, timer } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { useSending } from '../../hooks/useSending'
-import LoadingSvg from '../../assets/loading.svg'
-import SucceedSvg from '../../assets/succeed.svg'
+import { ReactComponent as LoadingSvg } from '../../assets/loading.svg'
+import { ReactComponent as SucceedSvg } from '../../assets/succeed.svg'
 import { RoutePath } from '../../route/path'
+import { RouterLink } from '../RouterLink'
 
 export const SendingDialog: React.FC = () => {
   const [t] = useTranslation('mailboxes')
@@ -97,7 +97,7 @@ export const SendingDialog: React.FC = () => {
               {isMessageSent ? t('sending.succeed') : t('sending.sending')}
             </Box>
             {isMessageSent ? (
-              <NextLink href={RoutePath.Sent} passHref>
+              <RouterLink href={RoutePath.Sent} passHref>
                 <Link
                   color="#4E51F4"
                   textDecoration="underline"
@@ -108,7 +108,7 @@ export const SendingDialog: React.FC = () => {
                 >
                   {t('sending.view_message')}
                 </Link>
-              </NextLink>
+              </RouterLink>
             ) : null}
             <Button
               variant="unstyled"

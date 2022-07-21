@@ -1,10 +1,13 @@
 import React, { useMemo, useRef } from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Button, PageContainer, ProfileCard } from 'ui'
-import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
-import { TrackEvent, useScreenshot, useToast, useTrackClick } from 'hooks'
+import { useTranslation } from 'react-i18next'
+import {
+  TrackEvent,
+  useAccount,
+  useScreenshot,
+  useToast,
+  useTrackClick,
+} from 'hooks'
 import {
   Box,
   Center,
@@ -16,33 +19,22 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import Head from 'next/head'
 import styled from '@emotion/styled'
 import { useAtomValue } from 'jotai/utils'
 import { shareToTwitter } from 'shared'
-import SvgCopy from 'assets/profile/copy.svg'
-import SvgShare from 'assets/profile/share.svg'
-import SvgTwitter from 'assets/profile/twitter-blue.svg'
-import SvgEtherscan from 'assets/profile/business/etherscan.svg'
-import SvgArrow from 'assets/profile/business/arrow.svg'
-import { Navbar } from '../../components/Navbar'
+import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
+import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
+import { ReactComponent as SvgTwitter } from 'assets/profile/twitter-blue.svg'
+import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
+import { ReactComponent as SvgArrow } from 'assets/profile/business/arrow.svg'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
-import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
-
+import { userPropertiesAtom } from '../../hooks/useLogin'
 import { copyText } from '../../utils'
-import { HOME_URL } from '../../constants'
-
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'settings',
-        'common',
-      ])),
-    },
-  })
-)
+import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
+import { useRedirectHome } from '../../hooks/useRedirectHome'
+import { RouterLink } from '../../components/RouterLink'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 const Container = styled(Flex)`
   .button-item {
@@ -77,22 +69,24 @@ const Footer = styled(Box)`
   }
 `
 
-const SetupShare: NextPage = () => {
+export const SetupSharePage = () => {
   const [t] = useTranslation('settings')
   const [t2] = useTranslation('common')
   const toast = useToast()
+  const { isAuth, redirectHome } = useRedirectHome()
   const trackNext = useTrackClick(TrackEvent.ClickShareYourNext)
   const trackCopy = useTrackClick(TrackEvent.ClickGuideCopy)
   const trackTwitter = useTrackClick(TrackEvent.ClickGuideTwitter)
   const trackDownload = useTrackClick(TrackEvent.ClickGuideDownloadCard)
   const { downloadScreenshot } = useScreenshot()
+  const account = useAccount()
 
   const userProps = useAtomValue(userPropertiesAtom)
 
   const cardRef = useRef<HTMLDivElement>(null)
 
   const mailAddress: string = useMemo(
-    () => userProps?.defaultAddress ?? 'unknown',
+    () => userProps?.defaultAddress || `${account}@${MAIL_SERVER_URL}`,
     [userProps]
   )
 
@@ -100,6 +94,12 @@ const SetupShare: NextPage = () => {
     const ads = mailAddress.substring(0, mailAddress.indexOf('@'))
     return `${HOME_URL}/${ads}`
   }, [mailAddress])
+
+  useDocumentTitle('Share')
+
+  if (!isAuth) {
+    return redirectHome()
+  }
 
   const onShareTwitter = () => {
     trackTwitter()
@@ -135,11 +135,7 @@ const SetupShare: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Mail3: Setup Share Profile</title>
-      </Head>
       <PageContainer>
-        <Navbar />
         <SettingContainer>
           <Center
             position="relative"
@@ -150,7 +146,7 @@ const SetupShare: NextPage = () => {
             <Heading fontSize={['20px', '20px', '28px']}>
               {t('setup.share.title')}
             </Heading>
-            <Link href={RoutePath.Inbox} passHref>
+            <RouterLink href={RoutePath.Inbox} passHref>
               <Button
                 bg="black"
                 color="white"
@@ -168,7 +164,7 @@ const SetupShare: NextPage = () => {
                   <Text>{t('setup.next')}</Text>
                 </Center>
               </Button>
-            </Link>
+            </RouterLink>
           </Center>
           <Container justifyContent="center">
             <Box w="600px">
@@ -234,7 +230,7 @@ const SetupShare: NextPage = () => {
           </Container>
 
           <Footer>
-            <Link href={RoutePath.Inbox} passHref>
+            <RouterLink href={RoutePath.Inbox} passHref>
               <Button
                 bg="black"
                 color="white"
@@ -251,7 +247,7 @@ const SetupShare: NextPage = () => {
                   <Text>{t('setup.next')}</Text>
                 </Center>
               </Button>
-            </Link>
+            </RouterLink>
           </Footer>
         </SettingContainer>
       </PageContainer>
@@ -262,5 +258,3 @@ const SetupShare: NextPage = () => {
     </>
   )
 }
-
-export default SetupShare

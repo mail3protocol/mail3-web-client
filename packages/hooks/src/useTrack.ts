@@ -1,7 +1,7 @@
 export enum TrackEvent {
   // settings
   ClickImageSignature = 'click_image_signature_edit',
-  ClickRegisterENS = 'click_register_new_ens',
+  ClickRegisterENS = 'click_register_new_ENS',
   ClickCyperConnect = 'click_image_signature_edit_cyberconnect',
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
@@ -27,6 +27,7 @@ export enum TrackEvent {
   // mail tracking
   OpenJoinMail3Dao = 'open_join_mail3_dao',
   OpenShowYourMail3NFT = 'open_show_your_mail3_nft',
+  OpenUpdateMail = 'open_update_mail',
   // connect wallet
   ConnectWallet = 'Mail3_app_home_click_connectwallet',
 
@@ -45,13 +46,13 @@ export enum TrackEvent {
   TestingEnterApp = 'beta1_click_enterapp',
 
   // home
-  HomeLaunchApp = 'mail3_offical_click_launchapp',
+  HomeLaunchApp = 'Mail3_offical_click_launchapp',
   HomeClickWhiteList = 'mail3_offical_click_whitelist',
   HomeClickJoinWhiteList = 'mail3_offical_click_jointhewhitelist',
   HomeClickTestingGo = 'mail3_offical_click_testinggo',
   HomeClickWhitePaper = 'mail3_offical_click_litepaper',
   HomeClickCommunity = 'mail3_offical_click_community',
-  HomeClickGetIn = 'mail3_offical_click_getin',
+  HomeClickGetIn = 'Mail3_offical_click_getin',
   HomeClickContact = 'mail3_offical_click_contactus',
   HomeClickGoTesting = 'Mail3_offical_click_testinggo',
   HomeClickBlackCube = 'mail3_offical_click_blackcube',
@@ -84,6 +85,14 @@ export enum TrackEvent {
   OpenDriftbottleMail = 'open_driftbottle_mail',
 
   ClickENSRefresh = 'click_ENS_refresh',
+
+  // ipfs
+  clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
+  clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
+
+  // mmb
+  ClickMmbMirror = 'click_mmb_mirror',
+  ClickMmbGithub = 'click_mmb_github',
 }
 
 // dimensions
@@ -120,9 +129,10 @@ export enum ProfileScoialPlatformItem {
 
 export enum PersonnalCenter {
   Settings = 'Settings',
-  Profile = 'Profile',
-  CopyAddress = 'CopyAddress',
-  ChangeWallet = 'ChangeWallet',
+  MyProfileLink = 'My Profile Link',
+  MyMail3Address = 'My mail3 Address',
+  ChangeWallet = 'Change Wallet',
+  Logout = 'Logout',
 }
 
 export enum Mail3MenuItem {

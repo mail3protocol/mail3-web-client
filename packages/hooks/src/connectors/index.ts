@@ -23,6 +23,18 @@ export * from './WalletConnect'
 export enum ConnectorName {
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
+
+  // 👇 Not supported
+  Phantom = 'Phantom',
+  Solflare = 'Solflare',
+  Blocto = 'Blocto',
+  Avalance = 'Avalance',
+  TronLink = 'TronLink',
+  Coinbase = 'Coinbase',
+  Keplr = 'Keplr',
+  Plug = 'Plug',
+  Zilpay = 'Zilpay',
+  Polkawallet = 'Polkawallet',
 }
 
 const lastConectorNameAtom = atomWithStorage<ConnectorName | undefined>(

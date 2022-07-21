@@ -1,6 +1,6 @@
 import { useHelpers } from '@remirror/react'
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useNavigate } from 'react-router-dom'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { defer, lastValueFrom, retry } from 'rxjs'
 import { useAPI } from '../../../hooks/useAPI'
@@ -12,6 +12,7 @@ import { API } from '../../../api'
 import {
   onRenderElementToImage,
   outputHtmlWithAttachmentImages,
+  removeDuplicationAttachments,
 } from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
 import { DRIFT_BOTTLE_ADDRESS } from '../../../constants'
@@ -44,7 +45,7 @@ export function useSubmitMessage() {
     onReset,
   } = useSubject()
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const navi = useNavigate()
   const isDisabledSendButton = [
     !fromAddress,
     toAddresses.length <= 0,
@@ -74,7 +75,7 @@ export function useSubmitMessage() {
       const {
         html: replacedAttachmentImageHtml,
         attachments: imageAttachments,
-      } = outputHtmlWithAttachmentImages(html)
+      } = await outputHtmlWithAttachmentImages(html)
       html = replacedAttachmentImageHtml
       const isSendToDriftBottle = toAddresses.some(
         (address) => address === DRIFT_BOTTLE_ADDRESS
@@ -89,9 +90,11 @@ export function useSubmitMessage() {
         cc: ccAddresses.map((address) => ({ address })),
         bcc: bccAddresses.map((address) => ({ address })),
         html,
-        attachments: attachments
-          .filter((a) => a.contentDisposition !== 'inline')
-          .concat(imageAttachments),
+        attachments: removeDuplicationAttachments(
+          attachments
+            .filter((a) => a.contentDisposition !== 'inline')
+            .concat(imageAttachments)
+        ),
       })
       addSendingMessage({ messageId: submitMessageResult.data.messageId })
       setIsSubmitted(true)
@@ -103,7 +106,7 @@ export function useSubmitMessage() {
       }
       await removeDraft(api)
       onReset()
-      await router.push(RoutePath.Inbox)
+      navi(RoutePath.Inbox)
     } catch (err: any) {
       toast(err?.response?.data?.message || err?.message || 'unknown error', {
         textProps: {

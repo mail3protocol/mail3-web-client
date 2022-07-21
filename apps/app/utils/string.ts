@@ -1,6 +1,4 @@
 import { verifyEmail, truncateMiddle } from 'shared'
-import querystring from 'query-string'
-import type { ParsedUrlQuery } from 'querystring'
 import { MAIL_SERVER_URL } from '../constants'
 
 export function copyTextFallback(data: string): void {
@@ -35,22 +33,6 @@ export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 4) {
     }
   }
   return truncateMiddle(str, takeLength, str.length - i + tailLength)
-}
-
-export const getUtmQueryString = (query: ParsedUrlQuery) => {
-  const newQuery: ParsedUrlQuery = {}
-  const keys = Object.keys(query)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    if (key.startsWith('utm')) {
-      newQuery[key] = query[key]
-    }
-  }
-  const qs = querystring.stringify(newQuery)
-  if (qs) {
-    return `?${qs}`
-  }
-  return qs
 }
 
 export function removeMailSuffix(emailAddress: string) {
@@ -103,4 +85,22 @@ export function getDriftBottleFrom(str: string): string | undefined {
     )?.[0]
     .substring(18)
     .trim()
+}
+
+export async function digestMessage(
+  message: string,
+  options?: {
+    algorithm: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512'
+  }
+) {
+  const algorithm = options?.algorithm || 'SHA-256'
+  // eslint-disable-next-line compat/compat
+  const msgUint8 = new TextEncoder().encode(message)
+  const hashBuffer = await crypto.subtle.digest(algorithm, msgUint8)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+export function generateAttachmentContentId(content: string) {
+  return digestMessage(content, { algorithm: 'SHA-1' })
 }

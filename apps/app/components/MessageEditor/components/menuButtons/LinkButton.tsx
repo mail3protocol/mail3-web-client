@@ -12,9 +12,9 @@ import {
 } from '@chakra-ui/react'
 import { useActive, useCommands, useCurrentSelection } from '@remirror/react'
 import { useState } from 'react'
-import LinkSvg from 'assets/svg/editor/link.svg'
+import { ReactComponent as LinkSvg } from 'assets/svg/editor/link.svg'
 import { Button } from 'ui'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { ButtonBase } from './Base'
 
 export const LinkButton: React.FC = () => {

@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { Icon, IconProps } from '@chakra-ui/icons'
-import AudioSvg from '../../../assets/fileIcons-preview/audio.svg'
-import FolderSvg from '../../../assets/fileIcons-preview/folder.svg'
-import ImageSvg from '../../../assets/fileIcons-preview/image.svg'
-import PdfSvg from '../../../assets/fileIcons-preview/pdf.svg'
-import VideoSvg from '../../../assets/fileIcons-preview/video.svg'
-import ZipSvg from '../../../assets/fileIcons-preview/zip.svg'
+import { ReactComponent as AudioSvg } from '../../../assets/fileIcons-preview/audio.svg'
+import { ReactComponent as FolderSvg } from '../../../assets/fileIcons-preview/folder.svg'
+import { ReactComponent as ImageSvg } from '../../../assets/fileIcons-preview/image.svg'
+import { ReactComponent as PdfSvg } from '../../../assets/fileIcons-preview/pdf.svg'
+import { ReactComponent as VideoSvg } from '../../../assets/fileIcons-preview/video.svg'
+import { ReactComponent as ZipSvg } from '../../../assets/fileIcons-preview/zip.svg'
 
 export const FileIcon: React.FC<{ type: string } & IconProps> = ({
   type,

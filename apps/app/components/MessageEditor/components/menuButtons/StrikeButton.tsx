@@ -1,6 +1,6 @@
 import { Icon } from '@chakra-ui/react'
 import { useCommands } from '@remirror/react'
-import StrikeSvg from 'assets/svg/editor/strike.svg'
+import { ReactComponent as StrikeSvg } from 'assets/svg/editor/strike.svg'
 import { ButtonBase } from './Base'
 
 export const StrikeButton: React.FC = () => {

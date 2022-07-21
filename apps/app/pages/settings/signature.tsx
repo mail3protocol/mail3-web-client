@@ -1,66 +1,49 @@
 import React from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer } from 'ui'
-import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { Center, Heading } from '@chakra-ui/react'
-import Head from 'next/head'
-import { Navbar } from '../../components/Navbar'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { Tabs, Tab } from '../../components/Tabs'
 import { SettingSignature } from '../../components/Settings/SettingSignature'
-import { getAuthenticateProps } from '../../hooks/useLogin'
+import { useRedirectHome } from '../../hooks/useRedirectHome'
+import { RouterLink } from '../../components/RouterLink'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'settings',
-        'common',
-      ])),
-    },
-  })
-)
-
-const SettingsSignaturePage: NextPage = () => {
+export const SettingsSignaturePage = () => {
   const [t] = useTranslation('settings')
+  const { isAuth, redirectHome } = useRedirectHome()
+  useDocumentTitle('Setting Signature')
+  if (!isAuth) {
+    return redirectHome()
+  }
   return (
-    <>
-      <Head>
-        <title>Mail3: Setting Signature</title>
-      </Head>
-      <PageContainer>
-        <Navbar />
-        <SettingContainer>
-          <Center
-            position="relative"
-            w="100%"
-            mb="20px"
-            mt={['20px', '20px', '40px']}
-          >
-            <Heading fontSize={['20px', '20px', '28px']}>
-              {t('settings.title')}
-            </Heading>
-          </Center>
-          <Tabs mb="32px">
-            <Link href={RoutePath.Settings} passHref>
-              <Tab as="a" isActive={false}>
-                {t('settings.tabs.address')}
-              </Tab>
-            </Link>
-            <Link href={RoutePath.SettingSignature} passHref>
-              <Tab as="a" isActive>
-                {t('settings.tabs.signature')}
-              </Tab>
-            </Link>
-          </Tabs>
-          <SettingSignature />
-        </SettingContainer>
-      </PageContainer>
-    </>
+    <PageContainer>
+      <SettingContainer>
+        <Center
+          position="relative"
+          w="100%"
+          mb="20px"
+          mt={['20px', '20px', '40px']}
+        >
+          <Heading fontSize={['20px', '20px', '28px']}>
+            {t('settings.title')}
+          </Heading>
+        </Center>
+        <Tabs mb="32px">
+          <RouterLink href={RoutePath.Settings}>
+            <Tab as="a" isActive={false}>
+              {t('settings.tabs.address')}
+            </Tab>
+          </RouterLink>
+          <RouterLink href={RoutePath.SettingSignature}>
+            <Tab as="a" isActive>
+              {t('settings.tabs.signature')}
+            </Tab>
+          </RouterLink>
+        </Tabs>
+        <SettingSignature />
+      </SettingContainer>
+    </PageContainer>
   )
 }
-
-export default SettingsSignaturePage

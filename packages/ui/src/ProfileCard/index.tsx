@@ -2,14 +2,19 @@ import { Box, Center, HStack, Image, Text } from '@chakra-ui/react'
 import React, { forwardRef } from 'react'
 import styled from '@emotion/styled'
 import QrCode from 'qrcode.react'
-import { Avatar, Button } from 'ui'
+import { Avatar, Button, Logo } from 'ui'
 import classNames from 'classnames'
 
-import LogoSvg from 'assets/svg/logo-pure.svg'
-import PngMailMeButton from './assets/mail3-button.png'
-import PngBorder from './assets/border.png'
-import PngAddressBorder from './assets/address-border.png'
-import PngSeal from './assets/seal.png'
+import _PngMail3MeButton from './assets/mail3-button.png'
+import _PngBorder from './assets/border.png'
+import _PngAddressBorder from './assets/address-border.png'
+import _PngSeal from './assets/seal.png'
+import { unifyImage } from '../utils'
+
+const PngMail3MeButton = unifyImage(_PngMail3MeButton)
+const PngBorder = unifyImage(_PngBorder)
+const PngAddressBorder = unifyImage(_PngAddressBorder)
+const PngSeal = unifyImage(_PngSeal)
 
 interface ProfileCardProps {
   mailAddress: string
@@ -26,7 +31,7 @@ const Container = styled(Box)`
   left: -9999px;
   position: absolute;
   border-radius: 20px;
-  background-image: url(${PngBorder.src});
+  background-image: url(${PngBorder});
   background-repeat: no-repeat;
   background-size: 100%;
 
@@ -107,6 +112,8 @@ const Container = styled(Box)`
     left: 50%;
     margin-left: -125px;
     position: absolute;
+    text-align: center;
+    padding: 2% 0;
   }
 
   .avatar-wrap {
@@ -146,17 +153,22 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
           'is-dev': isDev,
         })}
       >
-        <Image src={PngBorder.src} className="border" alt="" />
+        <Image src={PngBorder} className="border" alt="" />
         <Box className="content">
           <Center flexDirection="column">
             <Box pt="35px">
-              <LogoSvg />
+              <Logo
+                w="100px"
+                iconProps={{ w: '26px', h: '26px' }}
+                textProps={{ w: '67px', h: '20px', ml: '0' }}
+                justify="space-between"
+              />
             </Box>
             <Box mt="20px" className="avatar-wrap">
               <Box position="relative" zIndex={2}>
                 <Avatar address={address} w="72px" h="72px" />
               </Box>
-              <Image src={PngSeal.src} className="seal" />
+              <Image src={PngSeal} className="seal" />
             </Box>
             <Box className="address">
               <Text className="p">
@@ -164,7 +176,7 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
                 <span>{` ${mailSuffix}`}</span>
               </Text>
               <Box className="address-border">
-                <Image w="100%" h="100%" src={PngAddressBorder.src} alt="" />
+                <Image w="100%" h="100%" src={PngAddressBorder} alt="" />
               </Box>
             </Box>
             <HStack spacing="24px" mt="16px">
@@ -179,7 +191,13 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
             </Box>
 
             <Button className="button">
-              <Image src={PngMailMeButton.src} w="100%" height="100%" />
+              <Image
+                src={PngMail3MeButton}
+                alt=""
+                w="auto"
+                h="full"
+                objectFit="cover"
+              />
             </Button>
           </Center>
         </Box>
