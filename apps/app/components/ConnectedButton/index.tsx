@@ -80,9 +80,9 @@ const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
         icon: <ProfileSvg />,
         async onClick() {
           const href = `${HOME_URL}/${
-            userProps?.defaultAddress.substring(
+            userProps?.defaultAddress?.substring(
               0,
-              userProps.defaultAddress.indexOf('@')
+              userProps?.defaultAddress?.indexOf('@')
             ) || address
           }`
           await copyText(href)

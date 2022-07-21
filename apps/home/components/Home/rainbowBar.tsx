@@ -52,7 +52,7 @@ export const RainbowBar: React.FC = () => {
           textDecoration="underline"
           display="inline-block"
           ml="8px"
-          href={TESTING_URL}
+          href={`${TESTING_URL}?utm_source=offical_click_go`}
           onClick={() => trackTesting()}
         >
           {t('go')}

@@ -1,7 +1,13 @@
 import React, { useMemo, useRef } from 'react'
 import { Button, PageContainer, ProfileCard } from 'ui'
 import { useTranslation } from 'react-i18next'
-import { TrackEvent, useScreenshot, useToast, useTrackClick } from 'hooks'
+import {
+  TrackEvent,
+  useAccount,
+  useScreenshot,
+  useToast,
+  useTrackClick,
+} from 'hooks'
 import {
   Box,
   Center,
@@ -25,7 +31,7 @@ import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { copyText } from '../../utils'
-import { HOME_URL } from '../../constants'
+import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 import { RouterLink } from '../../components/RouterLink'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
@@ -73,13 +79,14 @@ export const SetupSharePage = () => {
   const trackTwitter = useTrackClick(TrackEvent.ClickGuideTwitter)
   const trackDownload = useTrackClick(TrackEvent.ClickGuideDownloadCard)
   const { downloadScreenshot } = useScreenshot()
+  const account = useAccount()
 
   const userProps = useAtomValue(userPropertiesAtom)
 
   const cardRef = useRef<HTMLDivElement>(null)
 
   const mailAddress: string = useMemo(
-    () => userProps?.defaultAddress ?? 'unknown',
+    () => userProps?.defaultAddress || `${account}@${MAIL_SERVER_URL}`,
     [userProps]
   )
 
