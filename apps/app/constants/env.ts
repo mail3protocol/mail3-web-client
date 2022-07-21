@@ -66,4 +66,4 @@ export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
 
-export const SENTRY_DSN = import.env.NEXT_PUBLIC_SENTRY_DSN
+export const SENTRY_DSN = import.meta.env.NEXT_PUBLIC_SENTRY_DSN
