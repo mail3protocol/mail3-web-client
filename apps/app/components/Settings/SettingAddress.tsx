@@ -186,6 +186,7 @@ export const SettingAddress: React.FC = () => {
   const toast = useToast()
   const dialog = useDialog()
   const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
+  const trackClickBITRefresh = useTrackClick(TrackEvent.ClickBITRefresh)
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
@@ -222,22 +223,29 @@ export const SettingAddress: React.FC = () => {
     setIsRefeshingMap((state) => {
       const newState = state
       newState[type] = true
+      console.log(newState)
       return newState
     })
-    trackClickENSRefresh()
     try {
-      await api.updateAliasList()
-      await refetch()
+      // if (type === AliasType.ENS) {
+      //   trackClickENSRefresh()
+      //   await api.updateAliasEnsList()
+      // }
+      // if (type === AliasType.BIT) {
+      //   trackClickBITRefresh()
+      //   await api.updateAliasBitList()
+      // }
+      // await refetch()
     } catch (e: any) {
       if (e.response.data.reason !== 'EMPTY_ENS_LIST') {
         toast(t('address.refresh_failed') + e.toString())
       }
     } finally {
-      setIsRefeshingMap((state) => {
-        const newState = state
-        newState[type] = false
-        return newState
-      })
+      // setIsRefeshingMap((state) => {
+      //   const newState = state
+      //   newState[type] = false
+      //   return newState
+      // })
     }
   }
 
@@ -309,6 +317,8 @@ export const SettingAddress: React.FC = () => {
         leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
         onClick={() => onRefreshDomains(type)}
         isLoading={isRefreshingMap[type]}
+        fontWeight="400"
+        fontSize="16px"
       >
         {t('address.refresh')}
       </RowButton>
