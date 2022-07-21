@@ -220,32 +220,29 @@ export const SettingAddress: React.FC = () => {
   )
 
   const onRefreshDomains = async (type: AliasType) => {
-    setIsRefeshingMap((state) => {
-      const newState = state
-      newState[type] = true
-      console.log(newState)
-      return newState
-    })
+    setIsRefeshingMap((s) => ({
+      ...s,
+      [type]: true,
+    }))
     try {
-      // if (type === AliasType.ENS) {
-      //   trackClickENSRefresh()
-      //   await api.updateAliasEnsList()
-      // }
-      // if (type === AliasType.BIT) {
-      //   trackClickBITRefresh()
-      //   await api.updateAliasBitList()
-      // }
-      // await refetch()
+      if (type === AliasType.ENS) {
+        trackClickENSRefresh()
+        await api.updateAliasEnsList()
+      }
+      if (type === AliasType.BIT) {
+        trackClickBITRefresh()
+        await api.updateAliasBitList()
+      }
+      await refetch()
     } catch (e: any) {
       if (e.response.data.reason !== 'EMPTY_ENS_LIST') {
         toast(t('address.refresh_failed') + e.toString())
       }
     } finally {
-      // setIsRefeshingMap((state) => {
-      //   const newState = state
-      //   newState[type] = false
-      //   return newState
-      // })
+      setIsRefeshingMap((s) => ({
+        ...s,
+        [type]: false
+      }))
     }
   }
 
@@ -309,21 +306,18 @@ export const SettingAddress: React.FC = () => {
 
   const router = useLocation()
 
-  const RefreshButton = useCallback(
-    ({ type }: { type: AliasType }) => (
-      <RowButton
-        variant="link"
-        colorScheme="deepBlue"
-        leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
-        onClick={() => onRefreshDomains(type)}
-        isLoading={isRefreshingMap[type]}
-        fontWeight="400"
-        fontSize="16px"
-      >
-        {t('address.refresh')}
-      </RowButton>
-    ),
-    [onRefreshDomains, isRefreshingMap]
+  const getRefreshButton = (type: AliasType) => (
+    <RowButton
+      variant="link"
+      colorScheme="deepBlue"
+      leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
+      onClick={() => onRefreshDomains(type)}
+      isLoading={isRefreshingMap[type]}
+      fontWeight="400"
+      fontSize="16px"
+    >
+      {t('address.refresh')}
+    </RowButton>
   )
 
   return (
@@ -411,7 +405,8 @@ export const SettingAddress: React.FC = () => {
                 </VStack>
               </Box>
               <Flex h="44px" bg="#fff" p="0 18px">
-                <RefreshButton type={AliasType.ENS} />
+                {/* <RefreshButton type={AliasType.ENS} /> */}
+                {getRefreshButton(AliasType.ENS)}
                 <Spacer />
                 <Center alignItems="center">
                   <Text fontSize="14px" fontWeight={500}>
@@ -477,7 +472,8 @@ export const SettingAddress: React.FC = () => {
                 </VStack>
               </Box>
               <Flex h="44px" bg="#fff" p="0 18px">
-                <RefreshButton type={AliasType.BIT} />
+                {/* <RefreshButton type={AliasType.BIT} /> */}
+                {getRefreshButton(AliasType.BIT)}
                 <Spacer />
                 <Center alignItems="center">
                   <Text fontSize="14px" fontWeight={500}>
