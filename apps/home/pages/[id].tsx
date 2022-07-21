@@ -1,12 +1,11 @@
 import { useDidMount, useLoginAccount } from 'hooks'
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import NextLink from 'next/link'
 import React, { useMemo, useState } from 'react'
 import ErrorPage from 'next/error'
 import styled from '@emotion/styled'
-import { Flex, Button, Text } from '@chakra-ui/react'
-import { Avatar, LinkButton, Logo } from 'ui'
+import { Flex, Button, Text, Link } from '@chakra-ui/react'
+import { Avatar, Logo } from 'ui'
 import { useRouter } from 'next/router'
 import { truncateMiddle } from 'shared'
 import Head from 'next/head'
@@ -74,11 +73,9 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
   return (
     <NavbarContainer>
       <Flex className="nav">
-        <NextLink href="/" passHref>
-          <LinkButton>
-            <Logo />
-          </LinkButton>
-        </NextLink>
+        <Link href={APP_URL} isExternal>
+          <Logo />
+        </Link>
         {isMounted ? (
           <Flex alignItems="center" position="absolute" right="20px">
             {address ? (
