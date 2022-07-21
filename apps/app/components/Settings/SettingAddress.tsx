@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'react-i18next'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
 import {
   useAccount,
@@ -241,7 +241,7 @@ export const SettingAddress: React.FC = () => {
     } finally {
       setIsRefeshingMap((s) => ({
         ...s,
-        [type]: false
+        [type]: false,
       }))
     }
   }
@@ -405,7 +405,6 @@ export const SettingAddress: React.FC = () => {
                 </VStack>
               </Box>
               <Flex h="44px" bg="#fff" p="0 18px">
-                {/* <RefreshButton type={AliasType.ENS} /> */}
                 {getRefreshButton(AliasType.ENS)}
                 <Spacer />
                 <Center alignItems="center">
@@ -472,7 +471,6 @@ export const SettingAddress: React.FC = () => {
                 </VStack>
               </Box>
               <Flex h="44px" bg="#fff" p="0 18px">
-                {/* <RefreshButton type={AliasType.BIT} /> */}
                 {getRefreshButton(AliasType.BIT)}
                 <Spacer />
                 <Center alignItems="center">
