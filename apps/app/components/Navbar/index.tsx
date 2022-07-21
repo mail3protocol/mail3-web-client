@@ -162,13 +162,43 @@ const LogoPopoverBody: React.FC = () => {
           }
         `}
       >
-        <Link className="item" href={TWITTER_URL} target="_blank">
+        <Link
+          className="item"
+          href={TWITTER_URL}
+          target="_blank"
+          onClick={() => {
+            context.onClose()
+            trackMenuClick({
+              [TrackKey.Mail3MenuItem]: Mail3MenuItem.Twitter,
+            })
+          }}
+        >
           <TwitterIcon w="20px" h="22px" />
         </Link>
-        <Link className="item" href={DISCORD_URL} target="_blank">
+        <Link
+          className="item"
+          href={DISCORD_URL}
+          target="_blank"
+          onClick={() => {
+            context.onClose()
+            trackMenuClick({
+              [TrackKey.Mail3MenuItem]: Mail3MenuItem.Discord,
+            })
+          }}
+        >
           <DiscordIcon w="20px" h="22px" />
         </Link>
-        <Link className="item" href={MIRROR_URL} target="_blank">
+        <Link
+          className="item"
+          href={MIRROR_URL}
+          target="_blank"
+          onClick={() => {
+            context.onClose()
+            trackMenuClick({
+              [TrackKey.Mail3MenuItem]: Mail3MenuItem.Mirror,
+            })
+          }}
+        >
           <MirrorIcon w="20px" h="22px" />
         </Link>
       </HStack>
