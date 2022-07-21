@@ -353,15 +353,6 @@ export const SettingAddress: React.FC = () => {
             <Text fontWeight={600} as="span">
               {`${t('address.wallet-address')}@${MAIL_SERVER_URL}`}
             </Text>
-            <HStack spacing="4px">
-              <CheckCircleIcon color="#4E52F5" w="12px" />
-              <Text fontWeight={500} color="#4E52F5">
-                {t('address.default')}
-              </Text>
-            </HStack>
-            <Tooltip label={t('address.default-hover')}>
-              <QuestionOutlineIcon cursor="pointer" w="16px" color="#4E52F5" />
-            </Tooltip>
           </Stack>
         </FormLabel>
         {primitiveAlias ? (
@@ -384,16 +375,25 @@ export const SettingAddress: React.FC = () => {
         {ensAliases.length && !isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
-              <Stack
-                direction="row"
-                spacing="16px"
-                justifyContent="flex-start"
-                alignItems="center"
-              >
+              <Flex>
                 <Box h="24px" lineHeight="24px">
                   {t('address.ens-name')}
                 </Box>
-              </Stack>
+                <Spacer />
+                <HStack spacing="4px">
+                  <CheckCircleIcon color="#4E52F5" w="12px" />
+                  <Text fontWeight={500} color="#4E52F5">
+                    {t('address.default')}
+                  </Text>
+                  <Tooltip label={t('address.default-hover')}>
+                    <QuestionOutlineIcon
+                      cursor="pointer"
+                      w="16px"
+                      color="#4E52F5"
+                    />
+                  </Tooltip>
+                </HStack>
+              </Flex>
             </FormLabel>
             <Box className="switch-wrap">
               <Box p="16px 8px 16px 8px">
