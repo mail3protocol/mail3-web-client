@@ -31,7 +31,7 @@ import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { copyText } from '../../utils'
-import { HOME_URL } from '../../constants'
+import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 import { RouterLink } from '../../components/RouterLink'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
@@ -86,7 +86,7 @@ export const SetupSharePage = () => {
   const cardRef = useRef<HTMLDivElement>(null)
 
   const mailAddress: string = useMemo(
-    () => userProps?.defaultAddress || account,
+    () => userProps?.defaultAddress || `${account}@${MAIL_SERVER_URL}`,
     [userProps]
   )
 
