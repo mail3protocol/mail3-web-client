@@ -1,8 +1,9 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import { Box, Flex, HStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useDidMount } from 'hooks'
 import { ReactComponent as SVGInbox } from '../../../assets/inbox.svg'
 import { ReactComponent as SVGSub } from '../../../assets/subscrption.svg'
 import { ReactComponent as DevelopersSvg } from '../../../assets/developes.svg'
@@ -23,6 +24,11 @@ interface NavItem {
 }
 
 const HStackContainer = styled(HStack)`
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
   overflow-y: hidden;
   overflow-x: auto;
   .wrap {
@@ -49,7 +55,9 @@ const HStackContainer = styled(HStack)`
   }
 `
 
-export const InboxNav: React.FC = () => {
+export const InboxNav: React.FC<{
+  initialScrollX?: number
+}> = ({ initialScrollX }) => {
   const { pathname } = useLocation()
   const [t] = useTranslation('inbox-nav')
   const navItems: NavItem[] = [
@@ -72,9 +80,19 @@ export const InboxNav: React.FC = () => {
       to: RoutePath.Developers,
     },
   ]
+  const containerRef = useRef<HTMLDivElement>(null)
+  useDidMount(() => {
+    if (initialScrollX && containerRef.current) {
+      containerRef.current.scrollTo(initialScrollX, 0)
+    }
+  })
 
   return (
-    <HStackContainer spacing={{ md: '80px', base: '40px' }} height="40px">
+    <HStackContainer
+      spacing={{ md: '80px', base: '40px' }}
+      height="40px"
+      ref={containerRef}
+    >
       {navItems.map(({ icon, title, type, to }) => {
         const isActive = to === pathname
         return (

@@ -33,7 +33,7 @@ export const Developers: React.FC = () => {
     <Box pt={{ base: '25px', md: '35px' }}>
       <PageContainer>
         <Flex justify="space-between">
-          <InboxNav />
+          <InboxNav initialScrollX={400} />
           <GoToWriteMailButton />
         </Flex>
       </PageContainer>
