@@ -65,3 +65,5 @@ export const MAIL3_ME_BUTTON_MIRROR_URL =
 export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
+
+export const SENTRY_DSN = import.env.NEXT_PUBLIC_SENTRY_DSN
