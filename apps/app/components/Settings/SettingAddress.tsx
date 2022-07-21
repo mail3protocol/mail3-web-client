@@ -48,6 +48,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
+import { ReactComponent as ArrawSvg } from '../../assets/setup/arrow.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { IS_IPHONE, MAIL_SERVER_URL } from '../../constants'
@@ -174,15 +175,13 @@ enum AliasType {
   BIT = 'BIT',
 }
 
+const LIMIT_MAX_NUMBER = 5
+
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
+  const router = useLocation()
   const account = useAccount()
   const api = useAPI()
-  const [activeAccount, setActiveAccount] = useState(account)
-  const [isRefreshingMap, setIsRefeshingMap] = useState({
-    [AliasType.BIT]: false,
-    [AliasType.ENS]: false,
-  })
   const toast = useToast()
   const dialog = useDialog()
   const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
@@ -191,6 +190,16 @@ export const SettingAddress: React.FC = () => {
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
+  const [activeAccount, setActiveAccount] = useState(account)
+  const [isRefreshingMap, setIsRefeshingMap] = useState({
+    [AliasType.BIT]: false,
+    [AliasType.ENS]: false,
+  })
+  const [isOpenMoreMap, setIsOpenMoreMap] = useState({
+    [AliasType.BIT]: false,
+    [AliasType.ENS]: false,
+  })
+
   const {
     data: aliasDate,
     isLoading,
@@ -198,7 +207,97 @@ export const SettingAddress: React.FC = () => {
   } = useQuery(
     [Query.Alias, account],
     async () => {
-      const { data } = await api.getAliases()
+      let { data } = await api.getAliases()
+      data = {
+        aliases: [
+          {
+            uuid: 'b951c1c8-c394-49af-ae9b-d7a73556b9c8',
+            address: '0x17EFDCcfc61a03aE6620F35e502215edde20c13d@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '86ce46b9-d30e-4420-83f9-2170c7604ce3',
+            address: 'horong.eth@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '86ce46b9-d30e-4420-83f9-2170c76042ce3',
+            address: 'horong.eth@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '86ce46b9-d30e-4420-83f9-2170c76041ce3',
+            address: 'horong.eth@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '86ce46b9-d30e-4420-83f9-2170c76043ce3',
+            address: 'horong.eth@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '86ce46b9-d30e-4420-83f9-2170c72604ce3',
+            address: 'horong.eth@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '86ce46b9-d30e-4420-83f9-21720c7604ce3',
+            address: 'horong.eth@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6caa-2123c176-4012-8a39-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: true,
+          },
+          {
+            uuid: '1e7c6caa213-c176-4012-8a39-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c26caa-c176-4012-8a39-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6caa-c176-4012-21a39-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6caa-c176-4012-8a39-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6caa-c176-4012-8a39-de4ee414d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6caa-c176-4012-8a239-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6caa-c176-4012-81a39-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6ca1a-c176-4012-8a39-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+          {
+            uuid: '1e7c6caa-c176-4012-8a239-de4ee14d8f48',
+            address: 'horong007.bit@imibao.net',
+            is_default: false,
+          },
+        ],
+      }
+
       return data
     },
     {
@@ -298,13 +397,14 @@ export const SettingAddress: React.FC = () => {
     return aliasMap
   }, [aliasDate])
 
-  const {
-    primitive: primitiveAlias,
-    ens: ensAliases,
-    bit: bitAliases,
-  } = aliases
+  const { primitive: primitiveAlias } = aliases
 
-  const router = useLocation()
+  const ensAliases = isOpenMoreMap[AliasType.ENS]
+    ? aliases.ens
+    : aliases.ens.slice(0, LIMIT_MAX_NUMBER)
+  const bitAliases = isOpenMoreMap[AliasType.BIT]
+    ? aliases.bit
+    : aliases.bit.slice(0, LIMIT_MAX_NUMBER)
 
   const getRefreshButton = (type: AliasType) => (
     <RowButton
@@ -403,6 +503,26 @@ export const SettingAddress: React.FC = () => {
                     />
                   ))}
                 </VStack>
+                {aliases.ens.length > LIMIT_MAX_NUMBER &&
+                !isOpenMoreMap[AliasType.ENS] ? (
+                  <Center
+                    cursor="pointer"
+                    pt="8px"
+                    fontSize="12px"
+                    lineHeight="18px"
+                    onClick={() => {
+                      setIsOpenMoreMap({
+                        ...isOpenMoreMap,
+                        [AliasType.ENS]: true,
+                      })
+                    }}
+                  >
+                    <ArrawSvg />
+                    <Box ml="2px">{` +${
+                      aliases.ens.length - LIMIT_MAX_NUMBER
+                    }`}</Box>
+                  </Center>
+                ) : null}
               </Box>
               <Flex h="44px" bg="#fff" p="0 18px">
                 {getRefreshButton(AliasType.ENS)}
@@ -469,7 +589,28 @@ export const SettingAddress: React.FC = () => {
                     />
                   ))}
                 </VStack>
+                {aliases.bit.length > LIMIT_MAX_NUMBER &&
+                !isOpenMoreMap[AliasType.BIT] ? (
+                  <Center
+                    cursor="pointer"
+                    pt="8px"
+                    fontSize="12px"
+                    lineHeight="18px"
+                    onClick={() => {
+                      setIsOpenMoreMap({
+                        ...isOpenMoreMap,
+                        [AliasType.BIT]: true,
+                      })
+                    }}
+                  >
+                    <ArrawSvg />
+                    <Box ml="2px">{` +${
+                      aliases.bit.length - LIMIT_MAX_NUMBER
+                    }`}</Box>
+                  </Center>
+                ) : null}
               </Box>
+
               <Flex h="44px" bg="#fff" p="0 18px">
                 {getRefreshButton(AliasType.BIT)}
                 <Spacer />
