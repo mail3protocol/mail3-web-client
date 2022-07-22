@@ -44,7 +44,8 @@ export enum FilenameVerifyErrorType {
   Space = 'space',
   TooLong = 'too_long',
   TooLarge = 'too_large',
-  Empty = 'empty',
+  ContentEmpty = 'content_empty',
+  FilenameEmpty = 'filename_empty',
 }
 
 export interface Rule {
@@ -66,8 +67,12 @@ const fileVerifyRules: Rule[] = [
     match: ({ name }) => name.length > MAXIMUM_LENGTH_OF_FILE,
   },
   {
-    type: FilenameVerifyErrorType.Empty,
-    match: ({ name }) => name[0] === '.' && name === '',
+    type: FilenameVerifyErrorType.FilenameEmpty,
+    match: ({ name }) => name[0] === '.' || name === '',
+  },
+  {
+    type: FilenameVerifyErrorType.ContentEmpty,
+    match: ({ size }) => size <= 0,
   },
   {
     type: FilenameVerifyErrorType.TooLarge,
@@ -120,7 +125,8 @@ export const Attach: React.FC<{
         [FilenameVerifyErrorType.Space]: [],
         [FilenameVerifyErrorType.TooLong]: [],
         [FilenameVerifyErrorType.TooLarge]: [],
-        [FilenameVerifyErrorType.Empty]: [],
+        [FilenameVerifyErrorType.FilenameEmpty]: [],
+        [FilenameVerifyErrorType.ContentEmpty]: [],
       }
     )
 
@@ -141,7 +147,8 @@ export const Attach: React.FC<{
         [FilenameVerifyErrorType.TooLong]: t('filename_verify.too_long', {
           count: MAXIMUM_LENGTH_OF_FILE,
         }),
-        [FilenameVerifyErrorType.Empty]: t('filename_verify.empty'),
+        [FilenameVerifyErrorType.FilenameEmpty]: t('filename_verify.empty'),
+        [FilenameVerifyErrorType.ContentEmpty]: t('file_content_is_empty'),
       } as { [key in FilenameVerifyErrorType]?: string }
     )[firstHasErrorMarkFile?.marks[0] || FilenameVerifyErrorType.None]
 

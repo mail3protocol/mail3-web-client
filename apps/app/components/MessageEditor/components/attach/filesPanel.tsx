@@ -54,7 +54,7 @@ export const FilesPanel: React.FC<FilesPanelProps> = ({
               >
                 {file.filename}
               </Box>
-              <Box>{kbToMb(file.content.length * (3 / 4))}MB</Box>
+              <Box>{kbToMb((file.content?.length || 0) * (3 / 4))}MB</Box>
             </Grid>
             {extraInfo && extraInfo?.downloadProgress !== 1 ? (
               <Progress
