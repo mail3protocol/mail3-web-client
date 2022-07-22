@@ -10,6 +10,7 @@ import {
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useQuery } from 'react-query'
+import { isEthAddress } from 'shared'
 import BoringAvatar from 'boring-avatars'
 
 const IS_IPHONE =
@@ -31,9 +32,6 @@ export interface AvatarProps extends RawAvatarProps {
   isSquare?: boolean
   isUseSvg?: boolean
 }
-
-const isEthAddress = (address?: string) =>
-  address && (address.startsWith('0x') || address?.endsWith('.eth'))
 
 const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
   'avatar_addresses',
