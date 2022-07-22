@@ -160,7 +160,7 @@ const data = realData.map((e, i) => ({
   avatarSrc: imgs[i],
 }))
 
-const dataAtom = atomWithStorage<Array<ListItem>>('subscriptionData', data)
+const dataAtom = atomWithStorage<Array<ListItem>>('subscription_data', data)
 
 export const SubscriptionBody: React.FC = () => {
   const trackMedia = useTrackClick(TrackEvent.ClickSubscriptionBell)

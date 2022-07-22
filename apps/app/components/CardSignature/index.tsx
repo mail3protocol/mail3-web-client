@@ -10,6 +10,7 @@ const stampBg = StampBg as any
 
 export interface SignatureCardProps {
   account: string
+  isUseSvgAvatar?: boolean
 }
 
 function truncateMiddle(
@@ -25,7 +26,7 @@ function truncateMiddle(
 export const CardSignature = React.forwardRef<
   HTMLDivElement,
   SignatureCardProps
->(({ account, ...props }, ref) => (
+>(({ account, isUseSvgAvatar, ...props }, ref) => (
   <Center
     position="relative"
     w="200px"
@@ -52,7 +53,13 @@ export const CardSignature = React.forwardRef<
         zIndex={0}
       />
       <Flex position="relative" zIndex={1}>
-        <Avatar isSquare w="100px" h="100px" address={account} />
+        <Avatar
+          isSquare
+          w="100px"
+          h="100px"
+          address={account}
+          isUseSvg={isUseSvgAvatar}
+        />
       </Flex>
     </Flex>
     <Flex position="absolute" bottom="0" left="-10px" zIndex={2}>

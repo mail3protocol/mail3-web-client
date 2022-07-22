@@ -45,7 +45,10 @@ export const SelectCardSignature: React.FC = () => {
           </Flex>
           {isEnableCardSignature && fromAddress ? (
             <Box id={CARD_SIGNATURE_ID}>
-              <CardSignature account={removeMailSuffix(fromAddress)} />
+              <CardSignature
+                account={removeMailSuffix(fromAddress)}
+                isUseSvgAvatar
+              />
             </Box>
           ) : null}
         </MenuButton>

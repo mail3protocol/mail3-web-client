@@ -9,7 +9,7 @@ import {
   Image,
   Center,
 } from '@chakra-ui/react'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Button } from 'ui'
 import {
   NotConnectWallet,
@@ -38,8 +38,10 @@ export const IpfsModal: React.FC<{
   const signMessage = useSignMessage()
   useEagerConnect(isForceConnectWallet)
   const { onOpen: onOpenWalletDialog } = useConnectWalletDialog()
+  const [isGenerating, setIsGenerating] = useState(false)
   const onGenerateKey = useCallback(async () => {
     try {
+      setIsGenerating(true)
       const signedString = await signMessage(stringToBeSigned)
       const signedStringWithSha256 = `0x${await digestMessage(signedString, {
         algorithm: 'SHA-256',
@@ -50,6 +52,8 @@ export const IpfsModal: React.FC<{
       if (e instanceof NotConnectWallet) {
         onOpenWalletDialog()
       }
+    } finally {
+      setIsGenerating(false)
     }
   }, [onAfterSignature, signMessage])
 
@@ -95,7 +99,14 @@ export const IpfsModal: React.FC<{
         </ModalBody>
 
         <ModalFooter display="flex" justifyContent="center" p="0" mt="24px">
-          <Button w="246px" lineHeight="46px" h="46px" onClick={onGenerateKey}>
+          <Button
+            w="246px"
+            lineHeight="46px"
+            h="46px"
+            onClick={onGenerateKey}
+            isLoading={isGenerating}
+            isDisabled={isGenerating}
+          >
             {t('generate_key')}
           </Button>
         </ModalFooter>
