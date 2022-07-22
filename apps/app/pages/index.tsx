@@ -2,7 +2,6 @@ import { PageContainer } from 'ui'
 import { useRedirectHome } from '../hooks/useRedirectHome'
 import { LandingPage } from '../components/LandingPage'
 import { InboxComponent } from '../components/Inbox'
-import { DriftbottleBanner } from '../components/DriftbottleBanner'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export const HomePage = () => {
@@ -14,10 +13,7 @@ export const HomePage = () => {
 
   return (
     <>
-      <PageContainer>
-        {!isAuth && <LandingPage />}
-        <DriftbottleBanner />
-      </PageContainer>
+      <PageContainer>{!isAuth && <LandingPage />}</PageContainer>
       {isAuth && <InboxComponent />}
     </>
   )
