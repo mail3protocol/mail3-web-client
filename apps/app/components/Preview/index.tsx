@@ -129,14 +129,14 @@ export const PreviewComponent: React.FC = () => {
           const { address } = from
           if (
             address.startsWith('mail3dao.eth') &&
-            subject.startsWith('Join Mail3 DAO!')
+            subject.includes('Join Mail3 DAO!')
           ) {
             trackJoinDao()
           }
 
           if (address.startsWith('mail3.eth')) {
-            if (subject.startsWith('Show your mail3')) trackShowYourNft()
-            if (subject.startsWith('Mail3 New Feature')) trackOpenUpdateMail()
+            if (subject.includes('Show your mail3')) trackShowYourNft()
+            if (subject.includes('Mail3 New Feature')) trackOpenUpdateMail()
           }
 
           const isFromDriftBottle = address === DRIFT_BOTTLE_ADDRESS
