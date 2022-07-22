@@ -117,9 +117,6 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
 }) => (
   <Flex
     justifyContent="space-between"
-    // boxShadow={
-    //   isChecked ? `0px 0px 10px 4px rgba(25, 25, 100, 0.1)` : undefined
-    // }
     borderRadius="8px"
     border={isChecked ? '1px solid #4E52F5' : '1px solid #e7e7e7'}
     padding="10px 16px 10px 16px"
@@ -272,37 +269,28 @@ export const SettingAddress: React.FC = () => {
       }
     }
 
-  const aliases = useMemo(() => {
-    const aliasMap: {
-      primitive: Alias | null
-      ens: Alias[]
-      bit: Alias[]
-    } = {
-      primitive: null,
-      ens: [],
-      bit: [],
-    }
-
-    if (aliasDate?.aliases) {
-      aliasDate?.aliases.forEach((item) => {
-        const [addr] = item.address.split('@')
-        if (isBitDomain(addr)) {
-          aliasMap.bit.push(item)
-          return
+  const aliases = useMemo(
+    () =>
+      (aliasDate?.aliases || []).reduce<{
+        primitive: Alias | null
+        ens: Alias[]
+        bit: Alias[]
+      }>(
+        (o, item) => {
+          const [addr] = item.address.split('@')
+          if (isBitDomain(addr)) return { ...o, bit: [...o.bit, item] }
+          if (isEnsDomain(addr)) return { ...o, ens: [...o.ens, item] }
+          if (isPrimitiveEthAddress(addr)) return { ...o, primitive: item }
+          return o
+        },
+        {
+          primitive: null,
+          ens: [],
+          bit: [],
         }
-        if (isEnsDomain(addr)) {
-          aliasMap.ens.push(item)
-          return
-        }
-        if (isPrimitiveEthAddress(addr)) {
-          aliasMap.primitive = item
-        }
-      })
-      return aliasMap
-    }
-
-    return aliasMap
-  }, [aliasDate])
+      ),
+    [aliasDate]
+  )
 
   const { primitive: primitiveAlias } = aliases
 
