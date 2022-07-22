@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { Avatar } from 'ui'
+import { Avatar, Button } from 'ui'
 import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import {
@@ -31,7 +31,12 @@ import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
 import { Attachment } from './Attachment'
-import { formatDateString, isMail3Address, removeMailSuffix } from '../../utils'
+import {
+  formatDateString,
+  getDriftBottleFrom,
+  isMail3Address,
+  removeMailSuffix,
+} from '../../utils'
 import { EmptyStatus } from '../MailboxStatus'
 import {
   DRIFT_BOTTLE_ADDRESS,
@@ -170,6 +175,11 @@ export const PreviewComponent: React.FC = () => {
     return ''
   }, [data])
 
+  const isDriftBottleAddress =
+    data?.messageInfo?.from.address === DRIFT_BOTTLE_ADDRESS
+
+  const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
+
   const messageId = data?.messageInfo?.messageId
   const {
     data: messageOnChainIdentifierData,
@@ -217,6 +227,7 @@ export const PreviewComponent: React.FC = () => {
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
+      isDisabled: isDriftBottleAddress,
       onClick: () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
@@ -584,6 +595,31 @@ export const PreviewComponent: React.FC = () => {
             />
           ) : null}
         </Box>
+        {isDriftBottleAddress && driftBottleFrom ? (
+          <Center pt="16px">
+            <Button
+              variant="solid"
+              bg="#4E52F5"
+              _hover={{
+                bg: '#4E52F5',
+              }}
+              onClick={() => {
+                const search = createSearchParams({
+                  force_to: driftBottleFrom,
+                  id,
+                  action: 'reply',
+                  origin: 'driftbottle',
+                }).toString()
+                navi({
+                  pathname: RoutePath.NewMessage,
+                  search,
+                })
+              }}
+            >
+              {t('reply-driftbottle-sender')}
+            </Button>
+          </Center>
+        ) : null}
       </Container>
     </>
   )

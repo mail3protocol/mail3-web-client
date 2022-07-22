@@ -1,7 +1,7 @@
 import { useHelpers } from '@remirror/react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useToast } from 'hooks'
+import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { defer, lastValueFrom, retry } from 'rxjs'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
@@ -15,6 +15,7 @@ import {
   removeDuplicationAttachments,
 } from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
+import { DRIFT_BOTTLE_ADDRESS } from '../../../constants'
 import { useSending } from '../../../hooks/useSending'
 
 export const ID_NAME = 'id'
@@ -53,6 +54,8 @@ export function useSubmitMessage() {
   const toast = useToast()
   const { attachments } = useAttachment()
   const { isEnableCardSignature } = useCardSignature()
+  const trackReplyDriftbottleMail = useTrackClick(TrackEvent.ReplyDriftbottle)
+  const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { addSendingMessage } = useSending()
 
@@ -74,6 +77,10 @@ export function useSubmitMessage() {
         attachments: imageAttachments,
       } = await outputHtmlWithAttachmentImages(html)
       html = replacedAttachmentImageHtml
+      const isSendToDriftBottle = toAddresses.some(
+        (address) => address === DRIFT_BOTTLE_ADDRESS
+      )
+      const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
       const submitMessageResult = await api.submitMessage({
         from: {
           address: fromAddress,
@@ -91,6 +98,12 @@ export function useSubmitMessage() {
       })
       addSendingMessage({ messageId: submitMessageResult.data.messageId })
       setIsSubmitted(true)
+      if (isSendToDriftBottle) {
+        trackSendDriftbottleMail()
+      }
+      if (isReplyDriftbottleMail) {
+        trackReplyDriftbottleMail()
+      }
       await removeDraft(api)
       onReset()
       navi(RoutePath.Inbox)
