@@ -97,7 +97,41 @@ export function removeDuplicationAttachments(
   })
 }
 
+export const DISABLED_FILENAME_SPECIAL_CHARACTERS = [
+  './',
+  '<!--',
+  '-->',
+  '<',
+  '>',
+  "'",
+  '"',
+  '&',
+  '$',
+  '#',
+  '{',
+  '}',
+  '[',
+  ']',
+  '=',
+  ';',
+  '?',
+  '%20', // space
+  '%22', // "
+  '%3c', // <
+  '%253c', // <
+  '%3e', // >
+  '%28', // (
+  '%29', // )
+  '%2528', // (
+  '%26', // &
+  '%24', // $
+  '%3f', // ?
+  '%3b', // ;
+  '%3d', // =
+]
+
 export function hasFilenameSpecialCharacters(filename: string) {
-  const reg = /[/|>|<|\||:|&]/gi
-  return reg.test(filename)
+  return DISABLED_FILENAME_SPECIAL_CHARACTERS.some((char) =>
+    filename.includes(char)
+  )
 }

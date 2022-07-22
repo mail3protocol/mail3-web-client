@@ -1,37 +1,16 @@
 import { describe, it, assert } from 'vitest'
-import { hasFilenameSpecialCharacters } from './editor'
+import {
+  DISABLED_FILENAME_SPECIAL_CHARACTERS,
+  hasFilenameSpecialCharacters,
+} from './editor'
 
 describe('Utils Editor', () => {
   describe('Function hasFilenameSpecialCharacters', () => {
     const fileNameList = [
-      {
-        name: 'file&.png',
+      ...DISABLED_FILENAME_SPECIAL_CHARACTERS.map((char) => ({
+        name: `fi${char}le.png`,
         has: true,
-      },
-      {
-        name: 'file/.png',
-        has: true,
-      },
-      {
-        name: 'file>.png',
-        has: true,
-      },
-      {
-        name: '<file>.png',
-        has: true,
-      },
-      {
-        name: 'fi<le.png',
-        has: true,
-      },
-      {
-        name: 'file|file.png',
-        has: true,
-      },
-      {
-        name: 'file:file.png',
-        has: true,
-      },
+      })),
       {
         name: 'file.png',
         has: false,

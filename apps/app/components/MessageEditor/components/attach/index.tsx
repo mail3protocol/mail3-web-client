@@ -44,6 +44,7 @@ export enum FilenameVerifyErrorType {
   Space = 'space',
   TooLong = 'too_long',
   TooLarge = 'too_large',
+  Empty = 'empty',
 }
 
 export interface Rule {
@@ -65,8 +66,8 @@ const fileVerifyRules: Rule[] = [
     match: ({ name }) => name.length > MAXIMUM_LENGTH_OF_FILE,
   },
   {
-    type: FilenameVerifyErrorType.TooLong,
-    match: ({ name }) => name[0] === '.',
+    type: FilenameVerifyErrorType.Empty,
+    match: ({ name }) => name[0] === '.' && name === '',
   },
   {
     type: FilenameVerifyErrorType.TooLarge,
@@ -119,6 +120,7 @@ export const Attach: React.FC<{
         [FilenameVerifyErrorType.Space]: [],
         [FilenameVerifyErrorType.TooLong]: [],
         [FilenameVerifyErrorType.TooLarge]: [],
+        [FilenameVerifyErrorType.Empty]: [],
       }
     )
 
@@ -136,7 +138,10 @@ export const Attach: React.FC<{
           'filename_verify.special_characters'
         ),
         [FilenameVerifyErrorType.Space]: t('filename_verify.space'),
-        [FilenameVerifyErrorType.TooLong]: t('filename_verify.too_long'),
+        [FilenameVerifyErrorType.TooLong]: t('filename_verify.too_long', {
+          count: MAXIMUM_LENGTH_OF_FILE,
+        }),
+        [FilenameVerifyErrorType.Empty]: t('filename_verify.empty'),
       } as { [key in FilenameVerifyErrorType]?: string }
     )[firstHasErrorMarkFile?.marks[0] || FilenameVerifyErrorType.None]
 

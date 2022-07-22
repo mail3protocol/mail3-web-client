@@ -89,8 +89,10 @@
         "filename_verify": {
             "special_characters": "Oops! File names cannot contain special characters: . / > < | : &",
             "space": "Oops! File names cannot contain spaces",
-            "too_long": "Oops! File names cannot exceed {{count}} characters"
-        }
+            "too_long": "Oops! File names cannot exceed {{count}} characters",
+            "empty": "Oops! File names cannot be empty"
+        },
+        "invalid_file_name": "Invalid file name"
     },
     "home": {
         "title": "The mail for crypto natives",
