@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { defer, lastValueFrom, retry } from 'rxjs'
+import { useTranslation } from 'react-i18next'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
@@ -17,6 +18,7 @@ import {
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
 import { DRIFT_BOTTLE_ADDRESS } from '../../../constants'
 import { useSending } from '../../../hooks/useSending'
+import { AddressNonceErrorReason } from '../../../api/ErrorCode'
 
 export const ID_NAME = 'id'
 export const ACTION_NAME = 'action'
@@ -34,6 +36,7 @@ export async function removeDraft(api: API) {
 }
 
 export function useSubmitMessage() {
+  const { t } = useTranslation('edit-message')
   const { getHTML } = useHelpers()
   const api = useAPI()
   const {
@@ -108,15 +111,14 @@ export function useSubmitMessage() {
       onReset()
       navi(RoutePath.Inbox)
     } catch (err: any) {
-      toast(err?.response?.data?.message || err?.message || 'unknown error', {
-        textProps: {
-          bg: '#fff',
-          color: '#000',
-          fontSize: '14px',
-          shadow:
-            '0 0 1px rgba(0, 0, 0, 0.08), 0px 2px 4px rgba(0, 0, 0, 0.08)',
-        },
-      })
+      if (
+        err.response.data.reason ===
+        AddressNonceErrorReason.INVALID_ATTACHMENT_FILE_NAME
+      ) {
+        toast(t('invalid_file_name'))
+      } else {
+        toast(err?.response?.data?.message || err?.message || 'unknown error')
+      }
       console.error({ err })
     } finally {
       setIsLoading(false)

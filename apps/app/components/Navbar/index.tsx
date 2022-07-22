@@ -10,6 +10,8 @@ import {
   PopoverArrow,
   Button,
   usePopoverContext,
+  HStack,
+  Link,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ReactComponent as DownTriangleSvg } from 'assets/svg/triangle-down.svg'
@@ -21,7 +23,13 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
-import { Logo as UiLogo } from 'ui'
+import { DiscordIcon, Logo as UiLogo, MirrorIcon, TwitterIcon } from 'ui'
+import {
+  DISCORD_URL,
+  MIRROR_URL,
+  TWITTER_URL,
+  NAVBAR_HEIGHT,
+} from '../../constants'
 import { ReactComponent as InboxWhiteSvg } from '../../assets/inbox-white.svg'
 import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
 import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
@@ -30,7 +38,6 @@ import { ReactComponent as SubscrptionSvg } from '../../assets/subscrption.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
-import { NAVBAR_HEIGHT } from '../../constants'
 import { Auth, AuthModal } from '../Auth'
 import { RouterLink } from '../RouterLink'
 import { ConnectWallet } from '../ConnectWallet'
@@ -135,6 +142,66 @@ const LogoPopoverBody: React.FC = () => {
         {t('navbar.other-stuff')}
       </Text>
       <ButtonList items={btns} />
+      <HStack
+        borderTop="1px solid #F3F3F3"
+        spacing="40px"
+        justifyContent="center"
+        pt="16px"
+        mt="20px"
+        css={`
+          .item {
+            width: 20px;
+            height: 22px;
+            color: #000;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .item:hover {
+            transform: scale(1.1);
+          }
+        `}
+      >
+        <Link
+          className="item"
+          href={TWITTER_URL}
+          target="_blank"
+          onClick={() => {
+            context.onClose()
+            trackMenuClick({
+              [TrackKey.Mail3MenuItem]: Mail3MenuItem.Twitter,
+            })
+          }}
+        >
+          <TwitterIcon w="20px" h="22px" />
+        </Link>
+        <Link
+          className="item"
+          href={DISCORD_URL}
+          target="_blank"
+          onClick={() => {
+            context.onClose()
+            trackMenuClick({
+              [TrackKey.Mail3MenuItem]: Mail3MenuItem.Discord,
+            })
+          }}
+        >
+          <DiscordIcon w="20px" h="22px" />
+        </Link>
+        <Link
+          className="item"
+          href={MIRROR_URL}
+          target="_blank"
+          onClick={() => {
+            context.onClose()
+            trackMenuClick({
+              [TrackKey.Mail3MenuItem]: Mail3MenuItem.Mirror,
+            })
+          }}
+        >
+          <MirrorIcon w="20px" h="22px" />
+        </Link>
+      </HStack>
     </>
   )
 }
@@ -167,7 +234,7 @@ const Logo = () => {
         boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25)"
       >
         <PopoverArrow />
-        <PopoverBody padding="20px 16px 30px 16px">
+        <PopoverBody padding="20px 16px 16px 16px">
           <LogoPopoverBody />
         </PopoverBody>
       </PopoverContent>

@@ -141,6 +141,9 @@ export enum Mail3MenuItem {
   Subscription = 'Subscription',
   Drafts = 'Drafts',
   Trash = 'Trash',
+  Discord = 'Discord',
+  Twitter = 'Twitter',
+  Mirror = 'Mirror',
 }
 
 export enum GlobalDimensions {
