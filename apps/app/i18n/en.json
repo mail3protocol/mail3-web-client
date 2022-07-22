@@ -85,7 +85,15 @@
         "leave_modal_title": "Are you sure you want to leave this page?",
         "save_and_quit": "Save as draft",
         "don't_save_and_exit": "Don't save and exit",
-        "discard": "Discard"
+        "discard": "Discard",
+        "filename_verify": {
+            "special_characters": "Oops! File names cannot contain special characters",
+            "space": "Oops! File names cannot contain spaces",
+            "too_long": "Oops! File names cannot exceed {{count}} characters",
+            "empty": "Oops! File names cannot be empty"
+        },
+        "file_content_is_empty": "The content of the file cannot be empty",
+        "invalid_file_name": "Invalid file name"
     },
     "home": {
         "title": "The mail for crypto natives",
