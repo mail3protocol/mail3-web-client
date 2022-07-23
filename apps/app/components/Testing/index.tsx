@@ -155,6 +155,8 @@ const IconLink: React.FC<IconLinkProps> = ({ icon, href, text, ...props }) => (
   </HStack>
 )
 
+const ENS_DOMAIN = 'https://app.ens.domains'
+
 export const Testing: React.FC = () => {
   useAuth()
   const account = useAccount()
@@ -165,6 +167,8 @@ export const Testing: React.FC = () => {
   const trackTwitter = useTrackClick(TrackEvent.TestingTwitter)
   const trackMoreDetail = useTrackClick(TrackEvent.TestingMoreDetails)
   const trackEnterApp = useTrackClick(TrackEvent.TestingEnterApp)
+  const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
+
   const isAuthModalOpen = useIsAuthModalOpen()
 
   const mascotIndex = useMemo(() => {
@@ -218,6 +222,28 @@ export const Testing: React.FC = () => {
             }}
           />
         </Text>
+        <ColorfulButton mt="16px">
+          <Text as="p">{t('fail-desc-3')}</Text>
+          <Text as="p">
+            <Trans
+              ns="testing"
+              i18nKey="fail-desc-4"
+              t={t}
+              components={{
+                a: (
+                  <Link
+                    isExternal
+                    href={ENS_DOMAIN}
+                    onClick={() => trackClickRegisterENS()}
+                    color="#4E52F5"
+                    textDecoration="underline"
+                    fontWeight={700}
+                  />
+                ),
+              }}
+            />
+          </Text>
+        </ColorfulButton>
       </>
     )
   }, [mascotIndex])
