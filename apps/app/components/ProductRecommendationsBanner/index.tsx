@@ -7,6 +7,7 @@ import { useAtom } from 'jotai'
 import { TrackEvent, useTrackClick } from 'hooks'
 import ProductRecommendationsBannerImage from '../../assets/product_recommendations_banner/desktop.png'
 import ProductRecommendationsBannerMobileImage from '../../assets/product_recommendations_banner/mobile.png'
+import LetTalkImage from "../../assets/product_recommendations_banner/let's_talk.png"
 import {
   PRODUCT_RECOMMENDATIONS_ADDRESS,
   PRODUCT_RECOMMENDATIONS_SUBJECT,
@@ -91,6 +92,26 @@ export const ProductRecommendationsBanner: React.FC = () => {
             pointerEvents="none"
           />
         </AspectRatio>
+        <Image
+          src={LetTalkImage}
+          alt="let's talk"
+          position="absolute"
+          top="54%"
+          right="38%"
+          w={{ base: '20%', md: '10%' }}
+          css={`
+            @keyframes DriftbottleBannerButtonAnimation {
+              0%,
+              100% {
+                transform: scale(1);
+              }
+              50% {
+                transform: scale(1.05);
+              }
+            }
+            animation: DriftbottleBannerButtonAnimation 2s infinite linear;
+          `}
+        />
       </Link>
     </Box>
   )
