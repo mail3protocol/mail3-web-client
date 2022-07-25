@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
 import { useDialog, useToast } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
@@ -8,11 +8,12 @@ import { Mailboxes } from '../../api/mailboxes'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { MailboxContainer, NewPageContainer } from '../Inbox'
 
-import SVGDrafts from '../../assets/drafts.svg'
-import SVGNone from '../../assets/mailbox/none.svg'
+import { ReactComponent as SVGDrafts } from '../../assets/drafts.svg'
+import { ReactComponent as SVGNone } from '../../assets/mailbox/none.svg'
 import { Loading } from '../Loading'
 import { ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { GotoInbox } from '../GotoInbox'
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
@@ -36,6 +37,7 @@ export const DraftsComponent: React.FC = () => {
 
   return (
     <NewPageContainer>
+      <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
           type={MailboxMenuType.Base}
@@ -71,7 +73,7 @@ export const DraftsComponent: React.FC = () => {
           }}
         />
       )}
-      <Flex alignItems="center" pt="30px" pl={{ base: '20px', md: 0 }}>
+      <Flex alignItems="center" pt="24px" pl={{ base: '20px', md: 0 }}>
         <Wrap>
           <WrapItem alignItems="center">
             <SVGDrafts />
@@ -123,9 +125,7 @@ export const DraftsComponent: React.FC = () => {
             }}
             getHref={(id) => ({
               pathname: RoutePath.NewMessage,
-              query: {
-                id,
-              },
+              search: `id=${id}`,
             })}
             mailboxType={Mailboxes.Drafts}
           />

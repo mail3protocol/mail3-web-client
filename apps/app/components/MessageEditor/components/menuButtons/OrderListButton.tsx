@@ -1,6 +1,6 @@
 import { Icon } from '@chakra-ui/react'
 import { useCommands } from '@remirror/react'
-import OrderListSvg from 'assets/svg/editor/orderList.svg'
+import { ReactComponent as OrderListSvg } from 'assets/svg/editor/orderList.svg'
 import { ButtonBase } from './Base'
 
 export const OrderListButton: React.FC = () => {

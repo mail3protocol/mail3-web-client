@@ -1,18 +1,11 @@
-import { Flex, Heading } from '@chakra-ui/react'
-import dynamic from 'next/dynamic'
-import React, { useEffect } from 'react'
-import { useTranslation } from 'next-i18next'
+import { Center, Flex, Heading, Spinner } from '@chakra-ui/react'
+import React, { useEffect, lazy, Suspense } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
 import { RecipientAndSubject } from './components/recipientAndSubject'
-import { EditorProps } from './components/editor'
 import { useCardSignature } from './hooks/useCardSignature'
 
-const Editor = dynamic<EditorProps>(
-  () => import('./components/editor').then((module) => module.Editor) as any,
-  {
-    ssr: false,
-  }
-)
+const Editor = lazy(() => import('./components/editor'))
 
 const FocusThemeContainer = styled(Flex)`
   button:focus {
@@ -36,6 +29,12 @@ export const MessageEditor: React.FC<MessageEditorProps> = ({
   useEffect(() => {
     setIsEnableCardSignature(isEnableCardSignature)
   }, [isEnableCardSignature])
+
+  const loadingEl = (
+    <Center minH="200px">
+      <Spinner />
+    </Center>
+  )
 
   return (
     <FocusThemeContainer
@@ -80,7 +79,13 @@ export const MessageEditor: React.FC<MessageEditorProps> = ({
         {t('title')}
       </Heading>
       <RecipientAndSubject />
-      {!isLoading ? <Editor content={defaultContent} /> : null}
+      {!isLoading ? (
+        <Suspense fallback={loadingEl}>
+          <Editor content={defaultContent} />
+        </Suspense>
+      ) : (
+        loadingEl
+      )}
     </FocusThemeContainer>
   )
 }

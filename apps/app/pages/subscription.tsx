@@ -1,30 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Button, PageContainer } from 'ui'
+import { PageContainer } from 'ui'
 import styled from '@emotion/styled'
-import { Box } from '@chakra-ui/react'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { TrackEvent, useTrackClick } from 'hooks'
+import { Box, Flex } from '@chakra-ui/react'
 import { Navbar } from '../components/Navbar'
-import { FlexButtonBox, MailboxContainer } from '../components/Inbox'
-import { InboxNav, InboxNavType } from '../components/Inbox/Nav'
-import { RoutePath } from '../route/path'
+import { MailboxContainer } from '../components/Inbox'
+import { InboxNav } from '../components/Inbox/Nav'
 import { SubscriptionBody } from '../components/SubscriptionBody'
-import SVGWrite from '../assets/mailbox/write.svg'
-import { getAuthenticateProps } from '../hooks/useLogin'
-
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'common',
-        'subscription',
-      ])),
-    },
-  })
-)
+import { GoToWriteMailButton } from '../components/GoToWriteMailButton'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 const NewPageContainer = styled(PageContainer)`
   @media (max-width: 600px) {
@@ -80,15 +63,13 @@ const Sticky: React.FC<StickyProps> = ({ children }) => {
   )
 }
 
-const Subscription: NextPage = () => {
-  const router = useRouter()
-  const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
-
+export const SubscriptionPage = () => {
+  useDocumentTitle('Subscription')
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Mail3: Subscription</title>
-      </Head>
+      </Head> */}
       <Sticky>
         <PageContainer>
           <Navbar />
@@ -96,18 +77,10 @@ const Subscription: NextPage = () => {
       </Sticky>
       <NewPageContainer>
         <Box paddingTop={{ base: '25px', md: '35px' }}>
-          <FlexButtonBox>
-            <InboxNav currentType={InboxNavType.Subscription} />
-            <Button
-              className="btn-write"
-              onClick={() => {
-                trackWriteButton()
-                router.push(RoutePath.NewMessage)
-              }}
-            >
-              <SVGWrite /> <Box ml="10px">Write</Box>
-            </Button>
-          </FlexButtonBox>
+          <Flex justify="space-between" pl="20px">
+            <InboxNav />
+            <GoToWriteMailButton />
+          </Flex>
 
           <MailboxContainer minH="700px">
             <Box padding={{ base: '20px 30px 60px', md: '40px 64px' }}>
@@ -119,5 +92,3 @@ const Subscription: NextPage = () => {
     </>
   )
 }
-
-export default Subscription

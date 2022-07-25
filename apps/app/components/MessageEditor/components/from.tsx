@@ -10,9 +10,10 @@ import {
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Avatar } from 'ui'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { useAtomValue } from 'jotai'
-import ChangeFromAddressSvg from '../../../assets/change-from-address.svg'
-import { removeMailSuffix, truncateEmailMiddle } from '../../../utils'
+import { ReactComponent as ChangeFromAddressSvg } from '../../../assets/change-from-address.svg'
+import { removeMailSuffix } from '../../../utils'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
 import { Alias } from '../../../api'
 
@@ -24,6 +25,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
   const [emailAddress, setEmailAddress] = useState<string | undefined>(
     undefined
   )
+  const trackClickFrom = useTrackClick(TrackEvent.AppEditMessageChangeFrom)
   const userProperties = useAtomValue(userPropertiesAtom)
   useEffect(() => {
     if (!userProperties) return
@@ -39,6 +41,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
     <Menu>
       <MenuButton
         as={Button}
+        onClick={() => trackClickFrom()}
         rightIcon={
           <Icon
             as={ChangeFromAddressSvg}
@@ -48,8 +51,8 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
           />
         }
         variant="unstyled"
-        h="30px"
-        lineHeight="30px"
+        minH="30px"
+        h="auto"
         display="flex"
         alignItems="center"
         textAlign="left"
@@ -61,18 +64,30 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
           outline: 'none',
         }}
       >
-        <Flex align="center">
-          {emailAddress ? (
+        {emailAddress ? (
+          <Flex align="center">
             <Avatar
               address={removeMailSuffix(emailAddress)}
               w="24px"
               h="24px"
             />
-          ) : null}
-          <Box as="span" ml="4px">
-            {truncateEmailMiddle(emailAddress)}
-          </Box>
-        </Flex>
+            <Box
+              as="span"
+              ml="4px"
+              whiteSpace="pre-line"
+              overflow="hidden"
+              noOfLines={1}
+              textOverflow="ellipsis"
+              flex={1}
+              display="inline-block"
+              w="full"
+              h="auto"
+              maxH="unset"
+            >
+              {emailAddress}
+            </Box>
+          </Flex>
+        ) : null}
       </MenuButton>
       <MenuList
         border="none"

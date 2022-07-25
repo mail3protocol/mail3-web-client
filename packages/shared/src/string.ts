@@ -40,3 +40,26 @@ export const truncateMailAddress = (
 
   return mailAddress
 }
+
+export function copyTextFallback(data: string): void {
+  const input = document.createElement('input')
+  input.readOnly = true
+  input.value = data
+  input.style.position = 'absolute'
+  input.style.width = '100px'
+  input.style.left = '-10000px'
+  document.body.appendChild(input)
+  input.select()
+  input.setSelectionRange(0, input.value.length)
+  document.execCommand('copy')
+  document.body.removeChild(input)
+}
+
+export async function copyText(s: string) {
+  try {
+    // eslint-disable-next-line compat/compat
+    await navigator.clipboard.writeText(s)
+  } catch (error) {
+    copyTextFallback(s)
+  }
+}

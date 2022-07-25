@@ -31,5 +31,14 @@
         "failed": "Draft Save Failed"
     },
     "succeeded": "succeeded",
-    "drift_bottle_template": "Write down your emotions, thoughts, questions, and even heartfelt secrets. The drift bottle will float with these to another user, and you will have a chance to get a response"
+    "drift_bottle_template": "Write down your emotions, thoughts, questions, and even heartfelt secrets. The drift bottle will float with these to another user, and you will have a chance to get a response",
+    "leave_modal_title": "Are you sure you want to leave this page?",
+    "save_and_quit": "Save as draft",
+    "don't_save_and_exit": "Don't save and exit",
+    "discard": "Discard",
+    "ipfs_modal": {
+        "title": "Enable IPFS Storage",
+        "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
+        "generate_key": "Generate key"
+    }
 }

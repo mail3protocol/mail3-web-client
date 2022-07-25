@@ -11,10 +11,12 @@ import NextLink from 'next/link'
 import { TrackEvent, useTrackClick } from 'hooks'
 import styled from '@emotion/styled'
 import {
-  LAUNCH_URL,
+  LAUNCH_URL as launchURL,
   LIGHT_PAPER_URL,
   WHITE_LIST_URL,
 } from '../../../constants/env'
+
+const LAUNCH_URL = `${launchURL}/?utm_source=offical_click_launchapp`
 
 const buttonProps: ButtonProps = {
   variant: 'outline',

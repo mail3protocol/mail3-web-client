@@ -8,7 +8,7 @@ import {
   zilpay,
 } from './connectors'
 
-export const buildSignMessaege = (nonce: number, desc: string) => `${desc}
+export const buildSignMessage = (nonce: number, desc: string) => `${desc}
 
 Nonce: ${nonce}`
 
@@ -54,10 +54,10 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
         nonce,
       }
     }
-    const message = buildSignMessaege(nonce, signatureDesc)
+    const message = buildSignMessage(nonce, signatureDesc)
     let signature = ''
     let pubkey = ''
-    if (lastConectorName === ConnectorName.ZilPay) {
+    if (lastConectorName === ConnectorName.Zilpay) {
       if (!zilpay.isConnected) {
         throw new Error('Please connect a wallet')
       }

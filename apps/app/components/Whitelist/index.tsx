@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import dayjs from 'dayjs'
 import { TrackEvent, useAccount, useTrackClick } from 'hooks'
-import { useTranslation, Trans } from 'next-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import React, { useMemo } from 'react'
 import styled from '@emotion/styled'
 import { CheckCircleIcon } from '@chakra-ui/icons'

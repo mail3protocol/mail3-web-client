@@ -3,10 +3,16 @@ import { Avatar, Box, Center, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { Button } from 'ui'
-import { TrackEvent, TrackKey, useDidMount, useTrackClick } from 'hooks'
+import {
+  MediaSubscriptionsItem,
+  TrackEvent,
+  TrackKey,
+  useDidMount,
+  useTrackClick,
+} from 'hooks'
 import SubTop from '../../assets/subscription/top.png'
-import SVGBell from '../../assets/subscription/bell.svg'
-import SVGBellCur from '../../assets/subscription/bell-cur.svg'
+import { ReactComponent as SVGBell } from '../../assets/subscription/bell.svg'
+import { ReactComponent as SVGBellCur } from '../../assets/subscription/bell-cur.svg'
 
 import Mail3 from '../../assets/subscription/logo/Mail3.png'
 import Bankless from '../../assets/subscription/logo/Bankless.png'
@@ -30,7 +36,7 @@ const imgs = [
 
 const dataMD = `
 | n | name | url | class | desc |
-| 1 | Mail3 | / | 项目方动态 | All about Mail3! |
+| 1 | Mail³ | / | 项目方动态 | All about Mail³! |
 | 2 | Bankless | https://newsletter.banklesshq.com/ | 综合 | The ultimate guide to DeFi, NFTs, Ethereum, and Bitcoin.  |
 | 3 | The Defiant  | https://newsletter.thedefiant.io/ | / | Curate, digest, and analyze all the major developments in DeFi |
 | 4 | Week in Ethereum News | https://weekinethereumnews.com/ | / | Ethereum News and Links |
@@ -119,12 +125,12 @@ const Item = (props: ItemProps) => {
     <>
       {isNew && (
         <Box position="absolute" top="-2px" left="-7px">
-          <Center w="75px" h="29px" bg={`url(${SubTop.src})`}>
+          <Center w="75px" h="29px" bg={`url(${SubTop})`}>
             News
           </Center>
         </Box>
       )}
-      <Avatar src={avatarSrc.src} />
+      <Avatar src={avatarSrc} />
       <Box>
         <Center>
           <Box marginLeft="5px" fontWeight="700" fontSize="18px">
@@ -154,10 +160,10 @@ const data = realData.map((e, i) => ({
   avatarSrc: imgs[i],
 }))
 
-const dataAtom = atomWithStorage<Array<ListItem>>('subscriptionData', data)
+const dataAtom = atomWithStorage<Array<ListItem>>('subscription_data', data)
 
 export const SubscriptionBody: React.FC = () => {
-  const trackBell = useTrackClick(TrackEvent.ClickSubscriptionBell)
+  const trackMedia = useTrackClick(TrackEvent.ClickSubscriptionBell)
   const [list, setList] = useAtom(dataAtom)
   const [isShow, setIsShow] = useState(false)
 
@@ -167,10 +173,10 @@ export const SubscriptionBody: React.FC = () => {
 
   const handleClick: HandleClick = (index, type) => {
     const newList = [...list]
-    trackBell({
-      [TrackKey.SubscriptionBell]: newList[index].name,
-    })
     if (type === 'follow') {
+      trackMedia({
+        [TrackKey.MediaSubscriptions]: MediaSubscriptionsItem[index],
+      })
       // doing follow
       newList[index].isSub = true
     } else {

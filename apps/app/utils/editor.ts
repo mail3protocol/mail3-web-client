@@ -1,16 +1,13 @@
-import html2canvas from 'html2canvas-objectfit-fix'
+import html2canvas from 'html2canvas'
 import { SubmitMessage } from 'models/src/submitMessage'
-import { generateUuid } from './string'
+import { generateAttachmentContentId } from './string'
 
 export async function onRenderElementToImage(element: HTMLDivElement) {
-  const boundingClientRect = element.getBoundingClientRect()
   return html2canvas(element, {
     useCORS: true,
     allowTaint: true,
     height: element.offsetHeight,
     width: element.offsetWidth,
-    x: boundingClientRect.x,
-    y: boundingClientRect.y,
     scale: 2,
     backgroundColor: null,
   }).then((canvas) => canvas.toDataURL())
@@ -47,7 +44,7 @@ export function replaceHtmlAttachImageSrc(
   return div.innerHTML
 }
 
-export function outputHtmlWithAttachmentImages(html: string) {
+export async function outputHtmlWithAttachmentImages(html: string) {
   const div = document.createElement('div')
   div.innerHTML = html
   const imageElements: HTMLImageElement[] = Array.from(
@@ -61,26 +58,80 @@ export function outputHtmlWithAttachmentImages(html: string) {
     'image/webp': '.webp',
     'image/bmp': '.bmp',
   }
-  imageElements.forEach((imageElement) => {
-    const src = imageElement.getAttribute('src')
-    if (!src) return
-    const isBase64 = src.startsWith('data:')
-    if (!isBase64) return
-    const split = src.split(';base64,')
-    const contentType = split[0].substring(5)
-    const content = split[1]
-    const uuid = generateUuid()
-    attachments.push({
-      filename: `${uuid}${suffixNameMap[contentType]}`,
-      contentType,
-      content,
-      contentDisposition: 'inline',
-      cid: uuid,
+  await Promise.all(
+    imageElements.map(async (imageElement) => {
+      const src = imageElement.getAttribute('src')
+      if (!src) return
+      const isBase64 = src.startsWith('data:')
+      if (!isBase64) return
+      const split = src.split(';base64,')
+      const contentType = split[0].substring(5)
+      const content = split[1]
+      // eslint-disable-next-line no-await-in-loop
+      const cid = await generateAttachmentContentId(content)
+      attachments.push({
+        filename: `${cid}${suffixNameMap[contentType]}`,
+        contentType,
+        content,
+        contentDisposition: 'inline',
+        cid,
+      })
+      imageElement.setAttribute('src', `cid:${cid}`)
     })
-    imageElement.setAttribute('src', `cid:${uuid}`)
-  })
+  )
+
   return {
     html: div.innerHTML,
     attachments,
   }
+}
+
+export function removeDuplicationAttachments(
+  attachments: SubmitMessage.Attachment[]
+) {
+  const idSet = new Set(attachments.map((a) => a.cid))
+  return attachments.filter((attachment) => {
+    const has = idSet.has(attachment.cid)
+    idSet.delete(attachment.cid)
+    return has
+  })
+}
+
+export const DISABLED_FILENAME_SPECIAL_CHARACTERS = [
+  './',
+  '<!--',
+  '-->',
+  '<',
+  '>',
+  "'",
+  '"',
+  '&',
+  '$',
+  '#',
+  '{',
+  '}',
+  '[',
+  ']',
+  '=',
+  ';',
+  '?',
+  '%20', // space
+  '%22', // "
+  '%3c', // <
+  '%253c', // <
+  '%3e', // >
+  '%28', // (
+  '%29', // )
+  '%2528', // (
+  '%26', // &
+  '%24', // $
+  '%3f', // ?
+  '%3b', // ;
+  '%3d', // =
+]
+
+export function hasFilenameSpecialCharacters(filename: string) {
+  return DISABLED_FILENAME_SPECIAL_CHARACTERS.some((char) =>
+    filename.includes(char)
+  )
 }

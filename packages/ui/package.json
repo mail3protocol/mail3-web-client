@@ -12,7 +12,7 @@
         "assets": "*",
         "boring-avatars": "1.5.8",
         "hooks": "*",
-        "qrcode.react": "^3.0.1"
+        "qrcode.react": "^3.0.2"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",
@@ -23,9 +23,7 @@
         "eslint": "8.13.0",
         "framer-motion": "^6",
         "jotai": "^1.6.1",
-        "next": "12.1.4",
         "react": "^17.0.2",
-        "react-cookie": "^4.1.1",
         "react-dom": "^17.0.2",
         "react-query": "^3.34.16",
         "scripts": "*",

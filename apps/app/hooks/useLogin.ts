@@ -1,24 +1,25 @@
 import dayjs from 'dayjs'
-import { useCallback, useEffect } from 'react'
-import { useCookies } from 'react-cookie'
-import type { GetServerSidePropsContext, GetServerSideProps } from 'next'
-import type { IncomingMessage } from 'http'
-import universalCookie from 'cookie'
+import { useCallback, useEffect, useMemo } from 'react'
 import {
-  COOKIE_KEY,
   useAccount,
   useConnector,
   useConnectWalletDialog,
-  LoginInfo,
-  useJWT,
   useLastConectorName,
   GlobalDimensions,
   SignatureStatus,
   useDidMount,
   useAccountIsActivating,
   zilpay,
+  useLoginAccount,
+  // useConnectedAccount,
+  useSetLoginInfo,
+  useLoginInfo,
+  ConnectorName,
+  metaMaskStore,
+  walletConnectStore,
+  useSetLastConnector,
 } from 'hooks'
-import { useRouter } from 'next/router'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { useAPI } from './useAPI'
@@ -26,54 +27,44 @@ import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
-import { useSetLoginInfo } from './useLoginInfo'
-import { getUtmQueryString } from '../utils'
 
-export const useSetLoginCookie = () => {
-  const [, setCookie] = useCookies([COOKIE_KEY])
-  return useCallback((info: LoginInfo) => {
-    const now = dayjs()
-    const option: Parameters<typeof setCookie>[2] = {
-      path: '/',
-      expires: now.add(14, 'day').toDate(),
-    }
-    setCookie(COOKIE_KEY, info, option)
-  }, [])
+export const useIsLoginExpired = () => {
+  const loginInfo = useLoginInfo()
+  return useMemo(
+    () => (loginInfo ? dayjs(loginInfo?.expires).isAfter(dayjs()) : false),
+    [loginInfo]
+  )
 }
 
 export const useIsAuthenticated = () => {
-  const jwt = useJWT()
-  return !!jwt
+  const loginInfo = useLoginInfo()
+  const isLoginExpired = useIsLoginExpired()
+  return useMemo(() => {
+    if (loginInfo?.expires) {
+      return isLoginExpired
+    }
+    return !!loginInfo?.jwt
+  }, [loginInfo, isLoginExpired])
 }
 
 export const useLogin = () => {
   const api = useAPI()
-  const setLoginInfo = useSetLoginCookie()
+  const setLoginInfo = useSetLoginInfo()
   return useCallback(
     async (message: string, sig: string, pubkey?: string) => {
       const { data } = await api.login(message, sig, pubkey)
+      const now = dayjs()
       const loginInfo = {
         address: api.getAddress(),
         jwt: data.jwt,
         uuid: data.uuid,
+        expires: now.add(14, 'day').toISOString(),
       }
       setLoginInfo(loginInfo)
       return loginInfo
     },
     [api]
   )
-}
-
-export function parseCookies(req?: IncomingMessage) {
-  try {
-    const cookies = universalCookie.parse(
-      req ? req.headers.cookie || '' : document.cookie
-    )
-    const cookie = cookies?.[COOKIE_KEY] ?? '{}'
-    return JSON.parse(cookie)
-  } catch (error) {
-    return {}
-  }
 }
 
 export const isAuthModalOpenAtom = atom(false)
@@ -95,6 +86,17 @@ export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.WhiteList,
   RoutePath.Testing,
 ])
+
+export const useCurrentWalletStore = () => {
+  const walletName = useLastConectorName()
+  if (walletName === ConnectorName.MetaMask) {
+    return metaMaskStore
+  }
+  if (walletName === ConnectorName.WalletConnect) {
+    return walletConnectStore
+  }
+  return metaMaskStore
+}
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
   'mail3_user_properties',
@@ -206,17 +208,31 @@ export const useInitUserProperties = () => {
   }, [isAuth])
 }
 
+export const useLogout = () => {
+  const connector = useConnector()
+  const setUserInfo = useSetLoginInfo()
+  const setLastConnector = useSetLastConnector()
+  return useCallback(async () => {
+    await connector?.deactivate()
+    setUserInfo(null)
+    setLastConnector(undefined)
+  }, [connector])
+}
+
 export const useWalletChange = () => {
   const closeAuthModal = useCloseAuthModal()
-  const [, , removeCookie] = useCookies([COOKIE_KEY])
+  const setLoginInfo = useSetLoginInfo()
   const { onOpen: openConnectWalletModal } = useConnectWalletDialog()
-  const account = useAccount()
+  const loginAccount = useLoginAccount()
   const isConnecting = useAccountIsActivating()
+  const store = useCurrentWalletStore()
+  const logout = useLogout()
   const handleAccountChanged = useCallback(
     ([acc]) => {
-      // disconected
+      const [account] = store.getState().accounts ?? []
+
       if (acc === undefined) {
-        removeCookie(COOKIE_KEY, { path: '/' })
+        setLoginInfo(null)
         return
       }
       if (isConnecting || !account) {
@@ -225,25 +241,32 @@ export const useWalletChange = () => {
       if (acc?.toLowerCase() === account?.toLowerCase()) {
         return
       }
-      removeCookie(COOKIE_KEY, { path: '/' })
+      if (
+        loginAccount &&
+        account &&
+        loginAccount.toLowerCase() !== account?.toLowerCase()
+      ) {
+        return
+      }
+      setLoginInfo(null)
     },
-    [account, isConnecting]
+    [isConnecting, loginAccount]
   )
   const handleZilpayAccountChanged = useCallback(
     (acc: any) => {
       if (acc == null) {
-        removeCookie(COOKIE_KEY, { path: '/' })
+        logout()
         return
       }
-      if (acc?.bech32 === account) {
+      if (acc?.bech32 === loginAccount) {
         return
       }
-      removeCookie(COOKIE_KEY, { path: '/' })
+      logout()
     },
-    [account]
+    [loginAccount]
   )
   const handleDisconnect = useCallback(() => {
-    removeCookie(COOKIE_KEY, { path: '/' })
+    setLoginInfo(null)
     closeAuthModal()
     openConnectWalletModal()
   }, [])
@@ -282,7 +305,8 @@ export const useAuth = () => {
   const account = useAccount()
   const openAuthModal = useOpenAuthModal()
   const closeAuthModal = useCloseAuthModal()
-  const router = useRouter()
+  const location = useLocation()
+  const navi = useNavigate()
   useEffect(() => {
     if (!isAuth && account) {
       openAuthModal()
@@ -293,10 +317,12 @@ export const useAuth = () => {
   }, [isAuth, account])
 
   useEffect(() => {
-    if (!isAuth && !allowWithoutAuthPaths.has(router.pathname)) {
-      router.replace(RoutePath.Home)
+    if (!isAuth && !allowWithoutAuthPaths.has(location.pathname)) {
+      navi(RoutePath.Home, {
+        replace: true,
+      })
     }
-  }, [isAuth, router.pathname])
+  }, [isAuth, location.pathname])
 
   useInitUserProperties()
   useWalletChange()
@@ -312,23 +338,3 @@ export const useAuthModalOnBack = () => {
     onOpen()
   }, [connector])
 }
-
-export const getAuthenticateProps =
-  (cb?: GetServerSideProps) => async (context: GetServerSidePropsContext) => {
-    const props = await cb?.(context)
-    const { req, res, query } = context
-    const data = parseCookies(req)
-    if (res) {
-      if (typeof data.jwt !== 'string') {
-        res.writeHead(307, {
-          Location: `/testing${getUtmQueryString(query)}`,
-          'Cache-Control': 'no-cache, no-store',
-          Pragma: 'no-cache',
-        })
-        res.end()
-      }
-    }
-    return {
-      ...props,
-    } as any
-  }

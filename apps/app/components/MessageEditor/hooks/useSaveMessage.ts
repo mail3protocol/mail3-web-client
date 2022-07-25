@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useNavigate, useLocation, createSearchParams } from 'react-router-dom'
 import { atomWithReset, useResetAtom } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useAPI } from '../../../hooks/useAPI'
@@ -12,7 +12,8 @@ export function useSaveMessage() {
   const api = useAPI()
   const { subject, toAddresses, fromAddress, ccAddresses, bccAddresses } =
     useSubject()
-  const router = useRouter()
+  const navi = useNavigate()
+  const location = useLocation()
   const [isLoading, setIsLoading] = useAtom(savingMessageAtom)
   const onResetSavingAtom = useResetAtom(savingMessageAtom)
   const { attachments } = useAttachment()
@@ -33,16 +34,12 @@ export function useSaveMessage() {
         attachments,
       })
       await removeDraft(api)
-      await router.replace(
-        router.pathname,
+      navi(
         {
-          query: {
-            [ID_NAME]: res.data.id,
-          },
+          pathname: location.pathname,
+          search: createSearchParams({ [ID_NAME]: res.data.id }).toString(),
         },
-        {
-          shallow: true,
-        }
+        { replace: true, state: location.state }
       )
     } finally {
       setIsLoading(false)
@@ -51,5 +48,6 @@ export function useSaveMessage() {
   return {
     onSave,
     onResetSavingAtom,
+    isSaving: isLoading,
   }
 }

@@ -1,34 +1,18 @@
 import React from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PageContainer } from 'ui'
-import Head from 'next/head'
 import { PreviewComponent } from '../../components/Preview'
-import { Navbar } from '../../components/Navbar'
-import { getAuthenticateProps } from '../../hooks/useLogin'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { useRedirectHome } from '../../hooks/useRedirectHome'
 
-export const getServerSideProps: GetServerSideProps = getAuthenticateProps(
-  async ({ locale }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'common',
-        'mailboxes',
-        'preview',
-      ])),
-    },
-  })
-)
-
-const Message: NextPage = () => (
-  <>
-    <Head>
-      <title>Mail3: Read Mail</title>
-    </Head>
+export const MessagePage = () => {
+  const { isAuth, redirectHome } = useRedirectHome()
+  useDocumentTitle('Read Mail')
+  if (!isAuth) {
+    return redirectHome()
+  }
+  return (
     <PageContainer>
-      <Navbar />
       <PreviewComponent />
     </PageContainer>
-  </>
-)
-
-export default Message
+  )
+}

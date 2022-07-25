@@ -5,11 +5,23 @@ import {
   SkeletonProps,
   LayoutProps,
   WrapItem,
+  Image,
 } from '@chakra-ui/react'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useQuery } from 'react-query'
 import BoringAvatar from 'boring-avatars'
+
+const IS_IPHONE =
+  typeof navigator !== 'undefined' &&
+  navigator.userAgent.toLowerCase().includes('iphone') &&
+  !navigator.vendor.includes('Google')
+
+const IS_SAFARI =
+  typeof navigator !== 'undefined' &&
+  navigator.vendor?.includes('Apple') &&
+  !navigator.userAgent.includes('CriOS') &&
+  !navigator.userAgent.includes('FxiOS')
 
 export interface AvatarProps extends RawAvatarProps {
   address: string
@@ -17,6 +29,7 @@ export interface AvatarProps extends RawAvatarProps {
   w?: LayoutProps['w']
   h?: LayoutProps['h']
   isSquare?: boolean
+  isUseSvg?: boolean
 }
 
 const isEthAddress = (address?: string) =>
@@ -59,6 +72,8 @@ export const avatarQuery = (
 }`
 
 const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
+const generateAvatarSrc = (address: string) =>
+  `https://source.boringavatars.com/marble/120/${address}?colors=92A1C6,146A7C,F0AB3D,C271B4,C20D90&square=false`
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
@@ -66,6 +81,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   skeletonProps,
   isSquare,
   onClick,
+  isUseSvg = false,
   ...props
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
@@ -115,14 +131,23 @@ export const Avatar: React.FC<AvatarProps> = ({
         overflow="hidden"
         onClick={onClick}
         cursor={onClick ? 'pointer' : undefined}
+        {...props}
       >
-        <BoringAvatar
-          name={address.toLowerCase()}
-          variant="marble"
-          square
-          size="100%"
-          colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-        />
+        {!IS_IPHONE || !IS_SAFARI || isUseSvg ? (
+          <BoringAvatar
+            name={address.toLowerCase()}
+            variant="marble"
+            square
+            size="100%"
+            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+          />
+        ) : (
+          <Image
+            src={generateAvatarSrc(address.toLowerCase())}
+            w={width}
+            h={width}
+          />
+        )}
       </WrapItem>
     ) : (
       <RawAvatar

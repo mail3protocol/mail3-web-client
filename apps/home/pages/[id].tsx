@@ -1,44 +1,27 @@
-import { COOKIE_KEY, useDidMount, useLoginAccount } from 'hooks'
+import { useDidMount, useLoginAccount } from 'hooks'
 import { GetServerSideProps, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import NextLink from 'next/link'
 import React, { useMemo, useState } from 'react'
 import ErrorPage from 'next/error'
-import type { IncomingMessage } from 'http'
-import { useTranslation } from 'next-i18next'
 import styled from '@emotion/styled'
-import { Center, Flex, Button, Text } from '@chakra-ui/react'
-import LogoSvg from 'assets/svg/logo-pure.svg'
-import universalCookie from 'cookie'
-import { Avatar, LinkButton } from 'ui'
+import { Flex, Button, Text, Link } from '@chakra-ui/react'
+import { Avatar, Logo } from 'ui'
 import { useRouter } from 'next/router'
 import { truncateMiddle } from 'shared'
+import Head from 'next/head'
 import { isEthAddress } from '../utils/eth'
 
-import { MAIL_SERVER_URL } from '../constants/env'
-
-function parseCookies(req?: IncomingMessage) {
-  try {
-    const cookies = universalCookie.parse(
-      req ? req.headers.cookie || '' : document.cookie
-    )
-    const cookie = cookies?.[COOKIE_KEY] ?? '{}'
-    return JSON.parse(cookie)
-  } catch (error) {
-    return {}
-  }
-}
+import { APP_URL, MAIL_SERVER_URL } from '../constants/env'
+import { ProfileComponent } from '../components/Profile'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { locale, resolvedUrl, req } = context
+  const { locale, resolvedUrl } = context
   const [address] = resolvedUrl.slice(1).split('?')
-  const cookie = parseCookies(req)
   const errorCode =
     isEthAddress(address) || address?.endsWith('.eth') ? false : 404
   return {
     props: {
       errorCode,
-      address: cookie?.address,
       ...(await serverSideTranslations(locale as string, [
         'common',
         'navbar',
@@ -71,7 +54,8 @@ const NavbarContainer = styled(Flex)`
 `
 
 const Navbar: React.FC<{ address: string }> = ({ address }) => {
-  const [t] = useTranslation('profile')
+  const [isMounted, setIsMounted] = useState(false)
+
   const emailAddress = useMemo(
     () =>
       address
@@ -83,25 +67,22 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
         : '',
     [address]
   )
-  const [isMounted, setIsMounted] = useState(false)
   useDidMount(() => {
     setIsMounted(true)
   })
   return (
     <NavbarContainer>
       <Flex className="nav">
-        <NextLink href="/" passHref>
-          <LinkButton>
-            <LogoSvg />
-          </LinkButton>
-        </NextLink>
+        <Link href={APP_URL} isExternal>
+          <Logo />
+        </Link>
         {isMounted ? (
           <Flex alignItems="center" position="absolute" right="20px">
             {address ? (
               <Button
                 as="a"
                 target="_blank"
-                href="https://app.mail3.me"
+                href={APP_URL}
                 variant="outline"
                 borderRadius="40px"
                 bg="transparent"
@@ -116,22 +97,7 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
                   {emailAddress}
                 </Text>
               </Button>
-            ) : (
-              <Button
-                as="a"
-                target="_blank"
-                href="https://app.mail3.me"
-                borderRadius="40px"
-                bg="brand.500"
-                w="200px"
-                color="white"
-                _hover={{
-                  bg: 'brand.300',
-                }}
-              >
-                {t('connect-wallet')}
-              </Button>
-            )}
+            ) : null}
           </Flex>
         ) : null}
       </Flex>
@@ -139,54 +105,28 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
   )
 }
 
-const btnBg = `linear-gradient(90.96deg, #898CFF 0.41%, #FFF500 29.76%, #FFA800 68.07%, #97F54E 100.92%)`
-
 const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
   errorCode,
   address,
 }) => {
   const account = useLoginAccount()
   const router = useRouter()
-  const [t] = useTranslation('profile')
+  const { id } = router.query as { id: string }
 
   if (errorCode) {
     return <ErrorPage statusCode={errorCode} />
   }
 
   return (
-    <Flex padding={0} flexDirection="column" position="relative">
-      <Navbar address={account || address} />
-      <iframe
-        src={`https://app.cyberconnect.me/address/${router.query.id}`}
-        title={`CyberConnect@${account}`}
-        frameBorder="0"
-        style={{
-          overflow: 'hidden',
-          height: 'calc(100vh - 60px)',
-          width: '100%',
-        }}
-        height="calc(100vh - 60px)"
-        width="100%"
-      />
-      <Center position="fixed" bottom="50px" w="100%">
-        <Button
-          color="white"
-          bg={btnBg}
-          _hover={{ bg: btnBg }}
-          w="300px"
-          borderRadius="40px"
-          as="a"
-          target="_blank"
-          href={
-            account
-              ? `https://app.mail3.me/message/new?to=${router.query.id}@${MAIL_SERVER_URL}`
-              : 'https://app.mail3.me'
-          }
-        >
-          {t('mail-me')}
-        </Button>
-      </Center>
-    </Flex>
+    <>
+      <Head>
+        <title>Mail3: Profile Page</title>
+      </Head>
+      <Flex padding={0} flexDirection="column" position="relative">
+        <Navbar address={account || address} />
+      </Flex>
+      <ProfileComponent mailAddress={`${id}@${MAIL_SERVER_URL}`} address={id} />
+    </>
   )
 }
 

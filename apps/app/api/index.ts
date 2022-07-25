@@ -4,6 +4,8 @@ import { UploadMessage } from 'models/src/uploadMessage'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
+import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
+import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdentifier'
 import { SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
@@ -15,7 +17,7 @@ export interface LoginResponse {
 export interface Alias {
   uuid: string
   address: string
-  is_default: string
+  is_default: boolean
 }
 
 export interface AliasResponse {
@@ -342,5 +344,27 @@ export class API {
 
   public async applyToExperienceNewFeature(featureName: 'community-mail') {
     return this.axios.post(`/account/feature_experiences/${featureName}`)
+  }
+
+  public async updateAliasList() {
+    return this.axios.put(`/account/aliases`)
+  }
+
+  public updateMessageEncryptionKey(messageEncryptionKey: string) {
+    return this.axios.put('/account/settings/message_encryption_keys', {
+      message_encryption_key: messageEncryptionKey,
+    })
+  }
+
+  public getMessageEncryptionKeyState() {
+    return this.axios.get<GetMessageEncryptionKeyResponse>(
+      '/account/settings/message_encryption_key_states'
+    )
+  }
+
+  public getMessageOnChainIdentifier(messageId: string) {
+    return this.axios.get<MessageOnChainIdentifierResponse>(
+      `/mailbox/account/messages/${messageId}/on_chain_identifier`
+    )
   }
 }

@@ -1,6 +1,6 @@
 import { Icon } from '@chakra-ui/react'
 import { useCommands } from '@remirror/react'
-import ItalicSvg from 'assets/svg/editor/italic.svg'
+import { ReactComponent as ItalicSvg } from 'assets/svg/editor/italic.svg'
 import { ButtonBase } from './Base'
 
 export const ItalicButton: React.FC = () => {

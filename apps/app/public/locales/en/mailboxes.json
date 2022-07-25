@@ -49,5 +49,16 @@
             "fail": "Restore is fail, try again."
         }
     },
-    "reply-driftbottle-sender": "Reply"
+    "reply-driftbottle-sender": "Reply",
+    "sending": {
+        "sending": "Sending...",
+        "succeed": "Message Sent",
+        "view_message": "View Message"
+    },
+    "ipfs": {
+        "ipfs_link": "IPFS LINK",
+        "eth_address": "SENDER ETHEREUM ADDRESS",
+        "content_digest": "CONTENT DIGEST",
+        "pending": "PENDING"
+    }
 }

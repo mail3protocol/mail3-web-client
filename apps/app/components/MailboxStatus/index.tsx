@@ -1,11 +1,10 @@
-import { Box, Flex } from '@chakra-ui/react'
-import { useTranslation } from 'next-i18next'
-import Image from 'next/image'
+import { Box, Flex, Image } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 import React from 'react'
 
 import IMGClear from '../../assets/mailbox/clear.png'
-import SVGBottom from '../../assets/mailbox/is-bottom.svg'
-import SVGNone from '../../assets/mailbox/none.svg'
+import { ReactComponent as SVGBottom } from '../../assets/mailbox/is-bottom.svg'
+import { ReactComponent as SVGNone } from '../../assets/mailbox/none.svg'
 import IMGNewNone from '../../assets/mailbox/new-none.png'
 
 export const EmptyStatus = () => {

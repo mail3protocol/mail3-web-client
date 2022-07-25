@@ -24,7 +24,18 @@ export * from './WalletConnect'
 export enum ConnectorName {
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
-  ZilPay = 'ZilPay',
+  Zilpay = 'Zilpay',
+
+  // 👇 Not supported
+  Phantom = 'Phantom',
+  Solflare = 'Solflare',
+  Blocto = 'Blocto',
+  Avalance = 'Avalance',
+  TronLink = 'TronLink',
+  Coinbase = 'Coinbase',
+  Keplr = 'Keplr',
+  Plug = 'Plug',
+  Polkawallet = 'Polkawallet',
 }
 
 const lastConectorNameAtom = atomWithStorage<ConnectorName | undefined>(
@@ -43,27 +54,36 @@ Connectors.set(ConnectorName.WalletConnect, walletConnect)
 export const useSetLastConnector = () => useUpdateAtom(lastConectorNameAtom)
 export const useLastConectorName = () => useAtomValue(lastConectorNameAtom)
 
-export const useAccount = () => {
+export const useConnectedAccount = () => {
   const lastConectorName = useAtomValue(lastConectorNameAtom)
-  const loginAccount = useLoginAccount()
-  const account = SupportedConnectors.useSelectedAccount(
+  const account = SupportedConnectors.useSelectedAccounts(
     Connectors.get(lastConectorName) ?? metaMask
   )
 
-  if (loginAccount) {
-    return loginAccount
+  if (lastConectorName && account?.[0]) {
+    return account?.[0]
   }
 
   if (lastConectorName) {
-    if (lastConectorName === ConnectorName.ZilPay && zilpay.isConnected()) {
+    if (lastConectorName === ConnectorName.Zilpay && zilpay.isConnected()) {
       return zilpay.getBech32Address()
     }
     if (account) {
       return account
     }
   }
-
   return ''
+}
+
+export const useAccount = () => {
+  const loginAccount = useLoginAccount()
+  const connectedAccount = useConnectedAccount()
+
+  if (loginAccount) {
+    return loginAccount
+  }
+
+  return connectedAccount
 }
 
 export const useAccountIsActivating = () => {
@@ -108,13 +128,15 @@ export const useEagerConnect = (forceConnect = false) => {
   const lastConectorName = useLastConectorName()
   const connector = useConnector()
   useDidMount(() => {
-    if (lastConectorName && connector) {
-      if (forceConnect) {
-        connector.activate()
-      } else {
-        connector?.connectEagerly?.()
+    setTimeout(() => {
+      if (lastConectorName && connector) {
+        if (forceConnect) {
+          connector.activate()
+        } else {
+          connector?.connectEagerly?.()
+        }
       }
-    }
+    }, 500)
   })
 }
 
