@@ -13,7 +13,7 @@
             "change-wallet": "Change Wallet",
             "copied": "Copied",
             "copied-to-clipboard": "Copied to clipboard：",
-            "logout": "Logout"
+            "logout": "Disconnect"
         },
         "connect": {
             "metamask": "MetaMask",
