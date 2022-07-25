@@ -174,6 +174,12 @@ enum AliasType {
 
 const LIMIT_MAX_NUMBER = 5
 
+const NotFound = () => (
+  <Box fontSize="16px" pl="10px">
+    Not Found
+  </Box>
+)
+
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
   const router = useLocation()
@@ -361,7 +367,7 @@ export const SettingAddress: React.FC = () => {
             }
           />
         ) : null}
-        {ensAliases.length && !isLoading ? (
+        {!isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
               <Flex>
@@ -386,6 +392,8 @@ export const SettingAddress: React.FC = () => {
             </FormLabel>
             <Box className="switch-wrap">
               <Box p="16px 8px 16px 8px">
+                {!ensAliases.length ? <NotFound /> : null}
+
                 <VStack spacing="10px">
                   {ensAliases.map((a) => (
                     <EmailSwitch
@@ -456,7 +464,7 @@ export const SettingAddress: React.FC = () => {
           </>
         ) : null}
 
-        {bitAliases.length && !isLoading ? (
+        {!isLoading ? (
           <>
             <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
               <Stack
@@ -472,6 +480,7 @@ export const SettingAddress: React.FC = () => {
             </FormLabel>
             <Box className="switch-wrap">
               <Box p="16px 8px 16px 8px">
+                {!bitAliases.length ? <NotFound /> : null}
                 <VStack spacing="10px">
                   {bitAliases.map((a) => (
                     <EmailSwitch
