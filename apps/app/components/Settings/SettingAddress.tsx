@@ -185,6 +185,7 @@ export const SettingAddress: React.FC = () => {
   const trackClickBITRefresh = useTrackClick(TrackEvent.ClickBITRefresh)
   const setUserProperties = useUpdateAtom(userPropertiesAtom)
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
+  const trackClickRegisterBIT = useTrackClick(TrackEvent.ClickRegisterBIT)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
   const [activeAccount, setActiveAccount] = useState(account)
@@ -526,7 +527,7 @@ export const SettingAddress: React.FC = () => {
                             a: (
                               <Link
                                 isExternal
-                                onClick={() => trackClickRegisterENS()}
+                                onClick={() => trackClickRegisterBIT()}
                                 href={BIT_DOMAIN}
                                 color="#4E52F5"
                               />
