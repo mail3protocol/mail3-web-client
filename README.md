@@ -2,10 +2,6 @@
 
 The web client of [Mail3](https://mail3.me).
 
-**Mail3 now supports Zilliqa blockchain and ZilPay! Please check is [live demo](https://mail3-app-git-feat-zilpay-mail3-postoffice.vercel.app/) and the following video demo.**
-
-https://user-images.githubusercontent.com/106502089/175956477-748c16da-6848-4082-b0ad-d2d3fd9e8317.mp4
-
 ## Quick start
 
 ### Prerequisites
