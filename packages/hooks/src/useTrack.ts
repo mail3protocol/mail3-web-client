@@ -44,6 +44,7 @@ export enum TrackEvent {
   TestingDisCordLink = 'beta1_click_discord',
   TestingTwitter = 'beta1_click_followtwitter',
   TestingEnterApp = 'beta1_click_enterapp',
+  TestingSignupNow = 'beta1_click_register_it_now',
 
   // home
   HomeLaunchApp = 'Mail3_offical_click_launchapp',
@@ -93,6 +94,10 @@ export enum TrackEvent {
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
   ClickMmbGithub = 'click_mmb_github',
+
+  // product recommendations
+  ClickBannerSuggestion = 'click_banner_suggestion',
+  SentProductSuggestion = 'sent_product_suggestion',
 }
 
 // dimensions
