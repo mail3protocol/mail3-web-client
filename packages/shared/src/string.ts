@@ -30,9 +30,7 @@ export const truncateMailAddress = (
   tailLength = 4
 ) => {
   if (verifyEmail(mailAddress)) {
-    const splitMailAddress = mailAddress.split('@')
-    const address = splitMailAddress[0]
-    const suffix = splitMailAddress[1]
+    const [address, suffix] = mailAddress.split('@')
     if (isPrimitiveEthAddress(address))
       return `${truncateMiddle(address, takeLength, tailLength)}@${suffix}`
   }
