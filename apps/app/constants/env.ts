@@ -67,3 +67,11 @@ export const IS_IPHONE =
   !navigator.vendor.includes('Google')
 
 export const SENTRY_DSN = import.meta.env.NEXT_PUBLIC_SENTRY_DSN
+
+export const PRODUCT_RECOMMENDATIONS_ADDRESS =
+  import.meta.env.NEXT_PUBLIC_PRODUCT_RECOMMENDATIONS_ADDRESS ||
+  'oxyful.eth@mail3.me'
+
+export const PRODUCT_RECOMMENDATIONS_SUBJECT =
+  import.meta.env.NEXT_PUBLIC_PRODUCT_RECOMMENDATIONS_SUBJECT ||
+  '[Product suggestion] It would be terrific if …'

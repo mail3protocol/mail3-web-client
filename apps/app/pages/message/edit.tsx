@@ -73,6 +73,7 @@ export const NewMessagePage = () => {
   const action = searchParams.get('action')
   const id = searchParams.get('id')
   const _to = searchParams.get('to')
+  const searchParamsSubject = searchParams.get('subject')
   const location = useLocation()
   const messageData = location.state as MessageData | undefined
   const to = _to ? filterEmails(_to.split(',')) : null
@@ -103,7 +104,8 @@ export const NewMessagePage = () => {
   } = useAttachment()
   const { onResetSavingAtom } = useSaveMessage()
 
-  function getSubject(messageInfo: GetMessage.Response) {
+  function getSubject(messageInfo?: GetMessage.Response | null) {
+    if (searchParamsSubject) return searchParamsSubject
     if (!messageInfo) return ''
     if (
       (messageInfo.subject.startsWith('Fwd:') && action === 'forward') ||
@@ -126,7 +128,7 @@ export const NewMessagePage = () => {
     return messageInfo.subject
   }
 
-  function getTo(messageInfo?: GetMessage.Response) {
+  function getTo(messageInfo?: GetMessage.Response | null) {
     if (forceTo) {
       return forceTo
     }
@@ -144,7 +146,6 @@ export const NewMessagePage = () => {
   function setSubjectAndOtherByMessageInfo(
     messageInfo?: GetMessage.Response | null
   ) {
-    if (!messageInfo) return
     if (isLoadedSubjectInfo) return
     setIsLoadedSubjectInfo(true)
     if (userProperties?.defaultAddress) {
@@ -152,7 +153,7 @@ export const NewMessagePage = () => {
     }
     setSubject(getSubject(messageInfo))
     setToAddresses(getTo(messageInfo))
-    if (action !== 'reply' && action !== 'forward') {
+    if (messageInfo && action !== 'reply' && action !== 'forward') {
       if (messageInfo.cc) {
         setCcAddresses(messageInfo.cc.map((item) => item.address))
       }

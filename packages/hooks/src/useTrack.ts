@@ -93,6 +93,10 @@ export enum TrackEvent {
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
   ClickMmbGithub = 'click_mmb_github',
+
+  // product recommendations
+  ClickBannerSuggestion = 'click_banner_suggestion',
+  SentProductSuggestion = 'sent_product_suggestion',
 }
 
 // dimensions
