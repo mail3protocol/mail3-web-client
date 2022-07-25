@@ -11,6 +11,7 @@ import {
   PRODUCT_RECOMMENDATIONS_ADDRESS,
   PRODUCT_RECOMMENDATIONS_SUBJECT,
 } from '../../constants'
+import { RoutePath } from '../../route/path'
 
 const isClosedBannerAtom = atomWithStorage<boolean>(
   'is_close_product_recommendations_banner_atom',
@@ -59,7 +60,7 @@ export const ProductRecommendationsBanner: React.FC = () => {
       </Button>
       <Link
         as={RouterLink}
-        to={`/message/edit?to=${PRODUCT_RECOMMENDATIONS_ADDRESS}&subject=${PRODUCT_RECOMMENDATIONS_SUBJECT}`}
+        to={`${RoutePath.NewMessage}?to=${PRODUCT_RECOMMENDATIONS_ADDRESS}&subject=${PRODUCT_RECOMMENDATIONS_SUBJECT}`}
         onClick={() => trackClickBannerSuggestion()}
       >
         <AspectRatio
