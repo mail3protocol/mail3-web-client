@@ -10,6 +10,7 @@ import {
   Box,
   StackProps,
   Stack,
+  ButtonProps,
 } from '@chakra-ui/react'
 import { useTranslation, Trans } from 'react-i18next'
 import { useAccount, useTrackClick, TrackEvent } from 'hooks'
@@ -127,8 +128,12 @@ const ColorfulButton = styled(Flex)`
 
 const COLORFUL_BTN_BG = `linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)`
 
-const RenderedButton: React.FC<{ addr: string }> = ({ addr }) => (
-  <Button w="185px" fontSize="14px" variant="outline">
+interface RenderedButtonProps extends ButtonProps {
+  addr: string
+}
+
+const RenderedButton: React.FC<RenderedButtonProps> = ({ addr, ...props }) => (
+  <Button w="185px" fontSize="14px" variant="outline" {...props}>
     {truncateMiddle(addr, 6, 4)}
   </Button>
 )
@@ -167,7 +172,7 @@ export const Testing: React.FC = () => {
   const trackTwitter = useTrackClick(TrackEvent.TestingTwitter)
   const trackMoreDetail = useTrackClick(TrackEvent.TestingMoreDetails)
   const trackEnterApp = useTrackClick(TrackEvent.TestingEnterApp)
-  const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
+  const trackClickRegisterENS = useTrackClick(TrackEvent.TestingSignupNow)
 
   const isAuthModalOpen = useIsAuthModalOpen()
 
@@ -253,27 +258,6 @@ export const Testing: React.FC = () => {
       <Container>
         <Heading className="title">{t('title')}</Heading>
         <Text className="desc">{desc}</Text>
-        {mascotIndex === 3 ? (
-          <Text fontSize="12px" mt="16px" color="#6F6F6F">
-            <Trans
-              ns="testing"
-              i18nKey="discord-desc"
-              t={t}
-              components={{
-                a: (
-                  <Link
-                    isExternal
-                    href={DISCORD_URL}
-                    onClick={() => trackDiscordLink()}
-                    color="#4E52F5"
-                    textDecoration="underline"
-                    fontWeight={700}
-                  />
-                ),
-              }}
-            />
-          </Text>
-        ) : null}
         <Box marginTop="32px">
           <ConnectWallet
             bg={COLORFUL_BTN_BG}
@@ -283,7 +267,13 @@ export const Testing: React.FC = () => {
               opacity: 0.8,
             }}
             w="185px"
-            renderConnected={(addr) => <RenderedButton addr={addr} />}
+            renderConnected={(addr) => (
+              <RenderedButton
+                border="none"
+                _hover={{ bg: 'transparent' }}
+                addr={addr}
+              />
+            )}
           />
         </Box>
         {mascotIndex === 2 ? (
