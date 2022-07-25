@@ -42,7 +42,9 @@ export const IpfsModal: React.FC<{
   const onGenerateKey = useCallback(async () => {
     try {
       setIsGenerating(true)
-      const signedString = await signMessage(stringToBeSigned)
+      const signedData = await signMessage(stringToBeSigned)
+      const signedString =
+        typeof signedData === 'string' ? signedData : signedData.signature
       const signedStringWithSha256 = `0x${await digestMessage(signedString, {
         algorithm: 'SHA-256',
       })}`

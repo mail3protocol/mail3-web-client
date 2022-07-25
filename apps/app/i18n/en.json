@@ -18,6 +18,7 @@
         "connect": {
             "metamask": "MetaMask",
             "wallet-connect": "Wallet Connect",
+            "zilpay": "ZilPay",
             "dialog-title": "Connect Your Wallet",
             "connect-wallet": "Connect Wallet",
             "phantom": "Phantom",
@@ -242,6 +243,8 @@
     "ipfs": {
         "ipfs_link": "IPFS LINK",
         "eth_address": "SENDER ETHEREUM ADDRESS",
+        "zil_address": "SENDER ZILLIQA ADDRESS",
+        "address": "SENDER ADDRESS",
         "content_digest": "CONTENT DIGEST",
         "pending": "PENDING"
     },

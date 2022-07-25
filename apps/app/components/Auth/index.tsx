@@ -60,7 +60,7 @@ export const AuthModal: React.FC = () => {
       toast(t('auth.errors.wallet-not-connected'))
       return null
     }
-    const message = buildSignMessaege(nonce, signatureDesc)
+    const message = buildSignMessage(nonce, signatureDesc)
     return zilpay.signMessage(message)
   }
   const onSign = async (nonce: number) => {
@@ -142,6 +142,9 @@ export const AuthModal: React.FC = () => {
       }
     } catch (error: any) {
       if (error?.code !== 4001) {
+        if (typeof error === 'string' && error.includes('Rejected')) {
+          return
+        }
         toast(error?.message ?? t('auth.errors.unknown'))
       }
     } finally {
