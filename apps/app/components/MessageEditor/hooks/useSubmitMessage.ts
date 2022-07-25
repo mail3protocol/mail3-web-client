@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { defer, lastValueFrom, retry } from 'rxjs'
+import { useTranslation } from 'react-i18next'
+import { SubmitMessage } from 'models/src/submitMessage'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
@@ -15,8 +17,12 @@ import {
   removeDuplicationAttachments,
 } from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
-import { DRIFT_BOTTLE_ADDRESS } from '../../../constants'
+import {
+  DRIFT_BOTTLE_ADDRESS,
+  PRODUCT_RECOMMENDATIONS_ADDRESS,
+} from '../../../constants'
 import { useSending } from '../../../hooks/useSending'
+import { AddressNonceErrorReason } from '../../../api/ErrorCode'
 
 export const ID_NAME = 'id'
 export const ACTION_NAME = 'action'
@@ -33,7 +39,13 @@ export async function removeDraft(api: API) {
   }
 }
 
+interface SendEmailTrack {
+  match: (body: SubmitMessage.RequestBody) => boolean
+  track: () => void
+}
+
 export function useSubmitMessage() {
+  const { t } = useTranslation('edit-message')
   const { getHTML } = useHelpers()
   const api = useAPI()
   const {
@@ -56,8 +68,28 @@ export function useSubmitMessage() {
   const { isEnableCardSignature } = useCardSignature()
   const trackReplyDriftbottleMail = useTrackClick(TrackEvent.ReplyDriftbottle)
   const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
+  const trackSentProductSuggestion = useTrackClick(
+    TrackEvent.SentProductSuggestion
+  )
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { addSendingMessage } = useSending()
+  const sendEmailTracks: SendEmailTrack[] = [
+    {
+      match: ({ subject: s, to }) =>
+        s.includes('Product suggestion') &&
+        !!to?.some((item) => item.address === PRODUCT_RECOMMENDATIONS_ADDRESS),
+      track: () => trackSentProductSuggestion(),
+    },
+    {
+      match: ({ subject: s }) => s.startsWith('Re: [🌊drift bottle]'),
+      track: () => trackReplyDriftbottleMail(),
+    },
+    {
+      match: ({ to }) =>
+        !!to?.some((address) => address === DRIFT_BOTTLE_ADDRESS),
+      track: () => trackSendDriftbottleMail(),
+    },
+  ]
 
   const onSubmit = async () => {
     if (!fromAddress) return
@@ -77,11 +109,7 @@ export function useSubmitMessage() {
         attachments: imageAttachments,
       } = await outputHtmlWithAttachmentImages(html)
       html = replacedAttachmentImageHtml
-      const isSendToDriftBottle = toAddresses.some(
-        (address) => address === DRIFT_BOTTLE_ADDRESS
-      )
-      const isReplyDriftbottleMail = subject.startsWith('Re: [🌊drift bottle]')
-      const submitMessageResult = await api.submitMessage({
+      const body = {
         from: {
           address: fromAddress,
         },
@@ -95,28 +123,25 @@ export function useSubmitMessage() {
             .filter((a) => a.contentDisposition !== 'inline')
             .concat(imageAttachments)
         ),
-      })
+      }
+      const submitMessageResult = await api.submitMessage(body)
       addSendingMessage({ messageId: submitMessageResult.data.messageId })
       setIsSubmitted(true)
-      if (isSendToDriftBottle) {
-        trackSendDriftbottleMail()
-      }
-      if (isReplyDriftbottleMail) {
-        trackReplyDriftbottleMail()
-      }
+      sendEmailTracks.forEach((item) => {
+        if (item.match(body)) item.track()
+      })
       await removeDraft(api)
       onReset()
       navi(RoutePath.Inbox)
     } catch (err: any) {
-      toast(err?.response?.data?.message || err?.message || 'unknown error', {
-        textProps: {
-          bg: '#fff',
-          color: '#000',
-          fontSize: '14px',
-          shadow:
-            '0 0 1px rgba(0, 0, 0, 0.08), 0px 2px 4px rgba(0, 0, 0, 0.08)',
-        },
-      })
+      if (
+        err.response.data.reason ===
+        AddressNonceErrorReason.INVALID_ATTACHMENT_FILE_NAME
+      ) {
+        toast(t('invalid_file_name'))
+      } else {
+        toast(err?.response?.data?.message || err?.message || 'unknown error')
+      }
       console.error({ err })
     } finally {
       setIsLoading(false)

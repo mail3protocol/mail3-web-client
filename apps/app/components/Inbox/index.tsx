@@ -17,9 +17,10 @@ import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
 
 import { SendingDialog } from '../SendingDialog'
 import { GoToWriteMailButton } from '../GoToWriteMailButton'
+import { ProductRecommendationsBanner } from '../ProductRecommendationsBanner'
 
 export const NewPageContainer = styled(PageContainer)`
-  @media (max-width: 600px) {
+  @media (max-width: 576px) {
     padding: 0;
   }
 `
@@ -36,7 +37,7 @@ export const MailboxContainer = styled(Box)`
     line-height: 30px;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     margin-top: 0px;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
@@ -192,6 +193,7 @@ export const InboxComponent: React.FC = () => {
         />
       )}
       <Box paddingTop={{ base: '25px', md: '35px' }}>
+        <ProductRecommendationsBanner />
         <Flex justify="space-between" pl="20px">
           <InboxNav />
           <GoToWriteMailButton />

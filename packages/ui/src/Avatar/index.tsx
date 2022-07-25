@@ -30,6 +30,7 @@ export interface AvatarProps extends RawAvatarProps {
   w?: LayoutProps['w']
   h?: LayoutProps['h']
   isSquare?: boolean
+  isUseSvg?: boolean
 }
 
 const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
@@ -66,6 +67,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   skeletonProps,
   isSquare,
   onClick,
+  isUseSvg = false,
   ...props
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
@@ -115,8 +117,9 @@ export const Avatar: React.FC<AvatarProps> = ({
         overflow="hidden"
         onClick={onClick}
         cursor={onClick ? 'pointer' : undefined}
+        {...props}
       >
-        {!IS_IPHONE || !IS_SAFARI ? (
+        {!IS_IPHONE || !IS_SAFARI || isUseSvg ? (
           <BoringAvatar
             name={address.toLowerCase()}
             variant="marble"
