@@ -13,7 +13,7 @@
             "change-wallet": "Change Wallet",
             "copied": "Copied",
             "copied-to-clipboard": "Copied to clipboard：",
-            "logout": "Logout"
+            "logout": "Disconnect"
         },
         "connect": {
             "metamask": "MetaMask",
@@ -216,6 +216,8 @@
         "success-desc": "Congratulations! \uD83C\uDF89 you are qualified for the beta access to Mail3.",
         "fail-desc": "\uD83D\uDE14 Sorry you are not qualified.",
         "fail-desc-2": "Join our <a>Discord</a>! We will randomly reward Beta slots to community member ",
+        "fail-desc-3": "You need an ENS domain name to get",
+        "fail-desc-4": "beta access to mail3 application. <a>Register it now</a> 👈",
         "more-details": "More Details",
         "discord-desc": "We invite you to join our <a>Discord</a> to get beta access.",
         "discord": "Join Discord",
