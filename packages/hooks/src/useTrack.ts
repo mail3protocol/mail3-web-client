@@ -2,6 +2,7 @@ export enum TrackEvent {
   // settings
   ClickImageSignature = 'click_image_signature_edit',
   ClickRegisterENS = 'click_register_new_ENS',
+  ClickRegisterBIT = 'click_register_new_BIT',
   ClickCyperConnect = 'click_image_signature_edit_cyberconnect',
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
@@ -86,6 +87,7 @@ export enum TrackEvent {
   OpenDriftbottleMail = 'open_driftbottle_mail',
 
   ClickENSRefresh = 'click_ENS_refresh',
+  ClickBITRefresh = 'click_BIT_refresh',
 
   // ipfs
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',

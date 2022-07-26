@@ -21,7 +21,7 @@ import {
   useToast,
   useTrackClick,
 } from 'hooks'
-import { truncateMiddle } from 'shared'
+import { truncateMailAddress } from 'shared'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { RoutePath } from '../../route/path'
@@ -135,8 +135,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
   const addr = useMemo(() => {
     const defaultAddress = userProps?.defaultAddress
     if (defaultAddress) {
-      const [a, url] = defaultAddress.split('@')
-      return `${truncateMiddle(a, 6, 4)}@${url}`
+      return truncateMailAddress(defaultAddress, 6, 4)
     }
     return emailAddress
   }, [userProps, emailAddress])

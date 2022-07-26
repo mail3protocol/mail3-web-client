@@ -9,6 +9,8 @@ import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdent
 import { SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
+type mailAddress = `${string}@${string}`
+
 export interface LoginResponse {
   uuid: string
   jwt: string
@@ -16,7 +18,7 @@ export interface LoginResponse {
 
 export interface Alias {
   uuid: string
-  address: string
+  address: mailAddress
   is_default: boolean
 }
 
@@ -344,8 +346,12 @@ export class API {
     return this.axios.post(`/account/feature_experiences/${featureName}`)
   }
 
-  public async updateAliasList() {
+  public async updateAliasEnsList() {
     return this.axios.put(`/account/aliases`)
+  }
+
+  public async updateAliasBitList() {
+    return this.axios.put(`/account/dot_bit_aliases`)
   }
 
   public updateMessageEncryptionKey(messageEncryptionKey: string) {
