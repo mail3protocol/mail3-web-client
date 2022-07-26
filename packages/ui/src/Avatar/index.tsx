@@ -11,6 +11,7 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useQuery } from 'react-query'
 import BoringAvatar from 'boring-avatars'
+import { useMemo } from 'react'
 
 const IS_IPHONE =
   typeof navigator !== 'undefined' &&
@@ -120,7 +121,14 @@ export const Avatar: React.FC<AvatarProps> = ({
     }
   )
 
-  if (avatar === EMPTY_PLACE_HOLDER_SRC) {
+  const isNonEthButValidAddress = useMemo(() => {
+    if (isSupportedAddress(address) && !isEthAddress(address)) {
+      return true
+    }
+    return false
+  }, [address])
+
+  if (avatar === EMPTY_PLACE_HOLDER_SRC || isNonEthButValidAddress) {
     return isSupportedAddress(address) ? (
       <WrapItem
         w={width}

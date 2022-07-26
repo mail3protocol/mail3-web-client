@@ -26,6 +26,9 @@ export const isEthAddress = (address: string) =>
 export const isZilpayAddress = (address: string) =>
   address.startsWith('zil') && address.length === 42
 
+export const isSupportedAddress = (address: string) =>
+  isZilpayAddress(address) || isEthAddress(address)
+
 export const truncateMailAddress = (
   mailAddress: string,
   takeLength = 6,
