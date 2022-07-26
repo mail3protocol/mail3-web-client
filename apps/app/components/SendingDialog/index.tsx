@@ -39,6 +39,7 @@ export const SendingDialog: React.FC = () => {
         })
       return () => {
         subscriber.unsubscribe()
+        clearSendingList()
       }
     }
     return () => {}
