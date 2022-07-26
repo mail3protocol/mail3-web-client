@@ -254,6 +254,9 @@ export const useWalletChange = () => {
   )
   const handleZilpayAccountChanged = useCallback(
     (acc: any) => {
+      if (loginAccount && !loginAccount.startsWith('zil')) {
+        return
+      }
       if (acc == null) {
         logout()
         return

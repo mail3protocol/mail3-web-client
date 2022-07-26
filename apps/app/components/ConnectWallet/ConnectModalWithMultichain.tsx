@@ -18,6 +18,8 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from '@chakra-ui/react'
+import { atomWithStorage, createJSONStorage } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import React, { ReactNode, useMemo, useState } from 'react'
 import { ConnectorName, useCloseOnChangePathname } from 'hooks'
 import PhantomPng from 'assets/wallets/phantom.png'
@@ -78,6 +80,10 @@ const variants = {
     transition: variantsTransition,
   }),
 }
+
+const tabIndexAtom = atomWithStorage('mail3-tab-index', 0, {
+  ...createJSONStorage(() => sessionStorage),
+})
 
 export const ConnectModalWithMultichain: React.FC<{
   isOpen: boolean
@@ -183,7 +189,7 @@ export const ConnectModalWithMultichain: React.FC<{
     ],
     []
   )
-  const [tabIndex, setTabIndex] = useState(0)
+  const [tabIndex, setTabIndex] = useAtom(tabIndexAtom)
   const currentChain = chains[tabIndex]
   const swipeConfidenceThreshold = 10000
   const [direction, setDirection] = useState(0)
@@ -196,6 +202,7 @@ export const ConnectModalWithMultichain: React.FC<{
     () => Math.max(...chains.map((chain) => chain.walletButtons.length)),
     [chains]
   )
+
   const currentWalletButtonsLength = currentChain?.walletButtons?.length || 3
 
   const contentEl = (

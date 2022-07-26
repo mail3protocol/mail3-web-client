@@ -33,7 +33,7 @@ export interface AvatarProps extends RawAvatarProps {
 }
 
 const isEthAddress = (address?: string) =>
-  address && (address.startsWith('0x') || address?.endsWith('.eth'))
+  address != null && (address.startsWith('0x') || address?.endsWith('.eth'))
 
 const isSupportedAddress = (address?: string) => {
   if (address) {
@@ -100,7 +100,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         body: JSON.stringify({ query: avatarQuery(address) }),
       }).then((res) => res.json()),
     {
-      enabled: avatar == null && isSupportedAddress(address),
+      enabled: avatar == null && isEthAddress(address),
       refetchIntervalInBackground: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
