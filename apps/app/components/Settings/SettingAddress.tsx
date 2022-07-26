@@ -175,7 +175,7 @@ enum AliasType {
 const LIMIT_MAX_NUMBER = 5
 
 const NotFound = () => (
-  <Box fontSize="16px" pl="10px">
+  <Box fontSize="14px" p="8px 16px">
     Not Found
   </Box>
 )
