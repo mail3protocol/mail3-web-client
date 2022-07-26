@@ -9,7 +9,7 @@ import {
   useTrackClick,
   zilpay,
 } from 'hooks'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ZilpayPng from 'assets/wallets/zilpay.png'
 
@@ -21,6 +21,7 @@ export const ZilPayButton: React.FC<{
 }> = ({ onClose }) => {
   const [t] = useTranslation('common')
   const dialog = useDialog()
+  const [isConnecting, setIsConnecting] = useState(false)
   const setLastConnector = useSetLastConnector()
   const connectorName = useLastConectorName()
   const isConnected = useIsAuthenticated()
@@ -31,12 +32,16 @@ export const ZilPayButton: React.FC<{
     <ConnectButton
       text={t('connect.zilpay')}
       icon={generateIcon(ZilpayPng)}
-      isDisabled={connectorName === ConnectorName.Zilpay && isConnected}
+      isLoading={isConnecting}
+      isDisabled={
+        isConnecting || (connectorName === ConnectorName.Zilpay && isConnected)
+      }
       isConnected={connectorName === ConnectorName.Zilpay && isConnected}
       onClick={async () => {
         trackWallet({
           [TrackKey.DesiredWallet]: DesiredWallet.ZilPay,
         })
+        setIsConnecting(true)
         try {
           await zilpay.connect()
           setLastConnector(ConnectorName.Zilpay)
@@ -48,6 +53,8 @@ export const ZilPayButton: React.FC<{
             title: t('connect.notice'),
             description: error?.message,
           })
+        } finally {
+          setIsConnecting(false)
         }
       }}
     />

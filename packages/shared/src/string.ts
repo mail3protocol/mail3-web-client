@@ -15,7 +15,7 @@ export function truncateMiddle(
 }
 
 export const isEnsDomain = (address: string) =>
-  /[0-9a-fA-F]+.eth$/.test(address)
+  address.length >= 4 && address.slice(-4) === '.eth'
 
 export const isPrimitiveEthAddress = (address: string) =>
   /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
