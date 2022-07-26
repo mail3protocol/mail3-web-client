@@ -62,6 +62,9 @@ export const MAIL3_ME_BUTTON_MIRROR_URL =
   import.meta.env.NEXT_PUBLIC_MAIL3_ME_BUTTON_MIRRIR_URL ||
   'https://mirror.xyz/mail3.eth/nTiZI4w3vB1BBjwc8ZLUHCJ2FPhaYJd-l7v62Tv_FY0'
 
+export const COMMUNITY_MAIL_MIRROR_URL =
+  import.meta.env.NEXT_PUBLIC_COMMUNITY_MAIL_MIRROR_URL || '' // TODO: add mirror url
+
 export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')

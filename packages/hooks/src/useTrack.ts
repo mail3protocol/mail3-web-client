@@ -91,9 +91,12 @@ export enum TrackEvent {
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
   clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
 
+  // developers
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
   ClickMmbGithub = 'click_mmb_github',
+  // community
+  ClickCommunityMirror = '', // TODO: add track
 
   // product recommendations
   ClickBannerSuggestion = 'click_banner_suggestion',
