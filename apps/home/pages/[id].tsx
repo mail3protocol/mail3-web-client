@@ -7,7 +7,7 @@ import styled from '@emotion/styled'
 import { Flex, Button, Text, Link } from '@chakra-ui/react'
 import { Avatar, Logo } from 'ui'
 import { useRouter } from 'next/router'
-import { isEthAddress, truncateMiddle } from 'shared'
+import { isSupportedAddress, truncateMiddle } from 'shared'
 import Head from 'next/head'
 
 import { APP_URL, MAIL_SERVER_URL } from '../constants/env'
@@ -16,7 +16,7 @@ import { ProfileComponent } from '../components/Profile'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { locale, resolvedUrl } = context
   const [address] = resolvedUrl.slice(1).split('?')
-  const errorCode = isEthAddress(address) ? false : 404
+  const errorCode = isSupportedAddress(address) ? false : 404
   return {
     props: {
       errorCode,

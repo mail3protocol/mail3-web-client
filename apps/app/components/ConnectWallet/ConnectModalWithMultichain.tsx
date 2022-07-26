@@ -18,23 +18,23 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from '@chakra-ui/react'
+import { atomWithStorage, createJSONStorage } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import React, { ReactNode, useMemo, useState } from 'react'
 import { ConnectorName, useCloseOnChangePathname } from 'hooks'
 import PhantomPng from 'assets/wallets/phantom.png'
 import BloctoPng from 'assets/wallets/blocto.png'
 import SolflarePng from 'assets/wallets/solflare.png'
-import AvalancePng from 'assets/wallets/avalanche.png'
 import TronPng from 'assets/wallets/tron.png'
 import CoinbasePng from 'assets/wallets/coinbase.png'
 import KeplrPng from 'assets/wallets/keplr.png'
 import PolkawalletPng from 'assets/wallets/polkadot.png'
 import PlugPng from 'assets/wallets/plug.png'
-import ZilpayPng from 'assets/wallets/zilpay.png'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { MetamaskButton } from './MetamaskButton'
 import { WalletConnectButton } from './WalletConnectButton'
-import AvaxIconPath from '../../assets/chain-icons/avax.png'
+import ZilliqaIconPath from '../../assets/chain-icons/zilliqa.png'
 import EthIconPath from '../../assets/chain-icons/eth.png'
 import FlowIconPath from '../../assets/chain-icons/flow.png'
 import SolIconPath from '../../assets/chain-icons/sol.png'
@@ -42,6 +42,7 @@ import TronIconPath from '../../assets/chain-icons/tron.png'
 import OtherIconPath from '../../assets/chain-icons/other.png'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
+import { ZilPayButton } from './ZilPayButton'
 
 interface ChainItem {
   name: string
@@ -80,6 +81,10 @@ const variants = {
   }),
 }
 
+const tabIndexAtom = atomWithStorage('mail3-tab-index', 0, {
+  ...createJSONStorage(() => sessionStorage),
+})
+
 export const ConnectModalWithMultichain: React.FC<{
   isOpen: boolean
   onClose: () => void
@@ -98,6 +103,12 @@ export const ConnectModalWithMultichain: React.FC<{
             onClose={onClose}
           />,
         ],
+      },
+      {
+        name: 'Zilliqa',
+        description: '',
+        icon: ZilliqaIconPath,
+        walletButtons: [<ZilPayButton onClose={onClose} key="zilpay" />],
       },
       {
         name: 'Flow',
@@ -128,19 +139,6 @@ export const ConnectModalWithMultichain: React.FC<{
             key={ConnectorName.Solflare}
             text="Solflare"
             icon={generateIcon(SolflarePng)}
-          />,
-        ],
-      },
-      {
-        name: 'Avalance',
-        icon: AvaxIconPath,
-        description: 'Coming soon',
-        walletButtons: [
-          <PlaceholderButton
-            trackDesiredWalletKey="Avalance"
-            key={ConnectorName.Avalance}
-            text="Avalance"
-            icon={generateIcon(AvalancePng)}
           />,
         ],
       },
@@ -181,12 +179,6 @@ export const ConnectModalWithMultichain: React.FC<{
             icon={generateIcon(PlugPng)}
           />,
           <PlaceholderButton
-            trackDesiredWalletKey="Zilpay"
-            key={ConnectorName.Zilpay}
-            text="Zilpay"
-            icon={generateIcon(ZilpayPng)}
-          />,
-          <PlaceholderButton
             trackDesiredWalletKey="Polkawallet"
             key={ConnectorName.Polkawallet}
             text="Polkawallet"
@@ -197,7 +189,7 @@ export const ConnectModalWithMultichain: React.FC<{
     ],
     []
   )
-  const [tabIndex, setTabIndex] = useState(0)
+  const [tabIndex, setTabIndex] = useAtom(tabIndexAtom)
   const currentChain = chains[tabIndex]
   const swipeConfidenceThreshold = 10000
   const [direction, setDirection] = useState(0)
@@ -210,6 +202,7 @@ export const ConnectModalWithMultichain: React.FC<{
     () => Math.max(...chains.map((chain) => chain.walletButtons.length)),
     [chains]
   )
+
   const currentWalletButtonsLength = currentChain?.walletButtons?.length || 3
 
   const contentEl = (
@@ -280,7 +273,7 @@ export const ConnectModalWithMultichain: React.FC<{
           textAlign="center"
           my="24px"
         >
-          {currentChain?.description}
+          {currentChain?.description}&nbsp;
         </Text>
         <Box
           overflowX="hidden"

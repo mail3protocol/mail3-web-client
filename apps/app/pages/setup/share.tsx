@@ -21,12 +21,13 @@ import {
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import styled from '@emotion/styled'
 import { useAtomValue } from 'jotai/utils'
-import { shareToTwitter } from 'shared'
+import { isZilpayAddress, shareToTwitter } from 'shared'
 import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter-blue.svg'
 import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
 import { ReactComponent as SvgArrow } from 'assets/profile/business/arrow.svg'
+import { ReactComponent as SvgZiliqa } from 'assets/svg/zilliqa.svg'
 import { RoutePath } from '../../route/path'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { userPropertiesAtom } from '../../hooks/useLogin'
@@ -122,7 +123,9 @@ export const SetupSharePage = () => {
     toast(t2('navbar.copied'))
   }
 
-  const Icons = [SvgArrow, SvgEtherscan].map((Item, index) => (
+  const Icons = (
+    isZilpayAddress(account) ? [SvgZiliqa] : [SvgArrow, SvgEtherscan]
+  ).map((Item, index) => (
     <Box
       // eslint-disable-next-line react/no-array-index-key
       key={index}

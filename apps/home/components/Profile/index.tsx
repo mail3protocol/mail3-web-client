@@ -25,14 +25,14 @@ import {
   useToast,
   useTrackClick,
 } from 'hooks'
-import { copyText, isBitDomain, shareToTwitter } from 'shared'
-
+import { copyText, isZilpayAddress, isBitDomain, shareToTwitter } from 'shared'
 import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
 import { ReactComponent as SvgMore } from 'assets/profile/more.svg'
 import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
 import { ReactComponent as SvgCyber } from 'assets/profile/business/arrow.svg'
+import { ReactComponent as SvgZiliqa } from 'assets/svg/zilliqa.svg'
 import dynamic from 'next/dynamic'
 import { useQuery } from 'react-query'
 import { useAPI } from '../../api'
@@ -48,6 +48,7 @@ enum ButtonType {
 enum ScoialPlatform {
   CyberConnect = 'CyberConnect',
   Etherscan = 'Etherscan',
+  ViewBlock = 'ViewBlock',
 }
 
 const Container = styled(Box)`
@@ -190,6 +191,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     [ScoialPlatform.Etherscan]: {
       Icon: SvgEtherscan,
     },
+    [ScoialPlatform.ViewBlock]: {
+      Icon: SvgZiliqa,
+    },
   }
 
   const profileUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
@@ -236,10 +240,20 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     if (type === ScoialPlatform.CyberConnect) {
       return `https://app.cyberconnect.me/address/${realAddr}`
     }
+    if (type === ScoialPlatform.ViewBlock) {
+      return `https://viewblock.io/zilliqa/address/${address}`
+    }
 
     return `https://etherscan.io/address/${realAddr}`
   }
 
+  const socials = isZilpayAddress(address)
+    ? [ScoialConfig.ViewBlock]
+    : [ScoialConfig.CyberConnect, ScoialConfig.Etherscan]
+
+  const socialPlatforms = isZilpayAddress(address)
+    ? [ScoialPlatform.ViewBlock]
+    : [ScoialPlatform.CyberConnect, ScoialPlatform.Etherscan]
   useDidMount(() => {
     setIsDid(true)
   })
@@ -307,83 +321,81 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               </PopoverContent>
             </Popover>
           </Box>
-          <HStack className="button-wrap-pc">
-            {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
-              (type: ButtonType) => {
-                const { Icon, label } = buttonConfig[type]
-                const onClick = actionMap[type]
-                return (
-                  <Popover
-                    arrowSize={8}
-                    key={type}
-                    trigger="hover"
-                    placement="top-start"
-                    size="md"
-                  >
-                    <PopoverTrigger>
-                      <Box as="button" p="10px" onClick={onClick}>
-                        <Icon />
-                      </Box>
-                    </PopoverTrigger>
-                    <PopoverContent width="auto">
-                      <PopoverArrow />
-                      <PopoverBody
-                        whiteSpace="nowrap"
-                        fontSize="14px"
-                        justifyContent="center"
-                      >
-                        {label}
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                )
-              }
-            )}
-          </HStack>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <HStack className="button-wrap-pc">
+              {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
+                (type: ButtonType) => {
+                  const { Icon, label } = buttonConfig[type]
+                  const onClick = actionMap[type]
+                  return (
+                    <Popover
+                      arrowSize={8}
+                      key={type}
+                      trigger="hover"
+                      placement="top-start"
+                      size="md"
+                    >
+                      <PopoverTrigger>
+                        <Box as="button" p="10px" onClick={onClick}>
+                          <Icon />
+                        </Box>
+                      </PopoverTrigger>
+                      <PopoverContent width="auto">
+                        <PopoverArrow />
+                        <PopoverBody
+                          whiteSpace="nowrap"
+                          fontSize="14px"
+                          justifyContent="center"
+                        >
+                          {label}
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  )
+                }
+              )}
+            </HStack>
+          )}
         </Box>
         <Box className="address">
           <Text className="p">{mailAddress}</Text>
         </Box>
         <Center mt="25px">
-          {!isLoading ? (
-            <HStack spacing="24px">
-              {[ScoialPlatform.CyberConnect, ScoialPlatform.Etherscan].map(
-                (itemKey: ScoialPlatform, index) => {
-                  const { Icon } = ScoialConfig[itemKey]
-                  return (
-                    <Box
-                      // eslint-disable-next-line react/no-array-index-key
-                      key={index}
-                      w={{ base: '24px', md: '36px' }}
-                      h={{ base: '24px', md: '36px' }}
-                      as="a"
-                      href={getHref(itemKey)}
-                      target="_blank"
-                      onClick={() => {
-                        if (itemKey === ScoialPlatform.CyberConnect) {
-                          trackScoialDimensions({
-                            [TrackKey.ProfileScoialPlatform]:
-                              ProfileScoialPlatformItem.CyberConnect,
-                          })
-                        }
+          <HStack spacing="24px">
+            {socialPlatforms.map((itemKey: ScoialPlatform, index) => {
+              const { Icon } = ScoialConfig[itemKey]
+              return (
+                <Box
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  w={{ base: '24px', md: '36px' }}
+                  h={{ base: '24px', md: '36px' }}
+                  as="a"
+                  href={getHref(itemKey)}
+                  target="_blank"
+                  onClick={() => {
+                    if (itemKey === ScoialPlatform.CyberConnect) {
+                      trackScoialDimensions({
+                        [TrackKey.ProfileScoialPlatform]:
+                          ProfileScoialPlatformItem.CyberConnect,
+                      })
+                    }
 
-                        if (itemKey === ScoialPlatform.Etherscan) {
-                          trackScoialDimensions({
-                            [TrackKey.ProfileScoialPlatform]:
-                              ProfileScoialPlatformItem.Etherscan,
-                          })
-                        }
-                      }}
-                    >
-                      <Icon />
-                    </Box>
-                  )
-                }
-              )}
-            </HStack>
-          ) : (
-            <Spinner />
-          )}
+                    if (itemKey === ScoialPlatform.Etherscan) {
+                      trackScoialDimensions({
+                        [TrackKey.ProfileScoialPlatform]:
+                          ProfileScoialPlatformItem.Etherscan,
+                      })
+                    }
+                  }}
+                >
+                  <Icon />
+                </Box>
+              )
+            })}
+          </HStack>
         </Center>
       </Container>
 
@@ -392,18 +404,16 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       </Center>
 
       <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
-        {[ScoialConfig.CyberConnect, ScoialConfig.Etherscan].map(
-          ({ Icon }, index) => (
-            <Box
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              w="24px"
-              h="24px"
-            >
-              <Icon />
-            </Box>
-          )
-        )}
+        {socials.map(({ Icon }, index) => (
+          <Box
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            w="24px"
+            h="24px"
+          >
+            <Icon />
+          </Box>
+        ))}
       </ProfileCard>
     </>
   )
