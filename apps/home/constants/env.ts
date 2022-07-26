@@ -32,3 +32,6 @@ export const GOOGLE_ANALYTICS_ID =
 
 export const MAIL_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
+
+export const SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL || 'https://api.mail3.me/api/v1'

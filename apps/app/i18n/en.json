@@ -186,9 +186,11 @@
             "desc": "you owned all can be used as mail3 address to send and receive emails.",
             "wallet-address": "Wallet Address",
             "ens-name": "ENS Name",
+            "bit-name": ".bit Name",
             "default": "Default",
             "default-hover": "This address will be the default address for sending emails.",
-            "registe-ens": "Register <a>new</a> ENS name",
+            "register-ens": "Register <a>new</a> ENS",
+            "register-bit": "Register <a>new</a> .bit",
             "request-failed": "Request change default address failed, please try again later.",
             "refresh": "Refresh",
             "refresh_failed": "Refresh Failed: "
