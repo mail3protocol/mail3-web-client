@@ -338,6 +338,7 @@ export const SettingAddress: React.FC = () => {
             e.preventDefault()
             e.stopPropagation()
           }}
+          as="legend"
         >
           <Stack
             direction="row"
@@ -369,7 +370,13 @@ export const SettingAddress: React.FC = () => {
         ) : null}
         {!isLoading ? (
           <>
-            <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
+            <FormLabel
+              fontSize="16px"
+              fontWeight={700}
+              mb="8px"
+              mt="32px"
+              as="legend"
+            >
               <Flex>
                 <Box h="24px" lineHeight="24px">
                   {t('address.ens-name')}
@@ -466,7 +473,13 @@ export const SettingAddress: React.FC = () => {
 
         {!isLoading ? (
           <>
-            <FormLabel fontSize="16px" fontWeight={700} mb="8px" mt="32px">
+            <FormLabel
+              fontSize="16px"
+              fontWeight={700}
+              mb="8px"
+              mt="32px"
+              as="legend"
+            >
               <Stack
                 direction="row"
                 spacing="16px"
