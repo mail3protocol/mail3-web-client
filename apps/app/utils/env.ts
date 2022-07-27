@@ -3,3 +3,5 @@ export const isWechat = () =>
 
 export const isImToken = () =>
   navigator.userAgent.toLowerCase().includes('imtoken')
+
+export const isTrust = () => navigator.userAgent.toLowerCase().includes('Trust')

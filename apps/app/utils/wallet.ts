@@ -1,9 +1,21 @@
+import { IS_MOBILE } from '../constants'
 import { isImToken } from './env'
 
-export const generateDeepLink = () =>
-  `https://metamask.app.link/dapp/${window.location.host}${
+const generateCurrentURL = () =>
+  `${window.location.host}${
     window.location.pathname !== '/' ? window.location.pathname : ''
   }`
+
+export const generateMetamaskDeepLink = () =>
+  `https://metamask.app.link/dapp/${generateCurrentURL()}`
+
+export const generateTrustWalletDeepLink = () =>
+  `https://link.trustwallet.com/open_url?coin_id=60&url=${generateCurrentURL()}`
+
+export const generateImtokenDeepLink = () =>
+  !IS_MOBILE
+    ? `https://token.im/download`
+    : `imtokenv2://navigate/DappView?url=${generateCurrentURL()}`
 
 export const isRejectedMessage = (error: any) =>
   error?.message && error.message.includes('rejected')
