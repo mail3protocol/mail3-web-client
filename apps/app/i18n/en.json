@@ -240,7 +240,8 @@
         "community-mail": {
             "title": "Community mail",
             "description": "Customize your email audience through filters to achieve precise push",
-            "mirror": "View our best access cases on mirror"
+            "interest": "Tell us you are interested in this feature \uD83D\uDE09",
+            "coming_soon": "Coming soon"
         }
     },
     "inbox-nav": {

@@ -11,14 +11,15 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import React, { ReactNode, useMemo } from 'react'
-import { GithubIcon, MirrorIcon, RightArrowIcon } from 'ui'
+import { GithubIcon, InterestIcon, MirrorIcon, RightArrowIcon } from 'ui'
 
 export const Item: React.FC<{
   title: string
   descriptionBgColor: string
   description: string
   image: string
-}> = ({ title, descriptionBgColor, description, image, children }) => (
+  links: ReactNode
+}> = ({ title, descriptionBgColor, description, image, links, children }) => (
   <Grid
     templateColumns={{ base: 'full', lg: '418px 1fr' }}
     templateRows={{ base: 'min(228px, 1fr) 1fr', lg: 'full' }}
@@ -28,6 +29,7 @@ export const Item: React.FC<{
     gridColumnGap="42px"
     gridRowGap="10px"
     w="full"
+    position="relative"
   >
     <Flex direction="column">
       <Center bg="#fff" borderTopRadius="16px" overflow="hidden">
@@ -63,9 +65,7 @@ export const Item: React.FC<{
           display: flex;
           background-color: #fff;
           border-radius: 16px;
-          height: 66px;
           align-items: center;
-          padding: 0 11px;
         }
         .item:hover {
           text-decoration: none;
@@ -76,27 +76,38 @@ export const Item: React.FC<{
         }
       `}
     >
-      {children}
+      {links}
     </VStack>
+    {children}
   </Grid>
 )
 
 export const ItemLink: React.FC<
   LinkProps & {
-    icon: 'github' | 'mirror' | ReactNode
+    icon: 'github' | 'mirror' | 'interest' | ReactNode
     text: ReactNode
   }
 > = ({ icon, text, ...props }) => {
+  const iconSize = { base: '30px', md: '40px' }
   const iconEl = useMemo(
     () =>
       ({
-        github: <GithubIcon w="28px" h="28px" />,
-        mirror: <MirrorIcon w="28px" h="28px" />,
-      }[icon as string]),
+        github: <GithubIcon w={iconSize} h={iconSize} />,
+        mirror: <MirrorIcon w={iconSize} h={iconSize} />,
+        interest: <InterestIcon w={iconSize} h={iconSize} />,
+      }[icon as string] || icon),
     [icon]
   )
   return (
-    <Link className="item" target="_blank" {...props}>
+    <Link
+      className="item"
+      target="_blank"
+      pl={{ base: '10px', md: '24px' }}
+      pr={{ base: '10px', md: '20px' }}
+      h={{ base: '62px', md: '66px' }}
+      position="relative"
+      {...props}
+    >
       {iconEl}
       <Box ml={{ base: '7px', md: '18px' }}>{text}</Box>
       <RightArrowIcon
