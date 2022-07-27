@@ -9,6 +9,7 @@ import {
   SignatureStatus,
   useDidMount,
   useAccountIsActivating,
+  zilpay,
   useLoginAccount,
   // useConnectedAccount,
   useSetLoginInfo,
@@ -50,8 +51,8 @@ export const useLogin = () => {
   const api = useAPI()
   const setLoginInfo = useSetLoginInfo()
   return useCallback(
-    async (message: string, sig: string) => {
-      const { data } = await api.login(message, sig)
+    async (message: string, sig: string, pubkey?: string) => {
+      const { data } = await api.login(message, sig, pubkey)
       const now = dayjs()
       const loginInfo = {
         address: api.getAddress(),
@@ -207,6 +208,17 @@ export const useInitUserProperties = () => {
   }, [isAuth])
 }
 
+export const useLogout = () => {
+  const connector = useConnector()
+  const setUserInfo = useSetLoginInfo()
+  const setLastConnector = useSetLastConnector()
+  return useCallback(async () => {
+    await connector?.deactivate()
+    setUserInfo(null)
+    setLastConnector(undefined)
+  }, [connector])
+}
+
 export const useWalletChange = () => {
   const closeAuthModal = useCloseAuthModal()
   const setLoginInfo = useSetLoginInfo()
@@ -214,6 +226,7 @@ export const useWalletChange = () => {
   const loginAccount = useLoginAccount()
   const isConnecting = useAccountIsActivating()
   const store = useCurrentWalletStore()
+  const logout = useLogout()
   const handleAccountChanged = useCallback(
     ([acc]) => {
       const [account] = store.getState().accounts ?? []
@@ -239,7 +252,22 @@ export const useWalletChange = () => {
     },
     [isConnecting, loginAccount]
   )
-
+  const handleZilpayAccountChanged = useCallback(
+    (acc: any) => {
+      if (loginAccount && !loginAccount.startsWith('zil')) {
+        return
+      }
+      if (acc == null) {
+        logout()
+        return
+      }
+      if (acc?.bech32 === loginAccount) {
+        return
+      }
+      logout()
+    },
+    [loginAccount]
+  )
   const handleDisconnect = useCallback(() => {
     setLoginInfo(null)
     closeAuthModal()
@@ -249,11 +277,24 @@ export const useWalletChange = () => {
   useEffect(() => {
     const w = window as any
     const { ethereum } = w
+    let zilpaySubscriber: any
+    if (w.zilPay && zilpay.isInstalled()) {
+      try {
+        zilpaySubscriber = zilpay
+          .getObservableAccount()
+          .subscribe(handleZilpayAccountChanged)
+      } catch (error) {
+        //
+      }
+    }
     if (ethereum && ethereum.on) {
       ethereum.on('disconnect', handleDisconnect)
       ethereum.on('accountsChanged', handleAccountChanged)
     }
     return () => {
+      if (zilpaySubscriber) {
+        zilpaySubscriber?.unsubscribe?.()
+      }
       if (ethereum && ethereum.off) {
         ethereum.off('disconnect', handleDisconnect)
         ethereum.off('accountsChanged', handleAccountChanged)
@@ -298,16 +339,5 @@ export const useAuthModalOnBack = () => {
     await connector?.deactivate()
     closeAuthModal()
     onOpen()
-  }, [connector])
-}
-
-export const useLogout = () => {
-  const connector = useConnector()
-  const setUserInfo = useSetLoginInfo()
-  const setLastConnector = useSetLastConnector()
-  return useCallback(async () => {
-    await connector?.deactivate()
-    setUserInfo(null)
-    setLastConnector(undefined)
   }, [connector])
 }

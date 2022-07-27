@@ -7,10 +7,12 @@ import {
   useUpdateAtom,
 } from 'jotai/utils'
 import { atom, useAtom } from 'jotai'
+import { useMemo } from 'react'
 import { useDidMount } from '../useDidMount'
 import { metaMask, metaMaskhooks } from './MetaMask'
 import { walletConnect, walletConnectHooks } from './WalletConnect'
 import { useLoginAccount } from '../useLoginInfo'
+import { zilpay } from './zilpay'
 
 export const SupportedConnectors = getSelectedConnector(
   [metaMask, metaMaskhooks],
@@ -23,6 +25,7 @@ export * from './WalletConnect'
 export enum ConnectorName {
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
+  Zilpay = 'Zilpay',
 
   // 👇 Not supported
   Phantom = 'Phantom',
@@ -33,7 +36,6 @@ export enum ConnectorName {
   Coinbase = 'Coinbase',
   Keplr = 'Keplr',
   Plug = 'Plug',
-  Zilpay = 'Zilpay',
   Polkawallet = 'Polkawallet',
 }
 
@@ -63,6 +65,14 @@ export const useConnectedAccount = () => {
     return account?.[0]
   }
 
+  if (lastConectorName) {
+    if (lastConectorName === ConnectorName.Zilpay && zilpay.isConnected()) {
+      return zilpay.getBech32Address()
+    }
+    if (account && Array.isArray(account)) {
+      return account[0]
+    }
+  }
   return ''
 }
 
@@ -146,3 +156,24 @@ export const useConnectWalletDialog = () => {
     },
   }
 }
+
+export enum CurrentChain {
+  Ethereum = 'ethereum',
+  Zilliqa = 'Zilliqa',
+  None = 'None',
+}
+
+export const useCurrentChain = () => {
+  const account = useAccount()
+  return useMemo(() => {
+    if (account.startsWith('0x')) {
+      return CurrentChain.Ethereum
+    }
+    if (account.startsWith('zil')) {
+      return CurrentChain.Zilliqa
+    }
+    return CurrentChain.None
+  }, [account])
+}
+
+export * from './zilpay'

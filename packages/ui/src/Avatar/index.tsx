@@ -10,7 +10,9 @@ import {
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useQuery } from 'react-query'
+import { isEthAddress, isSupportedAddress } from 'shared'
 import BoringAvatar from 'boring-avatars'
+import { useMemo } from 'react'
 
 const IS_IPHONE =
   typeof navigator !== 'undefined' &&
@@ -31,9 +33,6 @@ export interface AvatarProps extends RawAvatarProps {
   isSquare?: boolean
   isUseSvg?: boolean
 }
-
-const isEthAddress = (address?: string) =>
-  address && (address.startsWith('0x') || address?.endsWith('.eth'))
 
 const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
   'avatar_addresses',
@@ -88,7 +87,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         body: JSON.stringify({ query: avatarQuery(address) }),
       }).then((res) => res.json()),
     {
-      enabled: avatar == null && !!isEthAddress(address),
+      enabled: avatar == null && isEthAddress(address),
       refetchIntervalInBackground: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
@@ -108,8 +107,15 @@ export const Avatar: React.FC<AvatarProps> = ({
     }
   )
 
-  if (avatar === EMPTY_PLACE_HOLDER_SRC) {
-    return isEthAddress(address) ? (
+  const isNonEthButValidAddress = useMemo(() => {
+    if (isSupportedAddress(address) && !isEthAddress(address)) {
+      return true
+    }
+    return false
+  }, [address])
+
+  if (avatar === EMPTY_PLACE_HOLDER_SRC || isNonEthButValidAddress) {
+    return isSupportedAddress(address) ? (
       <WrapItem
         w={width}
         h={width}

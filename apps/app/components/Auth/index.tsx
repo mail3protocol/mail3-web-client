@@ -22,6 +22,7 @@ import {
   useTrackClick,
   TrackEvent,
   TrackKey,
+  zilpay,
 } from 'hooks'
 import { Button } from 'ui'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -54,7 +55,18 @@ export const AuthModal: React.FC = () => {
   const router = useLocation()
   const navi = useNavigate()
   const onBack = useAuthModalOnBack()
+  const onSignZilpay = async (nonce: number) => {
+    if (!zilpay.isConnected) {
+      toast(t('auth.errors.wallet-not-connected'))
+      return null
+    }
+    const message = buildSignMessage(nonce, signatureDesc)
+    return zilpay.signMessage(message)
+  }
   const onSign = async (nonce: number) => {
+    if (account.startsWith('zil')) {
+      return onSignZilpay(nonce)
+    }
     if (provider == null) {
       toast(t('auth.errors.wallet-not-connected'))
       return null
@@ -74,14 +86,15 @@ export const AuthModal: React.FC = () => {
   const onRemember = async () => {
     setIsLoading(true)
     try {
-      const { nonce, error, code, signature, message } = await signup()
+      const { nonce, error, code, signature, message, pubkey } = await signup()
       switch (code) {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
           if (signedData != null) {
             const { jwt } = await login(
               signedData.message,
-              signedData.signature
+              signedData.signature,
+              (signedData as any).publicKey
             )
             closeAuthModal()
             await setTrackGlobal(jwt)
@@ -96,7 +109,7 @@ export const AuthModal: React.FC = () => {
           break
         }
         case SignupResponseCode.Success: {
-          const { jwt } = await login(message!, signature!)
+          const { jwt } = await login(message!, signature!, pubkey)
           await setTrackGlobal(jwt)
           if (router.pathname === RoutePath.WhiteList) {
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
@@ -129,6 +142,9 @@ export const AuthModal: React.FC = () => {
       }
     } catch (error: any) {
       if (error?.code !== 4001) {
+        if (typeof error === 'string' && error.includes('Rejected')) {
+          return
+        }
         toast(error?.message ?? t('auth.errors.unknown'))
       }
     } finally {

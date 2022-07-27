@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useMemo } from 'react'
 import {
   isPrimitiveEthAddress,
+  isZilpayAddress,
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
@@ -248,7 +249,7 @@ const Item: React.FC<BoxItemProps> = ({
     if (mailboxType === Mailboxes.Sent || mailboxType === Mailboxes.Drafts) {
       const list = receiverList.map((item) => {
         const [addr] = item.address.split('@')
-        if (isPrimitiveEthAddress(addr)) {
+        if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr)) {
           return truncateMiddle(addr, 6, 4)
         }
         return addr
@@ -268,7 +269,7 @@ const Item: React.FC<BoxItemProps> = ({
     }
 
     const [addr] = from.address.split('@')
-    if (isPrimitiveEthAddress(addr)) {
+    if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr)) {
       return truncateMiddle(addr, 6, 4)
     }
 

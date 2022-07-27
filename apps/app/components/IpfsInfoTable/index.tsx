@@ -1,5 +1,5 @@
 import { Box, Grid, Icon, Link } from '@chakra-ui/react'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
 
@@ -26,9 +26,21 @@ export const IpfsInfoTable: React.FC<{
     return !str ? t('pending') : str
   }
   const ipfsLink = ipfs || undefined
-  const ethAddressLink = ethAddress
-    ? `https://etherscan.io/address/${ethAddress}`
-    : undefined
+  const ethAddressLink = useMemo(() => {
+    if (ethAddress?.startsWith('zil')) {
+      return `https://viewblock.io/zilliqa/address/${ethAddress}`
+    }
+    return ethAddress ? `https://etherscan.io/address/${ethAddress}` : undefined
+  }, [ethAddress])
+  const chainDesc = useMemo(() => {
+    if (ethAddress == null) {
+      return t('address')
+    }
+    if (ethAddress.startsWith('zil')) {
+      return t('zil_address')
+    }
+    return t('eth_address')
+  }, [ethAddress])
   const trackClickDInfoBlockchainLink = useTrackClick(
     TrackEvent.clickDInfoBlockchainLink
   )
@@ -77,7 +89,7 @@ export const IpfsInfoTable: React.FC<{
           onClick={() => trackClickDInfoBlockchainLink()}
           target="_blank"
         >
-          {t('eth_address')}
+          {chainDesc}
           <ExternalLink />
         </Link>
       </Box>

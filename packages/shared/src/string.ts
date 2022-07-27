@@ -15,13 +15,21 @@ export function truncateMiddle(
 }
 
 export const isEnsDomain = (address: string) =>
-  /[0-9a-fA-F]+.eth$/.test(address)
+  address.length >= 4 && address.slice(-4) === '.eth'
+
+export const isBitDomain = (address: string) => /\.bit$/.test(address)
 
 export const isPrimitiveEthAddress = (address: string) =>
   /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
 
 export const isEthAddress = (address: string) =>
-  isPrimitiveEthAddress(address) || isEnsDomain(address)
+  isPrimitiveEthAddress(address) || isEnsDomain(address) || isBitDomain(address)
+
+export const isZilpayAddress = (address: string) =>
+  address != null && address.startsWith('zil') && address.length === 42
+
+export const isSupportedAddress = (address: string) =>
+  isZilpayAddress(address) || isEthAddress(address)
 
 export const truncateMailAddress = (
   mailAddress: string,
@@ -29,10 +37,8 @@ export const truncateMailAddress = (
   tailLength = 4
 ) => {
   if (verifyEmail(mailAddress)) {
-    const splitMailAddress = mailAddress.split('@')
-    const address = splitMailAddress[0]
-    const suffix = splitMailAddress[1]
-    if (isPrimitiveEthAddress(address))
+    const [address, suffix] = mailAddress.split('@')
+    if (isPrimitiveEthAddress(address) || isZilpayAddress(address))
       return `${truncateMiddle(address, takeLength, tailLength)}@${suffix}`
   }
 
