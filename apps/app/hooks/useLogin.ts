@@ -131,6 +131,13 @@ export function getSigStatus<
   return sigStatus
 }
 
+export const getIsEnabledNotification = (
+  // eslint-disable-next-line compat/compat
+  permission: NotificationPermission = Notification?.permission || 'default'
+): { enabled_notification: 'yes' | 'no' } => ({
+  enabled_notification: permission === 'granted' ? 'yes' : 'no',
+})
+
 export const useSetGlobalTrack = () => {
   const account = useAccount()
   const walletName = useLastConectorName()
@@ -157,6 +164,7 @@ export const useSetGlobalTrack = () => {
           crm_id: `@${account}`,
           text_signature: userInfo.text_signature,
           aliases: aliases.aliases,
+          ...getIsEnabledNotification(),
         }
         try {
           gtag?.('set', 'user_properties', config)
