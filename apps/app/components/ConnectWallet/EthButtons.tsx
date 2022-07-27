@@ -144,7 +144,7 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
       icon={generateIcon(ImtokenPng)}
       href={isEthEnvironment ? undefined : generateImtokenDeepLink()}
       text="imToken"
-      desiredWallet={DesiredWallet.MetaMask}
+      desiredWallet={DesiredWallet.Imtoken}
       onClose={onClose}
     />
   )
@@ -155,7 +155,7 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
       icon={generateIcon(TrustPng)}
       href={isEthEnvironment ? undefined : generateTrustWalletDeepLink()}
       text="Trust"
-      desiredWallet={DesiredWallet.MetaMask}
+      desiredWallet={DesiredWallet.Trust}
       onClose={onClose}
     />
   )
