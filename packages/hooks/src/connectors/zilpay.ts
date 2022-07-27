@@ -1,6 +1,6 @@
 function isInstalled(): boolean {
-  const { zilpay } = window as any
-  return typeof zilpay === 'undefined'
+  const zilpay = (window as any).zilPay
+  return typeof zilpay !== 'undefined'
 }
 
 function isConnected(): boolean {
