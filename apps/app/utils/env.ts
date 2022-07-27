@@ -4,4 +4,5 @@ export const isWechat = () =>
 export const isImToken = () =>
   navigator.userAgent.toLowerCase().includes('imtoken')
 
-export const isTrust = () => navigator.userAgent.toLowerCase().includes('Trust')
+const w = window as any
+export const isTrust = () => !!w?.ethereum?.isTrust

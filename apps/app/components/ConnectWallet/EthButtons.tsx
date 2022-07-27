@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ConnectorName,
   DesiredWallet,
@@ -21,12 +21,14 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { useTranslation } from 'react-i18next'
 import { WalletConnectButton } from './WalletConnectButton'
 import { ConnectButton, generateIcon } from './ConnectButton'
+import { isImToken, isTrust, isWechat } from '../../utils'
 import {
-  isImToken,
-  isTrust,
-  isWechat,
-} from '../../utils'
-import { generateImtokenDeepLink, generateTrustWalletDeepLink, generateMetamaskDeepLink, isImTokenReject, isRejectedMessage } from '../../utils/wallet'
+  generateImtokenDeepLink,
+  generateTrustWalletDeepLink,
+  generateMetamaskDeepLink,
+  isImTokenReject,
+  isRejectedMessage,
+} from '../../utils/wallet'
 import { IS_MOBILE } from '../../constants'
 
 export interface EthButtonsProps {

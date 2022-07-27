@@ -10,12 +10,12 @@ export const generateMetamaskDeepLink = () =>
   `https://metamask.app.link/dapp/${generateCurrentURL()}`
 
 export const generateTrustWalletDeepLink = () =>
-  `https://link.trustwallet.com/open_url?coin_id=60&url=${generateCurrentURL()}`
+  `https://link.trustwallet.com/open_url?coin_id=60&url=https://${generateCurrentURL()}`
 
 export const generateImtokenDeepLink = () =>
   !IS_MOBILE
     ? `https://token.im/download`
-    : `imtokenv2://navigate/DappView?url=${generateCurrentURL()}`
+    : `imtokenv2://navigate/DappView?url=https://${generateCurrentURL()}`
 
 export const isRejectedMessage = (error: any) =>
   error?.message && error.message.includes('rejected')
