@@ -166,6 +166,8 @@ export enum DesiredWallet {
   Blocto = 'Blocto',
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
+  Imtoken = 'imToken',
+  Trust = 'Trust',
   ZilPay = 'ZilPay',
 }
 
