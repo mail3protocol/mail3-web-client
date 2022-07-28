@@ -74,11 +74,11 @@ const PreviewContent = styled(Box)`
   img {
     display: inline;
   }
-  /*
+
   a {
     text-decoration: underline;
     color: #3182ce;
-  } */
+  }
 `
 
 export const PreviewComponent: React.FC = () => {
