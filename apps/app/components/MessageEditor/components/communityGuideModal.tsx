@@ -12,7 +12,7 @@ import {
   Box,
 } from '@chakra-ui/react'
 import { Button } from 'ui'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import DesktopImage1 from '../../../assets/commuity-guide/desktop1.png'
@@ -38,6 +38,12 @@ export const CommunityGuideModal: React.FC<{
   const [index, setIndex] = useState(0)
   const api = useAPI()
   const toast = useToast()
+  useEffect(() => {
+    if (!isOpen) {
+      setIndex(0)
+    }
+  }, [isOpen])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />

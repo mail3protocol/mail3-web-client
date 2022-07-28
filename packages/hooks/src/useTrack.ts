@@ -70,7 +70,6 @@ export enum TrackEvent {
 
   // app_edit_message
   AppEditMessageChangeFrom = 'click_from',
-  AppEditMessageClickCommunity = 'click_community',
   AppEditMessageClickCommunityApply = 'click_community_apply',
   AppEditMessageClickCommunityNoThanks = 'click_community_nothanks',
   AppEditMessageClickSave = 'click_save',
@@ -93,9 +92,12 @@ export enum TrackEvent {
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
   clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
 
+  // developers
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
   ClickMmbGithub = 'click_mmb_github',
+  // community
+  ClickCommunity = 'click_community',
 
   // product recommendations
   ClickBannerSuggestion = 'click_banner_suggestion',
