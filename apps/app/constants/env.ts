@@ -66,6 +66,8 @@ export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
 
+export const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
 export const SENTRY_DSN = import.meta.env.NEXT_PUBLIC_SENTRY_DSN
 
 export const PRODUCT_RECOMMENDATIONS_ADDRESS =

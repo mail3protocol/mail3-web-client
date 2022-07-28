@@ -43,6 +43,7 @@ import {
   isPrimitiveEthAddress,
   isEnsDomain,
   isBitDomain,
+  isZilpayAddress,
 } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
@@ -156,7 +157,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
 
 const generateEmailAddress = (s = '') => {
   const [address, rest] = s.split('@')
-  if (isPrimitiveEthAddress(address))
+  if (isPrimitiveEthAddress(address) || isZilpayAddress(address))
     return `${truncateMiddle(address, 6, 4)}@${
       rest || MAIL_SERVER_URL
     }`.toLowerCase()
@@ -287,7 +288,7 @@ export const SettingAddress: React.FC = () => {
           const [addr] = item.address.split('@')
           if (isBitDomain(addr)) return { ...o, bit: [...o.bit, item] }
           if (isEnsDomain(addr)) return { ...o, ens: [...o.ens, item] }
-          if (isPrimitiveEthAddress(addr)) return { ...o, primitive: item }
+          if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr)) return { ...o, primitive: item }
           return o
         },
         {

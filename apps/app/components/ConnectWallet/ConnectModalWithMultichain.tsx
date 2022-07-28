@@ -21,7 +21,12 @@ import {
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import React, { ReactNode, useMemo, useState } from 'react'
-import { ConnectorName, useCloseOnChangePathname } from 'hooks'
+import {
+  ConnectorName,
+  useCloseOnChangePathname,
+  useDidMount,
+  zilpay,
+} from 'hooks'
 import PhantomPng from 'assets/wallets/phantom.png'
 import BloctoPng from 'assets/wallets/blocto.png'
 import SolflarePng from 'assets/wallets/solflare.png'
@@ -32,8 +37,6 @@ import PolkawalletPng from 'assets/wallets/polkadot.png'
 import PlugPng from 'assets/wallets/plug.png'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { MetamaskButton } from './MetamaskButton'
-import { WalletConnectButton } from './WalletConnectButton'
 import ZilliqaIconPath from '../../assets/chain-icons/zilliqa.png'
 import EthIconPath from '../../assets/chain-icons/eth.png'
 import FlowIconPath from '../../assets/chain-icons/flow.png'
@@ -43,6 +46,7 @@ import OtherIconPath from '../../assets/chain-icons/other.png'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'
+import { EthButtons } from './EthButtons'
 
 interface ChainItem {
   name: string
@@ -96,13 +100,7 @@ export const ConnectModalWithMultichain: React.FC<{
         name: 'ETH',
         icon: EthIconPath,
         description: 'EVM compatible chain: Ethereum, Polygon, BSC',
-        walletButtons: [
-          <MetamaskButton key={ConnectorName.MetaMask} onClose={onClose} />,
-          <WalletConnectButton
-            key={ConnectorName.WalletConnect}
-            onClose={onClose}
-          />,
-        ],
+        walletButtons: [<EthButtons onClose={onClose} key="ethbuttons" />],
       },
       {
         name: 'Zilliqa',
@@ -204,6 +202,12 @@ export const ConnectModalWithMultichain: React.FC<{
   )
 
   const currentWalletButtonsLength = currentChain?.walletButtons?.length || 3
+
+  useDidMount(() => {
+    if (zilpay.isInstalled()) {
+      setTabIndex(1)
+    }
+  })
 
   const contentEl = (
     <>

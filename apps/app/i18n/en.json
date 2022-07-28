@@ -229,14 +229,22 @@
     },
     "developers": {
         "title": "For Developers",
-        "example-title": "mail³ me button",
-        "example-description": "Embed decentralized communication features for your own product",
-        "github": {
-            "0": "Check out the mail",
-            "1": "3",
-            "2": " me button access on Github"
+        "mail3-me-button": {
+            "title": "mail³ me button",
+            "description": "Embed decentralized communication features for your own product",
+            "github": {
+                "0": "Check out the mail",
+                "1": "3",
+                "2": " me button access on Github"
+            },
+            "mirror": "View our best access cases on mirror"
         },
-        "mirror": "View our best access cases on mirror"
+        "community-mail": {
+            "title": "Community mail",
+            "description": "Customize your email audience through filters to achieve precise push",
+            "interest": "Tell us you are interested in this feature \uD83D\uDE09",
+            "coming_soon": "Coming soon"
+        }
     },
     "inbox-nav": {
         "inbox": "Inbox",

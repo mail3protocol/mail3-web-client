@@ -67,7 +67,6 @@ export enum TrackEvent {
 
   // app_edit_message
   AppEditMessageChangeFrom = 'click_from',
-  AppEditMessageClickCommunity = 'click_community',
   AppEditMessageClickCommunityApply = 'click_community_apply',
   AppEditMessageClickCommunityNoThanks = 'click_community_nothanks',
   AppEditMessageClickSave = 'click_save',
@@ -90,9 +89,12 @@ export enum TrackEvent {
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
   clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
 
+  // developers
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
   ClickMmbGithub = 'click_mmb_github',
+  // community
+  ClickCommunity = 'click_community',
 
   // product recommendations
   ClickBannerSuggestion = 'click_banner_suggestion',
@@ -148,6 +150,7 @@ export enum Mail3MenuItem {
 
 export enum GlobalDimensions {
   OwnEnsAddress = 'own_ens_address',
+  OwnBitAddress = 'own_bit_address',
   ConnectedWalletName = 'connected_wallet_name',
   WalletAddress = 'wallet_address',
   SignatureStatus = 'signature_status',
@@ -158,6 +161,8 @@ export enum DesiredWallet {
   Blocto = 'Blocto',
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
+  Imtoken = 'imToken',
+  Trust = 'Trust',
   ZilPay = 'ZilPay',
 }
 
