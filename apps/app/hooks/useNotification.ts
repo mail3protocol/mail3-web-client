@@ -1,18 +1,31 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useUpdateAtom } from 'jotai/utils'
-import { getIsEnabledNotification, userPropertiesAtom } from './useLogin'
+import {
+  getIsEnabledNotification,
+  getNotificationPermission,
+  userPropertiesAtom,
+} from './useLogin'
 
-export const getNotificationPermission = () =>
-  // eslint-disable-next-line compat/compat
-  Notification?.permission || 'default'
-
-export function useNotification(updatePermissionDeps?: any[]) {
+export function useNotification(options?: {
+  onChangePermission?: (permission: NotificationPermission) => void
+}) {
   const setUserInfo = useUpdateAtom(userPropertiesAtom)
   const [permission, setPermission] = useState(getNotificationPermission())
 
   useEffect(() => {
-    setPermission(getNotificationPermission())
-  }, [...(updatePermissionDeps || [])])
+    if ('permissions' in navigator) {
+      navigator.permissions
+        .query({ name: 'notifications' })
+        .then((notificationPerm) => {
+          // eslint-disable-next-line no-param-reassign
+          notificationPerm.onchange = () => {
+            const newPermission = getNotificationPermission()
+            setPermission(getNotificationPermission())
+            options?.onChangePermission?.(newPermission)
+          }
+        })
+    }
+  })
 
   useEffect(() => {
     setUserInfo((info) => ({

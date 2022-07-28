@@ -131,9 +131,12 @@ export function getSigStatus<
   return sigStatus
 }
 
-export const getIsEnabledNotification = (
+export const getNotificationPermission = () =>
   // eslint-disable-next-line compat/compat
-  permission: NotificationPermission = Notification?.permission || 'default'
+  Notification?.permission || 'default'
+
+export const getIsEnabledNotification = (
+  permission: NotificationPermission = getNotificationPermission()
 ): { enabled_notification: 'yes' | 'no' } => ({
   enabled_notification: permission === 'granted' ? 'yes' : 'no',
 })
