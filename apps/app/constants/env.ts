@@ -62,9 +62,22 @@ export const MAIL3_ME_BUTTON_MIRROR_URL =
   import.meta.env.NEXT_PUBLIC_MAIL3_ME_BUTTON_MIRRIR_URL ||
   'https://mirror.xyz/mail3.eth/nTiZI4w3vB1BBjwc8ZLUHCJ2FPhaYJd-l7v62Tv_FY0'
 
+export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')
+
+export const IS_CHROME =
+  navigator.userAgent.toLowerCase().includes('chrome') || !!window.chrome
+
+export const IS_FIREBOX = navigator.userAgent.toLowerCase().includes('firefox')
+
+export const IS_OPERA = window.opr !== undefined
+
+export const IS_IPAD = navigator.userAgent.toLowerCase().includes('ipad')
+
 export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
+
+export const IS_IOS = IS_IPAD || IS_IPHONE
 
 export const SENTRY_DSN = import.meta.env.NEXT_PUBLIC_SENTRY_DSN
 

@@ -16,12 +16,17 @@ import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
 import { GifGuide } from './GifGuide'
 import { BaseSwitch } from './BaseSwitch'
+import { IS_CHROME, IS_FIREBOX, IS_IOS, IS_OPERA } from '../../constants'
 
 export const NotificationSwitch: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { permission, requestPermission } = useNotification()
   const isEnabledNotification = permission === 'granted'
   const [isHide, setHide] = useState(isEnabledNotification)
+
+  const isBrowserSupport = [IS_CHROME, IS_FIREBOX, IS_OPERA].some(
+    (isSupport) => isSupport && !IS_IOS
+  )
 
   useEffect(() => {
     onClose()
@@ -36,6 +41,10 @@ export const NotificationSwitch: React.FC = () => {
     setHide(false)
     return () => {}
   }, [isEnabledNotification])
+
+  if (!isBrowserSupport) {
+    return null
+  }
 
   return (
     <AnimatePresence initial={false}>
