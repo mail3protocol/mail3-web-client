@@ -22,11 +22,13 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
+import { isBitDomain, isEnsDomain } from 'shared'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
+import { removeMailSuffix } from '../utils'
 
 export const useIsLoginExpired = () => {
   const loginInfo = useLoginInfo()
@@ -148,9 +150,22 @@ export const useSetGlobalTrack = () => {
         const defaultAddress =
           aliases.aliases.find((a) => a.is_default)?.address ||
           `${account}@${MAIL_SERVER_URL}`
+        let isOwnBitAddress = false
+        let isOwnEnsAddress = false
+        for (let i = 0; i < aliases.aliases.length; i++) {
+          const alias = aliases.aliases[i]
+          const addr = removeMailSuffix(alias.address)
+          if (isEnsDomain(addr)) {
+            isOwnEnsAddress = true
+          }
+          if (isBitDomain(addr)) {
+            isOwnBitAddress = true
+          }
+        }
         const config = {
           defaultAddress,
-          [GlobalDimensions.OwnEnsAddress]: aliases.aliases.length > 1,
+          [GlobalDimensions.OwnEnsAddress]: isOwnEnsAddress,
+          [GlobalDimensions.OwnBitAddress]: isOwnBitAddress,
           [GlobalDimensions.ConnectedWalletName]: walletName,
           [GlobalDimensions.WalletAddress]: `@${account}`,
           [GlobalDimensions.SignatureStatus]: sigStatus,
