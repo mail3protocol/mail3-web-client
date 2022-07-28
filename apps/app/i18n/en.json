@@ -5,7 +5,6 @@
             "sent": "Sent",
             "drafts": "Drafts",
             "trash": "Trash",
-            "subscriptions": "Subscription",
             "other-stuff": "Other Stuff",
             "settings": "Settings",
             "profile-link": "My Profile Link",
@@ -241,7 +240,6 @@
     },
     "inbox-nav": {
         "inbox": "Inbox",
-        "subscription": "Subscription",
         "developers": "Developers"
     },
     "ipfs": {
