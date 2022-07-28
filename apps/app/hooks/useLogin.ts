@@ -347,12 +347,10 @@ export const useAuth = () => {
 }
 
 export const useAuthModalOnBack = () => {
-  const connector = useConnector()
   const { onOpen } = useConnectWalletDialog()
   const closeAuthModal = useCloseAuthModal()
   return useCallback(async () => {
-    await connector?.deactivate()
     closeAuthModal()
     onOpen()
-  }, [connector])
+  }, [])
 }
