@@ -6,6 +6,7 @@ import {
   metaMaskStore,
   TrackEvent,
   TrackKey,
+  useAccount,
   useDialog,
   useDidMount,
   useLastConectorName,
@@ -29,7 +30,6 @@ import {
   isRejectedMessage,
 } from '../../utils/wallet'
 import { IS_MOBILE } from '../../constants'
-import { useIsAuthenticated } from '../../hooks/useLogin'
 
 export interface EthButtonsProps {
   onClose: () => void
@@ -57,7 +57,7 @@ export const EthButton: React.FC<EthButtonProps> = ({
   const dialog = useDialog()
   const setLastConnector = useSetLastConnector()
   const connectorName = useLastConectorName()
-  const isConnected = useIsAuthenticated()
+  const isConnected = !!useAccount()
   const setLoginInfo = useSetLoginInfo()
   const logout = () => setLoginInfo(null)
 
