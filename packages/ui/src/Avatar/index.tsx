@@ -10,7 +10,12 @@ import {
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useQuery } from 'react-query'
-import { isEthAddress, isSupportedAddress } from 'shared'
+import {
+  getCybertinoConnect,
+  generateAvatarSrc,
+  isEthAddress,
+  isSupportedAddress,
+} from 'shared'
 import BoringAvatar from 'boring-avatars'
 import { useMemo } from 'react'
 
@@ -43,24 +48,7 @@ const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
   }
 )
 
-export const avatarQuery = (
-  address: string,
-  chain = 'ETH'
-) => `query FullIdentityQuery {
-  identity(
-    address: "${address}"
-    network: ${chain}
-  ) {
-    address
-    domain
-    avatar
-    joinTime
-  }
-}`
-
 const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
-const generateAvatarSrc = (address: string) =>
-  `https://source.boringavatars.com/marble/120/${address}?colors=92A1C6,146A7C,F0AB3D,C271B4,C20D90&square=false`
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
@@ -76,16 +64,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   const width = props?.w
   const { isLoading } = useQuery(
     ['avatar', address],
-    async () =>
-      // eslint-disable-next-line compat/compat
-      fetch('https://api.cybertino.io/connect/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({ query: avatarQuery(address) }),
-      }).then((res) => res.json()),
+    async () => getCybertinoConnect(address),
     {
       enabled: avatar == null && isEthAddress(address),
       refetchIntervalInBackground: false,
