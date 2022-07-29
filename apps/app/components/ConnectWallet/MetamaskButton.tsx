@@ -18,12 +18,12 @@ import { useTranslation } from 'react-i18next'
 import detectEthereumProvider from '@metamask/detect-provider'
 import MetamaskPng from 'assets/wallets/metamask.png'
 import {
-  generateDeepLink,
+  generateMetamaskDeepLink,
   isImTokenReject,
   isRejectedMessage,
-  isWechat,
-} from '../../utils'
+} from '../../utils/wallet'
 import { ConnectButton, generateIcon } from './ConnectButton'
+import { isWechat } from '../../utils'
 
 export const MetamaskButton: React.FC<{
   onClose?: () => void
@@ -57,7 +57,7 @@ export const MetamaskButton: React.FC<{
       isLoading={isConnectingMetamask}
       text={t('connect.metamask')}
       icon={generateIcon(MetamaskPng)}
-      href={shouldUseDeeplink ? generateDeepLink() : undefined}
+      href={shouldUseDeeplink ? generateMetamaskDeepLink() : undefined}
       isConnected={connectorName === ConnectorName.MetaMask && isConnected}
       onClick={async () => {
         trackWallet({

@@ -11,7 +11,6 @@ export enum RoutePath {
   SetupShare = '/setup/share',
   NewMessage = '/message/edit',
   WhiteList = '/whitelist',
-  Subscription = '/subscription',
   Message = '/message',
   Testing = '/testing',
   Unread = '/unread',

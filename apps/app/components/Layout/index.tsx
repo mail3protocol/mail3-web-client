@@ -7,7 +7,6 @@ import { Navbar } from '../Navbar'
 const hideNavbarPaths: Set<string> = new Set([
   RoutePath.Unread,
   RoutePath.Testing,
-  RoutePath.Subscription,
 ])
 
 export const Layout: React.FC = () => {
