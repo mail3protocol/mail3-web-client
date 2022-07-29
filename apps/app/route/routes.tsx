@@ -8,7 +8,6 @@ import { SettingsAddressPage } from '../pages/settings/address'
 import { SettingsSignaturePage } from '../pages/settings/signature'
 import { SetupAddressPage } from '../pages/setup/address'
 import { SetupSharePage } from '../pages/setup/share'
-import { SubscriptionPage } from '../pages/subscription'
 import { UnReadPage } from '../pages/unread'
 import { TestingPage } from '../pages/testing'
 import { MessagePage } from '../pages/message/[id]'
@@ -83,11 +82,6 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.NewMessage,
     key: 'new-message',
     element: <NewMessagePage />,
-  },
-  {
-    path: RoutePath.Subscription,
-    key: 'subscription',
-    element: <SubscriptionPage />,
   },
   {
     path: RoutePath.Developers,
