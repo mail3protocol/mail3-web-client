@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "scripts": {
         "dev": "vite dev",
-        "build": "vite build",
+        "build": "vite build && vite build -c vite.sw.config.ts",
         "start": "vite",
         "lint": "eslint .",
         "report": "REPORT=true vite build",
@@ -31,6 +31,7 @@
         "dayjs": "^1.11.2",
         "dompurify": "^2.3.8",
         "events": "^3.3.0",
+        "firebase": "^9.9.1",
         "framer-motion": "^6",
         "hooks": "*",
         "html-react-parser": "^1.4.14",

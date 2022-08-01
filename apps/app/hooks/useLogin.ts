@@ -29,6 +29,7 @@ import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
 import { removeMailSuffix } from '../utils'
+import { deleteFirebaseMessagingToken } from '../utils/firebase'
 
 export const useIsLoginExpired = () => {
   const loginInfo = useLoginInfo()
@@ -242,6 +243,7 @@ export const useLogout = () => {
     await connector?.deactivate()
     setUserInfo(null)
     setLastConnector(undefined)
+    await deleteFirebaseMessagingToken()
   }, [connector])
 }
 
