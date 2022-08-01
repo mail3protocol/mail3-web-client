@@ -34,7 +34,6 @@ import { ReactComponent as InboxWhiteSvg } from '../../assets/inbox-white.svg'
 import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
 import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
 import { ReactComponent as SentSvg } from '../../assets/sent.svg'
-import { ReactComponent as SubscrptionSvg } from '../../assets/subscrption.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
@@ -65,15 +64,6 @@ const LogoPopoverBody: React.FC = () => {
       onClick() {
         context.onClose()
         trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Drafts })
-      },
-    },
-    {
-      href: RoutePath.Sent,
-      label: t('navbar.sent'),
-      icon: <SentSvg />,
-      onClick() {
-        context.onClose()
-        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Sent })
       },
     },
     {
@@ -113,7 +103,7 @@ const LogoPopoverBody: React.FC = () => {
             </Center>
           </Button>
         </RouterLink>
-        <RouterLink href={RoutePath.Subscription} passHref>
+        <RouterLink href={RoutePath.Sent} passHref>
           <Button
             flex="1"
             ml="9px"
@@ -123,7 +113,7 @@ const LogoPopoverBody: React.FC = () => {
             onClick={() => {
               context.onClose()
               trackMenuClick({
-                [TrackKey.Mail3MenuItem]: Mail3MenuItem.Subscription,
+                [TrackKey.Mail3MenuItem]: Mail3MenuItem.Sent,
               })
             }}
             border="1px solid black"
@@ -133,8 +123,8 @@ const LogoPopoverBody: React.FC = () => {
             as="a"
           >
             <Center flexDirection="column">
-              <SubscrptionSvg />
-              <Text>{t('navbar.subscriptions')}</Text>
+              <SentSvg />
+              <Text>{t('navbar.sent')}</Text>
             </Center>
           </Button>
         </RouterLink>

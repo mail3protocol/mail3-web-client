@@ -5,14 +5,12 @@ import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useDidMount } from 'hooks'
 import { ReactComponent as SVGInbox } from '../../../assets/inbox.svg'
-import { ReactComponent as SVGSub } from '../../../assets/subscrption.svg'
 import { ReactComponent as DevelopersSvg } from '../../../assets/developes.svg'
 import { RoutePath } from '../../../route/path'
 import { RouterLink } from '../../RouterLink'
 
 export enum InboxNavType {
   Inbox = 'Inbox',
-  Subscription = 'Subscription',
   Developers = 'Developers',
 }
 
@@ -66,12 +64,6 @@ export const InboxNav: React.FC<{
       icon: <SVGInbox />,
       title: t('inbox'),
       to: RoutePath.Home,
-    },
-    {
-      type: InboxNavType.Subscription,
-      icon: <SVGSub />,
-      title: t('subscription'),
-      to: RoutePath.Subscription,
     },
     {
       type: InboxNavType.Developers,

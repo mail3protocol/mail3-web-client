@@ -59,9 +59,6 @@ export enum TrackEvent {
   HomeClickGoTesting = 'Mail3_offical_click_testinggo',
   HomeClickBlackCube = 'mail3_offical_click_blackcube',
 
-  // subscriptions
-  ClickSubscriptionBell = 'click_subscription_bell',
-  MediaSubscriptions = 'media_subscriptions',
   // mailboxes
   ClickWrite = 'click_write',
 
@@ -70,7 +67,6 @@ export enum TrackEvent {
 
   // app_edit_message
   AppEditMessageChangeFrom = 'click_from',
-  AppEditMessageClickCommunity = 'click_community',
   AppEditMessageClickCommunityApply = 'click_community_apply',
   AppEditMessageClickCommunityNoThanks = 'click_community_nothanks',
   AppEditMessageClickSave = 'click_save',
@@ -93,9 +89,12 @@ export enum TrackEvent {
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
   clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
 
+  // developers
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
   ClickMmbGithub = 'click_mmb_github',
+  // community
+  ClickCommunity = 'click_community',
 
   // product recommendations
   ClickBannerSuggestion = 'click_banner_suggestion',
@@ -122,9 +121,6 @@ export enum TrackKey {
   // mail detail
   MailDetailPage = 'click_mail_details_page_item',
 
-  // subscriptions
-  SubscriptionBell = 'click_subscription_bell',
-  MediaSubscriptions = 'media_subscriptions',
   // testing
   TestingEntry = 'beta1_check_eligilibity',
 }
@@ -145,7 +141,6 @@ export enum PersonnalCenter {
 export enum Mail3MenuItem {
   Inbox = 'Inbox',
   Sent = 'Sent',
-  Subscription = 'Subscription',
   Drafts = 'Drafts',
   Trash = 'Trash',
   Discord = 'Discord',
@@ -155,6 +150,7 @@ export enum Mail3MenuItem {
 
 export enum GlobalDimensions {
   OwnEnsAddress = 'own_ens_address',
+  OwnBitAddress = 'own_bit_address',
   ConnectedWalletName = 'connected_wallet_name',
   WalletAddress = 'wallet_address',
   SignatureStatus = 'signature_status',
@@ -165,6 +161,8 @@ export enum DesiredWallet {
   Blocto = 'Blocto',
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
+  Imtoken = 'imToken',
+  Trust = 'Trust',
   ZilPay = 'ZilPay',
 }
 
@@ -190,17 +188,6 @@ export enum MailDetailPageItem {
   Delete = 'Delete',
 }
 
-export const MediaSubscriptionsItem: Record<number, string> = {
-  0: 'Mail3',
-  1: 'Bankless',
-  2: 'The Defiant',
-  3: 'Week in Ethereum News',
-  4: 'Mirror Curator DAO',
-  5: 'Arthur Hayes',
-  6: 'CryptoJobsList',
-  7: 'Web3 Jobs',
-}
-
 export interface TrackProps {
   [TrackKey.DesiredWallet]?: DesiredWallet
   [TrackKey.CollectedAddress]?: string
@@ -208,8 +195,6 @@ export interface TrackProps {
   [TrackKey.TestingEntry]?: boolean
   [TrackKey.HomeCommunity]?: HomeCommunity
   [TrackKey.MailDetailPage]?: MailDetailPageItem
-  [TrackKey.SubscriptionBell]?: string
-  [TrackKey.MediaSubscriptions]?: string
   [TrackKey.PersonnalCenter]?: PersonnalCenter
   [TrackKey.ProfileScoialPlatform]?: ProfileScoialPlatformItem
   [TrackKey.Mail3MenuItem]?: Mail3MenuItem
