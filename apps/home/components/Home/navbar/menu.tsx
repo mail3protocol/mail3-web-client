@@ -10,11 +10,6 @@ import {
   List,
   ListIcon,
   ListItem,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { LitepaperLanguage, TrackEvent, TrackKey, useTrackClick } from 'hooks'
@@ -61,86 +56,110 @@ export const Buttons: React.FC<{
   const trackWhitePaper = useTrackClick(TrackEvent.HomeClickWhitePaper)
 
   const litepaperButton = (
-    <Popover arrowShadowColor="none" arrowSize={12}>
-      <PopoverTrigger>
-        <Link
-          {...linkProps}
-          display={{
-            base: 'none',
-            md: 'inline-block',
-          }}
-          target="_blank"
-        >
-          Litepaper
-        </Link>
-      </PopoverTrigger>
-      <PopoverContent
+    <Box
+      position="relative"
+      css={`
+        .popover-dialog {
+          pointer-events: none;
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        :hover .popover-dialog {
+          opacity: 1;
+          pointer-events: unset;
+          transform: scale(1);
+        }
+      `}
+    >
+      <Link
+        {...linkProps}
+        display={{
+          base: 'none',
+          md: 'inline-block',
+        }}
+        _hover={{
+          textDecoration: 'none',
+        }}
+        target="_blank"
+      >
+        Litepaper
+      </Link>
+      <Box
+        className="popover-dialog"
+        top="100%"
+        left="-30px"
+        position="absolute"
+        w="220px"
         display={{ base: 'none', md: 'block' }}
         border="none"
         py="20px"
         px="16px"
-        maxW="220px"
         shadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25)"
         _focus={{
           shadow: '0px 0px 16px 12px rgba(192, 192, 192, 0.25)',
           outline: 'none',
         }}
+        transition="100ms"
         rounded="20px"
+        bg="#fff"
+        _before={{
+          content: '" "',
+          position: 'absolute',
+          bg: '#fff',
+          transform: 'rotate(45deg)',
+          w: '12px',
+          h: '12px',
+          top: '-5px',
+          left: '105px',
+        }}
       >
-        <PopoverArrow />
-        <PopoverBody p="0">
-          <List
-            css={`
-              li {
-                padding: 10px 15px;
-                border-radius: 4px;
+        <List
+          css={`
+            li a {
+              border-radius: 4px;
+              display: block;
+              width: 100%;
+              height: 100%;
+              font-weight: 500;
+              padding: 10px 15px;
+            }
+            li a:hover {
+              text-decoration: none;
+              background-color: #e7e7e7;
+            }
+          `}
+        >
+          <ListItem>
+            <Link
+              href={LIGHT_PAPER_URL}
+              target="_blank"
+              onClick={() =>
+                trackWhitePaper({
+                  [TrackKey.LitepaperLanguage]: LitepaperLanguage.English,
+                })
               }
-              li:hover {
-                background-color: #e7e7e7;
+            >
+              <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
+              English
+            </Link>
+          </ListItem>
+          <ListItem>
+            <Link
+              href={LIGHT_PAPER_JP_URL}
+              target="_blank"
+              onClick={() =>
+                trackWhitePaper({
+                  [TrackKey.LitepaperLanguage]: LitepaperLanguage.Japanese,
+                })
               }
-              li a {
-                display: block;
-                width: 100%;
-                height: 100%;
-                font-weight: 500;
-              }
-              li a:hover {
-                text-decoration: none;
-              }
-            `}
-          >
-            <ListItem>
-              <Link
-                href={LIGHT_PAPER_URL}
-                target="_blank"
-                onClick={() =>
-                  trackWhitePaper({
-                    [TrackKey.LitepaperLanguage]: LitepaperLanguage.English,
-                  })
-                }
-              >
-                <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
-                English
-              </Link>
-            </ListItem>
-            <ListItem>
-              <Link
-                href={LIGHT_PAPER_JP_URL}
-                target="_blank"
-                onClick={() =>
-                  trackWhitePaper({
-                    [TrackKey.LitepaperLanguage]: LitepaperLanguage.Japanese,
-                  })
-                }
-              >
-                <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
-                にほんご
-              </Link>
-            </ListItem>
-          </List>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+            >
+              <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
+              にほんご
+            </Link>
+          </ListItem>
+        </List>
+      </Box>
+    </Box>
   )
   const launchAppButton = (
     <Link href={LAUNCH_URL}>
