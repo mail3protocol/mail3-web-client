@@ -34,7 +34,7 @@ ${content}
 }
 
 function getReplyTemplate(content: string, signContent: string) {
-  return getDefaultTemplate(`<blockquote style="border-left: 2px solid #6f6f6f; background-color: #f7f7f7; padding: 6px; overflow: auto; margin: 0 0 0 8px; color: #6F6F6F">
+  return getDefaultTemplate(`<blockquote style="border-left: 2px solid #6f6f6f; background-color: #f7f7f7; padding: 6px; overflow: auto; margin: 0 0 0 8px; color: #6F6F6F; word-break: break-word;">
 ${content}
 </blockquote>
 <br/>
@@ -43,7 +43,7 @@ ${signContent}`)
 }
 
 function getForwardTemplate(content: string, signContent: string) {
-  return getDefaultTemplate(`<blockquote style="background-color: #f7f7f7; padding: 8px; border-radius: 8px; margin: 0; color: #6F6F6F">
+  return getDefaultTemplate(`<blockquote style="background-color: #f7f7f7; padding: 8px; border-radius: 8px; margin: 0; color: #6F6F6F; word-break: break-word;">
 <p>---------- Forwarded message ---------</p>
 ${content}
 </blockquote>
