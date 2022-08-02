@@ -5,6 +5,8 @@ export const DISCORD_URL =
   process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
 export const LIGHT_PAPER_URL =
   process.env.NEXT_PUBLIC_LIGHT_PAPER_URL || '/mail3-litepaper.pdf'
+export const LIGHT_PAPER_JP_URL =
+  process.env.NEXT_PUBLIC_LIGHT_PAPER_URL || '/mail3-litepaper-jp.pdf'
 export const WHITE_LIST_URL =
   process.env.NEXT_PUBLIC_WHITE_LIST_URL || `${APP_URL}/whitelist`
 
