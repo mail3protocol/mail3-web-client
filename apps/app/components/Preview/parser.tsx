@@ -98,6 +98,12 @@ export const UnofficialMailBody: React.FC = ({ children }) => {
   )
 }
 
+const urlity = (text: string) => {
+  const reg =
+    /(https?|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g
+  return text.replace(reg, (url) => `<a href="${url}">${url}</a>`)
+}
+
 export const RenderHTML: React.FC<htmlParserProps> = ({
   html,
   attachments,
@@ -123,7 +129,16 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
             />
           )
         }
-        return dom
+      }
+      console.log('dom', dom)
+      if (dom.type === 'text') {
+        // const text = (dom as Text).data
+        // console.log(text)
+        // const doms = urlity(text)
+        // console.log('doms', doms)
+        // const newText = urlity(text)
+        // eslint-disable-next-line react/no-danger
+        // return <p dangerouslySetInnerHTML={{ __html: newText }} />
       }
 
       return dom
@@ -141,8 +156,20 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   }, [from.address])
 
   const content = useMemo(() => {
+    DOMPurify.removeHook('beforeSanitizeAttributes')
     DOMPurify.removeHook('afterSanitizeAttributes')
+    DOMPurify.addHook('beforeSanitizeAttributes', (node) => {
+      if (
+        node?.nodeName &&
+        node.nodeName === '#text' &&
+        node?.parentNode?.nodeName !== 'A'
+      ) {
+        // eslint-disable-next-line no-param-reassign
+        node.textContent = urlity(node.textContent ?? '')
+      }
+    })
     DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+      // console.log('after', node.nodeName, node)
       // set all elements owning target to target=_blank
       if ('target' in node) {
         node.setAttribute('target', '_blank')
