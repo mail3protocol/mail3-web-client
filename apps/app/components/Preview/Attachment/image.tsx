@@ -1,4 +1,4 @@
-import { Box, Image, ImageProps, Skeleton } from '@chakra-ui/react'
+import { Skeleton } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import React from 'react'
 
@@ -38,7 +38,7 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
   attribs,
 }) => {
   const api = useAPI()
-  const { src: cid, width, height, style, alt } = attribs
+  const { src: cid, width, height, style = '', alt } = attribs
 
   const {
     isLoading,
@@ -66,14 +66,33 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
 
   if (isError)
     return (
-      <Box w="200px" h="100px" border="1px solid #ccc" p="10px">
+      <div
+        style={{
+          width: '200px',
+          height: '100px',
+          border: '1px solid #ccc',
+          padding: '10px',
+          textAlign: 'left',
+        }}
+      >
         The image fails to load.
-      </Box>
+      </div>
     )
 
-  const imgProps: ImageProps = {}
-  if (width) imgProps.width = width
-  if (height) imgProps.height = height
+  return (
+    // no support chakra style in iframe
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={(dom) => {
+        if (!dom) return
 
-  return <Image src={src} alt={alt} {...imgProps} css={style} />
+        dom.setAttribute('data-cid', cid)
+        if (style) dom.setAttribute('style', style)
+        if (width) dom.setAttribute('width', width)
+        if (height) dom.setAttribute('height', height)
+      }}
+      src={src}
+      alt={alt}
+    />
+  )
 }
