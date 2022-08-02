@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import parse, { DOMNode, Element } from 'html-react-parser'
+import parse, { DOMNode, Element, Text } from 'html-react-parser'
 import DOMPurify from 'dompurify'
 import ReactShadowRoot from 'react-shadow-root'
 import { createPortal } from 'react-dom'
@@ -130,15 +130,17 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
           )
         }
       }
-      console.log('dom', dom)
-      if (dom.type === 'text') {
-        // const text = (dom as Text).data
+      if (dom.type === 'text' && dom.parent.name !== 'a') {
+        console.log('dom', dom)
+
+        const text = (dom as Text).data
         // console.log(text)
-        // const doms = urlity(text)
+        const doms = urlity(text)
+        // dom.setValue('11')
         // console.log('doms', doms)
         // const newText = urlity(text)
         // eslint-disable-next-line react/no-danger
-        // return <p dangerouslySetInnerHTML={{ __html: newText }} />
+        return <p dangerouslySetInnerHTML={{ __html: doms }} />
       }
 
       return dom
@@ -159,13 +161,21 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     DOMPurify.removeHook('beforeSanitizeAttributes')
     DOMPurify.removeHook('afterSanitizeAttributes')
     DOMPurify.addHook('beforeSanitizeAttributes', (node) => {
+      console.dir(node)
+      // if (node?.nodeName && node.nodeName === 'P') {
+      //   node.innerHTML = '111'
+      // }
+
       if (
         node?.nodeName &&
         node.nodeName === '#text' &&
         node?.parentNode?.nodeName !== 'A'
       ) {
         // eslint-disable-next-line no-param-reassign
-        node.textContent = urlity(node.textContent ?? '')
+        node.innerHTML = '123'
+        // eslint-disable-next-line no-param-reassign
+        // node.textContent = urlity(node.textContent ?? '')
+        // node.setAttribute('data-link', 'hasLink')
       }
     })
     DOMPurify.addHook('afterSanitizeAttributes', (node) => {
