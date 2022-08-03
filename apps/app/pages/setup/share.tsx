@@ -21,7 +21,12 @@ import {
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import styled from '@emotion/styled'
 import { useAtomValue } from 'jotai/utils'
-import { isZilpayAddress, shareToTwitter } from 'shared'
+import {
+  isBitDomain,
+  isEnsDomain,
+  isZilpayAddress,
+  shareToTwitter,
+} from 'shared'
 import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter-blue.svg'
@@ -96,6 +101,14 @@ export const SetupSharePage = () => {
     return `${HOME_URL}/${ads}`
   }, [mailAddress])
 
+  const hashTag = useMemo(() => {
+    const addr = mailAddress.substring(0, mailAddress.indexOf('@'))
+    if (isZilpayAddress(addr)) return 'Zilliqa'
+    if (isBitDomain(addr)) return 'DOTBIT'
+    if (isEnsDomain(addr)) return 'ENS'
+    return ''
+  }, [mailAddress])
+
   useDocumentTitle('Share')
 
   if (!isAuth) {
@@ -107,7 +120,7 @@ export const SetupSharePage = () => {
     shareToTwitter({
       text: 'Hey, contact me using my Mail3 email address @mail3dao',
       url: profileUrl,
-      hashtags: ['web3', 'mail3'],
+      hashtags: hashTag ? ['web3', 'mail3', hashTag] : ['web3', 'mail3'],
     })
   }
 
