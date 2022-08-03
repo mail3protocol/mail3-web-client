@@ -17,7 +17,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { useSaveMessage } from '../../components/MessageEditor/hooks/useSaveMessage'
 import { replaceHtmlAttachImageSrc } from '../../utils/editor'
 import { DRIFT_BOTTLE_ADDRESS } from '../../constants'
-import { filterEmails } from '../../utils'
+import { filterEmails, isHttpUriReg } from '../../utils'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import { GotoInbox } from '../../components/GotoInbox'
@@ -59,6 +59,13 @@ function getDriftbottleTemplate(content: string, signContent: string) {
   <br>
   ${signContent}
 </p>`
+}
+
+function replaceSignContentUrlToATag(signContent: string) {
+  return signContent.replace(
+    isHttpUriReg,
+    (url) => `<a href="${url}">${url}</a>`
+  )
 }
 
 export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
@@ -232,7 +239,7 @@ export const NewMessagePage = () => {
   const defaultContent = useMemo(() => {
     const signContent =
       isEnableSignatureText && userProperties?.text_signature
-        ? userProperties?.text_signature
+        ? replaceSignContentUrlToATag(userProperties?.text_signature)
         : ''
     if (action === 'driftbottle') {
       return getDriftbottleTemplate(t('drift_bottle_template'), signContent)
