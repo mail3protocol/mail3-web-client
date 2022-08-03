@@ -8,7 +8,13 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Avatar } from 'ui'
-import { verifyEmail, isPrimitiveEthAddress } from 'shared'
+import {
+  verifyEmail,
+  isPrimitiveEthAddress,
+  isZilpayAddress,
+  isEnsDomain,
+  isBitDomain,
+} from 'shared'
 import { removeMailSuffix } from '../../../utils'
 import { MAIL_SERVER_URL } from '../../../constants'
 
@@ -23,8 +29,15 @@ export const ToInput: React.FC<ToInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState('')
   const onAddAddress = (value: string) => {
-    if (value !== '' && (isPrimitiveEthAddress(value) || verifyEmail(value))) {
-      const addingAddress = isPrimitiveEthAddress(value)
+    const isEmail = verifyEmail(value)
+    const isValidAddress = [
+      isPrimitiveEthAddress,
+      isZilpayAddress,
+      isEnsDomain,
+      isBitDomain,
+    ].some((fn) => fn(value))
+    if (value !== '' && (isValidAddress || isEmail)) {
+      const addingAddress = isValidAddress
         ? `${value}@${MAIL_SERVER_URL}`
         : value
       onChange?.([...addresses, addingAddress])
