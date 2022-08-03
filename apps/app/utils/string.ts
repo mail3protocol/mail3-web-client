@@ -105,4 +105,4 @@ export function generateAttachmentContentId(content: string) {
   return digestMessage(content, { algorithm: 'SHA-1' })
 }
 
-export const isHttpUriReg = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/g
+export const isHttpUriReg = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?/g
