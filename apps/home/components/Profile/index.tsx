@@ -25,7 +25,13 @@ import {
   useToast,
   useTrackClick,
 } from 'hooks'
-import { copyText, isZilpayAddress, isBitDomain, shareToTwitter } from 'shared'
+import {
+  copyText,
+  isZilpayAddress,
+  isBitDomain,
+  shareToTwitter,
+  isEnsDomain,
+} from 'shared'
 import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
@@ -198,6 +204,13 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
   const profileUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
 
+  const hashTag = useMemo(() => {
+    if (isZilpayAddress(address)) return 'Zilliqa'
+    if (isBitDomain(address)) return 'DOTBIT'
+    if (isEnsDomain(address)) return 'ENS'
+    return ''
+  }, [address])
+
   const actionMap = useMemo(
     () => ({
       [ButtonType.Copy]: async () => {
@@ -211,7 +224,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         shareToTwitter({
           text: 'Hey, contact me using my Mail3 email address @mail3dao',
           url: profileUrl,
-          hashtags: ['web3', 'mail3'],
+          hashtags: hashTag ? ['web3', 'mail3', hashTag] : ['web3', 'mail3'],
         })
       },
       [ButtonType.Card]: async () => {
