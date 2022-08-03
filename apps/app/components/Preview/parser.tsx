@@ -99,9 +99,18 @@ export const UnofficialMailBody: React.FC = ({ children }) => {
 }
 
 const urlity = (text: string) => {
+  const symbolSplit = '{!isLink!}'
   const reg =
     /(https?|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g
-  return text.replace(reg, (url) => `<a href="${url}">${url}</a>`)
+  const newText = text.replace(
+    reg,
+    (url) => `${symbolSplit}${url}${symbolSplit}`
+  )
+  const textParts = newText.split(symbolSplit)
+  return textParts.map((str) => ({
+    textType: reg.test(str) ? 'link' : 'text',
+    value: str,
+  }))
 }
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
@@ -130,17 +139,30 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
           )
         }
       }
-      if (dom.type === 'text' && dom.parent.name !== 'a') {
-        console.log('dom', dom)
-
-        const text = (dom as Text).data
-        // console.log(text)
-        const doms = urlity(text)
-        // dom.setValue('11')
-        // console.log('doms', doms)
-        // const newText = urlity(text)
-        // eslint-disable-next-line react/no-danger
-        return <p dangerouslySetInnerHTML={{ __html: doms }} />
+      if (dom.type === 'text') {
+        if ((dom as any)?.parent?.name !== 'a') {
+          const textMsg = urlity((dom as Text).data)
+          return (
+            <>
+              {textMsg.map(({ textType, value }, index) => {
+                if (textType === 'link') {
+                  return (
+                    <a
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
+                      href={value}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {value}
+                    </a>
+                  )
+                }
+                return value
+              })}
+            </>
+          )
+        }
       }
 
       return dom
@@ -158,28 +180,8 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   }, [from.address])
 
   const content = useMemo(() => {
-    DOMPurify.removeHook('beforeSanitizeAttributes')
     DOMPurify.removeHook('afterSanitizeAttributes')
-    DOMPurify.addHook('beforeSanitizeAttributes', (node) => {
-      console.dir(node)
-      // if (node?.nodeName && node.nodeName === 'P') {
-      //   node.innerHTML = '111'
-      // }
-
-      if (
-        node?.nodeName &&
-        node.nodeName === '#text' &&
-        node?.parentNode?.nodeName !== 'A'
-      ) {
-        // eslint-disable-next-line no-param-reassign
-        node.innerHTML = '123'
-        // eslint-disable-next-line no-param-reassign
-        // node.textContent = urlity(node.textContent ?? '')
-        // node.setAttribute('data-link', 'hasLink')
-      }
-    })
     DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-      // console.log('after', node.nodeName, node)
       // set all elements owning target to target=_blank
       if ('target' in node) {
         node.setAttribute('target', '_blank')
