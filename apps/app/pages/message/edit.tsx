@@ -17,7 +17,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { useSaveMessage } from '../../components/MessageEditor/hooks/useSaveMessage'
 import { replaceHtmlAttachImageSrc } from '../../utils/editor'
 import { DRIFT_BOTTLE_ADDRESS } from '../../constants'
-import { filterEmails, isHttpUriReg } from '../../utils'
+import { filterEmails, isHttpUriNoBlankSpaceReg } from '../../utils'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import { GotoInbox } from '../../components/GotoInbox'
@@ -63,7 +63,7 @@ function getDriftbottleTemplate(content: string, signContent: string) {
 
 function replaceSignContentUrlToATag(signContent: string) {
   return signContent.replace(
-    isHttpUriReg,
+    isHttpUriNoBlankSpaceReg,
     (url) => `<a href="${url}">${url}</a>`
   )
 }

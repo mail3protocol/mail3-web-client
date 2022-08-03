@@ -1,6 +1,6 @@
 import { describe, it, assert } from 'vitest'
 import { truncateMailAddress } from 'shared'
-import { isHttpUriReg } from './string'
+import { isHttpUriNoBlankSpaceReg, isHttpUriReg } from './string'
 
 describe('Utils String', () => {
   describe('Function truncateMiddle0xMail', () => {
@@ -39,14 +39,43 @@ describe('Utils String', () => {
           str: 'http://example.com',
           expected: true,
         },
-        {
-          str: 'https://example.com',
-          expected: true,
-        },
       ]
       list.forEach((item) => {
         assert.equal(isHttpUriReg.test(item.str), item.expected)
       })
+    })
+  })
+
+  describe('RegExp isHttpUriNoBlankSpaceReg', () => {
+    it('should test list', () => {
+      const list = [
+        {
+          str: 'htt://123456788',
+          expected: false,
+        },
+        {
+          str: 'http://example',
+          expected: false,
+        },
+        {
+          str: 'https://example',
+          expected: false,
+        },
+        {
+          str: 'http://example.com',
+          expected: true,
+        },
+      ]
+      list.forEach((item) => {
+        assert.equal(isHttpUriNoBlankSpaceReg.test(item.str), item.expected)
+      })
+    })
+
+    it('should blank space case', () => {
+      assert.equal(
+        'https://mail3.me/test test'.replace(isHttpUriNoBlankSpaceReg, 'url'),
+        'url test'
+      )
     })
   })
 })
