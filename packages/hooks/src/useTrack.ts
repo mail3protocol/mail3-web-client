@@ -123,6 +123,8 @@ export enum TrackKey {
 
   // testing
   TestingEntry = 'beta1_check_eligilibity',
+
+  LitepaperLanguage = 'litepaper_language',
 }
 
 export enum ProfileScoialPlatformItem {
@@ -188,6 +190,11 @@ export enum MailDetailPageItem {
   Delete = 'Delete',
 }
 
+export enum LitepaperLanguage {
+  English = 'English',
+  Japanese = 'Japanese',
+}
+
 export interface TrackProps {
   [TrackKey.DesiredWallet]?: DesiredWallet
   [TrackKey.CollectedAddress]?: string
@@ -198,6 +205,7 @@ export interface TrackProps {
   [TrackKey.PersonnalCenter]?: PersonnalCenter
   [TrackKey.ProfileScoialPlatform]?: ProfileScoialPlatformItem
   [TrackKey.Mail3MenuItem]?: Mail3MenuItem
+  [TrackKey.LitepaperLanguage]?: LitepaperLanguage
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {
