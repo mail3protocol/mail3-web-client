@@ -34,6 +34,7 @@ export const Iframe: React.FC<IframeProps> = (props) => {
         margin: 0;
         padding: 0;
         position: relative;
+        word-break: break-word;
       }
     `
     const domStyle = document.createElement('style')
