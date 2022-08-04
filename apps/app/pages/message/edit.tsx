@@ -17,7 +17,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { useSaveMessage } from '../../components/MessageEditor/hooks/useSaveMessage'
 import { replaceHtmlAttachImageSrc } from '../../utils/editor'
 import { DRIFT_BOTTLE_ADDRESS } from '../../constants'
-import { filterEmails } from '../../utils'
+import { filterEmails, isHttpUriNoBlankSpaceReg } from '../../utils'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import { GotoInbox } from '../../components/GotoInbox'
@@ -34,7 +34,7 @@ ${content}
 }
 
 function getReplyTemplate(content: string, signContent: string) {
-  return getDefaultTemplate(`<blockquote style="border-left: 2px solid #6f6f6f; background-color: #f7f7f7; padding: 16px 20px">
+  return getDefaultTemplate(`<blockquote style="border-left: 2px solid #6f6f6f; background-color: #f7f7f7; padding: 6px; overflow: auto; margin: 0 0 0 8px; color: #6F6F6F; word-break: break-word;">
 ${content}
 </blockquote>
 <br/>
@@ -43,7 +43,7 @@ ${signContent}`)
 }
 
 function getForwardTemplate(content: string, signContent: string) {
-  return getDefaultTemplate(`<blockquote style="background-color: #f7f7f7; padding: 16px 20px">
+  return getDefaultTemplate(`<blockquote style="background-color: #f7f7f7; padding: 8px; border-radius: 8px; margin: 0; color: #6F6F6F; word-break: break-word;">
 <p>---------- Forwarded message ---------</p>
 ${content}
 </blockquote>
@@ -59,6 +59,13 @@ function getDriftbottleTemplate(content: string, signContent: string) {
   <br>
   ${signContent}
 </p>`
+}
+
+function replaceSignContentUrlToATag(signContent: string) {
+  return signContent.replace(
+    isHttpUriNoBlankSpaceReg,
+    (url) => `<a href="${url}">${url}</a>`
+  )
 }
 
 export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
@@ -232,7 +239,7 @@ export const NewMessagePage = () => {
   const defaultContent = useMemo(() => {
     const signContent =
       isEnableSignatureText && userProperties?.text_signature
-        ? userProperties?.text_signature
+        ? replaceSignContentUrlToATag(userProperties?.text_signature)
         : ''
     if (action === 'driftbottle') {
       return getDriftbottleTemplate(t('drift_bottle_template'), signContent)

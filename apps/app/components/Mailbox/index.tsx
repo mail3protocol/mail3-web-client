@@ -39,7 +39,7 @@ export interface MessageItem extends MailboxMessageItemResponse {
 export interface BoxListProps {
   data: Array<MessageItem>
   onClickAvatar?: (index: number, id: string) => void
-  onClickBody: (id: string) => void
+  onClickBody: (msg: MessageItem) => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: Record<string, boolean>
@@ -390,7 +390,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
           isChooseMode={isChooseMode}
           setIsChooseMode={setIsChooseMode}
           onClick={() => {
-            onClickBody(id)
+            onClickBody(item)
           }}
           href={href}
           mailboxType={mailboxType}

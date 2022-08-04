@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 import { useInfiniteQuery } from 'react-query'
 import { Button, PageContainer } from 'ui'
 import { useToast } from 'hooks'
+import { atom, useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { MailboxMessageItemResponse } from '../../api'
@@ -82,6 +83,9 @@ export const formatState = (
 
 type messagesState = Array<MessageItem> | null
 
+export const pinUpMsgAtom = atom<Array<MessageItem>>([])
+export const hiddenMapAtom = atom<Record<string, boolean>>({})
+
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
@@ -92,7 +96,8 @@ export const InboxComponent: React.FC = () => {
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
-  const [hiddenMap, setHiddenMap] = useState<Record<string, boolean>>({})
+  const [hiddenMap, setHiddenMap] = useAtom(hiddenMapAtom)
+  const [pinUpMsg, setPinUpMsg] = useAtom(pinUpMsgAtom)
 
   const refSeenBoxList = useRef<InfiniteHandle>(null)
 
@@ -218,8 +223,15 @@ export const InboxComponent: React.FC = () => {
                   chooseMap={chooseMap}
                   hiddenMap={hiddenMap}
                   getHref={(id) => `${RoutePath.Message}/${id}`}
-                  onClickBody={() => {
-                    // report point
+                  onClickBody={(item) => {
+                    setHiddenMap({
+                      ...hiddenMap,
+                      [item.id]: true,
+                    })
+                    setPinUpMsg([
+                      { ...item, avatarBadgeType: AvatarBadgeType.None },
+                      ...pinUpMsg,
+                    ])
                   }}
                 />
                 {hasNextPage && (
@@ -279,6 +291,7 @@ export const InboxComponent: React.FC = () => {
               onClickBody={() => {
                 // report point
               }}
+              pinUpMsg={pinUpMsg}
               getHref={(id) => `${RoutePath.Message}/${id}`}
             />
           </Box>
