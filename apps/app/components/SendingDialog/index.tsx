@@ -57,6 +57,7 @@ export const SendingDialog: React.FC = () => {
           bottom={{ base: 'unset', md: '80px' }}
           left="0"
           as={motion.div}
+          zIndex={99}
           {...(isMobile
             ? {
                 initial: { opacity: 0, y: -100 },
