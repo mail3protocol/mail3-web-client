@@ -12,6 +12,7 @@ import { UnReadPage } from '../pages/unread'
 import { TestingPage } from '../pages/testing'
 import { MessagePage } from '../pages/message/[id]'
 import { TrashPage } from '../pages/messages/trash'
+import { SpamPage } from '../pages/messages/spam'
 import { SetupSignaturePage } from '../pages/setup/signature'
 import { Developers } from '../pages/developers'
 
@@ -52,6 +53,11 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Trash,
     key: 'trash',
     element: <TrashPage />,
+  },
+  {
+    path: RoutePath.Spam,
+    key: 'spam',
+    element: <SpamPage />,
   },
   {
     path: RoutePath.Settings,
