@@ -48,7 +48,7 @@ export const ThisBottomStatus = () => {
   )
 }
 
-export const ClearStatus = () => {
+export const ClearStatus = ({ nameKey }: { nameKey?: string }) => {
   const [t] = useTranslation('mailboxes')
 
   return (
@@ -61,7 +61,7 @@ export const ClearStatus = () => {
           marginBottom="20px"
           textAlign="center"
         >
-          {t('trash.clear')}
+          {t(nameKey ?? 'trash.clear')}
         </Box>
         <SVGNone />
       </Box>

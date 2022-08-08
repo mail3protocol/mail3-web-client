@@ -92,7 +92,7 @@ export const SpamComponent: React.FC = () => {
             fontSize="24px"
             lineHeight="30px"
           >
-            {t('trash.title')}
+            {t('spam.title')}
           </WrapItem>
         </Wrap>
 
@@ -103,7 +103,7 @@ export const SpamComponent: React.FC = () => {
           }}
         >
           <SVGIconEmpty />
-          <Box marginLeft="10px">{t('trash.empty')}</Box>
+          <Box marginLeft="10px">{t('spam.empty')}</Box>
         </Button> */}
       </Flex>
       <MailboxContainer>
@@ -112,16 +112,16 @@ export const SpamComponent: React.FC = () => {
             textAlign={{ base: 'left', md: 'center' }}
             pl={{ base: '20px', md: 0 }}
           >
-            <Text>{t('trash.auto-delete')}</Text>
+            <Text>{t('spam.auto-delete')}</Text>
           </TextBox>
           <InfiniteMailbox
-            mailboxType={Mailboxes.Trash}
+            mailboxType={Mailboxes.Spam}
             ref={refBoxList}
             enableQuery
             queryFn={queryFn}
-            queryKey={['Trash']}
+            queryKey={['spam']}
             loader={<Loading />}
-            emptyElement={<ClearStatus />}
+            emptyElement={<ClearStatus nameKey="spam.clear" />}
             noMoreElement={<ThisBottomStatus />}
             onChooseModeChange={(b) => setIsChooseMode(b)}
             onClickBody={() => {
