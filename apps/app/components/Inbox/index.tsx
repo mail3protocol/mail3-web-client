@@ -14,7 +14,7 @@ import { InboxNav } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 
 import { SendingDialog } from '../SendingDialog'
 import { GoToWriteMailButton } from '../GoToWriteMailButton'
@@ -160,7 +160,7 @@ export const InboxComponent: React.FC = () => {
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Delete, BulkActionType.Spam]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const newIds =

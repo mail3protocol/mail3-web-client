@@ -11,7 +11,7 @@ import { RoutePath } from '../../route/path'
 import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { GotoInbox } from '../GotoInbox'
 
@@ -46,7 +46,7 @@ export const SpamComponent: React.FC = () => {
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Delete]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
@@ -96,7 +96,7 @@ export const SpamComponent: React.FC = () => {
           </WrapItem>
         </Wrap>
 
-        {/* <Spacer /> */}
+        <Spacer />
         {/* <Button
           onClick={() => {
             console.log('empty')

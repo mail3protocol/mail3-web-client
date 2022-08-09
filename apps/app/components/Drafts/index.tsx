@@ -12,7 +12,7 @@ import { ReactComponent as SVGDrafts } from '../../assets/drafts.svg'
 import { ReactComponent as SVGNone } from '../../assets/mailbox/none.svg'
 import { Loading } from '../Loading'
 import { ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 import { GotoInbox } from '../GotoInbox'
 
 export const DraftsComponent: React.FC = () => {
@@ -40,7 +40,7 @@ export const DraftsComponent: React.FC = () => {
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Delete]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()

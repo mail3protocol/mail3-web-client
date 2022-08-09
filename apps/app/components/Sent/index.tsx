@@ -10,7 +10,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { EmptyStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 import { GotoInbox } from '../GotoInbox'
 import { Query } from '../../api/query'
 
@@ -41,7 +41,7 @@ export const SentComponent: React.FC = () => {
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Delete]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()

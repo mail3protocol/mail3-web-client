@@ -13,14 +13,6 @@ import { ReactComponent as EyeCloseSVG } from '../../assets/mailbox/menu/eye-clo
 
 type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
 
-export enum MailboxMenuType {
-  Base, // trash
-  MarkSeen, // mark seen,trash
-  MarkUnSeen, // mark unseen, trash
-  MarkBoth, // mark new, mark seen, trash
-  Restore, // restore, trash
-}
-
 export enum BulkActionType {
   Reply,
   Forward,
@@ -28,6 +20,8 @@ export enum BulkActionType {
   Restore,
   MarkUnSeen,
   MarkSeen,
+  Spam,
+  NotSpam,
 }
 
 export const bulkLoadingAtom = atom({
@@ -35,24 +29,9 @@ export const bulkLoadingAtom = atom({
 })
 
 interface MailboxMenuProps {
-  type: MailboxMenuType
+  btnList: BulkActionType[]
   actionMap: PartialRecord<BulkActionType, () => Promise<void>>
   onClose?: () => void
-}
-
-const menuConfig: Record<MailboxMenuType, BulkActionType[]> = {
-  [MailboxMenuType.Base]: [BulkActionType.Delete],
-  [MailboxMenuType.MarkSeen]: [BulkActionType.MarkSeen, BulkActionType.Delete],
-  [MailboxMenuType.MarkUnSeen]: [
-    BulkActionType.MarkUnSeen,
-    BulkActionType.Delete,
-  ],
-  [MailboxMenuType.MarkBoth]: [
-    BulkActionType.MarkSeen,
-    BulkActionType.MarkUnSeen,
-    BulkActionType.Delete,
-  ],
-  [MailboxMenuType.Restore]: [BulkActionType.Restore, BulkActionType.Delete],
 }
 
 const bulkConfig: Record<
@@ -85,6 +64,14 @@ const bulkConfig: Record<
   [BulkActionType.MarkSeen]: {
     Icon: EyeSVG,
     name: 'Mark Seen',
+  },
+  [BulkActionType.Spam]: {
+    Icon: EyeSVG,
+    name: 'Spam',
+  },
+  [BulkActionType.NotSpam]: {
+    Icon: EyeSVG,
+    name: 'Not Spam',
   },
 }
 
@@ -193,17 +180,13 @@ const Content = styled(Box)`
 `
 
 export const MailboxMenu: React.FC<MailboxMenuProps> = ({
-  type,
+  btnList,
   actionMap,
   onClose,
 }) => (
   <Container>
     <Content>
-      <BulkAtionWrap
-        list={menuConfig[type]}
-        onClickMap={actionMap}
-        onClose={onClose}
-      />
+      <BulkAtionWrap list={btnList} onClickMap={actionMap} onClose={onClose} />
     </Content>
   </Container>
 )

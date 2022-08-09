@@ -11,7 +11,7 @@ import { RoutePath } from '../../route/path'
 import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 import { ReactComponent as SVGTrash } from '../../assets/trash.svg'
 import { GotoInbox } from '../GotoInbox'
 
@@ -49,7 +49,7 @@ export const TrashComponent: React.FC = () => {
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Delete]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
