@@ -19,6 +19,7 @@ import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 import { SendingDialog } from '../SendingDialog'
 import { GoToWriteMailButton } from '../GoToWriteMailButton'
 import { ProductRecommendationsBanner } from '../ProductRecommendationsBanner'
+import { Mailboxes } from '../../api/mailboxes'
 
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 576px) {
@@ -187,6 +188,33 @@ export const InboxComponent: React.FC = () => {
                 toast(t('status.trash.ok'), { status: 'success' })
               } catch (error) {
                 toast(t('status.trash.fail'))
+              }
+            },
+            [BulkActionType.Spam]: async () => {
+              const newIds =
+                Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
+              const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
+              const ids = [...newIds, ...seenIds]
+
+              if (!ids.length) return
+              try {
+                await api.batchMoveMessage(ids, Mailboxes.Spam)
+                if (newIds.length) {
+                  const map: Record<string, boolean> = {}
+                  newIds.forEach((key) => {
+                    map[key] = true
+                  })
+                  setHiddenMap({
+                    ...hiddenMap,
+                    ...map,
+                  })
+                  setChooseMap({})
+                  setIsChooseMode(false)
+                }
+                refSeenBoxList?.current?.setHiddenIds(seenIds)
+                toast(t('status.spam.ok'), { status: 'success' })
+              } catch (error) {
+                toast(t('status.spam.fail'))
               }
             },
           }}

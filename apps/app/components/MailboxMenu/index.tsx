@@ -95,12 +95,12 @@ const BulkAtion: React.FC<{
         if (onClick) {
           setBulkLoadingMap((state) => ({
             ...state,
-            [BulkActionType.Delete]: true,
+            [type]: true,
           }))
           await onClick()
           setBulkLoadingMap((state) => ({
             ...state,
-            [BulkActionType.Delete]: false,
+            [type]: false,
           }))
         }
       }}

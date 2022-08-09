@@ -158,6 +158,10 @@
             "restore": {
                 "ok": "The message has been restore.",
                 "fail": "Restore is fail, try again."
+            },
+            "spam": {
+                "ok": "The messages have been moved to spam",
+                "fail": "move fail, try again."
             }
         },
         "reply-driftbottle-sender": "Reply",
