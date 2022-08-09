@@ -12,7 +12,7 @@ import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
-import { ReactComponent as SVGTrash } from '../../assets/trash.svg'
+import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { GotoInbox } from '../GotoInbox'
 
 const TextBox = styled(Box)`
@@ -83,7 +83,7 @@ export const SpamComponent: React.FC = () => {
       <Flex alignItems="center" pt="24px" pl={{ base: '20px', md: 0 }}>
         <Wrap>
           <WrapItem alignItems="center">
-            <SVGTrash />
+            <SpamSvg />
           </WrapItem>
           <WrapItem
             alignItems="center"
@@ -96,7 +96,7 @@ export const SpamComponent: React.FC = () => {
           </WrapItem>
         </Wrap>
 
-        <Spacer />
+        {/* <Spacer /> */}
         {/* <Button
           onClick={() => {
             console.log('empty')

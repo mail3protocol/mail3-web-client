@@ -148,6 +148,7 @@ export enum Mail3MenuItem {
   Discord = 'Discord',
   Twitter = 'Twitter',
   Mirror = 'Mirror',
+  Spam = 'Spam',
 }
 
 export enum GlobalDimensions {
