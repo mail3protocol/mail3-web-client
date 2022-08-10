@@ -417,12 +417,7 @@ export const PreviewComponent: React.FC = () => {
     }
 
     if (isOriginSpam) {
-      list = [
-        SuspendButtonType.Reply,
-        SuspendButtonType.Forward,
-        SuspendButtonType.Delete,
-        SuspendButtonType.NotSpam,
-      ]
+      list = [SuspendButtonType.NotSpam, SuspendButtonType.Delete]
     }
 
     return list.map((key) => buttonConfig[key])

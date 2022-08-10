@@ -6,7 +6,6 @@ import { ReactComponent as ReplySVG } from '../../assets/preview/reply-white.svg
 import { ReactComponent as ForwardSVG } from '../../assets/preview/forward-white.svg'
 import { ReactComponent as TrashSVG } from '../../assets/preview/trash-white.svg'
 import { ReactComponent as SpamSVG } from '../../assets/preview/spam-white.svg'
-import { ReactComponent as NotSpamSVG } from '../../assets/preview/not-spam-white.svg'
 
 interface listItem {
   type: SuspendButtonType
@@ -64,8 +63,9 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
     name: 'Spam',
   },
   [SuspendButtonType.NotSpam]: {
-    Icon: NotSpamSVG,
+    Icon: ReplySVG,
     name: 'Not Spam',
+    propsStyle: { w: '200px' },
   },
 }
 
