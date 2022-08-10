@@ -1,65 +1,140 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useUpdateAtom, atomWithStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
-import dayjs from 'dayjs'
+import { defer, from, fromEvent, switchMap } from 'rxjs'
 import {
   getIsEnabledNotification,
   getNotificationPermission,
   userPropertiesAtom,
 } from './useLogin'
+import { useAPI } from './useAPI'
 import {
-  deleteFirebaseMessagingToken,
-  getFirebaseMessagingToken,
-} from '../utils/firebase'
-
-const FirebaseMessagingTimeoutAtom = atomWithStorage<string | null>(
-  'firebase_messaging_timeout',
-  null
-)
+  getCurrentToken,
+  useDeleteFCMToken,
+  useGetFCMToken,
+} from './useFCMToken'
+import { onFirebaseMessage } from '../utils/firebase'
 
 export function useNotification(options?: {
   onChangePermission?: (permission: NotificationPermission) => void
 }) {
-  const setUserInfo = useUpdateAtom(userPropertiesAtom)
+  const api = useAPI()
+  const [userInfo, setUserInfo] = useAtom(userPropertiesAtom)
   const [permission, setPermission] = useState(getNotificationPermission())
-  const [firebaseMessagingTimeout, setFirebaseMessagingTimeout] = useAtom(
-    FirebaseMessagingTimeoutAtom
+  const [
+    isSwitchingWebPushNotificationState,
+    setIsSwitchingWebPushNotificationState,
+  ] = useState(false)
+  const webPushNotificationState: 'enabled' | 'disabled' =
+    userInfo?.web_push_notification_state || 'disabled'
+  const onDeleteFCMToken = useDeleteFCMToken()
+  const getFCMToken = useGetFCMToken()
+
+  const onLoadMessagingToken = useCallback(
+    async (state: 'enabled' | 'disabled') => {
+      if (state !== 'enabled') {
+        await onDeleteFCMToken()
+      } else {
+        await getFCMToken()
+      }
+    },
+    []
   )
 
-  const onLoadMessagingToken = useCallback(async () => {
-    await deleteFirebaseMessagingToken()
-    await getFirebaseMessagingToken()
-    setFirebaseMessagingTimeout(dayjs().add(15, 'day').toISOString())
-  }, [])
+  const onSwitchWebPushNotificationState = useCallback(
+    async (state: 'enabled' | 'disabled') => {
+      if (isSwitchingWebPushNotificationState) return
+      setIsSwitchingWebPushNotificationState(true)
+      try {
+        const isCurrentState =
+          (await api.getUserInfo()).data.web_push_notification_state === state
+        if (isCurrentState) return
+        await api.switchUserWebPushNotification()
+        setUserInfo((info) => ({
+          ...info,
+          web_push_notification_state: state,
+        }))
+        await onLoadMessagingToken(state)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setIsSwitchingWebPushNotificationState(false)
+      }
+    },
+    [api]
+  )
 
-  useEffect(() => {
-    if (dayjs().isAfter(dayjs(firebaseMessagingTimeout))) {
-      onLoadMessagingToken()
-    }
-  }, [firebaseMessagingTimeout])
+  function onFirebaseMessageListener() {
+    return onFirebaseMessage((payload) => {
+      // eslint-disable-next-line compat/compat
+      const notification = new Notification(payload.notification.title, {
+        body: payload.notification.body,
+      })
+      notification.onclick = () => {
+        window.open(
+          `${location.origin}/message/${payload.data.message_id}`,
+          '_blank'
+        )
+      }
+    })
+  }
 
-  useEffect(() => {
+  function onCheckNotificationStatus() {
+    if (
+      userInfo?.web_push_notification_state !== 'enabled' ||
+      permission !== 'granted'
+    )
+      return null
+    return getCurrentToken().then(async (tokenItem) => {
+      if (tokenItem) {
+        const state = await api
+          .getRegistrationTokenState(tokenItem.token)
+          .then((r) => r.data.state)
+          .catch(() => null)
+        if (state === 'stale') {
+          await api.updateRegistrationToken(tokenItem.token, 'active')
+        }
+        if (state) {
+          return null
+        }
+      }
+      return getFCMToken()
+    })
+  }
+
+  function onSubscribeNavigatorPermissions() {
     if ('permissions' in navigator) {
-      navigator.permissions
-        .query({ name: 'notifications' })
-        .then((notificationPerm) => {
-          // eslint-disable-next-line no-param-reassign
-          notificationPerm.onchange = async () => {
-            const newPermission = getNotificationPermission()
-            setPermission(getNotificationPermission())
-            options?.onChangePermission?.(newPermission)
-            await onLoadMessagingToken()
-          }
+      return defer(() =>
+        from(navigator.permissions.query({ name: 'notifications' }))
+      )
+        .pipe(
+          switchMap((notificationPerm) => fromEvent(notificationPerm, 'change'))
+        )
+        .subscribe((event) => {
+          const target = event.target as PermissionStatus
+          const newPermission = target.state as NotificationPermission
+          setPermission(newPermission)
+          options?.onChangePermission?.(newPermission)
+          setUserInfo((info) => ({
+            ...info,
+            ...getIsEnabledNotification(newPermission),
+          }))
+          onSwitchWebPushNotificationState(
+            newPermission === 'granted' ? 'enabled' : 'disabled'
+          )
         })
     }
-  })
+    return null
+  }
 
   useEffect(() => {
-    setUserInfo((info) => ({
-      ...info,
-      ...getIsEnabledNotification(permission),
-    }))
-  }, [permission])
+    onCheckNotificationStatus()
+    const navigatorPermissionsSubscriber = onSubscribeNavigatorPermissions()
+    const firebaseMessageListener = onFirebaseMessageListener()
+    return () => {
+      navigatorPermissionsSubscriber?.unsubscribe()
+      firebaseMessageListener()
+    }
+  }, [])
 
   const requestPermission = useCallback(async () => {
     // eslint-disable-next-line compat/compat
@@ -71,5 +146,6 @@ export function useNotification(options?: {
   return {
     requestPermission,
     permission,
+    webPushNotificationState,
   }
 }

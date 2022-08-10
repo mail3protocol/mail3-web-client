@@ -29,8 +29,10 @@ export const NotificationSwitch: React.FC = () => {
     onOpen: onOpenGifGuideDialog,
     onClose: onCloseGifGuideDialog,
   } = useDisclosure()
-  const { permission, requestPermission } = useNotification()
-  const isEnabledNotification = permission === 'granted'
+  const { permission, requestPermission, webPushNotificationState } =
+    useNotification()
+  const isEnabledNotification =
+    permission === 'granted' && webPushNotificationState === 'enabled'
   const [isHide, setHide] = useState(isEnabledNotification)
 
   const isBrowserSupport = [IS_CHROME, IS_FIREBOX, IS_OPERA].some(

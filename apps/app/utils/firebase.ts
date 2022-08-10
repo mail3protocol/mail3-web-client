@@ -1,5 +1,10 @@
 import { initializeApp } from 'firebase/app'
-import { getMessaging, getToken, deleteToken } from 'firebase/messaging'
+import {
+  getMessaging,
+  getToken,
+  deleteToken,
+  onMessage,
+} from 'firebase/messaging'
 import {
   FIREBASE_CONFIG,
   FIREBASE_MESSAGING_VAPID_KEY,
@@ -16,4 +21,20 @@ export function getFirebaseMessagingToken() {
 
 export function deleteFirebaseMessagingToken() {
   return deleteToken(messaging)
+}
+
+export function onFirebaseMessage(
+  callback: (payload: {
+    data: {
+      message_id: string
+    }
+    from: string
+    messageId: string
+    notification: {
+      body: string
+      title: string
+    }
+  }) => void
+) {
+  return onMessage(messaging, callback as any)
 }

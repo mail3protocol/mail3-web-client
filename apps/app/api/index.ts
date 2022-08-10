@@ -102,6 +102,7 @@ export interface UserResponse {
   text_signature: string
   text_sig_state: 'enabled' | 'disabled'
   card_sig_state: 'enabled' | 'disabled'
+  web_push_notification_state: 'enabled' | 'disabled'
 }
 
 interface putMessageResponse {
@@ -153,6 +154,31 @@ export class API {
 
   public async getUserInfo(): Promise<AxiosResponse<UserResponse>> {
     return this.axios.get(`/account/settings/info`)
+  }
+
+  public async updateRegistrationToken(
+    token: string,
+    state: 'stale' | 'active'
+  ) {
+    return this.axios.put(
+      `/account/settings/notification/registration_tokens`,
+      {
+        token,
+        state,
+      }
+    )
+  }
+
+  public switchUserWebPushNotification() {
+    return this.axios.put(
+      `/account/settings/web_push_notification_state_switches`
+    )
+  }
+
+  public getRegistrationTokenState(token: string) {
+    return this.axios.get<{
+      state: 'stale' | 'active'
+    }>(`/account/settings/notification/registration_tokens/${token}`)
   }
 
   public async login(

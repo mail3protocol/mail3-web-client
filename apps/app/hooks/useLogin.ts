@@ -29,7 +29,7 @@ import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
 import { removeMailSuffix } from '../utils'
-import { deleteFirebaseMessagingToken } from '../utils/firebase'
+import { useDeleteFCMToken } from './useFCMToken'
 
 export const useIsLoginExpired = () => {
   const loginInfo = useLoginInfo()
@@ -140,8 +140,9 @@ export const getNotificationPermission = () =>
 
 export const getIsEnabledNotification = (
   permission: NotificationPermission = getNotificationPermission()
-): { enabled_notification: 'yes' | 'no' } => ({
-  enabled_notification: permission === 'granted' ? 'yes' : 'no',
+): { web_push_notification_state: 'enabled' | 'disabled' } => ({
+  web_push_notification_state:
+    permission === 'granted' ? 'enabled' : 'disabled',
 })
 
 export const useSetGlobalTrack = () => {
@@ -239,11 +240,12 @@ export const useLogout = () => {
   const connector = useConnector()
   const setUserInfo = useSetLoginInfo()
   const setLastConnector = useSetLastConnector()
+  const onDeleteFCMToken = useDeleteFCMToken()
   return useCallback(async () => {
     await connector?.deactivate()
+    await onDeleteFCMToken()
     setUserInfo(null)
     setLastConnector(undefined)
-    await deleteFirebaseMessagingToken()
   }, [connector])
 }
 
