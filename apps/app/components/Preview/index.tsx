@@ -351,9 +351,15 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.moveMessage(id, Mailboxes.Spam)
           toast(t('status.spam.ok'))
-          navi(`${RoutePath.Message}/${id}`, {
-            replace: true,
-          })
+          navi(
+            {
+              pathname: `${RoutePath.Message}/${id}`,
+              search: createSearchParams({ origin: Mailboxes.Spam }).toString(),
+            },
+            {
+              replace: true,
+            }
+          )
         } catch (error) {
           toast(t('status.spam.fail'))
         }
@@ -384,6 +390,7 @@ export const PreviewComponent: React.FC = () => {
       SuspendButtonType.Reply,
       SuspendButtonType.Forward,
       SuspendButtonType.Trash,
+      SuspendButtonType.Spam,
     ]
 
     if (origin === Mailboxes.Trash) {
@@ -396,7 +403,8 @@ export const PreviewComponent: React.FC = () => {
 
     if (origin === Mailboxes.Spam) {
       list = [
-        SuspendButtonType.Restore,
+        SuspendButtonType.Reply,
+        SuspendButtonType.Forward,
         SuspendButtonType.Delete,
         SuspendButtonType.NotSpam,
       ]
