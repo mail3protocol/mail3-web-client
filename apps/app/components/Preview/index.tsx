@@ -1,6 +1,17 @@
 import React, { useEffect, useMemo } from 'react'
 import { Avatar, Button } from 'ui'
-import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
+import {
+  AvatarGroup,
+  Box,
+  Center,
+  Text,
+  Flex,
+  Circle,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import {
   createSearchParams,
@@ -84,6 +95,7 @@ const PreviewContent = styled(Box)`
 export const PreviewComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const [t2] = useTranslation('common')
+  const [t3] = useTranslation('preview')
 
   const [searchParams] = useSearchParams()
   const { id: _id } = useParams()
@@ -95,6 +107,9 @@ export const PreviewComponent: React.FC = () => {
   const toast = useToast()
   const api = useAPI()
   const dialog = useDialog()
+
+  const isOriginSpam = origin === Mailboxes.Spam
+  const isOriginTrash = origin === Mailboxes.Trash
 
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
@@ -393,7 +408,7 @@ export const PreviewComponent: React.FC = () => {
       SuspendButtonType.Spam,
     ]
 
-    if (origin === Mailboxes.Trash) {
+    if (isOriginTrash) {
       list = [
         SuspendButtonType.Restore,
         SuspendButtonType.Delete,
@@ -401,7 +416,7 @@ export const PreviewComponent: React.FC = () => {
       ]
     }
 
-    if (origin === Mailboxes.Spam) {
+    if (isOriginSpam) {
       list = [
         SuspendButtonType.Reply,
         SuspendButtonType.Forward,
@@ -627,11 +642,27 @@ export const PreviewComponent: React.FC = () => {
         <Box
           padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
           borderBottom="1px solid #ccc"
+          pointerEvents={isOriginSpam ? 'none' : 'auto'}
         >
           {isLoadingContent ? (
             <Loading />
           ) : (
             <PreviewContent>
+              {isOriginSpam ? (
+                <Alert
+                  status="error"
+                  backgroundColor="#FFE2E2"
+                  borderRadius="6px"
+                >
+                  <AlertIcon />
+                  <Box color="#DA4444">
+                    <AlertTitle fontSize="14px">{t3('spam_title')}</AlertTitle>
+                    <AlertDescription fontSize="12px">
+                      {t3('spam_content')}
+                    </AlertDescription>
+                  </Box>
+                </Alert>
+              ) : null}
               <RenderHTML
                 html={content}
                 attachments={detail.attachments}

@@ -279,5 +279,9 @@
         "title": "Enable IPFS Storage",
         "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
         "generate_key": "Generate key"
+    },
+    "preview":{
+        "spam_title": "This message was marked as spam by yourself",
+        "spam_content": "For your safety, we blocked all links, attachments, and replies."
     }
 }
