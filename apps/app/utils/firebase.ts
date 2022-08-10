@@ -8,7 +8,7 @@ import {
 import {
   FIREBASE_CONFIG,
   FIREBASE_MESSAGING_VAPID_KEY,
-} from '../constants/firebase'
+} from '../constants/env/firebase'
 
 export const firebaseApp = initializeApp(FIREBASE_CONFIG)
 export const messaging = getMessaging(firebaseApp)

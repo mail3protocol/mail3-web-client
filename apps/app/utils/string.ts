@@ -1,6 +1,8 @@
 import { verifyEmail, truncateMiddle } from 'shared'
 import { MAIL_SERVER_URL } from '../constants'
 
+export * from './string/generateAvatarUrl'
+
 export function copyTextFallback(data: string): void {
   const input = document.createElement('input')
   input.readOnly = true

@@ -1,22 +1,21 @@
 import firebase from 'firebase/compat'
-import { FIREBASE_CONFIG } from '../constants/firebase'
+import { APP_URL } from '../constants/env/apps'
+import { FIREBASE_CONFIG } from '../constants/env/firebase'
 import { RoutePath } from '../route/path'
+import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
 
 declare let clients: Clients
 
 firebase.initializeApp(FIREBASE_CONFIG)
 const messaging = firebase.messaging()
 
-export const HOME_URL =
-  import.meta.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'
-export const APP_URL =
-  import.meta.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'
-
 messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification?.title || ''
   const notificationOptions = {
     body: payload.notification?.body,
-    icon: payload.notification?.image,
+    icon: payload.notification?.title
+      ? generateAvatarUrl(payload.notification.title)
+      : undefined,
     data: payload.data,
   }
   return (

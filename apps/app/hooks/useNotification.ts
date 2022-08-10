@@ -13,6 +13,7 @@ import {
   useGetFCMToken,
 } from './useFCMToken'
 import { onFirebaseMessage } from '../utils/firebase'
+import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
 
 export function useNotification(options?: {
   onChangePermission?: (permission: NotificationPermission) => void
@@ -68,6 +69,7 @@ export function useNotification(options?: {
       // eslint-disable-next-line compat/compat
       const notification = new Notification(payload.notification.title, {
         body: payload.notification.body,
+        icon: generateAvatarUrl(payload.notification.title),
       })
       notification.onclick = () => {
         window.open(

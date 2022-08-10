@@ -1,4 +1,7 @@
 // @ts-nocheck
+export * from './env/apps'
+export * from './env/firebase'
+
 export const SERVER_URL =
   import.meta.env.NEXT_PUBLIC_SERVER_URL || 'https://api.mail3.me/api/v1'
 
@@ -16,9 +19,6 @@ export const TWITTER_URL =
 
 export const WHITE_LIST_DOC_URL =
   import.meta.env.NEXT_PUBLIC_WHITE_LIST_DOC_URL || '#'
-
-export const HOME_URL =
-  import.meta.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'
 
 export const GOOGLE_ANALYTICS_ID = import.meta.env
   .NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
