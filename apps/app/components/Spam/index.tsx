@@ -46,7 +46,7 @@ export const SpamComponent: React.FC = () => {
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          btnList={[BulkActionType.Delete]}
+          btnList={[BulkActionType.Delete, BulkActionType.NotSpam]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
@@ -75,6 +75,18 @@ export const SpamComponent: React.FC = () => {
                 },
                 onCancel: () => {},
               })
+            },
+            [BulkActionType.NotSpam]: async () => {
+              const ids = refBoxList?.current?.getChooseIds()
+              if (!ids?.length) return
+
+              try {
+                await api.batchMoveMessage(ids, Mailboxes.INBOX)
+                refBoxList?.current?.setHiddenIds(ids)
+                toast(t('status.notSpam.ok'), { status: 'success' })
+              } catch (error) {
+                toast(t('status.notSpam.fail'))
+              }
             },
           }}
         />

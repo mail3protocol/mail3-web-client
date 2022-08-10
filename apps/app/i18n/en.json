@@ -161,7 +161,11 @@
             },
             "spam": {
                 "ok": "The messages have been moved to spam",
-                "fail": "move fail, try again."
+                "fail": "Move fail, try again."
+            },
+            "notSpam": {
+                "ok": "The messages have been moved to Inbox",
+                "fail": "Move fail, try again."
             }
         },
         "reply-driftbottle-sender": "Reply",
