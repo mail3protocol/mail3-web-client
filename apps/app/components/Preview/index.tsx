@@ -341,6 +341,42 @@ export const PreviewComponent: React.FC = () => {
         }
       },
     },
+    [SuspendButtonType.Spam]: {
+      type: SuspendButtonType.Spam,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Spam,
+        })
+        if (typeof id !== 'string') return
+        try {
+          await api.moveMessage(id, Mailboxes.Spam)
+          toast(t('status.spam.ok'))
+          navi(`${RoutePath.Message}/${id}`, {
+            replace: true,
+          })
+        } catch (error) {
+          toast(t('status.spam.fail'))
+        }
+      },
+    },
+    [SuspendButtonType.NotSpam]: {
+      type: SuspendButtonType.NotSpam,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.NotSpam,
+        })
+        if (typeof id !== 'string') return
+        try {
+          await api.moveMessage(id, Mailboxes.INBOX)
+          toast(t('status.notSpam.ok'))
+          navi(`${RoutePath.Message}/${id}`, {
+            replace: true,
+          })
+        } catch (error) {
+          toast(t('status.notSpam.fail'))
+        }
+      },
+    },
   }
 
   const buttonList = useMemo(() => {
@@ -351,7 +387,19 @@ export const PreviewComponent: React.FC = () => {
     ]
 
     if (origin === Mailboxes.Trash) {
-      list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
+      list = [
+        SuspendButtonType.Restore,
+        SuspendButtonType.Delete,
+        SuspendButtonType.Spam,
+      ]
+    }
+
+    if (origin === Mailboxes.Spam) {
+      list = [
+        SuspendButtonType.Restore,
+        SuspendButtonType.Delete,
+        SuspendButtonType.NotSpam,
+      ]
     }
 
     return list.map((key) => buttonConfig[key])

@@ -189,6 +189,8 @@ export enum MailDetailPageItem {
   Trash = 'Trash',
   Restore = 'Restore',
   Delete = 'Delete',
+  Spam = 'Spam',
+  NotSpam = 'NotSpam',
 }
 
 export enum LitepaperLanguage {

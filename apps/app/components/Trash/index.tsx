@@ -3,7 +3,7 @@ import React, { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useDialog, useToast } from 'hooks'
-import { generatePath } from 'react-router-dom'
+import { createSearchParams, generatePath } from 'react-router-dom'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
@@ -132,9 +132,9 @@ export const TrashComponent: React.FC = () => {
             }}
             getHref={(id) => ({
               pathname: generatePath(`${RoutePath.Message}/:id`, { id }),
-              query: {
+              search: createSearchParams({
                 origin: Mailboxes.Trash,
-              },
+              }).toString(),
             })}
           />
         </Box>
