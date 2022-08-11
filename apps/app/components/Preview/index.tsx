@@ -182,7 +182,9 @@ export const PreviewComponent: React.FC = () => {
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
   const messageId = data?.messageInfo?.messageId
-  const messageFrom = data?.messageInfo?.from
+  const isOutsideEmailAddress = !data?.messageInfo?.from.address.endsWith(
+    `@${MAIL_SERVER_URL}`
+  )
   const {
     data: messageOnChainIdentifierData,
     refetch: refetchMessageOnChainIdentifier,
@@ -191,8 +193,7 @@ export const PreviewComponent: React.FC = () => {
   } = useQuery(
     [Query.GetMessageOnChainIdentifier, messageId],
     async () => {
-      if (!messageId || !messageFrom || !messageFrom.address) return null
-      if (!messageFrom.address.endsWith(`@${MAIL_SERVER_URL}`)) return null
+      if (!messageId || isOutsideEmailAddress) return null
       return (await api.getMessageOnChainIdentifier(messageId)).data
     },
     {
@@ -204,6 +205,7 @@ export const PreviewComponent: React.FC = () => {
   )
 
   const isShowIpfsTable =
+    !isOutsideEmailAddress &&
     !messageOnChainIdentifierError &&
     !isLoadingMessageOnChainIdentifier &&
     !isLoadingContent
