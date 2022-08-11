@@ -91,6 +91,10 @@ const ButtonItem = styled(Button)`
     background-color: #c4c4c4;
     transform: translateY(-50%);
   }
+
+  @media (max-width: 600px) {
+    padding: 14px 14px 8px;
+  }
 `
 
 export const SuspendButton: React.FC<Props> = (props) => {
@@ -130,7 +134,9 @@ export const SuspendButton: React.FC<Props> = (props) => {
               <Box>
                 <Icon />
               </Box>
-              <Box fontWeight="bold">{name}</Box>
+              <Box fontWeight="bold" fontSize={{ base: '14px', md: '18px' }}>
+                {name}
+              </Box>
             </ButtonItem>
           )
         })}
