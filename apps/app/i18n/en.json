@@ -151,6 +151,10 @@
             "restore": {
                 "ok": "The message has been restore.",
                 "fail": "Restore is fail, try again."
+            },
+            "not_found": {
+                "text": "This message does not exist.",
+                "back": "Back to Inbox"
             }
         },
         "reply-driftbottle-sender": "Reply",
