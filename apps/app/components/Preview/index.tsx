@@ -41,6 +41,7 @@ import { EmptyStatus } from '../MailboxStatus'
 import {
   DRIFT_BOTTLE_ADDRESS,
   HOME_URL,
+  MAIL_SERVER_URL,
   OFFICE_ADDRESS_LIST,
 } from '../../constants'
 import { RenderHTML } from './parser'
@@ -181,6 +182,7 @@ export const PreviewComponent: React.FC = () => {
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
   const messageId = data?.messageInfo?.messageId
+  const messageFrom = data?.messageInfo?.from
   const {
     data: messageOnChainIdentifierData,
     refetch: refetchMessageOnChainIdentifier,
@@ -189,11 +191,15 @@ export const PreviewComponent: React.FC = () => {
   } = useQuery(
     [Query.GetMessageOnChainIdentifier, messageId],
     async () => {
-      if (!messageId) return null
+      if (!messageId || !messageFrom || !messageFrom.address) return null
+      if (!messageFrom.address.endsWith(`@${MAIL_SERVER_URL}`)) return null
       return (await api.getMessageOnChainIdentifier(messageId)).data
     },
     {
       retry: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
 
