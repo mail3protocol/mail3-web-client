@@ -2566,10 +2566,10 @@
   resolved "https://registry.npmjs.org/@lingui/detect-locale/-/detect-locale-3.13.3.tgz#5afe43b590066dd3d7801542c5945ae35af62ac3"
   integrity sha512-GhJKjnpGh5N0Y96XJNjeGOEiVyO7b0Kwddv8cY5ORA0yS0+gCETAdlECeP0YrJBrzIVUeddpQTyaexAUDmeY+A==
 
-"@mail3/mail3-me@0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@mail3/mail3-me/-/mail3-me-0.1.4.tgz#9764db1cffb427e442e5323a6cd9a209cc45d38d"
-  integrity sha512-7psoczoJyVizEqoFOfNdfCRC7H2+dE4z/lncnH8PjvN/g319iUw7UyuLCig0DORxC/JMoxXI45foBWbVy8UTFg==
+"@mail3/mail3-me@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@mail3/mail3-me/-/mail3-me-0.1.5.tgz#f1cf54a92764d5f3cdb42651fbd4e76f49daaba9"
+  integrity sha512-RLVUjKoFtQuS8jsY4xBbOhN6ageJidE1xn0Eqc5vh2DxsqrL20seSsEFk9FhspVi9R61GV9GmPMn29D9em1RBw==
 
 "@mdn/browser-compat-data@^3.3.14":
   version "3.3.14"

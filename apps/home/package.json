@@ -17,7 +17,7 @@
         "@chakra-ui/react": "^1.8.6",
         "@emotion/react": "^11",
         "@emotion/styled": "^11",
-        "@mail3/mail3-me": "0.1.4",
+        "@mail3/mail3-me": "0.1.5",
         "assets": "*",
         "axios": "^0.26.1",
         "framer-motion": "^6",

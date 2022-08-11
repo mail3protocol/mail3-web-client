@@ -43,6 +43,7 @@ interface InfiniteMailboxProps<
   style?: CSSProperties
   parentIsChooseMode?: boolean
   parentChooseMap?: Record<string, boolean>
+  pinUpMsg?: MessageItem[]
   calcDataLength?: (data?: InfiniteData<TData>) => number
   onDataChange?: (data: MessageItem[]) => void
   onGetIsFetching?: (isFetching: boolean) => void
@@ -71,6 +72,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     noMoreElement,
     loader,
     parentChooseMap = {},
+    pinUpMsg = [],
     parentIsChooseMode = false,
     onDataChange,
     onGetIsLoading,
@@ -109,9 +111,15 @@ const InfiniteBox: ForwardRefRenderFunction<
 
   const dataMsg: MessageItem[] = useMemo(() => {
     if (!data) return []
-    const dataList = data.pages.map((item: any) => item.messages)
-    return dataList.flat()
-  }, [data])
+    const dataList = data.pages.map((item) => item.messages).flat()
+    const renderList = [
+      ...pinUpMsg,
+      ...dataList.filter(
+        (item) => !pinUpMsg.some((_item) => _item.id === item.id)
+      ),
+    ]
+    return renderList as MessageItem[]
+  }, [data, pinUpMsg])
 
   useEffect(() => {
     onGetIsFetching?.(isFetching)

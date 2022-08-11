@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import parse, { DOMNode, Element } from 'html-react-parser'
+import parse, { DOMNode, Element, Text } from 'html-react-parser'
 import DOMPurify from 'dompurify'
 import ReactShadowRoot from 'react-shadow-root'
 import { createPortal } from 'react-dom'
@@ -34,6 +34,7 @@ export const Iframe: React.FC<IframeProps> = (props) => {
         margin: 0;
         padding: 0;
         position: relative;
+        word-break: break-word;
       }
     `
     const domStyle = document.createElement('style')
@@ -98,6 +99,21 @@ export const UnofficialMailBody: React.FC = ({ children }) => {
   )
 }
 
+const urlity = (text: string) => {
+  const symbolSplit = '{!isLink!}'
+  const reg =
+    /(https?|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g
+  const newText = text.replace(
+    reg,
+    (url) => `${symbolSplit}${url}${symbolSplit}`
+  )
+  const textParts = newText.split(symbolSplit)
+  return textParts.map((str) => ({
+    textType: reg.test(str) ? 'link' : 'text',
+    value: str,
+  }))
+}
+
 export const RenderHTML: React.FC<htmlParserProps> = ({
   html,
   attachments,
@@ -123,7 +139,31 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
             />
           )
         }
-        return dom
+      }
+      if (dom.type === 'text') {
+        if ((dom as any)?.parent?.name !== 'a') {
+          const textMsg = urlity((dom as Text).data)
+          return (
+            <>
+              {textMsg.map(({ textType, value }, index) => {
+                if (textType === 'link') {
+                  return (
+                    <a
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
+                      href={value}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {value}
+                    </a>
+                  )
+                }
+                return value
+              })}
+            </>
+          )
+        }
       }
 
       return dom

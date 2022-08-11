@@ -106,3 +106,8 @@ export async function digestMessage(
 export function generateAttachmentContentId(content: string) {
   return digestMessage(content, { algorithm: 'SHA-1' })
 }
+
+export const isHttpUriNoBlankSpaceReg =
+  /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?/g
+
+export const isHttpUriReg = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/

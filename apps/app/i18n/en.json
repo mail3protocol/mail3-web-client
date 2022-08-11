@@ -100,7 +100,9 @@
             "empty": "Oops! File names cannot be empty"
         },
         "file_content_is_empty": "The content of the file cannot be empty",
-        "invalid_file_name": "Invalid file name"
+        "invalid_file_name": "Invalid file name",
+        "invalid_url": "Invalid url",
+        "only_supported_https": "Only supported https"
     },
     "home": {
         "title": "The mail for crypto natives",
