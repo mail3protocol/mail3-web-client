@@ -58,8 +58,8 @@ import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import type { MeesageDetailState } from '../Mailbox'
 import { IpfsInfoTable } from '../IpfsInfoTable'
+import type { MeesageDetailState } from '../Mailbox'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -164,6 +164,12 @@ export const PreviewComponent: React.FC = () => {
     }
   )
 
+  const content = useMemo(() => {
+    if (data?.html) return data.html
+    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
+    return ''
+  }, [data])
+
   const detail: MeesageDetailState | undefined = useMemo(() => {
     if (state) {
       return state
@@ -184,18 +190,16 @@ export const PreviewComponent: React.FC = () => {
     return undefined
   }, [data?.messageInfo, state])
 
-  const content = useMemo(() => {
-    if (data?.html) return data.html
-    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
-    return ''
-  }, [data])
+  const detailFull = data?.messageInfo
 
-  const isDriftBottleAddress =
-    data?.messageInfo?.from.address === DRIFT_BOTTLE_ADDRESS
+  const isBotCatchSpam = detailFull?.headers?.['x-spam-flag']
+
+  const isDriftBottleAddress = detail?.from.address === DRIFT_BOTTLE_ADDRESS
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
-  const messageId = data?.messageInfo?.messageId
+  const messageId = detailFull?.messageId
+
   const {
     data: messageOnChainIdentifierData,
     refetch: refetchMessageOnChainIdentifier,
@@ -366,15 +370,7 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.moveMessage(id, Mailboxes.Spam)
           toast(t('status.spam.ok'))
-          navi(
-            {
-              pathname: `${RoutePath.Message}/${id}`,
-              search: createSearchParams({ origin: Mailboxes.Spam }).toString(),
-            },
-            {
-              replace: true,
-            }
-          )
+          navi(-1)
         } catch (error) {
           toast(t('status.spam.fail'))
         }
@@ -390,9 +386,7 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.moveMessage(id, Mailboxes.INBOX)
           toast(t('status.notSpam.ok'))
-          navi(`${RoutePath.Message}/${id}`, {
-            replace: true,
-          })
+          navi(-1)
         } catch (error) {
           toast(t('status.notSpam.fail'))
         }
@@ -651,9 +645,17 @@ export const PreviewComponent: React.FC = () => {
                 >
                   <AlertIcon />
                   <Box color="#DA4444">
-                    <AlertTitle fontSize="14px">{t3('spam_title')}</AlertTitle>
+                    <AlertTitle fontSize="14px">
+                      {t3(
+                        isBotCatchSpam ? 'spam_title.bot' : 'spam_title.user'
+                      )}
+                    </AlertTitle>
                     <AlertDescription fontSize="12px">
-                      {t3('spam_content')}
+                      {t3(
+                        isBotCatchSpam
+                          ? 'spam_content.bot'
+                          : 'spam_content.user'
+                      )}
                     </AlertDescription>
                   </Box>
                 </Alert>

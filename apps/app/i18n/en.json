@@ -281,7 +281,13 @@
         "generate_key": "Generate key"
     },
     "preview":{
-        "spam_title": "This message was marked as spam by yourself",
-        "spam_content": "For your safety, we blocked all links, attachments, and replies."
+        "spam_title": {
+            "bot": "This message contains security risks",
+            "user": "This message was marked as spam by yourself"
+        },
+        "spam_content": {
+            "bot": "For your safety, we blocked all links, attachments, and replies.",
+            "user": "For your safety, we blocked all links, attachments, and replies."
+        }
     }
 }

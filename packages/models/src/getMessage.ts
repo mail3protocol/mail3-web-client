@@ -53,5 +53,8 @@ export namespace GetMessage {
     }
     bounces: Bounces[] | null
     isAutoReply?: boolean
+    headers: {
+      'x-spam-flag'?: string[]
+    }
   }
 }
