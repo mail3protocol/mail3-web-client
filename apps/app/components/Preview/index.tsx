@@ -211,10 +211,10 @@ export const PreviewComponent: React.FC = () => {
     !isLoadingContent
 
   useEffect(() => {
-    const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
-    const contentDigestIsEmtpyStr =
+    const ipfsUrlIsEmptyStr = messageOnChainIdentifierData?.url === ''
+    const contentDigestIsEmptyStr =
       messageOnChainIdentifierData?.content_digest === ''
-    if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
+    if (ipfsUrlIsEmptyStr && contentDigestIsEmptyStr) {
       const subscriber = interval(3000)
         .pipe(
           switchMap(() =>
