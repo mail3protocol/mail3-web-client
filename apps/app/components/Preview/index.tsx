@@ -252,7 +252,7 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
       isDisabled: isDriftBottleAddress,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
@@ -274,7 +274,7 @@ export const PreviewComponent: React.FC = () => {
     },
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
@@ -314,7 +314,7 @@ export const PreviewComponent: React.FC = () => {
     },
     [SuspendButtonType.Delete]: {
       type: SuspendButtonType.Delete,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Delete,
         })

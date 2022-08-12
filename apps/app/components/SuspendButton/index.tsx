@@ -2,6 +2,8 @@ import { Box, Button, HStack, StyleProps } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { atom, useAtomValue } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
 import { ReactComponent as ReplySVG } from '../../assets/preview/reply-white.svg'
 import { ReactComponent as ForwardSVG } from '../../assets/preview/forward-white.svg'
 import { ReactComponent as TrashSVG } from '../../assets/preview/trash-white.svg'
@@ -10,11 +12,7 @@ import { ReactComponent as SpamSVG } from '../../assets/preview/spam-white.svg'
 interface listItem {
   type: SuspendButtonType
   isDisabled?: boolean
-  onClick: () => void
-}
-
-interface Props {
-  list: Array<listItem>
+  onClick: () => Promise<void>
 }
 
 export enum SuspendButtonType {
@@ -71,7 +69,7 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
 
 const ButtonItem = styled(Button)`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   padding: 14px 16px 8px;
@@ -97,8 +95,17 @@ const ButtonItem = styled(Button)`
   }
 `
 
-export const SuspendButton: React.FC<Props> = (props) => {
+const SuspendButtonAtom = atom({
+  [SuspendButtonType.Delete]: false,
+  [SuspendButtonType.Trash]: false,
+  [SuspendButtonType.Spam]: false,
+  [SuspendButtonType.NotSpam]: false,
+})
+
+export const SuspendButton: React.FC<{ list: Array<listItem> }> = (props) => {
   const { list } = props
+  const loadingMap: Record<number, boolean> = useAtomValue(SuspendButtonAtom)
+  const setLoadingMap = useUpdateAtom(SuspendButtonAtom)
 
   return (
     <Box
@@ -118,23 +125,42 @@ export const SuspendButton: React.FC<Props> = (props) => {
         px="34px"
       >
         {list.map((item) => {
-          const { onClick, type } = item
+          const { onClick, type, isDisabled } = item
           const config = buttonConfig[type]
           const { Icon, name, useLine, propsStyle } = config
+          const isLoading = loadingMap[type]
 
           return (
             <ButtonItem
               key={type}
-              onClick={onClick}
+              onClick={async () => {
+                if (isLoading) return
+                if (onClick) {
+                  setLoadingMap((state) => ({
+                    ...state,
+                    [type]: true,
+                  }))
+                  await onClick()
+                  setLoadingMap((state) => ({
+                    ...state,
+                    [type]: false,
+                  }))
+                }
+              }}
+              isLoading={isLoading}
               variant="unstyled"
-              disabled={item.isDisabled}
+              disabled={isDisabled}
               {...propsStyle}
             >
               {useLine && <Box className="line" />}
               <Box>
                 <Icon />
               </Box>
-              <Box fontWeight="bold" fontSize={{ base: '14px', md: '18px' }}>
+              <Box
+                mt="10px"
+                fontWeight="bold"
+                fontSize={{ base: '14px', md: '18px' }}
+              >
                 {name}
               </Box>
             </ButtonItem>

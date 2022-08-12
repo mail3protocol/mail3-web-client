@@ -120,7 +120,7 @@ const BulkAtion: React.FC<{
       <Flex
         direction="column"
         align="center"
-        w="80px"
+        minW="80px"
         h="60px"
         justifyContent="space-evenly"
       >
