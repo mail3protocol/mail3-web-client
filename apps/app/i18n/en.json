@@ -166,6 +166,10 @@
             "notSpam": {
                 "ok": "The messages have been moved to Inbox",
                 "fail": "Move fail, try again."
+            },
+            "not_found": {
+                "text": "This message does not exist.",
+                "back": "Back to Inbox"
             }
         },
         "reply-driftbottle-sender": "Reply",
@@ -249,12 +253,8 @@
         "mail3-me-button": {
             "title": "mail³ me button",
             "description": "Embed decentralized communication features for your own product",
-            "github": {
-                "0": "Check out the mail",
-                "1": "3",
-                "2": " me button access on Github"
-            },
-            "mirror": "View our best access cases on mirror"
+            "github": "Check out the source code on Github",
+            "mirror": "View our best practice cases on Mirror"
         },
         "community-mail": {
             "title": "Community mail",

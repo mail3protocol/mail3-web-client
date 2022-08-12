@@ -33,7 +33,6 @@ import {
 import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { useAtomValue } from 'jotai'
-import { GetMessage } from 'models/src/getMessage'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
@@ -48,15 +47,15 @@ import {
   isMail3Address,
   removeMailSuffix,
 } from '../../utils'
-import { EmptyStatus } from '../MailboxStatus'
+import { EmptyStatus, NotFoundMessage } from '../MailboxStatus'
 import {
   DRIFT_BOTTLE_ADDRESS,
   HOME_URL,
+  MAIL_SERVER_URL,
   OFFICE_ADDRESS_LIST,
 } from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
-import { catchApiResponse } from '../../utils/api'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { IpfsInfoTable } from '../IpfsInfoTable'
 import type { MeesageDetailState } from '../Mailbox'
@@ -118,14 +117,14 @@ export const PreviewComponent: React.FC = () => {
   const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
 
   const userProps = useAtomValue(userPropertiesAtom)
-  const { data, isLoading: isLoadingContent } = useQuery(
+  const {
+    data,
+    isLoading: isLoadingContent,
+    error: errorFromGetMessage,
+  } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
-      const messageInfo = id
-        ? await catchApiResponse<GetMessage.Response>(
-            api.getMessageInfo(id as string)
-          )
-        : null
+      const messageInfo = (await api.getMessageInfo(id as string))?.data
       return {
         html: messageInfo?.text.html,
         plain: messageInfo?.text.plain,
@@ -198,8 +197,10 @@ export const PreviewComponent: React.FC = () => {
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
-  const messageId = detailFull?.messageId
-
+  const messageId = data?.messageInfo?.messageId
+  const isOutsideEmailAddress = !data?.messageInfo?.from.address.endsWith(
+    `@${MAIL_SERVER_URL}`
+  )
   const {
     data: messageOnChainIdentifierData,
     refetch: refetchMessageOnChainIdentifier,
@@ -208,24 +209,28 @@ export const PreviewComponent: React.FC = () => {
   } = useQuery(
     [Query.GetMessageOnChainIdentifier, messageId],
     async () => {
-      if (!messageId) return null
+      if (!messageId || isOutsideEmailAddress) return null
       return (await api.getMessageOnChainIdentifier(messageId)).data
     },
     {
       retry: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
 
   const isShowIpfsTable =
+    !isOutsideEmailAddress &&
     !messageOnChainIdentifierError &&
     !isLoadingMessageOnChainIdentifier &&
     !isLoadingContent
 
   useEffect(() => {
-    const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
-    const contentDigestIsEmtpyStr =
+    const ipfsUrlIsEmptyStr = messageOnChainIdentifierData?.url === ''
+    const contentDigestIsEmptyStr =
       messageOnChainIdentifierData?.content_digest === ''
-    if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
+    if (ipfsUrlIsEmptyStr && contentDigestIsEmptyStr) {
       const subscriber = interval(3000)
         .pipe(
           switchMap(() =>
@@ -462,6 +467,14 @@ export const PreviewComponent: React.FC = () => {
     return (
       <Container>
         <EmptyStatus />
+      </Container>
+    )
+  }
+
+  if (errorFromGetMessage) {
+    return (
+      <Container>
+        <NotFoundMessage />
       </Container>
     )
   }
