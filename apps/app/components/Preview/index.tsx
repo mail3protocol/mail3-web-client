@@ -37,7 +37,7 @@ import {
   isMail3Address,
   removeMailSuffix,
 } from '../../utils'
-import { EmptyStatus } from '../MailboxStatus'
+import { EmptyStatus, NotFoundMessage } from '../MailboxStatus'
 import {
   DRIFT_BOTTLE_ADDRESS,
   HOME_URL,
@@ -103,14 +103,14 @@ export const PreviewComponent: React.FC = () => {
   const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
 
   const userProps = useAtomValue(userPropertiesAtom)
-  const { data, isLoading: isLoadingContent } = useQuery(
+  const {
+    data,
+    isLoading: isLoadingContent,
+    error: errorFromGetMessage,
+  } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
-      const messageInfo = id
-        ? await catchApiResponse<GetMessage.Response>(
-            api.getMessageInfo(id as string)
-          )
-        : null
+      const messageInfo = (await api.getMessageInfo(id as string))?.data
       return {
         html: messageInfo?.text.html,
         plain: messageInfo?.text.plain,
@@ -402,6 +402,14 @@ export const PreviewComponent: React.FC = () => {
     return (
       <Container>
         <EmptyStatus />
+      </Container>
+    )
+  }
+
+  if (errorFromGetMessage) {
+    return (
+      <Container>
+        <NotFoundMessage />
       </Container>
     )
   }
