@@ -65,13 +65,7 @@ export const Developers: React.FC = () => {
                     href={GITHUB_MAIL3_ME_BUTTON_URL}
                     onClick={() => trackClickMmbGithub()}
                     icon="github"
-                    text={
-                      <>
-                        {t('mail3-me-button.github.0')}
-                        <sup>{t('mail3-me-button.github.1')}</sup>
-                        {t('mail3-me-button.github.2')}
-                      </>
-                    }
+                    text={t('mail3-me-button.github')}
                   />
                 </>
               }
