@@ -99,7 +99,7 @@ export const Developers: React.FC = () => {
           >
             <MirrorIcon w={{ base: '32px', md: '48px' }} h="auto" />
             <Text mt={{ base: 0, md: '17px' }} ml={{ base: '10px', md: 0 }}>
-              View our best access cases on mirror
+              View our best practice cases on Mirror
             </Text>
             <RightArrowIcon
               display={{ base: 'inline-block', md: 'none' }}
@@ -120,7 +120,7 @@ export const Developers: React.FC = () => {
           >
             <GithubIcon w={{ base: '32px', md: '48px' }} h="auto" />
             <Text mt={{ base: 0, md: '17px' }} ml={{ base: '10px', md: 0 }}>
-              Check out the mail<sup>3</sup> me button access on Github
+              Check out the source code on Github
             </Text>
             <RightArrowIcon
               display={{ base: 'inline-block', md: 'none' }}
