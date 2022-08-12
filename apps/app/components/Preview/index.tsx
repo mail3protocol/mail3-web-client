@@ -22,7 +22,6 @@ import {
 import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { useAtomValue } from 'jotai'
-import { GetMessage } from 'models/src/getMessage'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
@@ -41,11 +40,11 @@ import { EmptyStatus, NotFoundMessage } from '../MailboxStatus'
 import {
   DRIFT_BOTTLE_ADDRESS,
   HOME_URL,
+  MAIL_SERVER_URL,
   OFFICE_ADDRESS_LIST,
 } from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
-import { catchApiResponse } from '../../utils/api'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import type { MeesageDetailState } from '../Mailbox'
 import { IpfsInfoTable } from '../IpfsInfoTable'
@@ -181,6 +180,9 @@ export const PreviewComponent: React.FC = () => {
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
   const messageId = data?.messageInfo?.messageId
+  const isOutsideEmailAddress = !data?.messageInfo?.from.address.endsWith(
+    `@${MAIL_SERVER_URL}`
+  )
   const {
     data: messageOnChainIdentifierData,
     refetch: refetchMessageOnChainIdentifier,
@@ -189,24 +191,28 @@ export const PreviewComponent: React.FC = () => {
   } = useQuery(
     [Query.GetMessageOnChainIdentifier, messageId],
     async () => {
-      if (!messageId) return null
+      if (!messageId || isOutsideEmailAddress) return null
       return (await api.getMessageOnChainIdentifier(messageId)).data
     },
     {
       retry: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
 
   const isShowIpfsTable =
+    !isOutsideEmailAddress &&
     !messageOnChainIdentifierError &&
     !isLoadingMessageOnChainIdentifier &&
     !isLoadingContent
 
   useEffect(() => {
-    const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
-    const contentDigestIsEmtpyStr =
+    const ipfsUrlIsEmptyStr = messageOnChainIdentifierData?.url === ''
+    const contentDigestIsEmptyStr =
       messageOnChainIdentifierData?.content_digest === ''
-    if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
+    if (ipfsUrlIsEmptyStr && contentDigestIsEmptyStr) {
       const subscriber = interval(3000)
         .pipe(
           switchMap(() =>
