@@ -174,7 +174,7 @@ const BulkAtionWrap: React.FC<{
 const Container = styled(Box)`
   top: 10px;
   left: 5%;
-  width: calc(100% - 10%);
+  width: 100%;
   position: sticky;
   display: flex;
   justify-content: center;
