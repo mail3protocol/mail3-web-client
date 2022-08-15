@@ -3,6 +3,7 @@ import { APP_URL } from '../constants/env/apps'
 import { FIREBASE_CONFIG } from '../constants/env/firebase'
 import { RoutePath } from '../route/path'
 import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
+import { truncateMiddle0xMail } from '../utils/string/truncateMiddle0xMail'
 
 declare let clients: Clients
 
@@ -10,11 +11,13 @@ firebase.initializeApp(FIREBASE_CONFIG)
 const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage((payload) => {
-  const notificationTitle = payload.notification?.title || ''
+  const notificationTitle = truncateMiddle0xMail(
+    payload.notification?.title || ''
+  )
   const notificationOptions = {
     body: payload.notification?.body,
     icon: payload.notification?.title
-      ? generateAvatarUrl(payload.notification.title)
+      ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
       : undefined,
     data: payload.data,
   }
@@ -25,10 +28,13 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', (e) => {
   interface CurrentEvent extends ExtendableEvent {
-    notification: { data: { message_id: string; url: string } }
+    notification: {
+      data: { message_id: string; url: string }
+      close: () => void
+    }
   }
   const event = e as CurrentEvent
-
+  event.notification.close()
   event.waitUntil(
     clients.matchAll({ type: 'window' }).then((clientsArr) => {
       const hadWindowToFocus = clientsArr.some((windowClient) =>
