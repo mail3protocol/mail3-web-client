@@ -45,7 +45,7 @@ self.addEventListener('notificationclick', (e) => {
       if (!hadWindowToFocus) {
         clients
           .openWindow(
-            `https://${APP_URL}${RoutePath.Message}/${event.notification.data.message_id}`
+            `${APP_URL}${RoutePath.Message}/${event.notification.data.message_id}`
           )
           .then((windowClient) => (windowClient ? windowClient.focus() : null))
       }
