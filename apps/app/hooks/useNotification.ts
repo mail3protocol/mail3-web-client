@@ -12,8 +12,6 @@ import {
   useDeleteFCMToken,
   useGetFCMToken,
 } from './useFCMToken'
-import { onFirebaseMessage } from '../utils/firebase'
-import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
 
 export function useNotification(options?: {
   onChangePermission?: (permission: NotificationPermission) => void
@@ -63,22 +61,6 @@ export function useNotification(options?: {
     },
     [api]
   )
-
-  function onFirebaseMessageListener() {
-    return onFirebaseMessage((payload) => {
-      // eslint-disable-next-line compat/compat
-      const notification = new Notification(payload.notification.title, {
-        body: payload.notification.body,
-        icon: generateAvatarUrl(payload.notification.title),
-      })
-      notification.onclick = () => {
-        window.open(
-          `${location.origin}/message/${payload.data.message_id}`,
-          '_blank'
-        )
-      }
-    })
-  }
 
   function onCheckNotificationStatus() {
     if (
@@ -131,10 +113,8 @@ export function useNotification(options?: {
   useEffect(() => {
     onCheckNotificationStatus()
     const navigatorPermissionsSubscriber = onSubscribeNavigatorPermissions()
-    const firebaseMessageListener = onFirebaseMessageListener()
     return () => {
       navigatorPermissionsSubscriber?.unsubscribe()
-      firebaseMessageListener()
     }
   }, [])
 
