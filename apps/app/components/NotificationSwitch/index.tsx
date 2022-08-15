@@ -39,6 +39,11 @@ export const NotificationSwitch: React.FC = () => {
     (isSupport) => isSupport && !IS_IOS
   )
 
+  function onClickSwitch() {
+    if (permission === 'default') onOpenPopover()
+    if (permission === 'denied') onOpenGifGuideDialog()
+  }
+
   useEffect(() => {
     onClosePopover()
     onCloseGifGuideDialog()
@@ -50,9 +55,19 @@ export const NotificationSwitch: React.FC = () => {
         timerSubscriber.unsubscribe()
       }
     }
-    setHide(false)
+    setHide(isEnabledNotification)
     return () => {}
   }, [isEnabledNotification])
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout | undefined
+    if (!isEnabledNotification) {
+      timeout = setTimeout(onClickSwitch, 10000)
+    }
+    return () => {
+      if (timeout) clearTimeout(timeout)
+    }
+  }, [])
 
   if (!isBrowserSupport) {
     return null
@@ -75,13 +90,7 @@ export const NotificationSwitch: React.FC = () => {
               offset={[0, 20]}
             >
               <PopoverTrigger>
-                <RowButton
-                  variant="unstyled"
-                  onClick={() => {
-                    if (permission === 'default') onOpenPopover()
-                    if (permission === 'denied') onOpenGifGuideDialog()
-                  }}
-                >
+                <RowButton variant="unstyled" onClick={onClickSwitch}>
                   <BaseSwitch checked={isEnabledNotification}>
                     <Icon as={BellSvg} w="14px" h="14px" />
                     <Box
