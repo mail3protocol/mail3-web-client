@@ -7,11 +7,7 @@ import {
   userPropertiesAtom,
 } from './useLogin'
 import { useAPI } from './useAPI'
-import {
-  getCurrentToken,
-  useDeleteFCMToken,
-  useGetFCMToken,
-} from './useFCMToken'
+import { useDeleteFCMToken, useGetFCMToken } from './useFCMToken'
 
 export function useNotification(options?: {
   onChangePermission?: (permission: NotificationPermission) => void
@@ -44,14 +40,16 @@ export function useNotification(options?: {
       if (isSwitchingWebPushNotificationState) return
       setIsSwitchingWebPushNotificationState(true)
       try {
-        const isCurrentState =
-          (await api.getUserInfo()).data.web_push_notification_state === state
-        if (isCurrentState) return
-        await api.switchUserWebPushNotification()
-        setUserInfo((info) => ({
-          ...info,
-          web_push_notification_state: state,
-        }))
+        const isCurrentState = await api
+          .getUserInfo()
+          .then((res) => res.data.web_push_notification_state === state)
+        if (!isCurrentState) {
+          await api.switchUserWebPushNotification()
+          setUserInfo((info) => ({
+            ...info,
+            web_push_notification_state: state,
+          }))
+        }
         await onLoadMessagingToken(state)
       } catch (err) {
         console.error(err)
@@ -62,27 +60,13 @@ export function useNotification(options?: {
     [api]
   )
 
-  function onCheckNotificationStatus() {
+  async function onCheckNotificationStatus() {
     if (
       userInfo?.web_push_notification_state !== 'enabled' ||
       permission !== 'granted'
     )
-      return null
-    return getCurrentToken().then(async (tokenItem) => {
-      if (tokenItem) {
-        const state = await api
-          .getRegistrationTokenState(tokenItem.token)
-          .then((r) => r.data.state)
-          .catch(() => null)
-        if (state === 'stale') {
-          await api.updateRegistrationToken(tokenItem.token, 'active')
-        }
-        if (state) {
-          return null
-        }
-      }
-      return getFCMToken()
-    })
+      return
+    await onSwitchWebPushNotificationState('enabled')
   }
 
   function onSubscribeNavigatorPermissions() {
