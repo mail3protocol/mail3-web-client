@@ -248,6 +248,13 @@ export const PreviewComponent: React.FC = () => {
     return () => {}
   }, [messageOnChainIdentifierData])
 
+  const isSend: boolean = useMemo(() => {
+    if (!detail || !userProps?.aliases) return false
+    return userProps.aliases.some(
+      (item: { address: string }) => item.address === detail.from.address
+    )
+  }, [userProps, detail])
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
@@ -355,7 +362,7 @@ export const PreviewComponent: React.FC = () => {
         })
         if (typeof id !== 'string') return
         try {
-          await api.moveMessage(id, Mailboxes.INBOX)
+          await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
           toast(t('status.restore.ok'))
           navi(`${RoutePath.Message}/${id}`, {
             replace: true,
@@ -417,6 +424,17 @@ export const PreviewComponent: React.FC = () => {
 
     if (isOriginSpam) {
       list = [SuspendButtonType.NotSpam, SuspendButtonType.Delete]
+    }
+
+    if (isSend) {
+      list = [
+        SuspendButtonType.Reply,
+        SuspendButtonType.Forward,
+        SuspendButtonType.Trash,
+      ]
+      if (isOriginTrash) {
+        list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
+      }
     }
 
     return list.map((key) => buttonConfig[key])
