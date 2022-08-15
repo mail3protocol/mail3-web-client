@@ -400,7 +400,7 @@ export const PreviewComponent: React.FC = () => {
         })
         if (typeof id !== 'string') return
         try {
-          await api.moveMessage(id, Mailboxes.INBOX)
+          await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
           toast(t('status.notSpam.ok'))
           navi(-1)
         } catch (error) {
@@ -436,8 +436,13 @@ export const PreviewComponent: React.FC = () => {
         SuspendButtonType.Forward,
         SuspendButtonType.Trash,
       ]
+
       if (isOriginTrash) {
         list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
+      }
+
+      if (isOriginSpam) {
+        list = [SuspendButtonType.NotSpam, SuspendButtonType.Delete]
       }
     }
 
