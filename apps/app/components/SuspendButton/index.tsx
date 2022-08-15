@@ -36,7 +36,7 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
   [SuspendButtonType.Restore]: {
     Icon: ReplySVG,
     name: 'Restore',
-    propsStyle: { w: '200px' },
+    propsStyle: { w: '150px' },
   },
   [SuspendButtonType.Reply]: {
     Icon: ReplySVG,
