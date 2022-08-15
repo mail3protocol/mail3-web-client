@@ -32,7 +32,7 @@ import {
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
@@ -59,6 +59,7 @@ import { Query } from '../../api/query'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { IpfsInfoTable } from '../IpfsInfoTable'
 import type { MeesageDetailState } from '../Mailbox'
+import { pinUpMsgAtom } from '../Inbox'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -116,6 +117,7 @@ export const PreviewComponent: React.FC = () => {
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
   const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
 
+  const [pinUpMsg, setPinUpMsg] = useAtom(pinUpMsgAtom)
   const userProps = useAtomValue(userPropertiesAtom)
   const {
     data,
@@ -312,6 +314,7 @@ export const PreviewComponent: React.FC = () => {
         }
         try {
           await api.deleteMessage(id, { force: false })
+          setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
           toast(t('status.trash.ok'), { status: 'success' })
           navi(-1)
         } catch (error) {
@@ -381,6 +384,7 @@ export const PreviewComponent: React.FC = () => {
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id, Mailboxes.Spam)
+          setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
           toast(t('status.spam.ok'))
           navi(-1)
         } catch (error) {
