@@ -18,6 +18,7 @@ export enum BulkActionType {
   Reply,
   Forward,
   Delete,
+  Trash,
   Restore,
   MarkUnSeen,
   MarkSeen,
@@ -55,9 +56,13 @@ const bulkConfig: Record<
     Icon: ForwardSVG,
     name: 'Forward',
   },
-  [BulkActionType.Delete]: {
+  [BulkActionType.Trash]: {
     Icon: TrashSVG,
     name: 'Trash',
+  },
+  [BulkActionType.Delete]: {
+    Icon: TrashSVG,
+    name: 'Delete',
   },
   [BulkActionType.MarkUnSeen]: {
     Icon: EyeCloseSVG,

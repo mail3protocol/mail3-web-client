@@ -161,9 +161,9 @@ export const InboxComponent: React.FC = () => {
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
-          btnList={[BulkActionType.Delete, BulkActionType.Spam]}
+          btnList={[BulkActionType.Trash, BulkActionType.Spam]}
           actionMap={{
-            [BulkActionType.Delete]: async () => {
+            [BulkActionType.Trash]: async () => {
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
               const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []

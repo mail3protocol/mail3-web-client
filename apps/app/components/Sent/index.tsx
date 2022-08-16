@@ -41,9 +41,9 @@ export const SentComponent: React.FC = () => {
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          btnList={[BulkActionType.Delete]}
+          btnList={[BulkActionType.Trash]}
           actionMap={{
-            [BulkActionType.Delete]: async () => {
+            [BulkActionType.Trash]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
               if (!ids?.length) return
               try {
