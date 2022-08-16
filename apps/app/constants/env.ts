@@ -29,7 +29,7 @@ export const MORE_DETAILS_LINK =
 
 export const IMAGE_PROXY_URL =
   import.meta.env.NEXT_PUBLIC_IMAGE_PROXY_URL ||
-  'http://localhost:3001/api/image-proxy?url='
+  'https://mail3.me/api/image-proxy?url='
 
 export const OFFICE_ADDRESS_LIST = [
   'mail3.eth@mail3.me',
