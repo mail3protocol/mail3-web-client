@@ -25,24 +25,6 @@ interface Self {
 declare let clients: Clients
 declare let self: Self
 
-firebase.initializeApp(FIREBASE_CONFIG)
-const messaging = firebase.messaging()
-
-messaging.onBackgroundMessage((payload) => {
-  const notificationTitle = truncateMiddle0xMail(
-    payload.notification?.title || ''
-  )
-  const notificationIcon = payload.notification?.title
-    ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
-    : undefined
-
-  return self.registration.showNotification(notificationTitle, {
-    body: payload.notification?.body,
-    icon: notificationIcon,
-    data: payload.data,
-  })
-})
-
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
   clients
@@ -51,3 +33,22 @@ self.addEventListener('notificationclick', (event) => {
     )
     .then((windowClient) => (windowClient ? windowClient.focus() : null))
 })
+
+if (firebase.messaging.isSupported()) {
+  firebase.initializeApp(FIREBASE_CONFIG)
+  const messaging = firebase.messaging()
+  messaging.onBackgroundMessage((payload) => {
+    const notificationTitle = truncateMiddle0xMail(
+      payload.notification?.title || ''
+    )
+    const notificationIcon = payload.notification?.title
+      ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
+      : undefined
+
+    return self.registration.showNotification(notificationTitle, {
+      body: payload.notification?.body,
+      icon: notificationIcon,
+      data: payload.data,
+    })
+  })
+}
