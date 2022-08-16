@@ -1,4 +1,4 @@
-import { HOME_URL } from '../../constants'
+import { HOME_URL } from '../../constants/env/apps'
 import { removeMailSuffix } from './removeMailSuffix'
 
 export function generateAvatarUrl(
