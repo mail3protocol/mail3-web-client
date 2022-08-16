@@ -5,7 +5,25 @@ import { RoutePath } from '../route/path'
 import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
 import { truncateMiddle0xMail } from '../utils/string/truncateMiddle0xMail'
 
+interface CurrentEvent extends ExtendableEvent {
+  notification: {
+    data: { message_id: string; url: string }
+    close: () => void
+  }
+}
+
+type AddEventListener = (
+  eventName: 'notificationclick',
+  callback: (e: CurrentEvent) => void
+) => void | Promise<void>
+
+interface Self {
+  addEventListener: AddEventListener
+  registration: ServiceWorkerRegistration
+}
+
 declare let clients: Clients
+declare let self: Self
 
 firebase.initializeApp(FIREBASE_CONFIG)
 const messaging = firebase.messaging()
@@ -14,41 +32,22 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = truncateMiddle0xMail(
     payload.notification?.title || ''
   )
-  const notificationOptions = {
+  const notificationIcon = payload.notification?.title
+    ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
+    : undefined
+
+  return self.registration.showNotification(notificationTitle, {
     body: payload.notification?.body,
-    icon: payload.notification?.title
-      ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
-      : undefined,
+    icon: notificationIcon,
     data: payload.data,
-  }
-  return (
-    self as unknown as { registration: ServiceWorkerRegistration }
-  ).registration.showNotification(notificationTitle, notificationOptions)
+  })
 })
 
-self.addEventListener('notificationclick', (e) => {
-  interface CurrentEvent extends ExtendableEvent {
-    notification: {
-      data: { message_id: string; url: string }
-      close: () => void
-    }
-  }
-  const event = e as CurrentEvent
+self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-  event.waitUntil(
-    clients.matchAll({ type: 'window' }).then((clientsArr) => {
-      const hadWindowToFocus = clientsArr.some((windowClient) =>
-        windowClient.url === event.notification.data.url
-          ? Boolean(windowClient.focus())
-          : false
-      )
-      if (!hadWindowToFocus) {
-        clients
-          .openWindow(
-            `${APP_URL}${RoutePath.Message}/${event.notification.data.message_id}`
-          )
-          .then((windowClient) => (windowClient ? windowClient.focus() : null))
-      }
-    })
-  )
+  clients
+    .openWindow(
+      `${APP_URL}${RoutePath.Message}/${event.notification.data.message_id}`
+    )
+    .then((windowClient) => (windowClient ? windowClient.focus() : null))
 })

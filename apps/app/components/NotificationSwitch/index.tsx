@@ -11,11 +11,12 @@ import {
 } from '@chakra-ui/react'
 import { timer } from 'rxjs'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useQuery } from 'react-query'
+import { isSupported } from 'firebase/messaging'
 import { useNotification } from '../../hooks/useNotification'
 import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
 import { BaseSwitch } from './BaseSwitch'
-import { IS_CHROME, IS_FIREBOX, IS_IOS, IS_OPERA } from '../../constants'
 import { GifGuideDialog } from './GifGuideDialog'
 
 export const NotificationSwitch: React.FC = () => {
@@ -34,9 +35,14 @@ export const NotificationSwitch: React.FC = () => {
   const isEnabledNotification =
     permission === 'granted' && webPushNotificationState === 'enabled'
   const [isHide, setHide] = useState(isEnabledNotification)
-
-  const isBrowserSupport = [IS_CHROME, IS_FIREBOX, IS_OPERA].some(
-    (isSupport) => isSupport && !IS_IOS
+  const { data: isBrowserSupport } = useQuery(
+    ['isSupportedFCM'],
+    () => isSupported(),
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
   )
 
   function onClickSwitch() {
