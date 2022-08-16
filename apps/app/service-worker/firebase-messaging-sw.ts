@@ -37,18 +37,28 @@ self.addEventListener('notificationclick', (event) => {
 if (firebase.messaging.isSupported()) {
   firebase.initializeApp(FIREBASE_CONFIG)
   const messaging = firebase.messaging()
-  messaging.onBackgroundMessage((payload) => {
+  messaging.onBackgroundMessage(async (payload) => {
     const notificationTitle = truncateMiddle0xMail(
       payload.notification?.title || ''
     )
     const notificationIcon = payload.notification?.title
       ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
       : undefined
-
-    return self.registration.showNotification(notificationTitle, {
+    const notificationOptions = {
       body: payload.notification?.body,
       icon: notificationIcon,
       data: payload.data,
-    })
+    }
+    if (notificationIcon) {
+      await self.registration.getNotifications().then((notifications) => {
+        notifications.forEach((notification) => {
+          if (!notification.icon) notification.close()
+        })
+      })
+    }
+    await self.registration.showNotification(
+      notificationTitle,
+      notificationOptions
+    )
   })
 }
