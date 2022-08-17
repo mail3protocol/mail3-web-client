@@ -19,6 +19,7 @@ import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
 import { BaseSwitch } from './BaseSwitch'
 import { GifGuideDialog } from './GifGuideDialog'
+import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../../constants/env'
 
 export const NotificationSwitch: React.FC = () => {
   const {
@@ -42,7 +43,7 @@ export const NotificationSwitch: React.FC = () => {
   const [isHide, setHide] = useState(isEnabledNotification)
   const { data: isBrowserSupport } = useQuery(
     ['isSupportedFCM'],
-    () => isSupported(),
+    async () => (await isSupported()) && IS_CHROME && !IS_MOBILE && !IS_FIREFOX,
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
