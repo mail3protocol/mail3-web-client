@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useDialog, useToast } from 'hooks'
@@ -34,15 +34,10 @@ export const SpamComponent: React.FC = () => {
   const toast = useToast()
   const dialog = useDialog()
 
-  const queryFn = useCallback(
-    async ({ pageParam = 0 }) => {
-      const { data } = await api.getMailboxesMessages(Mailboxes.Spam, pageParam)
-      // test empty status
-      // data.messages = []
-      return data
-    },
-    [api]
-  )
+  const queryFn = async ({ pageParam = 0 }) => {
+    const { data } = await api.getMailboxesMessages(Mailboxes.Spam, pageParam)
+    return data
+  }
 
   return (
     <NewPageContainer>
