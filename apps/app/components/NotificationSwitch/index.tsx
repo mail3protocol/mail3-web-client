@@ -31,8 +31,12 @@ export const NotificationSwitch: React.FC = () => {
     onOpen: onOpenGifGuideDialog,
     onClose: onCloseGifGuideDialog,
   } = useDisclosure()
-  const { permission, requestPermission, webPushNotificationState } =
-    useNotification()
+  const {
+    permission,
+    requestPermission,
+    onChangePermission,
+    webPushNotificationState,
+  } = useNotification()
   const isEnabledNotification =
     permission === 'granted' && webPushNotificationState === 'enabled'
   const [isHide, setHide] = useState(isEnabledNotification)
@@ -50,7 +54,11 @@ export const NotificationSwitch: React.FC = () => {
   )
 
   function onClickSwitch() {
-    if (permission === 'default') onOpenPopover()
+    if (
+      permission === 'default' ||
+      (permission === 'granted' && webPushNotificationState === 'disabled')
+    )
+      onOpenPopover()
     if (permission === 'denied') onOpenGifGuideDialog()
   }
 
@@ -140,7 +148,14 @@ export const NotificationSwitch: React.FC = () => {
                   onConfirm={async () => {
                     onClosePopover()
                     trackClickNotificationToastOk()
-                    await requestPermission()
+                    if (
+                      permission === 'granted' &&
+                      webPushNotificationState === 'disabled'
+                    ) {
+                      await onChangePermission('granted')
+                    } else {
+                      await requestPermission()
+                    }
                   }}
                 />
               </PopoverContent>

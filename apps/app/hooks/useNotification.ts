@@ -9,9 +9,7 @@ import {
 import { useAPI } from './useAPI'
 import { useDeleteFCMToken, useGetFCMToken } from './useFCMToken'
 
-export function useNotification(options?: {
-  onChangePermission?: (permission: NotificationPermission) => void
-}) {
+export function useNotification() {
   const api = useAPI()
   const [userInfo, setUserInfo] = useAtom(userPropertiesAtom)
   const [permission, setPermission] = useState(getNotificationPermission())
@@ -61,9 +59,20 @@ export function useNotification(options?: {
   )
 
   async function onCheckNotificationStatus() {
-    if (permission === 'granted') {
+    if (permission === 'granted' && webPushNotificationState === 'enabled') {
       await onSwitchWebPushNotificationState('enabled')
     }
+  }
+
+  async function onChangePermission(newPermission: NotificationPermission) {
+    setPermission(newPermission)
+    setUserInfo((info) => ({
+      ...info,
+      ...getIsEnabledNotification(newPermission),
+    }))
+    await onSwitchWebPushNotificationState(
+      newPermission === 'granted' ? 'enabled' : 'disabled'
+    )
   }
 
   function onSubscribeNavigatorPermissions() {
@@ -76,16 +85,7 @@ export function useNotification(options?: {
         )
         .subscribe((event) => {
           const target = event.target as PermissionStatus
-          const newPermission = target.state as NotificationPermission
-          setPermission(newPermission)
-          options?.onChangePermission?.(newPermission)
-          setUserInfo((info) => ({
-            ...info,
-            ...getIsEnabledNotification(newPermission),
-          }))
-          onSwitchWebPushNotificationState(
-            newPermission === 'granted' ? 'enabled' : 'disabled'
-          )
+          onChangePermission(target.state as NotificationPermission)
         })
     }
     return null
@@ -102,12 +102,13 @@ export function useNotification(options?: {
   const requestPermission = useCallback(async () => {
     // eslint-disable-next-line compat/compat
     const newPermission = await Notification.requestPermission()
-    setPermission(newPermission)
+    await onChangePermission(newPermission)
     return newPermission
   }, [setPermission])
 
   return {
     requestPermission,
+    onChangePermission,
     permission,
     webPushNotificationState,
   }

@@ -1,20 +1,43 @@
-import firebase from 'firebase/compat'
 import { APP_URL } from '../constants/env/apps'
-import { FIREBASE_CONFIG } from '../constants/env/firebase'
 import { RoutePath } from '../route/path'
 import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
 import { truncateMiddle0xMail } from '../utils/string/truncateMiddle0xMail'
 
+interface PayloadData {
+  message_id: string
+}
+
 interface CurrentEvent extends ExtendableEvent {
   notification: {
-    data: { message_id: string; url: string }
+    data: PayloadData
     close: () => void
   }
 }
 
-type AddEventListener = (
-  eventName: 'notificationclick',
-  callback: (e: CurrentEvent) => void
+interface Payload {
+  data: PayloadData
+  from: string
+  priority: string
+  notification: {
+    title: string
+    body: string
+  }
+  fcmMessageId: string
+}
+
+const notificationclick = 'notificationclick'
+const push = 'push'
+
+type EventMap = {
+  [notificationclick]: CurrentEvent
+  [push]: PushEvent
+}
+
+type EventName = keyof EventMap
+
+type AddEventListener = <E = EventName>(
+  eventName: E,
+  callback: (e: EventMap[EventName]) => void
 ) => void | Promise<void>
 
 interface Self {
@@ -25,7 +48,8 @@ interface Self {
 declare let clients: Clients
 declare let self: Self
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener(notificationclick, (e) => {
+  const event = e as EventMap[typeof notificationclick]
   event.notification.close()
   clients
     .openWindow(
@@ -34,31 +58,32 @@ self.addEventListener('notificationclick', (event) => {
     .then((windowClient) => (windowClient ? windowClient.focus() : null))
 })
 
-if (firebase.messaging.isSupported()) {
-  firebase.initializeApp(FIREBASE_CONFIG)
-  const messaging = firebase.messaging()
-  messaging.onBackgroundMessage(async (payload) => {
-    const notificationTitle = truncateMiddle0xMail(
-      payload.notification?.title || ''
-    )
-    const notificationIcon = payload.notification?.title
-      ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
-      : undefined
-    const notificationOptions = {
-      body: payload.notification?.body,
-      icon: notificationIcon,
-      data: payload.data,
-    }
-    if (notificationIcon) {
-      await self.registration.getNotifications().then((notifications) => {
-        notifications.forEach((notification) => {
-          if (!notification.icon) notification.close()
-        })
+self.addEventListener(push, async (e) => {
+  const event = e as EventMap[typeof push]
+  const text = event.data?.text()
+  if (!text) return
+  const payload = JSON.parse(text) as Payload
+  if (!payload) return
+  const notificationTitle = truncateMiddle0xMail(
+    payload.notification?.title || ''
+  )
+  const notificationIcon = payload.notification?.title
+    ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
+    : undefined
+  const notificationOptions = {
+    body: payload.notification?.body,
+    icon: notificationIcon,
+    data: payload.data,
+  }
+  if (notificationIcon) {
+    await self.registration.getNotifications().then((notifications) => {
+      notifications.forEach((notification) => {
+        if (!notification.icon) notification.close()
       })
-    }
-    await self.registration.showNotification(
-      notificationTitle,
-      notificationOptions
-    )
-  })
-}
+    })
+  }
+  await self.registration.showNotification(
+    notificationTitle,
+    notificationOptions
+  )
+})
