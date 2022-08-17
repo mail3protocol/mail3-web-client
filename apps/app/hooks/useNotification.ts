@@ -83,9 +83,13 @@ export function useNotification() {
         .pipe(
           switchMap((notificationPerm) => fromEvent(notificationPerm, 'change'))
         )
-        .subscribe((event) => {
+        .subscribe(async (event) => {
           const target = event.target as PermissionStatus
-          onChangePermission(target.state as NotificationPermission)
+          const newPermission = target.state as NotificationPermission
+          await onChangePermission(target.state as NotificationPermission)
+          if (newPermission === 'granted') {
+            location.reload()
+          }
         })
     }
     return null
