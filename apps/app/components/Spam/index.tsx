@@ -4,6 +4,7 @@ import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useDialog, useToast } from 'hooks'
 import { createSearchParams, generatePath } from 'react-router-dom'
+import { useAtomValue } from 'jotai'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
@@ -14,6 +15,7 @@ import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { GotoInbox } from '../GotoInbox'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 const TextBox = styled(Box)`
   margin-top: 10px;
@@ -27,6 +29,7 @@ export const SpamComponent: React.FC = () => {
   const api = useAPI()
   const refBoxList = useRef<InfiniteHandle>(null)
   const [isChooseMode, setIsChooseMode] = useState(false)
+  const userProps = useAtomValue(userPropertiesAtom)
 
   const toast = useToast()
   const dialog = useDialog()
@@ -77,12 +80,31 @@ export const SpamComponent: React.FC = () => {
               })
             },
             [BulkActionType.NotSpam]: async () => {
-              const ids = refBoxList?.current?.getChooseIds()
-              if (!ids?.length) return
+              const msg = refBoxList?.current?.getChooseMsgs()
+              if (!msg?.length) return
+
+              const sendIds: string[] = []
+              const inboxIds: string[] = []
+
+              msg.forEach((item) => {
+                if (!item) return
+                if (
+                  userProps?.aliases.some(
+                    (_item: { address: string }) =>
+                      _item.address === item?.from.address
+                  )
+                ) {
+                  sendIds.push(item.id)
+                } else {
+                  inboxIds.push(item.id)
+                }
+              })
 
               try {
-                await api.batchMoveMessage(ids, Mailboxes.INBOX)
-                refBoxList?.current?.setHiddenIds(ids)
+                if (sendIds.length)
+                  await api.batchMoveMessage(sendIds, Mailboxes.Sent)
+                await api.batchMoveMessage(inboxIds, Mailboxes.INBOX)
+                refBoxList?.current?.setHiddenIds([...sendIds, ...inboxIds])
                 toast(t('status.notSpam.ok'), { status: 'success' })
               } catch (error) {
                 toast(t('status.notSpam.fail'))
