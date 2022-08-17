@@ -75,13 +75,6 @@ self.addEventListener(push, async (e) => {
     icon: notificationIcon,
     data: payload.data,
   }
-  if (notificationIcon) {
-    await self.registration.getNotifications().then((notifications) => {
-      notifications.forEach((notification) => {
-        if (!notification.icon) notification.close()
-      })
-    })
-  }
   await self.registration.showNotification(
     notificationTitle,
     notificationOptions
