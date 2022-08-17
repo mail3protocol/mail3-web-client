@@ -61,12 +61,9 @@ export function useNotification(options?: {
   )
 
   async function onCheckNotificationStatus() {
-    if (
-      userInfo?.web_push_notification_state !== 'enabled' ||
-      permission !== 'granted'
-    )
-      return
-    await onSwitchWebPushNotificationState('enabled')
+    if (permission === 'granted') {
+      await onSwitchWebPushNotificationState('enabled')
+    }
   }
 
   function onSubscribeNavigatorPermissions() {
