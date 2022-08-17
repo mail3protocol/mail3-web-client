@@ -12,7 +12,9 @@ import { useDeleteFCMToken, useGetFCMToken } from './useFCMToken'
 export function useNotification() {
   const api = useAPI()
   const [userInfo, setUserInfo] = useAtom(userPropertiesAtom)
-  const [permission, setPermission] = useState(getNotificationPermission())
+  const [permission, setPermission] = useState<
+    NotificationPermission | PermissionState
+  >(getNotificationPermission())
   const [
     isSwitchingWebPushNotificationState,
     setIsSwitchingWebPushNotificationState,

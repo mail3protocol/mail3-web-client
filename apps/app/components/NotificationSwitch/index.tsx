@@ -55,8 +55,10 @@ export const NotificationSwitch: React.FC = () => {
   )
 
   function onClickSwitch() {
+    if (isEnabledNotification) return
     if (
       permission === 'default' ||
+      permission === 'prompt' ||
       (permission === 'granted' && webPushNotificationState === 'disabled')
     )
       onOpenPopover()
