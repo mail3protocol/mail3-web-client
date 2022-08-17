@@ -211,7 +211,15 @@ export const useInitUserProperties = () => {
   useDidMount(() => {
     if (userProps && isAuth) {
       try {
-        gtag?.('set', 'user_properties', userProps)
+        const u: {
+          web_push_notification_state?: 'enabled' | 'disabled'
+          notification_state: 'enabled' | 'disabled'
+        } = {
+          ...userProps,
+          notification_state: userProps.web_push_notification_state,
+        }
+        delete u.web_push_notification_state
+        gtag?.('set', 'user_properties', u)
         if (userProps.wallet_address) {
           gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
             user_id: userProps.wallet_address,
