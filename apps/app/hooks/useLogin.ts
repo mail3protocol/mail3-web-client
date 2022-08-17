@@ -265,12 +265,15 @@ export const useWalletChange = () => {
   const isConnecting = useAccountIsActivating()
   const store = useCurrentWalletStore()
   const logout = useLogout()
+  const onDeleteFCMToken = useDeleteFCMToken()
   const handleAccountChanged = useCallback(
     ([acc]) => {
       const [account] = store.getState().accounts ?? []
 
       if (acc === undefined) {
-        setLoginInfo(null)
+        onDeleteFCMToken().then(() => {
+          setLoginInfo(null)
+        })
         return
       }
       if (isConnecting || !account) {
@@ -286,7 +289,9 @@ export const useWalletChange = () => {
       ) {
         return
       }
-      setLoginInfo(null)
+      onDeleteFCMToken().then(() => {
+        setLoginInfo(null)
+      })
     },
     [isConnecting, loginAccount]
   )
