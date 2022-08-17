@@ -93,9 +93,9 @@ const PreviewContent = styled(Box)`
 `
 
 export const PreviewComponent: React.FC = () => {
-  const [t] = useTranslation('mailboxes')
-  const [t2] = useTranslation('common')
-  const [t3] = useTranslation('preview')
+  const [i18Mailboxes] = useTranslation('mailboxes')
+  const [i18Common] = useTranslation('common')
+  const [i18Preview] = useTranslation('preview')
 
   const [searchParams] = useSearchParams()
   const { id: _id } = useParams()
@@ -315,10 +315,10 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.deleteMessage(id, { force: false })
           setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
-          toast(t('status.trash.ok'), { status: 'success' })
+          toast(i18Mailboxes('status.trash.ok'), { status: 'success' })
           navi(-1)
         } catch (error) {
-          toast(t('status.trash.fail'))
+          toast(i18Mailboxes('status.trash.fail'))
         }
       },
     },
@@ -334,10 +334,10 @@ export const PreviewComponent: React.FC = () => {
 
         dialog({
           type: 'text',
-          title: t('confirm.delete.title'),
-          description: t('confirm.delete.description'),
-          okText: t2('button.yes'),
-          cancelText: t2('button.cancel'),
+          title: i18Mailboxes('confirm.delete.title'),
+          description: i18Mailboxes('confirm.delete.description'),
+          okText: i18Common('button.yes'),
+          cancelText: i18Common('button.cancel'),
           modalProps: {
             isOpen: false,
             onClose: () => {},
@@ -347,10 +347,10 @@ export const PreviewComponent: React.FC = () => {
           onConfirm: async () => {
             try {
               await api.deleteMessage(id, { force: true })
-              toast(t('status.delete.ok'))
+              toast(i18Mailboxes('status.delete.ok'))
               navi(-1)
             } catch (error) {
-              toast(t('status.delete.fail'))
+              toast(i18Mailboxes('status.delete.fail'))
             }
           },
           onCancel: () => {},
@@ -366,12 +366,12 @@ export const PreviewComponent: React.FC = () => {
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
-          toast(t('status.restore.ok'))
+          toast(i18Mailboxes('status.restore.ok'))
           navi(`${RoutePath.Message}/${id}`, {
             replace: true,
           })
         } catch (error) {
-          toast(t('status.restore.fail'))
+          toast(i18Mailboxes('status.restore.fail'))
         }
       },
     },
@@ -385,10 +385,10 @@ export const PreviewComponent: React.FC = () => {
         try {
           await api.moveMessage(id, Mailboxes.Spam)
           setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
-          toast(t('status.spam.ok'))
+          toast(i18Mailboxes('status.spam.ok'))
           navi(-1)
         } catch (error) {
-          toast(t('status.spam.fail'))
+          toast(i18Mailboxes('status.spam.fail'))
         }
       },
     },
@@ -401,10 +401,10 @@ export const PreviewComponent: React.FC = () => {
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
-          toast(t('status.notSpam.ok'))
+          toast(i18Mailboxes('status.notSpam.ok'))
           navi(-1)
         } catch (error) {
-          toast(t('status.notSpam.fail'))
+          toast(i18Mailboxes('status.notSpam.fail'))
         }
       },
     },
@@ -570,7 +570,7 @@ export const PreviewComponent: React.FC = () => {
             lineHeight={1.2}
             marginBottom="30px"
           >
-            {detail.subject ? detail.subject : t('no-subject')}
+            {detail.subject ? detail.subject : i18Mailboxes('no-subject')}
           </Text>
         </Box>
         <Box>
@@ -686,12 +686,12 @@ export const PreviewComponent: React.FC = () => {
                   <AlertIcon />
                   <Box color="#DA4444">
                     <AlertTitle fontSize="14px">
-                      {t3(
+                      {i18Preview(
                         isBotCatchSpam ? 'spam_title.bot' : 'spam_title.user'
                       )}
                     </AlertTitle>
                     <AlertDescription fontSize="12px">
-                      {t3(
+                      {i18Preview(
                         isBotCatchSpam
                           ? 'spam_content.bot'
                           : 'spam_content.user'
@@ -740,7 +740,7 @@ export const PreviewComponent: React.FC = () => {
                 })
               }}
             >
-              {t('reply-driftbottle-sender')}
+              {i18Mailboxes('reply-driftbottle-sender')}
             </Button>
           </Center>
         ) : null}

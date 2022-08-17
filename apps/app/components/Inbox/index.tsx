@@ -200,10 +200,10 @@ export const InboxComponent: React.FC = () => {
               try {
                 await api.batchMoveMessage(ids, Mailboxes.Spam)
                 if (newIds.length) {
-                  const map: Record<string, boolean> = {}
-                  newIds.forEach((key) => {
-                    map[key] = true
-                  })
+                  const map = newIds.reduce<Record<string, boolean>>(
+                    (acc, key) => ({ ...acc, [key]: true }),
+                    {}
+                  )
                   setHiddenMap({
                     ...hiddenMap,
                     ...map,

@@ -58,7 +58,7 @@ interface InfiniteMailboxProps<
 }
 
 export interface InfiniteHandle {
-  getChooseMsgs: () => MailboxMessageItemResponse[] | null[]
+  getChooseMsgs: () => MailboxMessageItemResponse[]
   getChooseIds: () => string[]
   setHiddenIds: (ids: string[]) => void
 }
@@ -113,10 +113,16 @@ const InfiniteBox: ForwardRefRenderFunction<
 
   const loaderEl = useMemo(() => loader || <Box>Loading</Box>, [loader])
 
-  const dataOriginFlat = useMemo(() => {
-    if (!data) return []
-    return data.pages.map((item) => item.messages).flat()
-  }, [data])
+  const dataOriginFlat = useMemo(
+    () => data?.pages.map((item) => item.messages).flat() || [],
+    [data]
+  )
+
+  const dataOriginMap: Record<string, MailboxMessageItemResponse> = useMemo(
+    () =>
+      dataOriginFlat.reduce((acc, item) => ({ ...acc, [item.id]: item }), {}),
+    [dataOriginFlat]
+  )
 
   const dataMsg: MessageItem[] = useMemo(() => {
     const renderList = [
@@ -164,13 +170,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     getChooseMsgs() {
       return Object.keys(chooseMap)
         .filter((key) => chooseMap[key])
-        .map((id) => {
-          let ret = null
-          dataOriginFlat.forEach((_item) => {
-            if (_item.id === id) ret = _item
-          })
-          return ret
-        })
+        .map((id) => dataOriginMap[id])
     },
     getChooseIds() {
       return Object.keys(chooseMap).filter((key) => chooseMap[key])

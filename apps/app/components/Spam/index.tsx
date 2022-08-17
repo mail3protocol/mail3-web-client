@@ -78,22 +78,24 @@ export const SpamComponent: React.FC = () => {
               const msg = refBoxList?.current?.getChooseMsgs()
               if (!msg?.length) return
 
-              const sendIds: string[] = []
-              const inboxIds: string[] = []
+              const aliasesMap = (
+                userProps?.aliases as Array<{ address: string }>
+              ).reduce<Record<string, boolean>>(
+                (acc, item) => ({ ...acc, [item.address]: true }),
+                {}
+              )
 
-              msg.forEach((item) => {
-                if (!item) return
-                if (
-                  userProps?.aliases.some(
-                    (_item: { address: string }) =>
-                      _item.address === item?.from.address
-                  )
-                ) {
-                  sendIds.push(item.id)
-                } else {
-                  inboxIds.push(item.id)
-                }
-              })
+              const { sendIds, inboxIds } = msg.reduce<{
+                sendIds: string[]
+                inboxIds: string[]
+              }>(
+                (acc, item) => {
+                  if (aliasesMap[item.from.address])
+                    return { ...acc, sendIds: [...acc.sendIds, item.id] }
+                  return { ...acc, inboxIds: [...acc.inboxIds, item.id] }
+                },
+                { sendIds: [], inboxIds: [] }
+              )
 
               try {
                 if (sendIds.length)
@@ -126,14 +128,6 @@ export const SpamComponent: React.FC = () => {
         </Wrap>
 
         <Spacer />
-        {/* <Button
-          onClick={() => {
-            console.log('empty')
-          }}
-        >
-          <SVGIconEmpty />
-          <Box marginLeft="10px">{t('spam.empty')}</Box>
-        </Button> */}
       </Flex>
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
