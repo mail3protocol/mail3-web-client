@@ -18,7 +18,7 @@ export function useNotification() {
     setIsSwitchingWebPushNotificationState,
   ] = useState(false)
   const webPushNotificationState: 'enabled' | 'disabled' =
-    userInfo?.web_push_notification_state || 'disabled'
+    userInfo?.notification_state || 'disabled'
   const onDeleteFCMToken = useDeleteFCMToken()
   const getFCMToken = useGetFCMToken()
 

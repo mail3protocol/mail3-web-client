@@ -140,9 +140,8 @@ export const getNotificationPermission = () =>
 
 export const getIsEnabledNotification = (
   permission: NotificationPermission = getNotificationPermission()
-): { web_push_notification_state: 'enabled' | 'disabled' } => ({
-  web_push_notification_state:
-    permission === 'granted' ? 'enabled' : 'disabled',
+): { notification_state: 'enabled' | 'disabled' } => ({
+  notification_state: permission === 'granted' ? 'enabled' : 'disabled',
 })
 
 export const useSetGlobalTrack = () => {
@@ -184,7 +183,7 @@ export const useSetGlobalTrack = () => {
           crm_id: `@${account}`,
           text_signature: userInfo.text_signature,
           aliases: aliases.aliases,
-          ...getIsEnabledNotification(),
+          notification_state: userInfo.web_push_notification_state,
         }
         try {
           gtag?.('set', 'user_properties', config)
@@ -211,15 +210,7 @@ export const useInitUserProperties = () => {
   useDidMount(() => {
     if (userProps && isAuth) {
       try {
-        const u: {
-          web_push_notification_state?: 'enabled' | 'disabled'
-          notification_state: 'enabled' | 'disabled'
-        } = {
-          ...userProps,
-          notification_state: userProps.web_push_notification_state,
-        }
-        delete u.web_push_notification_state
-        gtag?.('set', 'user_properties', u)
+        gtag?.('set', 'user_properties', userProps)
         if (userProps.wallet_address) {
           gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
             user_id: userProps.wallet_address,
