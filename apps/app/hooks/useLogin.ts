@@ -29,6 +29,7 @@ import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
 import { removeMailSuffix } from '../utils'
+import { useDeleteFCMToken } from './useFCMToken'
 
 export const useIsLoginExpired = () => {
   const loginInfo = useLoginInfo()
@@ -133,6 +134,16 @@ export function getSigStatus<
   return sigStatus
 }
 
+export const getNotificationPermission = () =>
+  // eslint-disable-next-line compat/compat
+  Notification?.permission || 'default'
+
+export const getIsEnabledNotification = (
+  permission: NotificationPermission = getNotificationPermission()
+): { notification_state: 'enabled' | 'disabled' } => ({
+  notification_state: permission === 'granted' ? 'enabled' : 'disabled',
+})
+
 export const useSetGlobalTrack = () => {
   const account = useAccount()
   const walletName = useLastConectorName()
@@ -172,6 +183,7 @@ export const useSetGlobalTrack = () => {
           crm_id: `@${account}`,
           text_signature: userInfo.text_signature,
           aliases: aliases.aliases,
+          notification_state: userInfo.web_push_notification_state,
         }
         try {
           gtag?.('set', 'user_properties', config)
@@ -227,8 +239,10 @@ export const useLogout = () => {
   const connector = useConnector()
   const setUserInfo = useSetLoginInfo()
   const setLastConnector = useSetLastConnector()
+  const onDeleteFCMToken = useDeleteFCMToken()
   return useCallback(async () => {
     await connector?.deactivate()
+    await onDeleteFCMToken()
     setUserInfo(null)
     setLastConnector(undefined)
   }, [connector])
@@ -242,12 +256,15 @@ export const useWalletChange = () => {
   const isConnecting = useAccountIsActivating()
   const store = useCurrentWalletStore()
   const logout = useLogout()
+  const onDeleteFCMToken = useDeleteFCMToken()
   const handleAccountChanged = useCallback(
     ([acc]) => {
       const [account] = store.getState().accounts ?? []
 
       if (acc === undefined) {
-        setLoginInfo(null)
+        onDeleteFCMToken().then(() => {
+          setLoginInfo(null)
+        })
         return
       }
       if (isConnecting || !account) {
@@ -263,7 +280,9 @@ export const useWalletChange = () => {
       ) {
         return
       }
-      setLoginInfo(null)
+      onDeleteFCMToken().then(() => {
+        setLoginInfo(null)
+      })
     },
     [isConnecting, loginAccount]
   )

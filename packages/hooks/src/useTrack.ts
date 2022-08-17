@@ -99,6 +99,8 @@ export enum TrackEvent {
   // product recommendations
   ClickBannerSuggestion = 'click_banner_suggestion',
   SentProductSuggestion = 'sent_product_suggestion',
+
+  ClickNotificationToastOk = 'click_notification_toast_ok',
 }
 
 // dimensions
