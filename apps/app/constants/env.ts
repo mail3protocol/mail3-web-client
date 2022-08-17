@@ -1,12 +1,13 @@
 // @ts-nocheck
+import { MAIL_SERVER_URL } from './env/mailServer'
+
 export * from './env/apps'
 export * from './env/firebase'
 
+export { MAIL_SERVER_URL }
+
 export const SERVER_URL =
   import.meta.env.NEXT_PUBLIC_SERVER_URL || 'https://api.mail3.me/api/v1'
-
-export const MAIL_SERVER_URL =
-  import.meta.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
 
 export const COOKIE_DOMAIN =
   import.meta.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.mail3.me'
@@ -67,7 +68,7 @@ export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')
 export const IS_CHROME =
   navigator.userAgent.toLowerCase().includes('chrome') || !!window.chrome
 
-export const IS_FIREBOX = navigator.userAgent.toLowerCase().includes('firefox')
+export const IS_FIREFOX = navigator.userAgent.toLowerCase().includes('firefox')
 
 export const IS_OPERA = window.opr !== undefined
 
