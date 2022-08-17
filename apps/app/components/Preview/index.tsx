@@ -431,7 +431,11 @@ export const PreviewComponent: React.FC = () => {
           left="0px"
           border={{ base: 0, md: '2px solid #292D32' }}
           onClick={() => {
-            navi(-1)
+            if (window.history.length === 1) {
+              navi(RoutePath.Inbox)
+            } else {
+              navi(-1)
+            }
           }}
         >
           <ChevronLeftIcon w="26px" h="26px" />
