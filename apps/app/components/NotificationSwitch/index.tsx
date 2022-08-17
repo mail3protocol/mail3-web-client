@@ -13,6 +13,7 @@ import { timer } from 'rxjs'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useQuery } from 'react-query'
 import { isSupported } from 'firebase/messaging'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { useNotification } from '../../hooks/useNotification'
 import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
@@ -44,6 +45,9 @@ export const NotificationSwitch: React.FC = () => {
       refetchOnReconnect: false,
     }
   )
+  const trackClickNotificationToastOk = useTrackClick(
+    TrackEvent.ClickNotificationToastOk
+  )
 
   function onClickSwitch() {
     if (permission === 'default') onOpenPopover()
@@ -67,7 +71,7 @@ export const NotificationSwitch: React.FC = () => {
 
   useEffect(() => {
     let timeout: NodeJS.Timeout | undefined
-    if (!isEnabledNotification) {
+    if (!isEnabledNotification && location.pathname === '/') {
       timeout = setTimeout(onClickSwitch, 10000)
     }
     return () => {
@@ -135,6 +139,7 @@ export const NotificationSwitch: React.FC = () => {
                 <TextGuide
                   onConfirm={async () => {
                     onClosePopover()
+                    trackClickNotificationToastOk()
                     await requestPermission()
                   }}
                 />
