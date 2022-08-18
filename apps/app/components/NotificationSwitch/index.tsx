@@ -85,6 +85,7 @@ export const NotificationSwitch: React.FC = () => {
     let timeout: NodeJS.Timeout | undefined
     const isAllowTips = () =>
       window.location.pathname === RoutePath.Inbox &&
+      isBrowserSupport &&
       (permission === 'default' || permission === 'prompt')
     if (isAllowTips()) {
       timeout = setTimeout(() => {
