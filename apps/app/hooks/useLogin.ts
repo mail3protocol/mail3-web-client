@@ -23,12 +23,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { isBitDomain, isEnsDomain } from 'shared'
+import { clear as clearIndexDBStore } from 'idb-keyval'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
-import { removeMailSuffix } from '../utils'
+import { removeMailSuffix, notificationLogsStore } from '../utils'
 import { useDeleteFCMToken } from './useFCMToken'
 
 export const useIsLoginExpired = () => {
@@ -243,6 +244,7 @@ export const useLogout = () => {
   return useCallback(async () => {
     await connector?.deactivate()
     await onDeleteFCMToken()
+    await clearIndexDBStore(notificationLogsStore)
     setUserInfo(null)
     setLastConnector(undefined)
   }, [connector])
@@ -262,7 +264,8 @@ export const useWalletChange = () => {
       const [account] = store.getState().accounts ?? []
 
       if (acc === undefined) {
-        onDeleteFCMToken().then(() => {
+        onDeleteFCMToken().then(async () => {
+          await clearIndexDBStore(notificationLogsStore)
           setLoginInfo(null)
         })
         return
@@ -280,7 +283,8 @@ export const useWalletChange = () => {
       ) {
         return
       }
-      onDeleteFCMToken().then(() => {
+      onDeleteFCMToken().then(async () => {
+        await clearIndexDBStore(notificationLogsStore)
         setLoginInfo(null)
       })
     },

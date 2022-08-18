@@ -1,12 +1,9 @@
-import {
-  get as getIndexedDbById,
-  set as setIndexedDbById,
-  createStore,
-} from 'idb-keyval'
+import { get as getIndexedDbById, set as setIndexedDbById } from 'idb-keyval'
 import { APP_URL } from '../constants/env/apps'
 import { RoutePath } from '../route/path'
 import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
 import { truncateMiddle0xMail } from '../utils/string/truncateMiddle0xMail'
+import { notificationLogsStore } from '../utils/notification'
 
 interface PayloadData {
   message_id: string
@@ -52,8 +49,6 @@ interface Self {
 
 declare let clients: Clients
 declare let self: Self
-
-const notificationLogsStore = createStore('notification', 'logs')
 
 self.addEventListener(notificationclick, (e) => {
   const event = e as EventMap[typeof notificationclick]
