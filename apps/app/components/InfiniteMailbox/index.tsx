@@ -17,7 +17,10 @@ import {
 import { LinkProps } from 'react-router-dom'
 import { Box } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { MailboxesMessagesResponse } from '../../api'
+import {
+  MailboxesMessagesResponse,
+  MailboxMessageItemResponse,
+} from '../../api'
 import { BoxListProps, Mailbox, MessageItem } from '../Mailbox'
 import { Mailboxes } from '../../api/mailboxes'
 
@@ -55,6 +58,7 @@ interface InfiniteMailboxProps<
 }
 
 export interface InfiniteHandle {
+  getChooseMsgs: () => MailboxMessageItemResponse[]
   getChooseIds: () => string[]
   setHiddenIds: (ids: string[]) => void
 }
@@ -109,12 +113,21 @@ const InfiniteBox: ForwardRefRenderFunction<
 
   const loaderEl = useMemo(() => loader || <Box>Loading</Box>, [loader])
 
+  const dataOriginFlat = useMemo(
+    () => data?.pages.map((item) => item.messages).flat() || [],
+    [data]
+  )
+
+  const dataOriginMap: Record<string, MailboxMessageItemResponse> = useMemo(
+    () =>
+      dataOriginFlat.reduce((acc, item) => ({ ...acc, [item.id]: item }), {}),
+    [dataOriginFlat]
+  )
+
   const dataMsg: MessageItem[] = useMemo(() => {
-    if (!data) return []
-    const dataList = data.pages.map((item) => item.messages).flat()
     const renderList = [
       ...pinUpMsg,
-      ...dataList.filter(
+      ...dataOriginFlat.filter(
         (item) => !pinUpMsg.some((_item) => _item.id === item.id)
       ),
     ]
@@ -154,6 +167,11 @@ const InfiniteBox: ForwardRefRenderFunction<
   }, [chooseMap, parentChooseMap])
 
   useImperativeHandle(forwardedRef, () => ({
+    getChooseMsgs() {
+      return Object.keys(chooseMap)
+        .filter((key) => chooseMap[key])
+        .map((id) => dataOriginMap[id])
+    },
     getChooseIds() {
       return Object.keys(chooseMap).filter((key) => chooseMap[key])
     },

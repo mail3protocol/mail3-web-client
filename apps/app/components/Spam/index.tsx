@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useDialog, useToast } from 'hooks'
 import { createSearchParams, generatePath } from 'react-router-dom'
+import { useAtomValue } from 'jotai'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
@@ -12,8 +13,9 @@ import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu } from '../MailboxMenu'
-import { ReactComponent as SVGTrash } from '../../assets/trash.svg'
+import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { GotoInbox } from '../GotoInbox'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 const TextBox = styled(Box)`
   margin-top: 10px;
@@ -22,34 +24,27 @@ const TextBox = styled(Box)`
   line-height: 21px;
 `
 
-export const TrashComponent: React.FC = () => {
+export const SpamComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
   const refBoxList = useRef<InfiniteHandle>(null)
   const [isChooseMode, setIsChooseMode] = useState(false)
+  const userProps = useAtomValue(userPropertiesAtom)
 
   const toast = useToast()
   const dialog = useDialog()
 
-  const queryFn = useCallback(
-    async ({ pageParam = 0 }) => {
-      const { data } = await api.getMailboxesMessages(
-        Mailboxes.Trash,
-        pageParam
-      )
-      // test empty status
-      // data.messages = []
-      return data
-    },
-    [api]
-  )
+  const queryFn = async ({ pageParam = 0 }) => {
+    const { data } = await api.getMailboxesMessages(Mailboxes.Spam, pageParam)
+    return data
+  }
 
   return (
     <NewPageContainer>
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          btnList={[BulkActionType.Delete, BulkActionType.Spam]}
+          btnList={[BulkActionType.Delete, BulkActionType.NotSpam]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
@@ -79,15 +74,37 @@ export const TrashComponent: React.FC = () => {
                 onCancel: () => {},
               })
             },
-            [BulkActionType.Spam]: async () => {
-              const ids = refBoxList?.current?.getChooseIds()
-              if (!ids?.length) return
+            [BulkActionType.NotSpam]: async () => {
+              const msg = refBoxList?.current?.getChooseMsgs()
+              if (!msg?.length) return
+
+              const aliasesMap = (
+                userProps?.aliases as Array<{ address: string }>
+              ).reduce<Record<string, boolean>>(
+                (acc, item) => ({ ...acc, [item.address]: true }),
+                {}
+              )
+
+              const { sendIds, inboxIds } = msg.reduce<{
+                sendIds: string[]
+                inboxIds: string[]
+              }>(
+                (acc, item) => {
+                  if (aliasesMap[item.from.address])
+                    return { ...acc, sendIds: [...acc.sendIds, item.id] }
+                  return { ...acc, inboxIds: [...acc.inboxIds, item.id] }
+                },
+                { sendIds: [], inboxIds: [] }
+              )
+
               try {
-                await api.batchMoveMessage(ids, Mailboxes.Spam)
-                refBoxList?.current?.setHiddenIds(ids)
-                toast(t('status.spam.ok'), { status: 'success' })
+                if (sendIds.length)
+                  await api.batchMoveMessage(sendIds, Mailboxes.Sent)
+                await api.batchMoveMessage(inboxIds, Mailboxes.INBOX)
+                refBoxList?.current?.setHiddenIds([...sendIds, ...inboxIds])
+                toast(t('status.notSpam.ok'), { status: 'success' })
               } catch (error) {
-                toast(t('status.spam.fail'))
+                toast(t('status.notSpam.fail'))
               }
             },
           }}
@@ -97,7 +114,7 @@ export const TrashComponent: React.FC = () => {
       <Flex alignItems="center" pt="24px" pl={{ base: '20px', md: 0 }}>
         <Wrap>
           <WrapItem alignItems="center">
-            <SVGTrash />
+            <SpamSvg />
           </WrapItem>
           <WrapItem
             alignItems="center"
@@ -106,19 +123,11 @@ export const TrashComponent: React.FC = () => {
             fontSize="24px"
             lineHeight="30px"
           >
-            {t('trash.title')}
+            {t('spam.title')}
           </WrapItem>
         </Wrap>
 
         <Spacer />
-        {/* <Button
-          onClick={() => {
-            console.log('empty')
-          }}
-        >
-          <SVGIconEmpty />
-          <Box marginLeft="10px">{t('trash.empty')}</Box>
-        </Button> */}
       </Flex>
       <MailboxContainer>
         <Box padding={{ md: '20px 64px' }}>
@@ -126,16 +135,16 @@ export const TrashComponent: React.FC = () => {
             textAlign={{ base: 'left', md: 'center' }}
             pl={{ base: '20px', md: 0 }}
           >
-            <Text>{t('trash.auto-delete')}</Text>
+            <Text>{t('spam.auto-delete')}</Text>
           </TextBox>
           <InfiniteMailbox
-            mailboxType={Mailboxes.Trash}
+            mailboxType={Mailboxes.Spam}
             ref={refBoxList}
             enableQuery
             queryFn={queryFn}
-            queryKey={['Trash']}
+            queryKey={['spam']}
             loader={<Loading />}
-            emptyElement={<ClearStatus />}
+            emptyElement={<ClearStatus nameKey="spam.clear" />}
             noMoreElement={<ThisBottomStatus />}
             onChooseModeChange={(b) => setIsChooseMode(b)}
             onClickBody={() => {
@@ -144,7 +153,7 @@ export const TrashComponent: React.FC = () => {
             getHref={(id) => ({
               pathname: generatePath(`${RoutePath.Message}/:id`, { id }),
               search: createSearchParams({
-                origin: Mailboxes.Trash,
+                origin: Mailboxes.Spam,
               }).toString(),
             })}
           />

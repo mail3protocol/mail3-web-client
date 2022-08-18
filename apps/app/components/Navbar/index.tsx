@@ -33,6 +33,7 @@ import {
 import { ReactComponent as InboxWhiteSvg } from '../../assets/inbox-white.svg'
 import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
 import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
+import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { ReactComponent as SentSvg } from '../../assets/sent.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
@@ -73,6 +74,15 @@ const LogoPopoverBody: React.FC = () => {
       onClick() {
         context.onClose()
         trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Trash })
+      },
+    },
+    {
+      href: RoutePath.Spam,
+      label: t('navbar.spam'),
+      icon: <SpamSvg />,
+      onClick() {
+        context.onClose()
+        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Spam })
       },
     },
   ]

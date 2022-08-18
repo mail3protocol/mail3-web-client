@@ -1,6 +1,17 @@
 import React, { useEffect, useMemo } from 'react'
 import { Avatar, Button } from 'ui'
-import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
+import {
+  AvatarGroup,
+  Box,
+  Center,
+  Text,
+  Flex,
+  Circle,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import {
   createSearchParams,
@@ -21,7 +32,7 @@ import {
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
@@ -46,8 +57,9 @@ import {
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import type { MeesageDetailState } from '../Mailbox'
 import { IpfsInfoTable } from '../IpfsInfoTable'
+import type { MeesageDetailState } from '../Mailbox'
+import { pinUpMsgAtom } from '../Inbox'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -81,8 +93,9 @@ const PreviewContent = styled(Box)`
 `
 
 export const PreviewComponent: React.FC = () => {
-  const [t] = useTranslation('mailboxes')
-  const [t2] = useTranslation('common')
+  const [i18Mailboxes] = useTranslation('mailboxes')
+  const [i18Common] = useTranslation('common')
+  const [i18Preview] = useTranslation('preview')
 
   const [searchParams] = useSearchParams()
   const { id: _id } = useParams()
@@ -95,12 +108,16 @@ export const PreviewComponent: React.FC = () => {
   const api = useAPI()
   const dialog = useDialog()
 
+  const isOriginSpam = origin === Mailboxes.Spam
+  const isOriginTrash = origin === Mailboxes.Trash
+
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
   const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
 
+  const [pinUpMsg, setPinUpMsg] = useAtom(pinUpMsgAtom)
   const userProps = useAtomValue(userPropertiesAtom)
   const {
     data,
@@ -148,6 +165,12 @@ export const PreviewComponent: React.FC = () => {
     }
   )
 
+  const content = useMemo(() => {
+    if (data?.html) return data.html
+    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
+    return ''
+  }, [data])
+
   const detail: MeesageDetailState | undefined = useMemo(() => {
     if (state) {
       return state
@@ -168,14 +191,11 @@ export const PreviewComponent: React.FC = () => {
     return undefined
   }, [data?.messageInfo, state])
 
-  const content = useMemo(() => {
-    if (data?.html) return data.html
-    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
-    return ''
-  }, [data])
+  const detailFull = data?.messageInfo
 
-  const isDriftBottleAddress =
-    data?.messageInfo?.from.address === DRIFT_BOTTLE_ADDRESS
+  const isBotCatchSpam = detailFull?.headers?.['x-spam-flag']
+
+  const isDriftBottleAddress = detail?.from.address === DRIFT_BOTTLE_ADDRESS
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
@@ -230,11 +250,18 @@ export const PreviewComponent: React.FC = () => {
     return () => {}
   }, [messageOnChainIdentifierData])
 
+  const isSend: boolean = useMemo(() => {
+    if (!detail || !userProps?.aliases) return false
+    return userProps.aliases.some(
+      (item: { address: string }) => item.address === detail.from.address
+    )
+  }, [userProps, detail])
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
       isDisabled: isDriftBottleAddress,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
@@ -256,7 +283,7 @@ export const PreviewComponent: React.FC = () => {
     },
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
@@ -287,16 +314,17 @@ export const PreviewComponent: React.FC = () => {
         }
         try {
           await api.deleteMessage(id, { force: false })
-          toast(t('status.trash.ok'), { status: 'success' })
+          setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
+          toast(i18Mailboxes('status.trash.ok'), { status: 'success' })
           navi(-1)
         } catch (error) {
-          toast(t('status.trash.fail'))
+          toast(i18Mailboxes('status.trash.fail'))
         }
       },
     },
     [SuspendButtonType.Delete]: {
       type: SuspendButtonType.Delete,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Delete,
         })
@@ -306,10 +334,10 @@ export const PreviewComponent: React.FC = () => {
 
         dialog({
           type: 'text',
-          title: t('confirm.delete.title'),
-          description: t('confirm.delete.description'),
-          okText: t2('button.yes'),
-          cancelText: t2('button.cancel'),
+          title: i18Mailboxes('confirm.delete.title'),
+          description: i18Mailboxes('confirm.delete.description'),
+          okText: i18Common('button.yes'),
+          cancelText: i18Common('button.cancel'),
           modalProps: {
             isOpen: false,
             onClose: () => {},
@@ -319,10 +347,10 @@ export const PreviewComponent: React.FC = () => {
           onConfirm: async () => {
             try {
               await api.deleteMessage(id, { force: true })
-              toast(t('status.delete.ok'))
+              toast(i18Mailboxes('status.delete.ok'))
               navi(-1)
             } catch (error) {
-              toast(t('status.delete.fail'))
+              toast(i18Mailboxes('status.delete.fail'))
             }
           },
           onCancel: () => {},
@@ -337,13 +365,46 @@ export const PreviewComponent: React.FC = () => {
         })
         if (typeof id !== 'string') return
         try {
-          await api.moveMessage(id, Mailboxes.INBOX)
-          toast(t('status.restore.ok'))
+          await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
+          toast(i18Mailboxes('status.restore.ok'))
           navi(`${RoutePath.Message}/${id}`, {
             replace: true,
           })
         } catch (error) {
-          toast(t('status.restore.fail'))
+          toast(i18Mailboxes('status.restore.fail'))
+        }
+      },
+    },
+    [SuspendButtonType.Spam]: {
+      type: SuspendButtonType.Spam,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Spam,
+        })
+        if (typeof id !== 'string') return
+        try {
+          await api.moveMessage(id, Mailboxes.Spam)
+          setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
+          toast(i18Mailboxes('status.spam.ok'))
+          navi(-1)
+        } catch (error) {
+          toast(i18Mailboxes('status.spam.fail'))
+        }
+      },
+    },
+    [SuspendButtonType.NotSpam]: {
+      type: SuspendButtonType.NotSpam,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.NotSpam,
+        })
+        if (typeof id !== 'string') return
+        try {
+          await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
+          toast(i18Mailboxes('status.notSpam.ok'))
+          navi(-1)
+        } catch (error) {
+          toast(i18Mailboxes('status.notSpam.fail'))
         }
       },
     },
@@ -354,10 +415,35 @@ export const PreviewComponent: React.FC = () => {
       SuspendButtonType.Reply,
       SuspendButtonType.Forward,
       SuspendButtonType.Trash,
+      SuspendButtonType.Spam,
     ]
 
-    if (origin === Mailboxes.Trash) {
-      list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
+    if (isOriginTrash) {
+      list = [
+        SuspendButtonType.Restore,
+        SuspendButtonType.Delete,
+        SuspendButtonType.Spam,
+      ]
+    }
+
+    if (isOriginSpam) {
+      list = [SuspendButtonType.NotSpam, SuspendButtonType.Delete]
+    }
+
+    if (isSend) {
+      list = [
+        SuspendButtonType.Reply,
+        SuspendButtonType.Forward,
+        SuspendButtonType.Trash,
+      ]
+
+      if (isOriginTrash) {
+        list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
+      }
+
+      if (isOriginSpam) {
+        list = [SuspendButtonType.NotSpam, SuspendButtonType.Delete]
+      }
     }
 
     return list.map((key) => buttonConfig[key])
@@ -488,7 +574,7 @@ export const PreviewComponent: React.FC = () => {
             lineHeight={1.2}
             marginBottom="30px"
           >
-            {detail.subject ? detail.subject : t('no-subject')}
+            {detail.subject ? detail.subject : i18Mailboxes('no-subject')}
           </Text>
         </Box>
         <Box>
@@ -589,11 +675,35 @@ export const PreviewComponent: React.FC = () => {
         <Box
           padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
           borderBottom="1px solid #ccc"
+          pointerEvents={isOriginSpam ? 'none' : 'auto'}
         >
           {isLoadingContent ? (
             <Loading />
           ) : (
             <PreviewContent>
+              {isOriginSpam ? (
+                <Alert
+                  status="error"
+                  backgroundColor="#FFE2E2"
+                  borderRadius="6px"
+                >
+                  <AlertIcon />
+                  <Box color="#DA4444">
+                    <AlertTitle fontSize="14px">
+                      {i18Preview(
+                        isBotCatchSpam ? 'spam_title.bot' : 'spam_title.user'
+                      )}
+                    </AlertTitle>
+                    <AlertDescription fontSize="12px">
+                      {i18Preview(
+                        isBotCatchSpam
+                          ? 'spam_content.bot'
+                          : 'spam_content.user'
+                      )}
+                    </AlertDescription>
+                  </Box>
+                </Alert>
+              ) : null}
               <RenderHTML
                 html={content}
                 attachments={detail.attachments}
@@ -634,7 +744,7 @@ export const PreviewComponent: React.FC = () => {
                 })
               }}
             >
-              {t('reply-driftbottle-sender')}
+              {i18Mailboxes('reply-driftbottle-sender')}
             </Button>
           </Center>
         ) : null}

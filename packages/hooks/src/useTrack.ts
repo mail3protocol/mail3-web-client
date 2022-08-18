@@ -150,6 +150,7 @@ export enum Mail3MenuItem {
   Discord = 'Discord',
   Twitter = 'Twitter',
   Mirror = 'Mirror',
+  Spam = 'Spam',
 }
 
 export enum GlobalDimensions {
@@ -190,6 +191,8 @@ export enum MailDetailPageItem {
   Trash = 'Trash',
   Restore = 'Restore',
   Delete = 'Delete',
+  Spam = 'Spam',
+  NotSpam = 'NotSpam',
 }
 
 export enum LitepaperLanguage {

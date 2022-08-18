@@ -348,6 +348,16 @@ export class API {
     })
   }
 
+  public async batchMoveMessage(
+    ids: string[],
+    path: string
+  ): Promise<AxiosResponse<void>> {
+    return this.axios.put('/mailbox/account/messages/batch_move', {
+      messageIds: ids,
+      path,
+    })
+  }
+
   public async batchDeleteMessage(
     ids: string[],
     isForce?: boolean

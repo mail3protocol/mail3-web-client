@@ -5,6 +5,7 @@
             "sent": "Sent",
             "drafts": "Drafts",
             "trash": "Trash",
+            "spam": "Spam",
             "other-stuff": "Other Stuff",
             "settings": "Settings",
             "profile-link": "My Profile Link",
@@ -130,6 +131,12 @@
             "auto-delete": "Messages that have been in Trash more than 30 days will be automatically deleted.",
             "clear": "Clean Trash!"
         },
+        "spam": {
+            "title": "Spam",
+            "empty": "Empty",
+            "auto-delete": "Messages that have been in Spam more than 30 days will be automatically deleted.",
+            "clear": "Clean Spam!"
+        },
         "drafts": {
             "title": "Drafts",
             "no-content-w1": "Any time you start writing a new Email,",
@@ -158,6 +165,14 @@
             "restore": {
                 "ok": "The message has been restore.",
                 "fail": "Restore is fail, try again."
+            },
+            "spam": {
+                "ok": "The messages have been moved to spam",
+                "fail": "Move fail, try again."
+            },
+            "notSpam": {
+                "ok": "The messages have been moved to Inbox",
+                "fail": "Move fail, try again."
             },
             "not_found": {
                 "text": "This message does not exist.",
@@ -271,5 +286,15 @@
         "title": "Enable IPFS Storage",
         "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
         "generate_key": "Generate key"
+    },
+    "preview":{
+        "spam_title": {
+            "bot": "This message contains security risks",
+            "user": "This message was marked as spam by yourself"
+        },
+        "spam_content": {
+            "bot": "For your safety, we blocked all links, attachments, and replies.",
+            "user": "For your safety, we blocked all links, attachments, and replies."
+        }
     }
 }
