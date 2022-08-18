@@ -41,16 +41,13 @@ export function useNotification() {
       setIsSwitchingWebPushNotificationState(true)
       try {
         await onLoadMessagingToken(state)
-        const isCurrentState = await api
-          .getUserInfo()
-          .then((res) => res.data.web_push_notification_state === state)
-        if (!isCurrentState) {
-          await api.switchUserWebPushNotification()
-          setUserInfo((info) => ({
-            ...info,
-            notification_state: state,
-          }))
-        }
+        await api.switchUserWebPushNotification(
+          state === 'enabled' ? 'active' : 'stale'
+        )
+        setUserInfo((info) => ({
+          ...info,
+          notification_state: state,
+        }))
       } catch (err) {
         console.error(err)
       } finally {
