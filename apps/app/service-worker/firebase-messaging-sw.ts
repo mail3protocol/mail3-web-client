@@ -1,3 +1,8 @@
+import {
+  get as getIndexedDbById,
+  set as setIndexedDbById,
+  createStore,
+} from 'idb-keyval'
 import { APP_URL } from '../constants/env/apps'
 import { RoutePath } from '../route/path'
 import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
@@ -48,6 +53,8 @@ interface Self {
 declare let clients: Clients
 declare let self: Self
 
+const notificationLogsStore = createStore('notification', 'logs')
+
 self.addEventListener(notificationclick, (e) => {
   const event = e as EventMap[typeof notificationclick]
   event.notification.close()
@@ -64,6 +71,8 @@ self.addEventListener(push, async (e) => {
   if (!text) return
   const payload = JSON.parse(text) as Payload
   if (!payload) return
+  const key = payload.data.message_id
+  if (await getIndexedDbById(key, notificationLogsStore)) return
   const notificationTitle = truncateMiddle0xMail(
     payload.notification?.title || ''
   )
@@ -75,6 +84,7 @@ self.addEventListener(push, async (e) => {
     icon: notificationIcon,
     data: payload.data,
   }
+  await setIndexedDbById(key, payload, notificationLogsStore)
   await self.registration.showNotification(
     notificationTitle,
     notificationOptions
