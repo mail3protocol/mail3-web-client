@@ -26,13 +26,13 @@ export function useNotification() {
 
   const onLoadMessagingToken = useCallback(
     async (state: 'enabled' | 'disabled') => {
-      if (state !== 'enabled') {
+      if (state === 'disabled') {
         await onDeleteFCMToken()
-      } else {
+      } else if (state === 'enabled') {
         await getFCMToken()
       }
     },
-    []
+    [getFCMToken, onDeleteFCMToken]
   )
 
   const onSwitchWebPushNotificationState = useCallback(
@@ -40,24 +40,27 @@ export function useNotification() {
       if (isSwitchingWebPushNotificationState) return
       setIsSwitchingWebPushNotificationState(true)
       try {
-        const isCurrentState = await api
-          .getUserInfo()
-          .then((res) => res.data.web_push_notification_state === state)
-        if (!isCurrentState) {
-          await api.switchUserWebPushNotification()
-          setUserInfo((info) => ({
-            ...info,
-            web_push_notification_state: state,
-          }))
-        }
         await onLoadMessagingToken(state)
+        await api.switchUserWebPushNotification(
+          state === 'enabled' ? 'active' : 'stale'
+        )
+        setUserInfo((info) => ({
+          ...info,
+          notification_state: state,
+        }))
       } catch (err) {
         console.error(err)
       } finally {
         setIsSwitchingWebPushNotificationState(false)
       }
     },
-    [api]
+    [
+      api,
+      isSwitchingWebPushNotificationState,
+      setIsSwitchingWebPushNotificationState,
+      onLoadMessagingToken,
+      setUserInfo,
+    ]
   )
 
   async function onCheckNotificationStatus() {

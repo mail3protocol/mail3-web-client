@@ -169,9 +169,10 @@ export class API {
     )
   }
 
-  public switchUserWebPushNotification() {
+  public switchUserWebPushNotification(state: 'stale' | 'active') {
     return this.axios.put(
-      `/account/settings/web_push_notification_state_switches`
+      `/account/settings/web_push_notification_state_switches`,
+      { state }
     )
   }
 
