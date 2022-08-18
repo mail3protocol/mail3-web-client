@@ -20,6 +20,7 @@ import { TextGuide } from './TextGuide'
 import { BaseSwitch } from './BaseSwitch'
 import { GifGuideDialog } from './GifGuideDialog'
 import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../../constants/env'
+import { RoutePath } from '../../route/path'
 
 export const NotificationSwitch: React.FC = () => {
   const {
@@ -82,13 +83,19 @@ export const NotificationSwitch: React.FC = () => {
 
   useEffect(() => {
     let timeout: NodeJS.Timeout | undefined
-    if (!isEnabledNotification && location.pathname === '/') {
-      timeout = setTimeout(onClickSwitch, 10000)
+    const isAllowTips = () =>
+      window.location.pathname === RoutePath.Inbox &&
+      (permission === 'default' || permission === 'prompt')
+    if (isAllowTips()) {
+      timeout = setTimeout(() => {
+        if (!isAllowTips()) return
+        onOpenPopover()
+      }, 10000)
     }
     return () => {
       if (timeout) clearTimeout(timeout)
     }
-  }, [])
+  }, [permission])
 
   if (!isBrowserSupport) {
     return null
