@@ -74,6 +74,10 @@ export const IS_CHROME =
 
 export const IS_FIREFOX = navigator.userAgent.toLowerCase().includes('firefox')
 
+export const IS_EDGE = navigator.userAgent.toLowerCase().includes('edg') // edge ua is "edg"
+
+export const IS_WIN = /windows|win32/i.test(navigator.userAgent)
+
 export const IS_OPERA = window.opr !== undefined
 
 export const IS_IPAD = navigator.userAgent.toLowerCase().includes('ipad')
