@@ -285,7 +285,11 @@
     "ipfs_modal": {
         "title": "Enable IPFS Storage",
         "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
-        "generate_key": "Generate key"
+        "generate_key": "Generate key",
+        "signing_modal": {
+            "title": "Please check your \nwallet Content",
+            "content": "You need to approve the message signing request on your wallet software including Walletconnect in your mobile devices."
+        }
     },
     "preview":{
         "spam_title": {
