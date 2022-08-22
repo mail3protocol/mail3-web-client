@@ -14,11 +14,12 @@ import { InboxNav } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 
 import { SendingDialog } from '../SendingDialog'
 import { GoToWriteMailButton } from '../GoToWriteMailButton'
 import { ProductRecommendationsBanner } from '../ProductRecommendationsBanner'
+import { Mailboxes } from '../../api/mailboxes'
 
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 576px) {
@@ -160,9 +161,9 @@ export const InboxComponent: React.FC = () => {
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Trash, BulkActionType.Spam]}
           actionMap={{
-            [BulkActionType.Delete]: async () => {
+            [BulkActionType.Trash]: async () => {
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
               const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
@@ -187,6 +188,33 @@ export const InboxComponent: React.FC = () => {
                 toast(t('status.trash.ok'), { status: 'success' })
               } catch (error) {
                 toast(t('status.trash.fail'))
+              }
+            },
+            [BulkActionType.Spam]: async () => {
+              const newIds =
+                Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
+              const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
+              const ids = [...newIds, ...seenIds]
+
+              if (!ids.length) return
+              try {
+                await api.batchMoveMessage(ids, Mailboxes.Spam)
+                if (newIds.length) {
+                  const map = newIds.reduce<Record<string, boolean>>(
+                    (acc, key) => ({ ...acc, [key]: true }),
+                    {}
+                  )
+                  setHiddenMap({
+                    ...hiddenMap,
+                    ...map,
+                  })
+                  setChooseMap({})
+                  setIsChooseMode(false)
+                }
+                refSeenBoxList?.current?.setHiddenIds(seenIds)
+                toast(t('status.spam.ok'), { status: 'success' })
+              } catch (error) {
+                toast(t('status.spam.fail'))
               }
             },
           }}

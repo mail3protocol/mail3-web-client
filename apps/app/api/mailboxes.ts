@@ -1,7 +1,7 @@
 export enum Mailboxes {
   INBOX = 'INBOX',
   Drafts = 'Drafts',
-  Junk = 'Junk',
+  Spam = 'Junk',
   Sent = 'Sent',
   Trash = 'Trash',
 }

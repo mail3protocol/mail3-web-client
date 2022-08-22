@@ -1,9 +1,13 @@
 // @ts-nocheck
+import { MAIL_SERVER_URL } from './env/mailServer'
+
+export * from './env/apps'
+export * from './env/firebase'
+
+export { MAIL_SERVER_URL }
+
 export const SERVER_URL =
   import.meta.env.NEXT_PUBLIC_SERVER_URL || 'https://api.mail3.me/api/v1'
-
-export const MAIL_SERVER_URL =
-  import.meta.env.NEXT_PUBLIC_MAIL_SERVER_URL || 'mail3.me'
 
 export const COOKIE_DOMAIN =
   import.meta.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.mail3.me'
@@ -17,15 +21,16 @@ export const TWITTER_URL =
 export const WHITE_LIST_DOC_URL =
   import.meta.env.NEXT_PUBLIC_WHITE_LIST_DOC_URL || '#'
 
-export const HOME_URL =
-  import.meta.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'
-
 export const GOOGLE_ANALYTICS_ID = import.meta.env
   .NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 
 export const MORE_DETAILS_LINK =
   import.meta.env.NEXT_PUBLIC_MORE_DETAILS_LINK ||
   'https://feather-amaryllis-11e.notion.site/Mail3-Beta-Access-43c1bf8f21ff443ca3ca4b6f1119e0b8'
+
+export const IMAGE_PROXY_URL =
+  import.meta.env.NEXT_PUBLIC_IMAGE_PROXY_URL ||
+  'https://mail3.me/api/image-proxy?url='
 
 export const OFFICE_ADDRESS_LIST = [
   'mail3.eth@mail3.me',
@@ -62,11 +67,28 @@ export const MAIL3_ME_BUTTON_MIRROR_URL =
   import.meta.env.NEXT_PUBLIC_MAIL3_ME_BUTTON_MIRRIR_URL ||
   'https://mirror.xyz/mail3.eth/nTiZI4w3vB1BBjwc8ZLUHCJ2FPhaYJd-l7v62Tv_FY0'
 
+export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')
+
+export const IS_CHROME =
+  navigator.userAgent.toLowerCase().includes('chrome') || !!window.chrome
+
+export const IS_FIREFOX = navigator.userAgent.toLowerCase().includes('firefox')
+
+export const IS_EDGE = navigator.userAgent.toLowerCase().includes('edg') // edge ua is "edg"
+
+export const IS_WIN = /windows|win32/i.test(navigator.userAgent)
+
+export const IS_OPERA = window.opr !== undefined
+
+export const IS_IPAD = navigator.userAgent.toLowerCase().includes('ipad')
+
 export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
 
 export const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+export const IS_IOS = IS_IPAD || IS_IPHONE
 
 export const SENTRY_DSN = import.meta.env.NEXT_PUBLIC_SENTRY_DSN
 

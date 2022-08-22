@@ -6,7 +6,7 @@ import ReactShadowRoot from 'react-shadow-root'
 import { createPortal } from 'react-dom'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
-import { OFFICE_ADDRESS_LIST } from '../../constants'
+import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
 
 interface htmlParserProps {
   html: string
@@ -187,6 +187,13 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
       if ('target' in node) {
         node.setAttribute('target', '_blank')
         node.setAttribute('rel', 'noopener noreferrer')
+      }
+
+      if (node.hasAttribute('src') && node.nodeName === 'IMG') {
+        const src = node.getAttribute('src')
+        if (src?.startsWith('http://')) {
+          node.setAttribute('src', `${IMAGE_PROXY_URL}${src}`)
+        }
       }
 
       if (

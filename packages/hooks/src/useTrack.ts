@@ -99,6 +99,8 @@ export enum TrackEvent {
   // product recommendations
   ClickBannerSuggestion = 'click_banner_suggestion',
   SentProductSuggestion = 'sent_product_suggestion',
+
+  ClickNotificationToastOk = 'click_notification_toast_ok',
 }
 
 // dimensions
@@ -148,6 +150,7 @@ export enum Mail3MenuItem {
   Discord = 'Discord',
   Twitter = 'Twitter',
   Mirror = 'Mirror',
+  Spam = 'Spam',
 }
 
 export enum GlobalDimensions {
@@ -188,6 +191,8 @@ export enum MailDetailPageItem {
   Trash = 'Trash',
   Restore = 'Restore',
   Delete = 'Delete',
+  Spam = 'Spam',
+  NotSpam = 'NotSpam',
 }
 
 export enum LitepaperLanguage {

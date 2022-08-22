@@ -5,6 +5,7 @@
             "sent": "Sent",
             "drafts": "Drafts",
             "trash": "Trash",
+            "spam": "Spam",
             "other-stuff": "Other Stuff",
             "settings": "Settings",
             "profile-link": "My Profile Link",
@@ -46,6 +47,13 @@
             "btn-write": "write",
             "yes": "Yes",
             "cancel": "Cancel"
+        },
+        "bell": {
+            "title": "\uD83D\uDD14 Open the mail notification and claim the NFT",
+            "gif_guide_title": "\uD83D\uDCA1 Follow the reminders to\nturn on email notifications",
+            "open_notification_prompt": "<p>You can authorize our email push service at any time by flipping the switch above and clicking \"<strong>Allow</strong>\".</p><p><strong>Don't worry, we will only notify you when you receive new emails.</strong></p><p>Complete the authorization and we will send you a confirmation email with a special <strong>NFT</strong> ;)</p>",
+            "open_notification_prompt_list": "<li>Authorize our email push service at any time by flipping the switch above and clicking <strong>\"Allow\"</strong>.</li><li><strong>Don't worry, we will only notify you when you receive new emails.</strong></li>",
+            "open_notification_confirm": "Confirm"
         }
     },
     "edit-message": {
@@ -123,6 +131,12 @@
             "auto-delete": "Messages that have been in Trash more than 30 days will be automatically deleted.",
             "clear": "Clean Trash!"
         },
+        "spam": {
+            "title": "Spam",
+            "empty": "Empty",
+            "auto-delete": "Messages that have been in Spam more than 30 days will be automatically deleted.",
+            "clear": "Clean Spam!"
+        },
         "drafts": {
             "title": "Drafts",
             "no-content-w1": "Any time you start writing a new Email,",
@@ -151,6 +165,14 @@
             "restore": {
                 "ok": "The message has been restore.",
                 "fail": "Restore is fail, try again."
+            },
+            "spam": {
+                "ok": "The messages have been moved to spam",
+                "fail": "Move fail, try again."
+            },
+            "notSpam": {
+                "ok": "The messages have been moved to Inbox",
+                "fail": "Move fail, try again."
             },
             "not_found": {
                 "text": "This message does not exist.",
@@ -263,6 +285,20 @@
     "ipfs_modal": {
         "title": "Enable IPFS Storage",
         "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
-        "generate_key": "Generate key"
+        "generate_key": "Generate key",
+        "signing_modal": {
+            "title": "Please check your \nwallet Content",
+            "content": "You need to approve the message signing request on your wallet software including Walletconnect in your mobile devices."
+        }
+    },
+    "preview":{
+        "spam_title": {
+            "bot": "This message contains security risks",
+            "user": "This message was marked as spam by yourself"
+        },
+        "spam_content": {
+            "bot": "For your safety, we blocked all links, attachments, and replies.",
+            "user": "For your safety, we blocked all links, attachments, and replies."
+        }
     }
 }

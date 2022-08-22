@@ -33,6 +33,7 @@ import {
 import { ReactComponent as InboxWhiteSvg } from '../../assets/inbox-white.svg'
 import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
 import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
+import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { ReactComponent as SentSvg } from '../../assets/sent.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
@@ -40,6 +41,7 @@ import { ConnectedButton } from '../ConnectedButton'
 import { Auth, AuthModal } from '../Auth'
 import { RouterLink } from '../RouterLink'
 import { ConnectWallet } from '../ConnectWallet'
+import { NotificationSwitch } from '../NotificationSwitch'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -72,6 +74,15 @@ const LogoPopoverBody: React.FC = () => {
       onClick() {
         context.onClose()
         trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Trash })
+      },
+    },
+    {
+      href: RoutePath.Spam,
+      label: t('navbar.spam'),
+      icon: <SpamSvg />,
+      onClick() {
+        context.onClose()
+        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Spam })
       },
     },
   ]
@@ -198,7 +209,14 @@ const LogoPopoverBody: React.FC = () => {
 
 const Logo = () => {
   const isConnected = !!useAccount()
-  const logoEl = <UiLogo textProps={{ color: '#231815' }} />
+  const logoEl = (
+    <UiLogo
+      textProps={{
+        color: '#231815',
+        display: { base: 'none', sm: 'inline-block' },
+      }}
+    />
+  )
   const popoverTrigger = isConnected ? (
     <PopoverTrigger>
       <Center>
@@ -221,7 +239,7 @@ const Logo = () => {
         }}
         border="none"
         borderRadius="12px"
-        boxShadow="0px 0px 16px 12px rgba(192, 192, 192, 0.25)"
+        boxShadow="0 0 16px 12px rgba(192, 192, 192, 0.25)"
       >
         <PopoverArrow />
         <PopoverBody padding="20px 16px 16px 16px">
@@ -233,23 +251,21 @@ const Logo = () => {
 }
 
 const NavbarContainer = styled(Flex)`
-  justify-content: center;
   height: ${NAVBAR_HEIGHT}px;
   width: 100%;
   align-items: center;
   position: relative;
-
-  @media (max-width: 600px) {
-    justify-content: flex-start;
-  }
 `
 
 export const Navbar: React.FC<NavbarProps> = () => (
-  <NavbarContainer>
+  <NavbarContainer justifyContent={{ base: 'flex-start', md: 'center' }}>
     <Flex alignItems="center">
       <Logo />
     </Flex>
     <Flex alignItems="center" position="absolute" right={0}>
+      <Flex pr="15px">
+        <NotificationSwitch />
+      </Flex>
       <ConnectWallet
         renderConnected={(address) => <ConnectedButton address={address} />}
       />

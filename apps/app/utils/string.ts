@@ -1,6 +1,10 @@
 import { verifyEmail, truncateMiddle } from 'shared'
 import { MAIL_SERVER_URL } from '../constants'
 
+export * from './string/generateAvatarUrl'
+export * from './string/removeMailSuffix'
+export * from './string/truncateMiddle0xMail'
+
 export function copyTextFallback(data: string): void {
   const input = document.createElement('input')
   input.readOnly = true
@@ -35,17 +39,6 @@ export function truncateEmailMiddle(str = '', takeLength = 6, tailLength = 4) {
   return truncateMiddle(str, takeLength, str.length - i + tailLength)
 }
 
-export function removeMailSuffix(emailAddress: string) {
-  if (!verifyEmail(emailAddress)) return emailAddress
-  let i = emailAddress.length - 1
-  for (; i >= 0; i--) {
-    if (emailAddress[i] === '@') {
-      break
-    }
-  }
-  return emailAddress.substring(0, i)
-}
-
 export function generateUuid() {
   function S4() {
     return ((1 + Math.random()) * 0x10000 || 0).toString(16).substring(1)
@@ -59,19 +52,6 @@ export const isMail3Address = (address: string) =>
   )
 
 export const is0xAddress = (address: string) => address.startsWith('0x')
-
-export const truncateMiddle0xMail = (
-  address: string,
-  takeLength = 6,
-  tailLength = 4
-) => {
-  if (!verifyEmail(address)) return address
-  if (!is0xAddress(address)) return address
-  const splitAddress = address.split('@')
-  const realAddress = splitAddress[0]
-  const suffix = splitAddress[1]
-  return `${truncateMiddle(realAddress, takeLength, tailLength)}@${suffix}`
-}
 
 export function filterEmails(strings: string[]) {
   return strings.filter((str) => verifyEmail(str))
