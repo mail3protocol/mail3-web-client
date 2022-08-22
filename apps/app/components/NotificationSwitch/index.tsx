@@ -54,12 +54,14 @@ export const NotificationSwitch: React.FC = () => {
   const trackClickNotificationToastOk = useTrackClick(
     TrackEvent.ClickNotificationToastOk
   )
+  const isAllowOpenPopover = ['granted', 'default', 'prompt'].includes(
+    permission
+  )
 
   function onClickSwitch() {
     if (isEnabledNotification) return
     if (
-      permission === 'default' ||
-      permission === 'prompt' ||
+      isAllowOpenPopover ||
       (permission === 'granted' && webPushNotificationState === 'disabled')
     )
       onOpenPopover()
@@ -86,7 +88,7 @@ export const NotificationSwitch: React.FC = () => {
     const isAllowTips = () =>
       window.location.pathname === RoutePath.Inbox &&
       isBrowserSupport &&
-      (permission === 'default' || permission === 'prompt')
+      isAllowOpenPopover
     if (isAllowTips()) {
       timeout = setTimeout(() => {
         if (!isAllowTips()) return
