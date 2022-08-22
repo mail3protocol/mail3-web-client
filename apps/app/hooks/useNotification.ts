@@ -109,8 +109,9 @@ export function useNotification() {
   }, [])
 
   const requestPermission = useCallback(async () => {
+    if (!window?.Notification?.requestPermission) return 'default'
     // eslint-disable-next-line compat/compat
-    const newPermission = await Notification.requestPermission()
+    const newPermission = await window.Notification.requestPermission()
     await onChangePermission(newPermission)
     return newPermission
   }, [setPermission])

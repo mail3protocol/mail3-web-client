@@ -5,36 +5,65 @@ import {
   deleteToken,
   onMessage,
 } from 'firebase/messaging'
+import { FirebaseApp } from '@firebase/app'
+import { Messaging } from '@firebase/messaging'
 import {
   FIREBASE_CONFIG,
   FIREBASE_MESSAGING_VAPID_KEY,
 } from '../constants/env/firebase'
 
-export const firebaseApp = initializeApp(FIREBASE_CONFIG)
-export const messaging = getMessaging(firebaseApp)
+class FirebaseUtils {
+  readonly app?: FirebaseApp
 
-export function getFirebaseMessagingToken() {
-  return getToken(messaging, {
-    vapidKey: FIREBASE_MESSAGING_VAPID_KEY,
-  })
+  readonly messaging?: Messaging
+
+  constructor() {
+    try {
+      this.app = initializeApp(FIREBASE_CONFIG)
+      this.messaging = getMessaging(this.app)
+    } catch (err) {
+      console.log('Failed to initialize Firebase Messaging', err)
+    }
+  }
+
+  getFirebaseMessagingToken() {
+    if (!this.messaging) return ''
+    return getToken(this.messaging, {
+      vapidKey: FIREBASE_MESSAGING_VAPID_KEY,
+    })
+  }
+
+  deleteFirebaseMessagingToken() {
+    if (!this.messaging) return false
+    return deleteToken(this.messaging)
+  }
+
+  onFirebaseMessage(
+    callback: (payload: {
+      data: {
+        message_id: string
+      }
+      from: string
+      messageId: string
+      notification: {
+        body: string
+        title: string
+      }
+    }) => void
+  ) {
+    return this.messaging ? onMessage(this.messaging, callback as any) : null
+  }
 }
 
-export function deleteFirebaseMessagingToken() {
-  return deleteToken(messaging)
-}
+const utils = new FirebaseUtils()
+const {
+  getFirebaseMessagingToken,
+  deleteFirebaseMessagingToken,
+  onFirebaseMessage,
+} = utils
 
-export function onFirebaseMessage(
-  callback: (payload: {
-    data: {
-      message_id: string
-    }
-    from: string
-    messageId: string
-    notification: {
-      body: string
-      title: string
-    }
-  }) => void
-) {
-  return onMessage(messaging, callback as any)
+export {
+  getFirebaseMessagingToken,
+  deleteFirebaseMessagingToken,
+  onFirebaseMessage,
 }
