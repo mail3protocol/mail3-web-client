@@ -12,8 +12,6 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import NotificationMacEdgeGuideGif from '../../assets/notification/gif_guides/mac_edge.gif'
 import NotificationMacChromeGuideGif from '../../assets/notification/gif_guides/mac_chrome.gif'
-import NotificationWinEdgeGuideGif from '../../assets/notification/gif_guides/win_edge.gif'
-import NotificationWinChromeGuideGif from '../../assets/notification/gif_guides/win_chrome.gif'
 import { IS_CHROME, IS_EDGE, IS_WIN } from '../../constants'
 
 export const GifGuideDialog: React.FC<{
@@ -24,8 +22,8 @@ export const GifGuideDialog: React.FC<{
   const gifImage: string = useMemo(() => {
     if (IS_EDGE && !IS_WIN) return NotificationMacEdgeGuideGif
     if (IS_CHROME && !IS_WIN) return NotificationMacChromeGuideGif
-    if (IS_EDGE && IS_WIN) return NotificationWinEdgeGuideGif
-    return NotificationWinChromeGuideGif
+    if (IS_EDGE && IS_WIN) return NotificationMacEdgeGuideGif
+    return NotificationMacChromeGuideGif
   }, [])
 
   return (
