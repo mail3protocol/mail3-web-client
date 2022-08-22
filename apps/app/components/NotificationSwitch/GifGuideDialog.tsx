@@ -7,13 +7,16 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Center,
+  Text,
+  Icon,
 } from '@chakra-ui/react'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import NotificationMacEdgeGuideGif from '../../assets/notification/gif_guides/mac_edge.gif'
 import NotificationMacChromeGuideGif from '../../assets/notification/gif_guides/mac_chrome.gif'
-import NotificationWinEdgeGuideGif from '../../assets/notification/gif_guides/win_edge.gif'
-import NotificationWinChromeGuideGif from '../../assets/notification/gif_guides/win_chrome.gif'
+import { ReactComponent as NotFoundSvg } from '../../assets/not_found_message.svg'
+import LoadingPng from '../../assets/mailbox/loading.gif'
 import { IS_CHROME, IS_EDGE, IS_WIN } from '../../constants'
 
 export const GifGuideDialog: React.FC<{
@@ -24,9 +27,13 @@ export const GifGuideDialog: React.FC<{
   const gifImage: string = useMemo(() => {
     if (IS_EDGE && !IS_WIN) return NotificationMacEdgeGuideGif
     if (IS_CHROME && !IS_WIN) return NotificationMacChromeGuideGif
-    if (IS_EDGE && IS_WIN) return NotificationWinEdgeGuideGif
-    return NotificationWinChromeGuideGif
+    if (IS_EDGE && IS_WIN) return NotificationMacEdgeGuideGif
+    return NotificationMacChromeGuideGif
   }, [])
+  const [isLoadImageIsFailed, setIsLoadImageIsFailed] = useState(false)
+  useEffect(() => {
+    setIsLoadImageIsFailed(false)
+  }, [gifImage])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -54,7 +61,32 @@ export const GifGuideDialog: React.FC<{
         />
         <ModalBody>
           <AspectRatio ratio={437 / 251}>
-            <Image src={gifImage} alt="guide" rounded="24px" />
+            <Image
+              src={gifImage}
+              alt="guide"
+              rounded="24px"
+              onError={() => setIsLoadImageIsFailed(true)}
+              fallback={
+                <Center
+                  w="full"
+                  h="full"
+                  flexDirection="column"
+                  pointerEvents="none"
+                  userSelect="none"
+                >
+                  {isLoadImageIsFailed ? (
+                    <>
+                      <Icon as={NotFoundSvg} h="90px" w="auto" />
+                      <Text mt="10px" fontSize="16px" fontWeight="bold">
+                        {t('image_not_found')}
+                      </Text>
+                    </>
+                  ) : (
+                    <Image src={LoadingPng} alt="loading" w="290px" h="auto" />
+                  )}
+                </Center>
+              }
+            />
           </AspectRatio>
         </ModalBody>
       </ModalContent>
