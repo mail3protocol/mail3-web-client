@@ -26,14 +26,14 @@ class FirebaseUtils {
     }
   }
 
-  getFirebaseMessagingToken() {
+  async getFirebaseMessagingToken() {
     if (!this.messaging) return ''
     return getToken(this.messaging, {
       vapidKey: FIREBASE_MESSAGING_VAPID_KEY,
     })
   }
 
-  deleteFirebaseMessagingToken() {
+  async deleteFirebaseMessagingToken() {
     if (!this.messaging) return false
     return deleteToken(this.messaging)
   }
@@ -55,15 +55,6 @@ class FirebaseUtils {
   }
 }
 
-const utils = new FirebaseUtils()
-const {
-  getFirebaseMessagingToken,
-  deleteFirebaseMessagingToken,
-  onFirebaseMessage,
-} = utils
+const firebaseUtils = new FirebaseUtils()
 
-export {
-  getFirebaseMessagingToken,
-  deleteFirebaseMessagingToken,
-  onFirebaseMessage,
-}
+export { firebaseUtils }

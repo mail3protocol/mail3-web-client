@@ -5,10 +5,7 @@ import {
   keys as getIndexedDbKeys,
 } from 'idb-keyval'
 import { useAPI } from './useAPI'
-import {
-  deleteFirebaseMessagingToken,
-  getFirebaseMessagingToken,
-} from '../utils/firebase'
+import { firebaseUtils } from '../utils/firebase'
 
 export const FirebaseMessagingStore = createStore(
   'firebase-messaging-database',
@@ -40,14 +37,14 @@ export function useDeleteFCMToken() {
         .updateRegistrationToken(currentTokenItem.token, 'stale')
         .catch(console.error)
     }
-    await deleteFirebaseMessagingToken().catch(console.error)
+    await firebaseUtils.deleteFirebaseMessagingToken().catch(console.error)
   }, [api])
 }
 
 export function useGetFCMToken() {
   const api = useAPI()
   return useCallback(async () => {
-    const token = await getFirebaseMessagingToken()
+    const token = await firebaseUtils.getFirebaseMessagingToken()
     const currentServerNotificationState = await api
       .getRegistrationTokenState(token)
       .then((res) => res.data.state)
