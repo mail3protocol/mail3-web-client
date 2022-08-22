@@ -54,9 +54,7 @@ export const NotificationSwitch: React.FC = () => {
   const trackClickNotificationToastOk = useTrackClick(
     TrackEvent.ClickNotificationToastOk
   )
-  const isAllowOpenPopover = ['granted', 'default', 'prompt'].includes(
-    permission
-  )
+  const isAllowOpenPopover = ['default', 'prompt'].includes(permission)
 
   function onClickSwitch() {
     if (isEnabledNotification) return
@@ -98,7 +96,7 @@ export const NotificationSwitch: React.FC = () => {
     return () => {
       if (timeout) clearTimeout(timeout)
     }
-  }, [permission])
+  }, [isBrowserSupport, isAllowOpenPopover])
 
   if (!isBrowserSupport) {
     return null
