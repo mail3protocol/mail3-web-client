@@ -78,17 +78,23 @@ const Container = styled(Box)`
 
 const PreviewContent = styled(Box)`
   p {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: revert;
+    margin-bottom: revert;
   }
 
   img {
-    display: inline;
+    display: revert;
   }
 
   a {
-    text-decoration: underline;
+    text-decoration: revert;
     color: #4d51f3;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: revert;
+    list-style-position: revert;
   }
 `
 
