@@ -182,7 +182,6 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
         />
         {renderImtoken()}
         {renderTrust()}
-        <CoinbaseButton key={ConnectorName.Coinbase} />
       </>
     )
   }
