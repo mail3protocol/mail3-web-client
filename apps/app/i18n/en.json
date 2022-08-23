@@ -189,7 +189,7 @@
     "settings": {
         "setup": {
             "address": {
-                "title": "Your email address"
+                "title": "Customize your email address"
             },
             "signature": {
                 "title": "Show your own signature"
@@ -204,11 +204,16 @@
         "settings": {
             "title": "Settings",
             "tabs": {
+                "more": "More",
                 "address": "Mail3 Address",
-                "signature": "Signature setup"
+                "signature": "Signature setup",
+                "text": "The addresses listed below have been automatically activated as your mail3 addresses, and you can receive all emails sent to these addresses, regardless of whether they are selected as the default outgoing address."
             }
         },
         "address": {
+            "hover-title": "🔔This customized address will be your outgoing address by default. You can change it at any time.",
+            "hover-content": "You can choose one of the domain names we have resolved for you below as your outgoing address at any time ",
+            "outgoing": "Your default outgoing address",
             "title": "Your wallet address and the domain names",
             "desc": "you owned all can be used as mail3 address to send and receive emails.",
             "wallet-address": "Wallet Address",
