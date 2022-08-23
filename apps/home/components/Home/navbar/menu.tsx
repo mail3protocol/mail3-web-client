@@ -16,6 +16,7 @@ import { LitepaperLanguage, TrackEvent, TrackKey, useTrackClick } from 'hooks'
 import styled from '@emotion/styled'
 import {
   LAUNCH_URL as launchURL,
+  LIGHT_PAPER_CH_URL,
   LIGHT_PAPER_JP_URL,
   LIGHT_PAPER_URL,
   WHITE_LIST_URL,
@@ -157,6 +158,20 @@ export const Buttons: React.FC<{
               にほんご
             </Link>
           </ListItem>
+          <ListItem>
+            <Link
+              href={LIGHT_PAPER_CH_URL}
+              target="_blank"
+              onClick={() =>
+                trackWhitePaper({
+                  [TrackKey.LitepaperLanguage]: LitepaperLanguage.Chinese,
+                })
+              }
+            >
+              <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
+              中文
+            </Link>
+          </ListItem>
         </List>
       </Box>
     </Box>
@@ -295,6 +310,22 @@ export const Menus: React.FC<{
         >
           <Icon as={PdfIcon} w="20px" h="20px" mr="8px" />
           ライトペーパー
+        </MenuItem>
+      </Link>
+      <Link w="full" href={LIGHT_PAPER_CH_URL} target="_blank">
+        <MenuItem
+          variant="unstyled"
+          onClick={() =>
+            trackWhitePaper({
+              [TrackKey.LitepaperLanguage]: LitepaperLanguage.Chinese,
+            })
+          }
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-start"
+        >
+          <Icon as={PdfIcon} w="20px" h="20px" mr="8px" />
+          轻白皮书
         </MenuItem>
       </Link>
     </>

@@ -198,6 +198,7 @@ export enum MailDetailPageItem {
 export enum LitepaperLanguage {
   English = 'English',
   Japanese = 'Japanese',
+  Chinese = 'Chinese',
 }
 
 export interface TrackProps {
