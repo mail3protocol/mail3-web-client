@@ -207,11 +207,11 @@
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
-                "signature": "Signature setup",
-                "text": "The addresses listed below have been automatically activated as your mail3 addresses, and you can receive all emails sent to these addresses, regardless of whether they are selected as the default outgoing address."
+                "signature": "Signature setup"
             }
         },
         "address": {
+            "text": "The addresses listed below have been automatically activated as your mail3 addresses, and <a>you can receive all emails sent to these addresses,</a> regardless of whether they are selected as the default outgoing address.",
             "hover-title": "🔔This customized address will be your outgoing address by default. You can change it at any time.",
             "hover-content": "You can choose one of the domain names we have resolved for you below as your outgoing address at any time ",
             "outgoing": "Your default outgoing address",
