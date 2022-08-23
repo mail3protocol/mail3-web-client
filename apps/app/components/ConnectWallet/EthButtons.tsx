@@ -193,7 +193,7 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
         key={ConnectorName.WalletConnect}
         onClose={onClose}
       />
-      <CoinbaseButton key={ConnectorName.Coinbase} />
+      <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />
     </>
   )
 }
