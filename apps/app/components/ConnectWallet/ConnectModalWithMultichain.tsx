@@ -271,6 +271,7 @@ export const ConnectModalWithMultichain: React.FC<{
           my="24px"
         >
           {currentChain?.description}&nbsp;
+          {navigator.userAgent}
         </Text>
         <Box
           overflowX="hidden"
