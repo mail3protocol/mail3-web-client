@@ -31,7 +31,6 @@ import PhantomPng from 'assets/wallets/phantom.png'
 import BloctoPng from 'assets/wallets/blocto.png'
 import SolflarePng from 'assets/wallets/solflare.png'
 import TronPng from 'assets/wallets/tron.png'
-import CoinbasePng from 'assets/wallets/coinbase.png'
 import KeplrPng from 'assets/wallets/keplr.png'
 import PolkawalletPng from 'assets/wallets/polkadot.png'
 import PlugPng from 'assets/wallets/plug.png'
@@ -158,12 +157,6 @@ export const ConnectModalWithMultichain: React.FC<{
         icon: OtherIconPath,
         description: 'Coming soon',
         walletButtons: [
-          <PlaceholderButton
-            trackDesiredWalletKey="Coinbase"
-            key={ConnectorName.Coinbase}
-            text="Coinbase"
-            icon={generateIcon(CoinbasePng)}
-          />,
           <PlaceholderButton
             trackDesiredWalletKey="Keplr"
             key={ConnectorName.Keplr}

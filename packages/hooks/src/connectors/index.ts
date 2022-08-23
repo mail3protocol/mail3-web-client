@@ -11,21 +11,25 @@ import { useMemo } from 'react'
 import { useDidMount } from '../useDidMount'
 import { metaMask, metaMaskhooks } from './MetaMask'
 import { walletConnect, walletConnectHooks } from './WalletConnect'
+import { coinbase, coinbaseHooks } from './Coinbase'
 import { useLoginAccount } from '../useLoginInfo'
 import { zilpay } from './zilpay'
 
 export const SupportedConnectors = getSelectedConnector(
   [metaMask, metaMaskhooks],
-  [walletConnect, walletConnectHooks]
+  [walletConnect, walletConnectHooks],
+  [coinbase, coinbaseHooks]
 )
 
 export * from './MetaMask'
 export * from './WalletConnect'
+export * from './Coinbase'
 
 export enum ConnectorName {
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
   Zilpay = 'Zilpay',
+  Coinbase = 'Coinbase',
 
   // 👇 Not supported
   Phantom = 'Phantom',
@@ -33,7 +37,6 @@ export enum ConnectorName {
   Blocto = 'Blocto',
   Avalance = 'Avalance',
   TronLink = 'TronLink',
-  Coinbase = 'Coinbase',
   Keplr = 'Keplr',
   Plug = 'Plug',
   Polkawallet = 'Polkawallet',
@@ -51,6 +54,7 @@ const lastConectorNameAtom = atomWithStorage<ConnectorName | undefined>(
 const Connectors = new Map<ConnectorName | undefined, Connector>()
 Connectors.set(ConnectorName.MetaMask, metaMask)
 Connectors.set(ConnectorName.WalletConnect, walletConnect)
+Connectors.set(ConnectorName.Coinbase, coinbase)
 
 export const useSetLastConnector = () => useUpdateAtom(lastConectorNameAtom)
 export const useLastConectorName = () => useAtomValue(lastConectorNameAtom)
