@@ -242,11 +242,11 @@ export const useLogout = () => {
   const setLastConnector = useSetLastConnector()
   const onDeleteFCMToken = useDeleteFCMToken()
   return useCallback(async () => {
-    await connector?.deactivate()
     await onDeleteFCMToken()
     await clearIndexDBStore(notificationLogsStore)
     setUserInfo(null)
     setLastConnector(undefined)
+    await connector?.deactivate()
   }, [connector])
 }
 
