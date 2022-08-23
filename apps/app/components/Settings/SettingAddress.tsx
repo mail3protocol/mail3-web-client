@@ -5,7 +5,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
   Link,
   Spinner,
@@ -18,6 +17,12 @@ import {
   Button as RowButton,
   Box,
   Spacer,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverHeader,
+  PopoverBody,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import {
@@ -61,9 +66,15 @@ const Container = styled(Center)`
   flex-direction: column;
   width: 100%;
 
-  .header {
-    margin-bottom: 32px;
-    text-align: center;
+  .address-big {
+    background: rgba(78, 82, 245, 0.1);
+    border-radius: 39px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 44px;
+    height: 44px;
+    color: #000;
+    min-width: 476px;
   }
 
   .mascot {
@@ -288,7 +299,8 @@ export const SettingAddress: React.FC = () => {
           const [addr] = item.address.split('@')
           if (isBitDomain(addr)) return { ...o, bit: [...o.bit, item] }
           if (isEnsDomain(addr)) return { ...o, ens: [...o.ens, item] }
-          if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr)) return { ...o, primitive: item }
+          if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr))
+            return { ...o, primitive: item }
           return o
         },
         {
@@ -325,12 +337,41 @@ export const SettingAddress: React.FC = () => {
 
   return (
     <Container pb={{ md: '100px', base: 0 }}>
-      <header className="header">
-        <Heading fontSize={['14px', '14px', '18px']}>
-          {t('address.title')}
-        </Heading>
-        <Text fontSize={['14px', '14px', '18px']}>{t('address.desc')}</Text>
-      </header>
+      <Center className="address-big">{MAIL_SERVER_URL}</Center>
+      <Center m="10px">
+        <Text fontWeight={400} fontSize="12px" color="#4E52F5">
+          {t('address.outgoing')}
+        </Text>
+        <Popover trigger="hover">
+          <PopoverTrigger>
+            <Center cursor="pointer">
+              <QuestionOutlineIcon h="40px" color="#4E52F5" ml="5px" />
+            </Center>
+          </PopoverTrigger>
+          <PopoverContent p="24px" borderRadius="24px" textAlign="center">
+            <PopoverArrow />
+            <PopoverHeader
+              border="none"
+              fontWeight="700"
+              fontSize="14px"
+              lineHeight="18px"
+            >
+              {t('address.hover-title')}
+            </PopoverHeader>
+            <PopoverBody
+              background="#F3F3F3"
+              borderRadius="16px"
+              fontWeight="400"
+              fontSize="12px"
+              lineHeight="18px"
+              textAlign="left"
+            >
+              {t('address.hover-content')}
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+      </Center>
+
       <FormControl maxW="480px">
         <FormLabel
           fontSize="16px"
