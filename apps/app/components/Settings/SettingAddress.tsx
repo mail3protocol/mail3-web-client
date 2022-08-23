@@ -1,17 +1,13 @@
 /* eslint-disable no-nested-ternary */
 import {
   Center,
-  Checkbox,
   Flex,
   FormControl,
-  FormLabel,
   HStack,
   Link,
   Spinner,
   Stack,
-  Switch,
   Text,
-  Tooltip,
   VStack,
   Icon,
   Button as RowButton,
@@ -28,13 +24,10 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  useCheckbox,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import {
-  ChevronRightIcon,
-  CheckCircleIcon,
-  QuestionOutlineIcon,
-} from '@chakra-ui/icons'
+import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'react-i18next'
 import React, { useMemo, useState } from 'react'
@@ -64,9 +57,11 @@ import { ReactComponent as DefaultSvg } from '../../assets/settings/0x.svg'
 import { ReactComponent as BitSvg } from '../../assets/settings/bit.svg'
 import { ReactComponent as EnsSvg } from '../../assets/settings/ens.svg'
 import { ReactComponent as MoreSvg } from '../../assets/settings/more.svg'
+import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circle-cur.svg'
+import { ReactComponent as CircleSvg } from '../../assets/settings/tick-circle.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { IS_IPHONE, MAIL_SERVER_URL } from '../../constants'
+import { MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { Alias } from '../../api'
 import { RouterLink } from '../RouterLink'
@@ -159,6 +154,38 @@ interface EmailSwitchProps {
   onChange: (uuid: string, address: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
+const NewCheckbox = (props: any) => {
+  const { onChange } = props
+  const { state, getCheckboxProps, getInputProps, htmlProps } =
+    useCheckbox(props)
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      gridColumnGap={2}
+      w="24px"
+      h="24px"
+      rounded="lg"
+      cursor="pointer"
+      {...htmlProps}
+      onClick={onChange}
+    >
+      <input {...getInputProps()} hidden />
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        w={8}
+        h={8}
+        {...getCheckboxProps()}
+      >
+        {state.isChecked ? <CircleCurSvg /> : <CircleSvg />}
+      </Flex>
+    </Box>
+  )
+}
+
 const EmailSwitch: React.FC<EmailSwitchProps> = ({
   emailAddress,
   onChange,
@@ -173,35 +200,18 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
     border={isChecked ? '1px solid #4E52F5' : '1px solid #e7e7e7'}
     padding="10px 16px 10px 16px"
     w="100%"
+    bg="#fff"
   >
     <Text fontSize="14px">{emailAddress}</Text>
     {isLoading ? (
       <Spinner />
-    ) : IS_IPHONE ? (
-      <Switch
+    ) : (
+      <NewCheckbox
         colorScheme="deepBlue"
         isReadOnly={isChecked}
         isChecked={isChecked}
         onChange={onChange(uuid, address)}
       />
-    ) : (
-      <>
-        <Switch
-          colorScheme="deepBlue"
-          isReadOnly={isChecked}
-          isChecked={isChecked}
-          onChange={onChange(uuid, address)}
-          display={['none', 'none', 'block']}
-        />
-        <Checkbox
-          colorScheme="deepBlue"
-          isReadOnly={isChecked}
-          top="2px"
-          isChecked={isChecked}
-          onChange={onChange(uuid, address)}
-          display={['block', 'block', 'none']}
-        />
-      </>
     )}
   </Flex>
 )
@@ -487,21 +497,25 @@ export const SettingAddress: React.FC = () => {
                     return (
                       <TabPanel key={type}>
                         {primitiveAlias ? (
-                          <EmailSwitch
-                            uuid={primitiveAlias.uuid ?? 'first_alias'}
-                            emailAddress={generateEmailAddress(
-                              primitiveAlias.address ?? account
-                            )}
-                            account={primitiveAlias.address}
-                            onChange={onDefaultAccountChange}
-                            key={primitiveAlias.address}
-                            address={primitiveAlias.address ?? account}
-                            isLoading={isLoading}
-                            isChecked={
-                              primitiveAlias.uuid === activeAccount ||
-                              aliasDate?.aliases?.length === 1
-                            }
-                          />
+                          <Box className="switch-wrap">
+                            <Box p="16px 8px 16px 8px">
+                              <EmailSwitch
+                                uuid={primitiveAlias.uuid ?? 'first_alias'}
+                                emailAddress={generateEmailAddress(
+                                  primitiveAlias.address ?? account
+                                )}
+                                account={primitiveAlias.address}
+                                onChange={onDefaultAccountChange}
+                                key={primitiveAlias.address}
+                                address={primitiveAlias.address ?? account}
+                                isLoading={isLoading}
+                                isChecked={
+                                  primitiveAlias.uuid === activeAccount ||
+                                  aliasDate?.aliases?.length === 1
+                                }
+                              />
+                            </Box>
+                          </Box>
                         ) : null}
                       </TabPanel>
                     )
