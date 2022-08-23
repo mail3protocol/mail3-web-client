@@ -23,6 +23,11 @@ import {
   PopoverArrow,
   PopoverHeader,
   PopoverBody,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import {
@@ -55,12 +60,48 @@ import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
 import { ReactComponent as ArrawSvg } from '../../assets/setup/arrow.svg'
+import { ReactComponent as DefaultSvg } from '../../assets/settings/0x.svg'
+import { ReactComponent as BitSvg } from '../../assets/settings/bit.svg'
+import { ReactComponent as EnsSvg } from '../../assets/settings/ens.svg'
+import { ReactComponent as MoreSvg } from '../../assets/settings/more.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { IS_IPHONE, MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { Alias } from '../../api'
 import { RouterLink } from '../RouterLink'
+
+enum TabItemType {
+  Default = 0,
+  Ens = 1,
+  Bit = 2,
+  More = 3,
+}
+
+const tabsConfig: Record<
+  TabItemType,
+  {
+    Icon: any
+    name: string
+  }
+> = {
+  [TabItemType.Default]: {
+    Icon: DefaultSvg,
+    name: 'Wallet Address',
+  },
+  [TabItemType.Ens]: {
+    Icon: EnsSvg,
+    name: 'ENS Name',
+  },
+  [TabItemType.Bit]: {
+    Icon: BitSvg,
+    name: '.bit Name',
+  },
+  [TabItemType.More]: {
+    Icon: MoreSvg,
+    name: 'More',
+  },
+}
 
 const Container = styled(Center)`
   flex-direction: column;
@@ -74,7 +115,6 @@ const Container = styled(Center)`
     line-height: 44px;
     height: 44px;
     color: #000;
-    min-width: 476px;
   }
 
   .mascot {
@@ -337,7 +377,9 @@ export const SettingAddress: React.FC = () => {
 
   return (
     <Container pb={{ md: '100px', base: 0 }}>
-      <Center className="address-big">{MAIL_SERVER_URL}</Center>
+      <Center className="address-big" w={{ md: '470px', base: '100%' }}>
+        {MAIL_SERVER_URL}
+      </Center>
       <Center m="10px">
         <Text fontWeight={400} fontSize="12px" color="#4E52F5">
           {t('address.outgoing')}
@@ -371,6 +413,49 @@ export const SettingAddress: React.FC = () => {
           </PopoverContent>
         </Popover>
       </Center>
+
+      <Box w={{ base: '100%', md: 'auto' }}>
+        <Tabs position="relative">
+          <TabList
+            w={{ base: '100%', md: 'auto' }}
+            overflowX="scroll"
+            overflowY="hidden"
+            justifyContent={{ base: 'flex-start', md: 'space-around' }}
+          >
+            <HStack spacing={{ base: 0, md: '50px' }}>
+              {[
+                TabItemType.Default,
+                TabItemType.Ens,
+                TabItemType.Bit,
+                TabItemType.More,
+              ].map((type) => {
+                // eslint-disable-next-line @typescript-eslint/no-shadow
+                const { Icon, name } = tabsConfig[type]
+                return (
+                  <Tab key={type}>
+                    <HStack>
+                      <Icon />
+                      <Box whiteSpace="nowrap">{name}</Box>
+                    </HStack>
+                  </Tab>
+                )
+              })}
+            </HStack>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <p>one!</p>
+            </TabPanel>
+            <TabPanel>
+              <p>two!</p>
+            </TabPanel>
+            <TabPanel>
+              <p>three!</p>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
 
       <FormControl maxW="480px">
         <FormLabel
