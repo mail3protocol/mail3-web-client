@@ -30,6 +30,8 @@ body {
   padding: 0;
   position: relative;
   word-break: break-word;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 ${DefaultFontStyle}
