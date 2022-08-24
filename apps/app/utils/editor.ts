@@ -1,5 +1,6 @@
 import html2canvas from 'html2canvas'
 import { SubmitMessage } from 'models/src/submitMessage'
+import DOMPurify from 'dompurify'
 import { generateAttachmentContentId } from './string'
 
 export async function onRenderElementToImage(element: HTMLDivElement) {
@@ -18,7 +19,7 @@ export function replaceHtmlAttachImageSrc(
   attachments: SubmitMessage.Attachment[]
 ) {
   const div = document.createElement('div')
-  div.innerHTML = html
+  div.innerHTML = DOMPurify.sanitize(html)
   const cidToAttachmentMap = attachments.reduce<{
     [key: string]: SubmitMessage.Attachment
   }>(
@@ -46,7 +47,7 @@ export function replaceHtmlAttachImageSrc(
 
 export async function outputHtmlWithAttachmentImages(html: string) {
   const div = document.createElement('div')
-  div.innerHTML = html
+  div.innerHTML = DOMPurify.sanitize(html)
   const imageElements: HTMLImageElement[] = Array.from(
     div.querySelectorAll('img')
   )
