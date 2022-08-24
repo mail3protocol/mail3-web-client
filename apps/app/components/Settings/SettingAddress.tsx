@@ -437,7 +437,7 @@ export const SettingAddress: React.FC = () => {
                 TabItemType.Default,
                 TabItemType.Ens,
                 TabItemType.Bit,
-                TabItemType.More,
+                // TabItemType.More,
               ].map((type) => {
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 const { Icon, name } = tabsConfig[type]
@@ -491,7 +491,7 @@ export const SettingAddress: React.FC = () => {
                   TabItemType.Default,
                   TabItemType.Ens,
                   TabItemType.Bit,
-                  TabItemType.More,
+                  // TabItemType.More,
                 ].map((type) => {
                   if (type === TabItemType.Default) {
                     return (
