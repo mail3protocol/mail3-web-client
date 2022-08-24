@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
 import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
+import PreviewStyle from '../../styles/Preview.css'
 
 interface htmlParserProps {
   html: string
@@ -25,20 +26,8 @@ export const Iframe: React.FC<IframeProps> = (props) => {
   const mountNode = contentRef?.contentWindow?.document?.body
 
   useEffect(() => {
-    const iframeInnerStyle = `
-      html {
-        overflow: hidden;
-      }
-
-      body {
-        margin: 0;
-        padding: 0;
-        position: relative;
-        word-break: break-word;
-      }
-    `
     const domStyle = document.createElement('style')
-    domStyle.innerHTML = iframeInnerStyle
+    domStyle.textContent = PreviewStyle
     contentRef?.contentWindow?.document.head.appendChild(domStyle)
 
     const h = contentRef?.contentWindow?.document.body.scrollHeight
