@@ -158,7 +158,7 @@ export const RecipientAndSubject: React.FC = () => {
           onChange={(e) => setSubject(e.target.value)}
           maxLength={SUBJECT_TEXT_LIMIT}
         />
-        <Box color="#B7B7B7" fontSize="12px">
+        <Box color="#B7B7B7" fontSize="12px" whiteSpace="nowrap">
           {SUBJECT_TEXT_LIMIT - subject.length}
         </Box>
       </Item>
