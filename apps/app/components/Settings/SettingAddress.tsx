@@ -25,6 +25,8 @@ import {
   TabPanels,
   TabPanel,
   useCheckbox,
+  UnorderedList,
+  ListItem,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
@@ -239,12 +241,6 @@ enum AliasType {
 
 const LIMIT_MAX_NUMBER = 5
 
-const NotFound = () => (
-  <Box fontSize="14px" p="8px 16px">
-    Not Found
-  </Box>
-)
-
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
   const router = useLocation()
@@ -395,6 +391,29 @@ export const SettingAddress: React.FC = () => {
     })
   }
 
+  const NotFound = (
+    <Box
+      fontSize={{ base: '12px', md: '14px' }}
+      p="8px 16px"
+      textAlign="center"
+    >
+      <Box
+        fontSize={{ base: '14px', md: '16px' }}
+        fontWeight="600"
+        lineHeight="1"
+      >
+        <Trans ns="settings" i18nKey="address.not-found-p1" t={t} />
+      </Box>
+      <Box lineHeight="2">
+        <Box>{t('address.not-found-p2')}</Box>
+        <UnorderedList textAlign="left" pl={{ base: '30px', md: '70px' }}>
+          <ListItem>{t('address.not-found-p3')}</ListItem>
+          <ListItem>{t('address.not-found-p4')}</ListItem>
+        </UnorderedList>
+      </Box>
+    </Box>
+  )
+
   return (
     <Container pb={{ md: '100px', base: 0 }}>
       <Center
@@ -542,7 +561,7 @@ export const SettingAddress: React.FC = () => {
                         {!isLoading ? (
                           <Box className="switch-wrap">
                             <Box p="16px 8px 16px 8px">
-                              {!ensAliases.length ? <NotFound /> : null}
+                              {!ensAliases.length ? NotFound : null}
 
                               <VStack spacing="10px">
                                 {ensAliases.map((a) => (
@@ -626,7 +645,7 @@ export const SettingAddress: React.FC = () => {
                         {!isLoading ? (
                           <Box className="switch-wrap">
                             <Box p="16px 8px 16px 8px">
-                              {!bitAliases.length ? <NotFound /> : null}
+                              {!bitAliases.length ? NotFound : null}
                               <VStack spacing="10px">
                                 {bitAliases.map((a) => (
                                   <EmailSwitch
