@@ -47,7 +47,9 @@ import {
   isEnsDomain,
   isBitDomain,
   isZilpayAddress,
+  truncateMailAddress,
 } from 'shared'
+import { useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -251,7 +253,7 @@ export const SettingAddress: React.FC = () => {
   const dialog = useDialog()
   const trackClickENSRefresh = useTrackClick(TrackEvent.ClickENSRefresh)
   const trackClickBITRefresh = useTrackClick(TrackEvent.ClickBITRefresh)
-  const setUserProperties = useUpdateAtom(userPropertiesAtom)
+  const [userProps, setUserProperties] = useAtom(userPropertiesAtom)
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
   const trackClickRegisterBIT = useTrackClick(TrackEvent.ClickRegisterBIT)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
@@ -388,7 +390,7 @@ export const SettingAddress: React.FC = () => {
   return (
     <Container pb={{ md: '100px', base: 0 }}>
       <Center className="address-big" w={{ md: '470px', base: '100%' }}>
-        {MAIL_SERVER_URL}
+        {truncateMailAddress(userProps?.defaultAddress)}
       </Center>
       <Center m="10px">
         <Text fontWeight={400} fontSize="12px" color="#4E52F5">
