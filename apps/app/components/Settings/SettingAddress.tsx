@@ -48,6 +48,7 @@ import {
   isBitDomain,
   isZilpayAddress,
   truncateMailAddress,
+  copyText,
 } from 'shared'
 import { useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
@@ -387,9 +388,21 @@ export const SettingAddress: React.FC = () => {
     </RowButton>
   )
 
+  const onCopy = async () => {
+    await copyText(userProps?.defaultAddress)
+    toast(t('address.copied'), {
+      status: 'success',
+    })
+  }
+
   return (
     <Container pb={{ md: '100px', base: 0 }}>
-      <Center className="address-big" w={{ md: '470px', base: '100%' }}>
+      <Center
+        className="address-big"
+        w={{ md: '470px', base: '100%' }}
+        cursor="pointer"
+        onClick={onCopy}
+      >
         {truncateMailAddress(userProps?.defaultAddress)}
       </Center>
       <Center m="10px">
