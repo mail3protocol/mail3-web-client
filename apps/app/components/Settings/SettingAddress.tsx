@@ -117,6 +117,10 @@ const Container = styled(Center)`
     color: #000;
   }
 
+  .tablist::-webkit-scrollbar {
+    display: none;
+  }
+
   .mascot {
     bottom: 0;
     // 240 = content width / 2
@@ -425,9 +429,6 @@ export const SettingAddress: React.FC = () => {
         {truncateMailAddress(userProps?.defaultAddress)}
       </Center>
       <Center m="10px">
-        <Text fontWeight={400} fontSize="12px" color="#4E52F5">
-          {t('address.outgoing')}
-        </Text>
         <Center
           cursor="pointer"
           display={{ base: 'flex', md: 'none' }}
@@ -462,12 +463,18 @@ export const SettingAddress: React.FC = () => {
             })
           }}
         >
+          <Text fontWeight={400} fontSize="12px" color="#4E52F5">
+            {t('address.outgoing')}
+          </Text>
           <QuestionOutlineIcon h="40px" color="#4E52F5" ml="5px" />
         </Center>
 
         <Popover trigger="hover">
           <PopoverTrigger>
             <Center cursor="pointer" display={{ base: 'none', md: 'flex' }}>
+              <Text fontWeight={400} fontSize="12px" color="#4E52F5">
+                {t('address.outgoing')}
+              </Text>
               <QuestionOutlineIcon h="40px" color="#4E52F5" ml="5px" />
             </Center>
           </PopoverTrigger>
@@ -502,6 +509,7 @@ export const SettingAddress: React.FC = () => {
       <Box w={{ base: '100%', md: 'auto' }}>
         <Tabs position="relative">
           <TabList
+            className="tablist"
             w={{ base: '100%', md: 'auto' }}
             overflowX="scroll"
             overflowY="hidden"
