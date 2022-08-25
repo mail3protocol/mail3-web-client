@@ -46,6 +46,7 @@ export interface ConfirmDialogOptions {
   showCloseButton?: boolean
   okButtonProps?: ButtonProps
   isCloseOnChangePathname?: boolean // default is true
+  showClose?: boolean
 }
 
 export interface ConfirmDialogProps extends ConfirmDialogOptions {
@@ -180,7 +181,7 @@ export const ConfirmDialog: React.FC = () => {
     modalBodyProps,
     modalContentProps,
     modalProps,
-    showCloseButton = type !== 'text',
+    showCloseButton = options?.showClose || type !== 'text',
     okButtonProps,
     isCloseOnChangePathname,
   } = options

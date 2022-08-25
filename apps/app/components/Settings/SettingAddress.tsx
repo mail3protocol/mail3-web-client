@@ -428,13 +428,50 @@ export const SettingAddress: React.FC = () => {
         <Text fontWeight={400} fontSize="12px" color="#4E52F5">
           {t('address.outgoing')}
         </Text>
+        <Center
+          cursor="pointer"
+          display={{ base: 'flex', md: 'none' }}
+          onClick={() => {
+            dialog({
+              type: 'text',
+              showClose: true,
+              title: (
+                <Box
+                  fontWeight="700"
+                  fontSize="14px"
+                  lineHeight="18px"
+                  textAlign="left"
+                >
+                  {t('address.hover-title')}
+                </Box>
+              ),
+              description: (
+                <UnorderedList
+                  background="#F3F3F3"
+                  borderRadius="16px"
+                  fontWeight="400"
+                  fontSize="12px"
+                  lineHeight="18px"
+                  textAlign="left"
+                  p="20px"
+                  m="0"
+                >
+                  <ListItem>{t('address.hover-content')}</ListItem>
+                </UnorderedList>
+              ),
+            })
+          }}
+        >
+          <QuestionOutlineIcon h="40px" color="#4E52F5" ml="5px" />
+        </Center>
+
         <Popover trigger="hover">
           <PopoverTrigger>
-            <Center cursor="pointer">
+            <Center cursor="pointer" display={{ base: 'none', md: 'flex' }}>
               <QuestionOutlineIcon h="40px" color="#4E52F5" ml="5px" />
             </Center>
           </PopoverTrigger>
-          <PopoverContent p="24px" borderRadius="24px" textAlign="center">
+          <PopoverContent p="10px" borderRadius="24px" textAlign="center">
             <PopoverArrow />
             <PopoverHeader
               border="none"
@@ -444,15 +481,19 @@ export const SettingAddress: React.FC = () => {
             >
               {t('address.hover-title')}
             </PopoverHeader>
-            <PopoverBody
-              background="#F3F3F3"
-              borderRadius="16px"
-              fontWeight="400"
-              fontSize="12px"
-              lineHeight="18px"
-              textAlign="left"
-            >
-              {t('address.hover-content')}
+            <PopoverBody>
+              <UnorderedList
+                background="#F3F3F3"
+                borderRadius="16px"
+                fontWeight="400"
+                fontSize="12px"
+                lineHeight="18px"
+                textAlign="left"
+                p="20px"
+                m="0"
+              >
+                <ListItem>{t('address.hover-content')}</ListItem>
+              </UnorderedList>
             </PopoverBody>
           </PopoverContent>
         </Popover>
