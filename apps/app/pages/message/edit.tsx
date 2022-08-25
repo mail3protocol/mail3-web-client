@@ -194,6 +194,8 @@ export const NewMessagePage = () => {
 
   const queryMessageAndContentKeyId = useMemo(() => id, [])
 
+  const isEnabledMessageInfoQuery =
+    !!queryMessageAndContentKeyId && !messageData
   const queryMessageInfoAndContentData = useQuery(
     [Query.GetMessageInfoAndContent, queryMessageAndContentKeyId],
     async () => {
@@ -207,7 +209,7 @@ export const NewMessagePage = () => {
       }
     },
     {
-      enabled: !!queryMessageAndContentKeyId && messageData != null,
+      enabled: isEnabledMessageInfoQuery,
       refetchOnReconnect: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -269,9 +271,9 @@ export const NewMessagePage = () => {
     return redirectHome()
   }
 
-  const isLoadingContent = !messageData
-    ? isLoadingAttachments
-    : isLoadingAttachments || !!queryMessageInfoAndContentData?.isLoading
+  const isLoadingContent = isEnabledMessageInfoQuery
+    ? isLoadingAttachments || !!queryMessageInfoAndContentData?.isLoading
+    : isLoadingAttachments
 
   return (
     <>
