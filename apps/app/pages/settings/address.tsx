@@ -13,7 +13,7 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 export const SettingsAddressPage = () => {
   const [t] = useTranslation('settings')
   const { redirectHome, isAuth } = useRedirectHome()
-  useDocumentTitle('Setting Address')
+  useDocumentTitle('Customize your email address')
   if (!isAuth) {
     return redirectHome()
   }
