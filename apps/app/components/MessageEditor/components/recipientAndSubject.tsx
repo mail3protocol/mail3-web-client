@@ -34,6 +34,7 @@ export const ItemField = styled(Box)`
   color: #6f6f6f;
   font-size: 14px;
   user-select: none;
+  white-space: nowrap;
 `
 
 export const RecipientAndSubject: React.FC = () => {
@@ -77,7 +78,7 @@ export const RecipientAndSubject: React.FC = () => {
         />
       </Item>
       <Item px={ItemPx}>
-        <ItemField>To</ItemField>
+        <ItemField>{t('to')}</ItemField>
         <ToInput onChange={setToAddresses} addresses={toAddresses} />
         <Stack direction="row" spacing="5px">
           <RowButton
@@ -157,7 +158,7 @@ export const RecipientAndSubject: React.FC = () => {
           onChange={(e) => setSubject(e.target.value)}
           maxLength={SUBJECT_TEXT_LIMIT}
         />
-        <Box color="#B7B7B7" fontSize="12px">
+        <Box color="#B7B7B7" fontSize="12px" whiteSpace="nowrap">
           {SUBJECT_TEXT_LIMIT - subject.length}
         </Box>
       </Item>

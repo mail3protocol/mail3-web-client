@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
 import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
+import DefaultFontStyle from '../../styles/font.css'
 
 interface htmlParserProps {
   html: string
@@ -19,30 +20,41 @@ interface IframeProps extends React.IframeHTMLAttributes<HTMLIFrameElement> {
   getHeight: (h: number) => void
 }
 
+const IFRAME_INNER_STYLE = `
+html {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  word-break: break-word;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+${DefaultFontStyle}
+`
+
+const DEFAULT_HEIGHT = 200
+
 export const Iframe: React.FC<IframeProps> = (props) => {
   const { children, getHeight, ...rest } = props
   const [contentRef, setContentRef] = useState<HTMLIFrameElement | null>(null)
   const mountNode = contentRef?.contentWindow?.document?.body
 
-  useEffect(() => {
-    const iframeInnerStyle = `
-      html {
-        overflow: hidden;
-      }
+  function getHeightByContentRef() {
+    const h = contentRef?.contentWindow?.document.body.scrollHeight
+    getHeight(h ?? DEFAULT_HEIGHT)
+  }
 
-      body {
-        margin: 0;
-        padding: 0;
-        position: relative;
-        word-break: break-word;
-      }
-    `
+  useEffect(() => {
     const domStyle = document.createElement('style')
-    domStyle.innerHTML = iframeInnerStyle
+    domStyle.textContent = IFRAME_INNER_STYLE
     contentRef?.contentWindow?.document.head.appendChild(domStyle)
 
-    const h = contentRef?.contentWindow?.document.body.scrollHeight
-    getHeight(h ?? 200)
+    getHeightByContentRef()
   }, [contentRef])
 
   return (
@@ -50,10 +62,7 @@ export const Iframe: React.FC<IframeProps> = (props) => {
       title="Message Content"
       {...rest}
       ref={setContentRef}
-      onLoad={() => {
-        const h = contentRef?.contentWindow?.document.body.scrollHeight
-        getHeight(h ?? 200)
-      }}
+      onLoad={getHeightByContentRef}
     >
       {mountNode && createPortal(children, mountNode)}
     </iframe>
