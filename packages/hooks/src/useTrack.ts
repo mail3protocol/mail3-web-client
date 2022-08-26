@@ -169,6 +169,7 @@ export enum DesiredWallet {
   Imtoken = 'imToken',
   Trust = 'Trust',
   ZilPay = 'ZilPay',
+  Coinbase = 'Coinbase',
 }
 
 export enum SignatureStatus {

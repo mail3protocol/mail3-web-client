@@ -30,6 +30,7 @@ import {
   isRejectedMessage,
 } from '../../utils/wallet'
 import { IS_MOBILE } from '../../constants'
+import { CoinbaseButton } from './CoinbaseButton'
 
 export interface EthButtonsProps {
   onClose: () => void
@@ -192,6 +193,7 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
         key={ConnectorName.WalletConnect}
         onClose={onClose}
       />
+      <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />
     </>
   )
 }

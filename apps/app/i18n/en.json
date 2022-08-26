@@ -29,7 +29,8 @@
             "footer": "We do not own your private keys and cannot access your assets without your confirmation.",
             "notice": "Notice",
             "imtoken-reject": "You have declined authorization, please refresh this page to authorize again.",
-            "wechat": "The current environment does not support metamask. You can connect Metamask in the browser."
+            "wechat": "The current environment does not support metamask. You can connect Metamask in the browser.",
+            "coinbase": "Coinbase"
         },
         "auth": {
             "connect": "Connect your Wallet",
