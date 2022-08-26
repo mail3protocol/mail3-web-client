@@ -16,6 +16,7 @@ import { LitepaperLanguage, TrackEvent, TrackKey, useTrackClick } from 'hooks'
 import styled from '@emotion/styled'
 import {
   LAUNCH_URL as launchURL,
+  LIGHT_PAPER_CH_URL,
   LIGHT_PAPER_JP_URL,
   LIGHT_PAPER_URL,
   WHITE_LIST_URL,
@@ -47,6 +48,27 @@ const MenuItem = styled(RowButton)`
   border-radius: 0;
   border-bottom: 1px solid #e7e7e7;
 `
+
+const LITE_PAPER_ITEMS = [
+  {
+    href: LIGHT_PAPER_URL,
+    trackValue: LitepaperLanguage.English,
+    language: 'English',
+    content: 'Litepaper',
+  },
+  {
+    href: LIGHT_PAPER_JP_URL,
+    trackValue: LitepaperLanguage.Japanese,
+    language: 'にほんご',
+    content: 'ライトペーパー',
+  },
+  {
+    href: LIGHT_PAPER_CH_URL,
+    trackValue: LitepaperLanguage.Chinese,
+    language: '中文',
+    content: '轻白皮书',
+  },
+]
 
 export const Buttons: React.FC<{
   isWhiteList?: boolean
@@ -129,34 +151,22 @@ export const Buttons: React.FC<{
             }
           `}
         >
-          <ListItem>
-            <Link
-              href={LIGHT_PAPER_URL}
-              target="_blank"
-              onClick={() =>
-                trackWhitePaper({
-                  [TrackKey.LitepaperLanguage]: LitepaperLanguage.English,
-                })
-              }
-            >
-              <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
-              English
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link
-              href={LIGHT_PAPER_JP_URL}
-              target="_blank"
-              onClick={() =>
-                trackWhitePaper({
-                  [TrackKey.LitepaperLanguage]: LitepaperLanguage.Japanese,
-                })
-              }
-            >
-              <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
-              にほんご
-            </Link>
-          </ListItem>
+          {LITE_PAPER_ITEMS.map(({ href, trackValue, language }) => (
+            <ListItem key={trackValue}>
+              <Link
+                href={href}
+                target="_blank"
+                onClick={() =>
+                  trackWhitePaper({
+                    [TrackKey.LitepaperLanguage]: trackValue,
+                  })
+                }
+              >
+                <ListIcon as={PdfIcon} w="20px" h="20px" mr="10px" />
+                {language}
+              </Link>
+            </ListItem>
+          ))}
         </List>
       </Box>
     </Box>
@@ -265,38 +275,24 @@ export const Menus: React.FC<{
   )
   const litepaperButton = (
     <>
-      <Link w="full" href={LIGHT_PAPER_URL} target="_blank">
-        <MenuItem
-          variant="unstyled"
-          onClick={() =>
-            trackWhitePaper({
-              [TrackKey.LitepaperLanguage]: LitepaperLanguage.English,
-            })
-          }
-          display="flex"
-          alignItems="center"
-          justifyContent="flex-start"
-        >
-          <Icon as={PdfIcon} w="20px" h="20px" mr="8px" />
-          Litepaper
-        </MenuItem>
-      </Link>
-      <Link w="full" href={LIGHT_PAPER_JP_URL} target="_blank">
-        <MenuItem
-          variant="unstyled"
-          onClick={() =>
-            trackWhitePaper({
-              [TrackKey.LitepaperLanguage]: LitepaperLanguage.Japanese,
-            })
-          }
-          display="flex"
-          alignItems="center"
-          justifyContent="flex-start"
-        >
-          <Icon as={PdfIcon} w="20px" h="20px" mr="8px" />
-          ライトペーパー
-        </MenuItem>
-      </Link>
+      {LITE_PAPER_ITEMS.map(({ href, content, trackValue }) => (
+        <Link w="full" href={href} target="_blank" key={trackValue}>
+          <MenuItem
+            variant="unstyled"
+            onClick={() =>
+              trackWhitePaper({
+                [TrackKey.LitepaperLanguage]: trackValue,
+              })
+            }
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-start"
+          >
+            <Icon as={PdfIcon} w="20px" h="20px" mr="8px" />
+            {content}
+          </MenuItem>
+        </Link>
+      ))}
     </>
   )
   return isWhiteList ? (

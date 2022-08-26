@@ -29,7 +29,7 @@ export const WhitelistGuide = () => {
         passHref
       >
         <Button w="176px" mt="40px" onClick={() => trackClickGetIn()}>
-          OK，Get in
+          OK, Get in
         </Button>
       </NextLink>
     </Flex>
