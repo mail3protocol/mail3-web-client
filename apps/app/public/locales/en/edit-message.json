@@ -40,5 +40,6 @@
         "title": "Enable IPFS Storage",
         "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
         "generate_key": "Generate key"
-    }
+    },
+    "need_to_open_wallet": "Need to open wallet. If already connected, please try again. "
 }
