@@ -104,6 +104,7 @@ export const IpfsModal: React.FC<{
       if (provider == null) {
         toast(t('need_to_open_wallet'))
         await connector?.activate()
+        return
       }
       onOpenSigningDialog()
       const signedData = await signMessage(stringToBeSigned)
@@ -115,9 +116,7 @@ export const IpfsModal: React.FC<{
       await api.updateMessageEncryptionKey(signedStringWithSha256)
       onAfterSignature?.(signedString)
     } catch (e) {
-      if (e instanceof NotConnectWallet) {
-        onOpenWalletDialog()
-      }
+      console.error(e)
     } finally {
       onCloseSigningDialog()
     }
