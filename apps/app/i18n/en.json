@@ -61,6 +61,7 @@
     "edit-message": {
         "title": "New Message",
         "from": "From",
+        "to": "To",
         "community": "Community",
         "cc": "CC",
         "bcc": "BCC",
