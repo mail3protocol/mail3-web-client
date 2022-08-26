@@ -56,6 +56,7 @@ import { useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
+import unhappySetupMascot from '../../assets/unhappy-setup-mascot.png'
 import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
 import { ReactComponent as ArrawSvg } from '../../assets/setup/arrow.svg'
 import { ReactComponent as DefaultSvg } from '../../assets/settings/0x.svg'
@@ -780,9 +781,18 @@ export const SettingAddress: React.FC = () => {
         </Tabs>
       </Box>
 
-      <Flex className="mascot">
-        <Mascot src={happySetupMascot} />
-      </Flex>
+      {isLoading ? null : (
+        <Flex className="mascot">
+          <Mascot
+            src={
+              userProps?.defaultAddress.startsWith('0x')
+                ? unhappySetupMascot
+                : happySetupMascot
+            }
+          />
+        </Flex>
+      )}
+
       {(router.pathname as any) !== RoutePath.Settings ? (
         <Center className="footer" w="full">
           <RouterLink href={RoutePath.SetupSignature} passHref>
