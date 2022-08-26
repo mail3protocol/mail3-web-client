@@ -429,7 +429,7 @@ export const SettingAddress: React.FC = () => {
       >
         {truncateMailAddress(userProps?.defaultAddress)}
       </Center>
-      <Center m="10px">
+      <Center>
         <Center
           cursor="pointer"
           display={{ base: 'flex', md: 'none' }}
@@ -507,7 +507,7 @@ export const SettingAddress: React.FC = () => {
         </Popover>
       </Center>
 
-      <Box w={{ base: '100%', md: 'auto' }}>
+      <Box w={{ base: '100%', md: 'auto' }} mt="15px">
         <Tabs position="relative">
           <TabList
             className="tablist"
@@ -515,8 +515,22 @@ export const SettingAddress: React.FC = () => {
             overflowX="scroll"
             overflowY="hidden"
             justifyContent={{ base: 'flex-start', md: 'space-around' }}
+            border="none"
+            position="relative"
           >
-            <HStack spacing={{ base: 0, md: '50px' }}>
+            <Box
+              w="100%"
+              bottom="0"
+              position="absolute"
+              zIndex="1"
+              bg="#F3F3F3"
+              h="1px"
+            />
+            <HStack
+              spacing={{ base: 0, md: '50px' }}
+              position="relative"
+              zIndex="2"
+            >
               {[
                 TabItemType.Default,
                 TabItemType.Ens,
@@ -535,17 +549,25 @@ export const SettingAddress: React.FC = () => {
                         position: 'absolute',
                         w: '50px',
                         h: '4px',
-                        bottom: 0,
+                        bottom: '-1px',
                         bg: '#000',
                         ml: '20px',
                         borderRadius: '4px',
                       },
                     }}
                     position="relative"
+                    p={{ base: '5px', md: 'auto' }}
                   >
                     <HStack>
                       <Icon />
-                      <Box whiteSpace="nowrap" fontSize="18px">
+                      <Box
+                        whiteSpace="nowrap"
+                        fontSize={{ base: '14px', md: '18px' }}
+                        marginInlineStart={{
+                          base: '2px !important',
+                          md: '6px !important',
+                        }}
+                      >
                         {name}
                       </Box>
                     </HStack>
@@ -555,7 +577,7 @@ export const SettingAddress: React.FC = () => {
             </HStack>
           </TabList>
 
-          <Center p="32px">
+          <Center p="32px 10px">
             <Box w="600px" textAlign="center" fontSize="12px">
               <Trans
                 ns="settings"
