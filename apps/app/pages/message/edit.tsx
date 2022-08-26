@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import type { GetServerSideProps, NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { CONTAINER_MAX_WIDTH } from 'ui'
 import { Box } from '@chakra-ui/react'
 import { SubmitMessage } from 'models/src/submitMessage'
@@ -8,26 +6,23 @@ import { useAtomValue } from 'jotai'
 import { SignatureStatus, useDidMount } from 'hooks'
 import { useQuery } from 'react-query'
 import { GetMessage } from 'models/src/getMessage'
-import Head from 'next/head'
-import { useTranslation } from 'next-i18next'
+import { useLocation, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { MessageEditor } from '../../components/MessageEditor'
-import { Navbar } from '../../components/Navbar'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
-import { getAuthenticateProps, userPropertiesAtom } from '../../hooks/useLogin'
-import {
-  AttachmentExtraInfo,
-  useAttachment,
-} from '../../components/MessageEditor/hooks/useAttachment'
+import { userPropertiesAtom } from '../../hooks/useLogin'
+import { useAttachment } from '../../components/MessageEditor/hooks/useAttachment'
 import { useAPI } from '../../hooks/useAPI'
-import { convertBlobToBase64 } from '../../utils/file'
 import { useSaveMessage } from '../../components/MessageEditor/hooks/useSaveMessage'
 import { replaceHtmlAttachImageSrc } from '../../utils/editor'
 import { DRIFT_BOTTLE_ADDRESS } from '../../constants'
-import { filterEmails } from '../../utils'
+import { filterEmails, isHttpUriNoBlankSpaceReg } from '../../utils'
 import { Query } from '../../api/query'
 import { catchApiResponse } from '../../utils/api'
 import { GotoInbox } from '../../components/GotoInbox'
+import { useRedirectHome } from '../../hooks/useRedirectHome'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 function getDefaultTemplate(content: string) {
   return `<p>
@@ -39,7 +34,7 @@ ${content}
 }
 
 function getReplyTemplate(content: string, signContent: string) {
-  return getDefaultTemplate(`<blockquote style="border-left: 2px solid #6f6f6f; background-color: #f7f7f7; padding: 16px 20px">
+  return getDefaultTemplate(`<blockquote style="border-left: 2px solid #6f6f6f; background-color: #f7f7f7; padding: 6px; overflow: auto; margin: 0 0 0 8px; color: #6F6F6F; word-break: break-word;">
 ${content}
 </blockquote>
 <br/>
@@ -48,7 +43,7 @@ ${signContent}`)
 }
 
 function getForwardTemplate(content: string, signContent: string) {
-  return getDefaultTemplate(`<blockquote style="background-color: #f7f7f7; padding: 16px 20px">
+  return getDefaultTemplate(`<blockquote style="background-color: #f7f7f7; padding: 8px; border-radius: 8px; margin: 0; color: #6F6F6F; word-break: break-word;">
 <p>---------- Forwarded message ---------</p>
 ${content}
 </blockquote>
@@ -66,41 +61,32 @@ function getDriftbottleTemplate(content: string, signContent: string) {
 </p>`
 }
 
-export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
-
-interface ServerSideProps {
-  action: Action | null
-  id: string | null
-  // 👇👇 array string is split by `,`
-  to: string[] | null
-  forceTo: string[] | null // only `forceTo` without `messageInfo.to`
-  origin: 'driftbottle' | null
+function replaceSignContentUrlToATag(signContent: string) {
+  return signContent.replace(
+    isHttpUriNoBlankSpaceReg,
+    (url) => `<a href="${url}">${url}</a>`
+  )
 }
 
-export const getServerSideProps: GetServerSideProps<ServerSideProps> =
-  getAuthenticateProps(async ({ locale, query }) => ({
-    props: {
-      ...(await serverSideTranslations(locale as string, [
-        'edit-message',
-        'connect',
-        'common',
-      ])),
-      action: query.action ? query.action : null,
-      id: query.id ? query.id : null,
-      to: query.to ? filterEmails((query.to as string).split(',')) : null,
-      forceTo: query.force_to
-        ? filterEmails((query.force_to as string).split(','))
-        : null,
-      origin: query.origin ? query.origin : null,
-    },
-  }))
+export type Action = 'driftbottle' | SubmitMessage.ReferenceAction
 
-const NewMessagePage: NextPage<ServerSideProps> = ({
-  action,
-  id,
-  to,
-  forceTo,
-}) => {
+export interface MessageData {
+  messageInfo: GetMessage.Response
+  messageContent: GetMessageContent.Response
+}
+
+export const NewMessagePage = () => {
+  const [searchParams] = useSearchParams()
+  const action = searchParams.get('action')
+  const id = searchParams.get('id')
+  const _to = searchParams.get('to')
+  const searchParamsSubject = searchParams.get('subject')
+  const location = useLocation()
+  const messageData = location.state as MessageData | undefined
+  const to = _to ? filterEmails(_to.split(',')) : null
+  const _forceTo = searchParams.get('force_to')
+  const forceTo = _forceTo ? filterEmails(_forceTo.split(',')) : null
+  const { isAuth, redirectHome } = useRedirectHome()
   const api = useAPI()
   const [t] = useTranslation('edit-message')
   const userProperties = useAtomValue(userPropertiesAtom)
@@ -109,7 +95,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     signatureStatus === SignatureStatus.OnlyText ||
     signatureStatus === SignatureStatus.BothEnabled
   const [isLoadedSubjectInfo, setIsLoadedSubjectInfo] = useState(false)
-  const [isLoadingAttachments, setIsLoadingAttachments] = useState(false)
   const {
     setSubject,
     setToAddresses,
@@ -119,14 +104,15 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     onReset,
   } = useSubject()
   const {
-    setAttachmentExtraInfo,
-    setAttachments,
     onResetAttachments,
     attachments,
+    isLoadingAttachments,
+    loadAttachments,
   } = useAttachment()
   const { onResetSavingAtom } = useSaveMessage()
 
-  function getSubject(messageInfo: GetMessage.Response) {
+  function getSubject(messageInfo?: GetMessage.Response | null) {
+    if (searchParamsSubject) return searchParamsSubject
     if (!messageInfo) return ''
     if (
       (messageInfo.subject.startsWith('Fwd:') && action === 'forward') ||
@@ -149,7 +135,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     return messageInfo.subject
   }
 
-  function getTo(messageInfo?: GetMessage.Response) {
+  function getTo(messageInfo?: GetMessage.Response | null) {
     if (forceTo) {
       return forceTo
     }
@@ -164,10 +150,9 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     return getToAddressByMessageInfo().concat(to || [])
   }
 
-  async function setSubjectAndOtherByMessageInfo(
+  function setSubjectAndOtherByMessageInfo(
     messageInfo?: GetMessage.Response | null
   ) {
-    if (!messageInfo) return
     if (isLoadedSubjectInfo) return
     setIsLoadedSubjectInfo(true)
     if (userProperties?.defaultAddress) {
@@ -175,7 +160,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     }
     setSubject(getSubject(messageInfo))
     setToAddresses(getTo(messageInfo))
-    if (action !== 'reply' && action !== 'forward') {
+    if (messageInfo && action !== 'reply' && action !== 'forward') {
       if (messageInfo.cc) {
         setCcAddresses(messageInfo.cc.map((item) => item.address))
       }
@@ -183,48 +168,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
         setBccAddresses(messageInfo.bcc.map((item) => item.address))
       }
     }
-    if (!messageInfo.attachments) return
-    setAttachments(
-      messageInfo.attachments.map((a) => ({
-        filename: a.filename,
-        contentType: a.contentType,
-        cid: a.contentId,
-        content: '',
-        contentDisposition: a.inline ? 'inline' : 'attachment',
-      }))
-    )
-    setAttachmentExtraInfo(
-      messageInfo.attachments.reduce<{
-        [key: string]: AttachmentExtraInfo
-      }>(
-        (acc, cur) => ({
-          ...acc,
-          [cur.contentId]: { downloadProgress: 0 },
-        }),
-        {}
-      )
-    )
-    setIsLoadingAttachments(true)
-    await Promise.all(
-      messageInfo.attachments.map((attachment, i) =>
-        api
-          .downloadAttachment(messageInfo.id, attachment.id)
-          .then((res) => convertBlobToBase64(res.data))
-          .then((base64) => {
-            setAttachmentExtraInfo((o) => ({
-              ...o,
-              [attachment.contentId]: { downloadProgress: 1 },
-            }))
-            setAttachments((a) => {
-              // eslint-disable-next-line no-param-reassign,prefer-destructuring
-              a[i].content = base64.split(',')[1]
-              return a.concat([])
-            })
-          })
-          .catch(() => {})
-      )
-    )
-    setIsLoadingAttachments(false)
   }
 
   useDidMount(() => {
@@ -245,6 +188,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     }
     return 'Edit Mail'
   }, [action, id])
+  useDocumentTitle(title)
 
   const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
 
@@ -258,18 +202,12 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
             api.getMessageInfo(id as string)
           )
         : null
-      const messageContent = messageInfo?.text.id
-        ? await catchApiResponse<GetMessageContent.Response>(
-            api.getMessageContent(messageInfo?.text.id)
-          )
-        : null
       return {
         messageInfo,
-        messageContent,
       }
     },
     {
-      enabled: !!queryMessageAndContentKeyId,
+      enabled: !!queryMessageAndContentKeyId && messageData != null,
       refetchOnReconnect: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -277,8 +215,10 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     }
   )
 
-  const messageContent = queryMessageInfoAndContentData?.data?.messageContent
-  const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
+  const messageInfo =
+    messageData?.messageInfo ??
+    queryMessageInfoAndContentData?.data?.messageInfo
+  const messageContent = messageInfo?.text
 
   useEffect(() => {
     if (isFirstLoadMessage) return
@@ -286,6 +226,9 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
       setIsFirstLoadMessage(true)
     }
     setSubjectAndOtherByMessageInfo(messageInfo)
+    if (messageInfo?.attachments) {
+      loadAttachments(messageInfo.id, messageInfo.attachments)
+    }
   }, [messageInfo])
 
   useEffect(() => {
@@ -296,7 +239,7 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
   const defaultContent = useMemo(() => {
     const signContent =
       isEnableSignatureText && userProperties?.text_signature
-        ? userProperties?.text_signature
+        ? replaceSignContentUrlToATag(userProperties?.text_signature)
         : ''
     if (action === 'driftbottle') {
       return getDriftbottleTemplate(t('drift_bottle_template'), signContent)
@@ -322,11 +265,19 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
     return replaceHtmlAttachImageSrc(defaultContent, attachments)
   }, [defaultContent, isLoadingAttachments])
 
+  if (!isAuth) {
+    return redirectHome()
+  }
+
+  const isLoadingContent = !messageData
+    ? isLoadingAttachments
+    : isLoadingAttachments || !!queryMessageInfoAndContentData?.isLoading
+
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Mail3: {title}</title>
-      </Head>
+      </Head> */}
       <Box
         maxW={`${CONTAINER_MAX_WIDTH}px`}
         px={{
@@ -335,15 +286,6 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
         }}
         mx="auto"
       >
-        <Box
-          w="full"
-          px={{
-            base: '20px',
-            md: '0',
-          }}
-        >
-          <Navbar />
-        </Box>
         <GotoInbox />
         <MessageEditor
           defaultContent={contentWithAttachmentImage}
@@ -351,13 +293,9 @@ const NewMessagePage: NextPage<ServerSideProps> = ({
             signatureStatus === SignatureStatus.OnlyImage ||
             signatureStatus === SignatureStatus.BothEnabled
           }
-          isLoading={
-            queryMessageInfoAndContentData.isLoading || isLoadingAttachments
-          }
+          isLoading={isLoadingContent}
         />
       </Box>
     </>
   )
 }
-
-export default NewMessagePage

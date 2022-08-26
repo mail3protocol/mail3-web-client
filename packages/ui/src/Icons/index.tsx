@@ -1,0 +1,6 @@
+export * from './githubIcon'
+export * from './mirrorIcon'
+export * from './rightArrowIcon'
+export * from './discordIcon'
+export * from './twitterIcon'
+export * from './interestIcon'

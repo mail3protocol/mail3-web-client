@@ -1,26 +1,28 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
 import { useInfiniteQuery } from 'react-query'
-import { useRouter } from 'next/router'
 import { Button, PageContainer } from 'ui'
-import { TrackEvent, useToast, useTrackClick } from 'hooks'
+import { useToast } from 'hooks'
+import { atom, useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
 import { MailboxMessageItemResponse } from '../../api'
 import { Loading } from '../Loading'
-import { InboxNav, InboxNavType } from './Nav'
+import { InboxNav } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
 import { InfiniteHandle, InfiniteMailbox } from '../InfiniteMailbox'
 import { EmptyStatus, NoNewStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 
-import SVGWrite from '../../assets/mailbox/write.svg'
 import { SendingDialog } from '../SendingDialog'
+import { GoToWriteMailButton } from '../GoToWriteMailButton'
+import { ProductRecommendationsBanner } from '../ProductRecommendationsBanner'
+import { Mailboxes } from '../../api/mailboxes'
 
 export const NewPageContainer = styled(PageContainer)`
-  @media (max-width: 600px) {
+  @media (max-width: 576px) {
     padding: 0;
   }
 `
@@ -37,7 +39,7 @@ export const MailboxContainer = styled(Box)`
     line-height: 30px;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     margin-top: 0px;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
@@ -82,19 +84,21 @@ export const formatState = (
 
 type messagesState = Array<MessageItem> | null
 
+export const pinUpMsgAtom = atom<Array<MessageItem>>([])
+export const hiddenMapAtom = atom<Record<string, boolean>>({})
+
 export const InboxComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
   const api = useAPI()
-  const router = useRouter()
   const toast = useToast()
-  const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
 
   const [seenMessages, setSeenMessages] = useState<messagesState>(null)
   const [isLoadingSeen, setIsLoadingSeen] = useState(true)
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
-  const [hiddenMap, setHiddenMap] = useState<Record<string, boolean>>({})
+  const [hiddenMap, setHiddenMap] = useAtom(hiddenMapAtom)
+  const [pinUpMsg, setPinUpMsg] = useAtom(pinUpMsgAtom)
 
   const refSeenBoxList = useRef<InfiniteHandle>(null)
 
@@ -157,9 +161,9 @@ export const InboxComponent: React.FC = () => {
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Trash, BulkActionType.Spam]}
           actionMap={{
-            [BulkActionType.Delete]: async () => {
+            [BulkActionType.Trash]: async () => {
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
               const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
@@ -186,6 +190,33 @@ export const InboxComponent: React.FC = () => {
                 toast(t('status.trash.fail'))
               }
             },
+            [BulkActionType.Spam]: async () => {
+              const newIds =
+                Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
+              const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
+              const ids = [...newIds, ...seenIds]
+
+              if (!ids.length) return
+              try {
+                await api.batchMoveMessage(ids, Mailboxes.Spam)
+                if (newIds.length) {
+                  const map = newIds.reduce<Record<string, boolean>>(
+                    (acc, key) => ({ ...acc, [key]: true }),
+                    {}
+                  )
+                  setHiddenMap({
+                    ...hiddenMap,
+                    ...map,
+                  })
+                  setChooseMap({})
+                  setIsChooseMode(false)
+                }
+                refSeenBoxList?.current?.setHiddenIds(seenIds)
+                toast(t('status.spam.ok'), { status: 'success' })
+              } catch (error) {
+                toast(t('status.spam.fail'))
+              }
+            },
           }}
           onClose={() => {
             // TODO rerender bug
@@ -195,18 +226,11 @@ export const InboxComponent: React.FC = () => {
         />
       )}
       <Box paddingTop={{ base: '25px', md: '35px' }}>
-        <FlexButtonBox>
-          <InboxNav currentType={InboxNavType.Inbox} />
-          <Button
-            className="btn-write"
-            onClick={() => {
-              trackWriteButton()
-              router.push(RoutePath.NewMessage)
-            }}
-          >
-            <SVGWrite /> <Box ml="10px">Write</Box>
-          </Button>
-        </FlexButtonBox>
+        <ProductRecommendationsBanner />
+        <Flex justify="space-between" pl="20px">
+          <InboxNav />
+          <GoToWriteMailButton />
+        </Flex>
 
         <MailboxContainer minH="500px">
           <Box padding={{ md: '30px 64px', base: '0' }}>
@@ -227,8 +251,15 @@ export const InboxComponent: React.FC = () => {
                   chooseMap={chooseMap}
                   hiddenMap={hiddenMap}
                   getHref={(id) => `${RoutePath.Message}/${id}`}
-                  onClickBody={() => {
-                    // report point
+                  onClickBody={(item) => {
+                    setHiddenMap({
+                      ...hiddenMap,
+                      [item.id]: true,
+                    })
+                    setPinUpMsg([
+                      { ...item, avatarBadgeType: AvatarBadgeType.None },
+                      ...pinUpMsg,
+                    ])
                   }}
                 />
                 {hasNextPage && (
@@ -288,6 +319,7 @@ export const InboxComponent: React.FC = () => {
               onClickBody={() => {
                 // report point
               }}
+              pinUpMsg={pinUpMsg}
               getHref={(id) => `${RoutePath.Message}/${id}`}
             />
           </Box>

@@ -1,4 +1,4 @@
-import { useCookies } from 'react-cookie'
+import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 
 export const COOKIE_KEY = '__MAIL3__'
 
@@ -6,14 +6,21 @@ export interface LoginInfo {
   address: string
   jwt: string
   uuid: string
+  expires: string
 }
 
+const loginInfoAtom = atomWithStorage<LoginInfo | null>(COOKIE_KEY, null)
+
+export const useLoginInfo = () => useAtomValue(loginInfoAtom)
+
+export const useSetLoginInfo = () => useUpdateAtom(loginInfoAtom)
+
 export const useJWT = () => {
-  const [cookie] = useCookies([COOKIE_KEY])
-  return cookie?.[COOKIE_KEY]?.jwt
+  const loginInfo = useLoginInfo()
+  return loginInfo?.jwt
 }
 
 export const useLoginAccount = () => {
-  const [cookie] = useCookies([COOKIE_KEY])
-  return cookie?.[COOKIE_KEY]?.address
+  const loginInfo = useLoginInfo()
+  return loginInfo?.address
 }

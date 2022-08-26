@@ -1,6 +1,6 @@
 import { Icon } from '@chakra-ui/react'
 import { useCommands } from '@remirror/react'
-import UnderlineSvg from 'assets/svg/editor/underline.svg'
+import { ReactComponent as UnderlineSvg } from 'assets/svg/editor/underline.svg'
 import { ButtonBase } from './Base'
 
 export const UnderlineButton: React.FC = () => {

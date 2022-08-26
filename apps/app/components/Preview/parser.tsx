@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import parse, { DOMNode, Element } from 'html-react-parser'
+import parse, { DOMNode, Element, Text } from 'html-react-parser'
 import DOMPurify from 'dompurify'
 import ReactShadowRoot from 'react-shadow-root'
 import { createPortal } from 'react-dom'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
-import { OFFICE_ADDRESS_LIST } from '../../constants'
+import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
 
 interface htmlParserProps {
   html: string
@@ -34,12 +34,15 @@ export const Iframe: React.FC<IframeProps> = (props) => {
         margin: 0;
         padding: 0;
         position: relative;
-        word-break: break-all;
+        word-break: break-word;
       }
     `
     const domStyle = document.createElement('style')
     domStyle.innerHTML = iframeInnerStyle
     contentRef?.contentWindow?.document.head.appendChild(domStyle)
+
+    const h = contentRef?.contentWindow?.document.body.scrollHeight
+    getHeight(h ?? 200)
   }, [contentRef])
 
   return (
@@ -96,6 +99,21 @@ export const UnofficialMailBody: React.FC = ({ children }) => {
   )
 }
 
+const urlity = (text: string) => {
+  const symbolSplit = '{!isLink!}'
+  const reg =
+    /(https?|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g
+  const newText = text.replace(
+    reg,
+    (url) => `${symbolSplit}${url}${symbolSplit}`
+  )
+  const textParts = newText.split(symbolSplit)
+  return textParts.map((str) => ({
+    textType: reg.test(str) ? 'link' : 'text',
+    value: str,
+  }))
+}
+
 export const RenderHTML: React.FC<htmlParserProps> = ({
   html,
   attachments,
@@ -121,7 +139,31 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
             />
           )
         }
-        return dom
+      }
+      if (dom.type === 'text') {
+        if ((dom as any)?.parent?.name !== 'a') {
+          const textMsg = urlity((dom as Text).data)
+          return (
+            <>
+              {textMsg.map(({ textType, value }, index) => {
+                if (textType === 'link') {
+                  return (
+                    <a
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
+                      href={value}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {value}
+                    </a>
+                  )
+                }
+                return value
+              })}
+            </>
+          )
+        }
       }
 
       return dom
@@ -145,6 +187,13 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
       if ('target' in node) {
         node.setAttribute('target', '_blank')
         node.setAttribute('rel', 'noopener noreferrer')
+      }
+
+      if (node.hasAttribute('src') && node.nodeName === 'IMG') {
+        const src = node.getAttribute('src')
+        if (src?.startsWith('http://')) {
+          node.setAttribute('src', `${IMAGE_PROXY_URL}${src}`)
+        }
       }
 
       if (

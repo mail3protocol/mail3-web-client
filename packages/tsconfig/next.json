@@ -2,8 +2,9 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "display": "Next.js",
     "compilerOptions": {
-        "target": "es5",
+        "target": "ESNext",
         "lib": [
+            "webworker",
             "dom",
             "dom.iterable",
             "esnext"

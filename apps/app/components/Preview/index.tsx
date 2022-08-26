@@ -1,8 +1,25 @@
 import React, { useEffect, useMemo } from 'react'
 import { Avatar, Button } from 'ui'
-import { AvatarGroup, Box, Center, Text, Flex, Circle } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import {
+  AvatarGroup,
+  Box,
+  Center,
+  Text,
+  Flex,
+  Circle,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
 import { useQuery } from 'react-query'
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import styled from '@emotion/styled'
 import {
   ConfirmDialog,
@@ -13,20 +30,13 @@ import {
   useToast,
   useTrackClick,
 } from 'hooks'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
-import NextLink from 'next/link'
-import { GetMessage } from 'models/src/getMessage'
-import { GetMessageContent } from 'models/src/getMessageContent'
+import { useAtom, useAtomValue } from 'jotai'
 import { interval, from as fromPipe, defer, switchMap, takeWhile } from 'rxjs'
 import { SuspendButton, SuspendButtonType } from '../SuspendButton'
 import { useAPI } from '../../hooks/useAPI'
-import {
-  MessageFlagAction,
-  MessageFlagType,
-  MailboxMessageDetailResponse,
-  AddressResponse,
-} from '../../api'
+import { MessageFlagAction, MessageFlagType, AddressResponse } from '../../api'
 import { Mailboxes } from '../../api/mailboxes'
 import { RoutePath } from '../../route/path'
 import { Loading } from '../Loading'
@@ -37,18 +47,19 @@ import {
   isMail3Address,
   removeMailSuffix,
 } from '../../utils'
-import { EmptyStatus } from '../MailboxStatus'
-import { DRIFT_BOTTLE_ADDRESS, HOME_URL } from '../../constants'
+import { EmptyStatus, NotFoundMessage } from '../MailboxStatus'
+import {
+  DRIFT_BOTTLE_ADDRESS,
+  HOME_URL,
+  MAIL_SERVER_URL,
+  OFFICE_ADDRESS_LIST,
+} from '../../constants'
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
-import { catchApiResponse } from '../../utils/api'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 import { IpfsInfoTable } from '../IpfsInfoTable'
-
-interface MeesageDetailState
-  extends Pick<
-    MailboxMessageDetailResponse,
-    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc' | 'bcc'
-  > {}
+import type { MeesageDetailState } from '../Mailbox'
+import { pinUpMsgAtom } from '../Inbox'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -67,55 +78,65 @@ const Container = styled(Box)`
 
 const PreviewContent = styled(Box)`
   p {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: revert;
+    margin-bottom: revert;
   }
 
   img {
-    display: inline;
+    display: revert;
   }
-  /*
+
   a {
-    text-decoration: underline;
-    color: #3182ce;
-  } */
+    text-decoration: revert;
+    color: #4d51f3;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: revert;
+    list-style-position: revert;
+  }
 `
 
 export const PreviewComponent: React.FC = () => {
-  const [t] = useTranslation('mailboxes')
-  const [t2] = useTranslation('common')
+  const [i18Mailboxes] = useTranslation('mailboxes')
+  const [i18Common] = useTranslation('common')
+  const [i18Preview] = useTranslation('preview')
 
-  const router = useRouter()
+  const [searchParams] = useSearchParams()
+  const { id: _id } = useParams()
+  const id = _id as string
+  const location = useLocation()
+  const state = location.state as MeesageDetailState | undefined
+  const navi = useNavigate()
+  const origin = searchParams.get('origin')
   const toast = useToast()
-  const { id, origin } = router.query as {
-    id: string | undefined
-    origin: string
-  }
   const api = useAPI()
   const dialog = useDialog()
+
+  const isOriginSpam = origin === Mailboxes.Spam
+  const isOriginTrash = origin === Mailboxes.Trash
+
   const buttonTrack = useTrackClick(TrackEvent.ClickMailDetailsPageItem)
   const trackJoinDao = useTrackClick(TrackEvent.OpenJoinMail3Dao)
   const trackShowYourNft = useTrackClick(TrackEvent.OpenShowYourMail3NFT)
   const trackOpenDriftbottle = useTrackClick(TrackEvent.OpenDriftbottleMail)
-  const { data } = useQuery(
+  const trackOpenUpdateMail = useTrackClick(TrackEvent.OpenUpdateMail)
+
+  const [pinUpMsg, setPinUpMsg] = useAtom(pinUpMsgAtom)
+  const userProps = useAtomValue(userPropertiesAtom)
+  const {
+    data,
+    isLoading: isLoadingContent,
+    error: errorFromGetMessage,
+  } = useQuery(
     [Query.GetMessageInfoAndContent, id],
     async () => {
-      const messageInfo = id
-        ? await catchApiResponse<GetMessage.Response>(
-            api.getMessageInfo(id as string)
-          )
-        : null
-      const messageContent = messageInfo?.text.id
-        ? await catchApiResponse<GetMessageContent.Response>(
-            api.getMessageContent(messageInfo?.text.id)
-          )
-        : null
+      const messageInfo = (await api.getMessageInfo(id as string))?.data
       return {
-        info: messageInfo,
-        html: messageContent?.html,
-        plain: messageContent?.plain,
+        html: messageInfo?.text.html,
+        plain: messageInfo?.text.plain,
         messageInfo,
-        messageContent,
       }
     },
     {
@@ -124,36 +145,44 @@ export const PreviewComponent: React.FC = () => {
       refetchOnWindowFocus: false,
       cacheTime: Infinity,
       onSuccess(d) {
-        if (typeof id !== 'string') return
-        const messageInfo = d.info
+        const { messageInfo } = d
         if (messageInfo?.unseen) {
+          const { from, subject } = messageInfo
+          const { address } = from
           if (
-            messageInfo.from.address.startsWith('mail3dao.eth') &&
-            messageInfo.subject.startsWith('Join Mail3 DAO!')
+            address.startsWith('mail3dao.eth') &&
+            subject.includes('Join Mail3 DAO!')
           ) {
             trackJoinDao()
           }
-          if (
-            messageInfo.from.address.startsWith('mail3.eth') &&
-            messageInfo.subject.startsWith('Show your mail3')
-          ) {
-            trackShowYourNft()
+
+          if (address.startsWith('mail3.eth')) {
+            if (subject.includes('Show your mail3')) trackShowYourNft()
+            if (subject.includes('Mail3 New Feature')) trackOpenUpdateMail()
           }
+
+          const isFromDriftBottle = address === DRIFT_BOTTLE_ADDRESS
+          if (isFromDriftBottle) trackOpenDriftbottle()
+
+          api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
         }
-        const isSeen = d.info?.flags.includes(MessageFlagType.Seen)
-        const isFromDriftBottle = d.info?.from.address === DRIFT_BOTTLE_ADDRESS
-        if (!isSeen && isFromDriftBottle) {
-          trackOpenDriftbottle()
-        }
-        api.putMessage(id, MessageFlagAction.add, MessageFlagType.Seen)
       },
       enabled: typeof id === 'string',
     }
   )
 
+  const content = useMemo(() => {
+    if (data?.html) return data.html
+    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
+    return ''
+  }, [data])
+
   const detail: MeesageDetailState | undefined = useMemo(() => {
-    if (data?.info) {
-      const { date, subject, to, cc, from, attachments, bcc } = data.info
+    if (state) {
+      return state
+    }
+    if (data?.messageInfo) {
+      const { date, subject, to, cc, from, attachments, bcc } = data.messageInfo
 
       return {
         date,
@@ -166,19 +195,20 @@ export const PreviewComponent: React.FC = () => {
       }
     }
     return undefined
-  }, [data])
+  }, [data?.messageInfo, state])
 
-  const content = useMemo(() => {
-    if (data?.html) return data.html
-    if (data?.plain) return data.plain.replace(/(\n)/g, '<br>')
-    return ''
-  }, [data])
+  const detailFull = data?.messageInfo
 
-  const isDriftBottleAddress = data?.info?.from.address === DRIFT_BOTTLE_ADDRESS
+  const isBotCatchSpam = detailFull?.headers?.['x-spam-flag']
+
+  const isDriftBottleAddress = detail?.from.address === DRIFT_BOTTLE_ADDRESS
 
   const driftBottleFrom = useMemo(() => getDriftBottleFrom(content), [content])
 
   const messageId = data?.messageInfo?.messageId
+  const isOutsideEmailAddress = !data?.messageInfo?.from.address.endsWith(
+    `@${MAIL_SERVER_URL}`
+  )
   const {
     data: messageOnChainIdentifierData,
     refetch: refetchMessageOnChainIdentifier,
@@ -187,22 +217,28 @@ export const PreviewComponent: React.FC = () => {
   } = useQuery(
     [Query.GetMessageOnChainIdentifier, messageId],
     async () => {
-      if (!messageId) return null
+      if (!messageId || isOutsideEmailAddress) return null
       return (await api.getMessageOnChainIdentifier(messageId)).data
     },
     {
       retry: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
 
   const isShowIpfsTable =
-    !messageOnChainIdentifierError && !isLoadingMessageOnChainIdentifier
+    !isOutsideEmailAddress &&
+    !messageOnChainIdentifierError &&
+    !isLoadingMessageOnChainIdentifier &&
+    !isLoadingContent
 
   useEffect(() => {
-    const ipfsUrlIsEmtpyStr = messageOnChainIdentifierData?.url === ''
-    const contentDigestIsEmtpyStr =
+    const ipfsUrlIsEmptyStr = messageOnChainIdentifierData?.url === ''
+    const contentDigestIsEmptyStr =
       messageOnChainIdentifierData?.content_digest === ''
-    if (ipfsUrlIsEmtpyStr && contentDigestIsEmtpyStr) {
+    if (ipfsUrlIsEmptyStr && contentDigestIsEmptyStr) {
       const subscriber = interval(3000)
         .pipe(
           switchMap(() =>
@@ -220,36 +256,57 @@ export const PreviewComponent: React.FC = () => {
     return () => {}
   }, [messageOnChainIdentifierData])
 
+  const isSend: boolean = useMemo(() => {
+    if (!detail || !userProps?.aliases) return false
+    return userProps.aliases.some(
+      (item: { address: string }) => item.address === detail.from.address
+    )
+  }, [userProps, detail])
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
       isDisabled: isDriftBottleAddress,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
-        router.push({
-          pathname: RoutePath.NewMessage,
-          query: {
-            id,
-            action: 'reply',
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'reply',
+            }).toString(),
           },
-        })
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
-        router.push({
-          pathname: RoutePath.NewMessage,
-          query: {
-            id,
-            action: 'forward',
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'forward',
+            }).toString(),
           },
-        })
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+            },
+          }
+        )
       },
     },
     [SuspendButtonType.Trash]: {
@@ -263,16 +320,17 @@ export const PreviewComponent: React.FC = () => {
         }
         try {
           await api.deleteMessage(id, { force: false })
-          toast(t('status.trash.ok'), { status: 'success' })
-          router.back()
+          setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
+          toast(i18Mailboxes('status.trash.ok'), { status: 'success' })
+          navi(-1)
         } catch (error) {
-          toast(t('status.trash.fail'))
+          toast(i18Mailboxes('status.trash.fail'))
         }
       },
     },
     [SuspendButtonType.Delete]: {
       type: SuspendButtonType.Delete,
-      onClick: () => {
+      onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Delete,
         })
@@ -282,10 +340,10 @@ export const PreviewComponent: React.FC = () => {
 
         dialog({
           type: 'text',
-          title: t('confirm.delete.title'),
-          description: t('confirm.delete.description'),
-          okText: t2('button.yes'),
-          cancelText: t2('button.cancel'),
+          title: i18Mailboxes('confirm.delete.title'),
+          description: i18Mailboxes('confirm.delete.description'),
+          okText: i18Common('button.yes'),
+          cancelText: i18Common('button.cancel'),
           modalProps: {
             isOpen: false,
             onClose: () => {},
@@ -295,10 +353,10 @@ export const PreviewComponent: React.FC = () => {
           onConfirm: async () => {
             try {
               await api.deleteMessage(id, { force: true })
-              toast(t('status.delete.ok'))
-              router.back()
+              toast(i18Mailboxes('status.delete.ok'))
+              navi(-1)
             } catch (error) {
-              toast(t('status.delete.fail'))
+              toast(i18Mailboxes('status.delete.fail'))
             }
           },
           onCancel: () => {},
@@ -313,11 +371,46 @@ export const PreviewComponent: React.FC = () => {
         })
         if (typeof id !== 'string') return
         try {
-          await api.moveMessage(id, Mailboxes.INBOX)
-          toast(t('status.restore.ok'))
-          router.replace(`${RoutePath.Message}/${id}`)
+          await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
+          toast(i18Mailboxes('status.restore.ok'))
+          navi(`${RoutePath.Message}/${id}`, {
+            replace: true,
+          })
         } catch (error) {
-          toast(t('status.restore.fail'))
+          toast(i18Mailboxes('status.restore.fail'))
+        }
+      },
+    },
+    [SuspendButtonType.Spam]: {
+      type: SuspendButtonType.Spam,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Spam,
+        })
+        if (typeof id !== 'string') return
+        try {
+          await api.moveMessage(id, Mailboxes.Spam)
+          setPinUpMsg([...pinUpMsg.filter((item) => item.id !== id)])
+          toast(i18Mailboxes('status.spam.ok'))
+          navi(-1)
+        } catch (error) {
+          toast(i18Mailboxes('status.spam.fail'))
+        }
+      },
+    },
+    [SuspendButtonType.NotSpam]: {
+      type: SuspendButtonType.NotSpam,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.NotSpam,
+        })
+        if (typeof id !== 'string') return
+        try {
+          await api.moveMessage(id, isSend ? Mailboxes.Sent : Mailboxes.INBOX)
+          toast(i18Mailboxes('status.notSpam.ok'))
+          navi(-1)
+        } catch (error) {
+          toast(i18Mailboxes('status.notSpam.fail'))
         }
       },
     },
@@ -328,25 +421,70 @@ export const PreviewComponent: React.FC = () => {
       SuspendButtonType.Reply,
       SuspendButtonType.Forward,
       SuspendButtonType.Trash,
+      SuspendButtonType.Spam,
     ]
 
-    if (origin === Mailboxes.Trash) {
-      list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
+    if (isOriginTrash) {
+      list = [
+        SuspendButtonType.Restore,
+        SuspendButtonType.Delete,
+        SuspendButtonType.Spam,
+      ]
+    }
+
+    if (isOriginSpam) {
+      list = [SuspendButtonType.NotSpam, SuspendButtonType.Delete]
+    }
+
+    if (isSend) {
+      list = [
+        SuspendButtonType.Reply,
+        SuspendButtonType.Forward,
+        SuspendButtonType.Trash,
+      ]
+
+      if (isOriginTrash) {
+        list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
+      }
+
+      if (isOriginSpam) {
+        list = [SuspendButtonType.NotSpam, SuspendButtonType.Delete]
+      }
     }
 
     return list.map((key) => buttonConfig[key])
-  }, [api, id, origin, data?.info])
+  }, [api, id, origin, data?.messageInfo])
 
   const onClickAvatar = (address: string) => {
     const realAddress = removeMailSuffix(address).toLowerCase()
     window.location.href = `${HOME_URL}/${realAddress}`
   }
 
-  const avatarList = useMemo(() => {
-    if (!detail?.to) return []
-    const exists: Array<string> = []
+  const mailAddress: string = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
 
-    let arr = [detail.from, ...detail.to]
+  const toMessage = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => detail?.from.address === address
+    )
+
+    if (isOfficeMail && detail && detail.to === null) {
+      return [
+        {
+          address: mailAddress,
+        },
+      ]
+    }
+
+    return detail?.to || []
+  }, [detail])
+
+  const avatarList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = []
+    let arr = [detail.from, ...toMessage]
     if (detail.cc) arr = [...arr, ...detail.cc]
     if (detail.bcc) arr = [...arr, ...detail.bcc]
 
@@ -356,12 +494,20 @@ export const PreviewComponent: React.FC = () => {
       return true
     })
     return arr
-  }, [detail])
+  }, [detail, toMessage])
 
   if (!id) {
     return (
       <Container>
         <EmptyStatus />
+      </Container>
+    )
+  }
+
+  if (errorFromGetMessage) {
+    return (
+      <Container>
+        <NotFoundMessage />
       </Container>
     )
   }
@@ -391,7 +537,11 @@ export const PreviewComponent: React.FC = () => {
           left="0px"
           border={{ base: 0, md: '2px solid #292D32' }}
           onClick={() => {
-            router.back()
+            if (window.history.length === 1) {
+              navi(RoutePath.Inbox)
+            } else {
+              navi(-1)
+            }
           }}
         >
           <ChevronLeftIcon w="26px" h="26px" />
@@ -430,7 +580,7 @@ export const PreviewComponent: React.FC = () => {
             lineHeight={1.2}
             marginBottom="30px"
           >
-            {detail.subject ? detail.subject : t('no-subject')}
+            {detail.subject ? detail.subject : i18Mailboxes('no-subject')}
           </Text>
         </Box>
         <Box>
@@ -504,8 +654,8 @@ export const PreviewComponent: React.FC = () => {
                 lineHeight={{ base: '16px', md: '24px' }}
                 marginTop={{ base: '12px', md: '5px' }}
               >
-                {detail.to ? (
-                  <span>to {detail.to.map(getNameAddress).join('; ')}; </span>
+                {toMessage.length ? (
+                  <span>to {toMessage.map(getNameAddress).join('; ')}; </span>
                 ) : null}
                 {detail.cc ? (
                   <span>cc {detail.cc.map(getNameAddress).join('; ')}; </span>
@@ -531,15 +681,43 @@ export const PreviewComponent: React.FC = () => {
         <Box
           padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
           borderBottom="1px solid #ccc"
+          pointerEvents={isOriginSpam ? 'none' : 'auto'}
         >
-          <PreviewContent>
-            <RenderHTML
-              html={content}
-              attachments={detail.attachments}
-              messageId={id}
-              from={detail.from}
-            />
-          </PreviewContent>
+          {isLoadingContent ? (
+            <Loading />
+          ) : (
+            <PreviewContent>
+              {isOriginSpam ? (
+                <Alert
+                  status="error"
+                  backgroundColor="#FFE2E2"
+                  borderRadius="6px"
+                >
+                  <AlertIcon />
+                  <Box color="#DA4444">
+                    <AlertTitle fontSize="14px">
+                      {i18Preview(
+                        isBotCatchSpam ? 'spam_title.bot' : 'spam_title.user'
+                      )}
+                    </AlertTitle>
+                    <AlertDescription fontSize="12px">
+                      {i18Preview(
+                        isBotCatchSpam
+                          ? 'spam_content.bot'
+                          : 'spam_content.user'
+                      )}
+                    </AlertDescription>
+                  </Box>
+                </Alert>
+              ) : null}
+              <RenderHTML
+                html={content}
+                attachments={detail.attachments}
+                messageId={id}
+                from={detail.from}
+              />
+            </PreviewContent>
+          )}
           {detail.attachments ? (
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
@@ -553,29 +731,27 @@ export const PreviewComponent: React.FC = () => {
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (
           <Center pt="16px">
-            <NextLink
-              href={{
-                pathname: RoutePath.NewMessage,
-                query: {
+            <Button
+              variant="solid"
+              bg="#4E52F5"
+              _hover={{
+                bg: '#4E52F5',
+              }}
+              onClick={() => {
+                const search = createSearchParams({
                   force_to: driftBottleFrom,
                   id,
                   action: 'reply',
                   origin: 'driftbottle',
-                },
+                }).toString()
+                navi({
+                  pathname: RoutePath.NewMessage,
+                  search,
+                })
               }}
-              passHref
             >
-              <Button
-                as="a"
-                variant="solid"
-                bg="#4E52F5"
-                _hover={{
-                  bg: '#4E52F5',
-                }}
-              >
-                {t('reply-driftbottle-sender')}
-              </Button>
-            </NextLink>
+              {i18Mailboxes('reply-driftbottle-sender')}
+            </Button>
           </Center>
         ) : null}
       </Container>

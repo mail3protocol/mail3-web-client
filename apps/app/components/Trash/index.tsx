@@ -1,8 +1,9 @@
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import React, { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Spacer, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useDialog, useToast } from 'hooks'
+import { createSearchParams, generatePath } from 'react-router-dom'
 import { InfiniteMailbox, InfiniteHandle } from '../InfiniteMailbox'
 import { useAPI } from '../../hooks/useAPI'
 import { Mailboxes } from '../../api/mailboxes'
@@ -10,8 +11,8 @@ import { RoutePath } from '../../route/path'
 import { MailboxContainer, NewPageContainer } from '../Inbox'
 import { Loading } from '../Loading'
 import { ClearStatus, ThisBottomStatus } from '../MailboxStatus'
-import { BulkActionType, MailboxMenu, MailboxMenuType } from '../MailboxMenu'
-import SVGTrash from '../../assets/trash.svg'
+import { BulkActionType, MailboxMenu } from '../MailboxMenu'
+import { ReactComponent as SVGTrash } from '../../assets/trash.svg'
 import { GotoInbox } from '../GotoInbox'
 
 const TextBox = styled(Box)`
@@ -48,7 +49,7 @@ export const TrashComponent: React.FC = () => {
       <GotoInbox />
       {isChooseMode && (
         <MailboxMenu
-          type={MailboxMenuType.Base}
+          btnList={[BulkActionType.Delete, BulkActionType.Spam]}
           actionMap={{
             [BulkActionType.Delete]: async () => {
               const ids = refBoxList?.current?.getChooseIds()
@@ -77,6 +78,17 @@ export const TrashComponent: React.FC = () => {
                 },
                 onCancel: () => {},
               })
+            },
+            [BulkActionType.Spam]: async () => {
+              const ids = refBoxList?.current?.getChooseIds()
+              if (!ids?.length) return
+              try {
+                await api.batchMoveMessage(ids, Mailboxes.Spam)
+                refBoxList?.current?.setHiddenIds(ids)
+                toast(t('status.spam.ok'), { status: 'success' })
+              } catch (error) {
+                toast(t('status.spam.fail'))
+              }
             },
           }}
         />
@@ -130,10 +142,10 @@ export const TrashComponent: React.FC = () => {
               // report point
             }}
             getHref={(id) => ({
-              pathname: `${RoutePath.Message}/${id}`,
-              query: {
+              pathname: generatePath(`${RoutePath.Message}/:id`, { id }),
+              search: createSearchParams({
                 origin: Mailboxes.Trash,
-              },
+              }).toString(),
             })}
           />
         </Box>

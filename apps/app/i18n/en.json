@@ -1,0 +1,305 @@
+{
+    "common": {
+        "navbar": {
+            "inbox": "Inbox",
+            "sent": "Sent",
+            "drafts": "Drafts",
+            "trash": "Trash",
+            "spam": "Spam",
+            "other-stuff": "Other Stuff",
+            "settings": "Settings",
+            "profile-link": "My Profile Link",
+            "copy-address": "My mail³ Address",
+            "change-wallet": "Change Wallet",
+            "copied": "Copied",
+            "copied-to-clipboard": "Copied to clipboard：",
+            "logout": "Disconnect"
+        },
+        "connect": {
+            "metamask": "MetaMask",
+            "wallet-connect": "Wallet Connect",
+            "zilpay": "ZilPay",
+            "dialog-title": "Connect Your Wallet",
+            "connect-wallet": "Connect Wallet",
+            "phantom": "Phantom",
+            "blocto": "Blocto",
+            "connecting": "Connecting",
+            "coming-soon": "Coming soon",
+            "desired-wallet": "Click on the wallet below and let us know which one you need more",
+            "footer": "We do not own your private keys and cannot access your assets without your confirmation.",
+            "notice": "Notice",
+            "imtoken-reject": "You have declined authorization, please refresh this page to authorize again.",
+            "wechat": "The current environment does not support metamask. You can connect Metamask in the browser."
+        },
+        "auth": {
+            "connect": "Connect your Wallet",
+            "desc": "Skip approving every interaction with your wallet by allowing Mail3 to remember you.",
+            "remember": "Check",
+            "check-wallet": "Check Wallet",
+            "sign": "I authorize sending and checking my emails on mail3 from this device. This doesn't cost anything.",
+            "errors": {
+                "wallet-not-connected": "Wallet is not connected, please connect your wallet",
+                "unknown": "Unknown error, please try again later",
+                "condition-not-meet": "You do not have permission to participate in Beta testing."
+            }
+        },
+        "button": {
+            "btn-write": "write",
+            "yes": "Yes",
+            "cancel": "Cancel"
+        },
+        "bell": {
+            "title": "\uD83D\uDD14 Open the mail notification and claim the NFT",
+            "gif_guide_title": "\uD83D\uDCA1 Follow the reminders to\nturn on email notifications",
+            "open_notification_prompt": "<p>You can authorize our email push service at any time by flipping the switch above and clicking \"<strong>Allow</strong>\".</p><p><strong>Don't worry, we will only notify you when you receive new emails.</strong></p><p>Complete the authorization and we will send you a confirmation email with a special <strong>NFT</strong> ;)</p>",
+            "open_notification_prompt_list": "<li>Authorize our email push service at any time by flipping the switch above and clicking <strong>\"Allow\"</strong>.</li><li><strong>Don't worry, we will only notify you when you receive new emails.</strong></li>",
+            "open_notification_confirm": "Confirm"
+        },
+        "image_not_found": "Missing image"
+    },
+    "edit-message": {
+        "title": "New Message",
+        "from": "From",
+        "community": "Community",
+        "cc": "CC",
+        "bcc": "BCC",
+        "subject": "Subject",
+        "save": "Save",
+        "send": "Send",
+        "attach_files": "Attach files",
+        "add_attach_files": "+ Add",
+        "add_link": "Add Link",
+        "cancel": "Cancel",
+        "ok": "Ok",
+        "community_guide_modal": {
+            "title": "You’ve found a super cool feature!",
+            "text": {
+                "1": "1. Customize your audience by specific tokens, send direct mails to them in bulk.",
+                "2": "2. Push the project updates, DAO voting messages, and private information to the target users accurately."
+            },
+            "next": "Next"
+        },
+        "Apply to become a beta user": "Apply to become a beta user",
+        "You will have the possibility to experience this cool feature for the first time.": "You will have the possibility to experience this cool feature for the first time.",
+        "apply": "Apply",
+        "no_thanks": "No, Thanks",
+        "file_size_up_to": "File size up to {{size}}",
+        "file_over_title": "Files exceeds size",
+        "draft": {
+            "saved": "Draft Saved",
+            "failed": "Draft Save Failed"
+        },
+        "succeeded": "succeeded",
+        "drift_bottle_template": "Write down your emotions, thoughts, questions, and even heartfelt secrets. The drift bottle will float with these to another user, and you will have a chance to get a response",
+        "leave_modal_title": "Are you sure you want to leave this page?",
+        "save_and_quit": "Save as draft",
+        "don't_save_and_exit": "Don't save and exit",
+        "discard": "Discard",
+        "filename_verify": {
+            "special_characters": "Oops! File names cannot contain special characters",
+            "space": "Oops! File names cannot contain spaces",
+            "too_long": "Oops! File names cannot exceed {{count}} characters",
+            "empty": "Oops! File names cannot be empty"
+        },
+        "file_content_is_empty": "The content of the file cannot be empty",
+        "invalid_file_name": "Invalid file name",
+        "invalid_url": "Invalid url",
+        "only_supported_https": "Only supported https"
+    },
+    "home": {
+        "title": "The mail for crypto natives",
+        "desc": "Take control of your mail communication with decentralized ID by Mail3. ",
+        "connect": "Connect Wallet"
+    },
+    "mailboxes": {
+        "no-subject": "(No subject)",
+        "inbox": {
+            "title": {
+                "new": "New",
+                "seen": "Seen"
+            },
+            "no-new": "Nothing New！",
+            "all-clear": "You’re all clear",
+            "load-more": "load more"
+        },
+        "this-is-bottom": "This is bottom！",
+        "sent": {
+            "title": "Sent"
+        },
+        "trash": {
+            "title": "Trash",
+            "empty": "Empty",
+            "auto-delete": "Messages that have been in Trash more than 30 days will be automatically deleted.",
+            "clear": "Clean Trash!"
+        },
+        "spam": {
+            "title": "Spam",
+            "empty": "Empty",
+            "auto-delete": "Messages that have been in Spam more than 30 days will be automatically deleted.",
+            "clear": "Clean Spam!"
+        },
+        "drafts": {
+            "title": "Drafts",
+            "no-content-w1": "Any time you start writing a new Email,",
+            "no-content-w2": "Mail3 will automatically save it as a draft along the way.",
+            "no-content-w3": "Come here to find all your works in progress."
+        },
+
+        "button": {
+            "delete": "Delete"
+        },
+        "confirm": {
+            "delete": {
+                "title": "Are you sure you want to continue?",
+                "description": "This operation will completely delete the message and cannot be recovered."
+            }
+        },
+        "status": {
+            "trash": {
+                "ok": "The message has been moved to the trash.",
+                "fail": "trash fail!"
+            },
+            "delete":  {
+                "ok": "The message has been completely deleted.",
+                "fail": "Delete fail, try again."
+            },
+            "restore": {
+                "ok": "The message has been restore.",
+                "fail": "Restore is fail, try again."
+            },
+            "spam": {
+                "ok": "The messages have been moved to spam",
+                "fail": "Move fail, try again."
+            },
+            "notSpam": {
+                "ok": "The messages have been moved to Inbox",
+                "fail": "Move fail, try again."
+            },
+            "not_found": {
+                "text": "This message does not exist.",
+                "back": "Back to Inbox"
+            }
+        },
+        "reply-driftbottle-sender": "Reply",
+        "sending": {
+            "sending": "Sending...",
+            "succeed": "Message Sent",
+            "view_message": "View Message"
+        }
+    },
+    "settings": {
+        "setup": {
+            "address": {
+                "title": "Your email address"
+            },
+            "signature": {
+                "title": "Show your own signature"
+            },
+            "share": {
+                "title": "Share your Mail3 address",
+                "twitter": "Share on Twitter",
+                "card": "Share profile card"
+            },
+            "next": "Next"
+        },
+        "settings": {
+            "title": "Settings",
+            "tabs": {
+                "address": "Mail3 Address",
+                "signature": "Signature setup"
+            }
+        },
+        "address": {
+            "title": "Your wallet address and the domain names",
+            "desc": "you owned all can be used as mail3 address to send and receive emails.",
+            "wallet-address": "Wallet Address",
+            "ens-name": "ENS Name",
+            "bit-name": ".bit Name",
+            "default": "Default",
+            "default-hover": "This address will be the default address for sending emails.",
+            "register-ens": "Register <a>new</a> ENS",
+            "register-bit": "Register <a>new</a> .bit",
+            "request-failed": "Request change default address failed, please try again later.",
+            "refresh": "Refresh",
+            "refresh_failed": "Refresh Failed: "
+        },
+        "signature": {
+            "desc": "Your signature will be automatically inserted when you write a new email.",
+            "text": "Add Text",
+            "card": "Add Card",
+            "edit": "Edit",
+            "placeholder": "Please input your signature here.",
+            "edit-dialog": {
+                "title": "Edit Card",
+                "desc": "Please go to <a>CyberConnect</a> to edit your avatar."
+            }
+        },
+        "profile": {
+            "share": "Share profile card",
+            "copy": "Copy profile URL",
+            "twitter": "Share on Twitter"
+        }
+    },
+    "testing": {
+        "title": "Mail3 Beta is opening now \uD83D\uDD25",
+        "not-connected-desc": "Connect wallet to see if you are eligible to access the Beta",
+        "success-desc": "Congratulations! \uD83C\uDF89 you are qualified for the beta access to Mail3.",
+        "fail-desc": "\uD83D\uDE14 Sorry you are not qualified.",
+        "fail-desc-2": "Join our <a>Discord</a>! We will randomly reward Beta slots to community member ",
+        "fail-desc-3": "You need an ENS domain name to get",
+        "fail-desc-4": "beta access to mail3 application. <a>Register it now</a> 👈",
+        "more-details": "More Details",
+        "discord-desc": "We invite you to join our <a>Discord</a> to get beta access.",
+        "discord": "Join Discord",
+        "twitter": "Follow Twitter",
+        "join-community": "Join Community",
+        "connect-wallet": "Connect Wallet",
+        "enter-app": "Enter App"
+    },
+    "developers": {
+        "title": "For Developers",
+        "mail3-me-button": {
+            "title": "mail³ me button",
+            "description": "Embed decentralized communication features for your own product",
+            "github": "Check out the source code on Github",
+            "mirror": "View our best practice cases on Mirror"
+        },
+        "community-mail": {
+            "title": "Community mail",
+            "description": "Customize your email audience through filters to achieve precise push",
+            "interest": "Tell us you are interested in this feature \uD83D\uDE09",
+            "coming_soon": "Coming soon"
+        }
+    },
+    "inbox-nav": {
+        "inbox": "Inbox",
+        "developers": "Developers"
+    },
+    "ipfs": {
+        "ipfs_link": "IPFS LINK",
+        "eth_address": "SENDER ETHEREUM ADDRESS",
+        "zil_address": "SENDER ZILLIQA ADDRESS",
+        "address": "SENDER ADDRESS",
+        "content_digest": "CONTENT DIGEST",
+        "pending": "PENDING"
+    },
+    "ipfs_modal": {
+        "title": "Enable IPFS Storage",
+        "content": "Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically",
+        "generate_key": "Generate key",
+        "signing_modal": {
+            "title": "Please check your \nwallet Content",
+            "content": "You need to approve the message signing request on your wallet software including Walletconnect in your mobile devices."
+        }
+    },
+    "preview":{
+        "spam_title": {
+            "bot": "This message contains security risks",
+            "user": "This message was marked as spam by yourself"
+        },
+        "spam_content": {
+            "bot": "For your safety, we blocked all links, attachments, and replies.",
+            "user": "For your safety, we blocked all links, attachments, and replies."
+        }
+    }
+}

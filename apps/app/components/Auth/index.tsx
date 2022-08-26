@@ -10,7 +10,7 @@ import {
   Text,
   Box,
 } from '@chakra-ui/react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import React, { useState } from 'react'
 import {
   SignupResponseCode,
@@ -22,12 +22,13 @@ import {
   useTrackClick,
   TrackEvent,
   TrackKey,
+  zilpay,
 } from 'hooks'
 import { Button } from 'ui'
-import { useRouter } from 'next/router'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { truncateMiddle } from 'shared'
-import WalletSvg from '../../assets/wallet.svg'
-import LeftArrowSvg from '../../assets/left-arrow.svg'
+import { ReactComponent as WalletSvg } from '../../assets/wallet.svg'
+import { ReactComponent as LeftArrowSvg } from '../../assets/left-arrow.svg'
 import {
   useAuth,
   useAuthModalOnBack,
@@ -51,9 +52,21 @@ export const AuthModal: React.FC = () => {
   const login = useLogin()
   const closeAuthModal = useCloseAuthModal()
   const isAuthModalOpen = useIsAuthModalOpen()
-  const router = useRouter()
+  const router = useLocation()
+  const navi = useNavigate()
   const onBack = useAuthModalOnBack()
+  const onSignZilpay = async (nonce: number) => {
+    if (!zilpay.isConnected) {
+      toast(t('auth.errors.wallet-not-connected'))
+      return null
+    }
+    const message = buildSignMessage(nonce, signatureDesc)
+    return zilpay.signMessage(message)
+  }
   const onSign = async (nonce: number) => {
+    if (account.startsWith('zil')) {
+      return onSignZilpay(nonce)
+    }
     if (provider == null) {
       toast(t('auth.errors.wallet-not-connected'))
       return null
@@ -73,14 +86,15 @@ export const AuthModal: React.FC = () => {
   const onRemember = async () => {
     setIsLoading(true)
     try {
-      const { nonce, error, code, signature, message } = await signup()
+      const { nonce, error, code, signature, message, pubkey } = await signup()
       switch (code) {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
           if (signedData != null) {
             const { jwt } = await login(
               signedData.message,
-              signedData.signature
+              signedData.signature,
+              (signedData as any).publicKey
             )
             closeAuthModal()
             await setTrackGlobal(jwt)
@@ -90,12 +104,12 @@ export const AuthModal: React.FC = () => {
             if (router.pathname === RoutePath.Testing) {
               trackTestingConnect({ [TrackKey.TestingEntry]: true })
             }
-            router.push(RoutePath.Home)
+            navi(RoutePath.Home)
           }
           break
         }
         case SignupResponseCode.Success: {
-          const { jwt } = await login(message!, signature!)
+          const { jwt } = await login(message!, signature!, pubkey)
           await setTrackGlobal(jwt)
           if (router.pathname === RoutePath.WhiteList) {
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
@@ -105,7 +119,7 @@ export const AuthModal: React.FC = () => {
           }
           closeAuthModal()
           if (router.pathname !== RoutePath.WhiteList) {
-            router.push(RoutePath.Setup)
+            navi(RoutePath.Setup)
           }
           break
         }
@@ -128,6 +142,9 @@ export const AuthModal: React.FC = () => {
       }
     } catch (error: any) {
       if (error?.code !== 4001) {
+        if (typeof error === 'string' && error.includes('Rejected')) {
+          return
+        }
         toast(error?.message ?? t('auth.errors.unknown'))
       }
     } finally {

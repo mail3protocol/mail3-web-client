@@ -10,8 +10,9 @@ import {
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Avatar } from 'ui'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { useAtomValue } from 'jotai'
-import ChangeFromAddressSvg from '../../../assets/change-from-address.svg'
+import { ReactComponent as ChangeFromAddressSvg } from '../../../assets/change-from-address.svg'
 import { removeMailSuffix } from '../../../utils'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
 import { Alias } from '../../../api'
@@ -24,6 +25,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
   const [emailAddress, setEmailAddress] = useState<string | undefined>(
     undefined
   )
+  const trackClickFrom = useTrackClick(TrackEvent.AppEditMessageChangeFrom)
   const userProperties = useAtomValue(userPropertiesAtom)
   useEffect(() => {
     if (!userProperties) return
@@ -39,6 +41,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
     <Menu>
       <MenuButton
         as={Button}
+        onClick={() => trackClickFrom()}
         rightIcon={
           <Icon
             as={ChangeFromAddressSvg}

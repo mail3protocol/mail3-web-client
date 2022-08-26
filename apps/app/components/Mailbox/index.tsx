@@ -2,16 +2,20 @@ import { Avatar } from 'ui'
 import { Box, Circle, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import classNames from 'classnames'
-import { useTranslation } from 'next-i18next'
-import Link, { LinkProps } from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { useMemo } from 'react'
 import {
   isPrimitiveEthAddress,
+  isZilpayAddress,
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
-import ChooseSVG from '../../assets/mailbox/choose.svg'
-import { MailboxMessageItemResponse } from '../../api'
+import { Link as RouterLink, LinkProps } from 'react-router-dom'
+import { ReactComponent as ChooseSVG } from '../../assets/mailbox/choose.svg'
+import {
+  MailboxMessageItemResponse,
+  MailboxMessageDetailResponse,
+} from '../../api'
 import { formatDateString, removeMailSuffix } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
 
@@ -35,12 +39,12 @@ export interface MessageItem extends MailboxMessageItemResponse {
 export interface BoxListProps {
   data: Array<MessageItem>
   onClickAvatar?: (index: number, id: string) => void
-  onClickBody: (id: string) => void
+  onClickBody: (msg: MessageItem) => void
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: Record<string, boolean>
   hiddenMap?: Record<string, boolean>
-  getHref: (id: string) => LinkProps['href']
+  getHref: (id: string) => LinkProps['to']
   mailboxType?: Mailboxes
 }
 
@@ -54,9 +58,16 @@ export interface BoxItemProps extends MailboxMessageItemResponse {
   isChooseMode?: boolean
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: BoxListProps['chooseMap']
-  href: LinkProps['href']
+  href: LinkProps['to']
   mailboxType?: Mailboxes
+  state?: any
 }
+
+export interface MeesageDetailState
+  extends Pick<
+    MailboxMessageDetailResponse,
+    'date' | 'subject' | 'to' | 'from' | 'attachments' | 'cc' | 'bcc'
+  > {}
 
 const CircleE = styled(Circle)`
   background: #ffffff;
@@ -128,6 +139,7 @@ const Item: React.FC<BoxItemProps> = ({
   chooseMap,
   href,
   mailboxType,
+  state,
 }) => {
   const [t] = useTranslation('mailboxes')
 
@@ -237,7 +249,7 @@ const Item: React.FC<BoxItemProps> = ({
     if (mailboxType === Mailboxes.Sent || mailboxType === Mailboxes.Drafts) {
       const list = receiverList.map((item) => {
         const [addr] = item.address.split('@')
-        if (isPrimitiveEthAddress(addr)) {
+        if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr)) {
           return truncateMiddle(addr, 6, 4)
         }
         return addr
@@ -257,7 +269,7 @@ const Item: React.FC<BoxItemProps> = ({
     }
 
     const [addr] = from.address.split('@')
-    if (isPrimitiveEthAddress(addr)) {
+    if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr)) {
       return truncateMiddle(addr, 6, 4)
     }
 
@@ -292,47 +304,47 @@ const Item: React.FC<BoxItemProps> = ({
           AvatarBox
         )}
       </Box>
-      <Link href={href} passHref>
-        <Flex
-          as="a"
-          marginLeft="20px"
-          align={{ base: 'flex-start', md: 'center' }}
-          flexDirection={{ base: 'column', md: 'row' }}
-          w="100%"
-          onClick={onClick}
-          cursor="pointer"
-        >
-          <Flex flex={1} wrap="wrap" alignContent="center">
-            <Text
-              width="100%"
-              wordBreak="break-all"
-              fontWeight="600"
-              fontSize="16px"
-              noOfLines={1}
-            >
-              {subject || t('no-subject')}
-            </Text>
-            <Text
-              wordBreak="break-all"
-              fontWeight="400"
-              fontSize="14px"
-              pt="5px"
-              lineHeight={1.3}
-              noOfLines={{ base: 3, md: 1 }}
-            >
-              {desc}
-            </Text>
-          </Flex>
-          <Box
-            className="date"
-            fontSize="14px"
-            mt={{ base: '20px' }}
-            ml={{ md: '20px' }}
+      <Flex
+        as={RouterLink}
+        to={href}
+        state={state}
+        marginLeft="20px"
+        align={{ base: 'flex-start', md: 'center' }}
+        flexDirection={{ base: 'column', md: 'row' }}
+        w="100%"
+        onClick={onClick}
+        cursor="pointer"
+      >
+        <Flex flex={1} wrap="wrap" alignContent="center">
+          <Text
+            width="100%"
+            wordBreak="break-all"
+            fontWeight="600"
+            fontSize="16px"
+            noOfLines={1}
           >
-            {formatDateString(date)}
-          </Box>
+            {subject || t('no-subject')}
+          </Text>
+          <Text
+            wordBreak="break-all"
+            fontWeight="400"
+            fontSize="14px"
+            pt="5px"
+            lineHeight={1.3}
+            noOfLines={{ base: 3, md: 1 }}
+          >
+            {desc}
+          </Text>
         </Flex>
-      </Link>
+        <Box
+          className="date"
+          fontSize="14px"
+          mt={{ base: '20px' }}
+          ml={{ md: '20px' }}
+        >
+          {formatDateString(date)}
+        </Box>
+      </Flex>
     </ItemFlex>
   )
 }
@@ -358,6 +370,16 @@ export const Mailbox: React.FC<BoxListProps> = ({
 
       const href = getHref ? getHref(id) : ''
 
+      const state: MeesageDetailState = {
+        date: item.date,
+        subject: item.subject,
+        to: item.to,
+        cc: item.cc,
+        bcc: item.bcc,
+        from: item.from,
+        attachments: item.attachments,
+      }
+
       return (
         <Item
           key={id}
@@ -368,10 +390,11 @@ export const Mailbox: React.FC<BoxListProps> = ({
           isChooseMode={isChooseMode}
           setIsChooseMode={setIsChooseMode}
           onClick={() => {
-            onClickBody(id)
+            onClickBody(item)
           }}
           href={href}
           mailboxType={mailboxType}
+          state={state}
         />
       )
     })}

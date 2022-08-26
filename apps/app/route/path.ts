@@ -4,6 +4,7 @@ export enum RoutePath {
   Sent = '/messages/sent',
   Drafts = '/messages/drafts',
   Trash = '/messages/trash',
+  Spam = '/messages/spam',
   Settings = '/settings/address',
   SettingSignature = '/settings/signature',
   Setup = '/setup/address',
@@ -11,7 +12,8 @@ export enum RoutePath {
   SetupShare = '/setup/share',
   NewMessage = '/message/edit',
   WhiteList = '/whitelist',
-  Subscription = '/subscription',
   Message = '/message',
   Testing = '/testing',
+  Unread = '/unread',
+  Developers = '/developers',
 }

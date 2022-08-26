@@ -8,8 +8,8 @@ import {
   Box,
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { CardSignature } from 'ui'
 import React from 'react'
+import { CardSignature } from '../../CardSignature'
 import { useCardSignature } from '../hooks/useCardSignature'
 import { useSubject } from '../hooks/useSubject'
 import { removeMailSuffix } from '../../../utils'
@@ -45,7 +45,10 @@ export const SelectCardSignature: React.FC = () => {
           </Flex>
           {isEnableCardSignature && fromAddress ? (
             <Box id={CARD_SIGNATURE_ID}>
-              <CardSignature account={removeMailSuffix(fromAddress)} />
+              <CardSignature
+                account={removeMailSuffix(fromAddress)}
+                isUseSvgAvatar
+              />
             </Box>
           ) : null}
         </MenuButton>

@@ -1,7 +1,8 @@
 export enum TrackEvent {
   // settings
   ClickImageSignature = 'click_image_signature_edit',
-  ClickRegisterENS = 'click_register_new_ens',
+  ClickRegisterENS = 'click_register_new_ENS',
+  ClickRegisterBIT = 'click_register_new_BIT',
   ClickCyperConnect = 'click_image_signature_edit_cyberconnect',
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
@@ -27,6 +28,7 @@ export enum TrackEvent {
   // mail tracking
   OpenJoinMail3Dao = 'open_join_mail3_dao',
   OpenShowYourMail3NFT = 'open_show_your_mail3_nft',
+  OpenUpdateMail = 'open_update_mail',
   // connect wallet
   ConnectWallet = 'Mail3_app_home_click_connectwallet',
 
@@ -43,22 +45,20 @@ export enum TrackEvent {
   TestingDisCordLink = 'beta1_click_discord',
   TestingTwitter = 'beta1_click_followtwitter',
   TestingEnterApp = 'beta1_click_enterapp',
+  TestingSignupNow = 'beta1_click_register_it_now',
 
   // home
-  HomeLaunchApp = 'mail3_offical_click_launchapp',
+  HomeLaunchApp = 'Mail3_offical_click_launchapp',
   HomeClickWhiteList = 'mail3_offical_click_whitelist',
   HomeClickJoinWhiteList = 'mail3_offical_click_jointhewhitelist',
   HomeClickTestingGo = 'mail3_offical_click_testinggo',
   HomeClickWhitePaper = 'mail3_offical_click_litepaper',
   HomeClickCommunity = 'mail3_offical_click_community',
-  HomeClickGetIn = 'mail3_offical_click_getin',
+  HomeClickGetIn = 'Mail3_offical_click_getin',
   HomeClickContact = 'mail3_offical_click_contactus',
   HomeClickGoTesting = 'Mail3_offical_click_testinggo',
   HomeClickBlackCube = 'mail3_offical_click_blackcube',
 
-  // subscriptions
-  ClickSubscriptionBell = 'click_subscription_bell',
-  MediaSubscriptions = 'media_subscriptions',
   // mailboxes
   ClickWrite = 'click_write',
 
@@ -67,7 +67,6 @@ export enum TrackEvent {
 
   // app_edit_message
   AppEditMessageChangeFrom = 'click_from',
-  AppEditMessageClickCommunity = 'click_community',
   AppEditMessageClickCommunityApply = 'click_community_apply',
   AppEditMessageClickCommunityNoThanks = 'click_community_nothanks',
   AppEditMessageClickSave = 'click_save',
@@ -84,10 +83,24 @@ export enum TrackEvent {
   OpenDriftbottleMail = 'open_driftbottle_mail',
 
   ClickENSRefresh = 'click_ENS_refresh',
+  ClickBITRefresh = 'click_BIT_refresh',
 
   // ipfs
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
   clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
+
+  // developers
+  // mmb
+  ClickMmbMirror = 'click_mmb_mirror',
+  ClickMmbGithub = 'click_mmb_github',
+  // community
+  ClickCommunity = 'click_community',
+
+  // product recommendations
+  ClickBannerSuggestion = 'click_banner_suggestion',
+  SentProductSuggestion = 'sent_product_suggestion',
+
+  ClickNotificationToastOk = 'click_notification_toast_ok',
 }
 
 // dimensions
@@ -110,11 +123,10 @@ export enum TrackKey {
   // mail detail
   MailDetailPage = 'click_mail_details_page_item',
 
-  // subscriptions
-  SubscriptionBell = 'click_subscription_bell',
-  MediaSubscriptions = 'media_subscriptions',
   // testing
   TestingEntry = 'beta1_check_eligilibity',
+
+  LitepaperLanguage = 'litepaper_language',
 }
 
 export enum ProfileScoialPlatformItem {
@@ -124,21 +136,26 @@ export enum ProfileScoialPlatformItem {
 
 export enum PersonnalCenter {
   Settings = 'Settings',
-  Profile = 'Profile',
-  CopyAddress = 'CopyAddress',
-  ChangeWallet = 'ChangeWallet',
+  MyProfileLink = 'My Profile Link',
+  MyMail3Address = 'My mail3 Address',
+  ChangeWallet = 'Change Wallet',
+  Logout = 'Logout',
 }
 
 export enum Mail3MenuItem {
   Inbox = 'Inbox',
   Sent = 'Sent',
-  Subscription = 'Subscription',
   Drafts = 'Drafts',
   Trash = 'Trash',
+  Discord = 'Discord',
+  Twitter = 'Twitter',
+  Mirror = 'Mirror',
+  Spam = 'Spam',
 }
 
 export enum GlobalDimensions {
   OwnEnsAddress = 'own_ens_address',
+  OwnBitAddress = 'own_bit_address',
   ConnectedWalletName = 'connected_wallet_name',
   WalletAddress = 'wallet_address',
   SignatureStatus = 'signature_status',
@@ -149,6 +166,9 @@ export enum DesiredWallet {
   Blocto = 'Blocto',
   MetaMask = 'MetaMask',
   WalletConnect = 'WalletConnect',
+  Imtoken = 'imToken',
+  Trust = 'Trust',
+  ZilPay = 'ZilPay',
 }
 
 export enum SignatureStatus {
@@ -171,17 +191,13 @@ export enum MailDetailPageItem {
   Trash = 'Trash',
   Restore = 'Restore',
   Delete = 'Delete',
+  Spam = 'Spam',
+  NotSpam = 'NotSpam',
 }
 
-export const MediaSubscriptionsItem: Record<number, string> = {
-  0: 'Mail3',
-  1: 'Bankless',
-  2: 'The Defiant',
-  3: 'Week in Ethereum News',
-  4: 'Mirror Curator DAO',
-  5: 'Arthur Hayes',
-  6: 'CryptoJobsList',
-  7: 'Web3 Jobs',
+export enum LitepaperLanguage {
+  English = 'English',
+  Japanese = 'Japanese',
 }
 
 export interface TrackProps {
@@ -191,11 +207,10 @@ export interface TrackProps {
   [TrackKey.TestingEntry]?: boolean
   [TrackKey.HomeCommunity]?: HomeCommunity
   [TrackKey.MailDetailPage]?: MailDetailPageItem
-  [TrackKey.SubscriptionBell]?: string
-  [TrackKey.MediaSubscriptions]?: string
   [TrackKey.PersonnalCenter]?: PersonnalCenter
   [TrackKey.ProfileScoialPlatform]?: ProfileScoialPlatformItem
   [TrackKey.Mail3MenuItem]?: Mail3MenuItem
+  [TrackKey.LitepaperLanguage]?: LitepaperLanguage
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {

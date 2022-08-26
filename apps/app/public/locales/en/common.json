@@ -4,7 +4,6 @@
         "sent": "Sent",
         "drafts": "Drafts",
         "trash": "Trash",
-        "subscriptions": "Subscription",
         "other-stuff": "Other Stuff",
         "settings": "Settings",
         "profile": "Web3 Profile",
@@ -15,6 +14,7 @@
     "connect": {
         "metamask": "MetaMask",
         "wallet-connect": "Wallet Connect",
+        "zilpay": "ZilPay",
         "dialog-title": "Connect Your Wallet",
         "connect-wallet": "Connect Wallet",
         "phantom": "Phantom",

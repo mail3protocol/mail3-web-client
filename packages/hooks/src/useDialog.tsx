@@ -8,7 +8,7 @@ import type {
 } from '@chakra-ui/react'
 import { atom } from 'jotai'
 import { selectAtom, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import {
   Alert,
   AlertIcon,

@@ -1,6 +1,6 @@
 import { Icon } from '@chakra-ui/react'
 import { useCommands } from '@remirror/react'
-import BoldSvg from 'assets/svg/editor/bold.svg'
+import { ReactComponent as BoldSvg } from 'assets/svg/editor/bold.svg'
 import { ButtonBase } from './Base'
 
 export const BoldButton: React.FC = () => {

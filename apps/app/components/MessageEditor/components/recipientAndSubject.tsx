@@ -3,20 +3,18 @@ import {
   Flex,
   Input,
   Stack,
-  useDisclosure,
   Button as RowButton,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { From } from './from'
 import { ToInput } from './toInput'
 import { InlineCheckbox } from './inlineCheckbox'
 import { useSubject } from '../hooks/useSubject'
-import { CommunityGuideModal } from './communityGuideModal'
 
 const SUBJECT_TEXT_LIMIT = 80
 
@@ -53,11 +51,6 @@ export const RecipientAndSubject: React.FC = () => {
   const { t } = useTranslation('edit-message')
   const [isEnabledCC, setIsEnabledCC] = useState(false)
   const [isEnabledBCC, setIsEnabledBCC] = useState(false)
-  const {
-    isOpen: isOpenCommunityDialog,
-    onOpen: onOpenCommunityDialog,
-    onClose: onCloseCommunityDialog,
-  } = useDisclosure()
   const isFoldCcAndBcc = useBreakpointValue({ base: false, md: true })
   useEffect(() => {
     if (!isFoldCcAndBcc) {
@@ -67,11 +60,7 @@ export const RecipientAndSubject: React.FC = () => {
       }
     }
   }, [isFoldCcAndBcc])
-  const trackChangeFrom = useTrackClick(TrackEvent.AppEditMessageChangeFrom)
   const trackClickCC = useTrackClick(TrackEvent.AppEditMessageClickCC)
-  const trackClickCommunity = useTrackClick(
-    TrackEvent.AppEditMessageClickCommunity
-  )
   const trackClickBCC = useTrackClick(TrackEvent.AppEditMessageClickBCC)
   const trackClickMobileCCAndBCC = useTrackClick(
     TrackEvent.AppEditMessageClickMobileCCAndBCC
@@ -83,7 +72,6 @@ export const RecipientAndSubject: React.FC = () => {
         <ItemField>{t('from')}</ItemField>
         <From
           onChange={(e) => {
-            trackChangeFrom()
             setFromAddress(e)
           }}
         />
@@ -92,15 +80,6 @@ export const RecipientAndSubject: React.FC = () => {
         <ItemField>To</ItemField>
         <ToInput onChange={setToAddresses} addresses={toAddresses} />
         <Stack direction="row" spacing="5px">
-          <InlineCheckbox
-            checked
-            onClick={() => {
-              onOpenCommunityDialog()
-              trackClickCommunity()
-            }}
-          >
-            {t('community')}
-          </InlineCheckbox>
           <RowButton
             variant="unstyled"
             color="#000"
@@ -182,10 +161,6 @@ export const RecipientAndSubject: React.FC = () => {
           {SUBJECT_TEXT_LIMIT - subject.length}
         </Box>
       </Item>
-      <CommunityGuideModal
-        isOpen={isOpenCommunityDialog}
-        onClose={onCloseCommunityDialog}
-      />
     </>
   )
 }

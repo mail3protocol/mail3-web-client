@@ -11,6 +11,7 @@
         "@metamask/detect-provider": "^1.2.0",
         "assets": "*",
         "boring-avatars": "1.5.8",
+        "shared": "*",
         "hooks": "*",
         "qrcode.react": "^3.0.2"
     },
@@ -23,9 +24,7 @@
         "eslint": "8.13.0",
         "framer-motion": "^6",
         "jotai": "^1.6.1",
-        "next": "12.1.4",
         "react": "^17.0.2",
-        "react-cookie": "^4.1.1",
         "react-dom": "^17.0.2",
         "react-query": "^3.34.16",
         "scripts": "*",

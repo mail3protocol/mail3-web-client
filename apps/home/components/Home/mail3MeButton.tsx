@@ -5,7 +5,7 @@ const Mail3MeButton: React.FC = () => (
   <mail3-me
     to="mail3.eth@mail3.me"
     variant="ghost"
-    css="color: #fff; border: none; display: inline; line-height: 16px; height: 24px; font-size: 16px"
+    css="color: #fff; border: none; display: inline; line-height: 16px; height: 24px; font-size: 16px; text-transform: lowercase;"
     icon_style="width: 20px; height: 20px; margin-right: 10px;"
   />
 )

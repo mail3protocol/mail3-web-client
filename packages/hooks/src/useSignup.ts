@@ -1,7 +1,12 @@
 import { useCallback } from 'react'
 import axios from 'axios'
 import { useSignUpAPI } from './api'
-import { useProvider } from './connectors'
+import {
+  ConnectorName,
+  useLastConectorName,
+  useProvider,
+  zilpay,
+} from './connectors'
 
 export const buildSignMessage = (nonce: number, desc: string) => `${desc}
 
@@ -39,10 +44,8 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
   const api = useSignUpAPI(serverURL)
   const provider = useProvider()
   const getNonce = useGetNonce(serverURL)
+  const lastConectorName = useLastConectorName()
   return useCallback(async () => {
-    if (provider == null) {
-      throw new Error('Please connect a wallet')
-    }
     const { isRegistered, nonce } = await getNonce()
     // if it's already registered, return code 200 and nonce
     if (isRegistered) {
@@ -52,9 +55,23 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
       }
     }
     const message = buildSignMessage(nonce, signatureDesc)
-    const signature = await provider.getSigner().signMessage(message)
+    let signature = ''
+    let pubkey = ''
+    if (lastConectorName === ConnectorName.Zilpay) {
+      if (!zilpay.isConnected) {
+        throw new Error('Please connect a wallet')
+      }
+      const signData = await zilpay.signMessage(message)
+      signature = signData.signature
+      pubkey = signData.publicKey
+    } else {
+      if (provider == null) {
+        throw new Error('Please connect a wallet')
+      }
+      signature = await provider.getSigner().signMessage(message)
+    }
     try {
-      await api.signUp(message, signature)
+      await api.signUp(message, signature, pubkey)
     } catch (error) {
       if (axios.isAxiosError(error) && error?.response?.data.code === 400) {
         return {
@@ -74,6 +91,7 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
       nonce,
       message,
       signature,
+      pubkey,
     }
-  }, [api, provider, getNonce])
+  }, [api, provider, getNonce, lastConectorName])
 }

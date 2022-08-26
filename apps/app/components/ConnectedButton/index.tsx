@@ -7,40 +7,42 @@ import {
   PopoverArrow,
   Box,
   PopoverAnchor,
+  usePopoverContext,
 } from '@chakra-ui/react'
 import { Button, Avatar } from 'ui'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { useAtomValue } from 'jotai'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import {
   PersonnalCenter,
   TrackEvent,
   TrackKey,
   useConnectWalletDialog,
-  useDidMount,
   useToast,
   useTrackClick,
 } from 'hooks'
-import { truncateMiddle } from 'shared'
+import { truncateMailAddress } from 'shared'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { RoutePath } from '../../route/path'
-import SetupSvg from '../../assets/setup.svg'
-import ProfileSvg from '../../assets/profile.svg'
-import CopySvg from '../../assets/copy.svg'
-import ChangeWalletSvg from '../../assets/change-wallet.svg'
-import { copyText } from '../../utils'
-import { userPropertiesAtom } from '../../hooks/useLogin'
+import { ReactComponent as SetupSvg } from '../../assets/setup.svg'
+import { ReactComponent as ProfileSvg } from '../../assets/profile.svg'
+import { ReactComponent as CopySvg } from '../../assets/copy.svg'
+import { ReactComponent as LogoutSvg } from '../../assets/logout.svg'
+import { ReactComponent as ChangeWalletSvg } from '../../assets/change-wallet.svg'
+import { copyText, removeMailSuffix } from '../../utils'
+import { useLogout, userPropertiesAtom } from '../../hooks/useLogin'
 import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
 
-export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
-  const emailAddress = useEmailAddress()
-  const [t] = useTranslation('common')
-  const toast = useToast()
-  const popoverRef = useRef<HTMLElement>(null)
-  const { onOpen } = useConnectWalletDialog()
+const PopoverBodyWrapper: React.FC<{ address: string }> = ({ address }) => {
+  const context = usePopoverContext()
   const userProps = useAtomValue(userPropertiesAtom)
   const trackItem = useTrackClick(TrackEvent.ClickPersonalCenter)
+  const [t] = useTranslation('common')
+  const emailAddress = useEmailAddress()
+  const { onOpen } = useConnectWalletDialog()
+  const toast = useToast()
+  const logout = useLogout()
   const btns: ButtonListItemProps[] = useMemo(
     () => [
       {
@@ -48,33 +50,54 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
         label: t('navbar.settings'),
         icon: <SetupSvg />,
         onClick() {
+          context.onClose()
           trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Settings })
-        },
-      },
-      {
-        href: `${HOME_URL}/${
-          userProps?.defaultAddress.substring(
-            0,
-            userProps.defaultAddress.indexOf('@')
-          ) || address
-        }`,
-        label: t('navbar.profile'),
-        icon: <ProfileSvg />,
-        isExternal: true,
-        onClick() {
-          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.Profile })
         },
       },
       {
         label: t('navbar.copy-address'),
         icon: <CopySvg />,
         async onClick() {
-          trackItem({ [TrackKey.PersonnalCenter]: PersonnalCenter.CopyAddress })
+          context.onClose()
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.MyMail3Address,
+          })
           const addr =
             userProps?.defaultAddress || `${address}@${MAIL_SERVER_URL}`
           await copyText(addr)
-          toast(t('navbar.copied'))
-          popoverRef?.current?.blur()
+          toast(
+            <Box>
+              {t('navbar.copied-to-clipboard')}
+              <Box as="span" fontWeight="bold" wordBreak="break-all">
+                {addr}
+              </Box>
+            </Box>
+          )
+        },
+      },
+      {
+        label: t('navbar.profile-link'),
+        icon: <ProfileSvg />,
+        async onClick() {
+          const href = `${HOME_URL}/${
+            userProps?.defaultAddress?.substring(
+              0,
+              userProps?.defaultAddress?.indexOf('@')
+            ) || address
+          }`
+          await copyText(href)
+          toast(
+            <Box>
+              {t('navbar.copied-to-clipboard')}
+              <Box as="span" fontWeight="bold" wordBreak="break-all">
+                {href}
+              </Box>
+            </Box>
+          )
+          context.onClose()
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.MyProfileLink,
+          })
         },
       },
       {
@@ -87,28 +110,35 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
           onOpen()
         },
       },
+      {
+        label: t('navbar.logout'),
+        icon: <LogoutSvg />,
+        onClick() {
+          trackItem({
+            [TrackKey.PersonnalCenter]: PersonnalCenter.Logout,
+          })
+          context.onClose()
+          logout()
+        },
+      },
     ],
     [address, userProps, emailAddress]
   )
+  return <ButtonList items={btns} />
+}
 
-  const [mounted, setMounted] = useState(false)
-
-  useDidMount(() => {
-    setMounted(true)
-  })
+export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
+  const emailAddress = useEmailAddress()
+  const popoverRef = useRef<HTMLElement>(null)
+  const userProps = useAtomValue(userPropertiesAtom)
 
   const addr = useMemo(() => {
     const defaultAddress = userProps?.defaultAddress
     if (defaultAddress) {
-      const [a, url] = defaultAddress.split('@')
-      return `${truncateMiddle(a, 6, 4)}@${url}`
+      return truncateMailAddress(defaultAddress, 6, 4)
     }
     return emailAddress
   }, [userProps, emailAddress])
-
-  if (!mounted) {
-    return null
-  }
 
   return (
     <Popover
@@ -128,7 +158,13 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
           >
             <PopoverAnchor>
               <Box>
-                <Avatar w="32px" h="32px" address={address} />
+                <Avatar
+                  w="32px"
+                  h="32px"
+                  address={removeMailSuffix(
+                    userProps?.defaultAddress || address
+                  )}
+                />
               </Box>
             </PopoverAnchor>
             <Text ml="6px" fontSize="12px" fontWeight="normal">
@@ -150,7 +186,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
       >
         <PopoverArrow />
         <PopoverBody padding="20px 16px 20px 16px">
-          <ButtonList items={btns} />
+          <PopoverBodyWrapper address={address} />
         </PopoverBody>
       </PopoverContent>
     </Popover>

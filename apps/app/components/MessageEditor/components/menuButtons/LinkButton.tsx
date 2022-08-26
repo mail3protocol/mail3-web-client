@@ -9,13 +9,36 @@ import {
   ModalFooter,
   Input,
   Stack,
+  Box,
 } from '@chakra-ui/react'
 import { useActive, useCommands, useCurrentSelection } from '@remirror/react'
-import { useState } from 'react'
-import LinkSvg from 'assets/svg/editor/link.svg'
+import { useMemo, useState } from 'react'
+import { ReactComponent as LinkSvg } from 'assets/svg/editor/link.svg'
 import { Button } from 'ui'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { ButtonBase } from './Base'
+import { isHttpUriReg } from '../../../../utils'
+
+export enum LinkErrorType {
+  Invalid = 'invalid',
+  Empty = 'empty',
+  NotHttps = 'not_http',
+}
+
+const LinkVerifyRules = [
+  {
+    match: (value: string) => value !== '' && !isHttpUriReg.test(value),
+    error: LinkErrorType.Invalid,
+  },
+  {
+    match: (value: string) => value && !value.startsWith('https://'),
+    error: LinkErrorType.NotHttps,
+  },
+  {
+    match: (value: string) => !value,
+    error: LinkErrorType.Empty,
+  },
+]
 
 export const LinkButton: React.FC = () => {
   const { updateLink, removeLink } = useCommands()
@@ -24,6 +47,14 @@ export const LinkButton: React.FC = () => {
   const active = useActive()
   const { empty } = useCurrentSelection()
   const { t } = useTranslation('edit-message')
+  const linkError = useMemo(
+    () => LinkVerifyRules.find((rule) => rule.match(linkValue))?.error,
+    [linkValue]
+  )
+  const errorTextMap: { [key in LinkErrorType]?: string } = {
+    [LinkErrorType.Invalid]: t('invalid_url'),
+    [LinkErrorType.NotHttps]: t('only_supported_https'),
+  }
 
   return (
     <>
@@ -55,6 +86,9 @@ export const LinkButton: React.FC = () => {
               placeholder="Link URL"
               onChange={(e) => setLinkValue(e.target.value)}
             />
+            <Box fontSize="14px" color="red.500" mt="6px" minH="21px">
+              {linkError ? errorTextMap[linkError] : null}
+            </Box>
           </ModalBody>
 
           <ModalFooter>
@@ -69,6 +103,7 @@ export const LinkButton: React.FC = () => {
                   setLinkValue('')
                   onClose()
                 }}
+                isDisabled={Boolean(linkError)}
               >
                 {t('ok')}
               </Button>

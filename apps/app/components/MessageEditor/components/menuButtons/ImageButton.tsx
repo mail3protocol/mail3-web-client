@@ -1,7 +1,7 @@
 import { Icon, Input } from '@chakra-ui/react'
 import { useCommands } from '@remirror/react'
 import { useCallback, useRef } from 'react'
-import ImageSvg from 'assets/svg/editor/image.svg'
+import { ReactComponent as ImageSvg } from 'assets/svg/editor/image.svg'
 import { ButtonBase } from './Base'
 
 export const ImageButton: React.FC = () => {

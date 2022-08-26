@@ -1,10 +1,10 @@
 import { Button, HStack, Text } from '@chakra-ui/react'
-import Link from 'next/link'
 import React from 'react'
 import styled from '@emotion/styled'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { RoutePath } from '../../route/path'
+import { RouterLink } from '../RouterLink'
 
 const ButtonContainer = styled(Button)`
   margin-left: 0;
@@ -23,7 +23,7 @@ const ButtonContainer = styled(Button)`
 export const GotoInbox: React.FC = () => {
   const [t] = useTranslation('common')
   return (
-    <Link href={RoutePath.Home} passHref>
+    <RouterLink href={RoutePath.Home} passHref>
       <ButtonContainer
         flex="1"
         borderRadius="56px"
@@ -41,6 +41,6 @@ export const GotoInbox: React.FC = () => {
           </Text>
         </HStack>
       </ButtonContainer>
-    </Link>
+    </RouterLink>
   )
 }

@@ -11,9 +11,8 @@ import {
   ImageProps,
 } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH } from 'ui'
-import React from 'react'
-import HomeGridBgSvgPath from '../../assets/svg/home-grid-bg.svg?url'
-import Illustration1Svg from '../../assets/svg/illustration/1.svg'
+import HomeGridBgSvgPath from '../../assets/svg/home-grid-bg.svg'
+import { ReactComponent as Illustration1Svg } from '../../assets/svg/illustration/1.svg'
 import Illustration1Png from '../../assets/png/illustration/1.png'
 import Illustration3Png from '../../assets/png/illustration/3.png'
 import Illustration8Png from '../../assets/png/illustration/8.png'

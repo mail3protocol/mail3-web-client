@@ -23,75 +23,187 @@ import React, {
 } from 'react'
 import { TrackEvent, useDialog, useTrackClick } from 'hooks'
 import { SubmitMessage } from 'models/src/submitMessage'
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'react-i18next'
 import { AttachActivationButton } from './attachActivationButton'
 import { FilesPanel } from './filesPanel'
 import { convertFileToBase64, kbToMb } from '../../../../utils/file'
-import { useAttachment } from '../../hooks/useAttachment'
-import { generateUuid } from '../../../../utils'
+import {
+  AttachmentExtraInfoObject,
+  useAttachment,
+} from '../../hooks/useAttachment'
+import { generateAttachmentContentId } from '../../../../utils'
+import { hasFilenameSpecialCharacters } from '../../../../utils/editor'
 
 export const FILENAME_BASE64_CHATS_LIMIT = 5242880
 export const FILESIZE_LIMIT = FILENAME_BASE64_CHATS_LIMIT * (3 / 4)
+export const MAXIMUM_LENGTH_OF_FILE = 255
+
+export enum FilenameVerifyErrorType {
+  None = 'none',
+  SpecialCharacters = 'special_characters',
+  Space = 'space',
+  TooLong = 'too_long',
+  TooLarge = 'too_large',
+  ContentEmpty = 'content_empty',
+  FilenameEmpty = 'filename_empty',
+}
+
+export interface Rule {
+  type: FilenameVerifyErrorType
+  match: (file: File) => boolean
+}
+
+const fileVerifyRules: Rule[] = [
+  {
+    type: FilenameVerifyErrorType.SpecialCharacters,
+    match: ({ name }) => hasFilenameSpecialCharacters(name),
+  },
+  {
+    type: FilenameVerifyErrorType.Space,
+    match: ({ name }) => name.includes(' '),
+  },
+  {
+    type: FilenameVerifyErrorType.TooLong,
+    match: ({ name }) => name.length > MAXIMUM_LENGTH_OF_FILE,
+  },
+  {
+    type: FilenameVerifyErrorType.FilenameEmpty,
+    match: ({ name }) => name[0] === '.' || name === '',
+  },
+  {
+    type: FilenameVerifyErrorType.ContentEmpty,
+    match: ({ size }) => size <= 0,
+  },
+  {
+    type: FilenameVerifyErrorType.TooLarge,
+    match: ({ size }) => size > FILESIZE_LIMIT,
+  },
+]
 
 export const Attach: React.FC<{
   onChangeFiles?: (files: SubmitMessage.Attachment[]) => void
 }> = ({ onChangeFiles }) => {
   const { t } = useTranslation('edit-message')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { attachments: files, setAttachments: setFiles } = useAttachment()
+  const {
+    attachments: files,
+    setAttachments: setFiles,
+    setAttachmentExtraInfo,
+  } = useAttachment()
   const inputRef = useRef<HTMLInputElement>(null)
   const dialog = useDialog()
+
+  const markFilesByRules = (unmarkedFiles: File[]) =>
+    unmarkedFiles.map((file) => ({
+      file,
+      marks: fileVerifyRules
+        .filter((rule) => rule.match(file))
+        .map((rule) => rule.type),
+    }))
+
+  const convertFileMarkMap = (
+    filesWithMarks: ReturnType<typeof markFilesByRules>
+  ) =>
+    filesWithMarks.reduce<{
+      [key in FilenameVerifyErrorType]: File[]
+    }>(
+      (acc, f) => {
+        f.marks.forEach((mark) => {
+          acc[mark] = [...acc[mark], f.file]
+        })
+        if (f.marks.length === 0) {
+          acc[FilenameVerifyErrorType.None] = [
+            ...acc[FilenameVerifyErrorType.None],
+            f.file,
+          ]
+        }
+        return acc
+      },
+      {
+        [FilenameVerifyErrorType.None]: [],
+        [FilenameVerifyErrorType.SpecialCharacters]: [],
+        [FilenameVerifyErrorType.Space]: [],
+        [FilenameVerifyErrorType.TooLong]: [],
+        [FilenameVerifyErrorType.TooLarge]: [],
+        [FilenameVerifyErrorType.FilenameEmpty]: [],
+        [FilenameVerifyErrorType.ContentEmpty]: [],
+      }
+    )
+
+  const handleFileVerifyError = (
+    filesWithMarks: ReturnType<typeof markFilesByRules>,
+    fileMarkMap: ReturnType<typeof convertFileMarkMap>
+  ) => {
+    const filterOverSizeFiles = fileMarkMap.too_large
+    const firstHasErrorMarkFile = filesWithMarks.find(
+      (file) => file.marks.length > 0
+    )
+    const filenameErrorTitle = (
+      {
+        [FilenameVerifyErrorType.SpecialCharacters]: t(
+          'filename_verify.special_characters'
+        ),
+        [FilenameVerifyErrorType.Space]: t('filename_verify.space'),
+        [FilenameVerifyErrorType.TooLong]: t('filename_verify.too_long', {
+          count: MAXIMUM_LENGTH_OF_FILE,
+        }),
+        [FilenameVerifyErrorType.FilenameEmpty]: t('filename_verify.empty'),
+        [FilenameVerifyErrorType.ContentEmpty]: t('file_content_is_empty'),
+      } as { [key in FilenameVerifyErrorType]?: string }
+    )[firstHasErrorMarkFile?.marks[0] || FilenameVerifyErrorType.None]
+
+    if (filterOverSizeFiles.length > 0) {
+      dialog({
+        type: 'error',
+        title: t('file_over_title'),
+        description: (
+          <>
+            {t('file_size_up_to', { size: `${kbToMb(FILESIZE_LIMIT)}MB` })}
+            {fileMarkMap.too_large
+              .map((a, i) => ({ filename: a.name, key: i }))
+              .map(({ filename, key }) => (
+                <Box fontWeight="bold" key={key}>
+                  {filename}
+                </Box>
+              ))}
+          </>
+        ),
+      })
+    } else if (firstHasErrorMarkFile && filenameErrorTitle) {
+      dialog({
+        type: 'error',
+        title: filenameErrorTitle,
+        description: firstHasErrorMarkFile.file.name,
+      })
+    }
+  }
+
   const onUploadFiles: ChangeEventHandler<HTMLInputElement> = useCallback(
     async (e) => {
-      const targetFiles: SubmitMessage.Attachment[] = await Promise.all(
-        Array.from(e.target.files || []).map<Promise<SubmitMessage.Attachment>>(
-          async (file) => ({
-            filename: file.name,
-            contentDisposition: 'attachment',
-            contentType: file.type || 'text/plain',
-            content: (await convertFileToBase64(file)).split(',')[1],
-            cid: generateUuid(),
-          })
+      const filesWithMarks = markFilesByRules(Array.from(e.target.files || []))
+      const fileMarkMap = convertFileMarkMap(filesWithMarks)
+      handleFileVerifyError(filesWithMarks, fileMarkMap)
+      const uploadingFiles: SubmitMessage.Attachment[] = await Promise.all(
+        fileMarkMap.none.map<Promise<SubmitMessage.Attachment>>(
+          async (file) => {
+            const content = (await convertFileToBase64(file)).split(',')[1]
+            return {
+              filename: file.name,
+              contentDisposition: 'attachment',
+              contentType: file.type || 'text/plain',
+              content,
+              cid: await generateAttachmentContentId(content),
+            }
+          }
         )
       )
-      const { filterOverSizeFiles, uploadingFiles } = targetFiles.reduce<{
-        filterOverSizeFiles: SubmitMessage.Attachment[]
-        uploadingFiles: SubmitMessage.Attachment[]
-      }>(
-        (acc, f) =>
-          f.content.length <= FILENAME_BASE64_CHATS_LIMIT
-            ? {
-                ...acc,
-                uploadingFiles: acc.uploadingFiles.concat(f),
-              }
-            : {
-                ...acc,
-                filterOverSizeFiles: acc.filterOverSizeFiles.concat(f),
-              },
-        {
-          filterOverSizeFiles: [],
-          uploadingFiles: [],
-        }
-      )
-      if (filterOverSizeFiles.length > 0) {
-        dialog({
-          type: 'error',
-          title: t('file_over_title'),
-          description: (
-            <>
-              {t('file_size_up_to', { size: `${kbToMb(FILESIZE_LIMIT)}MB` })}
-              {filterOverSizeFiles
-                .map((a, i) => ({ filename: a.filename, i }))
-                .map((a) => (
-                  <Box fontWeight="bold" key={a.i}>
-                    {a.filename}
-                  </Box>
-                ))}
-            </>
-          ),
-        })
-      }
+      const attachmentExtraInfo =
+        uploadingFiles.reduce<AttachmentExtraInfoObject>(
+          (acc, f) => ({ ...acc, [f.cid as string]: { downloadProgress: 1 } }),
+          {}
+        )
       setFiles((f) => f.concat(uploadingFiles))
+      setAttachmentExtraInfo((info) => ({ ...info, attachmentExtraInfo }))
       e.target.value = ''
     },
     []

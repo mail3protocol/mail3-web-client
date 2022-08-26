@@ -14,10 +14,13 @@ import {
   QueryKey,
   InfiniteData,
 } from 'react-query'
+import { LinkProps } from 'react-router-dom'
 import { Box } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { LinkProps } from 'next/link'
-import { MailboxesMessagesResponse } from '../../api'
+import {
+  MailboxesMessagesResponse,
+  MailboxMessageItemResponse,
+} from '../../api'
 import { BoxListProps, Mailbox, MessageItem } from '../Mailbox'
 import { Mailboxes } from '../../api/mailboxes'
 
@@ -43,17 +46,19 @@ interface InfiniteMailboxProps<
   style?: CSSProperties
   parentIsChooseMode?: boolean
   parentChooseMap?: Record<string, boolean>
+  pinUpMsg?: MessageItem[]
   calcDataLength?: (data?: InfiniteData<TData>) => number
   onDataChange?: (data: MessageItem[]) => void
   onGetIsFetching?: (isFetching: boolean) => void
   onGetIsLoading?: (isLoading: boolean) => void
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
-  getHref: (id: string) => LinkProps['href']
+  getHref: (id: string) => LinkProps['to']
   mailboxType?: Mailboxes
 }
 
 export interface InfiniteHandle {
+  getChooseMsgs: () => MailboxMessageItemResponse[]
   getChooseIds: () => string[]
   setHiddenIds: (ids: string[]) => void
 }
@@ -71,6 +76,7 @@ const InfiniteBox: ForwardRefRenderFunction<
     noMoreElement,
     loader,
     parentChooseMap = {},
+    pinUpMsg = [],
     parentIsChooseMode = false,
     onDataChange,
     onGetIsLoading,
@@ -107,11 +113,26 @@ const InfiniteBox: ForwardRefRenderFunction<
 
   const loaderEl = useMemo(() => loader || <Box>Loading</Box>, [loader])
 
+  const dataOriginFlat = useMemo(
+    () => data?.pages.map((item) => item.messages).flat() || [],
+    [data]
+  )
+
+  const dataOriginMap: Record<string, MailboxMessageItemResponse> = useMemo(
+    () =>
+      dataOriginFlat.reduce((acc, item) => ({ ...acc, [item.id]: item }), {}),
+    [dataOriginFlat]
+  )
+
   const dataMsg: MessageItem[] = useMemo(() => {
-    if (!data) return []
-    const dataList = data.pages.map((item: any) => item.messages)
-    return dataList.flat()
-  }, [data])
+    const renderList = [
+      ...pinUpMsg,
+      ...dataOriginFlat.filter(
+        (item) => !pinUpMsg.some((_item) => _item.id === item.id)
+      ),
+    ]
+    return renderList as MessageItem[]
+  }, [data, pinUpMsg])
 
   useEffect(() => {
     onGetIsFetching?.(isFetching)
@@ -146,6 +167,11 @@ const InfiniteBox: ForwardRefRenderFunction<
   }, [chooseMap, parentChooseMap])
 
   useImperativeHandle(forwardedRef, () => ({
+    getChooseMsgs() {
+      return Object.keys(chooseMap)
+        .filter((key) => chooseMap[key])
+        .map((id) => dataOriginMap[id])
+    },
     getChooseIds() {
       return Object.keys(chooseMap).filter((key) => chooseMap[key])
     },
