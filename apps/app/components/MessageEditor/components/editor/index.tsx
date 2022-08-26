@@ -40,18 +40,25 @@ import { useAPI } from '../../../../hooks/useAPI'
 import { useSubject } from '../../hooks/useSubject'
 import { LeaveEditorModal } from '../leaveEditorModal'
 import { useBlocker } from '../../../../hooks/useBlocker'
+import { AttachmentImageExtensionExtension } from './extensions/AttachmentImageExtension'
 
 const RemirrorTheme = styled(Flex)`
   ul,
   ol {
-    padding-left: 20px;
+    padding-inline-start: revert;
+    list-style-position: revert;
   }
-
+  p {
+    margin-top: revert;
+    margin-bottom: revert;
+  }
   a {
-    text-decoration: underline;
-    color: #3182ce;
+    text-decoration: revert;
+    color: #4d51f3;
   }
-
+  img {
+    display: revert;
+  }
   .ProseMirror {
     box-shadow: none;
     height: 100%;
@@ -84,7 +91,7 @@ const TextEditor = () => {
     <Flex
       id={CONTAINER_ID}
       direction="column"
-      pt="15px"
+      pt="0"
       pb={{ base: '20px', md: 0 }}
       fontSize="14px"
       flex={0}
@@ -275,10 +282,7 @@ const Editor: React.FC<EditorProps> = ({ content = '<p></p>' }) => {
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
-      new ImageExtension({
-        enableResizing: true,
-        createPlaceholder: () => document.createElement('span'),
-      }),
+      new AttachmentImageExtensionExtension(),
       new ItalicExtension(),
       new UnderlineExtension(),
       new BulletListExtension(),
