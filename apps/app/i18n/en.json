@@ -192,7 +192,7 @@
     "settings": {
         "setup": {
             "address": {
-                "title": "Your email address"
+                "title": "Customize your email address"
             },
             "signature": {
                 "title": "Show your own signature"
@@ -207,11 +207,17 @@
         "settings": {
             "title": "Settings",
             "tabs": {
+                "more": "More",
                 "address": "Mail3 Address",
                 "signature": "Signature setup"
             }
         },
         "address": {
+            "copied": "Copy successfully",
+            "text": "The addresses listed below have been automatically activated as your mail3 addresses, and <a>you can receive all emails sent to these addresses,</a> regardless of whether they are selected as the default outgoing address.",
+            "hover-title": "🔔This customized address will be your outgoing address by default. You can change it at any time.",
+            "hover-content": "You can choose one of the domain names we have resolved for you below as your outgoing address at any time ",
+            "outgoing": "Your default outgoing address",
             "title": "Your wallet address and the domain names",
             "desc": "you owned all can be used as mail3 address to send and receive emails.",
             "wallet-address": "Wallet Address",
@@ -223,7 +229,11 @@
             "register-bit": "Register <a>new</a> .bit",
             "request-failed": "Request change default address failed, please try again later.",
             "refresh": "Refresh",
-            "refresh_failed": "Refresh Failed: "
+            "refresh_failed": "Refresh Failed: ",
+            "not-found-p1": "Opos!!<br><br/>Cannot associate to your domain name",
+            "not-found-p2": "please try clicking on the option above ：",
+            "not-found-p3": "Refesh",
+            "not-found-p4": "Register new domain name"
         },
         "signature": {
             "desc": "Your signature will be automatically inserted when you write a new email.",
