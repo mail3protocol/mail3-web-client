@@ -3,14 +3,10 @@ import { Box } from '@chakra-ui/react'
 import parse, { DOMNode, Element, Text } from 'html-react-parser'
 import DOMPurify from 'dompurify'
 import ReactShadowRoot from 'react-shadow-root'
-import { createPortal } from 'react-dom'
+import Frame, { FrameContextConsumer } from 'react-frame-component'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
-import {
-  OFFICE_ADDRESS_LIST,
-  IMAGE_PROXY_URL,
-  IS_FIREFOX,
-} from '../../constants'
+import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
 import DefaultFontStyle from '../../styles/font.css'
 
 interface htmlParserProps {
@@ -41,48 +37,19 @@ body {
 ${DefaultFontStyle}
 `
 
-const DEFAULT_HEIGHT = 200
-
 export const Iframe: React.FC<IframeProps> = (props) => {
   const { children, getHeight, ...rest } = props
-  const [contentRef, setContentRef] = useState<HTMLIFrameElement | null>(null)
-  const mountNode = contentRef?.contentWindow?.document?.body
-  const height = mountNode?.scrollHeight
-
-  function getHeightByContentRef() {
-    const h = contentRef?.contentWindow?.document.body.scrollHeight
-    getHeight(h ?? DEFAULT_HEIGHT)
-  }
-
-  useEffect(() => {
-    const domStyle = document.createElement('style')
-    domStyle.textContent = IFRAME_INNER_STYLE
-    contentRef?.contentWindow?.document.head.appendChild(domStyle)
-
-    if (IS_FIREFOX) {
-      getHeightByContentRef()
-    } else if (contentRef?.contentWindow) {
-      contentRef.contentWindow.document.body.onresize = getHeightByContentRef
-    }
-  }, [contentRef])
-
-  useEffect(() => {
-    if (height) {
-      getHeight(height)
-    }
-  }, [height])
-
   return (
-    <iframe
-      title="Message Content"
-      {...rest}
-      {...(IS_FIREFOX
-        ? // Compatible with Firefox, Issue: https://github.com/facebook/react/issues/22847
-          { onLoad: (e) => setContentRef(e.target as HTMLIFrameElement) }
-        : { ref: setContentRef })}
-    >
-      {mountNode && createPortal(children, mountNode)}
-    </iframe>
+    <Frame style={{ height: '100%' }} {...rest}>
+      <FrameContextConsumer>
+        {({ document }) => {
+          if (document?.body.scrollHeight) {
+            getHeight(document.body.scrollHeight)
+          }
+          return children
+        }}
+      </FrameContextConsumer>
+    </Frame>
   )
 }
 
@@ -244,7 +211,10 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
       {isOfficeMail ? (
         <div>{content}</div>
       ) : (
-        <UnofficialMailBody>{content}</UnofficialMailBody>
+        <UnofficialMailBody>
+          <style>{IFRAME_INNER_STYLE}</style>
+          {content}
+        </UnofficialMailBody>
       )}
     </Box>
   )
