@@ -1,95 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
 import parse, { DOMNode, Element, Text } from 'html-react-parser'
 import DOMPurify from 'dompurify'
-import ReactShadowRoot from 'react-shadow-root'
-import Frame, { FrameContextConsumer } from 'react-frame-component'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
 import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
-import DefaultFontStyle from '../../styles/font.css'
 
 interface htmlParserProps {
   html: string
   messageId: string
   attachments: AttachmentItemResponse[] | null
   from: AddressResponse
-}
-
-interface IframeProps extends React.IframeHTMLAttributes<HTMLIFrameElement> {
-  getHeight: (h: number) => void
-}
-
-const IFRAME_INNER_STYLE = `
-html {
-  overflow: hidden;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  position: relative;
-  word-break: break-word;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-${DefaultFontStyle}
-`
-
-export const Iframe: React.FC<IframeProps> = (props) => {
-  const { children, getHeight, ...rest } = props
-  return (
-    <Frame style={{ height: '100%' }} {...rest}>
-      <FrameContextConsumer>
-        {({ document }) => {
-          if (document?.body.scrollHeight) {
-            getHeight(document.body.scrollHeight)
-          }
-          return children
-        }}
-      </FrameContextConsumer>
-    </Frame>
-  )
-}
-
-const shadowRootStyle = `
-  :host {
-    display: block;
-  }
-
-  main {
-    display: block;
-    overflow: hidden;
-    min-height: 200px;
-  }
-
-  iframe {
-    border: none;
-    width: 100%;
-    height: 0;
-    margin: 0;
-  }
-`
-export const UnofficialMailBody: React.FC = ({ children }) => {
-  const [height, setHeight] = useState<number>(0)
-
-  return (
-    <ReactShadowRoot>
-      <style>{shadowRootStyle}</style>
-      <main style={{ height: `${height}px` }}>
-        <Iframe
-          getHeight={(h: number) => {
-            setHeight(h)
-          }}
-          src="about:blank"
-          style={{ height: '100%' }}
-        >
-          {children}
-        </Iframe>
-      </main>
-    </ReactShadowRoot>
-  )
 }
 
 const urlity = (text: string) => {
@@ -206,16 +127,5 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     return parse(removeImportant, { replace })
   }, [html, addTags])
 
-  return (
-    <Box>
-      {isOfficeMail ? (
-        <div>{content}</div>
-      ) : (
-        <UnofficialMailBody>
-          <style>{IFRAME_INNER_STYLE}</style>
-          {content}
-        </UnofficialMailBody>
-      )}
-    </Box>
-  )
+  return <Box>{content}</Box>
 }
