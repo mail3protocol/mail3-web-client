@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ConnectorName,
   DesiredWallet,
@@ -41,7 +41,6 @@ import { CoinbaseButton } from './CoinbaseButton'
 
 export interface EthButtonsProps {
   onClose: () => void
-  onListenButtonCount?: (count: number) => void
 }
 
 export interface EthButtonProps {
@@ -128,7 +127,7 @@ export const EthButton: React.FC<EthButtonProps> = ({
   )
 }
 
-export function useEthButtons() {
+export function useEthButtons({ onClose }: EthButtonsProps) {
   const [isEthEnvironment, setIsEthEnvironment] = useState(false)
   const [t] = useTranslation('common')
   useDidMount(() => {
@@ -138,17 +137,6 @@ export function useEthButtons() {
       }
     })
   })
-  return {
-    isEthEnvironment,
-    t,
-  }
-}
-
-export function getEthButtons({
-  isEthEnvironment,
-  t,
-  onClose,
-}: ReturnType<typeof useEthButtons> & EthButtonsProps) {
   const renderMetamask = () => (
     <EthButton
       isEthEnvironment={isEthEnvironment}
