@@ -59,6 +59,7 @@ export const Iframe: React.FC<IframeProps> = (props) => {
     contentRef?.contentWindow?.document.head.appendChild(domStyle)
 
     getHeightByContentRef()
+    setTimeout(getHeightByContentRef, 500)
   }, [contentRef])
 
   return (
