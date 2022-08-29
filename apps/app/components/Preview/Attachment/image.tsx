@@ -62,7 +62,14 @@ export const AttachmentImage: React.FC<AttachmentImageProps> = ({
     }
   )
   if (isLoading || !src)
-    return <Skeleton width="200px" height="200px" isLoaded={false} />
+    return (
+      <Skeleton
+        width="200px"
+        height="200px"
+        isLoaded={false}
+        display="inline-block"
+      />
+    )
 
   if (isError)
     return (
