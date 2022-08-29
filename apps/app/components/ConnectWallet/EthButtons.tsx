@@ -21,7 +21,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { useTranslation } from 'react-i18next'
 import { WalletConnectButton } from './WalletConnectButton'
 import { ConnectButton, generateIcon } from './ConnectButton'
-import { isImToken, isTrust, isWechat } from '../../utils'
+import { isCoinbaseWallet, isImToken, isTrust, isWechat } from '../../utils'
 import {
   generateImtokenDeepLink,
   generateTrustWalletDeepLink,
@@ -163,6 +163,10 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
     />
   )
 
+  const renderCoinbase = () => (
+    <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />
+  )
+
   if (IS_MOBILE) {
     if (isEthEnvironment) {
       if (isImToken()) {
@@ -170,6 +174,9 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
       }
       if (isTrust()) {
         return renderTrust()
+      }
+      if (isCoinbaseWallet()) {
+        return renderCoinbase()
       }
       return renderMetamask()
     }
@@ -193,7 +200,7 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
         key={ConnectorName.WalletConnect}
         onClose={onClose}
       />
-      <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />
+      {renderCoinbase()}
     </>
   )
 }

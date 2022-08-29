@@ -4,5 +4,13 @@ export const isWechat = () =>
 export const isImToken = () =>
   navigator.userAgent.toLowerCase().includes('imtoken')
 
+export const isCoinbaseWallet = () => {
+  const ethereum = window.ethereum as {
+    isCoinbaseWallet?: boolean
+    isCoinbaseBrowser?: boolean
+  }
+  return ethereum.isCoinbaseWallet || ethereum.isCoinbaseBrowser
+}
+
 const w = window as any
 export const isTrust = () => !!w?.ethereum?.isTrust
