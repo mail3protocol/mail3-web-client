@@ -39,6 +39,10 @@ const shadowRootStyle = `
     overflow: hidden;
     min-height: 200px;
   }
+  
+  iframe {
+    border: none;
+  }
 `
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
