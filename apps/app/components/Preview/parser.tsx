@@ -201,7 +201,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
 
   const content = useMemo(() => {
     DOMPurify.removeHook('afterSanitizeAttributes')
-    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+    DOMPurify.addHook('afterSanitizeAttributes', (node: HTMLElement) => {
       // set all elements owning target to target=_blank
       if ('target' in node) {
         node.setAttribute('target', '_blank')
