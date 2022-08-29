@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
 import parse, { DOMNode, Element, Text } from 'html-react-parser'
 import DOMPurify from 'dompurify'
+import ReactShadowRoot from 'react-shadow-root'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
 import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
@@ -27,6 +28,18 @@ const urlity = (text: string) => {
     value: str,
   }))
 }
+
+const shadowRootStyle = `
+  :host {
+    display: block;
+  }
+
+  main {
+    display: block;
+    overflow: hidden;
+    min-height: 200px;
+  }
+`
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
   html,
@@ -127,5 +140,12 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     return parse(removeImportant, { replace })
   }, [html, addTags])
 
-  return <Box>{content}</Box>
+  return (
+    <Box>
+      <ReactShadowRoot>
+        <style>{shadowRootStyle}</style>
+        <main>{content}</main>
+      </ReactShadowRoot>
+    </Box>
+  )
 }
