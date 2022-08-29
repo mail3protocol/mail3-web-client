@@ -38,10 +38,15 @@ const shadowRootStyle = `
     display: block;
     overflow: hidden;
     min-height: 200px;
+    position: relative;
   }
   
   iframe {
     border: none;
+  }
+  
+  a {
+    color: #4d51f3;
   }
 `
 
