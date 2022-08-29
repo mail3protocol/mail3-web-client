@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import VConsole from 'vconsole'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { App } from './app'
@@ -20,3 +21,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 )
+
+const vConsole = new VConsole()
+console.log(vConsole)
