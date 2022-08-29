@@ -47,6 +47,7 @@ export const Iframe: React.FC<IframeProps> = (props) => {
   const { children, getHeight, ...rest } = props
   const [contentRef, setContentRef] = useState<HTMLIFrameElement | null>(null)
   const mountNode = contentRef?.contentWindow?.document?.body
+  const height = mountNode?.scrollHeight
 
   function getHeightByContentRef() {
     const h = contentRef?.contentWindow?.document.body.scrollHeight
@@ -64,6 +65,12 @@ export const Iframe: React.FC<IframeProps> = (props) => {
       contentRef.contentWindow.document.body.onresize = getHeightByContentRef
     }
   }, [contentRef])
+
+  useEffect(() => {
+    if (height) {
+      getHeight(height)
+    }
+  }, [height])
 
   return (
     <iframe
