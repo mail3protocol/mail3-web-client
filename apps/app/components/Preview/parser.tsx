@@ -6,7 +6,11 @@ import ReactShadowRoot from 'react-shadow-root'
 import { createPortal } from 'react-dom'
 import { AddressResponse, AttachmentItemResponse } from '../../api'
 import { AttachmentImage } from './Attachment/image'
-import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
+import {
+  OFFICE_ADDRESS_LIST,
+  IMAGE_PROXY_URL,
+  IS_FIREFOX,
+} from '../../constants'
 import DefaultFontStyle from '../../styles/font.css'
 
 interface htmlParserProps {
@@ -61,8 +65,10 @@ export const Iframe: React.FC<IframeProps> = (props) => {
     <iframe
       title="Message Content"
       {...rest}
-      ref={setContentRef}
-      onLoad={getHeightByContentRef}
+      {...(IS_FIREFOX
+        ? // Compatible with Firefox, Issue: https://github.com/facebook/react/issues/22847
+          { onLoad: (e) => setContentRef(e.target as HTMLIFrameElement) }
+        : { ref: setContentRef })}
     >
       {mountNode && createPortal(children, mountNode)}
     </iframe>
