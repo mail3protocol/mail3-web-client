@@ -58,8 +58,11 @@ export const Iframe: React.FC<IframeProps> = (props) => {
     domStyle.textContent = IFRAME_INNER_STYLE
     contentRef?.contentWindow?.document.head.appendChild(domStyle)
 
-    getHeightByContentRef()
-    setTimeout(getHeightByContentRef, 500)
+    if (IS_FIREFOX) {
+      getHeightByContentRef()
+    } else if (contentRef?.contentWindow) {
+      contentRef.contentWindow.document.body.onresize = getHeightByContentRef
+    }
   }, [contentRef])
 
   return (
