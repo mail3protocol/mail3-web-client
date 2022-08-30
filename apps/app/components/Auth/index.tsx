@@ -39,7 +39,6 @@ import {
 } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
 import { SERVER_URL } from '../../constants'
-import { useAutoConnectCoinbase } from '../../hooks/useAutoConnectCoinbase'
 
 export const AuthModal: React.FC = () => {
   const [t] = useTranslation('common')
@@ -152,8 +151,6 @@ export const AuthModal: React.FC = () => {
       setIsLoading(false)
     }
   }
-
-  useAutoConnectCoinbase(onRemember)
 
   return (
     <Modal
