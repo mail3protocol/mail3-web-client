@@ -82,7 +82,7 @@ export const NewMessagePage = () => {
   const _to = searchParams.get('to')
   const searchParamsSubject = searchParams.get('subject')
   const location = useLocation()
-  const messageData = location.state as MessageData | undefined
+  const locationState = location.state as MessageData | undefined
   const to = _to ? filterEmails(_to.split(',')) : null
   const _forceTo = searchParams.get('force_to')
   const forceTo = _forceTo ? filterEmails(_forceTo.split(',')) : null
@@ -111,31 +111,31 @@ export const NewMessagePage = () => {
   } = useAttachment()
   const { onResetSavingAtom } = useSaveMessage()
 
-  function getSubject(messageInfo?: GetMessage.Response | null) {
+  function getSubject(m?: GetMessage.Response | null) {
     if (searchParamsSubject) return searchParamsSubject
-    if (!messageInfo) return ''
+    if (!m) return ''
     if (
-      (messageInfo.subject.startsWith('Fwd:') && action === 'forward') ||
-      (messageInfo.subject.startsWith('Re:') && action === 'reply')
+      (m.subject.startsWith('Fwd:') && action === 'forward') ||
+      (m.subject.startsWith('Re:') && action === 'reply')
     ) {
-      return messageInfo.subject
+      return m.subject
     }
     if (action === 'forward') {
-      if (messageInfo.subject.startsWith('Re:')) {
-        return `Fwd: ${messageInfo.subject.substring(4)}`
+      if (m.subject.startsWith('Re:')) {
+        return `Fwd: ${m.subject.substring(4)}`
       }
-      return `Fwd: ${messageInfo.subject}`
+      return `Fwd: ${m.subject}`
     }
     if (action === 'reply') {
-      if (messageInfo.subject.startsWith('Fwd:')) {
-        return `Re: ${messageInfo.subject.substring(5)}`
+      if (m.subject.startsWith('Fwd:')) {
+        return `Re: ${m.subject.substring(5)}`
       }
-      return `Re: ${messageInfo.subject}`
+      return `Re: ${m.subject}`
     }
-    return messageInfo.subject
+    return m.subject
   }
 
-  function getTo(messageInfo?: GetMessage.Response | null) {
+  function getTo(m?: GetMessage.Response | null) {
     if (forceTo) {
       return forceTo
     }
@@ -143,29 +143,27 @@ export const NewMessagePage = () => {
       return [DRIFT_BOTTLE_ADDRESS]
     }
     function getToAddressByMessageInfo() {
-      if (!messageInfo || !messageInfo.to || action === 'forward') return []
-      if (action === 'reply') return [messageInfo.from.address]
-      return messageInfo.to.map((item) => item.address)
+      if (!m || !m.to || action === 'forward') return []
+      if (action === 'reply') return [m.from.address]
+      return m.to.map((item) => item.address)
     }
     return getToAddressByMessageInfo().concat(to || [])
   }
 
-  function setSubjectAndOtherByMessageInfo(
-    messageInfo?: GetMessage.Response | null
-  ) {
+  function setSubjectAndOtherByMessageInfo(m?: GetMessage.Response | null) {
     if (isLoadedSubjectInfo) return
     setIsLoadedSubjectInfo(true)
     if (userProperties?.defaultAddress) {
       setFromAddress(userProperties.defaultAddress as string)
     }
-    setSubject(getSubject(messageInfo))
-    setToAddresses(getTo(messageInfo))
-    if (messageInfo && action !== 'reply' && action !== 'forward') {
-      if (messageInfo.cc) {
-        setCcAddresses(messageInfo.cc.map((item) => item.address))
+    setSubject(getSubject(m))
+    setToAddresses(getTo(m))
+    if (m && action !== 'reply' && action !== 'forward') {
+      if (m.cc) {
+        setCcAddresses(m.cc.map((item) => item.address))
       }
-      if (messageInfo.bcc) {
-        setBccAddresses(messageInfo.bcc.map((item) => item.address))
+      if (m.bcc) {
+        setBccAddresses(m.bcc.map((item) => item.address))
       }
     }
   }
@@ -190,26 +188,26 @@ export const NewMessagePage = () => {
   }, [action, id])
   useDocumentTitle(title)
 
-  const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
-
   const queryMessageAndContentKeyId = useMemo(() => id, [])
 
-  const isEnabledMessageInfoQuery =
-    !!queryMessageAndContentKeyId && !messageData
+  const messageInfoFromRouteState = locationState?.messageInfo
   const queryMessageInfoAndContentData = useQuery(
     [Query.GetMessageInfoAndContent, queryMessageAndContentKeyId],
     async () => {
-      const messageInfo = id
-        ? await catchApiResponse<GetMessage.Response>(
-            api.getMessageInfo(id as string)
-          )
-        : null
+      if (messageInfoFromRouteState) {
+        return { messageInfo: messageInfoFromRouteState }
+      }
+      if (!queryMessageAndContentKeyId) {
+        return { messageInfo: null }
+      }
+      const messageInfo = await catchApiResponse<GetMessage.Response>(
+        api.getMessageInfo(queryMessageAndContentKeyId as string)
+      )
       return {
         messageInfo,
       }
     },
     {
-      enabled: isEnabledMessageInfoQuery,
       refetchOnReconnect: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -217,21 +215,24 @@ export const NewMessagePage = () => {
     }
   )
 
-  const messageInfo =
-    messageData?.messageInfo ??
-    queryMessageInfoAndContentData?.data?.messageInfo
+  const messageInfo = queryMessageInfoAndContentData?.data?.messageInfo
   const messageContent = messageInfo?.text
 
+  const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
   useEffect(() => {
-    if (isFirstLoadMessage) return
-    if (messageInfo || !queryMessageAndContentKeyId) {
-      setIsFirstLoadMessage(true)
+    if (
+      isFirstLoadMessage ||
+      !queryMessageInfoAndContentData.isSuccess ||
+      !messageInfo
+    ) {
+      return
     }
+    setIsFirstLoadMessage(true)
     setSubjectAndOtherByMessageInfo(messageInfo)
     if (messageInfo?.attachments) {
       loadAttachments(messageInfo.id, messageInfo.attachments)
     }
-  }, [messageInfo])
+  }, [messageInfo, queryMessageInfoAndContentData.isSuccess])
 
   useEffect(() => {
     if (id) return
@@ -249,13 +250,14 @@ export const NewMessagePage = () => {
     if (!messageContent) {
       return getDefaultTemplate(signContent)
     }
+    const content = messageContent.html || messageContent.plain
     if (action === 'forward') {
-      return getForwardTemplate(messageContent.html, signContent)
+      return getForwardTemplate(content, signContent)
     }
     if (action === 'reply') {
-      return getReplyTemplate(messageContent.html, signContent)
+      return getReplyTemplate(content, signContent)
     }
-    return messageContent.html
+    return content
   }, [
     messageContent,
     action,
@@ -271,9 +273,8 @@ export const NewMessagePage = () => {
     return redirectHome()
   }
 
-  const isLoadingContent = isEnabledMessageInfoQuery
-    ? isLoadingAttachments || !!queryMessageInfoAndContentData?.isLoading
-    : isLoadingAttachments
+  const isLoadingContent =
+    isLoadingAttachments || !!queryMessageInfoAndContentData?.isLoading
 
   return (
     <>
