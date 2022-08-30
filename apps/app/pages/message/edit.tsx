@@ -194,8 +194,9 @@ export const NewMessagePage = () => {
 
   const queryMessageAndContentKeyId = useMemo(() => id, [])
 
+  const messageInfoFromRouteState = messageData?.messageInfo
   const isEnabledMessageInfoQuery =
-    !!queryMessageAndContentKeyId && !messageData
+    !!queryMessageAndContentKeyId && !messageInfoFromRouteState
   const queryMessageInfoAndContentData = useQuery(
     [Query.GetMessageInfoAndContent, queryMessageAndContentKeyId],
     async () => {
@@ -218,7 +219,7 @@ export const NewMessagePage = () => {
   )
 
   const messageInfo =
-    messageData?.messageInfo ??
+    messageInfoFromRouteState ??
     queryMessageInfoAndContentData?.data?.messageInfo
   const messageContent = messageInfo?.text
 
