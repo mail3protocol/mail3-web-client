@@ -11,7 +11,6 @@ import {
   Textarea,
   Spinner,
   Checkbox,
-  useToast,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ChevronRightIcon } from '@chakra-ui/icons'
@@ -24,6 +23,7 @@ import {
   useDialog,
   useTrackClick,
   TrackEvent,
+  useToast,
 } from 'hooks'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -206,7 +206,7 @@ export const SettingSignature: React.FC = () => {
         await api.setTextSignature(v)
         onChangeSignText(v)
       } catch (error: any) {
-        toast(error?.message)
+        toast(`The text signature should be less than 2000.`)
       }
     },
     [isTextEnable]
