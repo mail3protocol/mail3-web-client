@@ -206,7 +206,7 @@ export const SettingSignature: React.FC = () => {
         await api.setTextSignature(v)
         onChangeSignText(v)
       } catch (error: any) {
-        toast(`The text signature should be less than 2000.`)
+        toast(`The text signature should be less than 1024.`)
       }
     },
     [isTextEnable]
