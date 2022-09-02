@@ -99,3 +99,8 @@ export const PRODUCT_RECOMMENDATIONS_ADDRESS =
 export const PRODUCT_RECOMMENDATIONS_SUBJECT =
   import.meta.env.NEXT_PUBLIC_PRODUCT_RECOMMENDATIONS_SUBJECT ||
   '[Product suggestion] It would be terrific if …'
+
+export const SUBJECT_TEXT_LIMIT = (() => {
+  const limit = Number(import.meta.env.SUBJECT_TEXT_LIMIT)
+  return Number.isNaN(limit) ? 998 : limit
+})()
