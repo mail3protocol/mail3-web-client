@@ -15,8 +15,7 @@ import { From } from './from'
 import { ToInput } from './toInput'
 import { InlineCheckbox } from './inlineCheckbox'
 import { useSubject } from '../hooks/useSubject'
-
-const SUBJECT_TEXT_LIMIT = 80
+import { SUBJECT_TEXT_LIMIT } from '../../../constants'
 
 export const Item = styled(Flex)`
   align-items: center;
@@ -158,7 +157,7 @@ export const RecipientAndSubject: React.FC = () => {
           onChange={(e) => setSubject(e.target.value)}
           maxLength={SUBJECT_TEXT_LIMIT}
         />
-        <Box color="#B7B7B7" fontSize="12px" whiteSpace="nowrap">
+        <Box color="#B7B7B7" fontSize="12px" whiteSpace="nowrap" ml="12px">
           {SUBJECT_TEXT_LIMIT - subject.length}
         </Box>
       </Item>
