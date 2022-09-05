@@ -1,17 +1,62 @@
 import { useTranslation } from 'react-i18next'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
+  coinbase,
+  coinbaseStore,
   ConfirmDialog,
+  ConnectorName,
   useAccount,
   useConnectWalletDialog,
   useEagerConnect,
 } from 'hooks'
 import { Button } from 'ui/src/Button'
 import { ButtonProps } from '@chakra-ui/react'
+import { timer } from 'rxjs'
 import { ConnectModalWithMultichain } from './ConnectModalWithMultichain'
+import { isCoinbaseWallet } from '../../utils'
+import { useEthButton } from '../../hooks/useEthButton'
+import { useIsAuthenticated } from '../../hooks/useLogin'
+import { useRemember } from '../../hooks/useRemember'
 
 export interface ConnectWalletProps extends ButtonProps {
   renderConnected: (address: string) => React.ReactNode
+}
+
+const ConnectWalletWithCoinbase: React.FC<
+  ButtonProps & { isAuth: boolean; account: string }
+> = ({ isAuth, account, ...props }) => {
+  const [t] = useTranslation('common')
+  const { onClick, isConnecting } = useEthButton({
+    connectorName: ConnectorName.Coinbase,
+    connector: coinbase,
+    store: coinbaseStore,
+  })
+  const { onRemember, isLoading } = useRemember()
+  const [accountTemp, setAccountTemp] = useState(account)
+  useEffect(() => {
+    if (!accountTemp && account && !isAuth) {
+      const timeoutSubscriber = timer(1000).subscribe(() => {
+        onRemember()
+      })
+      return () => {
+        timeoutSubscriber.unsubscribe()
+      }
+    }
+    setAccountTemp(account)
+    return () => {}
+  }, [account])
+
+  return (
+    <Button
+      onClick={account && !isAuth ? onRemember : onClick}
+      w="200px"
+      loadingText={t('connect.connecting')}
+      isLoading={isConnecting || isLoading}
+      {...props}
+    >
+      {t('connect.connect-wallet')}
+    </Button>
+  )
 }
 
 export const ConnectWallet: React.FC<ConnectWalletProps> = ({
@@ -21,8 +66,15 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   const [t] = useTranslation('common')
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
+  const isAuth = useIsAuthenticated()
 
   useEagerConnect()
+
+  if (isCoinbaseWallet() && !isAuth) {
+    return (
+      <ConnectWalletWithCoinbase isAuth={isAuth} account={account} {...props} />
+    )
+  }
 
   return (
     <>
