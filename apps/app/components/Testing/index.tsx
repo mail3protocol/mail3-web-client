@@ -36,6 +36,7 @@ import { ReactComponent as TwitterSvg } from '../../assets/twitter-o.svg'
 import { RoutePath } from '../../route/path'
 import { RouterLink } from '../RouterLink'
 import { ConnectWallet } from '../ConnectWallet'
+import { isCoinbaseWallet } from '../../utils'
 
 const Container = styled(Flex)`
   height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);
@@ -177,7 +178,7 @@ export const Testing: React.FC = () => {
   const isAuthModalOpen = useIsAuthModalOpen()
 
   const mascotIndex = useMemo(() => {
-    if (!account || isAuthModalOpen) {
+    if (!account || isAuthModalOpen || isCoinbaseWallet()) {
       return 1
     }
     if (isAuth) {

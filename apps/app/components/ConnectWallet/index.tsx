@@ -34,6 +34,11 @@ const ConnectWalletWithCoinbase: React.FC<
   const { onRemember, isLoading } = useRemember()
   const [accountTemp, setAccountTemp] = useState(account)
   useEffect(() => {
+    if (isCoinbaseWallet() && account && !isAuth) {
+      onRemember()
+    }
+  }, [])
+  useEffect(() => {
     if (!accountTemp && account && !isAuth) {
       const timeoutSubscriber = timer(1000).subscribe(() => {
         onRemember()
