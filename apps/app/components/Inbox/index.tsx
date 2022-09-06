@@ -8,7 +8,11 @@ import { useToast } from 'hooks'
 import { atom, useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
-import { MailboxMessageItemResponse } from '../../api'
+import {
+  MailboxMessageItemResponse,
+  MessageFlagAction,
+  MessageFlagType,
+} from '../../api'
 import { Loading } from '../Loading'
 import { InboxNav } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
@@ -137,6 +141,19 @@ export const InboxComponent: React.FC = () => {
     return formatState(dataList.flat(), AvatarBadgeType.New)
   }, [newsInfiniteData])
 
+  const newMessagesMap: Record<string, MessageItem> = useMemo(() => {
+    if (!newMessages?.length) return {}
+
+    return newMessages?.reduce((bcc, item) => {
+      const { id } = item
+
+      return {
+        ...bcc,
+        [id]: item,
+      }
+    }, {})
+  }, [newMessages])
+
   const newsTotal = useMemo(() => {
     if (newsInfiniteData?.pages?.length)
       return newsInfiniteData.pages[newsInfiniteData.pages.length - 1].total
@@ -161,8 +178,47 @@ export const InboxComponent: React.FC = () => {
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
-          btnList={[BulkActionType.Trash, BulkActionType.Spam]}
+          btnList={[
+            BulkActionType.MarkSeen,
+            BulkActionType.Trash,
+            BulkActionType.Spam,
+          ]}
           actionMap={{
+            [BulkActionType.MarkSeen]: async () => {
+              const newIds =
+                Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
+              const ids = [...newIds]
+              if (!ids.length) return
+              try {
+                await api.batchUpdateMessage(
+                  ids,
+                  MessageFlagAction.add,
+                  MessageFlagType.Seen
+                )
+
+                const map: Record<string, boolean> = {}
+                newIds.forEach((key) => {
+                  map[key] = true
+                })
+                setHiddenMap({
+                  ...hiddenMap,
+                  ...map,
+                })
+
+                const addPinUpMsg = ids.map((key) => ({
+                  ...newMessagesMap[key],
+                  avatarBadgeType: AvatarBadgeType.None,
+                }))
+
+                setPinUpMsg([...addPinUpMsg, ...pinUpMsg])
+                setChooseMap({})
+                setIsChooseMode(false)
+
+                toast(t('status.trash.ok'), { status: 'success' })
+              } catch (error) {
+                toast(t('status.trash.fail'))
+              }
+            },
             [BulkActionType.Trash]: async () => {
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
