@@ -156,7 +156,7 @@ const BulkAtionWrap: React.FC<{
   list: BulkActionType[]
   onClickMap: MailboxMenuProps['actionMap']
   onClose?: () => void
-}> = ({ list, onClickMap, onClose, disableMap }, index) => {
+}> = ({ list, onClickMap, onClose, disableMap = {} }, index) => {
   const content = list.map((type) => {
     const onClick = onClickMap[type]
     const disable = disableMap[type]
