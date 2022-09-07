@@ -31,6 +31,7 @@ export const bulkLoadingAtom = atom({
 })
 
 interface MailboxMenuProps {
+  disableMap: PartialRecord<BulkActionType, boolean>
   btnList: BulkActionType[]
   actionMap: PartialRecord<BulkActionType, () => Promise<void>>
   onClose?: () => void
@@ -95,10 +96,11 @@ const LineBox = styled(Box)`
 `
 
 const BulkAtion: React.FC<{
+  disable?: boolean
   index: number
   onClick?: () => Promise<void>
   type: BulkActionType
-}> = ({ onClick, type, index }) => {
+}> = ({ onClick, type, index, disable }) => {
   const { Icon, name, hasLine } = bulkConfig[type]
   const loadingMap: Record<number, boolean> = useAtomValue(bulkLoadingAtom)
   const setBulkLoadingMap = useUpdateAtom(bulkLoadingAtom)
@@ -109,7 +111,9 @@ const BulkAtion: React.FC<{
       p="10px 18px"
       cursor="pointer"
       position="relative"
+      opacity={disable ? 0.5 : 1}
       onClick={async () => {
+        if (disable) return
         if (onClick) {
           setBulkLoadingMap((state) => ({
             ...state,
@@ -148,13 +152,23 @@ const BulkAtion: React.FC<{
 }
 
 const BulkAtionWrap: React.FC<{
+  disableMap: MailboxMenuProps['disableMap']
   list: BulkActionType[]
   onClickMap: MailboxMenuProps['actionMap']
   onClose?: () => void
-}> = ({ list, onClickMap, onClose }, index) => {
+}> = ({ list, onClickMap, onClose, disableMap }, index) => {
   const content = list.map((type) => {
     const onClick = onClickMap[type]
-    return <BulkAtion index={index} key={type} onClick={onClick} type={type} />
+    const disable = disableMap[type]
+    return (
+      <BulkAtion
+        disable={disable}
+        index={index}
+        key={type}
+        onClick={onClick}
+        type={type}
+      />
+    )
   })
 
   return (
@@ -204,13 +218,19 @@ const Content = styled(Box)`
 `
 
 export const MailboxMenu: React.FC<MailboxMenuProps> = ({
+  disableMap,
   btnList,
   actionMap,
   onClose,
 }) => (
   <Container>
     <Content>
-      <BulkAtionWrap list={btnList} onClickMap={actionMap} onClose={onClose} />
+      <BulkAtionWrap
+        disableMap={disableMap}
+        list={btnList}
+        onClickMap={actionMap}
+        onClose={onClose}
+      />
     </Content>
   </Container>
 )

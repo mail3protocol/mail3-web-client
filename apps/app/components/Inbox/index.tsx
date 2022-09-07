@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
@@ -98,6 +98,7 @@ export const InboxComponent: React.FC = () => {
 
   const [seenMessages, setSeenMessages] = useState<messagesState>(null)
   const [isLoadingSeen, setIsLoadingSeen] = useState(true)
+  const [markSeenDisable, setMarkSeenDisable] = useState(false)
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
@@ -174,10 +175,20 @@ export const InboxComponent: React.FC = () => {
   const isSeenEmpty = isLoading || !seenMessages?.length
   const isClear = !isLoading && isNewsEmpty && isSeenEmpty
 
+  useEffect(() => {
+    const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
+    if (seenIds?.length) {
+      setMarkSeenDisable(true)
+    } else {
+      setMarkSeenDisable(false)
+    }
+  }, [isChooseMode])
+
   return (
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
+          disableMap={{ [BulkActionType.MarkSeen]: markSeenDisable }}
           btnList={[
             BulkActionType.MarkSeen,
             BulkActionType.Trash,
