@@ -21,7 +21,7 @@ export const WhitelistGuide = () => {
       bg="#fff"
     >
       <Heading fontSize={{ base: '24px', md: '48px' }}>
-        Now, hit the Mail3 Beta
+        Now, hit the Mail3
       </Heading>
       <LogoAnimation w="270px" mt="7px" />
       <NextLink
