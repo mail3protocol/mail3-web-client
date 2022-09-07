@@ -97,10 +97,10 @@ const LineBox = styled(Box)`
 
 const BulkAtion: React.FC<{
   disable?: boolean
-  index: number
+  useLine: boolean
   onClick?: () => Promise<void>
   type: BulkActionType
-}> = ({ onClick, type, index, disable }) => {
+}> = ({ onClick, type, useLine, disable }) => {
   const { Icon, name, hasLine } = bulkConfig[type]
   const loadingMap: Record<number, boolean> = useAtomValue(bulkLoadingAtom)
   const setBulkLoadingMap = useUpdateAtom(bulkLoadingAtom)
@@ -127,7 +127,7 @@ const BulkAtion: React.FC<{
         }
       }}
     >
-      {index !== 0 && hasLine ? <LineBox className="line" /> : null}
+      {useLine && hasLine ? <LineBox className="line" /> : null}
       <Flex
         direction="column"
         align="center"
@@ -156,14 +156,14 @@ const BulkAtionWrap: React.FC<{
   list: BulkActionType[]
   onClickMap: MailboxMenuProps['actionMap']
   onClose?: () => void
-}> = ({ list, onClickMap, onClose, disableMap = {} }, index) => {
-  const content = list.map((type) => {
+}> = ({ list, onClickMap, onClose, disableMap = {} }) => {
+  const content = list.map((type, index) => {
     const onClick = onClickMap[type]
     const disable = disableMap[type]
     return (
       <BulkAtion
         disable={disable}
-        index={index}
+        useLine={index !== 0}
         key={type}
         onClick={onClick}
         type={type}
