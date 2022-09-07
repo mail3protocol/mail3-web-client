@@ -166,7 +166,7 @@ const IconLink: React.FC<IconLinkProps> = ({ icon, href, text, ...props }) => (
 
 const ENS_DOMAIN = 'https://app.ens.domains'
 
-export const Testing: React.FC = () => {
+export const Home: React.FC = () => {
   useAuth()
   const account = useAccount()
   const isAuth = useIsAuthenticated()

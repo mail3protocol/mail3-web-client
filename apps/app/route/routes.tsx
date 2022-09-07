@@ -9,7 +9,6 @@ import { SettingsSignaturePage } from '../pages/settings/signature'
 import { SetupAddressPage } from '../pages/setup/address'
 import { SetupSharePage } from '../pages/setup/share'
 import { UnReadPage } from '../pages/unread'
-import { TestingPage } from '../pages/testing'
 import { MessagePage } from '../pages/message/[id]'
 import { TrashPage } from '../pages/messages/trash'
 import { SpamPage } from '../pages/messages/spam'
@@ -27,11 +26,6 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Home,
     key: 'home',
     element: <HomePage />,
-  },
-  {
-    path: RoutePath.Testing,
-    key: 'beta',
-    element: <TestingPage />,
   },
   {
     path: RoutePath.Drafts,

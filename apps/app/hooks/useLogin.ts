@@ -95,7 +95,6 @@ export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.Home,
   RoutePath.WhiteList,
-  RoutePath.Testing,
 ])
 
 export const useCurrentWalletStore = () => {

@@ -1,20 +1,39 @@
-import { PageContainer } from 'ui'
+import { Logo, PageContainer } from 'ui'
+import React from 'react'
+import { Center, Link } from '@chakra-ui/react'
 import { useRedirectHome } from '../hooks/useRedirectHome'
-import { LandingPage } from '../components/LandingPage'
 import { InboxComponent } from '../components/Inbox'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { Home } from '../components/Home'
+import { Navbar } from '../components/Navbar'
+import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
+
+const UnAuthNavbar = () => (
+  <Center h={`${NAVBAR_HEIGHT}px`}>
+    <Link isExternal href={HOME_URL}>
+      <Logo textProps={{ color: '#231815' }} />
+    </Link>
+  </Center>
+)
 
 export const HomePage = () => {
-  const { redirectHome, isAuth } = useRedirectHome()
+  const { isAuth } = useRedirectHome()
   useDocumentTitle(isAuth ? 'Inbox' : 'Home')
   if (!isAuth) {
-    return redirectHome()
+    return (
+      <PageContainer>
+        <UnAuthNavbar />
+        <Home />
+      </PageContainer>
+    )
   }
 
   return (
     <>
-      <PageContainer>{!isAuth && <LandingPage />}</PageContainer>
-      {isAuth && <InboxComponent />}
+      <PageContainer>
+        <Navbar />
+      </PageContainer>
+      <InboxComponent />
     </>
   )
 }
