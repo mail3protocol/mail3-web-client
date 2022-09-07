@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Box, Center, Circle, Flex, Spinner } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
@@ -174,15 +174,6 @@ export const InboxComponent: React.FC = () => {
   const isNewsNoEmpty = !isLoading && !!newMessages?.length
   const isSeenEmpty = isLoading || !seenMessages?.length
   const isClear = !isLoading && isNewsEmpty && isSeenEmpty
-
-  useEffect(() => {
-    const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
-    if (seenIds?.length) {
-      setMarkSeenDisable(true)
-    } else {
-      setMarkSeenDisable(false)
-    }
-  }, [isChooseMode])
 
   return (
     <NewPageContainer>
@@ -385,6 +376,15 @@ export const InboxComponent: React.FC = () => {
               parentChooseMap={chooseMap}
               onClickBody={() => {
                 // report point
+              }}
+              onGetChooseMap={(seenChooseMap) => {
+                if (
+                  Object.keys(seenChooseMap).some((key) => seenChooseMap[key])
+                ) {
+                  setMarkSeenDisable(true)
+                } else {
+                  setMarkSeenDisable(false)
+                }
               }}
               pinUpMsg={pinUpMsg}
               getHref={(id) => `${RoutePath.Message}/${id}`}
