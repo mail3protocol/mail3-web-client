@@ -12,11 +12,13 @@ import {
 import { Button } from 'ui/src/Button'
 import { ButtonProps } from '@chakra-ui/react'
 import { timer } from 'rxjs'
+import { Navigate, useLocation } from 'react-router-dom'
 import { ConnectModalWithMultichain } from './ConnectModalWithMultichain'
 import { isCoinbaseWallet } from '../../utils'
 import { useEthButton } from '../../hooks/useEthButton'
 import { useIsAuthenticated } from '../../hooks/useLogin'
 import { useRemember } from '../../hooks/useRemember'
+import { RoutePath } from '../../route/path'
 
 export interface ConnectWalletProps extends ButtonProps {
   renderConnected: (address: string) => React.ReactNode
@@ -75,10 +77,25 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
 
   useEagerConnect()
 
-  if (isCoinbaseWallet() && !isAuth) {
-    return (
-      <ConnectWalletWithCoinbase isAuth={isAuth} account={account} {...props} />
-    )
+  useEffect(() => {
+    if (isCoinbaseWallet() && isAuth && account) {
+    }
+  }, [])
+
+  const { pathname } = useLocation()
+  if (isCoinbaseWallet()) {
+    if (!isAuth) {
+      return (
+        <ConnectWalletWithCoinbase
+          isAuth={isAuth}
+          account={account}
+          {...props}
+        />
+      )
+    }
+    if (pathname === RoutePath.Testing) {
+      return <Navigate to={RoutePath.Inbox} replace />
+    }
   }
 
   return (
