@@ -46,9 +46,7 @@ export function useRemember() {
       return onSignZilpay(nonce)
     }
     if (provider == null) {
-      if (!isCoinbaseWallet()) {
-        toast(t('auth.errors.wallet-not-connected'))
-      }
+      toast(t('auth.errors.wallet-not-connected'))
       return null
     }
     const message = buildSignMessage(nonce, signatureDesc)
