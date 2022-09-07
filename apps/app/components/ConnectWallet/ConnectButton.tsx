@@ -43,6 +43,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
       variant="outline"
       w="250px"
       px="8px"
+      minH="40px"
       {...props}
       onClick={isConnected ? undefined : onClick}
     >

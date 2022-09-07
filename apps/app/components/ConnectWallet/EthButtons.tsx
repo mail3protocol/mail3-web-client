@@ -19,9 +19,16 @@ import ImtokenPng from 'assets/wallets/imtoken.png'
 import TrustPng from 'assets/wallets/trust.png'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { useTranslation } from 'react-i18next'
+import CoinbasePng from 'assets/wallets/coinbase.png'
 import { WalletConnectButton } from './WalletConnectButton'
 import { ConnectButton, generateIcon } from './ConnectButton'
-import { isImToken, isTrust, isWechat } from '../../utils'
+import {
+  generateCoinbaseWalletDeepLink,
+  isCoinbaseWallet,
+  isImToken,
+  isTrust,
+  isWechat,
+} from '../../utils'
 import {
   generateImtokenDeepLink,
   generateTrustWalletDeepLink,
@@ -120,7 +127,7 @@ export const EthButton: React.FC<EthButtonProps> = ({
   )
 }
 
-export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
+export function useEthButtons({ onClose }: EthButtonsProps) {
   const [isEthEnvironment, setIsEthEnvironment] = useState(false)
   const [t] = useTranslation('common')
   useDidMount(() => {
@@ -130,7 +137,6 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
       }
     })
   })
-
   const renderMetamask = () => (
     <EthButton
       isEthEnvironment={isEthEnvironment}
@@ -139,6 +145,7 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
       text={t('connect.metamask')}
       desiredWallet={DesiredWallet.MetaMask}
       onClose={onClose}
+      key={DesiredWallet.MetaMask}
     />
   )
   const renderImtoken = () => (
@@ -149,9 +156,9 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
       text="imToken"
       desiredWallet={DesiredWallet.Imtoken}
       onClose={onClose}
+      key={DesiredWallet.Imtoken}
     />
   )
-
   const renderTrust = () => (
     <EthButton
       isEthEnvironment={isEthEnvironment}
@@ -160,40 +167,48 @@ export const EthButtons: React.FC<EthButtonsProps> = ({ onClose }) => {
       text="Trust"
       desiredWallet={DesiredWallet.Trust}
       onClose={onClose}
+      key={DesiredWallet.Trust}
+    />
+  )
+  const renderCoinbase = () => (
+    <EthButton
+      isEthEnvironment={isEthEnvironment}
+      icon={generateIcon(CoinbasePng)}
+      href={isEthEnvironment ? undefined : generateCoinbaseWalletDeepLink()}
+      text={t('connect.coinbase')}
+      desiredWallet={DesiredWallet.Coinbase}
+      onClose={onClose}
+      key={DesiredWallet.Coinbase}
     />
   )
 
   if (IS_MOBILE) {
     if (isEthEnvironment) {
       if (isImToken()) {
-        return renderImtoken()
+        return [renderImtoken()]
       }
       if (isTrust()) {
-        return renderTrust()
+        return [renderTrust()]
       }
-      return renderMetamask()
+      if (isCoinbaseWallet()) {
+        return [renderCoinbase()]
+      }
+      return [renderMetamask()]
     }
-    return (
-      <>
-        {renderMetamask()}
-        <WalletConnectButton
-          key={ConnectorName.WalletConnect}
-          onClose={onClose}
-        />
-        {renderImtoken()}
-        {renderTrust()}
-      </>
-    )
-  }
-
-  return (
-    <>
-      {renderMetamask()}
+    return [
+      renderMetamask(),
       <WalletConnectButton
         key={ConnectorName.WalletConnect}
         onClose={onClose}
-      />
-      <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />
-    </>
-  )
+      />,
+      renderImtoken(),
+      renderTrust(),
+      renderCoinbase(),
+    ]
+  }
+  return [
+    renderMetamask(),
+    <WalletConnectButton key={ConnectorName.WalletConnect} onClose={onClose} />,
+    <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />,
+  ]
 }

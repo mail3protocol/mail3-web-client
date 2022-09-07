@@ -45,7 +45,7 @@ import OtherIconPath from '../../assets/chain-icons/other.png'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'
-import { EthButtons } from './EthButtons'
+import { useEthButtons } from './EthButtons'
 
 interface ChainItem {
   name: string
@@ -93,13 +93,14 @@ export const ConnectModalWithMultichain: React.FC<{
   onClose: () => void
 }> = ({ isOpen, onClose }) => {
   const [t] = useTranslation('common')
+  const ethButtons = useEthButtons({ onClose })
   const chains: ChainItem[] = useMemo(
     () => [
       {
         name: 'ETH',
         icon: EthIconPath,
         description: 'EVM compatible chain: Ethereum, Polygon, BSC',
-        walletButtons: [<EthButtons onClose={onClose} key="ethbuttons" />],
+        walletButtons: ethButtons,
       },
       {
         name: 'Zilliqa',
@@ -178,7 +179,7 @@ export const ConnectModalWithMultichain: React.FC<{
         ],
       },
     ],
-    []
+    [ethButtons, onClose]
   )
   const [tabIndex, setTabIndex] = useAtom(tabIndexAtom)
   const currentChain = chains[tabIndex]

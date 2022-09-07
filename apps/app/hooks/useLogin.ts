@@ -29,7 +29,11 @@ import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
-import { removeMailSuffix, notificationLogsStore } from '../utils'
+import {
+  removeMailSuffix,
+  notificationLogsStore,
+  isCoinbaseWallet,
+} from '../utils'
 import { useDeleteFCMToken } from './useFCMToken'
 
 export const useIsLoginExpired = () => {
@@ -82,6 +86,9 @@ export const useCloseAuthModal = () => {
   const setAuthModalOpen = useUpdateAtom(isAuthModalOpenAtom)
   return () => setAuthModalOpen(false)
 }
+
+export const useIsNotAutoOpenAuthModal = () =>
+  [isCoinbaseWallet()].some((item) => item)
 
 export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 
@@ -348,8 +355,9 @@ export const useAuth = () => {
   const closeAuthModal = useCloseAuthModal()
   const location = useLocation()
   const navi = useNavigate()
+  const isNotAutoOpenAuthModal = useIsNotAutoOpenAuthModal()
   useEffect(() => {
-    if (!isAuth && account) {
+    if (!isAuth && account && !isNotAutoOpenAuthModal) {
       openAuthModal()
     }
     if (!account) {

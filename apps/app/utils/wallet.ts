@@ -12,6 +12,9 @@ export const generateMetamaskDeepLink = () =>
 export const generateTrustWalletDeepLink = () =>
   `https://link.trustwallet.com/open_url?coin_id=60&url=https://${generateCurrentURL()}`
 
+export const generateCoinbaseWalletDeepLink = () =>
+  `https://go.cb-w.com/dapp?cb_url=https://${generateCurrentURL()}`
+
 export const generateImtokenDeepLink = () =>
   !IS_MOBILE
     ? `https://token.im/download`
