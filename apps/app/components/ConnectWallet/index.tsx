@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   coinbase,
   coinbaseStore,
@@ -50,9 +50,16 @@ const ConnectWalletWithCoinbase: React.FC<ConnectWalletWithCoinbaseProps> = ({
       }
     })
 
+  const isConnectedWithoutSigned = account && !isAuth
+  useEffect(() => {
+    if (isConnectedWithoutSigned) {
+      onClick()
+    }
+  }, [isConnectedWithoutSigned])
+
   return (
     <Button
-      onClick={account && !isAuth ? onSignToLogin : onClick}
+      onClick={isConnectedWithoutSigned ? onSignToLogin : onClick}
       w="200px"
       loadingText={t('connect.connecting')}
       isLoading={isConnecting || isLoading}
