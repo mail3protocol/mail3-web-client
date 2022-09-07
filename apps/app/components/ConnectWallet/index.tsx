@@ -52,7 +52,7 @@ const ConnectWalletWithCoinbase: React.FC<ConnectWalletWithCoinbaseProps> = ({
 
   const isConnectedWithoutSigned = account && !isAuth
   useEffect(() => {
-    if (isConnectedWithoutSigned) {
+    if (!isConnectedWithoutSigned) {
       onClick()
     }
   }, [isConnectedWithoutSigned])
