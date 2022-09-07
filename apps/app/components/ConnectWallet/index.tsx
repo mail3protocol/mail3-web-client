@@ -77,11 +77,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
 
   useEagerConnect()
 
-  useEffect(() => {
-    if (isCoinbaseWallet() && isAuth && account) {
-    }
-  }, [])
-
   const { pathname } = useLocation()
   if (isCoinbaseWallet()) {
     if (!isAuth) {
