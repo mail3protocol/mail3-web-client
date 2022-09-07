@@ -69,6 +69,8 @@ const Container = styled(Flex)`
   .title {
     font-size: 28px;
     font-weight: 700;
+    text-align: center;
+    max-width: 500px;
     @media (max-width: 600px) {
       margin-top: 0;
       font-size: 24px;
@@ -195,7 +197,7 @@ export const Testing: React.FC = () => {
 
   const desc = useMemo(() => {
     if (mascotIndex === 1) {
-      return t('not-connected-desc')
+      return null
     }
     if (mascotIndex === 2) {
       return t('success-desc')

@@ -253,7 +253,7 @@
         }
     },
     "testing": {
-        "title": "Mail3 Beta is opening now \uD83D\uDD25",
+        "title": "Connect wallet to get a mail system designed for web3 natives",
         "not-connected-desc": "Connect wallet to see if you are eligible to access the Beta",
         "success-desc": "Congratulations! \uD83C\uDF89 you are qualified for the beta access to Mail3.",
         "fail-desc": "\uD83D\uDE14 Sorry you are not qualified.",
