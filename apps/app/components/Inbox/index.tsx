@@ -191,35 +191,29 @@ export const InboxComponent: React.FC = () => {
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
               const ids = [...newIds]
               if (!ids.length) return
-              try {
-                await api.batchUpdateMessage(
-                  ids,
-                  MessageFlagAction.add,
-                  MessageFlagType.Seen
-                )
+              await api.batchUpdateMessage(
+                ids,
+                MessageFlagAction.add,
+                MessageFlagType.Seen
+              )
 
-                const map: Record<string, boolean> = {}
-                newIds.forEach((key) => {
-                  map[key] = true
-                })
-                setHiddenMap({
-                  ...hiddenMap,
-                  ...map,
-                })
+              const map: Record<string, boolean> = {}
+              newIds.forEach((key) => {
+                map[key] = true
+              })
+              setHiddenMap({
+                ...hiddenMap,
+                ...map,
+              })
 
-                const addPinUpMsg = ids.map((key) => ({
-                  ...newMessagesMap[key],
-                  avatarBadgeType: AvatarBadgeType.None,
-                }))
+              const addPinUpMsg = ids.map((key) => ({
+                ...newMessagesMap[key],
+                avatarBadgeType: AvatarBadgeType.None,
+              }))
 
-                setPinUpMsg([...addPinUpMsg, ...pinUpMsg])
-                setChooseMap({})
-                setIsChooseMode(false)
-
-                toast(t('status.trash.ok'), { status: 'success' })
-              } catch (error) {
-                toast(t('status.trash.fail'))
-              }
+              setPinUpMsg([...addPinUpMsg, ...pinUpMsg])
+              setChooseMap({})
+              setIsChooseMode(false)
             },
             [BulkActionType.Trash]: async () => {
               const newIds =
