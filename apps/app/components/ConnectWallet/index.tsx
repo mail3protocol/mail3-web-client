@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   coinbase,
   coinbaseStore,
@@ -11,7 +11,6 @@ import {
 } from 'hooks'
 import { Button } from 'ui/src/Button'
 import { ButtonProps } from '@chakra-ui/react'
-import { timer } from 'rxjs'
 import { Navigate, useLocation } from 'react-router-dom'
 import { ConnectModalWithMultichain } from './ConnectModalWithMultichain'
 import { isCoinbaseWallet } from '../../utils'
@@ -44,34 +43,16 @@ const ConnectWalletWithCoinbase: React.FC<ConnectWalletWithCoinbaseProps> = ({
     store: coinbaseStore,
   })
   const { onRemember, isLoading } = useRemember()
-  const [accountTemp, setAccountTemp] = useState(account)
   const onSignToLogin = () =>
     onRemember().catch((error) => {
       if (error instanceof NoOnWhiteListError) {
         onSignError?.(error)
       }
     })
-  useEffect(() => {
-    if (isCoinbaseWallet() && account && !isAuth) {
-      onSignToLogin()
-    }
-  }, [])
-  useEffect(() => {
-    if (!accountTemp && account && !isAuth) {
-      const timeoutSubscriber = timer(1000).subscribe(() => {
-        onSignToLogin()
-      })
-      return () => {
-        timeoutSubscriber.unsubscribe()
-      }
-    }
-    setAccountTemp(account)
-    return () => {}
-  }, [account])
 
   return (
     <Button
-      onClick={account && !isAuth ? onRemember : onClick}
+      onClick={account && !isAuth ? onSignToLogin : onClick}
       w="200px"
       loadingText={t('connect.connecting')}
       isLoading={isConnecting || isLoading}
