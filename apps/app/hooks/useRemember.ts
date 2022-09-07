@@ -16,6 +16,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { SERVER_URL } from '../constants'
 import { useCloseAuthModal, useLogin, useSetGlobalTrack } from './useLogin'
 import { RoutePath } from '../route/path'
+import { isCoinbaseWallet } from '../utils'
+
+export class NoOnWhiteListError extends Error {}
 
 export function useRemember() {
   const [t] = useTranslation('common')
@@ -62,6 +65,9 @@ export function useRemember() {
     setIsLoading(true)
     try {
       const { nonce, error, code, signature, message, pubkey } = await signup()
+      if (isCoinbaseWallet() && error) {
+        throw new NoOnWhiteListError('Not on the white list')
+      }
       switch (code) {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
@@ -116,6 +122,9 @@ export function useRemember() {
           break
       }
     } catch (error: any) {
+      if (error instanceof NoOnWhiteListError) {
+        throw error
+      }
       if (error?.code !== 4001) {
         if (typeof error === 'string' && error.includes('Rejected')) {
           return

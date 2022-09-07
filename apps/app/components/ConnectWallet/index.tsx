@@ -17,16 +17,26 @@ import { ConnectModalWithMultichain } from './ConnectModalWithMultichain'
 import { isCoinbaseWallet } from '../../utils'
 import { useEthButton } from '../../hooks/useEthButton'
 import { useIsAuthenticated } from '../../hooks/useLogin'
-import { useRemember } from '../../hooks/useRemember'
+import { NoOnWhiteListError, useRemember } from '../../hooks/useRemember'
 import { RoutePath } from '../../route/path'
 
 export interface ConnectWalletProps extends ButtonProps {
   renderConnected: (address: string) => React.ReactNode
+  onSignError?: (error: NoOnWhiteListError) => void
 }
 
-const ConnectWalletWithCoinbase: React.FC<
-  ButtonProps & { isAuth: boolean; account: string }
-> = ({ isAuth, account, ...props }) => {
+export interface ConnectWalletWithCoinbaseProps
+  extends Omit<ConnectWalletProps, 'renderConnected'> {
+  isAuth: boolean
+  account: string
+}
+
+const ConnectWalletWithCoinbase: React.FC<ConnectWalletWithCoinbaseProps> = ({
+  isAuth,
+  account,
+  onSignError,
+  ...props
+}) => {
   const [t] = useTranslation('common')
   const { onClick, isConnecting } = useEthButton({
     connectorName: ConnectorName.Coinbase,
@@ -35,10 +45,21 @@ const ConnectWalletWithCoinbase: React.FC<
   })
   const { onRemember, isLoading } = useRemember()
   const [accountTemp, setAccountTemp] = useState(account)
+  const onSignToLogin = () =>
+    onRemember().catch((error) => {
+      if (error instanceof NoOnWhiteListError) {
+        onSignError?.(error)
+      }
+    })
+  useEffect(() => {
+    if (isCoinbaseWallet() && account && !isAuth) {
+      onSignToLogin()
+    }
+  }, [])
   useEffect(() => {
     if (!accountTemp && account && !isAuth) {
       const timeoutSubscriber = timer(1000).subscribe(() => {
-        onRemember()
+        onSignToLogin()
       })
       return () => {
         timeoutSubscriber.unsubscribe()
@@ -63,22 +84,28 @@ const ConnectWalletWithCoinbase: React.FC<
 
 export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   renderConnected,
+  onSignError,
   ...props
 }) => {
   const [t] = useTranslation('common')
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
   const isAuth = useIsAuthenticated()
+  const [signError, setSignError] = useState<NoOnWhiteListError | null>(null)
 
   useEagerConnect()
 
   const { pathname } = useLocation()
-  if (isCoinbaseWallet()) {
+  if (isCoinbaseWallet() && !signError) {
     if (!isAuth) {
       return (
         <ConnectWalletWithCoinbase
           isAuth={isAuth}
           account={account}
+          onSignError={(err) => {
+            setSignError(err)
+            onSignError?.(err)
+          }}
           {...props}
         />
       )
