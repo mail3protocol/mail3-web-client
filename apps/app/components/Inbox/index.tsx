@@ -197,7 +197,7 @@ export const InboxComponent: React.FC = () => {
                 MessageFlagType.Seen
               )
 
-              const map: Record<string, boolean> = {}
+              const map = newIds.reduce<Record<string, boolean>>((acc, key) => ({ [key]: true }), {})
               newIds.forEach((key) => {
                 map[key] = true
               })
