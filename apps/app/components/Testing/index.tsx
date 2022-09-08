@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import landingBg from 'assets/svg/landing-bg.svg?url'
 import styled from '@emotion/styled'
 import {
@@ -36,6 +36,8 @@ import { ReactComponent as TwitterSvg } from '../../assets/twitter-o.svg'
 import { RoutePath } from '../../route/path'
 import { RouterLink } from '../RouterLink'
 import { ConnectWallet } from '../ConnectWallet'
+import { isCoinbaseWallet } from '../../utils'
+import { NoOnWhiteListError } from '../../hooks/useRemember'
 
 const Container = styled(Flex)`
   height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);
@@ -174,17 +176,22 @@ export const Testing: React.FC = () => {
   const trackEnterApp = useTrackClick(TrackEvent.TestingEnterApp)
   const trackClickRegisterENS = useTrackClick(TrackEvent.TestingSignupNow)
 
+  const [signError, setSignError] = useState<Error | null>(null)
   const isAuthModalOpen = useIsAuthModalOpen()
 
   const mascotIndex = useMemo(() => {
-    if (!account || isAuthModalOpen) {
+    if (
+      !account ||
+      isAuthModalOpen ||
+      (isCoinbaseWallet() && !(signError instanceof NoOnWhiteListError))
+    ) {
       return 1
     }
     if (isAuth) {
       return 2
     }
     return 3
-  }, [account, isAuth, isAuthModalOpen])
+  }, [account, isAuth, isAuthModalOpen, signError])
 
   const desc = useMemo(() => {
     if (mascotIndex === 1) {
@@ -251,7 +258,7 @@ export const Testing: React.FC = () => {
         </ColorfulButton>
       </>
     )
-  }, [mascotIndex])
+  }, [mascotIndex, signError])
 
   return (
     <>
@@ -274,6 +281,7 @@ export const Testing: React.FC = () => {
                 addr={addr}
               />
             )}
+            onSignError={setSignError}
           />
         </Box>
         {mascotIndex === 2 ? (
