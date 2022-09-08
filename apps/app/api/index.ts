@@ -340,6 +340,19 @@ export class API {
     })
   }
 
+  public async batchUpdateMessage(
+    messageIds: string[],
+    action: MessageFlagAction,
+    flagType: MessageFlagType
+  ): Promise<AxiosResponse<putMessageResponse>> {
+    return this.axios.post(`/mailbox/account/messages/batch_update`, {
+      messageIds,
+      flags: {
+        [action]: [flagType],
+      },
+    })
+  }
+
   public async moveMessage(
     messageId: string,
     path: Mailboxes
