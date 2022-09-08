@@ -198,12 +198,10 @@ export const InboxComponent: React.FC = () => {
               )
 
               const map = newIds.reduce<Record<string, boolean>>(
-                (acc, key) => ({ [key]: true }),
+                (acc, key) => ({ ...acc, [key]: true }),
                 {}
               )
-              newIds.forEach((key) => {
-                map[key] = true
-              })
+
               setHiddenMap({
                 ...hiddenMap,
                 ...map,
