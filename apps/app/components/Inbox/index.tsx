@@ -148,7 +148,7 @@ export const InboxComponent: React.FC = () => {
     return newMessages?.reduce((bcc, item) => {
       const { id } = item
 
-      newMessages?.reduce((acc, item) => ({ ...acc, [item.id]: item }), {})
+      return {
         ...bcc,
         [id]: item,
       }
@@ -197,7 +197,10 @@ export const InboxComponent: React.FC = () => {
                 MessageFlagType.Seen
               )
 
-              const map = newIds.reduce<Record<string, boolean>>((acc, key) => ({ [key]: true }), {})
+              const map = newIds.reduce<Record<string, boolean>>(
+                (acc, key) => ({ [key]: true }),
+                {}
+              )
               newIds.forEach((key) => {
                 map[key] = true
               })
