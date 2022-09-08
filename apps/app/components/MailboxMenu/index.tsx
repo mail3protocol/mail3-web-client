@@ -80,7 +80,7 @@ const bulkConfig: Record<
     name: 'Spam',
   },
   [BulkActionType.NotSpam]: {
-    // hasLine: true,
+    hasLine: false,
     Icon: SpamSVG,
     name: 'Not Spam',
   },
