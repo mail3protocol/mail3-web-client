@@ -148,7 +148,7 @@ export const InboxComponent: React.FC = () => {
     return newMessages?.reduce((bcc, item) => {
       const { id } = item
 
-      return {
+      newMessages?.reduce((acc, item) => ({ ...acc, [item.id]: item }), {})
         ...bcc,
         [id]: item,
       }
