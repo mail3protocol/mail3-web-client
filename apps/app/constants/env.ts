@@ -104,3 +104,9 @@ export const SUBJECT_TEXT_LIMIT = (() => {
   const limit = Number(import.meta.env.SUBJECT_TEXT_LIMIT)
   return Number.isNaN(limit) ? 998 : limit
 })()
+
+export const ENS_DOMAIN =
+  import.meta.env.NEXT_PUBLIC_ENS_DOMAIN || 'https://app.ens.domains'
+export const BIT_DOMAIN =
+  import.meta.env.NEXT_PUBLIC_BIT_DOMAIN ||
+  'https://www.did.id/?inviter=mail3dao.bit&channel=mail3dao.bit'

@@ -67,7 +67,7 @@ import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circl
 import { ReactComponent as CircleSvg } from '../../assets/settings/tick-circle.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { MAIL_SERVER_URL } from '../../constants'
+import { BIT_DOMAIN, ENS_DOMAIN, MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { Alias } from '../../api'
 import { RouterLink } from '../RouterLink'
@@ -235,10 +235,6 @@ const generateEmailAddress = (s = '') => {
 
   return s
 }
-
-const ENS_DOMAIN = 'https://app.ens.domains'
-const BIT_DOMAIN =
-  'https://www.did.id/?inviter=mail3dao.bit&channel=mail3dao.bit'
 
 enum AliasType {
   ENS = 'ENS',

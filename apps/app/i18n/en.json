@@ -305,6 +305,14 @@
         },
         "need_to_open_wallet": "Need to open wallet. If already connected, please try again. "
     },
+    "experience_user_guide_dialog": {
+        "title": "Get a Web3 name to identify yourself and send message",
+        "refresh": "I’ve got one, refresh to check",
+        "button": {
+            "bit": "Register .bit Name",
+            "ens": "Register ENS Name"
+        }
+    },
     "preview":{
         "spam_title": {
             "bot": "This message contains security risks",

@@ -60,6 +60,7 @@ import { userPropertiesAtom } from '../../hooks/useLogin'
 import { IpfsInfoTable } from '../IpfsInfoTable'
 import type { MeesageDetailState } from '../Mailbox'
 import { pinUpMsgAtom } from '../Inbox'
+import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -263,11 +264,16 @@ export const PreviewComponent: React.FC = () => {
     )
   }, [userProps, detail])
 
+  const { onAction: getIsAllowExperienceUserAction, guardDialogElement } =
+    useExperienceUserGuard()
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
       isDisabled: isDriftBottleAddress,
       onClick: async () => {
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
@@ -290,6 +296,8 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
       onClick: async () => {
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
@@ -528,6 +536,7 @@ export const PreviewComponent: React.FC = () => {
 
   return (
     <>
+      {guardDialogElement}
       <ConfirmDialog />
       <SuspendButton list={buttonList} />
       <Center position="relative">
