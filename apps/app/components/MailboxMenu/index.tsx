@@ -75,7 +75,7 @@ const bulkConfig: Record<
     name: 'Mark as seen',
   },
   [BulkActionType.Spam]: {
-    // hasLine: true,
+    hasLine: false,
     Icon: SpamSVG,
     name: 'Spam',
   },
