@@ -416,6 +416,13 @@ export const SettingAddress: React.FC = () => {
     </Box>
   )
 
+  const tabItemTypes = [
+    TabItemType.Ens,
+    TabItemType.Bit,
+    TabItemType.Default,
+    // TabItemType.More,
+  ]
+
   return (
     <Container pb={{ md: '100px', base: 0 }}>
       <Center
@@ -528,12 +535,7 @@ export const SettingAddress: React.FC = () => {
               position="relative"
               zIndex="2"
             >
-              {[
-                TabItemType.Default,
-                TabItemType.Ens,
-                TabItemType.Bit,
-                // TabItemType.More,
-              ].map((type) => {
+              {tabItemTypes.map((type) => {
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 const { Icon, name } = tabsConfig[type]
                 return (
@@ -590,12 +592,7 @@ export const SettingAddress: React.FC = () => {
           <FormControl>
             <Flex justifyContent="center" pt="8px" minH="200px">
               <TabPanels maxW="480px">
-                {[
-                  TabItemType.Default,
-                  TabItemType.Ens,
-                  TabItemType.Bit,
-                  // TabItemType.More,
-                ].map((type) => {
+                {tabItemTypes.map((type) => {
                   if (type === TabItemType.Default) {
                     return (
                       <TabPanel key={type}>
