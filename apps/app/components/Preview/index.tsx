@@ -22,7 +22,6 @@ import {
 } from 'react-router-dom'
 import styled from '@emotion/styled'
 import {
-  ConfirmDialog,
   MailDetailPageItem,
   TrackEvent,
   TrackKey,
@@ -535,7 +534,6 @@ export const PreviewComponent: React.FC = () => {
 
   return (
     <>
-      <ConfirmDialog />
       <SuspendButton list={buttonList} />
       <Center position="relative">
         <Circle
