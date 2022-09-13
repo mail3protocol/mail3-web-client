@@ -1,49 +1,53 @@
-import { useDisclosure } from '@chakra-ui/react'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
+import { useDialog } from 'hooks'
 import { useIsExperienceUser } from './useIsExperienceUser'
 import {
-  ExperienceUserGuideDialog,
+  ExperienceUserGuideContent,
   ExperienceUserGuideDialogProps,
+  ExperienceUserGuideFooter,
 } from '../components/ExperienceUserGuideDialog'
 
 export function useExperienceUserGuard({
   action,
-  guardDialogProps,
 }: {
   action?: () => void
   guardDialogProps?: Partial<ExperienceUserGuideDialogProps>
 } = {}) {
   const isExperienceUser = useIsExperienceUser()
-  const {
-    isOpen: isOpenExperienceUserGuideDialog,
-    onOpen: onOpenExperienceUserGuideDialog,
-    onClose: onCloseExperienceUserGuideDialog,
-  } = useDisclosure()
-  const guardDialogElement = useMemo(
-    () => (
-      <ExperienceUserGuideDialog
-        isOpen={isOpenExperienceUserGuideDialog}
-        onClose={onCloseExperienceUserGuideDialog}
-        {...guardDialogProps}
-      />
-    ),
-    [
-      isOpenExperienceUserGuideDialog,
-      onCloseExperienceUserGuideDialog,
-      guardDialogProps,
-    ]
-  )
+  const dialog = useDialog()
+
   const onAction = useCallback(() => {
     if (isExperienceUser) {
-      onOpenExperienceUserGuideDialog()
+      dialog({
+        content: <ExperienceUserGuideContent />,
+        modalContentProps: {
+          maxW: '340px',
+          rounded: '24px',
+          pb: '8px',
+          w: 'calc(100% - 40px)',
+        },
+        modalBodyProps: {
+          p: 0,
+          m: 0,
+        },
+        modalCloseButtonProps: {
+          top: '20px',
+          right: '20px',
+        },
+        footer: <ExperienceUserGuideFooter />,
+        modalFooterProps: {
+          p: 0,
+          display: 'flex',
+          justifyContent: 'center',
+        },
+      })
       return false
     }
     action?.()
     return true
-  }, [isExperienceUser, onOpenExperienceUserGuideDialog, action])
+  }, [isExperienceUser, action])
 
   return {
-    guardDialogElement,
     onAction,
     isExperienceUser,
   }

@@ -264,8 +264,7 @@ export const PreviewComponent: React.FC = () => {
     )
   }, [userProps, detail])
 
-  const { onAction: getIsAllowExperienceUserAction, guardDialogElement } =
-    useExperienceUserGuard()
+  const { onAction: getIsAllowExperienceUserAction } = useExperienceUserGuard()
 
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
@@ -536,7 +535,6 @@ export const PreviewComponent: React.FC = () => {
 
   return (
     <>
-      {guardDialogElement}
       <ConfirmDialog />
       <SuspendButton list={buttonList} />
       <Center position="relative">

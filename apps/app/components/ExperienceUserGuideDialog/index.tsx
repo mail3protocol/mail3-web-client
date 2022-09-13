@@ -3,7 +3,7 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
-  ModalHeader,
+  Heading,
   ModalOverlay,
   ModalCloseButton,
   VStack,
@@ -27,100 +27,114 @@ export interface ExperienceUserGuideDialogProps {
   onCloseComplete?: () => void
 }
 
-export const ExperienceUserGuideDialog: React.FC<
-  ExperienceUserGuideDialogProps
-> = ({ isOpen, pageGuard, onCloseComplete, onClose }) => {
+export const ExperienceUserGuideContent: React.FC = () => {
   const { t } = useTranslation('experience_user_guide_dialog')
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered
-      closeOnEsc={!pageGuard}
-      onCloseComplete={onCloseComplete}
-    >
-      <ModalOverlay />
-      <ModalContent maxW="340px" rounded="24px" pb="8px" w="calc(100% - 40px)">
-        <ModalCloseButton top="20px" right="20px" />
-        <ModalHeader
-          borderBottom="1px solid #F4F4F4"
-          lineHeight="120%"
-          textAlign="center"
-          fontSize="16px"
-          py="24px"
-          px="42px"
+    <>
+      <Heading
+        borderBottom="1px solid #F4F4F4"
+        lineHeight="120%"
+        textAlign="center"
+        fontSize="16px"
+        py="24px"
+        px="47px"
+      >
+        {t('title')}
+      </Heading>
+      <VStack
+        spacing="16px"
+        css={`
+          a:hover {
+            text-decoration: none;
+          }
+        `}
+        fontSize={{ base: '12px', md: '16px' }}
+        bg="#F3F3F3"
+        py="24px"
+        px="47px"
+      >
+        <Button
+          as={Link}
+          variant="outline"
+          isFullWidth
+          leftIcon={<Icon as={EnsSvg} w="24px" h="24px" />}
+          justifyContent="flex-start"
+          px="8px"
+          href={ENS_DOMAIN}
+          target="_blank"
+          rounded="40px"
+          borderColor="#000"
+          colorScheme="blackAlpha"
+          color="#000"
+          bg="#fff"
         >
-          {t('title')}
-        </ModalHeader>
-        <ModalBody
-          py="24px"
-          px="47px"
-          fontSize={{ base: '12px', md: '16px' }}
-          bg="#F3F3F3"
+          <Box w="full" textAlign="center">
+            {t('button.ens')}
+          </Box>
+        </Button>
+        <Button
+          as={Link}
+          variant="outline"
+          isFullWidth
+          leftIcon={<Icon as={BitSvg} w="24px" h="24px" />}
+          justifyContent="flex-start"
+          px="8px"
+          href={BIT_DOMAIN}
+          target="_blank"
+          rounded="40px"
+          borderColor="#000"
+          colorScheme="blackAlpha"
+          color="#000"
+          bg="#fff"
         >
-          <VStack
-            spacing="16px"
-            css={`
-              a:hover {
-                text-decoration: none;
-              }
-            `}
-          >
-            <Button
-              as={Link}
-              variant="outline"
-              isFullWidth
-              leftIcon={<Icon as={EnsSvg} w="24px" h="24px" />}
-              justifyContent="flex-start"
-              px="8px"
-              href={ENS_DOMAIN}
-              target="_blank"
-              rounded="40px"
-              borderColor="#000"
-              colorScheme="blackAlpha"
-              color="#000"
-              bg="#fff"
-            >
-              <Box w="full" textAlign="center">
-                {t('button.ens')}
-              </Box>
-            </Button>
-            <Button
-              as={Link}
-              variant="outline"
-              isFullWidth
-              leftIcon={<Icon as={BitSvg} w="24px" h="24px" />}
-              justifyContent="flex-start"
-              px="8px"
-              href={BIT_DOMAIN}
-              target="_blank"
-              rounded="40px"
-              borderColor="#000"
-              colorScheme="blackAlpha"
-              color="#000"
-              bg="#fff"
-            >
-              <Box w="full" textAlign="center">
-                {t('button.bit')}
-              </Box>
-            </Button>
-          </VStack>
-        </ModalBody>
-        <ModalFooter display="flex" justifyContent="center" p="0">
-          <Link
-            as={RouterLink}
-            w="246px"
-            onClick={onClose}
-            color="#4E52F5"
-            fontSize="12px"
-            py="24px"
-            to={RoutePath.Settings}
-            textAlign="center"
-          >
-            {t('refresh')}
-          </Link>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <Box w="full" textAlign="center">
+            {t('button.bit')}
+          </Box>
+        </Button>
+      </VStack>
+    </>
   )
 }
+
+export const ExperienceUserGuideFooter: React.FC<
+  Partial<Pick<ExperienceUserGuideDialogProps, 'onClose'>>
+> = ({ onClose }) => {
+  const { t } = useTranslation('experience_user_guide_dialog')
+  return (
+    <Link
+      as={RouterLink}
+      w="246px"
+      onClick={onClose}
+      color="#4E52F5"
+      fontSize="12px"
+      py="24px"
+      to={RoutePath.Settings}
+      textAlign="center"
+    >
+      {t('refresh')}
+    </Link>
+  )
+}
+
+export const ExperienceUserGuideDialog: React.FC<
+  ExperienceUserGuideDialogProps
+> = ({ isOpen, pageGuard, onCloseComplete, onClose }) => (
+  <Modal
+    isOpen={isOpen}
+    onClose={onClose}
+    isCentered
+    closeOnEsc={!pageGuard}
+    onCloseComplete={onCloseComplete}
+  >
+    <ModalOverlay />
+    <ModalContent maxW="340px" rounded="24px" pb="8px" w="calc(100% - 40px)">
+      <ModalCloseButton top="20px" right="20px" />
+      <ModalBody p="0">
+        <ExperienceUserGuideContent />
+      </ModalBody>
+      <ModalFooter display="flex" justifyContent="center" p="0">
+        <ExperienceUserGuideFooter onClose={onClose} />
+      </ModalFooter>
+    </ModalContent>
+  </Modal>
+)

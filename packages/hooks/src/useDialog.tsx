@@ -5,6 +5,7 @@ import type {
   ButtonProps,
   ModalContentProps,
   AlertStatus,
+  ModalFooterProps,
 } from '@chakra-ui/react'
 import { atom } from 'jotai'
 import { selectAtom, useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -23,6 +24,7 @@ import {
   ModalOverlay,
   Button,
 } from '@chakra-ui/react'
+import { CloseButtonProps } from '@chakra-ui/close-button'
 import { useCloseOnChangePathname } from './useCloseOnChangePathname'
 
 export const noop: (...args: any) => any = () => {}
@@ -47,6 +49,9 @@ export interface ConfirmDialogOptions {
   okButtonProps?: ButtonProps
   isCloseOnChangePathname?: boolean // default is true
   showClose?: boolean
+  footer?: React.ReactNode
+  modalFooterProps?: ModalFooterProps
+  modalCloseButtonProps?: CloseButtonProps
 }
 
 export interface ConfirmDialogProps extends ConfirmDialogOptions {
@@ -184,6 +189,9 @@ export const ConfirmDialog: React.FC = () => {
     showCloseButton = options?.showClose || type !== 'text',
     okButtonProps,
     isCloseOnChangePathname,
+    footer,
+    modalFooterProps,
+    modalCloseButtonProps,
   } = options
 
   useCloseOnChangePathname(onClose, isCloseOnChangePathname)
@@ -201,7 +209,9 @@ export const ConfirmDialog: React.FC = () => {
     >
       <ModalOverlay />
       <ModalContent borderRadius="24px" {...modalContentProps}>
-        {showCloseButton ? <ModalCloseButton /> : null}
+        {showCloseButton ? (
+          <ModalCloseButton {...modalCloseButtonProps} />
+        ) : null}
         <ModalBody mt="35px" {...modalBodyProps}>
           {content ?? (
             <Alert
@@ -231,48 +241,50 @@ export const ConfirmDialog: React.FC = () => {
           )}
         </ModalBody>
 
-        <ModalFooter>
-          <Stack
-            spacing={2}
-            w="full"
-            direction={type === 'text' ? 'row-reverse' : 'column'}
-          >
-            {okText && onConfirm !== noop ? (
-              <Button
-                isFullWidth
-                variant="primary"
-                bg="brand.500"
-                mb="16px"
-                color="white"
-                borderRadius="40px"
-                _hover={{
-                  bg: 'brand.50',
-                }}
-                isLoading={isLoading}
-                onClick={onConfirm}
-                fontWeight="normal"
-                {...okButtonProps}
-              >
-                {okText}
-              </Button>
-            ) : null}
+        <ModalFooter {...modalFooterProps}>
+          {footer ?? (
+            <Stack
+              spacing={2}
+              w="full"
+              direction={type === 'text' ? 'row-reverse' : 'column'}
+            >
+              {okText && onConfirm !== noop ? (
+                <Button
+                  isFullWidth
+                  variant="primary"
+                  bg="brand.500"
+                  mb="16px"
+                  color="white"
+                  borderRadius="40px"
+                  _hover={{
+                    bg: 'brand.50',
+                  }}
+                  isLoading={isLoading}
+                  onClick={onConfirm}
+                  fontWeight="normal"
+                  {...okButtonProps}
+                >
+                  {okText}
+                </Button>
+              ) : null}
 
-            {onCancel !== noop && cancelText ? (
-              <Button
-                variant="outline"
-                isFullWidth
-                color="black"
-                mb="16px"
-                onClick={onCancel}
-                borderRadius="40px"
-                fontWeight="normal"
-                borderColor="black"
-                isLoading={isCancelLoading}
-              >
-                {cancelText}
-              </Button>
-            ) : null}
-          </Stack>
+              {onCancel !== noop && cancelText ? (
+                <Button
+                  variant="outline"
+                  isFullWidth
+                  color="black"
+                  mb="16px"
+                  onClick={onCancel}
+                  borderRadius="40px"
+                  fontWeight="normal"
+                  borderColor="black"
+                  isLoading={isCancelLoading}
+                >
+                  {cancelText}
+                </Button>
+              ) : null}
+            </Stack>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

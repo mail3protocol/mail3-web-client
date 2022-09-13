@@ -133,13 +133,12 @@ const Footer = () => {
       initialHtml === getHTML()
     )
   const onBack = useBack()
-  const { guardDialogElement, onAction, isExperienceUser } =
-    useExperienceUserGuard({
-      guardDialogProps: {
-        pageGuard: true,
-        onCloseComplete: onBack,
-      },
-    })
+  const { onAction, isExperienceUser } = useExperienceUserGuard({
+    guardDialogProps: {
+      pageGuard: true,
+      onCloseComplete: onBack,
+    },
+  })
   useEffect(() => {
     if (isExperienceUser) {
       onAction()
@@ -184,7 +183,6 @@ const Footer = () => {
 
   return (
     <>
-      {guardDialogElement}
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
           isOpen={isOpenIpfsModal}
