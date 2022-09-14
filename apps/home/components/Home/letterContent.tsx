@@ -85,7 +85,7 @@ export const LetterContent = () => (
     <Heading as="h2">The Lego base for productivity and SNS dApps</Heading>
     <Text>
       Mail3 users share their social connections, identities, and encryption
-      exchange keys onchain so that any dApp could take adventage of these data
+      exchange keys onchain so that any dApp could take advantage of these data
       to provide new services.
     </Text>
   </>
