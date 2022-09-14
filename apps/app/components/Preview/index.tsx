@@ -287,6 +287,29 @@ export const PreviewComponent: React.FC = () => {
         )
       },
     },
+    [SuspendButtonType.ReplyAll]: {
+      type: SuspendButtonType.ReplyAll,
+      isDisabled: isDriftBottleAddress,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
+        })
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'reply',
+            }).toString(),
+          },
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+            },
+          }
+        )
+      },
+    },
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
       onClick: async () => {
@@ -417,8 +440,18 @@ export const PreviewComponent: React.FC = () => {
   }
 
   const buttonList = useMemo(() => {
-    let list = [
+    let list: Array<
+      | SuspendButtonType.Reply
+      | SuspendButtonType.ReplyAll
+      | SuspendButtonType.Forward
+      | SuspendButtonType.Trash
+      | SuspendButtonType.Spam
+      | SuspendButtonType.Restore
+      | SuspendButtonType.Delete
+      | SuspendButtonType.NotSpam
+    > = [
       SuspendButtonType.Reply,
+      SuspendButtonType.ReplyAll,
       SuspendButtonType.Forward,
       SuspendButtonType.Trash,
       SuspendButtonType.Spam,
