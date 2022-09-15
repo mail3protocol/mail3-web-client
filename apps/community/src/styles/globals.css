@@ -12,3 +12,7 @@ body {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
+
+body {
+  min-width: 1280px;
+}

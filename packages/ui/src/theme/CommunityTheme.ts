@@ -9,4 +9,29 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     body: font,
     heading: font,
   },
+  colors: {
+    primary: {
+      900: '#4E51F4',
+      800: '#5F62F5',
+      700: '#6F72F4',
+      600: '#8183F5',
+      500: '#9193F4',
+      400: '#A1A2F4',
+      300: '#B2B3F5',
+      200: '#C3C4F5',
+      100: '#D4D4F5',
+    },
+    containerBackground: '#F2F2F2',
+    lineColor: '#F2F2F2',
+    cardBackground: '#FFF',
+    secondaryTextColor: '#BFBFBF',
+  },
+  components: {
+    Divider: {
+      baseStyle: {
+        borderColor: '#F2F2F2',
+        opacity: 1,
+      },
+    },
+  },
 })

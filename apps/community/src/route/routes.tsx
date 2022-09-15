@@ -1,6 +1,8 @@
 import { RouteProps } from 'react-router-dom'
 import { RoutePath } from './path'
 import { Index } from '../pages'
+import { Dashboard } from '../pages/dashboard'
+import { NewMessage } from '../pages/message/new'
 
 interface ExpandedRouterProps extends RouteProps {
   key: string
@@ -11,7 +13,17 @@ interface ExpandedRouterProps extends RouteProps {
 export const routes: ExpandedRouterProps[] = [
   {
     path: RoutePath.Index,
-    key: 'home',
+    key: 'index',
     element: <Index />,
+  },
+  {
+    path: RoutePath.Dashboard,
+    key: 'dashboard',
+    element: <Dashboard />,
+  },
+  {
+    path: RoutePath.NewMessage,
+    key: 'new_message',
+    element: <NewMessage />,
   },
 ]

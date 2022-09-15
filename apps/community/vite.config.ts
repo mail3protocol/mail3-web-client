@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgrPlugin from 'vite-plugin-svgr'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
@@ -50,7 +50,7 @@ export default defineConfig((c) => {
           // ...svgr options (https://react-svgr.com/docs/options/)
         },
       }),
-      ...[process.env.REPORT ? [visualizer()] : []],
+      ...(process.env.REPORT ? [visualizer()] : []),
     ],
     esbuild: {
       logOverride: { 'this-is-undefined-in-esm': 'silent' },
@@ -58,5 +58,5 @@ export default defineConfig((c) => {
     define: {
       global: {},
     },
-  }
+  } as UserConfig
 })
