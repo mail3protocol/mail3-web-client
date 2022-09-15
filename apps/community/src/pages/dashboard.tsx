@@ -1,3 +1,3 @@
-import { Box } from '@chakra-ui/react'
+import { Container } from '../components/Container'
 
-export const Dashboard: React.FC = () => <Box>Dashboard</Box>
+export const Dashboard: React.FC = () => <Container>Dashboard</Container>

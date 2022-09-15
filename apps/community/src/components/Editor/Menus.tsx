@@ -1,4 +1,4 @@
-import { Button, ButtonProps, HStack } from '@chakra-ui/react'
+import { Button, ButtonProps, HStack, StackProps } from '@chakra-ui/react'
 import {
   BoldIcon,
   LinkIcon,
@@ -28,7 +28,7 @@ export const MenuButton: React.FC<ButtonProps> = ({ children, ...props }) => (
 )
 
 // TODO: Add Link
-export const Menus: React.FC = () => {
+export const Menus: React.FC<StackProps> = ({ ...props }) => {
   const {
     toggleBold,
     toggleItalic,
@@ -52,6 +52,7 @@ export const Menus: React.FC = () => {
       h="40px"
       px="24px"
       spacing="12px"
+      {...props}
     >
       <MenuButton onClick={onToggleFunction(toggleBold)}>
         <BoldIcon />

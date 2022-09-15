@@ -7,7 +7,17 @@ export const HEADER_HEIGHT = 60
 export const Header: React.FC = () => {
   const { t } = useTranslation('components')
   return (
-    <Flex h={`${HEADER_HEIGHT}px`} w="full" px="20px" shadow="md">
+    <Flex
+      h={`${HEADER_HEIGHT}px`}
+      w="full"
+      px="20px"
+      shadow="md"
+      position="fixed"
+      top="0"
+      left="0"
+      zIndex="header"
+      bg="headerBackground"
+    >
       <Flex align="center" userSelect="none">
         <Logo />
         <Box

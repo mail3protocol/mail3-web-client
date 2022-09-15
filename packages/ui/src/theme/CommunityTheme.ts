@@ -24,7 +24,15 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     containerBackground: '#F2F2F2',
     lineColor: '#F2F2F2',
     cardBackground: '#FFF',
+    headerBackground: '#FFF',
     secondaryTextColor: '#BFBFBF',
+    sidebarBackground: '#FFF',
+  },
+  shadows: {
+    sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
+  },
+  zIndices: {
+    header: 1000,
   },
   components: {
     Divider: {
