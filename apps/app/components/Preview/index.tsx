@@ -263,6 +263,61 @@ export const PreviewComponent: React.FC = () => {
     )
   }, [userProps, detail])
 
+  const mailAddress: string = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
+
+  const toMessage = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => detail?.from.address === address
+    )
+
+    if (isOfficeMail && detail && detail.to === null) {
+      return [
+        {
+          address: mailAddress,
+        },
+      ]
+    }
+
+    return detail?.to || []
+  }, [detail])
+
+  const avatarList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = []
+    let arr = [detail.from, ...toMessage]
+    if (detail.cc) arr = [...arr, ...detail.cc]
+    if (detail.bcc) arr = [...arr, ...detail.bcc]
+
+    arr = arr.filter(({ address }) => {
+      if (exists.includes(address.toLocaleLowerCase())) return false
+      exists.push(address.toLocaleLowerCase())
+      return true
+    })
+    return arr
+  }, [detail, toMessage])
+
+  const replyAllList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = [
+      ...(userProps?.aliases.map((item: { address: string }) =>
+        item.address.toLocaleLowerCase()
+      ) || []),
+    ]
+
+    let arr = [...toMessage]
+    if (detail.cc) arr = [...arr, ...detail.cc]
+
+    arr = arr.filter(({ address }) => {
+      if (exists.includes(address.toLocaleLowerCase())) return false
+      exists.push(address.toLocaleLowerCase())
+      return true
+    })
+    return arr.map((item) => item.address)
+  }, [detail, toMessage, userProps?.aliases])
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
@@ -292,7 +347,7 @@ export const PreviewComponent: React.FC = () => {
       isDisabled: isDriftBottleAddress,
       onClick: async () => {
         buttonTrack({
-          [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
+          [TrackKey.MailDetailPage]: MailDetailPageItem.ReplyAll,
         })
         navi(
           {
@@ -300,6 +355,7 @@ export const PreviewComponent: React.FC = () => {
             search: createSearchParams({
               id,
               action: 'reply',
+              cc: replyAllList.join(','),
             }).toString(),
           },
           {
@@ -492,42 +548,6 @@ export const PreviewComponent: React.FC = () => {
     const realAddress = removeMailSuffix(address).toLowerCase()
     window.location.href = `${HOME_URL}/${realAddress}`
   }
-
-  const mailAddress: string = useMemo(
-    () => userProps?.defaultAddress ?? 'unknown',
-    [userProps]
-  )
-
-  const toMessage = useMemo(() => {
-    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
-      (address) => detail?.from.address === address
-    )
-
-    if (isOfficeMail && detail && detail.to === null) {
-      return [
-        {
-          address: mailAddress,
-        },
-      ]
-    }
-
-    return detail?.to || []
-  }, [detail])
-
-  const avatarList = useMemo(() => {
-    if (!detail) return []
-    const exists: Array<string> = []
-    let arr = [detail.from, ...toMessage]
-    if (detail.cc) arr = [...arr, ...detail.cc]
-    if (detail.bcc) arr = [...arr, ...detail.bcc]
-
-    arr = arr.filter(({ address }) => {
-      if (exists.includes(address.toLocaleLowerCase())) return false
-      exists.push(address.toLocaleLowerCase())
-      return true
-    })
-    return arr
-  }, [detail, toMessage])
 
   if (!id) {
     return (
