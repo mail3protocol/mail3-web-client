@@ -505,13 +505,21 @@ export const PreviewComponent: React.FC = () => {
       | SuspendButtonType.Restore
       | SuspendButtonType.Delete
       | SuspendButtonType.NotSpam
-    > = [
-      SuspendButtonType.Reply,
-      SuspendButtonType.ReplyAll,
-      SuspendButtonType.Forward,
-      SuspendButtonType.Trash,
-      SuspendButtonType.Spam,
-    ]
+    > =
+      replyAllList.length > 0
+        ? [
+            SuspendButtonType.Reply,
+            SuspendButtonType.ReplyAll,
+            SuspendButtonType.Forward,
+            SuspendButtonType.Trash,
+            SuspendButtonType.Spam,
+          ]
+        : [
+            SuspendButtonType.Reply,
+            SuspendButtonType.Forward,
+            SuspendButtonType.Trash,
+            SuspendButtonType.Spam,
+          ]
 
     if (isOriginTrash) {
       list = [
