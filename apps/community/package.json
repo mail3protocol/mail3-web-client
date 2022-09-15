@@ -1,0 +1,48 @@
+{
+  "private": true,
+  "name": "community",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite --port 3002 --host 0.0.0.0",
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "report": "REPORT=true vite build",
+    "test": "echo \"no test\""
+  },
+  "engines": {
+    "node": "16",
+    "yarn": "1.22"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^1.8.6",
+    "@chakra-ui/icons": "^1.1.7",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "assets": "*",
+    "axios": "^0.26.1",
+    "framer-motion": "^7.3.4",
+    "hooks": "*",
+    "jotai": "^1.6.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "shared": "*",
+    "ui": "*",
+    "i18next": "^21.8.13",
+    "react-i18next": "^11.18.0",
+    "react-query": "^3.34.16"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.1.0",
+    "eslint": "8.13.0",
+    "scripts": "*",
+    "tsconfig": "*",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0",
+    "vite-plugin-radar": "^0.4.2",
+    "vite-plugin-svgr": "^2.2.0"
+  }
+}
