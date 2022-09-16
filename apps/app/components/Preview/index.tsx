@@ -535,11 +535,19 @@ export const PreviewComponent: React.FC = () => {
     }
 
     if (isSend) {
-      list = [
-        SuspendButtonType.Reply,
-        SuspendButtonType.Forward,
-        SuspendButtonType.Trash,
-      ]
+      list =
+        replyAllList.length > 0
+          ? [
+              SuspendButtonType.Reply,
+              SuspendButtonType.ReplyAll,
+              SuspendButtonType.Forward,
+              SuspendButtonType.Trash,
+            ]
+          : [
+              SuspendButtonType.Reply,
+              SuspendButtonType.Forward,
+              SuspendButtonType.Trash,
+            ]
 
       if (isOriginTrash) {
         list = [SuspendButtonType.Restore, SuspendButtonType.Delete]

@@ -122,14 +122,11 @@ export const SuspendButton: React.FC<{
   const setLoadingMap = useUpdateAtom(SuspendButtonAtom)
   const [isMore, setIsMore] = useState(false)
 
-  const verticleList = list.slice(3)
+  const isNeedMore = list.length > 4
 
-  const horizonList = useMemo(() => {
-    if (list.length > 3) {
-      return list.slice(0, 3)
-    }
-    return list
-  }, [list])
+  const verticleList = isNeedMore ? list.slice(3) : []
+
+  const horizonList = useMemo(() => list.slice(0, isNeedMore ? 3 : 4), [list])
 
   return (
     <Box
