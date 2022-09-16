@@ -1,6 +1,6 @@
 import { Box, Button, HStack, StyleProps, VStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { atom, useAtomValue } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
@@ -121,12 +121,24 @@ export const SuspendButton: React.FC<{
   const loadingMap: Record<number, boolean> = useAtomValue(SuspendButtonAtom)
   const setLoadingMap = useUpdateAtom(SuspendButtonAtom)
   const [isMore, setIsMore] = useState(false)
+  const [disableClickMore, setDisableClickMore] = useState(false)
+  const verticleWrapRef = useRef<HTMLDivElement>(null)
 
   const isNeedMore = list.length > 4
 
   const verticleList = isNeedMore ? list.slice(3) : []
 
   const horizonList = useMemo(() => list.slice(0, isNeedMore ? 3 : 4), [list])
+
+  useEffect(() => {
+    verticleWrapRef.current?.addEventListener('blur', () => {
+      setIsMore(false)
+      setDisableClickMore(true)
+      setTimeout(() => {
+        setDisableClickMore(false)
+      }, 100)
+    })
+  }, [verticleWrapRef.current])
 
   return (
     <Box
@@ -136,8 +148,9 @@ export const SuspendButton: React.FC<{
       transform="translateX(-50%)"
       zIndex={99}
     >
-      {isMore ? (
+      <Box ref={verticleWrapRef} tabIndex={0}>
         <VStack
+          display={isMore ? 'flex' : 'none'}
           borderRadius="32px"
           bg="#000"
           fontSize="18px"
@@ -191,7 +204,7 @@ export const SuspendButton: React.FC<{
             )
           })}
         </VStack>
-      ) : null}
+      </Box>
       <HStack
         borderRadius="32px"
         bg="#000"
@@ -246,7 +259,9 @@ export const SuspendButton: React.FC<{
         {verticleList.length ? (
           <ButtonItem
             onClick={() => {
-              setIsMore(!isMore)
+              if (disableClickMore) return
+              setIsMore(true)
+              verticleWrapRef.current?.focus()
             }}
             variant="unstyled"
             opacity={isMore ? '0.2' : '1'}
