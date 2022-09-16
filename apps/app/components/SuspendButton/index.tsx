@@ -121,7 +121,6 @@ export const SuspendButton: React.FC<{
   const loadingMap: Record<number, boolean> = useAtomValue(SuspendButtonAtom)
   const setLoadingMap = useUpdateAtom(SuspendButtonAtom)
   const [isMore, setIsMore] = useState(false)
-  const [disableClickMore, setDisableClickMore] = useState(false)
   const verticleWrapRef = useRef<HTMLDivElement>(null)
 
   const isNeedMore = list.length > 4
@@ -132,11 +131,9 @@ export const SuspendButton: React.FC<{
 
   useEffect(() => {
     verticleWrapRef.current?.addEventListener('blur', () => {
-      setIsMore(false)
-      setDisableClickMore(true)
       setTimeout(() => {
-        setDisableClickMore(false)
-      }, 100)
+        setIsMore(false)
+      }, 150)
     })
   }, [verticleWrapRef.current])
 
@@ -261,9 +258,9 @@ export const SuspendButton: React.FC<{
         {verticleList.length ? (
           <ButtonItem
             onClick={() => {
-              if (disableClickMore) return
-              setIsMore(true)
-              verticleWrapRef.current?.focus()
+              const newBoolean = !isMore
+              setIsMore(newBoolean)
+              if (newBoolean) verticleWrapRef.current?.focus()
             }}
             variant="unstyled"
             opacity={isMore ? '0.2' : '1'}
