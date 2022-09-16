@@ -302,6 +302,7 @@ export const PreviewComponent: React.FC = () => {
   const replyAllList = useMemo(() => {
     if (!detail) return []
     const exists: Array<string> = [
+      detail?.from.address,
       ...(userProps?.aliases.map((item: { address: string }) =>
         item.address.toLocaleLowerCase()
       ) || []),
