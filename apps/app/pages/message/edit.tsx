@@ -80,10 +80,12 @@ export const NewMessagePage = () => {
   const action = searchParams.get('action')
   const id = searchParams.get('id')
   const _to = searchParams.get('to')
+  const _cc = searchParams.get('cc')
   const searchParamsSubject = searchParams.get('subject')
   const location = useLocation()
   const locationState = location.state as MessageData | undefined
   const to = _to ? filterEmails(_to.split(',')) : null
+  const cc = _cc ? filterEmails(_cc.split(',')) : null
   const _forceTo = searchParams.get('force_to')
   const forceTo = _forceTo ? filterEmails(_forceTo.split(',')) : null
   const { isAuth, redirectHome } = useRedirectHome()
@@ -158,6 +160,9 @@ export const NewMessagePage = () => {
     }
     setSubject(getSubject(m))
     setToAddresses(getTo(m))
+    if (m && action === 'reply' && cc) {
+      setCcAddresses(cc)
+    }
     if (m && action !== 'reply' && action !== 'forward') {
       if (m.cc) {
         setCcAddresses(m.cc.map((item) => item.address))

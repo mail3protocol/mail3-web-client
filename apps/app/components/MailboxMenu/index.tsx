@@ -31,7 +31,7 @@ export const bulkLoadingAtom = atom({
 })
 
 interface MailboxMenuProps {
-  disableMap: PartialRecord<BulkActionType, boolean>
+  disableMap?: PartialRecord<BulkActionType, boolean>
   btnList: BulkActionType[]
   actionMap: PartialRecord<BulkActionType, () => Promise<void>>
   onClose?: () => void
