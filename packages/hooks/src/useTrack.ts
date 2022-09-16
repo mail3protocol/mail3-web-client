@@ -188,6 +188,7 @@ export enum HomeCommunity {
 
 export enum MailDetailPageItem {
   Reply = 'reply',
+  ReplyAll = 'replyAll',
   Forward = 'Forward',
   Trash = 'Trash',
   Restore = 'Restore',
