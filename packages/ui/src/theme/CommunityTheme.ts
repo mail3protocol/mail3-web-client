@@ -30,6 +30,10 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
+    card: '0px 4px 6px rgba(62, 73, 84, 0.04)',
+  },
+  radii: {
+    card: '20px',
   },
   zIndices: {
     header: 1000,
