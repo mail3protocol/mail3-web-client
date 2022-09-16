@@ -145,12 +145,12 @@ const Footer = () => {
     }
   }, [isExperienceUser])
   const blockerWhen =
-    (isChangeContent() &&
-      !isSubmitted &&
-      !isAllowLeave &&
-      !isSaving &&
-      !isLeavingWithSave &&
-      !isLeavingWithoutSave) ||
+    isChangeContent() &&
+    !isSubmitted &&
+    !isAllowLeave &&
+    !isSaving &&
+    !isLeavingWithSave &&
+    !isLeavingWithoutSave &&
     !isExperienceUser
   useBlocker((tx) => {
     setLeavingUrl(tx.location.pathname)

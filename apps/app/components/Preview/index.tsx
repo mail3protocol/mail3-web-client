@@ -351,6 +351,8 @@ export const PreviewComponent: React.FC = () => {
       type: SuspendButtonType.ReplyAll,
       isDisabled: isDriftBottleAddress,
       onClick: async () => {
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.ReplyAll,
         })
