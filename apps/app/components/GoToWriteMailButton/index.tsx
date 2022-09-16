@@ -4,11 +4,9 @@ import { Link as RouteLink } from 'react-router-dom'
 import { useTrackClick, TrackEvent } from 'hooks'
 import { RoutePath } from '../../route/path'
 import { ReactComponent as SVGWrite } from '../../assets/mailbox/write.svg'
-import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'
 
 export const GoToWriteMailButton: React.FC<LinkProps> = ({ ...props }) => {
   const trackWriteButton = useTrackClick(TrackEvent.ClickWrite)
-  const { onAction: getIsAllowExperienceUserAction } = useExperienceUserGuard()
   return (
     <Link
       as={RouteLink}
@@ -26,12 +24,7 @@ export const GoToWriteMailButton: React.FC<LinkProps> = ({ ...props }) => {
       position={{ base: 'fixed', md: 'static' }}
       zIndex={{ base: 99, md: 'unset' }}
       transform={{ base: 'translateX(-50%)', md: 'unset' }}
-      onClick={(e) => {
-        const isAllow = getIsAllowExperienceUserAction()
-        if (!isAllow) {
-          e.stopPropagation()
-          e.preventDefault()
-        }
+      onClick={() => {
         trackWriteButton()
       }}
       {...props}

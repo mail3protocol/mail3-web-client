@@ -96,6 +96,11 @@ export interface AttachmentItemResponse {
 export interface MailboxMessageDetailResponse
   extends MailboxMessageItemResponse {}
 
+export enum UserRole {
+  Experience = 0,
+  FullFeatured = 1,
+}
+
 export interface UserResponse {
   user_uuid: string
   avatar: string
@@ -103,6 +108,7 @@ export interface UserResponse {
   text_sig_state: 'enabled' | 'disabled'
   card_sig_state: 'enabled' | 'disabled'
   web_push_notification_state: 'enabled' | 'disabled'
+  user_role: UserRole
 }
 
 interface putMessageResponse {

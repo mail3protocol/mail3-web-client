@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react'
 import { useDialog } from 'hooks'
-import { useIsExperienceUser } from './useIsExperienceUser'
+import { useAtomValue } from 'jotai'
 import {
   ExperienceUserGuideContent,
   ExperienceUserGuideDialogProps,
   ExperienceUserGuideFooter,
 } from '../components/ExperienceUserGuideDialog'
+import { UserRole } from '../api'
+import { userPropertiesAtom } from './useLogin'
 
 export function useExperienceUserGuard({
   action,
@@ -13,7 +15,8 @@ export function useExperienceUserGuard({
   action?: () => void
   guardDialogProps?: Partial<ExperienceUserGuideDialogProps>
 } = {}) {
-  const isExperienceUser = useIsExperienceUser()
+  const userProperties = useAtomValue(userPropertiesAtom)
+  const isExperienceUser = userProperties?.role === UserRole.Experience
   const dialog = useDialog()
 
   const onAction = useCallback(() => {
