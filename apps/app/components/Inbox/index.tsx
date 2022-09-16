@@ -8,7 +8,11 @@ import { useToast } from 'hooks'
 import { atom, useAtom } from 'jotai'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
-import { MailboxMessageItemResponse } from '../../api'
+import {
+  MailboxMessageItemResponse,
+  MessageFlagAction,
+  MessageFlagType,
+} from '../../api'
 import { Loading } from '../Loading'
 import { InboxNav } from './Nav'
 import { Mailbox, AvatarBadgeType, ItemType, MessageItem } from '../Mailbox'
@@ -94,6 +98,7 @@ export const InboxComponent: React.FC = () => {
 
   const [seenMessages, setSeenMessages] = useState<messagesState>(null)
   const [isLoadingSeen, setIsLoadingSeen] = useState(true)
+  const [markSeenDisable, setMarkSeenDisable] = useState(false)
 
   const [isChooseMode, setIsChooseMode] = useState(false)
   const [chooseMap, setChooseMap] = useState<Record<string, boolean>>({})
@@ -137,6 +142,19 @@ export const InboxComponent: React.FC = () => {
     return formatState(dataList.flat(), AvatarBadgeType.New)
   }, [newsInfiniteData])
 
+  const newMessagesMap: Record<string, MessageItem> = useMemo(() => {
+    if (!newMessages?.length) return {}
+
+    return newMessages?.reduce((bcc, item) => {
+      const { id } = item
+
+      return {
+        ...bcc,
+        [id]: item,
+      }
+    }, {})
+  }, [newMessages])
+
   const newsTotal = useMemo(() => {
     if (newsInfiniteData?.pages?.length)
       return newsInfiniteData.pages[newsInfiniteData.pages.length - 1].total
@@ -161,8 +179,43 @@ export const InboxComponent: React.FC = () => {
     <NewPageContainer>
       {isChooseMode && (
         <MailboxMenu
-          btnList={[BulkActionType.Trash, BulkActionType.Spam]}
+          disableMap={{ [BulkActionType.MarkSeen]: markSeenDisable }}
+          btnList={[
+            BulkActionType.MarkSeen,
+            BulkActionType.Trash,
+            BulkActionType.Spam,
+          ]}
           actionMap={{
+            [BulkActionType.MarkSeen]: async () => {
+              const newIds =
+                Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
+              const ids = [...newIds]
+              if (!ids.length) return
+              await api.batchUpdateMessage(
+                ids,
+                MessageFlagAction.add,
+                MessageFlagType.Seen
+              )
+
+              const map = newIds.reduce<Record<string, boolean>>(
+                (acc, key) => ({ ...acc, [key]: true }),
+                {}
+              )
+
+              setHiddenMap({
+                ...hiddenMap,
+                ...map,
+              })
+
+              const addPinUpMsg = ids.map((key) => ({
+                ...newMessagesMap[key],
+                avatarBadgeType: AvatarBadgeType.None,
+              }))
+
+              setPinUpMsg([...addPinUpMsg, ...pinUpMsg])
+              setChooseMap({})
+              setIsChooseMode(false)
+            },
             [BulkActionType.Trash]: async () => {
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
@@ -318,6 +371,15 @@ export const InboxComponent: React.FC = () => {
               parentChooseMap={chooseMap}
               onClickBody={() => {
                 // report point
+              }}
+              onGetChooseMap={(seenChooseMap) => {
+                if (
+                  Object.keys(seenChooseMap).some((key) => seenChooseMap[key])
+                ) {
+                  setMarkSeenDisable(true)
+                } else {
+                  setMarkSeenDisable(false)
+                }
               }}
               pinUpMsg={pinUpMsg}
               getHref={(id) => `${RoutePath.Message}/${id}`}

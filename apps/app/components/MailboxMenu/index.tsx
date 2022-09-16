@@ -9,7 +9,7 @@ import { ReactComponent as ReplySVG } from '../../assets/preview/reply-white.svg
 import { ReactComponent as ForwardSVG } from '../../assets/preview/forward-white.svg'
 import { ReactComponent as TrashSVG } from '../../assets/preview/trash-white.svg'
 import { ReactComponent as SpamSVG } from '../../assets/preview/spam-white.svg'
-import { ReactComponent as EyeSVG } from '../../assets/mailbox/menu/eye.svg'
+import { ReactComponent as MarkSeenSVG } from '../../assets/mailbox/menu/mark-as-seen.svg'
 import { ReactComponent as EyeCloseSVG } from '../../assets/mailbox/menu/eye-close.svg'
 
 type PartialRecord<K extends keyof any, T> = Partial<Record<K, T>>
@@ -31,6 +31,7 @@ export const bulkLoadingAtom = atom({
 })
 
 interface MailboxMenuProps {
+  disableMap?: PartialRecord<BulkActionType, boolean>
   btnList: BulkActionType[]
   actionMap: PartialRecord<BulkActionType, () => Promise<void>>
   onClose?: () => void
@@ -57,6 +58,7 @@ const bulkConfig: Record<
     name: 'Forward',
   },
   [BulkActionType.Trash]: {
+    hasLine: true,
     Icon: TrashSVG,
     name: 'Trash',
   },
@@ -69,16 +71,16 @@ const bulkConfig: Record<
     name: 'Mark Unseen',
   },
   [BulkActionType.MarkSeen]: {
-    Icon: EyeSVG,
-    name: 'Mark Seen',
+    Icon: MarkSeenSVG,
+    name: 'Mark as seen',
   },
   [BulkActionType.Spam]: {
-    hasLine: true,
+    hasLine: false,
     Icon: SpamSVG,
     name: 'Spam',
   },
   [BulkActionType.NotSpam]: {
-    hasLine: true,
+    hasLine: false,
     Icon: SpamSVG,
     name: 'Not Spam',
   },
@@ -94,9 +96,11 @@ const LineBox = styled(Box)`
 `
 
 const BulkAtion: React.FC<{
+  disable?: boolean
+  useLine: boolean
   onClick?: () => Promise<void>
   type: BulkActionType
-}> = ({ onClick, type }) => {
+}> = ({ onClick, type, useLine, disable }) => {
   const { Icon, name, hasLine } = bulkConfig[type]
   const loadingMap: Record<number, boolean> = useAtomValue(bulkLoadingAtom)
   const setBulkLoadingMap = useUpdateAtom(bulkLoadingAtom)
@@ -104,10 +108,12 @@ const BulkAtion: React.FC<{
 
   return (
     <Center
-      p="10px 35px"
+      p="10px 18px"
       cursor="pointer"
       position="relative"
+      opacity={disable ? 0.5 : 1}
       onClick={async () => {
+        if (disable) return
         if (onClick) {
           setBulkLoadingMap((state) => ({
             ...state,
@@ -121,7 +127,7 @@ const BulkAtion: React.FC<{
         }
       }}
     >
-      {hasLine ? <LineBox className="line" /> : null}
+      {useLine && hasLine ? <LineBox className="line" /> : null}
       <Flex
         direction="column"
         align="center"
@@ -146,13 +152,23 @@ const BulkAtion: React.FC<{
 }
 
 const BulkAtionWrap: React.FC<{
+  disableMap: MailboxMenuProps['disableMap']
   list: BulkActionType[]
   onClickMap: MailboxMenuProps['actionMap']
   onClose?: () => void
-}> = ({ list, onClickMap, onClose }) => {
-  const content = list.map((type) => {
+}> = ({ list, onClickMap, onClose, disableMap = {} }) => {
+  const content = list.map((type, index) => {
     const onClick = onClickMap[type]
-    return <BulkAtion key={type} onClick={onClick} type={type} />
+    const disable = disableMap[type]
+    return (
+      <BulkAtion
+        disable={disable}
+        useLine={index !== 0}
+        key={type}
+        onClick={onClick}
+        type={type}
+      />
+    )
   })
 
   return (
@@ -202,13 +218,19 @@ const Content = styled(Box)`
 `
 
 export const MailboxMenu: React.FC<MailboxMenuProps> = ({
+  disableMap,
   btnList,
   actionMap,
   onClose,
 }) => (
   <Container>
     <Content>
-      <BulkAtionWrap list={btnList} onClickMap={actionMap} onClose={onClose} />
+      <BulkAtionWrap
+        disableMap={disableMap}
+        list={btnList}
+        onClickMap={actionMap}
+        onClose={onClose}
+      />
     </Content>
   </Container>
 )

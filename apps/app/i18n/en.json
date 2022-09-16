@@ -232,7 +232,7 @@
             "refresh_failed": "Refresh Failed: ",
             "not-found-p1": "Oops!!<br><br/>Cannot associate to your domain name",
             "not-found-p2": "please try clicking on the option above ：",
-            "not-found-p3": "Refesh",
+            "not-found-p3": "Refresh",
             "not-found-p4": "Register new domain name"
         },
         "signature": {
