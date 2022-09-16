@@ -423,6 +423,17 @@ export const SettingAddress: React.FC = () => {
     // TabItemType.More,
   ]
 
+  const defaultTabIndex = useMemo(() => {
+    if (!userProps) return 0
+    if (
+      userProps.aliases.length === 1 &&
+      userProps.aliases[0].email_type === 'eth_mail'
+    ) {
+      return 2
+    }
+    return 0
+  }, [userProps?.aliases])
+
   return (
     <Container pb={{ md: '100px', base: 0 }}>
       <Center
@@ -512,7 +523,7 @@ export const SettingAddress: React.FC = () => {
       </Center>
 
       <Box w={{ base: '100%', md: 'auto' }} mt="15px">
-        <Tabs position="relative">
+        <Tabs position="relative" defaultIndex={defaultTabIndex}>
           <TabList
             className="tablist"
             w={{ base: '100%', md: 'auto' }}

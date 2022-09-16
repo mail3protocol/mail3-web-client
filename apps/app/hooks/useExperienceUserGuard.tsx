@@ -3,7 +3,6 @@ import { useDialog } from 'hooks'
 import { useAtomValue } from 'jotai'
 import {
   ExperienceUserGuideContent,
-  ExperienceUserGuideDialogProps,
   ExperienceUserGuideFooter,
 } from '../components/ExperienceUserGuideDialog'
 import { UserRole } from '../api'
@@ -11,18 +10,26 @@ import { userPropertiesAtom } from './useLogin'
 
 export function useExperienceUserGuard({
   action,
+  guardDialogProps,
 }: {
   action?: () => void
-  guardDialogProps?: Partial<ExperienceUserGuideDialogProps>
+  guardDialogProps?: {
+    pageGuard?: boolean
+    onCloseComplete?: () => void
+  }
 } = {}) {
   const userProperties = useAtomValue(userPropertiesAtom)
-  const isExperienceUser = userProperties?.role === UserRole.Experience
+  const isExperienceUser = userProperties?.user_role === UserRole.Experience
   const dialog = useDialog()
 
   const onAction = useCallback(() => {
     if (isExperienceUser) {
       dialog({
         content: <ExperienceUserGuideContent />,
+        modalProps: {
+          closeOnEsc: !guardDialogProps?.pageGuard,
+          onCloseComplete: guardDialogProps?.onCloseComplete,
+        },
         modalContentProps: {
           maxW: '340px',
           rounded: '24px',

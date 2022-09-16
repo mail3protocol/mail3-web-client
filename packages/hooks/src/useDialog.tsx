@@ -42,7 +42,7 @@ export interface ConfirmDialogOptions {
   content?: React.ReactNode
   okText?: React.ReactNode
   cancelText?: React.ReactNode
-  modalProps?: ModalProps
+  modalProps?: Omit<ModalProps, 'isOpen' | 'onClose' | 'children'>
   modalContentProps?: ModalContentProps
   modalBodyProps?: ModalBodyProps
   showCloseButton?: boolean
