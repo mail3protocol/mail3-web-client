@@ -1,8 +1,10 @@
-import { extendTheme } from '@chakra-ui/react'
+import { cssVar, extendTheme } from '@chakra-ui/react'
 import { theme as DefaultTheme } from './index'
 
 const font =
   "'Montserrat', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
+
+const $popperArrowBgVar = cssVar('popper-arrow-bg')
 
 export const CommunityTheme = extendTheme(DefaultTheme, {
   fonts: {
@@ -25,12 +27,16 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     lineColor: '#F2F2F2',
     cardBackground: '#FFF',
     headerBackground: '#FFF',
+    primaryTextColor: '#000',
     secondaryTextColor: '#BFBFBF',
+    secondaryTitleColor: '#737373',
     sidebarBackground: '#FFF',
+    tooltipBackground: '#FFF',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
     card: '0px 4px 6px rgba(62, 73, 84, 0.04)',
+    listHover: '0px 2px 8px rgba(0, 0, 0, 0.2)',
   },
   radii: {
     card: '20px',
@@ -43,6 +49,19 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
       baseStyle: {
         borderColor: '#F2F2F2',
         opacity: 1,
+      },
+    },
+    Tooltip: {
+      baseStyle: {
+        bg: 'tooltipBackground',
+        color: 'primaryTextColor',
+        px: '16px',
+        py: '12px',
+        rounded: '16px',
+        fontSize: '14px',
+        shadow: 'none',
+        filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))',
+        [$popperArrowBgVar.variable]: '#FFF',
       },
     },
   },
