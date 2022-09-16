@@ -171,6 +171,8 @@ export const SuspendButton: React.FC<{
             return (
               <ButtonItem
                 key={type}
+                as="div"
+                cursor="pointer"
                 onClick={async () => {
                   if (isLoading) return
                   if (onClick) {
