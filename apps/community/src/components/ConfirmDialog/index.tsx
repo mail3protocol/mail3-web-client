@@ -1,19 +1,34 @@
 import React from 'react'
 import { noop, useCloseOnChangePathname, useConfirmDialogModel } from 'hooks'
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Button,
+  Heading,
+  Text,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalOverlay,
-  Stack,
+  HStack,
+  Icon,
+  ButtonProps,
 } from '@chakra-ui/react'
+import { ReactComponent as DialogCloseButtonSvg } from '../../assets/DialogCloseButton.svg'
+
+export const CloseButton: React.FC<ButtonProps> = ({ ...props }) => (
+  <Button
+    w="24px"
+    h="24px"
+    variant="unstyled"
+    position="absolute"
+    top="24px"
+    right="20px"
+    minW="unset"
+    {...props}
+  >
+    <Icon as={DialogCloseButtonSvg} width="24px" height="24px" rounded="full" />
+  </Button>
+)
 
 export const ConfirmDialog: React.FC = () => {
   const {
@@ -44,7 +59,7 @@ export const ConfirmDialog: React.FC = () => {
 
   return (
     <Modal
-      size="xs"
+      size="md"
       closeOnEsc={showCloseButton}
       closeOnOverlayClick={showCloseButton}
       autoFocus={false}
@@ -54,46 +69,25 @@ export const ConfirmDialog: React.FC = () => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent borderRadius="24px" {...modalContentProps}>
-        {showCloseButton ? <ModalCloseButton /> : null}
-        <ModalBody mt="35px" {...modalBodyProps}>
+      <ModalContent borderRadius="20px" {...modalContentProps}>
+        {showCloseButton ? <CloseButton onClick={onClose} /> : null}
+        <ModalBody py="24px" px="20px" {...modalBodyProps}>
           {content ?? (
-            <Alert
-              status={type === 'text' ? undefined : type}
-              variant="subtle"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              textAlign="center"
-              bg="white"
-            >
-              {type !== 'text' ? (
-                <AlertIcon boxSize="20px" mr={0} mb="10px" color="black" />
-              ) : null}
-              <AlertTitle mb="16px" mx={0} fontSize="18px" fontWeight="600">
+            <>
+              <Heading as="h3" fontSize="18px" mb="24px">
                 {title}
-              </AlertTitle>
-              <AlertDescription
-                maxWidth="sm"
-                fontSize="14px"
-                color="black"
-                whiteSpace="pre-wrap"
-              >
+              </Heading>
+              <Text fontSize="16px" fontWeight="500">
                 {description}
-              </AlertDescription>
-            </Alert>
+              </Text>
+            </>
           )}
         </ModalBody>
 
-        <ModalFooter>
-          <Stack
-            spacing={2}
-            w="full"
-            direction={type === 'text' ? 'row-reverse' : 'column'}
-          >
+        <ModalFooter pb="4px" pt="0">
+          <HStack spacing={2} w="full" justify="flex-end">
             {okText && onConfirm !== noop ? (
               <Button
-                isFullWidth
                 variant="primary"
                 bg="brand.500"
                 mb="16px"
@@ -104,7 +98,8 @@ export const ConfirmDialog: React.FC = () => {
                 }}
                 isLoading={isLoading}
                 onClick={onConfirm}
-                fontWeight="normal"
+                fontWeight="500"
+                px="32px"
                 {...okButtonProps}
               >
                 {okText}
@@ -114,19 +109,19 @@ export const ConfirmDialog: React.FC = () => {
             {onCancel !== noop && cancelText ? (
               <Button
                 variant="outline"
-                isFullWidth
                 color="black"
                 mb="16px"
                 onClick={onCancel}
                 borderRadius="40px"
-                fontWeight="normal"
+                fontWeight="500"
                 borderColor="black"
+                px="32px"
                 isLoading={isCancelLoading}
               >
                 {cancelText}
               </Button>
             ) : null}
-          </Stack>
+          </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>

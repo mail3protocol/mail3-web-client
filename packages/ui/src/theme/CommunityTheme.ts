@@ -11,6 +11,13 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     body: font,
     heading: font,
   },
+  styles: {
+    global: {
+      body: {
+        color: 'primaryTextColor',
+      },
+    },
+  },
   colors: {
     primary: {
       900: '#4E51F4',
