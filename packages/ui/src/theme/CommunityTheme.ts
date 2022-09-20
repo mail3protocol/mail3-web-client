@@ -60,6 +60,9 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     checkboxOutlineBackground: '#FFF',
     uneditable: '#A6A6A6',
     tipsPanel: '#ECECF4',
+    earnNftStylePreviewBorder: '#D9D9D9',
+    earnNftStylePreviewCodeBackground: '#000',
+    earnNftStylePreviewCodeTitle: '#FFF',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',

@@ -52,6 +52,8 @@ export default {
       description_2:
         'Read the development documentation to learn how to integrate: <a>How to integrate subscribe to earn</a>',
       preview_subtitle: 'style preview',
+      customize_the_button: 'Customize the button',
+      get_the_code: 'Get the code',
     },
   },
 }

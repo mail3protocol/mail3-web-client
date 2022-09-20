@@ -13,18 +13,26 @@ import {
   Link,
   VStack,
   Text,
+  Center,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
+import { lazy } from 'react'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
+
+const CodeEditor = lazy(() => import('../../components/CodeEditor'))
 
 export const EarnNft: React.FC = () => {
   const { t } = useTranslation('earn_nft')
   const onUpdateTipsPanelContent = useUpdateTipsPanel()
 
   return (
-    <Container as={Grid} gridTemplateColumns="2fr 1fr" gap="20px">
+    <Container
+      as={Grid}
+      gridTemplateColumns="calc(calc(100% / 3) * 2) calc(100% / 3)"
+      gap="20px"
+    >
       <Box
         as={chakra.form}
         bg="cardBackground"
@@ -95,7 +103,7 @@ export const EarnNft: React.FC = () => {
         </Button>
       </Box>
       <TipsPanel gridRow="1 / 3" gridColumn="2 / 3" useSharedContent />
-      <Box bg="cardBackground" shadow="card" rounded="card" h="506px" p="32px">
+      <Box bg="cardBackground" shadow="card" rounded="card" p="32px">
         <Heading as="h4" fontSize="18px" lineHeight="20px" mb="8px">
           {t('title')}
         </Heading>
@@ -109,6 +117,43 @@ export const EarnNft: React.FC = () => {
             />
           </Text>
         </Box>
+        <Heading as="h5" fontSize="14px" fontWeight="500" mb="16px">
+          {t('subscription_style_preview.preview_subtitle')}
+        </Heading>
+        <Grid templateColumns="repeat(2, calc(50% - 4px))" gap="8px">
+          <Box
+            border="1px solid"
+            borderColor="earnNftStylePreviewBorder"
+            rounded="16px"
+          />
+          <Box
+            bg="earnNftStylePreviewCodeBackground"
+            rounded="16px"
+            px="20px"
+            py="16px"
+          >
+            <Heading
+              as="h6"
+              color="earnNftStylePreviewCodeTitle"
+              fontSize="12px"
+              lineHeight="17px"
+              textAlign="center"
+              mb="16px"
+            >
+              {t('subscription_style_preview.customize_the_button')}
+            </Heading>
+            <CodeEditor />
+          </Box>
+          <Center gridColumn="2 / 3">
+            <Button
+              variant="solid-rounded"
+              colorScheme="primaryButton"
+              isDisabled
+            >
+              {t('subscription_style_preview.get_the_code')}
+            </Button>
+          </Center>
+        </Grid>
       </Box>
     </Container>
   )
