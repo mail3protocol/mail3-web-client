@@ -26,4 +26,21 @@ export default {
     send_records_tooltip: 'Show 10 sent messages recently',
     view_all_send_records: 'View all send records',
   },
+  earn_nft: {
+    title: 'Subscribe To Earn NFT',
+    to_earn: 'To Earn',
+    nft: 'NFT',
+    distribution_platform: 'Distribution Platform',
+    platforms: {
+      galaxy: 'Project Galaxy',
+      quest3: 'Quest3',
+    },
+    campaign_link_field: 'Campaign Link',
+    campaign_link_placeholder: 'campaign Link',
+    go_to_galaxy_description:
+      'Go to <a>Project Galaxy</a> to create a marketing campaign and get the campaign link.',
+    credential_id: 'Credential ID',
+    credential_key: 'Credential Key',
+    enable: 'Enable',
+  },
 }
