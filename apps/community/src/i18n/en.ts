@@ -3,6 +3,13 @@ export default {
     header: {
       logo_name: 'Community',
     },
+    sidebar: {
+      message: 'Message',
+      subscribe: 'Subscribe',
+      home: 'Home',
+      send_records: 'Send Records',
+      earn_nft: 'Earn NFT',
+    },
   },
   new_message: {
     subject: 'Subject',

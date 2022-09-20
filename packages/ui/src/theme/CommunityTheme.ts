@@ -38,6 +38,11 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     secondaryTextColor: '#BFBFBF',
     secondaryTitleColor: '#737373',
     sidebarBackground: '#FFF',
+    sidebarMenuActiveBackground: '#F2F2F2',
+    sidebarSubmenuBorder: '#BFBFBF',
+    sidebarMenuItemHoverBackground: '#F2F2F2',
+    sidebarMenuHoverBackground: '#F2F2F2',
+    sidebarMenuActiveText: '#FFF',
     tooltipBackground: '#FFF',
   },
   shadows: {
