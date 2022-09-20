@@ -59,6 +59,7 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     inputPlaceholder: '#BFBFBF',
     checkboxOutlineBackground: '#FFF',
     uneditable: '#A6A6A6',
+    tipsPanel: '#ECECF4',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
@@ -203,6 +204,29 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
               color: 'uneditable',
             },
           },
+        },
+      },
+    },
+    Card: {
+      bg: 'card',
+      shadow: 'card',
+      rounded: 'card',
+    },
+    TipsPanel: {
+      baseStyle: {
+        bg: 'tipsPanel',
+        shadow: 'card',
+        rounded: 'card',
+        px: '18px',
+        py: '32px',
+        position: 'relative',
+        title: {
+          color: 'primary.900',
+          fontSize: '18px',
+          lineHeight: '28px',
+          display: 'flex',
+          fontWeight: 500,
+          mb: '32px',
         },
       },
     },

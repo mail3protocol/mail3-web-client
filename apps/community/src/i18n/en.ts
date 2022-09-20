@@ -10,6 +10,9 @@ export default {
       send_records: 'Send Records',
       earn_nft: 'Earn NFT',
     },
+    tips_panel: {
+      title: 'Help',
+    },
   },
   new_message: {
     subject: 'Subject',

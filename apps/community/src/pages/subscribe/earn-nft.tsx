@@ -15,9 +15,13 @@ import {
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Container } from '../../components/Container'
+import { TipsPanel } from '../../components/TipsPanel'
+import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
 
 export const EarnNft: React.FC = () => {
   const { t } = useTranslation('earn_nft')
+  const onUpdateTipsPanelContent = useUpdateTipsPanel()
+
   return (
     <Container as={Grid} gridTemplateColumns="2fr 1fr" gap="20px">
       <Box
@@ -53,6 +57,11 @@ export const EarnNft: React.FC = () => {
             <Input
               placeholder={t('campaign_link_placeholder')}
               name="campaign_link"
+              onFocus={() =>
+                onUpdateTipsPanelContent(
+                  `current is: ${t('campaign_link_field')}`
+                )
+              }
             />
             <FormHelperText whiteSpace="nowrap">
               <Trans
@@ -64,7 +73,12 @@ export const EarnNft: React.FC = () => {
           </FormControl>
           <FormControl>
             <FormLabel>{t('credential_id')}</FormLabel>
-            <Input w="150px" />
+            <Input
+              w="150px"
+              onFocus={() =>
+                onUpdateTipsPanelContent(`current is: ${t('credential_id')}`)
+              }
+            />
           </FormControl>
           <FormControl>
             <FormLabel>{t('credential_key')}</FormLabel>
@@ -79,13 +93,7 @@ export const EarnNft: React.FC = () => {
           {t('enable')}
         </Button>
       </Box>
-      <Box
-        gridRow="1 / 3"
-        gridColumn="2 / 3"
-        bg="cardBackground"
-        shadow="card"
-        rounded="card"
-      />
+      <TipsPanel gridRow="1 / 3" gridColumn="2 / 3" useSharedContent />
       <Box bg="cardBackground" shadow="card" rounded="card" h="506px" />
     </Container>
   )
