@@ -45,5 +45,13 @@ export default {
     credential_id: 'Credential ID',
     credential_key: 'Credential Key',
     enable: 'Enable',
+    subscription_style_preview: {
+      title: 'Subscription dialog style preview',
+      description_1:
+        'Edit the code area on the right to preview the style of the dialog box you want and get the code',
+      description_2:
+        'Read the development documentation to learn how to integrate: <a>How to integrate subscribe to earn</a>',
+      preview_subtitle: 'style preview',
+    },
   },
 }

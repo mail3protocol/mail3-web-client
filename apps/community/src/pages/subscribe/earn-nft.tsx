@@ -12,6 +12,7 @@ import {
   Input,
   Link,
   VStack,
+  Text,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Container } from '../../components/Container'
@@ -94,7 +95,21 @@ export const EarnNft: React.FC = () => {
         </Button>
       </Box>
       <TipsPanel gridRow="1 / 3" gridColumn="2 / 3" useSharedContent />
-      <Box bg="cardBackground" shadow="card" rounded="card" h="506px" />
+      <Box bg="cardBackground" shadow="card" rounded="card" h="506px" p="32px">
+        <Heading as="h4" fontSize="18px" lineHeight="20px" mb="8px">
+          {t('title')}
+        </Heading>
+        <Box fontSize="12px" fontWeight="400" mb="24px">
+          <Text>{t('subscription_style_preview.description_1')}</Text>
+          <Text>
+            <Trans
+              t={t}
+              i18nKey="subscription_style_preview.description_2"
+              components={{ a: <Link color="primary.900" fontWeight="500" /> }}
+            />
+          </Text>
+        </Box>
+      </Box>
     </Container>
   )
 }
