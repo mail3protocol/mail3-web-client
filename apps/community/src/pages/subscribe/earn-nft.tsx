@@ -14,9 +14,10 @@ import {
   VStack,
   Text,
   Center,
+  Skeleton,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
@@ -142,7 +143,9 @@ export const EarnNft: React.FC = () => {
             >
               {t('subscription_style_preview.customize_the_button')}
             </Heading>
-            <CodeEditor />
+            <Suspense fallback={<Skeleton w="full" h="207px" />}>
+              <CodeEditor />
+            </Suspense>
           </Box>
           <Center gridColumn="2 / 3">
             <Button
