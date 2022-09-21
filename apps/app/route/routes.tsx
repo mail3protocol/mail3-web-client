@@ -1,4 +1,4 @@
-import { RouteProps } from 'react-router-dom'
+import { Navigate, RouteProps } from 'react-router-dom'
 import { RoutePath } from './path'
 import { HomePage } from '../pages/index'
 import { DraftsPage } from '../pages/messages/drafts'
@@ -92,5 +92,10 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Unread,
     key: 'unread',
     element: <UnReadPage />,
+  },
+  {
+    path: RoutePath.Testing,
+    key: 'testing',
+    element: <Navigate to={RoutePath.Inbox} />,
   },
 ]

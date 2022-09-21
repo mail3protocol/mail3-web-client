@@ -351,11 +351,11 @@ export const PreviewComponent: React.FC = () => {
       type: SuspendButtonType.ReplyAll,
       isDisabled: isDriftBottleAddress,
       onClick: async () => {
-        const isAllow = getIsAllowExperienceUserAction()
-        if (!isAllow) return
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.ReplyAll,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         navi(
           {
             pathname: RoutePath.NewMessage,
@@ -376,11 +376,11 @@ export const PreviewComponent: React.FC = () => {
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
       onClick: async () => {
-        const isAllow = getIsAllowExperienceUserAction()
-        if (!isAllow) return
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         navi(
           {
             pathname: RoutePath.NewMessage,
@@ -403,6 +403,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Trash,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') {
           return
         }
@@ -422,6 +424,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Delete,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') {
           return
         }
@@ -475,6 +479,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Spam,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id, Mailboxes.Spam)

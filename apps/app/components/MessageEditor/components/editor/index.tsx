@@ -42,6 +42,7 @@ import { useBlocker } from '../../../../hooks/useBlocker'
 import { AttachmentImageExtensionExtension } from './extensions/AttachmentImageExtension'
 import { useExperienceUserGuard } from '../../../../hooks/useExperienceUserGuard'
 import { useBack } from '../../../../hooks/useBack'
+import { RoutePath } from '../../../../route/path'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -136,7 +137,11 @@ const Footer = () => {
   const { onAction, isExperienceUser } = useExperienceUserGuard({
     guardDialogProps: {
       pageGuard: true,
-      onCloseComplete: onBack,
+      onCloseComplete: () => {
+        if (window.location.pathname === RoutePath.NewMessage) {
+          onBack()
+        }
+      },
     },
   })
   useEffect(() => {

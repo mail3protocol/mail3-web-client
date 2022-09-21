@@ -57,25 +57,6 @@ export const ExperienceUserGuideContent: React.FC = () => {
           as={Link}
           variant="outline"
           isFullWidth
-          leftIcon={<Icon as={EnsSvg} w="24px" h="24px" />}
-          justifyContent="flex-start"
-          px="8px"
-          href={ENS_DOMAIN}
-          target="_blank"
-          rounded="40px"
-          borderColor="#000"
-          colorScheme="blackAlpha"
-          color="#000"
-          bg="#fff"
-        >
-          <Box w="full" textAlign="center">
-            {t('button.ens')}
-          </Box>
-        </Button>
-        <Button
-          as={Link}
-          variant="outline"
-          isFullWidth
           leftIcon={<Icon as={BitSvg} w="24px" h="24px" />}
           justifyContent="flex-start"
           px="8px"
@@ -86,9 +67,30 @@ export const ExperienceUserGuideContent: React.FC = () => {
           colorScheme="blackAlpha"
           color="#000"
           bg="#fff"
+          maxW="246px"
         >
           <Box w="full" textAlign="center">
             {t('button.bit')}
+          </Box>
+        </Button>
+        <Button
+          as={Link}
+          variant="outline"
+          isFullWidth
+          leftIcon={<Icon as={EnsSvg} w="24px" h="24px" />}
+          justifyContent="flex-start"
+          px="8px"
+          href={ENS_DOMAIN}
+          target="_blank"
+          rounded="40px"
+          borderColor="#000"
+          colorScheme="blackAlpha"
+          color="#000"
+          bg="#fff"
+          maxW="246px"
+        >
+          <Box w="full" textAlign="center">
+            {t('button.ens')}
           </Box>
         </Button>
       </VStack>

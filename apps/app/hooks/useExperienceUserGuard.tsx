@@ -31,7 +31,7 @@ export function useExperienceUserGuard({
           onCloseComplete: guardDialogProps?.onCloseComplete,
         },
         modalContentProps: {
-          maxW: '340px',
+          maxW: '520px',
           rounded: '24px',
           pb: '8px',
           w: 'calc(100% - 40px)',
