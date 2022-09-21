@@ -9,6 +9,9 @@ export namespace Subscription {
 
   export interface MessageListResp {
     messages: MessageResp[]
+    page: number
+    pages: number
+    total: number
   }
 
   export interface MessageDetailResp {

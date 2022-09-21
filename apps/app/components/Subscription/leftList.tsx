@@ -1,7 +1,8 @@
 import { Box, Circle, Flex, Image, Spacer, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Subscription } from 'models'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
+import { useInfiniteQuery } from 'react-query'
 
 const Container = styled(Box)`
   flex: 1;
@@ -79,57 +80,93 @@ export const SubListItem: FC<SubListItemProps> = ({
 }
 
 // list ui
-// list infinite
-const SubList: FC = () => {
-  const mock = [
+interface SubListProps {
+  data: Subscription.MessageResp[]
+}
+const SubList: FC<SubListProps> = ({ data }) => (
+  <Box>
+    {data.map((item) => {
+      const { uuid } = item
+      return (
+        <SubListItem
+          key={uuid}
+          data={item}
+          isClicked={false}
+          onClick={() => {
+            console.log('click', uuid)
+          }}
+        />
+      )
+    })}
+  </Box>
+)
+
+export const SubLeftList: FC = () => {
+  // list infinite
+
+  const { data, isLoading } = useInfiniteQuery<Subscription.MessageListResp>(
+    ['SubscriptionList'],
+    () =>
+      new Promise((r) => {
+        setTimeout(() => {
+          const mock = {
+            messages: [
+              {
+                uuid: 'string',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
+              {
+                uuid: 'string2',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
+              {
+                uuid: 'string3',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
+            ],
+          }
+          r(mock as Subscription.MessageListResp)
+        }, 1000)
+      }),
     {
-      uuid: 'string',
-      subject: 'The More Important the Work, the More Important the Rest',
-      writer: 'Meta',
-      seen: false,
-      created_at: 'Aug 27 / 9:07 am',
-    },
-    {
-      uuid: 'string2',
-      subject: 'The More Important the Work, the More Important the Rest',
-      writer: 'Meta',
-      seen: false,
-      created_at: 'Aug 27 / 9:07 am',
-    },
-    {
-      uuid: 'string3',
-      subject: 'The More Important the Work, the More Important the Rest',
-      writer: 'Meta',
-      seen: false,
-      created_at: 'Aug 27 / 9:07 am',
-    },
-  ]
+      getNextPageParam: (lastPage: any) => {
+        if (typeof lastPage?.page !== 'number') return undefined
+        if (lastPage.page >= lastPage.pages - 1) {
+          return undefined
+        }
+        return lastPage.page + 1
+      },
+      refetchOnReconnect: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+    }
+  )
+
+  const listData = useMemo(
+    () => data?.pages.map((item) => item.messages).flat() || [],
+    [data]
+  )
+
+  // loading
+  if (isLoading) return <Container>loading</Container>
+  // empty
+  if (!listData) return <Container>Empty</Container>
 
   return (
-    <Box>
-      {mock.map((item) => {
-        const { uuid } = item
-        return (
-          <SubListItem
-            key={uuid}
-            data={item}
-            isClicked={false}
-            onClick={() => {
-              console.log('click', uuid)
-            }}
-          />
-        )
-      })}
-    </Box>
+    <Container>
+      <SubList data={listData} />
+    </Container>
   )
 }
-
-export const SubLeftList: FC = () => (
-  // loading
-
-  // empty
-
-  <Container>
-    <SubList />
-  </Container>
-)
