@@ -11,6 +11,7 @@ import { RouterLink } from '../../RouterLink'
 
 export enum InboxNavType {
   Inbox = 'Inbox',
+  Subscription = 'Subscription',
   Developers = 'Developers',
 }
 
@@ -64,6 +65,12 @@ export const InboxNav: React.FC<{
       icon: <SVGInbox />,
       title: t('inbox'),
       to: RoutePath.Home,
+    },
+    {
+      type: InboxNavType.Subscription,
+      icon: <SVGInbox />,
+      title: t('subscription'),
+      to: RoutePath.Subscription,
     },
     {
       type: InboxNavType.Developers,

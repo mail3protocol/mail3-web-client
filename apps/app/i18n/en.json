@@ -285,6 +285,7 @@
     },
     "inbox-nav": {
         "inbox": "Inbox",
+        "subscription": "Subscription",
         "developers": "Developers"
     },
     "ipfs": {
