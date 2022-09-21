@@ -269,12 +269,14 @@ export const useWalletChange = () => {
   )
   const handleZilpayAccountChanged = useCallback(
     (acc: any) => {
-      console.log(acc, loginAccount)
       if (loginAccount && !loginAccount.startsWith('zil')) {
         return
       }
       if (acc == null) {
         logout()
+        return
+      }
+      if (loginAccount == null) {
         return
       }
       if (acc?.bech32 === loginAccount) {
