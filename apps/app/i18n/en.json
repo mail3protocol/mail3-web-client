@@ -306,7 +306,7 @@
         "need_to_open_wallet": "Need to open wallet. If already connected, please try again. "
     },
     "experience_user_guide_dialog": {
-        "title": "Get a Web3 name to experience the full functionality",
+        "title": "Get a web3 name to identify yourself",
         "refresh": "I’ve got one, refresh to check",
         "button": {
             "bit": "Register .bit Name",
