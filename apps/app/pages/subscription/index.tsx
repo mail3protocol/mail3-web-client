@@ -3,6 +3,7 @@ import React from 'react'
 import { PageContainer } from 'ui'
 import { GoToWriteMailButton } from '../../components/GoToWriteMailButton'
 import { InboxNav } from '../../components/Inbox/Nav'
+import { SubWrap } from '../../components/Subscription'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 
@@ -19,6 +20,8 @@ export const SubPage = () => {
           <InboxNav initialScrollX={0} />
           <GoToWriteMailButton />
         </Flex>
+
+        <SubWrap />
       </PageContainer>
     </Box>
   )
