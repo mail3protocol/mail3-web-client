@@ -306,6 +306,9 @@ export const useWalletChange = () => {
         logout()
         return
       }
+      if (loginAccount == null && acc != null) {
+        return
+      }
       if (acc?.bech32 === loginAccount) {
         return
       }
