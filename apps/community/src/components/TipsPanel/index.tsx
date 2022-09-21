@@ -22,7 +22,7 @@ export const TipsPanel = forwardRef<
   const { t } = useTranslation('components')
   const { title: titleStyleConfig, ...styleConfig } = useStyleConfig(
     'TipsPanel'
-  ) as BoxProps & {
+  ) as Omit<BoxProps, 'title'> & {
     title: HeadingProps
   }
   return (
