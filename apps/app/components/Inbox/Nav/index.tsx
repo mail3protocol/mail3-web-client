@@ -4,7 +4,8 @@ import styled from '@emotion/styled'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useDidMount } from 'hooks'
-import { ReactComponent as SVGInbox } from '../../../assets/inbox.svg'
+import { ReactComponent as InboxSvg } from '../../../assets/inbox.svg'
+import { ReactComponent as SubSvg } from '../../../assets/subscription.svg'
 import { ReactComponent as DevelopersSvg } from '../../../assets/developes.svg'
 import { RoutePath } from '../../../route/path'
 import { RouterLink } from '../../RouterLink'
@@ -62,13 +63,13 @@ export const InboxNav: React.FC<{
   const navItems: NavItem[] = [
     {
       type: InboxNavType.Inbox,
-      icon: <SVGInbox />,
+      icon: <InboxSvg />,
       title: t('inbox'),
       to: RoutePath.Home,
     },
     {
       type: InboxNavType.Subscription,
-      icon: <SVGInbox />,
+      icon: <SubSvg />,
       title: t('subscription'),
       to: RoutePath.Subscription,
     },
