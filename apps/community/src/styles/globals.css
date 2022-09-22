@@ -16,3 +16,9 @@ body {
 body {
   min-width: 1280px;
 }
+
+::selection {
+  color: #fff;
+  background: var(--chakra-colors-primary-900);
+}
+
