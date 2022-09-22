@@ -108,51 +108,57 @@ export const Content: React.FC = () => {
       flex={1}
       pl="108px"
       position="relative"
+      userSelect="none"
     >
-      <Heading
-        as="h2"
-        fontWeight="600"
-        fontSize="36px"
-        lineHeight="56px"
-        mb="22px"
-      >
-        {t('Hello! Friends')}
-      </Heading>
-      <Heading
-        as="h1"
-        whiteSpace="pre"
-        fontSize="48px"
-        lineHeight="56px"
-        fontWeight="900"
-        mb="32px"
-      >
-        {t('Welcome to\nmail3 Community!')}
-      </Heading>
-      <Button
-        rounded="99px"
-        bg="rainbow"
-        color="loginHomePage.background"
-        h="34px"
-        lineHeight="34px"
-        px="31px"
-        fontWeight="900"
-        mb="16px"
-        _hover={{
-          bg: 'rainbow',
-          transform: 'scale(1.05)',
-        }}
-        _active={{
-          bg: 'rainbow',
-          transform: 'scale(0.99)',
-        }}
-      >
-        {t('connect_wallet', { ns: 'common' })}
-      </Button>
-      <Box fontWeight="500" fontSize="14px">
-        {t('no_mail3', { ns: 'common' })}
-        <Button variant="link" color="primary.900">
-          {t('register', { ns: 'common' })}
+      <Box position="relative" zIndex={2} userSelect="text">
+        <Heading
+          as="h2"
+          fontWeight="600"
+          fontSize={{ base: '36px', xxl: '46px', xxxl: '56px' }}
+          lineHeight={{ base: '56px', xxl: '74px', xxxl: '87px' }}
+          mb={{ base: '22px', xxl: '34px' }}
+          transition="200ms"
+        >
+          {t('Hello! Friends')}
+        </Heading>
+        <Heading
+          as="h1"
+          whiteSpace="pre"
+          fontSize={{ base: '48px', xxl: '60px', xxxl: '74px' }}
+          lineHeight={{ base: '56px', xxl: '74px', xxxl: '87px' }}
+          fontWeight="900"
+          mb={{ base: '32px', xxl: '50px' }}
+          transition="200ms"
+        >
+          {t('Welcome to\nmail3 Community!')}
+        </Heading>
+        <Button
+          rounded="99px"
+          bg="rainbow"
+          color="loginHomePage.background"
+          h="34px"
+          lineHeight="34px"
+          px="31px"
+          fontWeight="900"
+          mb="16px"
+          _hover={{
+            bg: 'rainbow',
+            transform: 'scale(1.05)',
+          }}
+          _active={{
+            bg: 'rainbow',
+            transform: 'scale(0.99)',
+          }}
+          shadow="xl"
+        >
+          {t('connect_wallet', { ns: 'common' })}
         </Button>
+        <Box fontWeight="500" fontSize="14px">
+          {t('no_mail3', { ns: 'common' })}
+          <Button variant="link" color="primary.900">
+            {t('register', { ns: 'common' })}
+          </Button>
+        </Box>
       </Box>
       <Image
         src={BackgroundPng}
