@@ -243,9 +243,7 @@ enum AliasType {
 
 const LIMIT_MAX_NUMBER = 5
 
-export const SettingAddress: React.FC<{
-  isUseDefaultTabIndex?: boolean
-}> = ({ isUseDefaultTabIndex = false }) => {
+export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
   const router = useLocation()
   const account = useAccount()
@@ -426,20 +424,15 @@ export const SettingAddress: React.FC<{
   ]
 
   const defaultTabIndex = useMemo(() => {
-    if (!userProps || !isUseDefaultTabIndex) return 0
-    const aliasTypes = (userProps.aliases as Alias[]).map(
-      (alias) => alias.email_type
+    if (!userProps) return 0
+    const defaultAlias = (userProps.aliases as Alias[]).find(
+      (alias) => alias.is_default
     )
-    const onlyEns =
-      userProps.aliases.length === 2 && aliasTypes.includes(AliasMailType.Ens)
-    const onlyBit =
-      userProps.aliases.length === 2 && aliasTypes.includes(AliasMailType.Bit)
-    const hasEnsAndBit =
-      aliasTypes.includes(AliasMailType.Bit) &&
-      aliasTypes.includes(AliasMailType.Ens)
-    if (onlyEns || hasEnsAndBit) return 0
-    if (onlyBit) return 1
-    return 2
+    const indexMap: { [key in AliasMailType]?: number } = {
+      [AliasMailType.Ens]: 0,
+      [AliasMailType.Bit]: 1,
+    }
+    return indexMap[defaultAlias?.email_type as AliasMailType] || 2
   }, [userProps?.aliases])
 
   return (

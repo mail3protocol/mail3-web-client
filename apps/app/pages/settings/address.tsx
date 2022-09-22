@@ -43,7 +43,7 @@ export const SettingsAddressPage = () => {
             </Tab>
           </RouterLink>
         </Tabs>
-        <SettingAddress isUseDefaultTabIndex />
+        <SettingAddress />
       </SettingContainer>
     </PageContainer>
   )
