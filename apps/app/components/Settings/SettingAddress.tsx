@@ -69,7 +69,7 @@ import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import { BIT_DOMAIN, ENS_DOMAIN, MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import { Alias } from '../../api'
+import { Alias, AliasMailType } from '../../api'
 import { RouterLink } from '../RouterLink'
 
 enum TabItemType {
@@ -243,7 +243,9 @@ enum AliasType {
 
 const LIMIT_MAX_NUMBER = 5
 
-export const SettingAddress: React.FC = () => {
+export const SettingAddress: React.FC<{
+  isUseDefaultTabIndex?: boolean
+}> = ({ isUseDefaultTabIndex = false }) => {
   const [t] = useTranslation('settings')
   const router = useLocation()
   const account = useAccount()
@@ -424,14 +426,20 @@ export const SettingAddress: React.FC = () => {
   ]
 
   const defaultTabIndex = useMemo(() => {
-    if (!userProps) return 0
-    if (
-      userProps.aliases.length === 1 &&
-      userProps.aliases[0].email_type === 'eth_mail'
-    ) {
-      return 2
-    }
-    return 0
+    if (!userProps || !isUseDefaultTabIndex) return 0
+    const aliasTypes = (userProps.aliases as Alias[]).map(
+      (alias) => alias.email_type
+    )
+    const onlyEns =
+      userProps.aliases.length === 2 && aliasTypes.includes(AliasMailType.Ens)
+    const onlyBit =
+      userProps.aliases.length === 2 && aliasTypes.includes(AliasMailType.Bit)
+    const hasEnsAndBit =
+      aliasTypes.includes(AliasMailType.Bit) &&
+      aliasTypes.includes(AliasMailType.Ens)
+    if (onlyEns || hasEnsAndBit) return 0
+    if (onlyBit) return 1
+    return 2
   }, [userProps?.aliases])
 
   return (
