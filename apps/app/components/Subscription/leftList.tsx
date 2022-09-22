@@ -142,6 +142,14 @@ export const SubLeftList: FC = () => {
                 seen: false,
                 created_at: 'Aug 27 / 9:07 am',
               },
+              {
+                uuid: 'string3',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
             ],
           }
           r(mock as Subscription.MessageListResp)

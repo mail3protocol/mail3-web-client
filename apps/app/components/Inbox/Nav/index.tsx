@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import { Box, Flex, HStack } from '@chakra-ui/react'
+import { Badge, Box, Flex, HStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -79,6 +79,11 @@ export const InboxNav: React.FC<{
       to: RoutePath.Developers,
     },
   ]
+  const numberMap = {
+    [InboxNavType.Inbox]: 0,
+    [InboxNavType.Subscription]: 999,
+    [InboxNavType.Developers]: 0,
+  }
   const containerRef = useRef<HTMLDivElement>(null)
   useDidMount(() => {
     if (initialScrollX && containerRef.current) {
@@ -94,6 +99,7 @@ export const InboxNav: React.FC<{
     >
       {navItems.map(({ icon, title, type, to }) => {
         const isActive = to === pathname
+        const count = numberMap[type]
         return (
           <RouterLink key={type} href={to}>
             <Flex
@@ -106,6 +112,22 @@ export const InboxNav: React.FC<{
               <Box className={isActive ? 'box-cur' : ''} ml="5px">
                 {title}
               </Box>
+              {count > 0 ? (
+                <Badge
+                  ml="5px"
+                  h="18px"
+                  lineHeight="18px"
+                  fontSize="14px"
+                  bg="#4E51F4"
+                  color="#fff"
+                  fontWeight={700}
+                  w="38px"
+                  borderRadius="27px"
+                  textAlign="center"
+                >
+                  {count > 99 ? '99+' : count}
+                </Badge>
+              ) : null}
             </Flex>
           </RouterLink>
         )

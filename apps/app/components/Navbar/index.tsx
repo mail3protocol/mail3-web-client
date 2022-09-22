@@ -12,6 +12,8 @@ import {
   usePopoverContext,
   HStack,
   Link,
+  Box,
+  Badge,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ReactComponent as DownTriangleSvg } from 'assets/svg/triangle-down.svg'
@@ -35,6 +37,7 @@ import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
 import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
 import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { ReactComponent as SentSvg } from '../../assets/sent.svg'
+import { ReactComponent as SubscriptionSvg } from '../../assets/subscription.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
@@ -65,6 +68,15 @@ const LogoPopoverBody: React.FC = () => {
       onClick() {
         context.onClose()
         trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Drafts })
+      },
+    },
+    {
+      href: RoutePath.Sent,
+      label: t('navbar.sent'),
+      icon: <SentSvg />,
+      onClick() {
+        context.onClose()
+        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Sent })
       },
     },
     {
@@ -113,7 +125,7 @@ const LogoPopoverBody: React.FC = () => {
             </Center>
           </Button>
         </RouterLink>
-        <RouterLink href={RoutePath.Sent} passHref>
+        <RouterLink href={RoutePath.Subscription} passHref>
           <Button
             flex="1"
             ml="9px"
@@ -133,8 +145,26 @@ const LogoPopoverBody: React.FC = () => {
             as="a"
           >
             <Center flexDirection="column">
-              <SentSvg />
-              <Text>{t('navbar.sent')}</Text>
+              <Box position="relative">
+                <SubscriptionSvg />
+                <Badge
+                  top="0"
+                  right="-30px"
+                  position="absolute"
+                  h="16px"
+                  lineHeight="16px"
+                  fontSize="10px"
+                  bg="#4E51F4"
+                  color="#fff"
+                  fontWeight={700}
+                  borderRadius="27px"
+                  textAlign="center"
+                >
+                  {/* {count > 99 ? '99+' : count} */}
+                  99+
+                </Badge>
+              </Box>
+              <Text>{t('navbar.subscription')}</Text>
             </Center>
           </Button>
         </RouterLink>
