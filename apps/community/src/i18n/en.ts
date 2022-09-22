@@ -19,6 +19,12 @@ export default {
       title: 'Help',
     },
   },
+  hooks: {
+    register_dialog: {
+      title: '😔 Sorry you are not qualified!',
+      description: `If you would like to apply for access to "mail<sup>3</sup> Community". \n Please send us an email via the "Mail me" button below, telling us about your project, <span>your needs and your contact information</span>, and we will contact you after evaluation.`,
+    },
+  },
   new_message: {
     subject: 'Subject',
     subject_limit: '{{count}} / {{limit}}',

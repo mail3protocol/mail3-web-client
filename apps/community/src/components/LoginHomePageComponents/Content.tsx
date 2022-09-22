@@ -26,6 +26,7 @@ import LikePng from '../../assets/LoginHomePage/like.png'
 import PlanePng from '../../assets/LoginHomePage/plane.png'
 import VisionPng from '../../assets/LoginHomePage/vision.png'
 import BackgroundPng from '../../assets/LoginHomePage/background.png'
+import { useRegisterDialog } from '../../hooks/useRegisterDialog'
 
 const MotionImage = chakra(motion.img, {
   shouldForwardProp: (prop) =>
@@ -98,7 +99,7 @@ export const AnimationImage: React.FC<
 
 export const Content: React.FC = () => {
   const { t } = useTranslation(['login_home_page', 'common'])
-
+  const onOpenRegisterDialog = useRegisterDialog()
   return (
     <Center
       flexDirection="column"
@@ -155,7 +156,11 @@ export const Content: React.FC = () => {
         </Button>
         <Box fontWeight="500" fontSize="14px">
           {t('no_mail3', { ns: 'common' })}
-          <Button variant="link" color="primary.900">
+          <Button
+            variant="link"
+            color="primary.900"
+            onClick={onOpenRegisterDialog}
+          >
             {t('register', { ns: 'common' })}
           </Button>
         </Box>
