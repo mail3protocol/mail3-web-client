@@ -1,6 +1,7 @@
 import { Box, Link, HStack, useToken } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { DiscordIcon, TwitterIcon } from 'ui'
+import { DISCORD_URL, TWITTER_URL } from '../../constants/env/url'
 
 export const Footer: React.FC = () => {
   const { t } = useTranslation('login_home_page')
@@ -11,7 +12,8 @@ export const Footer: React.FC = () => {
   return (
     <HStack
       bg="rainbow"
-      align="center"
+      pt="24px"
+      align="flex-start"
       w="full"
       h="100px"
       color="loginHomePage.background"
@@ -23,7 +25,12 @@ export const Footer: React.FC = () => {
       <Box fontWeight="800" fontSize="20px">
         {t('join_community')}
       </Box>
-      <Link display="flex" alignItems="center">
+      <Link
+        display="flex"
+        alignItems="center"
+        href={DISCORD_URL}
+        target="_blank"
+      >
         <DiscordIcon
           hasCircle={false}
           iconColor={discordColor}
@@ -34,7 +41,12 @@ export const Footer: React.FC = () => {
         />
         {t('join_discord')}
       </Link>
-      <Link display="flex" alignItems="center">
+      <Link
+        display="flex"
+        alignItems="center"
+        href={TWITTER_URL}
+        target="_blank"
+      >
         <TwitterIcon
           hasCircle={false}
           iconColor={twitterColor}
