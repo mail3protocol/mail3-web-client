@@ -188,6 +188,7 @@ export const Content: React.FC = () => {
             animate={{
               x: [300, 0],
               y: [-100, 0],
+              scale: [0.5, 1],
             }}
             containerTransition={{ delay: 0.3 }}
             src={DiamondPng}
@@ -199,6 +200,7 @@ export const Content: React.FC = () => {
             animate={{
               x: [140, 0],
               y: [300, 0],
+              scale: [0.5, 1],
             }}
             containerTransition={{ delay: 0.8 }}
             src={LikePng}
@@ -208,8 +210,9 @@ export const Content: React.FC = () => {
           />
           <AnimationImage
             animate={{
-              x: [-50, 0],
+              x: [-90, 0],
               y: [300, 0],
+              scale: [0.5, 1],
             }}
             containerTransition={{ delay: 1.4 }}
             src={VisionPng}
@@ -221,6 +224,7 @@ export const Content: React.FC = () => {
             animate={{
               x: [-230, 0],
               y: [260, 0],
+              scale: [0.5, 1],
             }}
             containerTransition={{ delay: 2 }}
             src={BellPng}
@@ -232,6 +236,7 @@ export const Content: React.FC = () => {
             animate={{
               x: [-280, 0],
               y: [-10, 0],
+              scale: [0.5, 1],
             }}
             src={PlanePng}
             bottom="16%"
