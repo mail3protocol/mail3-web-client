@@ -1,10 +1,14 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, BoxProps, Flex, FlexProps } from '@chakra-ui/react'
 import { Logo } from 'ui/src/Logo'
 import { useTranslation } from 'react-i18next'
 
 export const HEADER_HEIGHT = 60
 
-export const Header: React.FC = () => {
+export const Header: React.FC<
+  FlexProps & {
+    logoNameProps?: BoxProps
+  }
+> = ({ logoNameProps, ...props }) => {
   const { t } = useTranslation('components')
   return (
     <Flex
@@ -17,6 +21,7 @@ export const Header: React.FC = () => {
       left="0"
       zIndex="header"
       bg="headerBackground"
+      {...props}
     >
       <Flex align="center" userSelect="none">
         <Logo />
@@ -26,6 +31,7 @@ export const Header: React.FC = () => {
           color="primary.900"
           fontWeight="bold"
           fontSize="18px"
+          {...logoNameProps}
         >
           {t('header.logo_name')}
         </Box>

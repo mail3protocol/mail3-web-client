@@ -1,4 +1,9 @@
 export default {
+  common: {
+    no_mail3: 'No mail3? ',
+    register: 'Register it now',
+    connect_wallet: 'Connect Wallet',
+  },
   components: {
     header: {
       logo_name: 'Community',
@@ -55,5 +60,13 @@ export default {
       customize_the_button: 'Customize the button',
       get_the_code: 'Get the code',
     },
+  },
+  login_home_page: {
+    'Hello! Friends': 'Hello! Friends',
+    'Welcome to\nmail3 Community!': 'Welcome to\nmail3 Community!',
+    'Connect Wallet': 'Connect wallet',
+    join_community: 'Join community',
+    join_discord: 'Join Discord',
+    follow_twitter: 'Follow Twitter',
   },
 }

@@ -41,6 +41,10 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
       800: '#1216f3',
       900: '#1013c7',
     },
+    otherBrand: {
+      discord: '#4E52F5',
+      twitter: '#3888FF',
+    },
     containerBackground: '#F2F2F2',
     lineColor: '#F2F2F2',
     cardBackground: '#FFF',
@@ -63,6 +67,12 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     earnNftStylePreviewBorder: '#D9D9D9',
     earnNftStylePreviewCodeBackground: '#000',
     earnNftStylePreviewCodeTitle: '#FFF',
+    loginHomePage: {
+      background: '#000',
+      color: '#fff',
+    },
+    rainbow:
+      'linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
