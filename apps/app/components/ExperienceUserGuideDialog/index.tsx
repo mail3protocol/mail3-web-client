@@ -1,20 +1,21 @@
 import {
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Link,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
-  Heading,
   ModalOverlay,
-  ModalCloseButton,
   VStack,
-  Icon,
-  Box,
-  Link,
-  Button,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { ReactComponent as BitSvg } from '../../assets/settings/bit.svg'
 import { ReactComponent as EnsSvg } from '../../assets/settings/ens.svg'
 import { RoutePath } from '../../route/path'
@@ -29,6 +30,12 @@ export interface ExperienceUserGuideDialogProps {
 
 export const ExperienceUserGuideContent: React.FC = () => {
   const { t } = useTranslation('experience_user_guide_dialog')
+  const trackExuserClickRegisterEns = useTrackClick(
+    TrackEvent.ExuserClickRegisterEns
+  )
+  const trackExuserClickRegisterBit = useTrackClick(
+    TrackEvent.ExuserClickRegisterBit
+  )
   return (
     <>
       <Heading
@@ -68,6 +75,7 @@ export const ExperienceUserGuideContent: React.FC = () => {
           color="#000"
           bg="#fff"
           maxW="246px"
+          onClick={() => trackExuserClickRegisterBit()}
         >
           <Box w="full" textAlign="center">
             {t('button.bit')}
@@ -88,6 +96,7 @@ export const ExperienceUserGuideContent: React.FC = () => {
           color="#000"
           bg="#fff"
           maxW="246px"
+          onClick={() => trackExuserClickRegisterEns()}
         >
           <Box w="full" textAlign="center">
             {t('button.ens')}
@@ -102,11 +111,15 @@ export const ExperienceUserGuideFooter: React.FC<
   Partial<Pick<ExperienceUserGuideDialogProps, 'onClose'>>
 > = ({ onClose }) => {
   const { t } = useTranslation('experience_user_guide_dialog')
+  const trackExuserClickGotOne = useTrackClick(TrackEvent.ExuserClickGotOne)
   return (
     <Link
       as={RouterLink}
       w="246px"
-      onClick={onClose}
+      onClick={() => {
+        onClose?.()
+        trackExuserClickGotOne()
+      }}
       color="#4E52F5"
       fontSize="12px"
       py="24px"
