@@ -159,6 +159,7 @@ export const Content: React.FC = () => {
           <Button
             variant="link"
             color="primary.900"
+            _active={{ color: 'primary.900', opacity: 0.6 }}
             onClick={onOpenRegisterDialog}
           >
             {t('register', { ns: 'common' })}
