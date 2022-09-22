@@ -2,7 +2,7 @@ import { Flex } from '@chakra-ui/react'
 import { Content, Footer } from '../components/LoginHomePageComponents'
 import { Header } from '../components/Header'
 
-export const MAX_WIDTH = 1440
+export const MAX_WIDTH = 1920
 
 export const Index = () => (
   <Flex
@@ -21,11 +21,7 @@ export const Index = () => (
       h="full"
       w="full"
     >
-      <Header
-        bg="loginHomePage.background"
-        position="static"
-        logoNameProps={{ color: 'loginHomePage.color' }}
-      />
+      <Header bg="loginHomePage.background" position="static" />
       <Content />
     </Flex>
     <Footer />
