@@ -1,8 +1,10 @@
 import { Box, Circle, Flex, Image, Spacer, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
+import { useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
 import { FC, useMemo } from 'react'
 import { useInfiniteQuery } from 'react-query'
+import { SubPreviewIdAtom } from './preview'
 
 const Container = styled(Box)`
   flex: 1;
@@ -83,23 +85,28 @@ export const SubListItem: FC<SubListItemProps> = ({
 interface SubListProps {
   data: Subscription.MessageResp[]
 }
-const SubList: FC<SubListProps> = ({ data }) => (
-  <Box>
-    {data.map((item) => {
-      const { uuid } = item
-      return (
-        <SubListItem
-          key={uuid}
-          data={item}
-          isClicked={false}
-          onClick={() => {
-            console.log('click', uuid)
-          }}
-        />
-      )
-    })}
-  </Box>
-)
+const SubList: FC<SubListProps> = ({ data }) => {
+  const setPreivewId = useUpdateAtom(SubPreviewIdAtom)
+
+  return (
+    <Box>
+      {data.map((item) => {
+        const { uuid } = item
+        return (
+          <SubListItem
+            key={uuid}
+            data={item}
+            isClicked={false}
+            onClick={() => {
+              setPreivewId(uuid)
+              console.log('click', uuid)
+            }}
+          />
+        )
+      })}
+    </Box>
+  )
+}
 
 export const SubLeftList: FC = () => {
   // list infinite
