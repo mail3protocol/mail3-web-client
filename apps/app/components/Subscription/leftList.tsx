@@ -1,4 +1,4 @@
-import { Box, Circle, Flex, Image, Spacer, Text } from '@chakra-ui/react'
+import { Avatar, Box, Circle, Flex, Spacer, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
@@ -7,35 +7,40 @@ import { useInfiniteQuery } from 'react-query'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 
 const Container = styled(Box)`
-  flex: 1;
-  border-right: 1px solid #dedede;
+  flex: 9;
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
+  box-shadow: 0px 0px 10px rgba(25, 25, 100, 0.1);
+  padding: 20px 0;
+
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+  }
 
   @media (max-width: 768px) {
     padding-top: 30px;
-    border-right: none;
+    box-shadow: none;
   }
 `
 
+const Badge = styled(Circle)`
+  top: 2px;
+  right: 2px;
+  height: 10px;
+  width: 10px;
+  position: absolute;
+`
+
 const SubListItemWrap = styled(Flex)`
-  padding: 20px 20px 20px 40px;
+  padding: 14px 20px 8px 32px;
   cursor: pointer;
   position: relative;
+  border-bottom: 1px solid #f3f3f3;
 
   :hover {
-    background-color: #ededed;
-  }
-
-  .point {
-    top: 50%;
-    left: -10px;
-    transform: translate(-100%, -50%);
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    background-color: #4e51f4;
+    background-color: #f3f3f3;
   }
 `
 
@@ -61,22 +66,27 @@ export const SubListItem: FC<SubListItemProps> = ({
       }}
     >
       <Box position="relative">
-        {!seen && !isClicked ? <Circle className="point" /> : null}
-        <Circle size="72px" overflow="hidden">
-          <Image src="" w="100%" h="100%" />
-        </Circle>
+        <Avatar w="48px">
+          {!seen && !isClicked ? <Badge boxSize="10px" bg="#9093F9" /> : null}
+        </Avatar>
       </Box>
-      <Box pl="33px">
+      <Box pl="24px">
         <Text
           h="52px"
-          fontSize="16px"
+          fontSize="14px"
           fontWeight={600}
           noOfLines={2}
-          lineHeight="26px"
+          lineHeight="20px"
+          color={!seen && !isClicked ? '#000' : '#6F6F6F'}
         >
           {subject}
         </Text>
-        <Flex fontSize="14px" fontWeight={400} color="#818181">
+        <Flex
+          fontSize="12px"
+          fontWeight={400}
+          color="#818181"
+          lineHeight="26px"
+        >
           <Text noOfLines={1}>{writer}</Text>
           <Spacer />
           <Box>{time}</Box>

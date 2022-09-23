@@ -1,7 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
-import { PageContainer } from 'ui'
 import { GoToWriteMailButton } from '../../components/GoToWriteMailButton'
 import { NewPageContainer } from '../../components/Inbox'
 import { InboxNav } from '../../components/Inbox/Nav'
