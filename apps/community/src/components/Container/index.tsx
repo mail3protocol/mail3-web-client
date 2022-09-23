@@ -3,7 +3,7 @@ import { useLayoutStatus } from '../../hooks/useLayoutStatus'
 import { HEADER_HEIGHT } from '../Header'
 import { SIDEBAR_WIDTH } from '../Sidebar'
 
-export const MAX_WIDTH = 1084
+export const MAX_WIDTH = 1440
 
 export interface ContainerProps extends BoxProps {
   containerBgColor?: string

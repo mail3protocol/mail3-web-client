@@ -31,7 +31,7 @@ export const EarnNft: React.FC = () => {
   return (
     <Container
       as={Grid}
-      gridTemplateColumns="calc(calc(100% / 3) * 2) calc(100% / 3)"
+      gridTemplateColumns="calc(calc(calc(100% - 20px) / 4) * 3) calc(calc(100% - 20px) / 4)"
       gap="20px"
     >
       <Box
