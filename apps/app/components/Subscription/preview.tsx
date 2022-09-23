@@ -90,7 +90,7 @@ const Container = styled(Box)`
 `
 
 const Wrap: React.FC = ({ children }) => {
-  const [isMaxWdith600] = useMediaQuery(`(max-width: 600px)`)
+  const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
   const [isOpen, setIsOpen] = useAtom(SubPreviewIsOpenAtom)
   const isMobileOpen = isMaxWdith600 && isOpen
 

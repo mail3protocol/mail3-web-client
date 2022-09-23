@@ -11,10 +11,16 @@ const Container = styled(Box)`
   border-top-right-radius: 24px;
   overflow: hidden;
   top: 170px;
-  left: 30px;
-  right: 30px;
+  left: auto;
+  /* transform: translateX(-50%); */
+  max-width: 1200px;
   bottom: 0;
   position: fixed;
+
+  @media (max-width: 1220px) {
+    left: 30px;
+    right: 30px;
+  }
 
   @media (max-width: 768px) {
     top: auto;

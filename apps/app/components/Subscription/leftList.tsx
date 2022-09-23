@@ -70,9 +70,9 @@ export const SubListItem: FC<SubListItemProps> = ({
           {!seen && !isClicked ? <Badge boxSize="10px" bg="#9093F9" /> : null}
         </Avatar>
       </Box>
-      <Box pl="24px">
+      <Box pl="24px" w="100%">
         <Text
-          h="52px"
+          h="44px"
           fontSize="14px"
           fontWeight={600}
           noOfLines={2}
