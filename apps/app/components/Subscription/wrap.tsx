@@ -15,6 +15,17 @@ const Container = styled(Box)`
   right: 30px;
   bottom: 0;
   position: fixed;
+
+  @media (max-width: 768px) {
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    position: relative;
+    box-shadow: none;
+    border-top-left-radius: none;
+    border-top-right-radius: none;
+  }
 `
 
 export const SubWrap: FC = () => (

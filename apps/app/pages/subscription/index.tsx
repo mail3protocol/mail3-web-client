@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { PageContainer } from 'ui'
 import { GoToWriteMailButton } from '../../components/GoToWriteMailButton'
+import { NewPageContainer } from '../../components/Inbox'
 import { InboxNav } from '../../components/Inbox/Nav'
 import { SubWrap } from '../../components/Subscription'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
@@ -24,14 +25,13 @@ export const SubPage = () => {
   }
   return (
     <Box pt={{ base: '25px', md: '35px' }}>
-      <PageContainer>
-        <FlexNav justify="space-between">
+      <NewPageContainer>
+        <FlexNav justify="space-between" ml="20px">
           <InboxNav initialScrollX={0} />
           <GoToWriteMailButton className="write-button" />
         </FlexNav>
-
         <SubWrap />
-      </PageContainer>
+      </NewPageContainer>
     </Box>
   )
 }

@@ -12,6 +12,11 @@ const Container = styled(Box)`
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
+
+  @media (max-width: 768px) {
+    padding-top: 30px;
+    border-right: none;
+  }
 `
 
 const SubListItemWrap = styled(Flex)`
@@ -130,6 +135,38 @@ export const SubLeftList: FC = () => {
               },
               {
                 uuid: 'string2',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
+              {
+                uuid: 'string3',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
+              {
+                uuid: 'string3',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
+              {
+                uuid: 'string3',
+                subject:
+                  'The More Important the Work, the More Important the Rest',
+                writer: 'Meta',
+                seen: false,
+                created_at: 'Aug 27 / 9:07 am',
+              },
+              {
+                uuid: 'string3',
                 subject:
                   'The More Important the Work, the More Important the Rest',
                 writer: 'Meta',
