@@ -4,7 +4,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
 import { FC, useMemo } from 'react'
 import { useInfiniteQuery } from 'react-query'
-import { SubPreviewIdAtom } from './preview'
+import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 
 const Container = styled(Box)`
   flex: 1;
@@ -86,6 +86,7 @@ interface SubListProps {
   data: Subscription.MessageResp[]
 }
 const SubList: FC<SubListProps> = ({ data }) => {
+  const setIsOpen = useUpdateAtom(SubPreviewIsOpenAtom)
   const setPreivewId = useUpdateAtom(SubPreviewIdAtom)
 
   return (
@@ -98,6 +99,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
             data={item}
             isClicked={false}
             onClick={() => {
+              setIsOpen(true)
               setPreivewId(uuid)
               console.log('click', uuid)
             }}
