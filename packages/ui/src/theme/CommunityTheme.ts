@@ -176,19 +176,36 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
           color: 'white',
           _active: { bg: `${colorScheme}.700` },
         }),
-        wallet: {
-          justifyContent: 'flex-start',
-          bg: 'connectWalletButtonBackground',
-          filter: 'drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.15))',
-          rounded: '100px',
-          px: '8px',
-          h: '40px',
-          _hover: {
-            transform: 'scale(1.03)',
-          },
-          _active: {
-            transform: 'scale(0.99)',
-          },
+        wallet: ({
+          disabled,
+          isDisabled,
+        }: {
+          disabled?: boolean
+          isDisabled?: boolean
+        }) => {
+          const _isDisabled = disabled || isDisabled
+          return {
+            justifyContent: 'flex-start',
+            bg: 'connectWalletButtonBackground',
+            filter: 'drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.15))',
+            rounded: '100px',
+            px: '8px',
+            h: '40px',
+            transition: '200ms',
+            _hover: _isDisabled
+              ? null
+              : {
+                  transform: 'scale(1.02)',
+                },
+            _active: _isDisabled
+              ? null
+              : {
+                  transition: '20ms',
+                  transform: 'scale(0.99)',
+                  shadow: 'xs',
+                  filter: 'drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.05))',
+                },
+          }
         },
       },
     },

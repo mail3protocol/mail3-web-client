@@ -170,6 +170,11 @@ export enum DesiredWallet {
   Trust = 'Trust',
   ZilPay = 'ZilPay',
   Coinbase = 'Coinbase',
+  Polkawallet = 'Polkawallet',
+  Plug = 'Plug',
+  Keplr = 'Keplr',
+  Tron = 'Tron',
+  Solflare = 'Solflare',
 }
 
 export enum SignatureStatus {

@@ -8,7 +8,7 @@ export const Header: React.FC<
   FlexProps & {
     logoNameProps?: BoxProps
   }
-> = ({ logoNameProps, ...props }) => {
+> = ({ logoNameProps, children, ...props }) => {
   const { t } = useTranslation('components')
   return (
     <Flex
@@ -36,6 +36,7 @@ export const Header: React.FC<
           {t('header.logo_name')}
         </Box>
       </Flex>
+      {children}
     </Flex>
   )
 }

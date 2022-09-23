@@ -18,6 +18,7 @@ import {
   Transition,
   VariantLabels,
 } from 'framer-motion'
+import { useAccount } from 'hooks'
 import MascotPng from '../../assets/LoginHomePage/mascot.png'
 import BellPng from '../../assets/LoginHomePage/bell.png'
 import CursorPng from '../../assets/LoginHomePage/cursor.png'
@@ -27,7 +28,9 @@ import PlanePng from '../../assets/LoginHomePage/plane.png'
 import VisionPng from '../../assets/LoginHomePage/vision.png'
 import BackgroundPng from '../../assets/LoginHomePage/background.png'
 import { useRegisterDialog } from '../../hooks/useRegisterDialog'
-import { useConnectWallet } from '../../hooks/useConnectWallet'
+import { useConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
+import { useAuth } from '../../hooks/useLogin'
+import { useRememberDialog } from '../../hooks/useRememberDialog'
 
 const MotionImage = chakra(motion.img, {
   shouldForwardProp: (prop) =>
@@ -101,7 +104,11 @@ export const AnimationImage: React.FC<
 export const Content: React.FC = () => {
   const { t } = useTranslation(['login_home_page', 'common'])
   const onOpenRegisterDialog = useRegisterDialog()
-  const onOpenConnectWallet = useConnectWallet()
+  const onOpenConnectWalletDialog = useConnectWalletDialog()
+  const onOpenRememberDialog = useRememberDialog()
+  const account = useAccount()
+  useAuth()
+
   return (
     <Center
       flexDirection="column"
@@ -153,17 +160,18 @@ export const Content: React.FC = () => {
             transform: 'scale(0.99)',
           }}
           shadow="xl"
-          onClick={onOpenConnectWallet}
+          onClick={account ? onOpenRememberDialog : onOpenConnectWalletDialog}
         >
           {t('connect_wallet', { ns: 'common' })}
         </Button>
-        <Box fontWeight="500" fontSize="14px">
+        <Box fontWeight="500" fontSize="16px">
           {t('no_mail3', { ns: 'common' })}
           <Button
             variant="link"
             color="primary.900"
             _active={{ color: 'primary.900', opacity: 0.6 }}
             onClick={onOpenRegisterDialog}
+            fontSize="16px"
           >
             {t('register', { ns: 'common' })}
           </Button>

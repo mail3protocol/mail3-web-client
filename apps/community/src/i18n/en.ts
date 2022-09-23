@@ -3,6 +3,10 @@ export default {
     no_mail3: 'No mail3? ',
     register: 'Register it now',
     connect_wallet: 'Connect Wallet',
+    connect: {
+      notice: 'Notice',
+      unknown_error: 'Unknown error',
+    },
   },
   components: {
     header: {
@@ -18,26 +22,39 @@ export default {
     tips_panel: {
       title: 'Help',
     },
-  },
-  hooks: {
-    register_dialog: {
-      title: '😔 Sorry you are not qualified!',
-      description: `If you would like to apply for access to "mail<sup>3</sup> Community". \n Please send us an email via the "Mail me" button below, telling us about your project, <span>your needs and your contact information</span>, and we will contact you after evaluation.`,
-    },
-    connect_wallet_dialog: {
+    select_connect_wallet: {
       description: 'Please select the wallet.',
       wallets: {
         metamask: 'Metamask',
         wallet_connect: 'Wallet Connect',
+        zilpay: 'Zilpay',
+        blocto: 'Blocto',
+        phantom: 'Phantom',
+        solflare: 'Solflare',
+        tron_link: 'TronLink',
+        keplr: 'Keplr',
+        plug: 'Plug',
+        polkawallet: 'Polkawallet',
       },
       chain_descriptions: {
         eth: 'EVM compatible chain: Ethereum, Polygon, BSC',
-        zilliqa: '',
+        zilliqa: 'Coming soon',
         flow: 'Coming soon',
         sol: 'Coming soon',
         tron: 'Coming soon',
         others: 'Coming soon',
       },
+    },
+    auth_connect_wallet: {
+      description:
+        'Skip approving every interaction with your wallet by allowing Mail3 to remember you.',
+      remember: 'Check',
+    },
+  },
+  hooks: {
+    register_dialog: {
+      title: '😔 Sorry you are not qualified!',
+      description: `If you would like to apply for access to "mail<sup>3</sup> Community". \n Please send us an email via the "Mail me" button below, telling us about your project, <span>your needs and your contact information</span>, and we will contact you after evaluation.`,
     },
   },
   new_message: {
