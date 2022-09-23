@@ -7,6 +7,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { Home } from '../components/Home'
 import { Navbar } from '../components/Navbar'
 import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
+import { useRememberLoading } from '../hooks/useRemember'
 
 const UnAuthNavbar = () => (
   <Center h={`${NAVBAR_HEIGHT}px`}>
@@ -19,7 +20,8 @@ const UnAuthNavbar = () => (
 export const HomePage = () => {
   const { isAuth } = useRedirectHome()
   useDocumentTitle(isAuth ? 'Inbox' : 'Home')
-  if (!isAuth) {
+  const isRememberLoading = useRememberLoading()
+  if (!isAuth || isRememberLoading) {
     return (
       <PageContainer>
         <UnAuthNavbar />
