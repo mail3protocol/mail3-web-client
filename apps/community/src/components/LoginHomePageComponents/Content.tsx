@@ -27,6 +27,7 @@ import PlanePng from '../../assets/LoginHomePage/plane.png'
 import VisionPng from '../../assets/LoginHomePage/vision.png'
 import BackgroundPng from '../../assets/LoginHomePage/background.png'
 import { useRegisterDialog } from '../../hooks/useRegisterDialog'
+import { useConnectWallet } from '../../hooks/useConnectWallet'
 
 const MotionImage = chakra(motion.img, {
   shouldForwardProp: (prop) =>
@@ -100,6 +101,7 @@ export const AnimationImage: React.FC<
 export const Content: React.FC = () => {
   const { t } = useTranslation(['login_home_page', 'common'])
   const onOpenRegisterDialog = useRegisterDialog()
+  const onOpenConnectWallet = useConnectWallet()
   return (
     <Center
       flexDirection="column"
@@ -151,6 +153,7 @@ export const Content: React.FC = () => {
             transform: 'scale(0.99)',
           }}
           shadow="xl"
+          onClick={onOpenConnectWallet}
         >
           {t('connect_wallet', { ns: 'common' })}
         </Button>

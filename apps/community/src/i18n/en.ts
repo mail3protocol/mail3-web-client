@@ -24,6 +24,21 @@ export default {
       title: '😔 Sorry you are not qualified!',
       description: `If you would like to apply for access to "mail<sup>3</sup> Community". \n Please send us an email via the "Mail me" button below, telling us about your project, <span>your needs and your contact information</span>, and we will contact you after evaluation.`,
     },
+    connect_wallet_dialog: {
+      description: 'Please select the wallet.',
+      wallets: {
+        metamask: 'Metamask',
+        wallet_connect: 'Wallet Connect',
+      },
+      chain_descriptions: {
+        eth: 'EVM compatible chain: Ethereum, Polygon, BSC',
+        zilliqa: '',
+        flow: 'Coming soon',
+        sol: 'Coming soon',
+        tron: 'Coming soon',
+        others: 'Coming soon',
+      },
+    },
   },
   new_message: {
     subject: 'Subject',

@@ -73,6 +73,7 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     },
     rainbow:
       'linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)',
+    connectWalletButtonBackground: '#FFF',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
@@ -175,6 +176,20 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
           color: 'white',
           _active: { bg: `${colorScheme}.700` },
         }),
+        wallet: {
+          justifyContent: 'flex-start',
+          bg: 'connectWalletButtonBackground',
+          filter: 'drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.15))',
+          rounded: '100px',
+          px: '8px',
+          h: '40px',
+          _hover: {
+            transform: 'scale(1.03)',
+          },
+          _active: {
+            transform: 'scale(0.99)',
+          },
+        },
       },
     },
     Checkbox: {
@@ -240,6 +255,40 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
           display: 'flex',
           fontWeight: 500,
           mb: '32px',
+        },
+      },
+    },
+    Tabs: {
+      variants: {
+        chain: {
+          tablist: {
+            pb: '4px',
+          },
+          tab: {
+            display: 'inline-grid',
+            gridTemplateColumns: '16px 1fr',
+            gridGap: '4px',
+            pl: 0,
+            pr: '20px',
+            fontWeight: '600',
+            position: 'relative',
+            py: 0,
+            fontSize: '14px',
+            lineHeight: '24px',
+            color: 'secondaryTitleColor',
+            _selected: {
+              color: 'primaryTextColor',
+              _before: {
+                content: '" "',
+                position: 'absolute',
+                display: 'block',
+                bottom: '0',
+                right: '20px',
+                w: 'calc(100% - 40px)',
+                borderBottom: '2px solid currentColor',
+              },
+            },
+          },
         },
       },
     },
