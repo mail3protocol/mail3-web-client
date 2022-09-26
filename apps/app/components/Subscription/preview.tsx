@@ -7,6 +7,7 @@ import {
   Flex,
   Link,
   Spacer,
+  Spinner,
   Text,
   useMediaQuery,
 } from '@chakra-ui/react'
@@ -17,10 +18,8 @@ import React, { useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
+import { ReactComponent as ArtEmptySvg } from '../../assets/subscription/article-empty.svg'
 // import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
-
-export const SubPreviewIdAtom = atom<string>('')
-export const SubPreviewIsOpenAtom = atom<boolean>(true)
 
 const Mask = styled(Box)`
   height: 100%;
@@ -94,6 +93,9 @@ const Container = styled(Box)`
     }
   }
 `
+
+export const SubPreviewIdAtom = atom<string>('')
+export const SubPreviewIsOpenAtom = atom<boolean>(true)
 
 const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   children,
@@ -169,7 +171,9 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           r(mock)
         }, 1000)
       }),
-    {}
+    {
+      enabled: !!id,
+    }
   )
 
   useEffect(() => {
@@ -180,12 +184,24 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
 
   // loading
   if (isLoading) {
-    return <Wrap isSingleMode={isSingleMode}>Detail Loading</Wrap>
+    return (
+      <Wrap isSingleMode={isSingleMode}>
+        <Center minH="200px">
+          <Spinner />
+        </Center>
+      </Wrap>
+    )
   }
 
   // empty
   if (!detail) {
-    return <Wrap isSingleMode={isSingleMode}>Empty</Wrap>
+    return (
+      <Wrap isSingleMode={isSingleMode}>
+        <Center minH="500px">
+          <ArtEmptySvg />
+        </Center>
+      </Wrap>
+    )
   }
 
   return (

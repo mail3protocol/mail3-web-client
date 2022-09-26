@@ -1,6 +1,8 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Center, Flex, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
+import { atom, useAtomValue } from 'jotai'
 import { FC } from 'react'
+import { ReactComponent as Empty } from '../../assets/subscription/all-empty.svg'
 import { SubLeftList } from './leftList'
 import { SubPreview } from './preview'
 
@@ -11,8 +13,8 @@ const Container = styled(Box)`
   border-top-right-radius: 24px;
   overflow: hidden;
   top: 170px;
-  left: auto;
-  /* transform: translateX(-50%); */
+  left: calc((100% - 1200px) / 2);
+  right: calc((100% - 1200px) / 2);
   max-width: 1200px;
   bottom: 0;
   position: fixed;
@@ -34,11 +36,27 @@ const Container = styled(Box)`
   }
 `
 
-export const SubWrap: FC = () => (
-  <Container>
-    <Flex h="100%">
-      <SubLeftList />
-      <SubPreview isSingleMode={false} />
-    </Flex>
-  </Container>
-)
+export const SubWrapEmptyAtom = atom(false)
+
+export const SubWrap: FC = () => {
+  const isEmpty = useAtomValue(SubWrapEmptyAtom)
+  return (
+    <Container>
+      <Flex h="100%">
+        {isEmpty ? (
+          <Center minH="200px" w="100%">
+            <Box>
+              <Empty />
+              <Text mt="10px">No new update here for now</Text>
+            </Box>
+          </Center>
+        ) : (
+          <>
+            <SubLeftList />
+            <SubPreview isSingleMode={false} />
+          </>
+        )}
+      </Flex>
+    </Container>
+  )
+}

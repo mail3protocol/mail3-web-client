@@ -1,10 +1,21 @@
-import { Avatar, Box, Circle, Flex, Spacer, Text } from '@chakra-ui/react'
+import {
+  Avatar,
+  Box,
+  Center,
+  Circle,
+  Flex,
+  Spacer,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useUpdateAtom } from 'jotai/utils'
+import { atom, useAtom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
+import { SubWrapEmptyAtom } from './wrap'
 
 const Container = styled(Box)`
   flex: 9;
@@ -42,6 +53,10 @@ const SubListItemWrap = styled(Flex)`
   :hover {
     background-color: #f3f3f3;
   }
+
+  &.cur {
+    background-color: #e7e7e7;
+  }
 `
 
 // item
@@ -50,11 +65,16 @@ interface SubListItemProps {
   onClick: () => void
   isClicked: boolean
   data: Subscription.MessageResp
+  isChoose: boolean
 }
+
+export const isClickMapAtom = atom<Record<string, boolean>>({})
+
 export const SubListItem: FC<SubListItemProps> = ({
   onClick,
   isClicked,
   data,
+  isChoose,
 }) => {
   const { uuid, seen, subject, writer, created_at: time } = data
 
@@ -64,6 +84,7 @@ export const SubListItem: FC<SubListItemProps> = ({
       onClick={() => {
         if (typeof onClick === 'function') onClick()
       }}
+      className={isChoose ? 'cur' : ''}
     >
       <Box position="relative">
         <Avatar w="48px">
@@ -102,7 +123,8 @@ interface SubListProps {
 }
 const SubList: FC<SubListProps> = ({ data }) => {
   const setIsOpen = useUpdateAtom(SubPreviewIsOpenAtom)
-  const setPreivewId = useUpdateAtom(SubPreviewIdAtom)
+  const [id, setId] = useAtom(SubPreviewIdAtom)
+  const [isClickMap, setIsClickMap] = useAtom(isClickMapAtom)
 
   return (
     <Box>
@@ -110,12 +132,17 @@ const SubList: FC<SubListProps> = ({ data }) => {
         const { uuid } = item
         return (
           <SubListItem
+            isChoose={id === uuid}
             key={uuid}
             data={item}
-            isClicked={false}
+            isClicked={isClickMap[uuid]}
             onClick={() => {
               setIsOpen(true)
-              setPreivewId(uuid)
+              setId(uuid)
+              setIsClickMap({
+                ...isClickMap,
+                [uuid]: true,
+              })
               console.log('click', uuid)
             }}
           />
@@ -127,6 +154,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
 
 export const SubLeftList: FC = () => {
   // list infinite
+  const setEmpty = useUpdateAtom(SubWrapEmptyAtom)
 
   const { data, isLoading } = useInfiniteQuery<Subscription.MessageListResp>(
     ['SubscriptionList'],
@@ -160,7 +188,7 @@ export const SubLeftList: FC = () => {
                 created_at: 'Aug 27 / 9:07 am',
               },
               {
-                uuid: 'string3',
+                uuid: 'string4',
                 subject:
                   'The More Important the Work, the More Important the Rest',
                 writer: 'Meta',
@@ -168,7 +196,7 @@ export const SubLeftList: FC = () => {
                 created_at: 'Aug 27 / 9:07 am',
               },
               {
-                uuid: 'string3',
+                uuid: 'string5',
                 subject:
                   'The More Important the Work, the More Important the Rest',
                 writer: 'Meta',
@@ -176,7 +204,7 @@ export const SubLeftList: FC = () => {
                 created_at: 'Aug 27 / 9:07 am',
               },
               {
-                uuid: 'string3',
+                uuid: 'string6',
                 subject:
                   'The More Important the Work, the More Important the Rest',
                 writer: 'Meta',
@@ -184,7 +212,7 @@ export const SubLeftList: FC = () => {
                 created_at: 'Aug 27 / 9:07 am',
               },
               {
-                uuid: 'string3',
+                uuid: 'string7',
                 subject:
                   'The More Important the Work, the More Important the Rest',
                 writer: 'Meta',
@@ -192,7 +220,7 @@ export const SubLeftList: FC = () => {
                 created_at: 'Aug 27 / 9:07 am',
               },
               {
-                uuid: 'string3',
+                uuid: 'string9',
                 subject:
                   'The More Important the Work, the More Important the Rest',
                 writer: 'Meta',
@@ -223,8 +251,24 @@ export const SubLeftList: FC = () => {
     [data]
   )
 
+  useEffect(() => {
+    if (isLoading) return
+    if (!listData?.length) {
+      setEmpty(true)
+    } else {
+      setEmpty(false)
+    }
+  }, [listData, isLoading])
+
   // loading
-  if (isLoading) return <Container>loading</Container>
+  if (isLoading)
+    return (
+      <Container>
+        <Center w="100%" minH="200px">
+          <Spinner />
+        </Center>
+      </Container>
+    )
   // empty
   if (!listData) return <Container>Empty</Container>
 
