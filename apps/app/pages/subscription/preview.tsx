@@ -2,6 +2,8 @@ import { Box } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
 import { PageContainer } from 'ui'
+import { GotoSubscription } from '../../components/GotoSubscription'
+import { NewPageContainer } from '../../components/Inbox'
 
 import { SubPreview } from '../../components/Subscription'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
@@ -18,7 +20,7 @@ const Container = styled(PageContainer)`
     border-radius: 0;
     box-shadow: none;
     padding: 0px;
-    margin: 20px auto 130px;
+    margin: 10px auto 50px;
   }
 `
 
@@ -30,6 +32,9 @@ export const SubPreviewPage = () => {
   }
   return (
     <Box pt={{ base: '25px', md: '35px' }}>
+      <NewPageContainer>
+        <GotoSubscription />
+      </NewPageContainer>
       <Container>
         <SubPreview isSingleMode />
       </Container>

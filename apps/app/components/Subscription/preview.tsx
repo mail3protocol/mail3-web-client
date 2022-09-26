@@ -88,9 +88,10 @@ const Container = styled(Box)`
         display: flex;
       }
     }
-  }
 
-  &.single-mode {
+    &.single-mode {
+      padding: 20px;
+    }
   }
 `
 

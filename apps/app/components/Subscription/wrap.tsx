@@ -38,7 +38,7 @@ export const SubWrap: FC = () => (
   <Container>
     <Flex h="100%">
       <SubLeftList />
-      <SubPreview />
+      <SubPreview isSingleMode={false} />
     </Flex>
   </Container>
 )
