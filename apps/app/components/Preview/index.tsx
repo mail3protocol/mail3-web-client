@@ -22,7 +22,6 @@ import {
 } from 'react-router-dom'
 import styled from '@emotion/styled'
 import {
-  ConfirmDialog,
   MailDetailPageItem,
   TrackEvent,
   TrackKey,
@@ -60,6 +59,7 @@ import { userPropertiesAtom } from '../../hooks/useLogin'
 import { IpfsInfoTable } from '../IpfsInfoTable'
 import type { MeesageDetailState } from '../Mailbox'
 import { pinUpMsgAtom } from '../Inbox'
+import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -263,6 +263,8 @@ export const PreviewComponent: React.FC = () => {
     )
   }, [userProps, detail])
 
+  const { onAction: getIsAllowExperienceUserAction } = useExperienceUserGuard()
+
   const mailAddress: string = useMemo(
     () => userProps?.defaultAddress ?? 'unknown',
     [userProps]
@@ -324,6 +326,8 @@ export const PreviewComponent: React.FC = () => {
       type: SuspendButtonType.Reply,
       isDisabled: isDriftBottleAddress,
       onClick: async () => {
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
@@ -350,6 +354,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.ReplyAll,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         navi(
           {
             pathname: RoutePath.NewMessage,
@@ -373,6 +379,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         navi(
           {
             pathname: RoutePath.NewMessage,
@@ -395,6 +403,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Trash,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') {
           return
         }
@@ -414,6 +424,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Delete,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') {
           return
         }
@@ -467,6 +479,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Spam,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id, Mailboxes.Spam)
@@ -598,7 +612,6 @@ export const PreviewComponent: React.FC = () => {
 
   return (
     <>
-      <ConfirmDialog />
       <SuspendButton list={buttonList} />
       <Center position="relative">
         <Circle

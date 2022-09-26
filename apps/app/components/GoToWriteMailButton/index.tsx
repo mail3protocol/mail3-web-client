@@ -24,7 +24,9 @@ export const GoToWriteMailButton: React.FC<LinkProps> = ({ ...props }) => {
       position={{ base: 'fixed', md: 'static' }}
       zIndex={{ base: 99, md: 'unset' }}
       transform={{ base: 'translateX(-50%)', md: 'unset' }}
-      onClick={() => trackWriteButton()}
+      onClick={() => {
+        trackWriteButton()
+      }}
       {...props}
     >
       <Button w="full">

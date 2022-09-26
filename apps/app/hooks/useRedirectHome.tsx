@@ -9,7 +9,7 @@ export const useRedirectHome = () => {
   const redirectHome = useCallback(
     () => (
       <Navigate
-        to={`${RoutePath.Testing}${
+        to={`${RoutePath.Inbox}${
           searchParams.toString() ? `?${searchParams.toString()}` : ''
         }`}
         replace

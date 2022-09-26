@@ -67,9 +67,9 @@ import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circl
 import { ReactComponent as CircleSvg } from '../../assets/settings/tick-circle.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
-import { MAIL_SERVER_URL } from '../../constants'
+import { BIT_DOMAIN, ENS_DOMAIN, MAIL_SERVER_URL } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import { Alias } from '../../api'
+import { Alias, AliasMailType } from '../../api'
 import { RouterLink } from '../RouterLink'
 
 enum TabItemType {
@@ -235,10 +235,6 @@ const generateEmailAddress = (s = '') => {
 
   return s
 }
-
-const ENS_DOMAIN = 'https://app.ens.domains'
-const BIT_DOMAIN =
-  'https://www.did.id/?inviter=mail3dao.bit&channel=mail3dao.bit'
 
 enum AliasType {
   ENS = 'ENS',
@@ -420,6 +416,25 @@ export const SettingAddress: React.FC = () => {
     </Box>
   )
 
+  const tabItemTypes = [
+    TabItemType.Ens,
+    TabItemType.Bit,
+    TabItemType.Default,
+    // TabItemType.More,
+  ]
+
+  const defaultTabIndex = useMemo(() => {
+    if (!userProps) return 0
+    const defaultAlias = (userProps.aliases as Alias[]).find(
+      (alias) => alias.is_default
+    )
+    const indexMap: { [key in AliasMailType]?: number } = {
+      [AliasMailType.Ens]: 0,
+      [AliasMailType.Bit]: 1,
+    }
+    return indexMap[defaultAlias?.email_type as AliasMailType] || 2
+  }, [userProps?.aliases])
+
   return (
     <Container pb={{ md: '100px', base: 0 }}>
       <Center
@@ -509,7 +524,7 @@ export const SettingAddress: React.FC = () => {
       </Center>
 
       <Box w={{ base: '100%', md: 'auto' }} mt="15px">
-        <Tabs position="relative">
+        <Tabs position="relative" defaultIndex={defaultTabIndex}>
           <TabList
             className="tablist"
             w={{ base: '100%', md: 'auto' }}
@@ -532,12 +547,7 @@ export const SettingAddress: React.FC = () => {
               position="relative"
               zIndex="2"
             >
-              {[
-                TabItemType.Default,
-                TabItemType.Ens,
-                TabItemType.Bit,
-                // TabItemType.More,
-              ].map((type) => {
+              {tabItemTypes.map((type) => {
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 const { Icon, name } = tabsConfig[type]
                 return (
@@ -594,12 +604,7 @@ export const SettingAddress: React.FC = () => {
           <FormControl>
             <Flex justifyContent="center" pt="8px" minH="200px">
               <TabPanels maxW="480px">
-                {[
-                  TabItemType.Default,
-                  TabItemType.Ens,
-                  TabItemType.Bit,
-                  // TabItemType.More,
-                ].map((type) => {
+                {tabItemTypes.map((type) => {
                   if (type === TabItemType.Default) {
                     return (
                       <TabPanel key={type}>
