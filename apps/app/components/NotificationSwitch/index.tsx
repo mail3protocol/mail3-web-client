@@ -11,15 +11,12 @@ import {
 } from '@chakra-ui/react'
 import { timer } from 'rxjs'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useQuery } from 'react-query'
-import { isSupported } from 'firebase/messaging'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { useNotification } from '../../hooks/useNotification'
 import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
 import { BaseSwitch } from './BaseSwitch'
 import { GifGuideDialog } from './GifGuideDialog'
-import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../../constants/env'
 import { RoutePath } from '../../route/path'
 
 export const NotificationSwitch: React.FC = () => {
@@ -38,19 +35,11 @@ export const NotificationSwitch: React.FC = () => {
     requestPermission,
     onChangePermission,
     webPushNotificationState,
+    isBrowserSupport,
   } = useNotification()
   const isEnabledNotification =
     permission === 'granted' && webPushNotificationState === 'enabled'
   const [isHide, setHide] = useState(isEnabledNotification)
-  const { data: isBrowserSupport } = useQuery(
-    ['isSupportedFCM'],
-    async () => (await isSupported()) && IS_CHROME && !IS_MOBILE && !IS_FIREFOX,
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    }
-  )
   const trackClickNotificationToastOk = useTrackClick(
     TrackEvent.ClickNotificationToastOk
   )

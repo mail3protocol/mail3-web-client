@@ -314,5 +314,18 @@
             "bot": "For your safety, we blocked all links, attachments, and replies.",
             "user": "For your safety, we blocked all links, attachments, and replies."
         }
+    },
+    "subscribe": {
+        "connect": "Subscribe for updates via Mail³",
+        "subscribed": "🎉 You're subscribed!",
+        "continue": "Continue",
+        "ok": "Ok",
+        "visit": "Visit mail³ to receive our latest news",
+        "already": "You have already subscribed to us",
+        "thank-you": "🎉 Thank you for subscribing",
+        "nft": "You have earned an NFT!",
+        "request-permission": "Claim Link will be sent to your inbox, in case you miss the message, please allow the desktop notification authorization for mail³.",
+        "declined": "You have declined the desktop notification authorization, you can go to mail³ to claim your nft",
+        "success": "Claim Link will be sent to your inbox, please check in mail³"
     }
 }

@@ -7,17 +7,19 @@ import { Navbar } from '../Navbar'
 const hideNavbarPaths: Set<string> = new Set([
   RoutePath.Unread,
   RoutePath.Testing,
+  RoutePath.Subscribe,
 ])
 
 export const Layout: React.FC = () => {
   const location = useLocation()
+  const [, pathname] = location.pathname.split('/')
 
   // useEffect(() => {
   //   gtag('event', 'page_view')
   // }, [location.pathname])
   return (
     <>
-      {hideNavbarPaths.has(location.pathname) ? null : (
+      {hideNavbarPaths.has(`/${pathname}`) ? null : (
         <PageContainer>
           <Navbar />
         </PageContainer>

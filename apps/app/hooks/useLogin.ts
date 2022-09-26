@@ -96,6 +96,7 @@ export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.Home,
   RoutePath.WhiteList,
   RoutePath.Testing,
+  RoutePath.Subscribe,
 ])
 
 export const useCurrentWalletStore = () => {
@@ -366,7 +367,8 @@ export const useAuth = () => {
   }, [isAuth, account])
 
   useEffect(() => {
-    if (!isAuth && !allowWithoutAuthPaths.has(location.pathname)) {
+    const [, pathname] = location.pathname.split('/')
+    if (!isAuth && !allowWithoutAuthPaths.has(`/${pathname}`)) {
       navi(RoutePath.Home, {
         replace: true,
       })
