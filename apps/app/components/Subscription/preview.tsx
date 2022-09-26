@@ -58,41 +58,56 @@ const Container = styled(Box)`
   }
 
   @media (max-width: 768px) {
-    padding: 0;
-    top: 143px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 999;
-    background-color: #fff;
-    position: fixed;
+    &.not-single-mode {
+      padding: 0;
+      top: 143px;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 999;
+      background-color: #fff;
+      position: fixed;
 
-    border-radius: 22px 22px 0px 0px;
+      border-radius: 22px 22px 0px 0px;
 
-    padding: 30px 30px 200px;
+      padding: 30px 30px 200px;
 
-    .header {
-      display: none;
+      .header {
+        display: none;
+      }
+
+      .info {
+        display: flex;
+      }
+
+      .mobile-button {
+        display: flex;
+      }
+
+      .mobile-header {
+        display: flex;
+      }
     }
+  }
 
-    .info {
-      display: flex;
-    }
-
-    .mobile-button {
-      display: flex;
-    }
-
-    .mobile-header {
-      display: flex;
-    }
+  &.single-mode {
   }
 `
 
-const Wrap: React.FC = ({ children }) => {
+const Wrap: React.FC<{ isSingleMode: boolean }> = ({
+  children,
+  isSingleMode,
+}) => {
   const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
   const [isOpen, setIsOpen] = useAtom(SubPreviewIsOpenAtom)
   const isMobileOpen = isMaxWdith600 && isOpen
+
+  if (isSingleMode)
+    return (
+      <Container className={isSingleMode ? 'single-mode' : 'not-single-mode'}>
+        {children}
+      </Container>
+    )
 
   return (
     <>
@@ -101,6 +116,7 @@ const Wrap: React.FC = ({ children }) => {
         transform={
           !isMaxWdith600 || isMobileOpen ? 'translateY(0)' : 'translateY(100%)'
         }
+        className={isSingleMode ? 'single-mode' : 'not-single-mode'}
       >
         {isMaxWdith600 ? (
           <Box position="absolute" top="20px" right="20px">
@@ -117,7 +133,9 @@ const Wrap: React.FC = ({ children }) => {
   )
 }
 
-export const SubPreview: React.FC = () => {
+export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
+  isSingleMode,
+}) => {
   const id = useAtomValue(SubPreviewIdAtom)
   const { data, isLoading } = useQuery<Subscription.MessageDetailResp>(
     ['subscriptionDetail', id],
@@ -161,16 +179,16 @@ export const SubPreview: React.FC = () => {
 
   // loading
   if (isLoading) {
-    return <Wrap>Detail Loading</Wrap>
+    return <Wrap isSingleMode={isSingleMode}>Detail Loading</Wrap>
   }
 
   // empty
   if (!detail) {
-    return <Wrap>Empty</Wrap>
+    return <Wrap isSingleMode={isSingleMode}>Empty</Wrap>
   }
 
   return (
-    <Wrap>
+    <Wrap isSingleMode={isSingleMode}>
       <Box className="header">
         <Flex alignItems="center">
           <Avatar w="32px" h="32px" />
