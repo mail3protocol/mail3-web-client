@@ -5,20 +5,18 @@ import {
   Flex,
   Heading,
   Text,
-  Link,
   HStack,
   Box,
   StackProps,
   Stack,
   ButtonProps,
 } from '@chakra-ui/react'
-import { useTranslation, Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useAccount, useTrackClick, TrackEvent } from 'hooks'
 import { Button } from 'ui'
 import { truncateMiddle } from 'shared'
 import {
   DISCORD_URL,
-  MORE_DETAILS_LINK,
   NAVBAR_GUTTER,
   NAVBAR_HEIGHT,
   TWITTER_URL,
@@ -69,6 +67,8 @@ const Container = styled(Flex)`
   .title {
     font-size: 28px;
     font-weight: 700;
+    text-align: center;
+    max-width: 500px;
     @media (max-width: 600px) {
       margin-top: 0;
       font-size: 24px;
@@ -162,19 +162,14 @@ const IconLink: React.FC<IconLinkProps> = ({ icon, href, text, ...props }) => (
   </HStack>
 )
 
-const ENS_DOMAIN = 'https://app.ens.domains'
-
-export const Testing: React.FC = () => {
+export const Home: React.FC = () => {
   useAuth()
   const account = useAccount()
   const isAuth = useIsAuthenticated()
   const [t] = useTranslation('testing')
   const trackDiscord = useTrackClick(TrackEvent.TestingDiscord)
-  const trackDiscordLink = useTrackClick(TrackEvent.TestingDisCordLink)
   const trackTwitter = useTrackClick(TrackEvent.TestingTwitter)
-  const trackMoreDetail = useTrackClick(TrackEvent.TestingMoreDetails)
   const trackEnterApp = useTrackClick(TrackEvent.TestingEnterApp)
-  const trackClickRegisterENS = useTrackClick(TrackEvent.TestingSignupNow)
 
   const [signError, setSignError] = useState<Error | null>(null)
   const isAuthModalOpen = useIsAuthModalOpen()
@@ -194,70 +189,10 @@ export const Testing: React.FC = () => {
   }, [account, isAuth, isAuthModalOpen, signError])
 
   const desc = useMemo(() => {
-    if (mascotIndex === 1) {
-      return t('not-connected-desc')
-    }
     if (mascotIndex === 2) {
       return t('success-desc')
     }
-
-    return (
-      <>
-        <Text as="span">{t('fail-desc')}</Text>
-        <Link
-          ml="6px"
-          isExternal
-          href={MORE_DETAILS_LINK}
-          fontSize="16px"
-          onClick={() => trackMoreDetail()}
-          textDecoration="underline"
-          cursor="pointer"
-        >
-          {t('more-details')}
-        </Link>
-        <Text as="p">
-          <Trans
-            ns="testing"
-            i18nKey="fail-desc-2"
-            t={t}
-            components={{
-              a: (
-                <Link
-                  isExternal
-                  href={DISCORD_URL}
-                  onClick={() => trackDiscordLink()}
-                  color="#4E52F5"
-                  textDecoration="underline"
-                  fontWeight={700}
-                />
-              ),
-            }}
-          />
-        </Text>
-        <ColorfulButton mt="16px">
-          <Text as="p">{t('fail-desc-3')}</Text>
-          <Text as="p">
-            <Trans
-              ns="testing"
-              i18nKey="fail-desc-4"
-              t={t}
-              components={{
-                a: (
-                  <Link
-                    isExternal
-                    href={ENS_DOMAIN}
-                    onClick={() => trackClickRegisterENS()}
-                    color="#4E52F5"
-                    textDecoration="underline"
-                    fontWeight={700}
-                  />
-                ),
-              }}
-            />
-          </Text>
-        </ColorfulButton>
-      </>
-    )
+    return null
   }, [mascotIndex, signError])
 
   return (

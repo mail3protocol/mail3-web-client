@@ -11,8 +11,9 @@ import {
   useTrackClick,
   zilpay,
 } from 'hooks'
-import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { atom, useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { SERVER_URL } from '../constants'
 import { useCloseAuthModal, useLogin, useSetGlobalTrack } from './useLogin'
 import { RoutePath } from '../route/path'
@@ -20,10 +21,16 @@ import { isCoinbaseWallet } from '../utils'
 
 export class NoOnWhiteListError extends Error {}
 
+export const rememberLoadingAtom = atom(false)
+
+export function useRememberLoading() {
+  return useAtomValue(rememberLoadingAtom)
+}
+
 export function useRemember() {
   const [t] = useTranslation('common')
   const account = useAccount()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useAtom(rememberLoadingAtom)
   const signatureDesc = t('auth.sign')
   const signup = useSignup(signatureDesc, SERVER_URL)
   const provider = useProvider()
@@ -59,7 +66,6 @@ export function useRemember() {
   }
 
   const trackWhiteListConnect = useTrackClick(TrackEvent.WhiteListConnectWallet)
-  const trackTestingConnect = useTrackClick(TrackEvent.TestingConnectWallet)
   const setTrackGlobal = useSetGlobalTrack()
   const onRemember = async () => {
     setIsLoading(true)
@@ -82,9 +88,6 @@ export function useRemember() {
             if (router.pathname === RoutePath.WhiteList) {
               trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
             }
-            if (router.pathname === RoutePath.Testing) {
-              trackTestingConnect({ [TrackKey.TestingEntry]: true })
-            }
             navi(RoutePath.Home)
           }
           break
@@ -94,9 +97,6 @@ export function useRemember() {
           await setTrackGlobal(jwt)
           if (router.pathname === RoutePath.WhiteList) {
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
-          }
-          if (router.pathname === RoutePath.Testing) {
-            trackTestingConnect({ [TrackKey.TestingEntry]: true })
           }
           closeAuthModal()
           if (router.pathname !== RoutePath.WhiteList) {
@@ -108,9 +108,8 @@ export function useRemember() {
           if (router.pathname === RoutePath.WhiteList) {
             closeAuthModal()
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: false })
-          } else if (router.pathname === RoutePath.Testing) {
+          } else if (router.pathname === RoutePath.Home) {
             closeAuthModal()
-            trackTestingConnect({ [TrackKey.TestingEntry]: false })
           } else {
             toast(t('auth.errors.condition-not-meet'))
           }
