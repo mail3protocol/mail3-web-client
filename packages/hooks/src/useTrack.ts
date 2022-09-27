@@ -101,6 +101,11 @@ export enum TrackEvent {
   SentProductSuggestion = 'sent_product_suggestion',
 
   ClickNotificationToastOk = 'click_notification_toast_ok',
+
+  // experience users
+  ExuserClickRegisterEns = 'exuser_click_register_ens',
+  ExuserClickRegisterBit = 'exuser_click_register_bit',
+  ExuserClickGotOne = 'exuser_click_got_one',
 }
 
 // dimensions
@@ -193,6 +198,7 @@ export enum HomeCommunity {
 
 export enum MailDetailPageItem {
   Reply = 'reply',
+  ReplyAll = 'replyAll',
   Forward = 'Forward',
   Trash = 'Trash',
   Restore = 'Restore',

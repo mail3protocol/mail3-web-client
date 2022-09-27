@@ -1,6 +1,6 @@
-import { Box, Button, HStack, StyleProps } from '@chakra-ui/react'
+import { Box, Button, HStack, StyleProps, VStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { atom, useAtomValue } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
@@ -8,6 +8,8 @@ import { ReactComponent as ReplySVG } from '../../assets/preview/reply-white.svg
 import { ReactComponent as ForwardSVG } from '../../assets/preview/forward-white.svg'
 import { ReactComponent as TrashSVG } from '../../assets/preview/trash-white.svg'
 import { ReactComponent as SpamSVG } from '../../assets/preview/spam-white.svg'
+import { ReactComponent as MoreSVG } from '../../assets/preview/more-white.svg'
+import { ReactComponent as ReplyAllSVG } from '../../assets/preview/reply-all-white.svg'
 
 interface listItem {
   type: SuspendButtonType
@@ -18,11 +20,13 @@ interface listItem {
 export enum SuspendButtonType {
   Restore,
   Reply,
+  ReplyAll,
   Forward,
   Delete,
   Trash,
   Spam,
   NotSpam,
+  More,
 }
 
 interface buttonItemConfig {
@@ -65,6 +69,14 @@ const buttonConfig: Record<SuspendButtonType, buttonItemConfig> = {
     name: 'Not Spam',
     propsStyle: { w: '200px' },
   },
+  [SuspendButtonType.More]: {
+    Icon: MoreSVG,
+    name: 'More',
+  },
+  [SuspendButtonType.ReplyAll]: {
+    Icon: ReplyAllSVG,
+    name: 'Reply all',
+  },
 }
 
 const ButtonItem = styled(Button)`
@@ -72,10 +84,10 @@ const ButtonItem = styled(Button)`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 14px 16px 8px;
+  padding: 14px 16px 10px;
   height: 80px;
   :hover {
-    background: #1f1f1f;
+    background: rgba(255, 255, 255, 0.2);
   }
   position: relative;
   transition: background 0.2s ease;
@@ -102,10 +114,28 @@ const SuspendButtonAtom = atom({
   [SuspendButtonType.NotSpam]: false,
 })
 
-export const SuspendButton: React.FC<{ list: Array<listItem> }> = (props) => {
+export const SuspendButton: React.FC<{
+  list: Array<listItem>
+}> = (props) => {
   const { list } = props
   const loadingMap: Record<number, boolean> = useAtomValue(SuspendButtonAtom)
   const setLoadingMap = useUpdateAtom(SuspendButtonAtom)
+  const [isMore, setIsMore] = useState(false)
+  const verticleWrapRef = useRef<HTMLDivElement>(null)
+
+  const isNeedMore = list.length > 4
+
+  const verticleList = isNeedMore ? list.slice(3) : []
+
+  const horizonList = useMemo(() => list.slice(0, isNeedMore ? 3 : 4), [list])
+
+  useEffect(() => {
+    verticleWrapRef.current?.addEventListener('blur', () => {
+      setTimeout(() => {
+        setIsMore(false)
+      }, 150)
+    })
+  }, [verticleWrapRef.current])
 
   return (
     <Box
@@ -115,6 +145,65 @@ export const SuspendButton: React.FC<{ list: Array<listItem> }> = (props) => {
       transform="translateX(-50%)"
       zIndex={99}
     >
+      <Box ref={verticleWrapRef} tabIndex={0}>
+        <VStack
+          display={isMore ? 'flex' : 'none'}
+          borderRadius="32px"
+          bg="#000"
+          fontSize="18px"
+          spacing="0"
+          color="#fff"
+          overflow="hidden"
+          p="15px"
+          position="absolute"
+          bottom="110%"
+          right="0"
+        >
+          {verticleList.map((item) => {
+            const { onClick, type, isDisabled } = item
+            const config = buttonConfig[type]
+            const { Icon, name, propsStyle } = config
+            const isLoading = loadingMap[type]
+
+            return (
+              <ButtonItem
+                key={type}
+                as="div"
+                cursor="pointer"
+                onClick={async () => {
+                  if (isLoading) return
+                  if (onClick) {
+                    setLoadingMap((state) => ({
+                      ...state,
+                      [type]: true,
+                    }))
+                    await onClick()
+                    setLoadingMap((state) => ({
+                      ...state,
+                      [type]: false,
+                    }))
+                  }
+                }}
+                isLoading={isLoading}
+                variant="unstyled"
+                disabled={isDisabled}
+                {...propsStyle}
+              >
+                <Box>
+                  <Icon />
+                </Box>
+                <Box
+                  mt="10px"
+                  fontWeight="bold"
+                  fontSize={{ base: '14px', md: '18px' }}
+                >
+                  {name}
+                </Box>
+              </ButtonItem>
+            )
+          })}
+        </VStack>
+      </Box>
       <HStack
         borderRadius="32px"
         bg="#000"
@@ -122,9 +211,9 @@ export const SuspendButton: React.FC<{ list: Array<listItem> }> = (props) => {
         spacing="0"
         color="#fff"
         overflow="hidden"
-        px="34px"
+        px="25px"
       >
-        {list.map((item) => {
+        {horizonList.map((item) => {
           const { onClick, type, isDisabled } = item
           const config = buttonConfig[type]
           const { Icon, name, useLine, propsStyle } = config
@@ -166,6 +255,28 @@ export const SuspendButton: React.FC<{ list: Array<listItem> }> = (props) => {
             </ButtonItem>
           )
         })}
+        {verticleList.length ? (
+          <ButtonItem
+            onClick={() => {
+              const newBoolean = !isMore
+              setIsMore(newBoolean)
+              if (newBoolean) verticleWrapRef.current?.focus()
+            }}
+            variant="unstyled"
+            opacity={isMore ? '0.2' : '1'}
+          >
+            <Box>
+              <MoreSVG />
+            </Box>
+            <Box
+              mt="10px"
+              fontWeight="bold"
+              fontSize={{ base: '14px', md: '18px' }}
+            >
+              {buttonConfig[SuspendButtonType.More].name}
+            </Box>
+          </ButtonItem>
+        ) : null}
       </HStack>
     </Box>
   )

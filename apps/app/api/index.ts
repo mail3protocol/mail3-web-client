@@ -16,10 +16,18 @@ export interface LoginResponse {
   jwt: string
 }
 
+export enum AliasMailType {
+  Ens = 'ens_mail',
+  Bit = 'dot_bit_mail',
+  Eth = 'eth_mail',
+  Zilliqa = 'zilliqa_mail',
+}
+
 export interface Alias {
   uuid: string
   address: mailAddress
   is_default: boolean
+  email_type: AliasMailType
 }
 
 export interface AliasResponse {
@@ -96,6 +104,11 @@ export interface AttachmentItemResponse {
 export interface MailboxMessageDetailResponse
   extends MailboxMessageItemResponse {}
 
+export enum UserRole {
+  Experience = 0,
+  FullFeatured = 1,
+}
+
 export interface UserResponse {
   user_uuid: string
   avatar: string
@@ -103,6 +116,7 @@ export interface UserResponse {
   text_sig_state: 'enabled' | 'disabled'
   card_sig_state: 'enabled' | 'disabled'
   web_push_notification_state: 'enabled' | 'disabled'
+  user_role: UserRole
 }
 
 interface putMessageResponse {

@@ -110,7 +110,7 @@ const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
   const account = useLoginAccount()
   const router = useRouter()
   const { id } = router.query as { id: string }
-
+  const emailAddress = `${id}@${MAIL_SERVER_URL}`
   if (errorCode) {
     return <ErrorPage statusCode={errorCode} />
   }
@@ -118,12 +118,12 @@ const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
   return (
     <>
       <Head>
-        <title>Mail3: Profile Page</title>
+        <title>Mail3: Profile Page - {emailAddress}</title>
       </Head>
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
       </Flex>
-      <ProfileComponent mailAddress={`${id}@${MAIL_SERVER_URL}`} address={id} />
+      <ProfileComponent mailAddress={emailAddress} address={id} />
     </>
   )
 }
