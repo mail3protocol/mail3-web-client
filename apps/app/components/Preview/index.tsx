@@ -22,7 +22,6 @@ import {
 } from 'react-router-dom'
 import styled from '@emotion/styled'
 import {
-  ConfirmDialog,
   MailDetailPageItem,
   TrackEvent,
   TrackKey,
@@ -60,6 +59,7 @@ import { userPropertiesAtom } from '../../hooks/useLogin'
 import { IpfsInfoTable } from '../IpfsInfoTable'
 import type { MeesageDetailState } from '../Mailbox'
 import { pinUpMsgAtom } from '../Inbox'
+import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -263,11 +263,71 @@ export const PreviewComponent: React.FC = () => {
     )
   }, [userProps, detail])
 
+  const { onAction: getIsAllowExperienceUserAction } = useExperienceUserGuard()
+
+  const mailAddress: string = useMemo(
+    () => userProps?.defaultAddress ?? 'unknown',
+    [userProps]
+  )
+
+  const toMessage = useMemo(() => {
+    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
+      (address) => detail?.from.address === address
+    )
+
+    if (isOfficeMail && detail && detail.to === null) {
+      return [
+        {
+          address: mailAddress,
+        },
+      ]
+    }
+
+    return detail?.to || []
+  }, [detail])
+
+  const avatarList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = []
+    let arr = [detail.from, ...toMessage]
+    if (detail.cc) arr = [...arr, ...detail.cc]
+    if (detail.bcc) arr = [...arr, ...detail.bcc]
+
+    arr = arr.filter(({ address }) => {
+      if (exists.includes(address.toLocaleLowerCase())) return false
+      exists.push(address.toLocaleLowerCase())
+      return true
+    })
+    return arr
+  }, [detail, toMessage])
+
+  const replyAllList = useMemo(() => {
+    if (!detail) return []
+    const exists: Array<string> = [
+      detail?.from.address,
+      ...(userProps?.aliases.map((item: { address: string }) =>
+        item.address.toLocaleLowerCase()
+      ) || []),
+    ]
+
+    let arr = [...toMessage]
+    if (detail.cc) arr = [...arr, ...detail.cc]
+
+    arr = arr.filter(({ address }) => {
+      if (exists.includes(address.toLocaleLowerCase())) return false
+      exists.push(address.toLocaleLowerCase())
+      return true
+    })
+    return arr.map((item) => item.address)
+  }, [detail, toMessage, userProps?.aliases])
+
   const buttonConfig = {
     [SuspendButtonType.Reply]: {
       type: SuspendButtonType.Reply,
       isDisabled: isDriftBottleAddress,
       onClick: async () => {
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
@@ -287,12 +347,40 @@ export const PreviewComponent: React.FC = () => {
         )
       },
     },
+    [SuspendButtonType.ReplyAll]: {
+      type: SuspendButtonType.ReplyAll,
+      isDisabled: isDriftBottleAddress,
+      onClick: async () => {
+        buttonTrack({
+          [TrackKey.MailDetailPage]: MailDetailPageItem.ReplyAll,
+        })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
+        navi(
+          {
+            pathname: RoutePath.NewMessage,
+            search: createSearchParams({
+              id,
+              action: 'reply',
+              cc: replyAllList.join(','),
+            }).toString(),
+          },
+          {
+            state: {
+              messageInfo: data?.messageInfo,
+            },
+          }
+        )
+      },
+    },
     [SuspendButtonType.Forward]: {
       type: SuspendButtonType.Forward,
       onClick: async () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Forward,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         navi(
           {
             pathname: RoutePath.NewMessage,
@@ -315,6 +403,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Trash,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') {
           return
         }
@@ -334,6 +424,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Delete,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') {
           return
         }
@@ -387,6 +479,8 @@ export const PreviewComponent: React.FC = () => {
         buttonTrack({
           [TrackKey.MailDetailPage]: MailDetailPageItem.Spam,
         })
+        const isAllow = getIsAllowExperienceUserAction()
+        if (!isAllow) return
         if (typeof id !== 'string') return
         try {
           await api.moveMessage(id, Mailboxes.Spam)
@@ -417,12 +511,30 @@ export const PreviewComponent: React.FC = () => {
   }
 
   const buttonList = useMemo(() => {
-    let list = [
-      SuspendButtonType.Reply,
-      SuspendButtonType.Forward,
-      SuspendButtonType.Trash,
-      SuspendButtonType.Spam,
-    ]
+    let list: Array<
+      | SuspendButtonType.Reply
+      | SuspendButtonType.ReplyAll
+      | SuspendButtonType.Forward
+      | SuspendButtonType.Trash
+      | SuspendButtonType.Spam
+      | SuspendButtonType.Restore
+      | SuspendButtonType.Delete
+      | SuspendButtonType.NotSpam
+    > =
+      replyAllList.length > 0
+        ? [
+            SuspendButtonType.Reply,
+            SuspendButtonType.ReplyAll,
+            SuspendButtonType.Forward,
+            SuspendButtonType.Trash,
+            SuspendButtonType.Spam,
+          ]
+        : [
+            SuspendButtonType.Reply,
+            SuspendButtonType.Forward,
+            SuspendButtonType.Trash,
+            SuspendButtonType.Spam,
+          ]
 
     if (isOriginTrash) {
       list = [
@@ -437,11 +549,19 @@ export const PreviewComponent: React.FC = () => {
     }
 
     if (isSend) {
-      list = [
-        SuspendButtonType.Reply,
-        SuspendButtonType.Forward,
-        SuspendButtonType.Trash,
-      ]
+      list =
+        replyAllList.length > 0
+          ? [
+              SuspendButtonType.Reply,
+              SuspendButtonType.ReplyAll,
+              SuspendButtonType.Forward,
+              SuspendButtonType.Trash,
+            ]
+          : [
+              SuspendButtonType.Reply,
+              SuspendButtonType.Forward,
+              SuspendButtonType.Trash,
+            ]
 
       if (isOriginTrash) {
         list = [SuspendButtonType.Restore, SuspendButtonType.Delete]
@@ -459,42 +579,6 @@ export const PreviewComponent: React.FC = () => {
     const realAddress = removeMailSuffix(address).toLowerCase()
     window.location.href = `${HOME_URL}/${realAddress}`
   }
-
-  const mailAddress: string = useMemo(
-    () => userProps?.defaultAddress ?? 'unknown',
-    [userProps]
-  )
-
-  const toMessage = useMemo(() => {
-    const isOfficeMail = OFFICE_ADDRESS_LIST.some(
-      (address) => detail?.from.address === address
-    )
-
-    if (isOfficeMail && detail && detail.to === null) {
-      return [
-        {
-          address: mailAddress,
-        },
-      ]
-    }
-
-    return detail?.to || []
-  }, [detail])
-
-  const avatarList = useMemo(() => {
-    if (!detail) return []
-    const exists: Array<string> = []
-    let arr = [detail.from, ...toMessage]
-    if (detail.cc) arr = [...arr, ...detail.cc]
-    if (detail.bcc) arr = [...arr, ...detail.bcc]
-
-    arr = arr.filter(({ address }) => {
-      if (exists.includes(address.toLocaleLowerCase())) return false
-      exists.push(address.toLocaleLowerCase())
-      return true
-    })
-    return arr
-  }, [detail, toMessage])
 
   if (!id) {
     return (
@@ -528,7 +612,6 @@ export const PreviewComponent: React.FC = () => {
 
   return (
     <>
-      <ConfirmDialog />
       <SuspendButton list={buttonList} />
       <Center position="relative">
         <Circle

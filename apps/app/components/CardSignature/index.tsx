@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Flex, Center, Text, Image as RowImage } from '@chakra-ui/react'
+import { Flex, Center, Image as RowImage, Box } from '@chakra-ui/react'
 import StampBg from 'assets/svg/stamp-bg.svg'
 import StampPng from 'assets/png/stamp.png'
 import QrCode from 'qrcode.react'
@@ -64,25 +64,22 @@ export const CardSignature = React.forwardRef<
       <Flex position="absolute" bottom="0" left="-10px" zIndex={2}>
         <RowImage src={StampPng} width="163px" height="144px" />
       </Flex>
-      <Flex
+      <Box
         position="absolute"
-        bottom="47px"
+        bottom="45px"
         right="50px"
         w="95px"
         h="20px"
         zIndex={2}
+        fontSize="12px"
+        fontWeight={500}
+        color="#4E52F5"
+        lineHeight="10px"
+        textAlign="center"
       >
-        <Text
-          fontSize="12px"
-          w="95px"
-          fontWeight={500}
-          color="#4E52F5"
-          lineHeight="10px"
-        >
-          {addr}
-          <br />@{MAIL_SERVER_URL}
-        </Text>
-      </Flex>
+        {addr}
+        <br />@{MAIL_SERVER_URL}
+      </Box>
       <Flex position="absolute" bottom="5px" zIndex={2}>
         <QrCode
           value={`https://mail3.me/${account}`}

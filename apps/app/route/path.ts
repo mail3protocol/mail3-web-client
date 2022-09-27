@@ -13,8 +13,8 @@ export enum RoutePath {
   NewMessage = '/message/edit',
   WhiteList = '/whitelist',
   Message = '/message',
-  Testing = '/testing',
   Unread = '/unread',
   Developers = '/developers',
   Subscribe = '/subscribe',
+  Testing = '/testing',
 }

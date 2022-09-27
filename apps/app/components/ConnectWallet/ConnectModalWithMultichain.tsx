@@ -46,6 +46,7 @@ import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'
 import { useEthButtons } from './EthButtons'
+import { IS_MOBILE } from '../../constants'
 
 interface ChainItem {
   name: string
@@ -199,7 +200,7 @@ export const ConnectModalWithMultichain: React.FC<{
   const currentWalletButtonsLength = currentChain?.walletButtons?.length || 3
 
   useDidMount(() => {
-    if (zilpay.isInstalled()) {
+    if (zilpay.isInstalled() && IS_MOBILE) {
       setTabIndex(1)
     }
   })

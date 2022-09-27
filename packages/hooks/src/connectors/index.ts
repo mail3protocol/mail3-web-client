@@ -65,10 +65,6 @@ export const useConnectedAccount = () => {
     Connectors.get(lastConectorName) ?? metaMask
   )
 
-  if (lastConectorName && account?.[0]) {
-    return account?.[0]
-  }
-
   if (lastConectorName) {
     if (lastConectorName === ConnectorName.Zilpay && zilpay.isConnected()) {
       return zilpay.getBech32Address()

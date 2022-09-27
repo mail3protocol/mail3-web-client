@@ -59,7 +59,11 @@ export const RecipientAndSubject: React.FC = () => {
         setIsEnabledBCC(true)
       }
     }
-  }, [isFoldCcAndBcc])
+
+    if (ccAddresses.length) {
+      setIsEnabledCC(true)
+    }
+  }, [isFoldCcAndBcc, ccAddresses])
   const trackClickCC = useTrackClick(TrackEvent.AppEditMessageClickCC)
   const trackClickBCC = useTrackClick(TrackEvent.AppEditMessageClickBCC)
   const trackClickMobileCCAndBCC = useTrackClick(

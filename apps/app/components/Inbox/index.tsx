@@ -24,6 +24,7 @@ import { SendingDialog } from '../SendingDialog'
 import { GoToWriteMailButton } from '../GoToWriteMailButton'
 import { ProductRecommendationsBanner } from '../ProductRecommendationsBanner'
 import { Mailboxes } from '../../api/mailboxes'
+import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'
 
 export const NewPageContainer = styled(PageContainer)`
   @media (max-width: 576px) {
@@ -175,6 +176,8 @@ export const InboxComponent: React.FC = () => {
   const isSeenEmpty = isLoading || !seenMessages?.length
   const isClear = !isLoading && isNewsEmpty && isSeenEmpty
 
+  const { onAction: getIsAllowExperienceUserAction } = useExperienceUserGuard()
+
   return (
     <NewPageContainer>
       {isChooseMode && (
@@ -217,6 +220,8 @@ export const InboxComponent: React.FC = () => {
               setIsChooseMode(false)
             },
             [BulkActionType.Trash]: async () => {
+              const isAllow = getIsAllowExperienceUserAction()
+              if (!isAllow) return
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
               const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []
@@ -244,6 +249,8 @@ export const InboxComponent: React.FC = () => {
               }
             },
             [BulkActionType.Spam]: async () => {
+              const isAllow = getIsAllowExperienceUserAction()
+              if (!isAllow) return
               const newIds =
                 Object.keys(chooseMap).filter((key) => chooseMap[key]) ?? []
               const seenIds = refSeenBoxList?.current?.getChooseIds() ?? []

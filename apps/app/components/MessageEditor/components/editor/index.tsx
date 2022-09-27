@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import {
   BoldExtension,
-  ImageExtension,
   ItalicExtension,
   UnderlineExtension,
   BulletListExtension,
@@ -41,6 +40,9 @@ import { useSubject } from '../../hooks/useSubject'
 import { LeaveEditorModal } from '../leaveEditorModal'
 import { useBlocker } from '../../../../hooks/useBlocker'
 import { AttachmentImageExtensionExtension } from './extensions/AttachmentImageExtension'
+import { useExperienceUserGuard } from '../../../../hooks/useExperienceUserGuard'
+import { useBack } from '../../../../hooks/useBack'
+import { RoutePath } from '../../../../route/path'
 
 const RemirrorTheme = styled(Flex)`
   ul,
@@ -131,11 +133,36 @@ const Footer = () => {
       bccAddresses.length <= 0 &&
       initialHtml === getHTML()
     )
+  const onBack = useBack()
+  const { onAction, isExperienceUser } = useExperienceUserGuard({
+    guardDialogProps: {
+      pageGuard: true,
+      onCloseComplete: () => {
+        if (window.location.pathname === RoutePath.NewMessage) {
+          onBack()
+        }
+      },
+    },
+  })
+  useEffect(() => {
+    if (isExperienceUser) {
+      onAction()
+    }
+  }, [isExperienceUser])
+  const blockerWhen =
+    isChangeContent() &&
+    !isSubmitted &&
+    !isAllowLeave &&
+    !isSaving &&
+    !isLeavingWithSave &&
+    !isLeavingWithoutSave &&
+    !isExperienceUser
   useBlocker((tx) => {
     setLeavingUrl(tx.location.pathname)
     onOpenLeaveEditorModal()
-  }, isChangeContent() && !isSubmitted && !isAllowLeave && !isSaving && !isLeavingWithSave && !isLeavingWithoutSave)
+  }, blockerWhen)
   useEffect(() => {
+    if (!blockerWhen) return () => {}
     const handleBeforeunload = (e: Event) => {
       e.preventDefault()
       // @ts-ignore
@@ -145,7 +172,7 @@ const Footer = () => {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeunload)
     }
-  }, [])
+  }, [blockerWhen])
 
   const {
     isOpen: isOpenIpfsModal,
@@ -256,7 +283,7 @@ const Footer = () => {
             bg: 'brand.500',
           }}
           fontSize="14px"
-          disabled={isDisabledSendButton}
+          disabled={isDisabledSendButton || isExperienceUser}
           isLoading={isLoading}
           onClick={() => {
             trackClickSend()
