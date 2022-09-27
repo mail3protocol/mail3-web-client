@@ -85,7 +85,10 @@ export function useRemember() {
             if (router.pathname === RoutePath.Testing) {
               trackTestingConnect({ [TrackKey.TestingEntry]: true })
             }
-            navi(RoutePath.Home)
+            const [, pathname] = router.pathname.split('/')
+            if (`/${pathname}` !== RoutePath.Subscribe) {
+              navi(RoutePath.Home)
+            }
           }
           break
         }

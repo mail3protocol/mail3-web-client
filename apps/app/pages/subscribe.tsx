@@ -4,6 +4,7 @@ import { Logo, PageContainer } from 'ui'
 import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { Subscribe } from '../components/Subscribe'
+import { AuthModal } from '../components/Auth'
 
 const Navbar = () => (
   <Center h={`${NAVBAR_HEIGHT}px`}>
@@ -19,6 +20,7 @@ export const SubscribePage = () => {
     <PageContainer>
       <Navbar />
       <Subscribe />
+      <AuthModal />
     </PageContainer>
   )
 }

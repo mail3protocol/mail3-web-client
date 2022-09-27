@@ -1,6 +1,7 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SubmitMessage } from 'models/src/submitMessage'
 import { UploadMessage } from 'models/src/uploadMessage'
+import { CommunitySubscriptionResp } from 'models/src/subscribe'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
@@ -422,5 +423,25 @@ export class API {
     return this.axios.get<MessageOnChainIdentifierResponse>(
       `/mailbox/account/messages/${messageId}/on_chain_identifier`
     )
+  }
+
+  public async getSubscribeStatus(
+    campaignId: string
+  ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    return this.axios.get(`/community/subscription/${campaignId}`, {
+      params: {
+        address: this.account,
+      },
+    })
+  }
+
+  public async putSubscribeCampaign(
+    campaignId: string,
+    state: 'active' | 'inactive' = 'active'
+  ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    return this.axios.put(`/community/subscription/${campaignId}`, {
+      address: this.account,
+      state,
+    })
   }
 }
