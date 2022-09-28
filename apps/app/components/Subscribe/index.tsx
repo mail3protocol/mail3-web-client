@@ -6,10 +6,14 @@ import {
   Box,
   Text,
   Spinner,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  AlertIcon,
 } from '@chakra-ui/react'
 import { useAccount } from 'hooks'
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from 'ui'
@@ -50,12 +54,17 @@ const ConnectWallet = () => {
 const AlreadySubscribed = () => {
   const [t] = useTranslation('subscribe')
   return (
-    <Center>
-      <Center padding="32px" flexDirection="column">
+    <Center h="calc(100vh - 180px)">
+      <Center
+        padding="32px"
+        flexDirection="column"
+        border="1px solid #efefef"
+        borderRadius="24px"
+      >
         <Heading mb="24px" fontSize="20px" fontWeight={700}>
           {t('already')}
         </Heading>
-        <Text mb="24px">{t('vista')}</Text>
+        <Text mb="24px">{t('visit')}</Text>
         <Link to={RoutePath.Inbox}>
           <Button w="168px">{t('continue')}</Button>
         </Link>
@@ -64,14 +73,27 @@ const AlreadySubscribed = () => {
   )
 }
 
-const Desc: React.FC = ({ children }) => {
-  return <Box textAlign="center" padding="8px" bg="#F3F3F3" borderRadius="16px">
+const Desc: React.FC = ({ children }) => (
+  <Box
+    textAlign="center"
+    padding="8px"
+    bg="#F3F3F3"
+    borderRadius="16px"
+    mb="16px"
+    mt="8px"
+    fontSize="12px"
+  >
     {children}
   </Box>
-}
+)
 
 const SubscribeStatus = () => {
-  const { isBrowserSupport, webPushNotificationState, permission } = useNotification(false)
+  const {
+    isBrowserSupport,
+    webPushNotificationState,
+    permission,
+    requestPermission,
+  } = useNotification(false)
   const [t] = useTranslation('subscribe')
   const isEnabledNotification =
     permission === 'granted' && webPushNotificationState === 'enabled'
@@ -82,7 +104,6 @@ const SubscribeStatus = () => {
         <Text fontWeight={700} fontSize="14px">
           {t('nft')}
         </Text>
-        <Text mb="24px">{t('vista')}</Text>
         <Desc>{t('success')}</Desc>
         <Link to={RoutePath.Inbox}>
           <Button w="168px">{t('continue')}</Button>
@@ -92,30 +113,64 @@ const SubscribeStatus = () => {
   }
 
   if (permission === 'denied') {
-
+    return (
+      <>
+        <Text fontWeight={700} mb="16px">
+          {t('declined')}
+        </Text>
+        <Link to={RoutePath.Inbox}>
+          <Button w="168px">{t('continue')}</Button>
+        </Link>
+      </>
+    )
   }
 
   return (
-
+    <>
+      <Text fontWeight={700} fontSize="14px">
+        {t('nft')}
+      </Text>
+      <Desc>
+        <Trans
+          components={{
+            b: <Text color="blue" />,
+          }}
+          ns="subscribe"
+          i18nKey="request-permission"
+          t={t}
+        />
+      </Desc>
+      <Button
+        w="168px"
+        onClick={async () => {
+          const ps = await requestPermission()
+          if (ps === 'granted') {
+            setIsSubscribe(true)
+          }
+        }}
+      >
+        {t('ok')}
+      </Button>
+    </>
   )
 }
 
 const Subscribing = () => {
   const [t] = useTranslation('subscribe')
   return (
-    <Center>
-      <Center padding="32px" flexDirection="column" minW="375px">
+    <Center h="calc(100vh - 180px)" textAlign="center">
+      <Center
+        padding="32px"
+        flexDirection="column"
+        w="375px"
+        border="1px solid #efefef"
+        borderRadius="24px"
+      >
         <Heading mb="24px" fontSize="20px" fontWeight={700}>
           {t('subscribed')}
         </Heading>
         <Image src={Welcomepng} w="180px" mb="24px" />
-        <Text fontWeight={700} fontSize="14px">
-          {t('nft')}
-        </Text>
-        <Text mb="24px">{t('vista')}</Text>
-        <Link to={RoutePath.Inbox}>
-          <Button w="168px">{t('continue')}</Button>
-        </Link>
+        <SubscribeStatus />
       </Center>
     </Center>
   )
@@ -127,11 +182,15 @@ export const Subscribe: React.FC = () => {
   const acccount = useAccount()
   const api = useAPI()
   const { id } = useParams()
-  const { isLoading: isLoadingStatus, data: subscribeStatus } = useQuery(
+  const {
+    isLoading: isLoadingStatus,
+    data: subscribeStatus,
+    error: getSubscribeStatusError,
+  } = useQuery(
     [Query.GetSubscribeStatus, acccount, id],
     async () => {
-      const { data } = await api.getSubscribeStatus(id!)
-      return data
+      const r = await api.getSubscribeStatus(id!)
+      return r.data
     },
     {
       enabled: !!id && isAuth,
@@ -141,10 +200,15 @@ export const Subscribe: React.FC = () => {
     }
   )
 
-  const { isLoading: isSubscribing, data: subscribeResult } = useQuery(
+  const {
+    isLoading: isSubscribing,
+    data: subscribeResult,
+    error: putSubscribeError,
+  } = useQuery(
     [Query.GetSubscribeStatus, acccount, id],
     async () => {
       const { data } = await api.putSubscribeCampaign(id!)
+      // console.log(data)
       return data
     },
     {
@@ -161,8 +225,8 @@ export const Subscribe: React.FC = () => {
 
   if (isSubscribing || isLoadingStatus) {
     return (
-      <Center>
-        <Spinner size="xl" />
+      <Center mt="50px">
+        <Spinner size="lg" />
       </Center>
     )
   }
@@ -171,9 +235,20 @@ export const Subscribe: React.FC = () => {
     return <AlreadySubscribed />
   }
 
+  // TODO: or already subscribed
   if (subscribeResult) {
     return <Subscribing />
   }
 
-  return <div>connect</div>
+  // @ts-ignore
+  const error = getSubscribeStatusError?.message ?? putSubscribeError?.message
+  return (
+    <Alert status="error" backgroundColor="#FFE2E2" borderRadius="6px">
+      <AlertIcon />
+      <Box color="#DA4444">
+        <AlertTitle fontSize="14px">Error:</AlertTitle>
+        <AlertDescription fontSize="12px">{error}</AlertDescription>
+      </Box>
+    </Alert>
+  )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-promise-executor-return */
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SubmitMessage } from 'models/src/submitMessage'
 import { UploadMessage } from 'models/src/uploadMessage'
@@ -442,6 +443,14 @@ export class API {
   public async getSubscribeStatus(
     campaignId: string
   ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    const res: any = {
+      data: {
+        state: 'inactive',
+      },
+    }
+    if (campaignId === '100') {
+      return new Promise((resolve) => resolve(res))
+    }
     return this.axios.get(`/community/subscription/${campaignId}`, {
       params: {
         address: this.account,
@@ -453,6 +462,14 @@ export class API {
     campaignId: string,
     state: 'active' | 'inactive' = 'active'
   ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    const res: any = {
+      data: {
+        state: 'inactive',
+      },
+    }
+    if (campaignId === '100') {
+      return new Promise((resolve) => resolve(res))
+    }
     return this.axios.put(`/community/subscription/${campaignId}`, {
       address: this.account,
       state,

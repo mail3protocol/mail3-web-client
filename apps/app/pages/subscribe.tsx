@@ -1,14 +1,16 @@
 import React from 'react'
-import { Center, Link } from '@chakra-ui/react'
+import { Center } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
-import { HOME_URL, NAVBAR_HEIGHT } from '../constants'
+import { Link } from 'react-router-dom'
+import { NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { Subscribe } from '../components/Subscribe'
 import { AuthModal } from '../components/Auth'
+import { RoutePath } from '../route/path'
 
 const Navbar = () => (
   <Center h={`${NAVBAR_HEIGHT}px`}>
-    <Link isExternal href={HOME_URL}>
+    <Link to={RoutePath.Home}>
       <Logo textProps={{ color: '#231815' }} />
     </Link>
   </Center>

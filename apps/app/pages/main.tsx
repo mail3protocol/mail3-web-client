@@ -6,7 +6,7 @@ import { App } from './app'
 import '../styles/globals.css'
 import { SENTRY_DSN } from '../constants'
 
-if (SENTRY_DSN) {
+if (SENTRY_DSN && process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: SENTRY_DSN,
     integrations: [new Integrations.BrowserTracing()],
