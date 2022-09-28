@@ -11,7 +11,6 @@ export function useRememberDialog() {
       dialog({
         title: t('connect_wallet', { ns: 'common' }),
         description: <AuthContent />,
-        // @ts-ignore
         modalProps: {
           size: 'sm',
         },

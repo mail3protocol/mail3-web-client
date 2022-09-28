@@ -7,6 +7,16 @@ export default {
       notice: 'Notice',
       unknown_error: 'Unknown error',
     },
+    auth: {
+      sign: "I authorize sending and checking my emails on mail3 from this device. This doesn't cost anything.",
+      errors: {
+        'wallet-not-connected':
+          'Wallet is not connected, please connect your wallet',
+        unknown: 'Unknown error, please try again later',
+        'condition-not-meet':
+          'You do not have permission to participate in Beta testing.',
+      },
+    },
   },
   components: {
     header: {

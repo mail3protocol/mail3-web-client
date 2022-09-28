@@ -28,6 +28,8 @@
     "@uiw/react-codemirror": "^4.12.3",
     "assets": "*",
     "axios": "^0.26.1",
+    "axios-mock-adapter": "^1.21.2",
+    "dayjs": "^1.11.5",
     "framer-motion": "^7.3.4",
     "hooks": "*",
     "i18next": "^21.8.13",

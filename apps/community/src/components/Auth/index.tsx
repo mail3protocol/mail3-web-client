@@ -4,13 +4,12 @@ import { truncateMiddle } from 'shared'
 import React from 'react'
 import { useAccount } from 'hooks'
 import { ReactComponent as WalletSvg } from 'assets/svg/wallet.svg'
-import { useNavigate } from 'react-router-dom'
-import { RoutePath } from '../../route/path'
+import { useRemember } from '../../hooks/useRemember'
 
 export const AuthContent: React.FC = () => {
   const { t } = useTranslation('components')
   const account = useAccount()
-  const navi = useNavigate()
+  const { onRemember, isLoading } = useRemember()
 
   return (
     <>
@@ -35,8 +34,9 @@ export const AuthContent: React.FC = () => {
         mt="20px"
         variant="solid-rounded"
         colorScheme="primaryButton"
+        isLoading={isLoading}
         onClick={() => {
-          navi(RoutePath.Dashboard)
+          onRemember()
         }}
       >
         {t('auth_connect_wallet.remember')}
