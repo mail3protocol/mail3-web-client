@@ -1,9 +1,4 @@
-import {
-  AddIcon,
-  InfoOutlineIcon,
-  QuestionOutlineIcon,
-  ViewIcon,
-} from '@chakra-ui/icons'
+import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import {
   Box,
   Grid,
@@ -20,10 +15,12 @@ import {
 } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link as InsideLink } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { Container } from '../components/Container'
-import { RoutePath } from '../route/path'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
+import { NewMessageLinkButton } from '../components/NewMessageLinkButton'
+import { SentRecordItem } from '../components/SentRecordItem'
+import { RoutePath } from '../route/path'
 
 interface BaseInfo {
   key: string
@@ -131,21 +128,7 @@ export const Dashboard: React.FC = () => {
         <Heading as="h3" fontSize="16px">
           {t('send_message')}
         </Heading>
-        <Center
-          as={InsideLink}
-          to={RoutePath.NewMessage}
-          target="_blank"
-          w="full"
-          mt="20px"
-          flex={1}
-          borderColor="primary.900"
-          color="primary.900"
-          borderWidth="2px"
-          borderStyle="dashed"
-          rounded="14px"
-        >
-          <AddIcon w="16px" h="16px" />
-        </Center>
+        <NewMessageLinkButton />
       </Flex>
       <Box
         bg="cardBackground"
@@ -162,6 +145,8 @@ export const Dashboard: React.FC = () => {
             </Tooltip>
           </Heading>
           <Link
+            as={RouterLink}
+            to={RoutePath.SendRecords}
             color="primary.900"
             fontSize="12px"
             textDecoration="underline"
@@ -172,42 +157,12 @@ export const Dashboard: React.FC = () => {
         </Flex>
         <List mt="24px">
           <ListItem h="52px">
-            <Grid
-              as="a"
-              h="inherit"
-              gridTemplateColumns="120px 1fr 80px"
-              alignItems="center"
-              whiteSpace="nowrap"
-              px="16px"
-              rounded="8px"
-              transition="200ms"
-              cursor="pointer"
-              _hover={{ shadow: 'listHover', transform: 'scale(1.01)' }}
-            >
-              <Box fontSize="12px" color="secondaryTitleColor" fontWeight="500">
-                2022-05-23
-              </Box>
-              <Box
-                fontSize="16px"
-                overflow="hidden"
-                noOfLines={1}
-                textOverflow="ellipsis"
-                display="block"
-                fontWeight="600"
-              >
-                🌟 Mail3 New Feature：See what we bring you in the past two
-                weeks ；)
-              </Box>
-              <Box
-                fontSize="12px"
-                textAlign="right"
-                verticalAlign="middle"
-                fontWeight="400"
-              >
-                <ViewIcon w="16px" h="16px" mr="4px" mb="2px" />
-                22,454
-              </Box>
-            </Grid>
+            <SentRecordItem
+              time="2022-05-23"
+              subject="🌟 Mail3 New Feature：See what we bring you in the past two
+                weeks ；)"
+              viewCount={22454}
+            />
           </ListItem>
         </List>
       </Box>

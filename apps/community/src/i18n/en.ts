@@ -131,4 +131,8 @@ export default {
     download: 'Download',
     title: 'Account Information',
   },
+  send_message: {
+    title: 'Send Records',
+    new_message: 'New Message',
+  },
 }
