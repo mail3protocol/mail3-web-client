@@ -279,14 +279,16 @@ export const SettingAddress: React.FC = () => {
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      onSuccess(d) {
+      async onSuccess(d) {
         const defaultAlias: Alias =
           d.aliases.find((alias) => alias.is_default) || d.aliases[0]
         setActiveAccount(defaultAlias.uuid)
+        const userInfo = await api.getUserInfo()
         setUserProperties((config) => ({
           ...config,
           aliases: d.aliases,
           defaultAddress: defaultAlias.address,
+          user_role: userInfo.data.user_role,
         }))
       },
     }
