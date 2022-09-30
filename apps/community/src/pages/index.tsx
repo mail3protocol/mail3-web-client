@@ -58,7 +58,7 @@ export const Index = () => (
       h="full"
       w="full"
     >
-      <Header bg="loginHomePage.background" position="static" px="0">
+      <Header bg="loginHomePage.background" position="static">
         <RegisterButton />
       </Header>
       <Content />

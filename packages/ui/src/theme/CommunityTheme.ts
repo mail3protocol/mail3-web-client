@@ -74,6 +74,10 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     rainbow:
       'linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)',
     connectWalletButtonBackground: '#FFF',
+    connectedWalletButton: {
+      background: '#000',
+      color: '#fff',
+    },
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
@@ -305,6 +309,99 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
                 borderBottom: '2px solid currentColor',
               },
             },
+          },
+        },
+      },
+    },
+    Modal: {
+      baseStyle: {
+        dialog: {
+          rounded: '20px',
+        },
+        body: {
+          py: '24px',
+          px: '20px',
+        },
+      },
+    },
+    ConnectedWalletButton: {
+      baseStyle: {
+        rounded: '99px',
+        ml: 'auto',
+        fontSize: '12px',
+        lineHeight: '14px',
+        h: '36px',
+        p: '2px',
+        bg: 'connectedWalletButton.background',
+        color: 'connectedWalletButton.color',
+        avatar: {
+          w: '32px',
+          h: '32px',
+        },
+        text: {
+          mx: '4px',
+        },
+        listItem: {
+          fontSize: '16px',
+          lineHeight: '20px',
+          p: '10px',
+          fontWeight: 500,
+          rounded: '8px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          w: 'full',
+          textAlign: 'left',
+          _hover: {
+            bg: '#ECECF4',
+            color: 'primary.900',
+          },
+          _active: {
+            color: '#fff',
+            bg: 'primary.400',
+            transition: '50ms',
+          },
+        },
+      },
+    },
+    Popover: {
+      baseStyle: {
+        arrow: {
+          border: 'none',
+        },
+        content: {
+          border: 'none',
+          boxShadow: 'none',
+          _focusVisible: { boxShadow: 'none' },
+          filter: 'drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.15))',
+          rounded: '16px',
+        },
+      },
+    },
+    Menu: {
+      baseStyle: {
+        list: {
+          py: '16px',
+          px: '8px',
+          border: 'none',
+          boxShadow: 'none',
+          _focusVisible: { boxShadow: 'none' },
+          filter: 'drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.15))',
+          rounded: '16px',
+        },
+        item: {
+          fontSize: '16px',
+          lineHeight: '20px',
+          p: '10px',
+          fontWeight: 500,
+          rounded: '8px',
+          _focus: {
+            bg: '#ECECF4',
+            color: 'primary.900',
+          },
+          _active: {
+            color: '#fff',
+            bg: 'primary.400',
           },
         },
       },

@@ -8,7 +8,9 @@ import {
 import WalletConnectPng from 'assets/wallets/walletconnect.png'
 import { EthBaseButton } from './EthBaseButton'
 
-export const WalletConnectButton: React.FC = () => {
+export const WalletConnectButton: React.FC<{ onClose: () => void }> = ({
+  onClose,
+}) => {
   const { t } = useTranslation('components')
   return (
     <EthBaseButton
@@ -17,6 +19,7 @@ export const WalletConnectButton: React.FC = () => {
       web3ReactStore={walletConnectStore}
       connectorName={ConnectorName.WalletConnect}
       icon={WalletConnectPng}
+      onClose={onClose}
     >
       {t('select_connect_wallet.wallets.wallet_connect')}
     </EthBaseButton>

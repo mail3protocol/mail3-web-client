@@ -5,6 +5,7 @@ import { Dashboard } from '../pages/dashboard'
 import { NewMessage } from '../pages/message/new'
 import { SendRecords } from '../pages/message/send-records'
 import { EarnNft } from '../pages/subscribe/earn-nft'
+import { Information } from '../pages/information'
 
 interface ExpandedRouterProps extends RouteProps {
   key: string
@@ -37,5 +38,10 @@ export const routes: ExpandedRouterProps[] = [
     path: RoutePath.EarnNft,
     key: 'earn-nft',
     element: <EarnNft />,
+  },
+  {
+    path: RoutePath.Information,
+    key: 'information',
+    element: <Information />,
   },
 ]

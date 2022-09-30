@@ -60,6 +60,11 @@ export default {
         'Skip approving every interaction with your wallet by allowing Mail3 to remember you.',
       remember: 'Check',
     },
+    connect_wallet_button: {
+      information: 'Information',
+      change_wallet: 'Change Wallet',
+      disconnect: 'Disconnect',
+    },
   },
   hooks: {
     register_dialog: {

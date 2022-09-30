@@ -81,7 +81,7 @@ export function useInitUserProperties() {
   }, [isAuth])
 }
 
-export const useLogout = () => {
+export function useLogout() {
   const connector = useConnector()
   const setUserInfo = useSetLoginInfo()
   const setLastConnector = useSetLastConnector()
@@ -92,7 +92,7 @@ export const useLogout = () => {
   }, [connector])
 }
 
-export const useCurrentWalletStore = () => {
+export function useCurrentWalletStore() {
   const walletName = useLastConectorName()
   if (walletName === ConnectorName.MetaMask) {
     return metaMaskStore

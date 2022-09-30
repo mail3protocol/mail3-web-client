@@ -19,6 +19,7 @@ import PlugPng from 'assets/wallets/plug.png'
 import { PlaceholderButton } from '../ConnectWalletButtons/PlaceholderButton'
 import { WalletConnectButton } from '../ConnectWalletButtons/WalletConnectButton'
 import { MetamaskButton } from '../ConnectWalletButtons/MetamaskButton'
+import { useCloseConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
 
 interface ChainItem {
   name: string
@@ -29,13 +30,17 @@ interface ChainItem {
 
 export const SelectConnectWallet: React.FC = () => {
   const { t } = useTranslation('components')
+  const onClose = useCloseConnectWalletDialog()
   const chains: ChainItem[] = [
     {
       name: 'ETH',
       icon: EthIconPath,
       walletButtons: [
-        <MetamaskButton key={ConnectorName.MetaMask} />,
-        <WalletConnectButton key={ConnectorName.WalletConnect} />,
+        <MetamaskButton key={ConnectorName.MetaMask} onClose={onClose} />,
+        <WalletConnectButton
+          key={ConnectorName.WalletConnect}
+          onClose={onClose}
+        />,
       ],
       description: t('select_connect_wallet.chain_descriptions.eth'),
     },

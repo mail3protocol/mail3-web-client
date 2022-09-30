@@ -45,7 +45,6 @@ export function useRemember() {
     setIsLoading(true)
     try {
       const { nonce, error, code, signature, message, pubkey } = await signup()
-      console.log(code)
       switch (code) {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
@@ -65,7 +64,6 @@ export function useRemember() {
           break
         }
         case SignupResponseCode.ConditionNotMeet: {
-          console.log(code)
           onOpenRegisterDialog()
           break
         }

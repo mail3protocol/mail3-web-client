@@ -1,19 +1,39 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icon, Text } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  Heading,
+  Icon,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Text,
+} from '@chakra-ui/react'
 import { truncateMiddle } from 'shared'
 import React from 'react'
 import { useAccount } from 'hooks'
 import { ReactComponent as WalletSvg } from 'assets/svg/wallet.svg'
+import { useAtomValue } from 'jotai/utils'
 import { useRemember } from '../../hooks/useRemember'
+import { CloseButton } from '../ConfirmDialog'
+import {
+  isAuthModalOpenAtom,
+  useCloseAuthModal,
+} from '../../hooks/useAuthDialog'
 
 export const AuthContent: React.FC = () => {
-  const { t } = useTranslation('components')
+  const { t } = useTranslation(['components', 'common'])
   const account = useAccount()
   const { onRemember, isLoading } = useRemember()
+  const onCloseAuthDialog = useCloseAuthModal()
 
   return (
     <>
-      {t('auth_connect_wallet.description')}
+      <Heading as="h3" fontSize="18px" mb="24px">
+        {t('connect_wallet', { ns: 'common' })}
+      </Heading>
+      <Text>{t('auth_connect_wallet.description')}</Text>
       <Flex
         w="100%"
         align="center"
@@ -35,12 +55,35 @@ export const AuthContent: React.FC = () => {
         variant="solid-rounded"
         colorScheme="primaryButton"
         isLoading={isLoading}
-        onClick={() => {
-          onRemember()
+        onClick={async () => {
+          await onRemember()
+          onCloseAuthDialog()
         }}
       >
         {t('auth_connect_wallet.remember')}
       </Button>
     </>
+  )
+}
+
+export const AuthDialog: React.FC = () => {
+  const isAuthModalOpen = useAtomValue(isAuthModalOpenAtom)
+  const onCloseAuthDialog = useCloseAuthModal()
+  return (
+    <Modal
+      size="sm"
+      autoFocus={false}
+      isOpen={isAuthModalOpen}
+      onClose={onCloseAuthDialog}
+      isCentered
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <CloseButton onClick={onCloseAuthDialog} />
+        <ModalBody>
+          <AuthContent />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }

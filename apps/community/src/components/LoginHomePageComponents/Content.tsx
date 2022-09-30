@@ -18,7 +18,8 @@ import {
   Transition,
   VariantLabels,
 } from 'framer-motion'
-import { useAccount } from 'hooks'
+import { useAccount, useConnector, useProvider } from 'hooks'
+import { Navigate } from 'react-router-dom'
 import MascotPng from '../../assets/LoginHomePage/mascot.png'
 import BellPng from '../../assets/LoginHomePage/bell.png'
 import CursorPng from '../../assets/LoginHomePage/cursor.png'
@@ -28,9 +29,10 @@ import PlanePng from '../../assets/LoginHomePage/plane.png'
 import VisionPng from '../../assets/LoginHomePage/vision.png'
 import BackgroundPng from '../../assets/LoginHomePage/background.png'
 import { useRegisterDialog } from '../../hooks/useRegisterDialog'
-import { useConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
-import { useAuth } from '../../hooks/useLogin'
-import { useRememberDialog } from '../../hooks/useRememberDialog'
+import { useOpenConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
+import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
+import { useOpenAuthModal } from '../../hooks/useAuthDialog'
+import { RoutePath } from '../../route/path'
 
 const MotionImage = chakra(motion.img, {
   shouldForwardProp: (prop) =>
@@ -104,10 +106,17 @@ export const AnimationImage: React.FC<
 export const Content: React.FC = () => {
   const { t } = useTranslation(['login_home_page', 'common'])
   const onOpenRegisterDialog = useRegisterDialog()
-  const onOpenConnectWalletDialog = useConnectWalletDialog()
-  const onOpenRememberDialog = useRememberDialog()
+  const onOpenConnectWalletDialog = useOpenConnectWalletDialog()
   const account = useAccount()
+  const onOpenAuthDialog = useOpenAuthModal()
+  const provider = useProvider()
+  const connector = useConnector()
+  const isAuth = useIsAuthenticated()
   useAuth()
+
+  if (isAuth) {
+    return <Navigate to={`${RoutePath.Dashboard}`} replace />
+  }
 
   return (
     <Center
@@ -160,7 +169,16 @@ export const Content: React.FC = () => {
             transform: 'scale(0.99)',
           }}
           shadow="xl"
-          onClick={account ? onOpenRememberDialog : onOpenConnectWalletDialog}
+          onClick={async () => {
+            if (!account || provider == null) {
+              await connector?.activate()
+            }
+            if (account) {
+              onOpenAuthDialog()
+            } else {
+              onOpenConnectWalletDialog()
+            }
+          }}
         >
           {t('connect_wallet', { ns: 'common' })}
         </Button>
