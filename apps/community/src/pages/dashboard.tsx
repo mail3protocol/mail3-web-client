@@ -1,6 +1,5 @@
 import {
   AddIcon,
-  DownloadIcon,
   InfoOutlineIcon,
   QuestionOutlineIcon,
   ViewIcon,
@@ -17,12 +16,14 @@ import {
   Link,
   List,
   ListItem,
+  Icon,
 } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as InsideLink } from 'react-router-dom'
 import { Container } from '../components/Container'
 import { RoutePath } from '../route/path'
+import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 
 interface BaseInfo {
   key: string
@@ -48,11 +49,11 @@ export const Dashboard: React.FC = () => {
               console.log('download')
             }}
           >
-            <DownloadIcon
+            <Icon
+              as={DownloadSvg}
               color="primaryTextColor"
-              w="14px"
-              h="14px"
-              mb="2px"
+              w="16px"
+              h="16px"
               ml="5px"
             />
           </Link>

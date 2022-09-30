@@ -122,4 +122,13 @@ export default {
     join_discord: 'Join Discord',
     follow_twitter: 'Follow Twitter',
   },
+  user_information: {
+    name_field: 'Name',
+    name_placeholder: 'Mail3.eth',
+    address_field: 'Mail<sup>3</sup> Address',
+    address_placeholder: 'robert@mail.com',
+    qr_code: 'Profile QR Code',
+    download: 'Download',
+    title: 'Account Information',
+  },
 }

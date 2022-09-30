@@ -64,6 +64,7 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     checkboxOutlineBackground: '#FFF',
     uneditable: '#A6A6A6',
     tipsPanel: '#ECECF4',
+    previewBorder: '#D9D9D9',
     earnNftStylePreviewBorder: '#D9D9D9',
     earnNftStylePreviewCodeBackground: '#000',
     earnNftStylePreviewCodeTitle: '#FFF',
@@ -73,11 +74,13 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     },
     rainbow:
       'linear-gradient(90.02deg, #FFB1B1 0.01%, #FFCD4B 50.26%, #916BFF 99.99%)',
+    informationAvatarBackground: 'linear-gradient(#FFB800, #4E51F4)',
     connectWalletButtonBackground: '#FFF',
     connectedWalletButton: {
       background: '#000',
       color: '#fff',
     },
+    informationQrCodeBackground: '#FFF',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
@@ -133,6 +136,11 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
             _focus: {
               borderColor: 'primary.900',
               shadow: 'none',
+            },
+            _disabled: {
+              opacity: 1,
+              color: 'secondaryTitleColor',
+              borderColor: 'inputBackground',
             },
           },
         },
@@ -257,9 +265,11 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
       },
     },
     Card: {
-      bg: 'card',
-      shadow: 'card',
-      rounded: 'card',
+      baseStyle: {
+        bg: 'cardBackground',
+        shadow: 'card',
+        rounded: 'card',
+      },
     },
     TipsPanel: {
       baseStyle: {
