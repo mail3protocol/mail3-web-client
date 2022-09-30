@@ -1,5 +1,6 @@
 import {
   AddIcon,
+  DownloadIcon,
   InfoOutlineIcon,
   QuestionOutlineIcon,
   ViewIcon,
@@ -27,7 +28,6 @@ interface BaseInfo {
   key: string
   field: ReactNode
   value: ReactNode
-  tooltip?: ReactNode
 }
 
 export const Dashboard: React.FC = () => {
@@ -40,14 +40,43 @@ export const Dashboard: React.FC = () => {
     },
     {
       key: 'subscribers',
-      field: t('subscribers'),
+      field: (
+        <>
+          {t('subscribers')}
+          <Link
+            onClick={() => {
+              console.log('download')
+            }}
+          >
+            <DownloadIcon
+              color="primaryTextColor"
+              w="14px"
+              h="14px"
+              mb="2px"
+              ml="5px"
+            />
+          </Link>
+        </>
+      ),
       value: 0,
     },
     {
       key: 'new_subscribers',
-      field: t('new_subscribers'),
+      field: (
+        <>
+          {t('new_subscribers')}
+          <Tooltip label={t('statistics_time')} hasArrow placement="top">
+            <InfoOutlineIcon
+              color="primaryTextColor"
+              w="14px"
+              h="14px"
+              mb="2px"
+              ml="5px"
+            />
+          </Tooltip>
+        </>
+      ),
       value: 10000,
-      tooltip: t('statistics_time'),
     },
   ]
 
@@ -82,17 +111,6 @@ export const Dashboard: React.FC = () => {
           >
             <Heading as="h4" fontSize="14px" color="secondaryTitleColor">
               {info.field}
-              {info.tooltip ? (
-                <Tooltip label={info.tooltip} hasArrow placement="top">
-                  <InfoOutlineIcon
-                    color="primaryTextColor"
-                    w="14px"
-                    h="14px"
-                    mb="2px"
-                    ml="5px"
-                  />
-                </Tooltip>
-              ) : null}
             </Heading>
             <Text fontSize="16px" fontWeight="600" mt="4px">
               {typeof info.value === 'number'
