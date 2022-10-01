@@ -279,14 +279,16 @@ export const SettingAddress: React.FC = () => {
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      onSuccess(d) {
+      async onSuccess(d) {
         const defaultAlias: Alias =
           d.aliases.find((alias) => alias.is_default) || d.aliases[0]
         setActiveAccount(defaultAlias.uuid)
+        const userInfo = await api.getUserInfo()
         setUserProperties((config) => ({
           ...config,
           aliases: d.aliases,
           defaultAddress: defaultAlias.address,
+          user_role: userInfo.data.user_role,
         }))
       },
     }
@@ -432,8 +434,9 @@ export const SettingAddress: React.FC = () => {
       [AliasMailType.Ens]: 0,
       [AliasMailType.Bit]: 1,
     }
-    return indexMap[defaultAlias?.email_type as AliasMailType] || 2
-  }, [userProps?.aliases])
+    const currentIndex = indexMap[defaultAlias?.email_type as AliasMailType]
+    return currentIndex === undefined ? 2 : currentIndex
+  }, [userProps])
 
   return (
     <Container pb={{ md: '100px', base: 0 }}>
