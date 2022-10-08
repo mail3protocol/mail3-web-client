@@ -8,11 +8,12 @@ const iconStyle = `
   `
 
 const bodyStyle = `
-  line-height: 5px;
   font-weight: 700;
-  font-size: 20px;
-  width: 250px;
-  border-radius: 40px;
+  font-size: 16px;
+  width: 150px;
+  height: 28px;
+  border-radius: 100px;
+  padding: 4px 24px;
 `
 
 const Mail3MeButton: React.FC<{ to: string }> = ({ to }) => (

@@ -58,21 +58,30 @@ enum ScoialPlatform {
 }
 
 const Container = styled(Box)`
+  background: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 24px;
+  max-width: 1220px;
+  width: 100%;
+  margin: 0 auto;
+`
+
+const WrapMain = styled(Center)`
+  height: 100%;
   position: relative;
-  max-width: 475px;
+`
+
+const WrapLeft = styled(Center)`
+  flex: 1;
+  position: relative;
   margin: 120px auto;
   padding: 60px 20px 55px 20px;
   background-color: #ffffff;
-  box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
+  border: 1px solid #e7e7e7;
   border-radius: 24px;
+  flex-direction: column;
 
   .avatar {
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    position: absolute;
-    border: 4px solid #fff;
-    border-radius: 50%;
   }
 
   .button-list {
@@ -88,29 +97,21 @@ const Container = styled(Box)`
   .address {
     background: #f3f3f3;
     border-radius: 16px;
-    padding: 13px;
+    padding: 4px 8px;
+    margin-top: 26px;
     text-align: center;
 
     .p {
       font-style: normal;
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 28px;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 20px;
     }
   }
+`
 
-  @media (max-width: 600px) {
-    max-width: 325px;
-
-    .button-list {
-      .button-wrap-mobile {
-        display: block;
-      }
-      .button-wrap-pc {
-        display: none;
-      }
-    }
-  }
+const WrapRight = styled(Box)`
+  flex: 3;
 `
 
 interface ProfileComponentProps {
@@ -276,145 +277,96 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   return (
     <>
       <Container>
-        <Box className="avatar">
-          <Avatar address={address} w="72px" h="72px" />
-        </Box>
-        <Box className="button-list">
-          <Box className="button-wrap-mobile">
-            <Popover
-              offset={[0, 10]}
-              arrowSize={18}
-              autoFocus
-              closeOnBlur
-              strategy="fixed"
-            >
-              <PopoverTrigger>
-                <Box p="10px">
-                  <SvgMore />
-                </Box>
-              </PopoverTrigger>
-              <PopoverContent
-                width="auto"
-                _focus={{
-                  boxShadow: '0px 0px 16px 12px rgba(192, 192, 192, 0.25)',
-                  outline: 'none',
-                }}
-                borderRadius="20px"
-                ref={popoverRef}
-              >
-                <PopoverArrow />
-                <PopoverBody>
-                  <Wrap p="14px" direction="column">
-                    {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
-                      (type: ButtonType) => {
-                        const { Icon, label } = buttonConfig[type]
-                        const onClick = actionMap[type]
-
-                        return (
-                          <WrapItem
-                            key={type}
-                            p="5px"
-                            borderRadius="10px"
-                            _hover={{
-                              bg: '#E7E7E7',
-                            }}
-                          >
-                            <Center as="button" onClick={onClick}>
-                              <Box>
-                                <Icon />
-                              </Box>
-                              <Text pl="10px">{label}</Text>
-                            </Center>
-                          </WrapItem>
-                        )
-                      }
-                    )}
-                  </Wrap>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </Box>
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <HStack className="button-wrap-pc">
-              {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
-                (type: ButtonType) => {
-                  const { Icon, label } = buttonConfig[type]
-                  const onClick = actionMap[type]
-                  return (
-                    <Popover
-                      arrowSize={8}
-                      key={type}
-                      trigger="hover"
-                      placement="top-start"
-                      size="md"
-                    >
-                      <PopoverTrigger>
-                        <Box as="button" p="10px" onClick={onClick}>
-                          <Icon />
-                        </Box>
-                      </PopoverTrigger>
-                      <PopoverContent width="auto">
-                        <PopoverArrow />
-                        <PopoverBody
-                          whiteSpace="nowrap"
-                          fontSize="14px"
-                          justifyContent="center"
+        <WrapMain>
+          <WrapLeft>
+            <Box className="avatar">
+              <Avatar address={address} w="62px" h="62px" />
+            </Box>
+            <Box className="button-list">
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <HStack className="button-wrap-pc">
+                  {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
+                    (type: ButtonType) => {
+                      const { Icon, label } = buttonConfig[type]
+                      const onClick = actionMap[type]
+                      return (
+                        <Popover
+                          arrowSize={8}
+                          key={type}
+                          trigger="hover"
+                          placement="top-start"
+                          size="md"
                         >
-                          {label}
-                        </PopoverBody>
-                      </PopoverContent>
-                    </Popover>
-                  )
-                }
+                          <PopoverTrigger>
+                            <Box as="button" p="10px" onClick={onClick}>
+                              <Icon />
+                            </Box>
+                          </PopoverTrigger>
+                          <PopoverContent width="auto">
+                            <PopoverArrow />
+                            <PopoverBody
+                              whiteSpace="nowrap"
+                              fontSize="14px"
+                              justifyContent="center"
+                            >
+                              {label}
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                      )
+                    }
+                  )}
+                </HStack>
               )}
-            </HStack>
-          )}
-        </Box>
-        <Box className="address">
-          <Text className="p">{mailAddress}</Text>
-        </Box>
-        <Center mt="25px">
-          <HStack spacing="24px">
-            {socialPlatforms.map((itemKey: ScoialPlatform, index) => {
-              const { Icon } = ScoialConfig[itemKey]
-              return (
-                <Box
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
-                  w={{ base: '24px', md: '36px' }}
-                  h={{ base: '24px', md: '36px' }}
-                  as="a"
-                  href={getHref(itemKey)}
-                  target="_blank"
-                  onClick={() => {
-                    if (itemKey === ScoialPlatform.CyberConnect) {
-                      trackScoialDimensions({
-                        [TrackKey.ProfileScoialPlatform]:
-                          ProfileScoialPlatformItem.CyberConnect,
-                      })
-                    }
+            </Box>
+            <Box className="address">
+              <Text className="p">{mailAddress}</Text>
+            </Box>
+            <Center mt="25px">
+              <Mail3MeButton to={mailAddress} />
+            </Center>
+            <Center mt="25px">
+              <HStack spacing="24px">
+                {socialPlatforms.map((itemKey: ScoialPlatform, index) => {
+                  const { Icon } = ScoialConfig[itemKey]
+                  return (
+                    <Box
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
+                      w={{ base: '24px', md: '36px' }}
+                      h={{ base: '24px', md: '36px' }}
+                      as="a"
+                      href={getHref(itemKey)}
+                      target="_blank"
+                      onClick={() => {
+                        if (itemKey === ScoialPlatform.CyberConnect) {
+                          trackScoialDimensions({
+                            [TrackKey.ProfileScoialPlatform]:
+                              ProfileScoialPlatformItem.CyberConnect,
+                          })
+                        }
 
-                    if (itemKey === ScoialPlatform.Etherscan) {
-                      trackScoialDimensions({
-                        [TrackKey.ProfileScoialPlatform]:
-                          ProfileScoialPlatformItem.Etherscan,
-                      })
-                    }
-                  }}
-                >
-                  <Icon />
-                </Box>
-              )
-            })}
-          </HStack>
-        </Center>
+                        if (itemKey === ScoialPlatform.Etherscan) {
+                          trackScoialDimensions({
+                            [TrackKey.ProfileScoialPlatform]:
+                              ProfileScoialPlatformItem.Etherscan,
+                          })
+                        }
+                      }}
+                    >
+                      <Icon />
+                    </Box>
+                  )
+                })}
+              </HStack>
+            </Center>
+          </WrapLeft>
+
+          <WrapRight />
+        </WrapMain>
       </Container>
-
-      <Center>
-        <Mail3MeButton to={mailAddress} />
-      </Center>
 
       <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
         {socials.map(({ Icon }, index) => (
