@@ -6,3 +6,6 @@ export const TWITTER_URL =
 
 export const SERVER_URL =
   import.meta.env.NEXT_PUBLIC_SERVER_URL || 'https://api.mail3.me/api/v1'
+
+export const HOME_URL =
+  import.meta.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'

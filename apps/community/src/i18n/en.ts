@@ -76,6 +76,9 @@ export default {
     subject: 'Subject',
     subject_limit: '{{count}} / {{limit}}',
     editor_placeholder: 'Start writing here...',
+    preview: 'Preview',
+    send: 'Send',
+    edit: 'Edit',
   },
   dashboard: {
     message: 'Message',
