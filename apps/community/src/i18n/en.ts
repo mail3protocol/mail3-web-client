@@ -123,6 +123,8 @@ export default {
       customize_the_button: 'Customize the button',
       get_the_code: 'Get the code',
     },
+    earn_nft: '🎁 Earn NFT',
+    subscribe: 'Subscribe',
   },
   login_home_page: {
     'Hello! Friends': 'Hello! Friends',

@@ -1,9 +1,18 @@
 import CodeMirror from '@uiw/react-codemirror'
 import { atomone } from '@uiw/codemirror-theme-atomone'
-import { css } from '@codemirror/lang-css'
+import { html } from '@codemirror/lang-html'
 import { Flex, FlexProps } from '@chakra-ui/react'
 
-const CodeEditor: React.FC<FlexProps> = ({ ...props }) => (
+export interface CodeEditorProps extends Omit<FlexProps, 'onChange'> {
+  value: string
+  onChange: (value: string) => void
+}
+
+const CodeEditor: React.FC<CodeEditorProps> = ({
+  value,
+  onChange,
+  ...props
+}) => (
   <Flex
     w="full"
     css={`
@@ -20,13 +29,12 @@ const CodeEditor: React.FC<FlexProps> = ({ ...props }) => (
     {...props}
   >
     <CodeMirror
-      value={`div {
-  color: red;
-}`}
+      value={value}
       width="100%"
       height="207px"
       theme={atomone}
-      extensions={[css()]}
+      extensions={[html()]}
+      onChange={onChange}
     />
   </Flex>
 )
