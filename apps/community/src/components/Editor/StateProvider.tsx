@@ -7,6 +7,8 @@ import {
   OrderedListExtension,
   BulletListExtension,
   StrikeExtension,
+  LinkExtension,
+  ImageExtension,
 } from 'remirror/extensions'
 import { Box, BoxProps } from '@chakra-ui/react'
 import { useCallback } from 'react'
@@ -31,6 +33,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({
       new BulletListExtension(),
       new StrikeExtension(),
       new PlaceholderExtension({ placeholder }),
+      new LinkExtension(),
+      new ImageExtension(),
     ],
     [placeholder]
   )

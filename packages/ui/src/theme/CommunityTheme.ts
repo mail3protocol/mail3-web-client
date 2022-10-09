@@ -87,6 +87,7 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     },
     informationQrCodeBackground: '#FFF',
     previewDatetimeColor: '#6f6f6f',
+    editorAddLinkDialogErrorColor: '#E53E3E',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',

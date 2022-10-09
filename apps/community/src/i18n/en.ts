@@ -65,6 +65,13 @@ export default {
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
     },
+    editor_menus: {
+      link_button: {
+        add_link: 'Add Link',
+        add_link_input_placeholder: 'Link URL',
+        ok: 'OK',
+      },
+    },
   },
   hooks: {
     register_dialog: {

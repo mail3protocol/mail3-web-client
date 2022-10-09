@@ -68,3 +68,5 @@ export async function copyText(s: string) {
     copyTextFallback(s)
   }
 }
+
+export const isHttpUriReg = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/
