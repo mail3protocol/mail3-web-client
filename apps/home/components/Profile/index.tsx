@@ -1,6 +1,7 @@
 import {
   Box,
   Center,
+  Flex,
   HStack,
   Popover,
   PopoverArrow,
@@ -8,9 +9,12 @@ import {
   PopoverContent,
   PopoverTrigger,
   Spinner,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
-  Wrap,
-  WrapItem,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
@@ -35,7 +39,6 @@ import {
 import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
-import { ReactComponent as SvgMore } from 'assets/profile/more.svg'
 import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
 import { ReactComponent as SvgCyber } from 'assets/profile/business/arrow.svg'
 import { ReactComponent as SvgZiliqa } from 'assets/svg/zilliqa.svg'
@@ -68,6 +71,9 @@ const Container = styled(Box)`
 
 const WrapMain = styled(Center)`
   height: 100%;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
   position: relative;
 `
 
@@ -122,6 +128,25 @@ interface ProfileComponentProps {
 let homeUrl = ''
 if (typeof window !== 'undefined') {
   homeUrl = `${window?.location?.origin}`
+}
+
+enum TabItemType {
+  Collection = 0,
+  Updates = 1,
+}
+
+const tabsConfig: Record<
+  TabItemType,
+  {
+    name: string
+  }
+> = {
+  [TabItemType.Collection]: {
+    name: 'Collection',
+  },
+  [TabItemType.Updates]: {
+    name: 'Updates',
+  },
 }
 
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
@@ -202,6 +227,8 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       Icon: SvgZiliqa,
     },
   }
+
+  const tabItemTypes = [TabItemType.Collection, TabItemType.Updates]
 
   const profileUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
 
@@ -364,7 +391,78 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             </Center>
           </WrapLeft>
 
-          <WrapRight />
+          <WrapRight>
+            <Tabs position="relative">
+              <TabList
+                className="tablist"
+                w={{ base: '100%', md: 'auto' }}
+                overflowX="scroll"
+                overflowY="hidden"
+                justifyContent={{ base: 'flex-start', md: 'space-around' }}
+                border="none"
+                position="relative"
+              >
+                <Box
+                  w="100%"
+                  bottom="0"
+                  position="absolute"
+                  zIndex="1"
+                  bg="#F3F3F3"
+                  h="1px"
+                />
+                <HStack
+                  spacing={{ base: 0, md: '50px' }}
+                  position="relative"
+                  zIndex="2"
+                >
+                  {tabItemTypes.map((type) => {
+                    // eslint-disable-next-line @typescript-eslint/no-shadow
+                    const { name } = tabsConfig[type]
+                    return (
+                      <Tab
+                        key={type}
+                        _selected={{
+                          fontWeight: 600,
+                          _before: {
+                            content: '""',
+                            position: 'absolute',
+                            w: '50px',
+                            h: '4px',
+                            bottom: '-1px',
+                            bg: '#000',
+                            ml: '20px',
+                            borderRadius: '4px',
+                          },
+                        }}
+                        position="relative"
+                        p={{ base: '5px', md: 'auto' }}
+                      >
+                        <HStack>
+                          <Box
+                            whiteSpace="nowrap"
+                            fontSize={{ base: '14px', md: '18px' }}
+                            marginInlineStart={{
+                              base: '2px !important',
+                              md: '6px !important',
+                            }}
+                          >
+                            {name}
+                          </Box>
+                        </HStack>
+                      </Tab>
+                    )
+                  })}
+                </HStack>
+              </TabList>
+
+              <Flex justifyContent="center" pt="8px" minH="200px">
+                <TabPanels maxW="480px">
+                  <TabPanel>1</TabPanel>
+                  <TabPanel>2</TabPanel>
+                </TabPanels>
+              </Flex>
+            </Tabs>
+          </WrapRight>
         </WrapMain>
       </Container>
 
