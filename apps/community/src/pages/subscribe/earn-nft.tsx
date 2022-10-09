@@ -49,6 +49,7 @@ const buttonDefaultCode = (t: TFunction) => `<button
       right: 9px;
       background: #4E51F4;
       padding: 0 5px 5px 5px;
+      border-radius: 3px 3px 12px 12px;
     "
   >
     ${t('earn_nft')}
