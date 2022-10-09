@@ -16,52 +16,24 @@ import {
   Center,
   Skeleton,
 } from '@chakra-ui/react'
-import { TFunction, Trans, useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { lazy, Suspense, useState, useMemo } from 'react'
 import DOMPurify from 'dompurify'
 import { downloadStringAsFile } from 'shared/src/downloadStringAsFile'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
+import {
+  subscribeButtonTemplateCode,
+  subscribeButtonTemplateCssCode,
+} from '../../components/EarnNFTPageComponents'
 
 const CodeEditor = lazy(() => import('../../components/CodeEditor'))
-
-// language=html
-const buttonDefaultCode = (t: TFunction) => `<button
-  style="
-    background: #000;
-    color: #fff;
-    padding: 24px 34px 11px 26px;
-    font-size: 24px;
-    border-radius: 6px;
-    border: none;
-    opacity: 0.54;
-    position: relative;
-  "
->
-  <span
-    style="
-      display: block;
-      position: absolute;
-      clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 20% 76%, 15% 100%, 15% 75%, 0% 75%);
-      font-size: 14px;
-      top: 3px;
-      right: 9px;
-      background: #4E51F4;
-      padding: 0 5px 5px 5px;
-      border-radius: 3px 3px 12px 12px;
-    "
-  >
-    ${t('earn_nft')}
-  </span>
-  <span>${t('subscribe')}</span>
-</button>
-`
 
 export const EarnNft: React.FC = () => {
   const { t } = useTranslation('earn_nft')
   const onUpdateTipsPanelContent = useUpdateTipsPanel()
-  const [code, setCode] = useState(buttonDefaultCode(t))
+  const [code, setCode] = useState(subscribeButtonTemplateCode(t))
   const secureCode = useMemo(() => DOMPurify.sanitize(code), [code])
 
   return (
@@ -164,7 +136,7 @@ export const EarnNft: React.FC = () => {
             rounded="16px"
           >
             <iframe
-              srcDoc={`<style>html, body { width: 100%; height: 100%; margin: 0; box-sizing: border-box }body { display: flex; justify-content: center; align-items: center; }</style>${secureCode}`}
+              srcDoc={`<style>${subscribeButtonTemplateCssCode}</style>${secureCode}`}
               frameBorder="0"
               title="preview"
               style={{ width: '100%', height: '100%' }}
