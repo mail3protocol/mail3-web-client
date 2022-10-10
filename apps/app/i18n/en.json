@@ -22,6 +22,7 @@
             "dialog-title": "Connect Your Wallet",
             "connect-wallet": "Connect Wallet",
             "phantom": "Phantom",
+            "ud": "Unstoppable Domains",
             "blocto": "Blocto",
             "connecting": "Connecting",
             "coming-soon": "Coming soon",
@@ -31,6 +32,14 @@
             "imtoken-reject": "You have declined authorization, please refresh this page to authorize again.",
             "wechat": "The current environment does not support metamask. You can connect Metamask in the browser.",
             "coinbase": "Coinbase"
+        },
+        "ud": {
+            "title": "Connect Wallet",
+            "connect": "Connect",
+            "connect-wallet-desc": "Please connect your wallet with account: {{address}}",
+            "error-1": "The selected account ({{address}}) is not associated with domain {{domain}}.",
+            "error-2": "The expected account for this domain is {{address}}.",
+            "error-3": ""
         },
         "auth": {
             "connect": "Connect your Wallet",

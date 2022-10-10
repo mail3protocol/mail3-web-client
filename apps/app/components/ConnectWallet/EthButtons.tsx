@@ -38,6 +38,7 @@ import {
 } from '../../utils/wallet'
 import { IS_MOBILE } from '../../constants'
 import { CoinbaseButton } from './CoinbaseButton'
+import { UnstopableButton } from './UnstopableButton'
 
 export interface EthButtonsProps {
   onClose: () => void
@@ -210,5 +211,6 @@ export function useEthButtons({ onClose }: EthButtonsProps) {
     renderMetamask(),
     <WalletConnectButton key={ConnectorName.WalletConnect} onClose={onClose} />,
     <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />,
+    <UnstopableButton key={ConnectorName.UD} />,
   ]
 }
