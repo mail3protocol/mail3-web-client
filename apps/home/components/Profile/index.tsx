@@ -3,11 +3,14 @@ import {
   Center,
   Flex,
   HStack,
+  Image,
+  Link,
   Popover,
   PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Spacer,
   Spinner,
   Tab,
   TabList,
@@ -15,6 +18,8 @@ import {
   TabPanels,
   Tabs,
   Text,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
@@ -36,14 +41,17 @@ import {
   shareToTwitter,
   isEnsDomain,
 } from 'shared'
+import dynamic from 'next/dynamic'
+import { useQuery } from 'react-query'
 import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
 import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
 import { ReactComponent as SvgCyber } from 'assets/profile/business/arrow.svg'
 import { ReactComponent as SvgZiliqa } from 'assets/svg/zilliqa.svg'
-import dynamic from 'next/dynamic'
-import { useQuery } from 'react-query'
+import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
+import PngCluster3 from '../../assets/png/cluster3.png'
+import PngEmpty from '../../assets/png/empty.png'
 import { useAPI } from '../../api'
 
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
@@ -72,15 +80,16 @@ const Container = styled(Box)`
 const WrapMain = styled(Center)`
   height: 100%;
   width: 100%;
-  max-width: 1000px;
   margin: 0 auto;
+  max-width: 1100px;
   position: relative;
+  align-items: flex-start;
 `
 
 const WrapLeft = styled(Center)`
-  flex: 1;
+  width: 228px;
   position: relative;
-  margin: 120px auto;
+  margin-top: 40px;
   padding: 60px 20px 55px 20px;
   background-color: #ffffff;
   border: 1px solid #e7e7e7;
@@ -117,7 +126,8 @@ const WrapLeft = styled(Center)`
 `
 
 const WrapRight = styled(Box)`
-  flex: 3;
+  width: 100%;
+  padding: 40px;
 `
 
 interface ProfileComponentProps {
@@ -456,9 +466,127 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               </TabList>
 
               <Flex justifyContent="center" pt="8px" minH="200px">
-                <TabPanels maxW="480px">
-                  <TabPanel>1</TabPanel>
-                  <TabPanel>2</TabPanel>
+                <TabPanels>
+                  <TabPanel>
+                    <Box w="100%">
+                      <Center
+                        background="#F9F9F9"
+                        borderRadius="24px"
+                        p="18px"
+                        w="100%"
+                      >
+                        <Center>
+                          <SvgRank />
+                          <Text
+                            ml="8px"
+                            fontWeight="700"
+                            fontSize="14px"
+                            lineHeight="26px"
+                          >
+                            Collection Rank
+                          </Text>
+                          <Text
+                            ml="16px"
+                            fontWeight="700"
+                            fontSize="24px"
+                            lineHeight="26px"
+                            color="#4E51F4"
+                          >
+                            1000
+                          </Text>
+                        </Center>
+                        <Spacer />
+                        <Center>
+                          <Text
+                            fontWeight="400"
+                            fontSize="12px"
+                            lineHeight="26px"
+                          >
+                            Details of the ranking:
+                          </Text>
+                          <Link href="#" pl="5px">
+                            <Image w="100px" src={PngCluster3.src} />
+                          </Link>
+                        </Center>
+                      </Center>
+
+                      <Center p="24px 0">
+                        <Center
+                          fontWeight="500"
+                          fontSize="16px"
+                          lineHeight="26px"
+                        >
+                          <Text color="#4E51F4">4</Text>/<Text>8</Text>
+                          <Text ml="5px">collected</Text>
+                        </Center>
+                        <Spacer />
+                        <Link color="#4E51F4" fontSize="14px">
+                          view all
+                        </Link>
+                      </Center>
+
+                      <Box
+                        background="#F9F9F9"
+                        borderRadius="24px"
+                        p="18px"
+                        w="100%"
+                      >
+                        <Wrap spacing="20px">
+                          <WrapItem w="110px">
+                            <Center flexDirection="column">
+                              <Image src="#" w="76px" h="110px" />
+                              <Text mt="8px" textAlign="center">
+                                Mail of the Month 2022
+                              </Text>
+                            </Center>
+                          </WrapItem>
+                          <WrapItem w="110px">
+                            <Center flexDirection="column">
+                              <Image src="#" w="76px" h="110px" />
+                              <Text mt="8px" textAlign="center">
+                                Mail of the Month 2022
+                              </Text>
+                            </Center>
+                          </WrapItem>
+                          <WrapItem w="110px">
+                            <Center flexDirection="column">
+                              <Image src="#" w="76px" h="110px" />
+                              <Text mt="8px" textAlign="center">
+                                Mail of the Month 2022
+                              </Text>
+                            </Center>
+                          </WrapItem>
+                          <WrapItem w="110px">
+                            <Center flexDirection="column">
+                              <Image src="#" w="76px" h="110px" />
+                              <Text mt="8px" textAlign="center">
+                                Mail of the Month 2022
+                              </Text>
+                            </Center>
+                          </WrapItem>
+                          <WrapItem w="110px">
+                            <Center flexDirection="column">
+                              <Image src="#" w="76px" h="110px" />
+                              <Text mt="8px" textAlign="center">
+                                Mail of the Month 2022
+                              </Text>
+                            </Center>
+                          </WrapItem>
+                        </Wrap>
+                      </Box>
+                    </Box>
+                  </TabPanel>
+                  <TabPanel>
+                    <Center
+                      w="100%"
+                      h="200px"
+                      alignContent="center"
+                      flexDirection="column"
+                    >
+                      Coming soon...
+                      <Image mt="20px" src={PngEmpty.src} w="106px" />
+                    </Center>
+                  </TabPanel>
                 </TabPanels>
               </Flex>
             </Tabs>
