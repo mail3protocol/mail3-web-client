@@ -486,7 +486,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
               <Flex justifyContent="center" pt="8px" minH="200px">
                 <TabPanels>
-                  <TabPanel>
+                  <TabPanel p="0px">
                     <Box w="100%">
                       <Center
                         background="#F9F9F9"
@@ -548,11 +548,11 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                       <Box
                         background="#F9F9F9"
                         borderRadius="24px"
-                        p="18px"
+                        p={{ base: '8px', md: '18px' }}
                         w="100%"
                       >
-                        <Wrap spacing="20px">
-                          <WrapItem w="110px">
+                        <Wrap spacing="10px">
+                          <WrapItem w="100px">
                             <Center flexDirection="column">
                               <Image src="#" w="76px" h="110px" />
                               <Text mt="8px" textAlign="center">
@@ -560,7 +560,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               </Text>
                             </Center>
                           </WrapItem>
-                          <WrapItem w="110px">
+                          <WrapItem w="100px">
                             <Center flexDirection="column">
                               <Image src="#" w="76px" h="110px" />
                               <Text mt="8px" textAlign="center">
@@ -568,7 +568,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               </Text>
                             </Center>
                           </WrapItem>
-                          <WrapItem w="110px">
+                          <WrapItem w="100px">
                             <Center flexDirection="column">
                               <Image src="#" w="76px" h="110px" />
                               <Text mt="8px" textAlign="center">
@@ -576,7 +576,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               </Text>
                             </Center>
                           </WrapItem>
-                          <WrapItem w="110px">
+                          <WrapItem w="100px">
                             <Center flexDirection="column">
                               <Image src="#" w="76px" h="110px" />
                               <Text mt="8px" textAlign="center">
@@ -584,7 +584,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               </Text>
                             </Center>
                           </WrapItem>
-                          <WrapItem w="110px">
+                          <WrapItem w="100px">
                             <Center flexDirection="column">
                               <Image src="#" w="76px" h="110px" />
                               <Text mt="8px" textAlign="center">
