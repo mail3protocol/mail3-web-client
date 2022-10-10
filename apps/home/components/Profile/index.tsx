@@ -75,6 +75,11 @@ const Container = styled(Box)`
   max-width: 1220px;
   width: 100%;
   margin: 0 auto;
+  min-height: 700px;
+
+  @media (max-width: 600px) {
+    box-shadow: none;
+  }
 `
 
 const WrapMain = styled(Center)`
@@ -84,6 +89,11 @@ const WrapMain = styled(Center)`
   max-width: 1100px;
   position: relative;
   align-items: flex-start;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `
 
 const WrapLeft = styled(Center)`
@@ -123,11 +133,20 @@ const WrapLeft = styled(Center)`
       line-height: 20px;
     }
   }
+
+  @media (max-width: 600px) {
+    border: none;
+    width: 100%;
+  }
 `
 
 const WrapRight = styled(Box)`
   width: 100%;
   padding: 40px;
+
+  @media (max-width: 600px) {
+    padding: 10px;
+  }
 `
 
 interface ProfileComponentProps {
@@ -317,7 +336,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         <WrapMain>
           <WrapLeft>
             <Box className="avatar">
-              <Avatar address={address} w="62px" h="62px" />
+              <Avatar address={address} w="64px" h="64px" />
             </Box>
             <Box className="button-list">
               {isLoading ? (
@@ -474,6 +493,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                         borderRadius="24px"
                         p="18px"
                         w="100%"
+                        flexDirection={{ base: 'column', md: 'row' }}
                       >
                         <Center>
                           <SvgRank />
@@ -496,7 +516,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                           </Text>
                         </Center>
                         <Spacer />
-                        <Center>
+                        <Center mt={{ base: '5px', md: '0' }}>
                           <Text
                             fontWeight="400"
                             fontSize="12px"
