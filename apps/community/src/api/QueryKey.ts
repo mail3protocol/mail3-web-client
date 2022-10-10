@@ -1,1 +1,3 @@
-export enum QueryKey {}
+export enum QueryKey {
+  CheckUser = 'CheckUser',
+}

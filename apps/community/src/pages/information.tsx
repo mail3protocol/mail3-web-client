@@ -17,6 +17,8 @@ import {
 import { Avatar } from 'ui'
 import { useAccount } from 'hooks'
 import { Trans, useTranslation } from 'react-i18next'
+import QrCode from 'qrcode.react'
+import React from 'react'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { TipsPanel } from '../components/TipsPanel'
@@ -110,13 +112,19 @@ export const Information: React.FC = () => {
                 p="16px"
                 flexDirection="column"
               >
-                <Box
+                <Center
                   w="full"
                   h="full"
                   mb="16px"
                   bg="informationQrCodeBackground"
                   rounded="8px"
-                />
+                >
+                  <QrCode
+                    value={`https://mail3.me/${account}`}
+                    size={68}
+                    fgColor="black"
+                  />
+                </Center>
                 <DownloadButton mt="auto" />
               </Center>
             </Grid>

@@ -18,7 +18,7 @@ import {
   Transition,
   VariantLabels,
 } from 'framer-motion'
-import { useAccount, useConnector, useProvider } from 'hooks'
+import { useAccount, useConnector, useEagerConnect, useProvider } from 'hooks'
 import { Navigate } from 'react-router-dom'
 import MascotPng from '../../assets/LoginHomePage/mascot.png'
 import BellPng from '../../assets/LoginHomePage/bell.png'
@@ -30,7 +30,11 @@ import VisionPng from '../../assets/LoginHomePage/vision.png'
 import BackgroundPng from '../../assets/LoginHomePage/background.png'
 import { useRegisterDialog } from '../../hooks/useRegisterDialog'
 import { useOpenConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
-import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
+import {
+  useAuth,
+  useIsAuthenticated,
+  useIsCommunityUser,
+} from '../../hooks/useLogin'
 import { useOpenAuthModal } from '../../hooks/useAuthDialog'
 import { RoutePath } from '../../route/path'
 
@@ -113,6 +117,8 @@ export const Content: React.FC = () => {
   const connector = useConnector()
   const isAuth = useIsAuthenticated()
   useAuth()
+  useEagerConnect()
+  const { isCommunityUser } = useIsCommunityUser()
 
   if (isAuth) {
     return <Navigate to={`${RoutePath.Dashboard}`} replace />
@@ -174,7 +180,11 @@ export const Content: React.FC = () => {
               await connector?.activate()
             }
             if (account) {
-              onOpenAuthDialog()
+              if (isCommunityUser) {
+                onOpenAuthDialog()
+              } else {
+                onOpenRegisterDialog()
+              }
             } else {
               onOpenConnectWalletDialog()
             }

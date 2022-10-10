@@ -17,12 +17,14 @@ import {
 } from 'hooks'
 import dayjs from 'dayjs'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
+import { useQuery } from 'react-query'
 import {
   allowWithoutAuthPathnameSet,
   unauthorizedRedirectTo,
 } from '../route/guard/auth'
 import { useAPI } from './useAPI'
 import { useCloseAuthModal, useOpenAuthModal } from './useAuthDialog'
+import { QueryKey } from '../api/QueryKey'
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
   'mail3_community_user_properties',
@@ -190,6 +192,26 @@ export function useWalletChange() {
   }, [])
 }
 
+export function useIsCommunityUser() {
+  const api = useAPI()
+  const account = useAccount()
+  const { data: isCommunityUser = false, ...other } = useQuery(
+    [QueryKey.CheckUser, account],
+    async () =>
+      api
+        .checkUser(account)
+        .then(() => true)
+        .catch(() => false),
+    {
+      enabled: !!account,
+    }
+  )
+  return {
+    isCommunityUser,
+    ...other,
+  }
+}
+
 export function useAuth() {
   const isAuth = useIsAuthenticated()
   const account = useAccount()
@@ -197,8 +219,10 @@ export function useAuth() {
   const closeAuthModal = useCloseAuthModal()
   const { pathname } = useLocation()
   const navi = useNavigate()
+  const { isCommunityUser } = useIsCommunityUser()
+
   useEffect(() => {
-    if (!isAuth && account) {
+    if (!isAuth && account && isCommunityUser) {
       openAuthModal()
     }
     if (!account) {

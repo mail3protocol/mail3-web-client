@@ -1,6 +1,16 @@
 import axios, { AxiosInstance } from 'axios'
-import { CommunityConnectionResponse } from './modals/CommunityConnectionResponse'
+import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
+import { UserInfoResponse } from './modals/UserInfoResponse'
+import { MessageListResponse } from './modals/MessageListResponse'
+import { StatisticsResponse } from './modals/StatisticsResponse'
+import { SubscribersResponse } from './modals/SubscribersResponse'
+import {
+  SubscriptionRequest,
+  UpdateSubscriptionResponse,
+} from './modals/UpdateSubscriptionResponse'
+import { SubscriptionResponse } from './modals/SubscriptionResponse'
+import { PagingRequest } from './modals/base'
 
 export class API {
   private readonly axios: AxiosInstance
@@ -27,18 +37,46 @@ export class API {
       pubKey?: string
     }
   ) {
-    return this.axios.post<CommunityConnectionResponse>(
-      `/community/connection`,
-      {
-        address: this.account,
-        message,
-        signature,
-        pub_key: options?.pubKey,
-      }
-    )
+    return this.axios.post<ConnectionResponse>(`/community/connection`, {
+      address: this.account,
+      message,
+      signature,
+      pub_key: options?.pubKey,
+    })
   }
 
   checkUser(address: string) {
     return this.axios.get(`/community/users/${address}`)
+  }
+
+  getUserInfo() {
+    return this.axios.get<UserInfoResponse>(`/community/user_info`)
+  }
+
+  getMessageList(queryParams: PagingRequest) {
+    return this.axios.get<MessageListResponse>(`/community/messages`, {
+      params: queryParams,
+    })
+  }
+
+  getStatistics() {
+    return this.axios.get<StatisticsResponse>(`/community/statistics`)
+  }
+
+  getSubscribers(queryParams: PagingRequest) {
+    return this.axios.get<SubscribersResponse>(`/community/subscribers`, {
+      params: queryParams,
+    })
+  }
+
+  getSubscription() {
+    return this.axios.get<SubscriptionResponse>(`/community/subscription`)
+  }
+
+  updateSubscription(body: SubscriptionRequest) {
+    return this.axios.put<UpdateSubscriptionResponse>(
+      `/community/subscription`,
+      body
+    )
   }
 }
