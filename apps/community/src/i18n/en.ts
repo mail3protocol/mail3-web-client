@@ -20,6 +20,7 @@ export default {
     no_data: 'No Data',
     all_loaded: 'All Loaded',
     loading: 'Loading……',
+    unknown_error: 'Unknown error',
   },
   components: {
     header: {
@@ -99,6 +100,8 @@ export default {
     send_records: 'Send Records',
     send_records_tooltip: 'Show 10 sent messages recently',
     view_all_send_records: 'View all send records',
+    download_failed: 'Download failed, reason: {{message}}',
+    download_no_data: 'No data, unable to download.',
   },
   earn_nft: {
     title: 'Subscribe To Earn NFT',

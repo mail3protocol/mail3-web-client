@@ -45,7 +45,8 @@
     "remirror": "^1.0.85",
     "shared": "*",
     "ui": "*",
-    "qrcode.react": "^3.0.2"
+    "qrcode.react": "^3.0.2",
+    "rxjs": "^7.5.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",

@@ -1,4 +1,4 @@
 export interface PagingRequest {
-  cursor: string
+  cursor?: string
   count: number // max is 1000
 }

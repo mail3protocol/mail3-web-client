@@ -67,7 +67,7 @@ export const SendRecords: React.FC = () => {
         <Heading as="h2" fontSize="18px" fontWeight="700">
           {t('title')}
         </Heading>
-        <VStack spacing="0" mt="24px" w="full">
+        <VStack spacing="4px" mt="24px" w="full">
           {listQuery.isLoading ? (
             <>
               {new Array(10)
@@ -82,7 +82,7 @@ export const SendRecords: React.FC = () => {
               // eslint-disable-next-line react/no-array-index-key
               <Fragment key={i}>
                 {page.messages?.map((message) => (
-                  <Box key={message.uuid} h="52px" w="full">
+                  <Box key={message.uuid} h="48px" w="full">
                     <SentRecordItem
                       time={message.created_at}
                       subject={message.subject}
@@ -95,7 +95,7 @@ export const SendRecords: React.FC = () => {
           )}
           <div ref={loadNextPageRef} />
           {listQuery.isFetchingNextPage ? (
-            <Flex align="center" color="secondaryTitleColor" h="52px">
+            <Flex align="center" color="secondaryTitleColor" h="48px">
               <Spinner w="16px" h="16px" />
               <Box as="span" ml="4px" fontWeight="500" fontSize="16px">
                 {t('loading', { ns: 'common' })}
@@ -108,7 +108,7 @@ export const SendRecords: React.FC = () => {
             <Flex
               align="center"
               color="secondaryTitleColor"
-              h="52px"
+              h="48px"
               fontWeight="500"
               fontSize="16px"
             >

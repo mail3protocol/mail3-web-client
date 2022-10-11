@@ -14,8 +14,9 @@ import {
   Icon,
   VStack,
   Skeleton,
+  Spinner,
 } from '@chakra-ui/react'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
 import { useQuery } from 'react-query'
@@ -27,11 +28,56 @@ import { SentRecordItem } from '../components/SentRecordItem'
 import { RoutePath } from '../route/path'
 import { useAPI } from '../hooks/useAPI'
 import { QueryKey } from '../api/QueryKey'
+import { useDownloadSubscribers } from '../hooks/useDownloadSubscribers'
+import { useToast } from '../hooks/useToast'
 
 interface BaseInfo {
   key: string
   field: ReactNode
   value: ReactNode
+}
+
+export const DownloadButton = () => {
+  const onDownloadSubscribers = useDownloadSubscribers()
+  const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation(['dashboard', 'common'])
+  const toast = useToast()
+
+  return (
+    <Link
+      onClick={async () => {
+        if (isLoading) return
+        setIsLoading(true)
+        try {
+          const subscribers = await onDownloadSubscribers()
+          if (subscribers.length <= 0) {
+            toast(t('download_no_data'))
+          }
+        } catch (err) {
+          toast(
+            t('download_failed', {
+              message:
+                (err as any)?.message || t('unknown_error', { ns: 'common' }),
+            })
+          )
+        } finally {
+          setIsLoading(false)
+        }
+      }}
+    >
+      {isLoading ? (
+        <Spinner ml="5px" w="16px" h="16px" color="primaryTextColor" />
+      ) : (
+        <Icon
+          as={DownloadSvg}
+          color="primaryTextColor"
+          w="16px"
+          h="16px"
+          ml="5px"
+        />
+      )}
+    </Link>
+  )
 }
 
 export const Dashboard: React.FC = () => {
@@ -57,19 +103,7 @@ export const Dashboard: React.FC = () => {
       field: (
         <>
           {t('subscribers')}
-          <Link
-            onClick={() => {
-              console.log('download')
-            }}
-          >
-            <Icon
-              as={DownloadSvg}
-              color="primaryTextColor"
-              w="16px"
-              h="16px"
-              ml="5px"
-            />
-          </Link>
+          <DownloadButton />
         </>
       ),
       value: statisticsData?.subscribers_count ?? '-',
