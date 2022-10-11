@@ -9,9 +9,7 @@ export namespace Subscription {
 
   export interface MessageListResp {
     messages: MessageResp[]
-    page: number
-    pages: number
-    total: number
+    next_cursor: string
   }
 
   export interface MessageDetailResp {

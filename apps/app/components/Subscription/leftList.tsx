@@ -10,20 +10,19 @@ import {
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { atom, useAtom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
-import { FC, useEffect, useMemo } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
+import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 import { SubWrapEmptyAtom } from './wrap'
 
 const Container = styled(Box)`
   flex: 9;
   height: 100%;
-  overflow: hidden;
-  overflow-y: scroll;
   box-shadow: 0px 0px 10px rgba(25, 25, 100, 0.1);
-  padding: 20px 0;
 
   &::-webkit-scrollbar {
     width: 0 !important;
@@ -127,7 +126,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
   const [isClickMap, setIsClickMap] = useAtom(isClickMapAtom)
 
   return (
-    <Box>
+    <Box p="10px 0">
       {data.map((item) => {
         const { uuid } = item
         return (
@@ -155,90 +154,21 @@ const SubList: FC<SubListProps> = ({ data }) => {
 export const SubLeftList: FC = () => {
   // list infinite
   const setEmpty = useUpdateAtom(SubWrapEmptyAtom)
+  const api = useAPI()
+  const [scrollHeight, setScrollHeight] = useState(0)
 
-  const { data, isLoading } = useInfiniteQuery<Subscription.MessageListResp>(
+  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
     ['SubscriptionList'],
-    () =>
-      new Promise((r) => {
-        setTimeout(() => {
-          const mock = {
-            messages: [
-              {
-                uuid: 'string',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-              {
-                uuid: 'string2',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-              {
-                uuid: 'string3',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-              {
-                uuid: 'string4',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-              {
-                uuid: 'string5',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-              {
-                uuid: 'string6',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-              {
-                uuid: 'string7',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-              {
-                uuid: 'string9',
-                subject:
-                  'The More Important the Work, the More Important the Rest',
-                writer: 'Meta',
-                seen: false,
-                created_at: 'Aug 27 / 9:07 am',
-              },
-            ],
-          }
-          r(mock as Subscription.MessageListResp)
-        }, 1000)
-      }),
+    async ({ pageParam = '' }) => {
+      const ret = await api.SubscriptionMessages(pageParam)
+      return ret.data
+    },
     {
-      getNextPageParam: (lastPage: any) => {
-        if (typeof lastPage?.page !== 'number') return undefined
-        if (lastPage.page >= lastPage.pages - 1) {
-          return undefined
+      getNextPageParam: (lastPage) => {
+        if (lastPage.next_cursor) {
+          return lastPage.next_cursor
         }
-        return lastPage.page + 1
+        return undefined
       },
       refetchOnReconnect: true,
       refetchOnWindowFocus: false,
@@ -273,8 +203,22 @@ export const SubLeftList: FC = () => {
   if (!listData) return <Container>Empty</Container>
 
   return (
-    <Container>
-      <SubList data={listData} />
+    <Container ref={(ref) => setScrollHeight(ref?.clientHeight ?? 0)}>
+      {scrollHeight ? (
+        <InfiniteScroll
+          dataLength={listData.length}
+          next={fetchNextPage}
+          height={scrollHeight}
+          hasMore={hasNextPage === true}
+          loader={
+            <Center h="50px">
+              <Spinner />
+            </Center>
+          }
+        >
+          <SubList data={listData} />
+        </InfiniteScroll>
+      ) : null}
     </Container>
   )
 }
