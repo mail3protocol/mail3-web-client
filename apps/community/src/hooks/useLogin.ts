@@ -219,10 +219,9 @@ export function useAuth() {
   const closeAuthModal = useCloseAuthModal()
   const { pathname } = useLocation()
   const navi = useNavigate()
-  const { isCommunityUser } = useIsCommunityUser()
 
   useEffect(() => {
-    if (!isAuth && account && isCommunityUser) {
+    if (!isAuth && account) {
       openAuthModal()
     }
     if (!account) {

@@ -118,7 +118,6 @@ export const Content: React.FC = () => {
   const isAuth = useIsAuthenticated()
   useAuth()
   useEagerConnect()
-  const { isCommunityUser } = useIsCommunityUser()
 
   if (isAuth) {
     return <Navigate to={`${RoutePath.Dashboard}`} replace />
@@ -180,11 +179,7 @@ export const Content: React.FC = () => {
               await connector?.activate()
             }
             if (account) {
-              if (isCommunityUser) {
-                onOpenAuthDialog()
-              } else {
-                onOpenRegisterDialog()
-              }
+              onOpenAuthDialog()
             } else {
               onOpenConnectWalletDialog()
             }
