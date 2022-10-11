@@ -18,6 +18,8 @@ export default {
       },
     },
     no_data: 'No Data',
+    all_loaded: 'All Loaded',
+    loading: 'Loading……',
   },
   components: {
     header: {

@@ -42,7 +42,7 @@ export const Dashboard: React.FC = () => {
     async () => api.getStatistics().then((r) => r.data)
   )
   const { data: messageList, isLoading: isLoadingMessageList } = useQuery(
-    [QueryKey.GetMessageList],
+    [QueryKey.GetMessageListForDashboard],
     async () =>
       api.getMessageList({ cursor: '0', count: 10 }).then((r) => r.data)
   )

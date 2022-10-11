@@ -1,5 +1,5 @@
 export interface MessageListResponse {
-  messages: Message[]
+  messages: Message[] | null
   next_cursor: string
 }
 
