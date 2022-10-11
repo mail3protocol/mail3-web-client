@@ -236,6 +236,7 @@
             "default-hover": "This address will be the default address for sending emails.",
             "register-ens": "Register <a>new</a> ENS",
             "register-bit": "Register <a>new</a> .bit",
+            "register-ud": "Register <a>new</a> Unstoppable Domains",
             "request-failed": "Request change default address failed, please try again later.",
             "refresh": "Refresh",
             "refresh_failed": "Refresh Failed: ",

@@ -110,3 +110,5 @@ export const ENS_DOMAIN =
 export const BIT_DOMAIN =
   import.meta.env.NEXT_PUBLIC_BIT_DOMAIN ||
   'https://www.did.id/?inviter=mail3dao.bit&channel=mail3dao.bit'
+export const UD_DOMAIN =
+  import.meta.env.NEXT_PUBLIC_UD_DOMAIN || 'https://unstoppabledomains.com/'

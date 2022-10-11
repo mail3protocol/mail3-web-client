@@ -48,7 +48,7 @@ import { useOpenAuthModal, useUnstaopable } from '../../hooks/useLogin'
 const uauth = new UAuth({
   clientID: '3d424113-5e87-4c17-a629-2632db580d64',
   scope: 'openid wallet',
-  redirectUri: 'https://mail3-app-git-feat-ud-mail3-postoffice.vercel.app',
+  redirectUri: 'http://localhost:3000',
 })
 
 interface UnstopableDialogProps {
