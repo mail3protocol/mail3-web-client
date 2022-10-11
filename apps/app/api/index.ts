@@ -441,38 +441,21 @@ export class API {
   }
 
   public async getSubscribeStatus(
-    campaignId: string
+    userId: string
   ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
-    const res: any = {
-      data: {
-        state: 'inactive',
-      },
-    }
-    if (campaignId === '100') {
-      return new Promise((resolve) => resolve(res))
-    }
-    return this.axios.get(`/community/subscription/${campaignId}`, {
-      params: {
-        address: this.account,
-      },
-    })
+    return this.axios.get(`/subscription/followings/${userId}`)
   }
 
   public async putSubscribeCampaign(
-    campaignId: string,
+    userId: string,
     state: 'active' | 'inactive' = 'active'
   ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
-    const res: any = {
-      data: {
-        state: 'inactive',
-      },
-    }
-    if (campaignId === '100') {
-      return new Promise((resolve) => resolve(res))
-    }
-    return this.axios.put(`/community/subscription/${campaignId}`, {
-      address: this.account,
-      state,
-    })
+    return this.axios.post(
+      `/subscription/community_users/${userId}/following`,
+      {
+        uuid: userId,
+        state,
+      }
+    )
   }
 }

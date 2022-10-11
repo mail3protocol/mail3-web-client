@@ -155,7 +155,7 @@ const SubscribeStatus = () => {
   )
 }
 
-const Subscribing = () => {
+const Subscribing: React.FC = () => {
   const [t] = useTranslation('subscribe')
   return (
     <Center h="calc(100vh - 180px)" textAlign="center">
@@ -189,8 +189,22 @@ export const Subscribe: React.FC = () => {
   } = useQuery(
     [Query.GetSubscribeStatus, acccount, id],
     async () => {
-      const r = await api.getSubscribeStatus(id!)
-      return r.data
+      try {
+        await api.getSubscribeStatus(id!)
+        return {
+          state: 'active',
+        } as any
+      } catch (error: any) {
+        if (
+          error?.response?.status === 404 &&
+          error?.response?.data?.reason === 'COMMUNITY_USER_FOLLOWING_NOT_FOUND'
+        ) {
+          return {
+            state: 'inactive',
+          } as any
+        }
+        throw error
+      }
     },
     {
       enabled: !!id && isAuth,
@@ -205,11 +219,12 @@ export const Subscribe: React.FC = () => {
     data: subscribeResult,
     error: putSubscribeError,
   } = useQuery(
-    [Query.GetSubscribeStatus, acccount, id],
+    [Query.SetSubscribeStatus, acccount, id],
     async () => {
-      const { data } = await api.putSubscribeCampaign(id!)
-      // console.log(data)
-      return data
+      await api.putSubscribeCampaign(id!)
+      return {
+        state: 'active',
+      } as any
     },
     {
       enabled: !!id && isAuth && subscribeStatus?.state === 'inactive',
@@ -234,14 +249,16 @@ export const Subscribe: React.FC = () => {
   if (subscribeStatus?.state === 'active') {
     return <AlreadySubscribed />
   }
-
+  const error =
+    // @ts-ignore
+    getSubscribeStatusError?.response?.data.message ??
+    // @ts-ignore
+    putSubscribeError?.response?.data.message
   // TODO: or already subscribed
-  if (subscribeResult) {
+  if (subscribeResult && !error) {
     return <Subscribing />
   }
 
-  // @ts-ignore
-  const error = getSubscribeStatusError?.message ?? putSubscribeError?.message
   return (
     <Alert status="error" backgroundColor="#FFE2E2" borderRadius="6px">
       <AlertIcon />
