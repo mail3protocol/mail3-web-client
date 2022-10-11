@@ -194,7 +194,7 @@ export function useEthButtons({ onClose }: EthButtonsProps) {
       if (isCoinbaseWallet()) {
         return [renderCoinbase()]
       }
-      return [renderMetamask()]
+      return [renderMetamask(), <UnstopableButton key={ConnectorName.UD} />]
     }
     return [
       renderMetamask(),
@@ -205,6 +205,7 @@ export function useEthButtons({ onClose }: EthButtonsProps) {
       renderImtoken(),
       renderTrust(),
       renderCoinbase(),
+      <UnstopableButton key={ConnectorName.UD} />,
     ]
   }
   return [

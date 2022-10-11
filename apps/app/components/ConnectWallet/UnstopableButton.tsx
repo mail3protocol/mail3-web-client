@@ -10,6 +10,7 @@ import {
   useAccount,
   useConnectedEthAccount,
   useDialog,
+  useDidMount,
   useLastConectorName,
   useSetLastConnector,
   useSetLoginInfo,
@@ -44,11 +45,12 @@ import {
 import { ConnectButton, generateIcon } from './ConnectButton'
 import { isWechat } from '../../utils'
 import { useOpenAuthModal, useUnstaopable } from '../../hooks/useLogin'
+import { IS_MOBILE, UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants'
 
 const uauth = new UAuth({
-  clientID: '3d424113-5e87-4c17-a629-2632db580d64',
+  clientID: UD_CLIENT_ID,
   scope: 'openid wallet',
-  redirectUri: 'https://mail3-app-git-feat-ud-mail3-postoffice.vercel.app',
+  redirectUri: UD_REDIRECT_URI,
 })
 
 interface UnstopableDialogProps {
@@ -244,6 +246,52 @@ export const UnstopableButton: React.FC<{
     onClose: onCloseDialog,
     onOpen: openDialog,
   } = useDisclosure()
+  const isRedirectFromUD =
+    location.hash.includes('code') && location.hash.includes('openid%20wallet')
+  const onClick = async () => {
+    trackWallet({
+      [TrackKey.DesiredWallet]: DesiredWallet.UD,
+    })
+    if (shouldUseDeeplink) {
+      return
+    }
+    if (isWechat()) {
+      await dialog({
+        type: 'warning',
+        title: t('connect.notice'),
+        description: t('connect.wechat'),
+      })
+      return
+    }
+    setIsConnecting(true)
+    setIsConnectingUD(true)
+    try {
+      if (isRedirectFromUD) {
+        await uauth.loginCallback()
+      } else {
+        if (IS_MOBILE) {
+          await uauth.login()
+          return
+        }
+        await uauth.loginWithPopup()
+      }
+      const userInfo = await uauth.user()
+      setUnstopableUserInfo(userInfo)
+      openDialog()
+    } catch (error: any) {
+      //
+      logout()
+      onClose?.()
+      setIsConnectingUD(false)
+    } finally {
+      setIsConnecting(false)
+    }
+  }
+  useDidMount(() => {
+    if (isRedirectFromUD) {
+      onClick()
+    }
+  })
   return (
     <>
       <ConnectButton
@@ -255,37 +303,7 @@ export const UnstopableButton: React.FC<{
         icon={generateIcon(UDPng)}
         href={shouldUseDeeplink ? generateMetamaskDeepLink() : undefined}
         isConnected={connectorName === ConnectorName.UD && isConnected}
-        onClick={async () => {
-          trackWallet({
-            [TrackKey.DesiredWallet]: DesiredWallet.UD,
-          })
-          if (shouldUseDeeplink) {
-            return
-          }
-          if (isWechat()) {
-            await dialog({
-              type: 'warning',
-              title: t('connect.notice'),
-              description: t('connect.wechat'),
-            })
-            return
-          }
-          setIsConnecting(true)
-          setIsConnectingUD(true)
-          try {
-            await uauth.loginWithPopup()
-            const userInfo = await uauth.user()
-            setUnstopableUserInfo(userInfo)
-            openDialog()
-          } catch (error: any) {
-            //
-            logout()
-            onClose?.()
-            setIsConnectingUD(false)
-          } finally {
-            setIsConnecting(false)
-          }
-        }}
+        onClick={onClick}
       />
       <UnstopableDialog
         isOpen={dialogIsOpen}

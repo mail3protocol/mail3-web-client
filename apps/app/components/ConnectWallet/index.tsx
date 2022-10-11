@@ -7,6 +7,7 @@ import {
   ConnectorName,
   useAccount,
   useConnectWalletDialog,
+  useDidMount,
   useEagerConnect,
 } from 'hooks'
 import { Button } from 'ui/src/Button'
@@ -80,6 +81,15 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   const [signError, setSignError] = useState<NoOnWhiteListError | null>(null)
 
   useEagerConnect()
+
+  const isRedirectFromUD =
+    location.hash.includes('code') && location.hash.includes('openid%20wallet')
+
+  useDidMount(() => {
+    if (isRedirectFromUD) {
+      onOpen()
+    }
+  })
 
   if (isCoinbaseWallet() && !signError) {
     if (!isAuth) {

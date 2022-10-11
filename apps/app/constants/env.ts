@@ -12,6 +12,13 @@ export const SERVER_URL =
 export const COOKIE_DOMAIN =
   import.meta.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.mail3.me'
 
+export const UD_REDIRECT_URI =
+  import.meta.env.NEXT_PUBLIC_UD_REDIRECT_URI || 'http://localhost:3000'
+
+export const UD_CLIENT_ID =
+  import.meta.env.NEXT_PUBLIC_UD_CLIENT_ID ||
+  '3d424113-5e87-4c17-a629-2632db580d64'
+
 export const DISCORD_URL =
   import.meta.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
 
