@@ -17,9 +17,17 @@ export class API {
 
   private account: string
 
-  constructor(account = '') {
-    this.axios = axios.create({ baseURL: SERVER_URL })
+  private jwt: string
+
+  constructor(account = '', jwt = '') {
+    this.jwt = jwt
     this.account = account
+    this.axios = axios.create({
+      baseURL: SERVER_URL,
+      headers: {
+        Authorization: `Bearer ${this.jwt}`,
+      },
+    })
   }
 
   get axiosInstance() {

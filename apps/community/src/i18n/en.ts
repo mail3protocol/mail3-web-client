@@ -17,6 +17,7 @@ export default {
           'You do not have permission to participate in Beta testing.',
       },
     },
+    no_data: 'No Data',
   },
   components: {
     header: {

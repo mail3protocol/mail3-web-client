@@ -12,15 +12,21 @@ import {
   List,
   ListItem,
   Icon,
+  VStack,
+  Skeleton,
 } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
+import { useQuery } from 'react-query'
+import dayjs from 'dayjs'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { NewMessageLinkButton } from '../components/NewMessageLinkButton'
 import { SentRecordItem } from '../components/SentRecordItem'
 import { RoutePath } from '../route/path'
+import { useAPI } from '../hooks/useAPI'
+import { QueryKey } from '../api/QueryKey'
 
 interface BaseInfo {
   key: string
@@ -29,12 +35,22 @@ interface BaseInfo {
 }
 
 export const Dashboard: React.FC = () => {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation(['dashboard', 'common'])
+  const api = useAPI()
+  const { data: statisticsData } = useQuery(
+    [QueryKey.GetStatistics],
+    async () => api.getStatistics().then((r) => r.data)
+  )
+  const { data: messageList, isLoading: isLoadingMessageList } = useQuery(
+    [QueryKey.GetMessageList],
+    async () =>
+      api.getMessageList({ cursor: '0', count: 10 }).then((r) => r.data)
+  )
   const baseInfos: BaseInfo[] = [
     {
       key: 'message',
       field: t('message'),
-      value: 0,
+      value: statisticsData?.messages_count ?? '-',
     },
     {
       key: 'subscribers',
@@ -56,7 +72,7 @@ export const Dashboard: React.FC = () => {
           </Link>
         </>
       ),
-      value: 0,
+      value: statisticsData?.subscribers_count ?? '-',
     },
     {
       key: 'new_subscribers',
@@ -74,9 +90,32 @@ export const Dashboard: React.FC = () => {
           </Tooltip>
         </>
       ),
-      value: 10000,
+      value: statisticsData?.new_subscribers_count ?? '-',
     },
   ]
+
+  const listEl =
+    !messageList?.messages || messageList?.messages.length <= 0 ? (
+      <ListItem
+        textAlign="center"
+        color="secondaryTitleColor"
+        fontSize="16px"
+        fontWeight="500"
+        lineHeight="50px"
+      >
+        {t('no_data', { ns: 'common' })}
+      </ListItem>
+    ) : (
+      (messageList?.messages || []).map((item) => (
+        <ListItem h="52px" key={item.uuid}>
+          <SentRecordItem
+            time={dayjs(item.created_at).format('YYYY-MM-DD')}
+            subject={item.uuid}
+            viewCount={item.read_count}
+          />
+        </ListItem>
+      ))
+    )
 
   return (
     <Container
@@ -156,14 +195,18 @@ export const Dashboard: React.FC = () => {
           </Link>
         </Flex>
         <List mt="24px">
-          <ListItem h="52px">
-            <SentRecordItem
-              time="2022-05-23"
-              subject="🌟 Mail3 New Feature：See what we bring you in the past two
-                weeks ；)"
-              viewCount={22454}
-            />
-          </ListItem>
+          {isLoadingMessageList ? (
+            <VStack>
+              {new Array(10)
+                .fill(0)
+                .map((_, i) => i)
+                .map((i) => (
+                  <Skeleton h="52px" w="full" key={i} />
+                ))}
+            </VStack>
+          ) : (
+            listEl
+          )}
         </List>
       </Box>
     </Container>
