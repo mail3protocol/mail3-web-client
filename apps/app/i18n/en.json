@@ -36,10 +36,11 @@
         "ud": {
             "title": "Connect Wallet",
             "connect": "Connect",
+            "reconnect": "Reconnect Wallet",
             "connect-wallet-desc": "Please connect your wallet with account: {{address}}",
             "error-1": "The selected account ({{address}}) is not associated with domain {{domain}}.",
             "error-2": "The expected account for this domain is {{address}}.",
-            "error-3": ""
+            "error-3": "Please check your wallet settings to ensure you have connected the correct Ethereum account."
         },
         "auth": {
             "connect": "Connect your Wallet",

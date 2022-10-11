@@ -277,6 +277,7 @@ export const useLogout = () => {
     logout()
     setLastConnector(undefined)
     await connector?.deactivate()
+    location.reload()
   }, [connector])
 }
 

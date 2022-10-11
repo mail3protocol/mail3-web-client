@@ -48,7 +48,7 @@ import { useOpenAuthModal, useUnstaopable } from '../../hooks/useLogin'
 const uauth = new UAuth({
   clientID: '3d424113-5e87-4c17-a629-2632db580d64',
   scope: 'openid wallet',
-  redirectUri: 'http://localhost:3000',
+  redirectUri: 'https://mail3-app-git-feat-ud-mail3-postoffice.vercel.app',
 })
 
 interface UnstopableDialogProps {
@@ -121,6 +121,7 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
       }
     }
   }
+  const isWrongAddress = !!account && account !== userInfo?.wallet_address
   const connectWallet = async () => {
     setIsConnecting(true)
     try {
@@ -142,7 +143,6 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
       setIsConnecting(false)
     }
   }
-  const isWrongAddress = !!account && account !== userInfo?.wallet_address
   const shortAddress = truncateMiddle(userInfo?.wallet_address ?? '', 6, 4)
   const description = useMemo(() => {
     if (isWrongAddress) {
@@ -199,22 +199,24 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
           </Alert>
         </ModalBody>
         <ModalFooter>
-          <Button
-            isFullWidth
-            variant="primary"
-            bg="brand.500"
-            mb="16px"
-            color="white"
-            borderRadius="40px"
-            _hover={{
-              bg: 'brand.50',
-            }}
-            isLoading={isConnecting}
-            onClick={connectWallet}
-            fontWeight="normal"
-          >
-            {t('ud.connect')}
-          </Button>
+          {isWrongAddress ? null : (
+            <Button
+              isFullWidth
+              variant="primary"
+              bg="brand.500"
+              mb="16px"
+              color="white"
+              borderRadius="40px"
+              _hover={{
+                bg: 'brand.50',
+              }}
+              isLoading={isConnecting}
+              onClick={connectWallet}
+              fontWeight="normal"
+            >
+              {isWrongAddress ? t('ud.reconnect') : t('ud.connect')}
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>
@@ -228,6 +230,7 @@ export const UnstopableButton: React.FC<{
   const [isConnecting, setIsConnecting] = useState(false)
   const dialog = useDialog()
   const connectorName = useLastConectorName()
+  const setLastConector = useSetLastConnector()
   const isConnected = !!useAccount()
   const [shouldUseDeeplink] = useState(false)
   const setLoginInfo = useSetLoginInfo()
@@ -288,6 +291,7 @@ export const UnstopableButton: React.FC<{
         isOpen={dialogIsOpen}
         onClose={() => {
           onCloseDialog()
+          setLastConector()
         }}
         userInfo={unstaopableUserInfo}
       />
