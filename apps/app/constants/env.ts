@@ -13,7 +13,8 @@ export const COOKIE_DOMAIN =
   import.meta.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.mail3.me'
 
 export const UD_REDIRECT_URI =
-  import.meta.env.NEXT_PUBLIC_UD_REDIRECT_URI || 'http://localhost:3000'
+  import.meta.env.NEXT_PUBLIC_UD_REDIRECT_URI ||
+  'https://mail3-app-git-feat-ud-mail3-postoffice.vercel.app'
 
 export const UD_CLIENT_ID =
   import.meta.env.NEXT_PUBLIC_UD_CLIENT_ID ||
