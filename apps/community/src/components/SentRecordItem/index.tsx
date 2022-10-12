@@ -1,10 +1,10 @@
 import { Box, Grid } from '@chakra-ui/react'
 import { ViewIcon } from '@chakra-ui/icons'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { ReactNode } from 'react'
 
 export const SentRecordItem: React.FC<{
-  time: string
+  time: string | Dayjs
   subject: ReactNode
   viewCount: number
 }> = ({ time, subject, viewCount }) => (

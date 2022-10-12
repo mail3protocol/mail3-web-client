@@ -89,8 +89,7 @@ export const Dashboard: React.FC = () => {
   )
   const { data: messageList, isLoading: isLoadingMessageList } = useQuery(
     [QueryKey.GetMessageListForDashboard],
-    async () =>
-      api.getMessageList({ cursor: '0', count: 10 }).then((r) => r.data)
+    async () => api.getMessageList({ count: 10 }).then((r) => r.data)
   )
   const baseInfos: BaseInfo[] = [
     {
@@ -143,8 +142,8 @@ export const Dashboard: React.FC = () => {
       (messageList?.messages || []).map((item) => (
         <ListItem h="52px" key={item.uuid}>
           <SentRecordItem
-            time={dayjs(item.created_at).format('YYYY-MM-DD')}
-            subject={item.uuid}
+            time={dayjs.unix(Number(item.created_at))}
+            subject={item.subject}
             viewCount={item.read_count}
           />
         </ListItem>

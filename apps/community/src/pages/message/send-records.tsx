@@ -12,6 +12,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
 import { Fragment } from 'react'
+import dayjs from 'dayjs'
 import { Container } from '../../components/Container'
 import { NewMessageLinkButton } from '../../components/NewMessageLinkButton'
 import { SentRecordItem } from '../../components/SentRecordItem'
@@ -27,7 +28,7 @@ export const SendRecords: React.FC = () => {
 
   const listQuery = useInfiniteQuery(
     [QueryKey.GetMessageList],
-    async ({ pageParam = '0' }) =>
+    async ({ pageParam }) =>
       api
         .getMessageList({
           cursor: pageParam,
@@ -84,7 +85,7 @@ export const SendRecords: React.FC = () => {
                 {page.messages?.map((message) => (
                   <Box key={message.uuid} h="48px" w="full">
                     <SentRecordItem
-                      time={message.created_at}
+                      time={dayjs.unix(Number(message.created_at))}
                       subject={message.subject}
                       viewCount={message.read_count}
                     />
