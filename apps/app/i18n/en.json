@@ -241,6 +241,7 @@
             "request-failed": "Request change default address failed, please try again later.",
             "refresh": "Refresh",
             "refresh_failed": "Refresh Failed: ",
+            "timeout": "Request timeout, please try again later.",
             "not-found-p1": "Oops!!<br><br/>Cannot associate to your domain name",
             "not-found-p2": "please try clicking on the option above ：",
             "not-found-p3": "Refresh",

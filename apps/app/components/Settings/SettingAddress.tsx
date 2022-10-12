@@ -10,7 +10,7 @@ import {
   Text,
   VStack,
   Icon,
-  Button as RowButton,
+  Button as RawButton,
   Box,
   Spacer,
   Popover,
@@ -27,6 +27,8 @@ import {
   useCheckbox,
   UnorderedList,
   ListItem,
+  Image,
+  Portal,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
@@ -61,6 +63,7 @@ import unhappySetupMascot from '../../assets/unhappy-setup-mascot.png'
 import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
 import { ReactComponent as ArrawSvg } from '../../assets/setup/arrow.svg'
 import { ReactComponent as DefaultSvg } from '../../assets/settings/0x.svg'
+import UDIcon from '../../assets/settings/ud-icon.png'
 import { ReactComponent as BitSvg } from '../../assets/settings/bit.svg'
 import { ReactComponent as EnsSvg } from '../../assets/settings/ens.svg'
 import { ReactComponent as MoreSvg } from '../../assets/settings/more.svg'
@@ -252,6 +255,7 @@ const LIMIT_MAX_NUMBER = 5
 
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
+  const [t2] = useTranslation('common')
   const router = useLocation()
   const account = useAccount()
   const api = useAPI()
@@ -319,7 +323,9 @@ export const SettingAddress: React.FC = () => {
       }
       await refetch()
     } catch (e: any) {
-      if (e.response.data.reason !== 'EMPTY_ENS_LIST') {
+      if (e?.response?.data?.message?.includes('deadline')) {
+        toast(t('address.refresh_failed') + e.toString())
+      } else if (e.response.data.reason !== 'EMPTY_ENS_LIST') {
         toast(t('address.refresh_failed') + e.toString())
       }
     } finally {
@@ -331,16 +337,27 @@ export const SettingAddress: React.FC = () => {
   }
 
   const setUserInfo = useUpdateAtom(userPropertiesAtom)
+
   const onDefaultAccountChange =
-    (uuid: string, address: string) => async () => {
+    (isPrimitive = false) =>
+    (uuid: string, address: string) =>
+    async () => {
       const prevActiveAccount = activeAccount
       try {
         setActiveAccount(uuid)
         await api.setDefaultSentAddress(uuid)
-        setUserInfo((prev) => ({
-          ...prev,
-          defaultAddress: address,
-        }))
+        if (isPrimitive) {
+          setUserInfo((prev) => ({
+            ...prev,
+            defaultAddress: address,
+          }))
+        } else {
+          setUserInfo((prev) => ({
+            ...prev,
+            defaultAddress: address,
+            user_role: 1,
+          }))
+        }
       } catch (error) {
         setActiveAccount(prevActiveAccount)
         dialog({
@@ -390,7 +407,7 @@ export const SettingAddress: React.FC = () => {
   const udAliases = aliases.ud
 
   const getRefreshButton = (type: AliasType) => (
-    <RowButton
+    <RawButton
       variant="link"
       colorScheme="deepBlue"
       leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
@@ -402,7 +419,7 @@ export const SettingAddress: React.FC = () => {
       fontSize="16px"
     >
       {t('address.refresh')}
-    </RowButton>
+    </RawButton>
   )
 
   const onCopy = async () => {
@@ -454,6 +471,13 @@ export const SettingAddress: React.FC = () => {
     }
     return indexMap[defaultAlias?.email_type as AliasMailType] || 2
   }, [userProps?.aliases])
+
+  const [tabIndex, setTabIndex] = React.useState(defaultTabIndex)
+  const handleTabsChange = (index: number) => {
+    if (index !== 3) {
+      setTabIndex(index)
+    }
+  }
 
   return (
     <Container pb={{ md: '100px', base: 0 }}>
@@ -544,7 +568,12 @@ export const SettingAddress: React.FC = () => {
       </Center>
 
       <Box w={{ base: '100%', md: 'auto' }} mt="15px">
-        <Tabs position="relative" defaultIndex={defaultTabIndex}>
+        <Tabs
+          position="relative"
+          defaultIndex={defaultTabIndex}
+          index={tabIndex}
+          onChange={handleTabsChange}
+        >
           <TabList
             className="tablist"
             w={{ base: '100%', md: 'auto' }}
@@ -589,19 +618,56 @@ export const SettingAddress: React.FC = () => {
                     position="relative"
                     p={{ base: '5px', md: 'auto' }}
                   >
-                    <HStack>
-                      <Icon />
-                      <Box
-                        whiteSpace="nowrap"
-                        fontSize={{ base: '14px', md: '18px' }}
-                        marginInlineStart={{
-                          base: '2px !important',
-                          md: '6px !important',
-                        }}
-                      >
-                        {name}
-                      </Box>
-                    </HStack>
+                    {name === 'More' ? (
+                      <Popover>
+                        <PopoverTrigger>
+                          <HStack>
+                            <Icon />
+                            <Box
+                              whiteSpace="nowrap"
+                              fontSize={{ base: '14px', md: '18px' }}
+                              marginInlineStart={{
+                                base: '2px !important',
+                                md: '6px !important',
+                              }}
+                            >
+                              {name}
+                            </Box>
+                          </HStack>
+                        </PopoverTrigger>
+                        <Portal>
+                          <PopoverContent w="230px">
+                            <PopoverArrow />
+                            <PopoverBody>
+                              <RawButton
+                                variant="ghost"
+                                colorScheme="gray"
+                                size="sm"
+                                fontWeight={500}
+                                leftIcon={<Image w="20px" src={UDIcon} />}
+                                onClick={() => setTabIndex(3)}
+                              >
+                                {t2('connect.ud')}
+                              </RawButton>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Portal>
+                      </Popover>
+                    ) : (
+                      <HStack>
+                        <Icon />
+                        <Box
+                          whiteSpace="nowrap"
+                          fontSize={{ base: '14px', md: '18px' }}
+                          marginInlineStart={{
+                            base: '2px !important',
+                            md: '6px !important',
+                          }}
+                        >
+                          {name}
+                        </Box>
+                      </HStack>
+                    )}
                   </Tab>
                 )
               })}
@@ -642,7 +708,7 @@ export const SettingAddress: React.FC = () => {
                                       a.address
                                     )}
                                     account={a.address}
-                                    onChange={onDefaultAccountChange}
+                                    onChange={onDefaultAccountChange(false)}
                                     key={a.address}
                                     isChecked={a.uuid === activeAccount}
                                   />
@@ -660,7 +726,7 @@ export const SettingAddress: React.FC = () => {
                                     justifyContent="flex-start"
                                     alignItems="center"
                                   >
-                                    <Box>
+                                    <Box fontSize={['11px', '14px', '14px']}>
                                       <Trans
                                         ns="settings"
                                         i18nKey="address.register-ud"
@@ -700,7 +766,7 @@ export const SettingAddress: React.FC = () => {
                                   primitiveAlias.address ?? account
                                 )}
                                 account={primitiveAlias.address}
-                                onChange={onDefaultAccountChange}
+                                onChange={onDefaultAccountChange(true)}
                                 key={primitiveAlias.address}
                                 address={primitiveAlias.address ?? account}
                                 isLoading={isLoading}
@@ -733,7 +799,7 @@ export const SettingAddress: React.FC = () => {
                                       a.address
                                     )}
                                     account={a.address}
-                                    onChange={onDefaultAccountChange}
+                                    onChange={onDefaultAccountChange(false)}
                                     key={a.address}
                                     isChecked={a.uuid === activeAccount}
                                   />
@@ -816,7 +882,7 @@ export const SettingAddress: React.FC = () => {
                                       a.address
                                     )}
                                     account={a.address}
-                                    onChange={onDefaultAccountChange}
+                                    onChange={onDefaultAccountChange(false)}
                                     key={a.address}
                                     isChecked={a.uuid === activeAccount}
                                   />
