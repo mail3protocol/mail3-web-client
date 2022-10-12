@@ -1,11 +1,12 @@
-import { Box, Button, Divider, Flex, HStack } from '@chakra-ui/react'
+import { Box, Divider, Flex, HStack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import React, { useState } from 'react'
 import { Container } from '../../components/Container'
 import { Content, StateProvider, Menus } from '../../components/Editor'
-import { SubjectInput } from '../../components/NewMessageComponents'
-import { PreviewButton } from '../../components/NewMessageComponents/PreviewButton'
-import { PreviewSimulator } from '../../components/NewMessageComponents/PreviewSimulator'
+import { SubjectInput } from '../../components/NewMessagePageComponents/SubjectInput'
+import { PreviewButton } from '../../components/NewMessagePageComponents/PreviewButton'
+import { PreviewSimulator } from '../../components/NewMessagePageComponents/PreviewSimulator'
+import { SendButton } from '../../components/NewMessagePageComponents/SendButton'
 
 export const NewMessage = () => {
   const { t } = useTranslation('new_message')
@@ -66,15 +67,7 @@ export const NewMessage = () => {
               }}
               w="138px"
             />
-            {!isPreview ? (
-              <Button
-                variant="solid-rounded"
-                colorScheme="blackButton"
-                w="138px"
-              >
-                {t('send')}
-              </Button>
-            ) : null}
+            {!isPreview ? <SendButton subject={subjectText} /> : null}
           </HStack>
         </Flex>
       </StateProvider>

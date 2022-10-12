@@ -90,6 +90,8 @@ export default {
     preview: 'Preview',
     send: 'Send',
     edit: 'Edit',
+    send_succeed: 'Send Succeed!',
+    send_failed: 'Send failed, reason: {{message}}',
   },
   dashboard: {
     message: 'Message',

@@ -87,4 +87,11 @@ export class API {
       body
     )
   }
+
+  sendMessage(subject: string, content: string) {
+    return this.axios.post(`/community/message`, {
+      subject,
+      content,
+    })
+  }
 }
