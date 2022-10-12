@@ -2,8 +2,9 @@ import { Grid } from '@chakra-ui/layout'
 import {
   Box,
   Button,
+  Center,
   chakra,
-  Checkbox,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -11,15 +12,21 @@ import {
   HStack,
   Input,
   Link,
-  VStack,
-  Text,
-  Center,
+  ListItem,
+  OrderedList,
+  Radio,
+  RadioGroup,
   Skeleton,
+  Spinner,
+  Text,
+  UnorderedList,
+  VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
-import { lazy, Suspense, useState, useMemo } from 'react'
+import { lazy, Suspense, useMemo, useState } from 'react'
 import DOMPurify from 'dompurify'
 import { downloadStringAsFile } from 'shared/src/downloadStringAsFile'
+import { useQuery } from 'react-query'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
@@ -27,20 +34,93 @@ import {
   subscribeButtonTemplateCode,
   subscribeButtonTemplateCssCode,
 } from '../../components/EarnNFTPageComponents'
+import { useAPI } from '../../hooks/useAPI'
+import { QueryKey } from '../../api/QueryKey'
+import {
+  SubscriptionPlatform,
+  SubscriptionRewardType,
+  SubscriptionState,
+} from '../../api/modals/SubscriptionResponse'
+import { useToast } from '../../hooks/useToast'
+import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
 
 const CodeEditor = lazy(() => import('../../components/CodeEditor'))
 
 export const EarnNft: React.FC = () => {
-  const { t } = useTranslation('earn_nft')
+  const { t } = useTranslation(['earn_nft', 'common'])
   const onUpdateTipsPanelContent = useUpdateTipsPanel()
   const [code, setCode] = useState(subscribeButtonTemplateCode(t))
   const secureCode = useMemo(() => DOMPurify.sanitize(code), [code])
+  const api = useAPI()
+  const toast = useToast()
+
+  const [campaignUrl, setCampaignUrl] = useState('')
+  const [rewardType, setRewardType] = useState(SubscriptionRewardType.NFT)
+  const [platform, setPlatform] = useState(SubscriptionPlatform.Galaxy)
+  const [credentialId, setCredentialId] = useState('')
+  const [accessToken, setAccessToken] = useState('')
+  const [state, setState] = useState(SubscriptionState.Inactive)
+  const [isUpdating, setIsUpdating] = useState(false)
+
+  const { isLoading } = useQuery(
+    [QueryKey.GetSubscription],
+    async () => api.getSubscription().then((r) => r.data),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchInterval: false,
+      cacheTime: 0,
+      onSuccess(res) {
+        setCampaignUrl(res.campaign_url)
+        setRewardType(res.reward_type)
+        setPlatform(res.platform)
+        setCredentialId(res.credential_id)
+        setAccessToken(res.key)
+        setState(res.state)
+      },
+    }
+  )
+
+  const isDisabled = isLoading || state === SubscriptionState.Active
+
+  const onUpdateSubscription = async () => {
+    if (isUpdating) return
+    setIsUpdating(true)
+    try {
+      if (state === SubscriptionState.Active) {
+        await api.updateSubscription({ state: SubscriptionState.Inactive })
+      } else {
+        await api.updateSubscription({
+          credential_id: credentialId,
+          campaign_url: campaignUrl,
+          reward_type: rewardType,
+          key: accessToken,
+          platform,
+          state: SubscriptionState.Active,
+        })
+      }
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        t('unknown_error', { ns: 'common' })
+      toast(
+        t('update_failed', {
+          message: errorMessage,
+        })
+      )
+    } finally {
+      setIsUpdating(false)
+    }
+  }
 
   return (
     <Container
       as={Grid}
       gridTemplateColumns="calc(calc(calc(100% - 20px) / 4) * 3) calc(calc(100% - 20px) / 4)"
+      // gridTemplateRows="100%"
       gap="20px"
+      position="relative"
     >
       <Box
         as={chakra.form}
@@ -50,9 +130,26 @@ export const EarnNft: React.FC = () => {
         p="32px"
         onSubmit={(event) => {
           event.preventDefault()
-          console.log((event.target as HTMLFormElement).campaign_link)
+          onUpdateSubscription()
         }}
+        position="relative"
       >
+        {isLoading ? (
+          <Center
+            w="full"
+            h="full"
+            bg="loadingOverlayBackground"
+            position="absolute"
+            top="0"
+            left="0"
+            zIndex={2}
+          >
+            <Flex align="center">
+              <Spinner mr="6px" w="16px" h="16px" />
+              {t('loading', { ns: 'common' })}
+            </Flex>
+          </Center>
+        ) : null}
         <Box mb="32px">
           <Heading as="h4" fontSize="18px" lineHeight="20px">
             {t('title')}
@@ -61,14 +158,34 @@ export const EarnNft: React.FC = () => {
         <VStack spacing="24px" maxW="487px" mb="32px">
           <FormControl>
             <FormLabel>{t('to_earn')}</FormLabel>
-            <Checkbox variant="outline">{t('nft')}</Checkbox>
+            <RadioGroup
+              isDisabled={isDisabled}
+              value={rewardType}
+              onChange={(val) => setRewardType(val as SubscriptionRewardType)}
+            >
+              <HStack spacing="8px">
+                <Radio variant="outline" value={SubscriptionRewardType.NFT}>
+                  {t('nft')}
+                </Radio>
+              </HStack>
+            </RadioGroup>
           </FormControl>
           <FormControl>
             <FormLabel>{t('distribution_platform')}</FormLabel>
-            <HStack spacing="8px">
-              <Checkbox variant="outline">{t('platforms.galaxy')}</Checkbox>
-              <Checkbox variant="outline">{t('platforms.quest3')}</Checkbox>
-            </HStack>
+            <RadioGroup
+              isDisabled={isDisabled}
+              value={platform}
+              onChange={(val) => setPlatform(val as SubscriptionPlatform)}
+            >
+              <HStack spacing="8px">
+                <Radio value={SubscriptionPlatform.Galaxy}>
+                  {t('platforms.galaxy')}
+                </Radio>
+                <Radio value={SubscriptionPlatform.Quest3}>
+                  {t('platforms.quest3')}
+                </Radio>
+              </HStack>
+            </RadioGroup>
           </FormControl>
           <FormControl>
             <FormLabel>{t('campaign_link_field')}</FormLabel>
@@ -80,38 +197,92 @@ export const EarnNft: React.FC = () => {
                   `current is: ${t('campaign_link_field')}`
                 )
               }
+              isDisabled={isDisabled}
+              value={campaignUrl}
+              onChange={(e) => setCampaignUrl(e.target.value)}
             />
             <FormHelperText whiteSpace="nowrap">
-              <Trans
-                t={t}
-                i18nKey="go_to_galaxy_description"
-                components={{ a: <Link color="primary.900" /> }}
-              />
+              {platform === SubscriptionPlatform.Galaxy ? (
+                <Trans
+                  t={t}
+                  i18nKey="go_to_galaxy_description"
+                  components={{
+                    a: (
+                      <Link
+                        color="primary.900"
+                        href={GALXE_URL}
+                        target="_blank"
+                      />
+                    ),
+                  }}
+                />
+              ) : null}
+              {platform === SubscriptionPlatform.Quest3 ? (
+                <Trans
+                  t={t}
+                  i18nKey="go_to_quest3_description"
+                  components={{
+                    a: (
+                      <Link
+                        color="primary.900"
+                        href={QUEST3_URL}
+                        target="_blank"
+                      />
+                    ),
+                  }}
+                />
+              ) : null}
             </FormHelperText>
           </FormControl>
-          <FormControl>
-            <FormLabel>{t('credential_id')}</FormLabel>
-            <Input
-              w="150px"
-              onFocus={() =>
-                onUpdateTipsPanelContent(`current is: ${t('credential_id')}`)
-              }
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>{t('credential_key')}</FormLabel>
-            <Input w="150px" />
-          </FormControl>
+          {platform === SubscriptionPlatform.Galaxy ? (
+            <>
+              <FormControl>
+                <FormLabel>{t('credential_id')}</FormLabel>
+                <Input
+                  onFocus={() =>
+                    onUpdateTipsPanelContent(
+                      `current is: ${t('credential_id')}`
+                    )
+                  }
+                  isDisabled={isDisabled}
+                  value={credentialId}
+                  onChange={(e) => setCredentialId(e.target.value)}
+                  placeholder={t('credential_id_placeholder')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>{t('access_token')}</FormLabel>
+                <Input
+                  isDisabled={isDisabled}
+                  value={accessToken}
+                  onChange={(e) => setAccessToken(e.target.value)}
+                  placeholder={t('access_token_placeholder')}
+                />
+              </FormControl>
+            </>
+          ) : null}
         </VStack>
         <Button
           variant="solid-rounded"
           colorScheme="primaryButton"
           type="submit"
         >
-          {t('enable')}
+          {state === SubscriptionState.Active ? t('disable') : t('enable')}
         </Button>
       </Box>
-      <TipsPanel gridRow="1 / 3" gridColumn="2 / 3" useSharedContent />
+      <TipsPanel gridRow="1 / 3" gridColumn="2 / 3">
+        <Trans
+          i18nKey="help"
+          t={t}
+          components={{
+            h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
+            ul: <UnorderedList />,
+            ol: <OrderedList />,
+            li: <ListItem fontSize="14px" fontWeight="400" />,
+            p: <Text fontSize="14px" fontWeight="400" />,
+          }}
+        />
+      </TipsPanel>
       <Box bg="cardBackground" shadow="card" rounded="card" p="32px">
         <Heading as="h4" fontSize="18px" lineHeight="20px" mb="8px">
           {t('title')}
@@ -173,6 +344,7 @@ export const EarnNft: React.FC = () => {
           </Center>
         </Grid>
       </Box>
+      <Box />
     </Container>
   )
 }

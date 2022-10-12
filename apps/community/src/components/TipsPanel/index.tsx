@@ -27,13 +27,11 @@ export const TipsPanel = forwardRef<
   }
   return (
     <Box ref={ref} {...styleConfig} {...props}>
-      <Box position="sticky" top="80px">
-        <Heading as="h4" {...titleStyleConfig}>
-          <Icon as={QuestionSvg} w="20px" h="20px" mr="14px" my="auto" />
-          {t('tips_panel.title')}
-        </Heading>
-        {useSharedContent ? <SharedTipsPanelContent /> : children}
-      </Box>
+      <Heading as="h4" {...titleStyleConfig}>
+        <Icon as={QuestionSvg} w="20px" h="20px" mr="14px" my="auto" />
+        {t('tips_panel.title')}
+      </Heading>
+      {useSharedContent ? <SharedTipsPanelContent /> : children}
     </Box>
   )
 })

@@ -109,16 +109,21 @@ export default {
     nft: 'NFT',
     distribution_platform: 'Distribution Platform',
     platforms: {
-      galaxy: 'Project Galaxy',
+      galaxy: 'Galxe',
       quest3: 'Quest3',
     },
     campaign_link_field: 'Campaign Link',
-    campaign_link_placeholder: 'campaign Link',
+    campaign_link_placeholder: 'Campaign Link',
     go_to_galaxy_description:
-      'Go to <a>Project Galaxy</a> to create a marketing campaign and get the campaign link.',
+      'Go to <a>Galax</a> to create a marketing campaign and get the campaign link.',
+    go_to_quest3_description:
+      'Go to <a>Quest3</a> to create a marketing campaign and get the campaign link.',
     credential_id: 'Credential ID',
-    credential_key: 'Credential Key',
+    credential_id_placeholder: 'Credential ID',
+    access_token: 'Access Token',
+    access_token_placeholder: 'Access Token',
     enable: 'Enable',
+    disable: 'Disable',
     subscription_style_preview: {
       title: 'Subscription dialog style preview',
       description_1:
@@ -131,6 +136,51 @@ export default {
     },
     earn_nft: '🎁 Earn NFT',
     subscribe: 'Subscribe',
+    update_failed: 'Setup failed, reason: {{message}}',
+    update_succeed: 'Setup succeed!',
+    // language=html
+    help: `<h3>What is Subscribe To Earn?</h3>
+           <ul>
+             <li>
+               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project. 
+             </li>
+             <li>
+               <p>Only a few simple steps are needed:</p>
+               <ol>
+                 <li>Create your rewards on a supported platform (currently only Project Galaxy OAT & NFT are supported);</li>
+                 <li>Follow the guide to complete the configuration below;</li>
+                 <li>Get the code to integrate into your website or product.</li>
+               </ol>
+             </li>
+           </ul>
+           <h3>How to get the Credential ID?</h3>
+           <ul>
+             <li>
+               As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Crurated Credentials] > [Create] > [Select Type: EVM Address or Snapshot] > [Fill in the necessary information and create Credential] > [Create]
+             </li>
+             <li>
+               You can see the URL in the browser address bar of the successfully created Credential web page, for example: galxe.com/credential/20193934911****190
+             </li>
+             <li>
+               Get [Credential ID]: 20193934911****190
+             </li>
+           </ul>
+           <h3>How to get the Access Token?</h3>
+           <ul>
+             <li>
+               As a Galxe inbound project party, you can get your Access Token through the following path: [Click on avatar] > [Setting] > [Access Token]
+             </li>
+             <li>
+               For example: gbt****FgD3.
+             </li>
+             <li>
+               Get [Access Token]: gbt****FgD3
+             </li>
+             <li>
+               Please note: You need to synchronize and update the new Access Token to Mail3 community after each refresh to avoid possible error
+             </li>
+           </ul>
+    `,
   },
   login_home_page: {
     'Hello! Friends': 'Hello! Friends',

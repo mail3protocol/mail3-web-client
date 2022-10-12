@@ -9,10 +9,10 @@ export interface UpdateSubscriptionResponse {
 }
 
 export interface SubscriptionRequest {
-  campaign_url: string
-  reward_type: SubscriptionRewardType
-  platform: SubscriptionPlatform
-  credential_id: string
-  key: string
-  state: SubscriptionState
+  campaign_url?: string
+  reward_type?: SubscriptionRewardType
+  platform?: SubscriptionPlatform
+  credential_id?: string
+  key?: string
+  state?: SubscriptionState
 }

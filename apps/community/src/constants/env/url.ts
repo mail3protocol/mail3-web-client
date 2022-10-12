@@ -9,3 +9,9 @@ export const SERVER_URL =
 
 export const HOME_URL =
   import.meta.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'
+
+export const GALXE_URL =
+  import.meta.env.NEXT_PUBLIC_GALXE_URL || 'https://galxe.com'
+
+export const QUEST3_URL =
+  import.meta.env.NEXT_PUBLIC_QUEST3_URL || 'https://quest3.xyz'

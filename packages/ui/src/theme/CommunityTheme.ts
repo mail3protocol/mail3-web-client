@@ -88,6 +88,7 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     informationQrCodeBackground: '#FFF',
     previewDatetimeColor: '#6f6f6f',
     editorAddLinkDialogErrorColor: '#E53E3E',
+    loadingOverlayBackground: 'rgba(255, 255, 255, 0.4)',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
@@ -289,6 +290,47 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
         },
       },
     },
+    Radio: {
+      baseStyle: {
+        container: {
+          w: '150px',
+          h: '38px',
+          lineHeight: '36px',
+        },
+        control: {
+          display: 'none',
+          opacity: 0,
+          h: 0,
+          w: 0,
+          border: 'none',
+        },
+        label: {
+          m: 0,
+          w: 'inherit',
+          h: 'inherit',
+          fontSize: '14px',
+          textAlign: 'center',
+          rounded: '8px',
+          border: '1px solid',
+          borderColor: 'currentColor',
+          fontWeight: 600,
+          letterSpacing: 0.1,
+          opacity: 0.8,
+          transaction: '200ms',
+          bg: 'checkboxOutlineBackground',
+          _checked: {
+            color: 'primary.900',
+            _disabled: {
+              color: 'primary.400',
+            },
+          },
+          _disabled: {
+            opacity: 0.8,
+            color: 'uneditable',
+          },
+        },
+      },
+    },
     Card: {
       baseStyle: {
         bg: 'cardBackground',
@@ -303,7 +345,10 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
         rounded: 'card',
         px: '18px',
         py: '32px',
-        position: 'relative',
+        position: 'sticky',
+        top: '80px',
+        maxH: 'calc(100vh - 100px)',
+        overflowY: 'auto',
         title: {
           color: 'primary.900',
           fontSize: '18px',
