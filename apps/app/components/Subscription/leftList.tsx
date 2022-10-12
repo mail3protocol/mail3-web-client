@@ -59,8 +59,6 @@ const SubListItemWrap = styled(Flex)`
   }
 `
 
-// item
-// click set SubpreviewIdAtom id
 interface SubListItemProps {
   onClick: () => void
   isClicked: boolean
@@ -117,7 +115,6 @@ export const SubListItem: FC<SubListItemProps> = ({
   )
 }
 
-// list ui
 interface SubListProps {
   data: Subscription.MessageResp[]
 }
@@ -143,7 +140,6 @@ const SubList: FC<SubListProps> = ({ data }) => {
                 ...isClickMap,
                 [uuid]: true,
               })
-              console.log('click', uuid)
             }}
           />
         )
@@ -153,7 +149,6 @@ const SubList: FC<SubListProps> = ({ data }) => {
 }
 
 export const SubLeftList: FC = () => {
-  // list infinite
   const setEmpty = useUpdateAtom(SubWrapEmptyAtom)
   const api = useAPI()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -162,7 +157,6 @@ export const SubLeftList: FC = () => {
 
   useEffect(() => {
     if (isMaxWdith600) return
-    console.log(containerRef.current?.clientHeight)
     setScrollHeight(containerRef.current?.clientHeight || 0)
   })
 
@@ -199,7 +193,6 @@ export const SubLeftList: FC = () => {
     }
   }, [listData, isLoading])
 
-  // loading
   if (isLoading)
     return (
       <Container>
@@ -208,7 +201,7 @@ export const SubLeftList: FC = () => {
         </Center>
       </Container>
     )
-  // empty
+
   if (!listData) return <Container>Empty</Container>
 
   return (
@@ -217,7 +210,7 @@ export const SubLeftList: FC = () => {
         <InfiniteScroll
           dataLength={listData.length}
           next={fetchNextPage}
-          height={isMaxWdith600 ? 'auto' : scrollHeight}
+          height={isMaxWdith600 ? '' : scrollHeight}
           hasMore={hasNextPage === true}
           loader={
             <Center h="50px">

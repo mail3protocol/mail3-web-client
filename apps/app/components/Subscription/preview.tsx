@@ -14,11 +14,12 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
 import { ReactComponent as ArtEmptySvg } from '../../assets/subscription/article-empty.svg'
+import { useAPI } from '../../hooks/useAPI'
 // import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
 
 const Mask = styled(Box)`
@@ -139,50 +140,21 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
 export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   isSingleMode,
 }) => {
+  const api = useAPI()
   const id = useAtomValue(SubPreviewIdAtom)
   const { data, isLoading } = useQuery<Subscription.MessageDetailResp>(
     ['subscriptionDetail', id],
-    () =>
-      new Promise((r) => {
-        setTimeout(() => {
-          const mock = {
-            uuid: 'string',
-            subject: 'The More Important the Work, the More Important the Rest',
-            writer_name: 'string',
-            writer_uuid: 'string',
-            content: `
-        Things you can do on a contact’s page
-    Decide if their email should go to The Imbox, The Feed, or The Paper Trail. Just click the “Delivering to...” button under their name. If you change the destination, all existing and future email will be moved automatically.
-
-    Automatically label their email. Always want someone’s emails to go into a specific label? Easy, just click the “Autofile...” button and pick the label.
-
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-    Turn on/off notifications for that contact. We want HEY to be a calm and quiet place, so all push notifications are off by default. But sometimes you need to know when your partner, or doctor, or your kid’s teacher emails you. To set that up, click “Not notifying” button to toggle notifications on.
-
-        `,
-            created_at: 'Aug 27 9:07 am',
-          }
-          r(mock)
-        }, 1000)
-      }),
+    async () => {
+      const messageDetail = await api.SubscriptionMessageDetail(id)
+      return messageDetail.data
+    },
     {
       enabled: !!id,
     }
   )
 
-  useEffect(() => {
-    console.log('preview', id)
-  }, [id])
-
   const detail = useMemo(() => data, [data])
 
-  // loading
   if (isLoading) {
     return (
       <Wrap isSingleMode={isSingleMode}>
@@ -193,7 +165,6 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     )
   }
 
-  // empty
   if (!detail) {
     return (
       <Wrap isSingleMode={isSingleMode}>
@@ -223,7 +194,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           </Link>
         </Flex>
         <Box fontWeight={500} fontSize="12px" color="#6F6F6F" mt="4px">
-          {detail?.created_at}
+          {detail.created_at}
         </Box>
         <Divider orientation="horizontal" mt="16px" />
       </Box>
@@ -236,7 +207,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           lineHeight="26px"
           color="#818181"
         >
-          {detail?.writer_name}
+          {detail.writer_name}
         </Box>
       </Center>
       <Text
@@ -256,7 +227,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           whiteSpace="nowrap"
           color="#818181"
         >
-          Aug 27 / 9:07
+          {detail.created_at}
         </Box>
         <Divider orientation="horizontal" />
       </Flex>
