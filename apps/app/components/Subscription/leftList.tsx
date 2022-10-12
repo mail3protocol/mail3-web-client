@@ -7,13 +7,14 @@ import {
   Spacer,
   Spinner,
   Text,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { atom, useAtom } from 'jotai'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
@@ -155,7 +156,15 @@ export const SubLeftList: FC = () => {
   // list infinite
   const setEmpty = useUpdateAtom(SubWrapEmptyAtom)
   const api = useAPI()
+  const containerRef = useRef<HTMLDivElement>(null)
   const [scrollHeight, setScrollHeight] = useState(0)
+  const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
+
+  useEffect(() => {
+    if (isMaxWdith600) return
+    console.log(containerRef.current?.clientHeight)
+    setScrollHeight(containerRef.current?.clientHeight || 0)
+  })
 
   const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
     ['SubscriptionList'],
@@ -203,12 +212,12 @@ export const SubLeftList: FC = () => {
   if (!listData) return <Container>Empty</Container>
 
   return (
-    <Container ref={(ref) => setScrollHeight(ref?.clientHeight ?? 0)}>
-      {scrollHeight ? (
+    <Container ref={containerRef}>
+      {scrollHeight || isMaxWdith600 ? (
         <InfiniteScroll
           dataLength={listData.length}
           next={fetchNextPage}
-          height={scrollHeight}
+          height={isMaxWdith600 ? 'auto' : scrollHeight}
           hasMore={hasNextPage === true}
           loader={
             <Center h="50px">

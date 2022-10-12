@@ -95,7 +95,7 @@ const Container = styled(Box)`
 `
 
 export const SubPreviewIdAtom = atom<string>('')
-export const SubPreviewIsOpenAtom = atom<boolean>(true)
+export const SubPreviewIsOpenAtom = atom<boolean>(false)
 
 const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   children,
