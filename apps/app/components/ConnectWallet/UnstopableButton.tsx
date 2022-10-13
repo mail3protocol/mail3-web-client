@@ -44,7 +44,11 @@ import {
 } from '../../utils/wallet'
 import { ConnectButton, generateIcon } from './ConnectButton'
 import { isWechat } from '../../utils'
-import { useOpenAuthModal, useUnstaopable } from '../../hooks/useLogin'
+import {
+  useIsAuthenticated,
+  useOpenAuthModal,
+  useUnstaopable,
+} from '../../hooks/useLogin'
 import { IS_MOBILE, UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants'
 
 const uauth = new UAuth({
@@ -160,13 +164,14 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
     }
     return t('ud.connect-wallet-desc', { address: shortAddress })
   }, [t, shortAddress, isWrongAddress])
+  const isAuth = useIsAuthenticated()
   useEffect(() => {
     if (account) {
-      if (account === userInfo?.wallet_address) {
+      if (account === userInfo?.wallet_address && !isAuth) {
         openAuthModal()
       }
     }
-  }, [account, userInfo?.wallet_address])
+  }, [account, userInfo?.wallet_address, isAuth])
 
   return (
     <Modal
@@ -310,6 +315,7 @@ export const UnstopableButton: React.FC<{
         onClose={() => {
           onCloseDialog()
           setLastConector()
+          setIsConnectingUD(false)
         }}
         userInfo={unstaopableUserInfo}
       />
