@@ -21,6 +21,7 @@ export default {
     all_loaded: 'All Loaded',
     loading: 'Loading……',
     unknown_error: 'Unknown error',
+    copy_succeed: 'Copy Succeed!',
   },
   components: {
     header: {

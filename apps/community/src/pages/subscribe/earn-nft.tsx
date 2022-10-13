@@ -36,6 +36,7 @@ import {
 } from '../../api/modals/SubscriptionResponse'
 import { useToast } from '../../hooks/useToast'
 import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
+import { StylePreview } from '../../components/EarnNFTPageComponents/StylePreview'
 
 export const EarnNft: React.FC = () => {
   const { t } = useTranslation(['earn_nft', 'common'])
@@ -51,7 +52,7 @@ export const EarnNft: React.FC = () => {
   const [state, setState] = useState(SubscriptionState.Inactive)
   const [isUpdating, setIsUpdating] = useState(false)
 
-  const { isLoading } = useQuery(
+  const { isLoading, refetch } = useQuery(
     [QueryKey.GetSubscription],
     async () => api.getSubscription().then((r) => r.data),
     {
@@ -76,18 +77,23 @@ export const EarnNft: React.FC = () => {
     if (isUpdating) return
     setIsUpdating(true)
     try {
-      if (state === SubscriptionState.Active) {
-        await api.updateSubscription({ state: SubscriptionState.Inactive })
-      } else {
-        await api.updateSubscription({
-          credential_id: credentialId,
-          campaign_url: campaignUrl,
-          reward_type: rewardType,
-          key: accessToken,
-          platform,
-          state: SubscriptionState.Active,
-        })
+      const body = {
+        campaign_url: campaignUrl,
+        reward_type: rewardType,
+        platform,
+        state:
+          state === SubscriptionState.Active
+            ? SubscriptionState.Inactive
+            : SubscriptionState.Active,
+        ...(platform === SubscriptionPlatform.Galaxy
+          ? {
+              credential_id: credentialId,
+              key: accessToken,
+            }
+          : {}),
       }
+      await api.updateSubscription(body)
+      await refetch()
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message ||
@@ -121,7 +127,6 @@ export const EarnNft: React.FC = () => {
           onUpdateSubscription()
         }}
         position="relative"
-        gridRow="1 / 3"
       >
         {isLoading ? (
           <Center
@@ -255,6 +260,7 @@ export const EarnNft: React.FC = () => {
           variant="solid-rounded"
           colorScheme="primaryButton"
           type="submit"
+          isLoading={isUpdating}
         >
           {state === SubscriptionState.Active ? t('disable') : t('enable')}
         </Button>
@@ -272,6 +278,7 @@ export const EarnNft: React.FC = () => {
           }}
         />
       </TipsPanel>
+      <StylePreview isDisabledCopy={state === SubscriptionState.Inactive} />
     </Container>
   )
 }

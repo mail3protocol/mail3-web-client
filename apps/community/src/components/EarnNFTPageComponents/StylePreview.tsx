@@ -10,19 +10,27 @@ import {
 import { Trans, useTranslation } from 'react-i18next'
 import { Grid } from '@chakra-ui/layout'
 import { lazy, Suspense, useMemo, useState } from 'react'
-import { downloadStringAsFile } from 'shared/src/downloadStringAsFile'
 import DOMPurify from 'dompurify'
+import { copyText } from 'shared'
 import {
   subscribeButtonTemplateCode,
   subscribeButtonTemplateCssCode,
 } from './SubscribeButtonTemplateCode'
+import { useToast } from '../../hooks/useToast'
 
 const CodeEditor = lazy(() => import('../CodeEditor'))
 
-export const StylePreview = () => {
+export interface StylePreviewProps {
+  isDisabledCopy?: boolean
+}
+
+export const StylePreview: React.FC<StylePreviewProps> = ({
+  isDisabledCopy,
+}) => {
   const { t } = useTranslation(['earn_nft', 'common'])
   const [code, setCode] = useState(subscribeButtonTemplateCode(t))
   const secureCode = useMemo(() => DOMPurify.sanitize(code), [code])
+  const toast = useToast()
 
   return (
     <Box bg="cardBackground" shadow="card" rounded="card" p="32px">
@@ -72,14 +80,19 @@ export const StylePreview = () => {
             {t('subscription_style_preview.customize_the_button')}
           </Heading>
           <Suspense fallback={<Skeleton w="full" h="207px" />}>
-            <CodeEditor value={code} onChange={setCode} />
+            <CodeEditor value={code} onChange={setCode} readOnly />
           </Suspense>
         </Box>
         <Center gridColumn="2 / 3">
           <Button
             variant="solid-rounded"
             colorScheme="primaryButton"
-            onClick={() => downloadStringAsFile(code, 'code.html')}
+            onClick={() => {
+              copyText(code).then(() => {
+                toast(t('copy_succeed', { ns: 'common' }))
+              })
+            }}
+            isDisabled={isDisabledCopy}
           >
             {t('subscription_style_preview.get_the_code')}
           </Button>

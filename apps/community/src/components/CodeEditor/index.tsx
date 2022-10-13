@@ -6,11 +6,13 @@ import { Flex, FlexProps } from '@chakra-ui/react'
 export interface CodeEditorProps extends Omit<FlexProps, 'onChange'> {
   value: string
   onChange: (value: string) => void
+  readOnly?: boolean
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
   value,
   onChange,
+  readOnly,
   ...props
 }) => (
   <Flex
@@ -35,6 +37,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       theme={atomone}
       extensions={[html()]}
       onChange={onChange}
+      readOnly={readOnly}
     />
   </Flex>
 )
