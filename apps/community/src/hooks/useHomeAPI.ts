@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
-import { useAccount } from 'hooks'
-import { useJWT } from './useLoginInfo'
+import { useAccount, useLoginInfo } from 'hooks'
 import { HomeAPI } from '../api/HomeAPI'
 
 export function useHomeAPI() {
   const account = useAccount()
-  const jwt = useJWT()
+  const jwt = useLoginInfo()?.jwt
   return useMemo(() => new HomeAPI(account, jwt), [account, jwt])
 }

@@ -3,7 +3,6 @@ import {
   Box,
   Grid,
   Center,
-  Avatar,
   Text,
   Flex,
   Heading,
@@ -16,11 +15,13 @@ import {
   Skeleton,
   Spinner,
 } from '@chakra-ui/react'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
+import { useAccount } from 'hooks'
+import { Avatar } from 'ui'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { NewMessageLinkButton } from '../components/NewMessageLinkButton'
@@ -30,6 +31,7 @@ import { useAPI } from '../hooks/useAPI'
 import { QueryKey } from '../api/QueryKey'
 import { useDownloadSubscribers } from '../hooks/useDownloadSubscribers'
 import { useToast } from '../hooks/useToast'
+import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
 
 interface BaseInfo {
   key: string
@@ -126,6 +128,23 @@ export const Dashboard: React.FC = () => {
       value: statisticsData?.new_subscribers_count ?? '-',
     },
   ]
+  const userInfo = useUserInfo()
+  const setUserInfo = useSetUserInfo()
+  const address = useAccount()
+  useEffect(() => {
+    if (
+      !userInfo ||
+      !userInfo.next_refresh_time ||
+      dayjs(userInfo.next_refresh_time).isBefore(dayjs())
+    ) {
+      api.getUserInfo().then(({ data }) =>
+        setUserInfo({
+          ...data,
+          next_refresh_time: dayjs().add(1, 'day').format(),
+        })
+      )
+    }
+  }, [userInfo?.next_refresh_time])
 
   const listEl =
     !messageList?.messages || messageList?.messages.length <= 0 ? (
@@ -167,9 +186,9 @@ export const Dashboard: React.FC = () => {
         h="full"
       >
         <Center flexDirection="column">
-          <Avatar w="48px" h="48px" />
+          <Avatar w="48px" h="48px" address={address} />
           <Text mt="4px" fontWeight="bold">
-            Mail3
+            {userInfo?.name}
           </Text>
         </Center>
         {baseInfos.map((info) => (

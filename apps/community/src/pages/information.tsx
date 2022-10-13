@@ -1,5 +1,5 @@
 import {
-  Box,
+  Image,
   BoxProps,
   Button,
   ButtonProps,
@@ -14,15 +14,24 @@ import {
   VStack,
   Icon,
 } from '@chakra-ui/react'
-import { Avatar } from 'ui'
-import { useAccount } from 'hooks'
+import { Avatar, ProfileCard } from 'ui'
+import { useAccount, useScreenshot } from 'hooks'
 import { Trans, useTranslation } from 'react-i18next'
 import QrCode from 'qrcode.react'
-import React from 'react'
+import React, { useRef } from 'react'
+import { useQuery } from 'react-query'
+import dayjs from 'dayjs'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
+import { QueryKey } from '../api/QueryKey'
+import { useAPI } from '../hooks/useAPI'
+import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
+import { HOME_URL } from '../constants/env/url'
+import { MAIL_SERVER_URL } from '../constants/env/mailServer'
 
-export const DownloadButton: React.FC<ButtonProps> = () => {
+export const DownloadButton: React.FC<
+  ButtonProps & { href?: string; download?: string }
+> = ({ ...props }) => {
   const { t } = useTranslation('user_information')
   return (
     <Button
@@ -30,6 +39,7 @@ export const DownloadButton: React.FC<ButtonProps> = () => {
       variant="link"
       fontSize="14px"
       colorScheme="primaryButton"
+      {...props}
     >
       {t('download')}
     </Button>
@@ -40,6 +50,31 @@ export const Information: React.FC = () => {
   const { t } = useTranslation('user_information')
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const account = useAccount()
+  const api = useAPI()
+  const userInfo = useUserInfo()
+  const setUserInfo = useSetUserInfo()
+  const { data: userInfoData } = useQuery(
+    [QueryKey.GetUserInfo],
+    async () => api.getUserInfo().then((r) => r.data),
+    {
+      onSuccess(d) {
+        setUserInfo({
+          ...d,
+          next_refresh_time: dayjs().add(1, 'day').format(),
+        })
+      },
+    }
+  )
+  const cardRef = useRef<HTMLDivElement>(null)
+  const qrcodeRef = useRef<HTMLDivElement>(null)
+  const { takeScreenshot, downloadScreenshot } = useScreenshot()
+  const { data: profileImage } = useQuery(
+    ['RenderProfileImage', account],
+    () => takeScreenshot(cardRef.current!),
+    {
+      enabled: !!cardRef.current && !!account,
+    }
+  )
 
   return (
     <Container as={Grid} gridTemplateRows="100%" gap="20px">
@@ -67,7 +102,12 @@ export const Information: React.FC = () => {
         <VStack as="form" spacing="24px" mt="32px" w="400px" mx="auto">
           <FormControl>
             <FormLabel>{t('name_field')}</FormLabel>
-            <Input placeholder={t('name_placeholder')} name="name" />
+            <Input
+              placeholder={t('name_placeholder')}
+              name="name"
+              isDisabled
+              value={userInfo?.name || userInfoData?.name}
+            />
           </FormControl>
           <FormControl>
             <FormLabel>
@@ -77,7 +117,12 @@ export const Information: React.FC = () => {
                 components={{ sup: <sup /> }}
               />
             </FormLabel>
-            <Input placeholder={t('address_placeholder')} name="mail_address" />
+            <Input
+              placeholder={t('address_placeholder')}
+              name="mail_address"
+              isDisabled
+              value={userInfo?.address || userInfoData?.address}
+            />
           </FormControl>
           <FormControl>
             <FormLabel>{t('qr_code')}</FormLabel>
@@ -95,8 +140,27 @@ export const Information: React.FC = () => {
                 p="16px"
                 flexDirection="column"
               >
-                <Box w="full" h="full" mb="16px" />
-                <DownloadButton mt="auto" />
+                <Flex justify="center" mb="16px" h="165px">
+                  <ProfileCard
+                    homeUrl={HOME_URL}
+                    mailAddress={`${account}@${MAIL_SERVER_URL}`}
+                    ref={cardRef}
+                  />
+                  {profileImage ? (
+                    <Image
+                      src={profileImage}
+                      alt="profile_card"
+                      h="full"
+                      w="auto"
+                    />
+                  ) : null}
+                </Flex>
+                <DownloadButton
+                  mt="auto"
+                  as="a"
+                  href={profileImage}
+                  download={`profile_card_${account}.png`}
+                />
               </Center>
               <Center
                 bg="containerBackground"
@@ -112,6 +176,7 @@ export const Information: React.FC = () => {
                   mb="16px"
                   bg="informationQrCodeBackground"
                   rounded="8px"
+                  ref={qrcodeRef}
                 >
                   <QrCode
                     value={`https://mail3.me/${account}`}
@@ -119,7 +184,15 @@ export const Information: React.FC = () => {
                     fgColor="black"
                   />
                 </Center>
-                <DownloadButton mt="auto" />
+                <DownloadButton
+                  mt="auto"
+                  onClick={() =>
+                    downloadScreenshot(
+                      qrcodeRef.current!,
+                      `qrcode_${account}.png`
+                    )
+                  }
+                />
               </Center>
             </Grid>
           </FormControl>

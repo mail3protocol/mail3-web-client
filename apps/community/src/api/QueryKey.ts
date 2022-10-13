@@ -4,4 +4,5 @@ export enum QueryKey {
   GetMessageList = 'GetMessageList',
   GetMessageListForDashboard = 'GetMessageListForDashboard',
   GetSubscription = 'GetSubscription',
+  GetUserInfo = 'GetUserInfo',
 }

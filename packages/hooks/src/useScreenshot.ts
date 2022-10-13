@@ -11,9 +11,7 @@ interface useScreenshotReturn {
   ) => void
 }
 
-type useScreenshotProps = () => useScreenshotReturn
-
-export const useScreenshot: useScreenshotProps = () => {
+export const useScreenshot = (): useScreenshotReturn => {
   const [image, setImage] = useState('')
 
   const takeScreenshot = async (
