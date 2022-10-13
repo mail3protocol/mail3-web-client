@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse, PageConfig } from 'next'
 import S3, { ManagedUpload } from 'aws-sdk/clients/s3'
 import dayjs from 'dayjs'
 import axios from 'axios'
-import { S3_CONFIG, SERVER_URL } from '../../../constants/env'
+import NextCors from 'nextjs-cors'
+import { COMMUNITY_URL, S3_CONFIG, SERVER_URL } from '../../../constants/env'
 import { fileConsumer, formidablePromise } from '../../../utils/formData'
 
 const formidableConfig = {
@@ -22,6 +23,12 @@ const allowMimes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp']
 const allowMimeSet = new Set(allowMimes)
 
 async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
+  await NextCors(req, res, {
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    origin: COMMUNITY_URL,
+    optionsSuccessStatus: 200,
+  })
+
   if (req.method !== 'POST') return res.status(404).end()
 
   try {
@@ -91,25 +98,25 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
         }
       )
     })
-    return res.status(200).json({
+    return res.json({
       url: `${S3_CONFIG.Host}/${key}`,
     })
   } catch (err: any) {
     if (err instanceof ParamError || err instanceof FileError) {
-      return res.status(400).json({ error: err.message })
+      return res.status(400).json({ message: err.message })
     }
     if (err.code === 'ERR_HTTP_INVALID_HEADER_VALUE') {
-      return res.status(401).json({ error: err.message })
+      return res.status(401).json({ message: err.message })
     }
     if (err.response.status === 401) {
-      return res.status(401).json({ error: 'Permission error' })
+      return res.status(401).json({ message: 'Permission error' })
     }
     if (err.code === 1009) {
       return res
         .status(400)
-        .json({ error: err.message.replace('options.', '') })
+        .json({ message: err.message.replace('options.', '') })
     }
-    return res.status(500).json({ error: 'Internal Server Error' })
+    return res.status(500).json({ message: 'Internal Server Error' })
   }
 }
 
