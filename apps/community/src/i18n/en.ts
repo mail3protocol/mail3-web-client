@@ -24,6 +24,8 @@ export default {
     copy_succeed: 'Copy Succeed!',
     send_time_limit:
       'Only one message can be sent within 24 hours, please try again later.',
+    upload_failed: 'Upload failed, reason: {{message}}',
+    upload_succeed: 'Upload Succeed!',
   },
   components: {
     header: {
@@ -95,6 +97,8 @@ export default {
     edit: 'Edit',
     send_succeed: 'Send Succeed!',
     send_failed: 'Send failed, reason: {{message}}',
+    mail_image_limit:
+      'The total image size of this message cannot exceed {{size}}',
   },
   dashboard: {
     message: 'Message',

@@ -1,6 +1,7 @@
 import { Flex, FlexProps } from '@chakra-ui/react'
 import { useRemirrorContext } from '@remirror/react'
 import root from 'react-shadow'
+import { forwardRef } from 'react'
 
 // language=css
 const style = `
@@ -25,24 +26,26 @@ div:focus-visible {
 }
 `
 
-export const Content: React.FC<FlexProps> = ({ ...props }) => {
-  const { getRootProps } = useRemirrorContext({ autoUpdate: true })
-  return (
-    <Flex
-      flex={1}
-      direction="column"
-      css={`
-        div {
-          flex: 1;
-          display: flex;
-        }
-      `}
-      {...props}
-    >
-      <root.div>
-        <style>{style}</style>
-        <div className="content-container" {...getRootProps()} />
-      </root.div>
-    </Flex>
-  )
-}
+export const Content = forwardRef<HTMLDivElement, FlexProps>(
+  ({ ...props }, ref) => {
+    const { getRootProps } = useRemirrorContext({ autoUpdate: true })
+    return (
+      <Flex
+        flex={1}
+        direction="column"
+        css={`
+          div {
+            flex: 1;
+            display: flex;
+          }
+        `}
+        {...props}
+      >
+        <root.div ref={ref}>
+          <style>{style}</style>
+          <div className="content-container" {...getRootProps()} />
+        </root.div>
+      </Flex>
+    )
+  }
+)

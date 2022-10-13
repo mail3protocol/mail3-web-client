@@ -10,7 +10,10 @@ import {
 import { useCommands } from '@remirror/react'
 import { useCallback } from 'react'
 import { LinkButton } from './MenuFcuntionButtons/LinkButton'
-import { ImageButton } from './MenuFcuntionButtons/ImageButton'
+import {
+  ImageButton,
+  ImageButtonProps,
+} from './MenuFcuntionButtons/ImageButton'
 
 export const MenuButton: React.FC<ButtonProps> = ({ children, ...props }) => (
   <Button
@@ -28,7 +31,11 @@ export const MenuButton: React.FC<ButtonProps> = ({ children, ...props }) => (
   </Button>
 )
 
-export const Menus: React.FC<StackProps> = ({ ...props }) => {
+export const Menus: React.FC<
+  StackProps & {
+    imageButtonProps?: ImageButtonProps
+  }
+> = ({ imageButtonProps, ...props }) => {
   const {
     toggleBold,
     toggleItalic,
@@ -73,7 +80,7 @@ export const Menus: React.FC<StackProps> = ({ ...props }) => {
       <MenuButton onClick={onToggleFunction(toggleBulletList)}>
         <UnOrderListIcon />
       </MenuButton>
-      <ImageButton />
+      <ImageButton {...imageButtonProps} />
     </HStack>
   )
 }

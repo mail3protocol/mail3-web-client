@@ -48,6 +48,7 @@ export const SendButton: React.FC<SendButtonProps> = ({ subject, onSend }) => {
       w="138px"
       onClick={onSendMessage}
       isDisabled={isDisabled}
+      isLoading={isLoading}
     >
       {t('send')}
     </Button>

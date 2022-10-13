@@ -6,3 +6,6 @@ export const DEFAULT_LIST_ITEM_COUNT =
 export const DEFAULT_DOWNLOAD_LIST_ITEM_COUNT =
   parseInt(import.meta.env.NEXT_PUBLIC_DEFAULT_DOWNLOAD_LIST_ITEM_COUNT, 10) ||
   1000
+
+export const MAIL_CONTENT_IMAGE_QUOTA_KB =
+  parseInt(import.meta.env.NEXT_PUBLIC_MAIL_CONTENT_IMAGE_QUOTA_KB, 10) || 5000
