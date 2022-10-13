@@ -21,7 +21,6 @@ import QrCode from 'qrcode.react'
 import React from 'react'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
-import { TipsPanel } from '../components/TipsPanel'
 
 export const DownloadButton: React.FC<ButtonProps> = () => {
   const { t } = useTranslation('user_information')
@@ -43,12 +42,7 @@ export const Information: React.FC = () => {
   const account = useAccount()
 
   return (
-    <Container
-      as={Grid}
-      gridTemplateRows="100%"
-      gridTemplateColumns="3fr 1fr"
-      gap="20px"
-    >
+    <Container as={Grid} gridTemplateRows="100%" gap="20px">
       <Flex
         direction="column"
         align="center"
@@ -131,7 +125,6 @@ export const Information: React.FC = () => {
           </FormControl>
         </VStack>
       </Flex>
-      <TipsPanel />
     </Container>
   )
 }
