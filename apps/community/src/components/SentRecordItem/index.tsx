@@ -17,8 +17,8 @@ export const SentRecordItem: React.FC<{
     px="16px"
     rounded="8px"
     transition="200ms"
-    cursor="pointer"
-    _hover={{ shadow: 'listHover', transform: 'scale(1.01)' }}
+    // cursor="pointer"
+    // _hover={{ shadow: 'listHover', transform: 'scale(1.01)' }}
   >
     <Box fontSize="12px" color="secondaryTitleColor" fontWeight="500">
       {dayjs(time).format('YYYY-MM-DD')}

@@ -200,7 +200,13 @@ export const Dashboard: React.FC = () => {
         <Heading as="h3" fontSize="16px">
           {t('send_message')}
         </Heading>
-        <NewMessageLinkButton />
+        <NewMessageLinkButton
+          lastMessageSentTime={
+            messageList?.messages?.[0]?.created_at
+              ? dayjs.unix(Number(messageList.messages[0].created_at))
+              : undefined
+          }
+        />
       </Flex>
       <Box
         bg="cardBackground"

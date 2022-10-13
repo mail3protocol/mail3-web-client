@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 import dayjs from 'dayjs'
 import { Container } from '../../components/Container'
 import { NewMessageLinkButton } from '../../components/NewMessageLinkButton'
@@ -51,6 +51,12 @@ export const SendRecords: React.FC = () => {
     }
   })
 
+  const lastMessageSentTime = useMemo(
+    () =>
+      dayjs.unix(Number(listQuery?.data?.pages[0].messages?.[0]?.created_at)),
+    [listQuery?.data?.pages[0].messages]
+  )
+
   return (
     <Container
       as={Grid}
@@ -62,7 +68,7 @@ export const SendRecords: React.FC = () => {
         <Heading as="h3" fontSize="16px">
           {t('new_message')}
         </Heading>
-        <NewMessageLinkButton />
+        <NewMessageLinkButton lastMessageSentTime={lastMessageSentTime} />
       </Flex>
       <Box {...cardStyleProps} p="32px">
         <Heading as="h2" fontSize="18px" fontWeight="700">

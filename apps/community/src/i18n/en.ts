@@ -22,6 +22,8 @@ export default {
     loading: 'Loading……',
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
+    send_time_limit:
+      'Only one message can be sent within 24 hours, please try again later.',
   },
   components: {
     header: {
