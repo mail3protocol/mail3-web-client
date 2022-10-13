@@ -316,5 +316,10 @@
             "bot": "For your safety, we blocked all links, attachments, and replies.",
             "user": "For your safety, we blocked all links, attachments, and replies."
         }
+    },
+    "subscription": {
+        "unsubscribe": "Are you sure you want to unsubscribe from this author？",
+        "Unsubscribe successfully": "Unsubscribe successfully",
+        "Subscribe successfully": "Subscribe successfully"
     }
 }

@@ -16,12 +16,14 @@ import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
 import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
+import { useDialog, useToast } from 'hooks'
 import { RenderHTML } from '../Preview/parser'
+import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
 import { ReactComponent as ArtEmptySvg } from '../../assets/subscription/article-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { SubFormatDate } from '../../utils'
-// import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
+import { useTranslation } from 'react-i18next'
 
 const Mask = styled(Box)`
   height: 100%;
@@ -140,9 +142,11 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
 
 export const SubscribeLink = ({ uuid }: { uuid: string }) => {
   const api = useAPI()
+  const [t] = useTranslation('subscription')
   const [isFollow, setIsFollow] = useState(true)
-
+  const dialog = useDialog()
   const [isLoading, setIsLoading] = useState(false)
+  const toast = useToast()
 
   return (
     <Link
@@ -154,13 +158,28 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
         if (isLoading) return
         setIsLoading(true)
         if (isFollow) {
-          await api.SubscriptionCommunityUserUnFollowing(uuid)
-          setIsFollow(false)
+          dialog({
+            type: 'text',
+            title: '',
+            description: t('unsubscribe'),
+            showCloseButton: true,
+            onConfirm: async () => {
+              await api.SubscriptionCommunityUserUnFollowing(uuid)
+              setIsFollow(false)
+              setIsLoading(false)
+              toast(t('Unsubscribe successfully'), { status: 'success' })
+            },
+            onCancel: () => {},
+            onClose: () => {},
+            okText: 'Yes',
+            cancelText: 'No',
+          })
         } else {
           await api.SubscriptionCommunityUserFollowing(uuid)
           setIsFollow(true)
+          toast(t('Subscribe successfully'), { status: 'success' })
+          setIsLoading(false)
         }
-        setIsLoading(false)
       }}
     >
       {isFollow ? (
@@ -169,7 +188,7 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
         </>
       ) : (
         <>
-          <UnsubscribeSvg /> Subscribe
+          <SubscribeSvg /> Subscribe
         </>
       )}
     </Link>
