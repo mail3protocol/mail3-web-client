@@ -20,6 +20,7 @@
         "@mail3/mail3-me": "0.1.5",
         "assets": "*",
         "axios": "^0.26.1",
+        "formidable": "^2.0.1",
         "framer-motion": "^6",
         "jotai": "^1.6.1",
         "next": "12.1.4",
@@ -31,10 +32,13 @@
         "rxjs": "^7.5.5",
         "shared": "*",
         "sharp": "^0.30.7",
-        "ui": "*"
+        "ui": "*",
+        "aws-sdk": "^2.1206.0",
+        "dayjs": "^1.11.5"
     },
     "devDependencies": {
         "@svgr/webpack": "6.2.1",
+        "@types/formidable": "^2.0.5",
         "@types/node": "17.0.4",
         "@types/react": "17.0.38",
         "@types/react-dom": "^17.0.0",
