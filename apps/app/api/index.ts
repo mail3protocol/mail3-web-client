@@ -439,13 +439,13 @@ export class API {
 
   public async SubscriptionCommunityUserFollowing(uuid: string) {
     return this.axios.post<void>(
-      `/subscription/community_subscriptions/${uuid}/following`
+      `/subscription/community_users/${uuid}/following`
     )
   }
 
   public async SubscriptionCommunityUserUnFollowing(uuid: string) {
     return this.axios.delete<void>(
-      `/subscription/community_subscriptions/${uuid}/following`
+      `/subscription/community_users/${uuid}/following`
     )
   }
 }

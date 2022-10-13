@@ -14,12 +14,13 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
 import { ReactComponent as ArtEmptySvg } from '../../assets/subscription/article-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
+import { SubFormatDate } from '../../utils'
 // import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
 
 const Mask = styled(Box)`
@@ -137,6 +138,44 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   )
 }
 
+export const SubscribeLink = ({ uuid }: { uuid: string }) => {
+  const api = useAPI()
+  const [isFollow, setIsFollow] = useState(true)
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  return (
+    <Link
+      fontWeight="400"
+      fontSize="12px"
+      lineHeight="18px"
+      display="flex"
+      onClick={async () => {
+        if (isLoading) return
+        setIsLoading(true)
+        if (isFollow) {
+          await api.SubscriptionCommunityUserUnFollowing(uuid)
+          setIsFollow(false)
+        } else {
+          await api.SubscriptionCommunityUserFollowing(uuid)
+          setIsFollow(true)
+        }
+        setIsLoading(false)
+      }}
+    >
+      {isFollow ? (
+        <>
+          <UnsubscribeSvg /> Unsubscribe
+        </>
+      ) : (
+        <>
+          <UnsubscribeSvg /> Subscribe
+        </>
+      )}
+    </Link>
+  )
+}
+
 export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   isSingleMode,
 }) => {
@@ -184,17 +223,10 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             {detail?.writer_name}
           </Box>
           <Spacer />
-          <Link
-            fontWeight="400"
-            fontSize="12px"
-            lineHeight="18px"
-            display="flex"
-          >
-            <UnsubscribeSvg /> Unsubscribe
-          </Link>
+          <SubscribeLink uuid={detail.writer_uuid} />
         </Flex>
         <Box fontWeight={500} fontSize="12px" color="#6F6F6F" mt="4px">
-          {detail.created_at}
+          {SubFormatDate(detail.created_at)}
         </Box>
         <Divider orientation="horizontal" mt="16px" />
       </Box>
@@ -227,7 +259,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           whiteSpace="nowrap"
           color="#818181"
         >
-          {detail.created_at}
+          {SubFormatDate(detail.created_at)}
         </Box>
         <Divider orientation="horizontal" />
       </Flex>
@@ -241,7 +273,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       </Box>
       <Center className="mobile-button" w="100%" mt="20px">
         <Link fontWeight="400" fontSize="12px" lineHeight="18px" display="flex">
-          <UnsubscribeSvg /> Unsubscribe
+          <SubscribeLink uuid={detail.writer_uuid} />
         </Link>
       </Center>
     </Wrap>

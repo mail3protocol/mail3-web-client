@@ -19,6 +19,7 @@ import { useInfiniteQuery } from 'react-query'
 import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 import { SubWrapEmptyAtom } from './wrap'
+import { SubFormatDate } from '../../utils'
 
 const Container = styled(Box)`
   flex: 9;
@@ -108,7 +109,7 @@ export const SubListItem: FC<SubListItemProps> = ({
         >
           <Text noOfLines={1}>{writer}</Text>
           <Spacer />
-          <Box>{time}</Box>
+          <Box>{SubFormatDate(time)}</Box>
         </Flex>
       </Box>
     </SubListItemWrap>
@@ -180,7 +181,11 @@ export const SubLeftList: FC = () => {
   )
 
   const listData = useMemo(
-    () => data?.pages.map((item) => item.messages).flat() || [],
+    () =>
+      data?.pages
+        .map((item) => item.messages)
+        .filter((item) => item?.length)
+        .flat() || [],
     [data]
   )
 
@@ -202,7 +207,7 @@ export const SubLeftList: FC = () => {
       </Container>
     )
 
-  if (!listData) return <Container>Empty</Container>
+  if (!listData.length) return <Container>Empty</Container>
 
   return (
     <Container ref={containerRef}>
