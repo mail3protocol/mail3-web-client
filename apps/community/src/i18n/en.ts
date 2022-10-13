@@ -190,6 +190,18 @@ export default {
              </li>
            </ul>
     `,
+    enable_confirm: {
+      title: 'Please confirm this operation!',
+      description:
+        '<p>Please evaluate whether your OAT/NFT issuance is in line with your expectation before enabling it, to avoid users not being able to collect their rewards due to insufficient issuance.</p><br/><p>Make sure your Project Galaxy campaign is active and started before enabling it.</p>',
+      confirm: 'Confirm',
+    },
+    disable_confirm: {
+      title: 'Please confirm this operation!',
+      description:
+        'Please make sure you have adjusted the "subscribe to earn" dialog on your website or product integration before deactivating "subscribe to earn" to avoid situations where users cannot receive rewards after subscribing.',
+      confirm: 'Confirm',
+    },
   },
   login_home_page: {
     'Hello! Friends': 'Hello! Friends',

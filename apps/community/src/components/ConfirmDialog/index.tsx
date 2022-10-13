@@ -88,14 +88,9 @@ export const ConfirmDialog: React.FC = () => {
           <HStack spacing={2} w="full" justify="flex-end">
             {okText && onConfirm !== noop ? (
               <Button
-                variant="primary"
-                bg="brand.500"
+                variant="solid-rounded"
+                colorScheme="primaryButton"
                 mb="16px"
-                color="white"
-                borderRadius="40px"
-                _hover={{
-                  bg: 'brand.50',
-                }}
                 isLoading={isLoading}
                 onClick={onConfirm}
                 fontWeight="500"
@@ -108,8 +103,8 @@ export const ConfirmDialog: React.FC = () => {
 
             {onCancel !== noop && cancelText ? (
               <Button
-                variant="outline"
-                color="black"
+                variant="outline-rounded"
+                colorScheme="blackAlpha"
                 mb="16px"
                 onClick={onCancel}
                 borderRadius="40px"

@@ -24,6 +24,7 @@ import {
 import { Trans, useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { useDialog } from 'hooks'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
@@ -51,6 +52,7 @@ export const EarnNft: React.FC = () => {
   const [accessToken, setAccessToken] = useState('')
   const [state, setState] = useState(SubscriptionState.Inactive)
   const [isUpdating, setIsUpdating] = useState(false)
+  const dialog = useDialog()
 
   const { isLoading, refetch } = useQuery(
     [QueryKey.GetSubscription],
@@ -124,7 +126,33 @@ export const EarnNft: React.FC = () => {
         p="32px"
         onSubmit={(event) => {
           event.preventDefault()
-          onUpdateSubscription()
+          dialog({
+            title:
+              state === SubscriptionState.Inactive
+                ? t('enable_confirm.title')
+                : t('disable_confirm.title'),
+            description:
+              state === SubscriptionState.Inactive ? (
+                <Trans
+                  t={t}
+                  i18nKey="enable_confirm.description"
+                  components={{ p: <Text /> }}
+                />
+              ) : (
+                t('disable_confirm.description')
+              ),
+            okText:
+              state === SubscriptionState.Inactive
+                ? t('enable_confirm.confirm')
+                : t('disable_confirm.confirm'),
+            okButtonProps: {
+              colorScheme:
+                state === SubscriptionState.Inactive ? 'blackButton' : 'red',
+            },
+            onConfirm: () => {
+              onUpdateSubscription()
+            },
+          })
         }}
         position="relative"
       >
@@ -256,14 +284,25 @@ export const EarnNft: React.FC = () => {
             </>
           ) : null}
         </VStack>
-        <Button
-          variant="solid-rounded"
-          colorScheme="primaryButton"
-          type="submit"
-          isLoading={isUpdating}
-        >
-          {state === SubscriptionState.Active ? t('disable') : t('enable')}
-        </Button>
+        {state === SubscriptionState.Active ? (
+          <Button
+            variant="solid-rounded"
+            colorScheme="red"
+            type="submit"
+            isLoading={isUpdating}
+          >
+            {t('disable')}
+          </Button>
+        ) : (
+          <Button
+            variant="solid-rounded"
+            colorScheme="primaryButton"
+            type="submit"
+            isLoading={isUpdating}
+          >
+            {t('enable')}
+          </Button>
+        )}
       </Box>
       <TipsPanel gridRow="1 / 3" gridColumn="2 / 3">
         <Trans
@@ -279,6 +318,7 @@ export const EarnNft: React.FC = () => {
         />
       </TipsPanel>
       <StylePreview isDisabledCopy={state === SubscriptionState.Inactive} />
+      <div />
     </Container>
   )
 }
