@@ -73,7 +73,10 @@ export function useRemember() {
           )
           break
       }
-    } catch (err) {
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message || err?.message || t('unknown_error')
+      toast(errorMessage)
       console.error(err)
     } finally {
       setIsLoading(false)
