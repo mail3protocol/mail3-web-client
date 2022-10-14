@@ -17,13 +17,14 @@ import { Subscription } from 'models'
 import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDialog, useToast } from 'hooks'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
 import { ReactComponent as ArtEmptySvg } from '../../assets/subscription/article-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { SubFormatDate } from '../../utils'
-import { useTranslation } from 'react-i18next'
 
 const Mask = styled(Box)`
   height: 100%;
@@ -198,8 +199,12 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
 export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   isSingleMode,
 }) => {
+  const { id: _id } = useParams()
   const api = useAPI()
-  const id = useAtomValue(SubPreviewIdAtom)
+  let id = useAtomValue(SubPreviewIdAtom)
+  if (_id) {
+    id = _id
+  }
   const { data, isLoading } = useQuery<Subscription.MessageDetailResp>(
     ['subscriptionDetail', id],
     async () => {
