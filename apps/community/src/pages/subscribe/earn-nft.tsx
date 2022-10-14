@@ -38,8 +38,10 @@ import {
 import { useToast } from '../../hooks/useToast'
 import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
 import { StylePreview } from '../../components/EarnNFTPageComponents/StylePreview'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 export const EarnNft: React.FC = () => {
+  useDocumentTitle('Subscribe To Earn NFT')
   const { t } = useTranslation(['earn_nft', 'common'])
   const onUpdateTipsPanelContent = useUpdateTipsPanel()
   const api = useAPI()

@@ -15,7 +15,13 @@ import {
   VStack,
   usePopoverContext,
 } from '@chakra-ui/react'
-import { useAccount } from 'hooks'
+import {
+  useAccount,
+  useTrackClick,
+  TrackEvent,
+  TrackKey,
+  CommunityClickCommunityPersonalcenterItem,
+} from 'hooks'
 import { truncateMiddle } from 'shared'
 import { Avatar, AvatarProps } from 'ui'
 import { useTranslation } from 'react-i18next'
@@ -38,6 +44,10 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
   const logout = useLogout()
   const onOpenConnectWalletDialog = useOpenConnectWalletDialog()
 
+  const trackClickCommunityPersonalCenterItem = useTrackClick(
+    TrackEvent.CommunityClickCommunityPersonalcenter
+  )
+
   return (
     <VStack
       spacing="6px"
@@ -49,16 +59,42 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
         as={Link}
         to={RoutePath.Information}
         variant="unstyled"
+        onClick={() => {
+          trackClickCommunityPersonalCenterItem({
+            [TrackKey.CommunityClickCommunityPersonalcenterItem]:
+              CommunityClickCommunityPersonalcenterItem.Information,
+          })
+        }}
         {...props}
       >
         <Icon w="20px" h="20px" as={InformationSvg} mr="8px" />
         {t('connect_wallet_button.information')}
       </Button>
-      <Button variant="unstyled" {...props} onClick={onOpenConnectWalletDialog}>
+      <Button
+        variant="unstyled"
+        {...props}
+        onClick={() => {
+          trackClickCommunityPersonalCenterItem({
+            [TrackKey.CommunityClickCommunityPersonalcenterItem]:
+              CommunityClickCommunityPersonalcenterItem.ChangeWallet,
+          })
+          return onOpenConnectWalletDialog()
+        }}
+      >
         <Icon w="20px" h="20px" as={ChangeWalletSvg} mr="8px" />
         {t('connect_wallet_button.change_wallet')}
       </Button>
-      <Button variant="unstyled" {...props} onClick={logout}>
+      <Button
+        variant="unstyled"
+        {...props}
+        onClick={() => {
+          trackClickCommunityPersonalCenterItem({
+            [TrackKey.CommunityClickCommunityPersonalcenterItem]:
+              CommunityClickCommunityPersonalcenterItem.Disconnect,
+          })
+          return logout()
+        }}
+      >
         <Icon w="20px" h="20px" as={DisconnectSvg} mr="8px" />
         {t('connect_wallet_button.disconnect')}
       </Button>

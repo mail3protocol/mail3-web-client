@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { Content, Footer } from '../components/LoginHomePageComponents'
 import { Header } from '../components/Header'
 import { useRegisterDialog } from '../hooks/useRegisterDialog'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export const MAX_WIDTH = 1920
 
 const RegisterButton = () => {
+  useDocumentTitle('Index')
   const { t } = useTranslation('common')
   const onOpenRegisterDialog = useRegisterDialog()
   return (

@@ -20,8 +20,10 @@ import { QueryKey } from '../../api/QueryKey'
 import { useAPI } from '../../hooks/useAPI'
 import { DEFAULT_LIST_ITEM_COUNT } from '../../constants/env/config'
 import { useLoadNextPageRef } from '../../hooks/useLoadNextPageRef'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 export const SendRecords: React.FC = () => {
+  useDocumentTitle('Send Records')
   const { t } = useTranslation(['send_message', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()

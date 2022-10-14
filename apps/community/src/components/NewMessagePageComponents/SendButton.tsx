@@ -2,6 +2,7 @@ import { Button } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHelpers } from '@remirror/react'
+import { useTrackClick, TrackEvent } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
 import { useToast } from '../../hooks/useToast'
 
@@ -17,8 +18,13 @@ export const SendButton: React.FC<SendButtonProps> = ({ subject, onSend }) => {
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
 
+  const trackClickCommunitySendConfirm = useTrackClick(
+    TrackEvent.CommunityClickCommunitySendConfirm
+  )
+
   const onSendMessage = async () => {
     if (isLoading) return
+    trackClickCommunitySendConfirm()
     setIsLoading(true)
     try {
       await api.sendMessage(subject, getHTML())

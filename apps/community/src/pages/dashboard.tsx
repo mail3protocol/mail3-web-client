@@ -32,6 +32,7 @@ import { QueryKey } from '../api/QueryKey'
 import { useDownloadSubscribers } from '../hooks/useDownloadSubscribers'
 import { useToast } from '../hooks/useToast'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 interface BaseInfo {
   key: string
@@ -40,6 +41,7 @@ interface BaseInfo {
 }
 
 export const DownloadButton = () => {
+  useDocumentTitle('Home')
   const onDownloadSubscribers = useDownloadSubscribers()
   const [isLoading, setIsLoading] = useState(false)
   const { t } = useTranslation(['dashboard', 'common'])

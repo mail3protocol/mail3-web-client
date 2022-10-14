@@ -1,5 +1,4 @@
 import {
-  Image,
   BoxProps,
   Button,
   ButtonProps,
@@ -9,13 +8,21 @@ import {
   FormLabel,
   Grid,
   Heading,
+  Icon,
+  Image,
   Input,
   useStyleConfig,
   VStack,
-  Icon,
 } from '@chakra-ui/react'
 import { Avatar, ProfileCard } from 'ui'
-import { useAccount, useScreenshot } from 'hooks'
+import {
+  CommunityQRcodeStyle,
+  TrackEvent,
+  TrackKey,
+  useAccount,
+  useScreenshot,
+  useTrackClick,
+} from 'hooks'
 import { Trans, useTranslation } from 'react-i18next'
 import QrCode from 'qrcode.react'
 import React, { useRef } from 'react'
@@ -28,6 +35,7 @@ import { useAPI } from '../hooks/useAPI'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
 import { HOME_URL } from '../constants/env/url'
 import { MAIL_SERVER_URL } from '../constants/env/mailServer'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }
@@ -47,6 +55,7 @@ export const DownloadButton: React.FC<
 }
 
 export const Information: React.FC = () => {
+  useDocumentTitle('Information')
   const { t } = useTranslation('user_information')
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const account = useAccount()
@@ -74,6 +83,10 @@ export const Information: React.FC = () => {
     {
       enabled: !!cardRef.current && !!account,
     }
+  )
+
+  const trackClickInformationQRcodeDownload = useTrackClick(
+    TrackEvent.CommunityClickInformationQRcodeDownload
   )
 
   return (
@@ -160,6 +173,12 @@ export const Information: React.FC = () => {
                   as="a"
                   href={profileImage}
                   download={`profile_card_${account}.png`}
+                  onClick={() => {
+                    trackClickInformationQRcodeDownload({
+                      [TrackKey.CommunityQRcodeStyle]:
+                        CommunityQRcodeStyle.Mail3Style,
+                    })
+                  }}
                 />
               </Center>
               <Center
@@ -186,12 +205,16 @@ export const Information: React.FC = () => {
                 </Center>
                 <DownloadButton
                   mt="auto"
-                  onClick={() =>
+                  onClick={() => {
+                    trackClickInformationQRcodeDownload({
+                      [TrackKey.CommunityQRcodeStyle]:
+                        CommunityQRcodeStyle.PureStyle,
+                    })
                     downloadScreenshot(
                       qrcodeRef.current!,
                       `qrcode_${account}.png`
                     )
-                  }
+                  }}
                 />
               </Center>
             </Grid>

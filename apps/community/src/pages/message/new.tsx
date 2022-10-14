@@ -8,8 +8,10 @@ import { PreviewButton } from '../../components/NewMessagePageComponents/Preview
 import { PreviewSimulator } from '../../components/NewMessagePageComponents/PreviewSimulator'
 import { SendButton } from '../../components/NewMessagePageComponents/SendButton'
 import { MAIL_CONTENT_IMAGE_QUOTA_KB } from '../../constants/env/config'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 export const NewMessage = () => {
+  useDocumentTitle('New Message')
   const { t } = useTranslation('new_message')
   const [subjectText, setSubjectText] = useState('')
   const [isPreview, setIsPreview] = useState(false)
