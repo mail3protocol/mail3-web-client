@@ -3,7 +3,8 @@ import S3, { ManagedUpload } from 'aws-sdk/clients/s3'
 import dayjs from 'dayjs'
 import axios from 'axios'
 import NextCors from 'nextjs-cors'
-import { COMMUNITY_URL, S3_CONFIG, SERVER_URL } from '../../../constants/env'
+import { COMMUNITY_URL, SERVER_URL } from '../../../constants/env'
+import { S3_CONFIG } from '../../../constants/env/S3'
 import { fileConsumer, formidablePromise } from '../../../utils/formData'
 
 const formidableConfig = {

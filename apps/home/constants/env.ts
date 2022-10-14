@@ -40,13 +40,5 @@ export const MAIL_SERVER_URL =
 export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || 'https://api.mail3.me/api/v1'
 
-export const S3_CONFIG = {
-  Bucket: process.env.NEXT_PUBLIC_S3_BUCKET || '',
-  Region: process.env.NEXT_PUBLIC_S3_REGION || '',
-  AccessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID || '',
-  AccessKeySecret: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_SECRET || '',
-  Host: process.env.NEXT_PUBLIC_S3_HOST || '',
-}
-
 export const COMMUNITY_URL =
   process.env.NEXT_PUBLIC_COMMUNITY_URL || 'https://subscribe.mail3.me'
