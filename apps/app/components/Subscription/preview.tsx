@@ -63,6 +63,7 @@ const Container = styled(Box)`
 
   @media (max-width: 768px) {
     &.not-single-mode {
+      overflow: hidden;
       padding: 0;
       top: 143px;
       right: 0;
@@ -127,15 +128,20 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
         className={isSingleMode ? 'single-mode' : 'not-single-mode'}
       >
         {isMaxWdith600 ? (
-          <Box position="absolute" top="20px" right="20px">
-            <CloseButton
-              onClick={() => {
-                setIsOpen(false)
-              }}
-            />
+          <Box
+            position="absolute"
+            top="20px"
+            right="20px"
+            onClick={() => {
+              setIsOpen(false)
+            }}
+          >
+            <CloseButton />
           </Box>
         ) : null}
-        {children}
+        <Box h="100%" overflow="hidden" overflowY="scroll">
+          {children}
+        </Box>
       </Container>
     </>
   )
