@@ -14,7 +14,7 @@ import { TrashPage } from '../pages/messages/trash'
 import { SpamPage } from '../pages/messages/spam'
 import { SetupSignaturePage } from '../pages/setup/signature'
 import { Developers } from '../pages/developers'
-import { SubPage } from '../pages/subscription'
+import { SubPage } from '../pages/subscription/index'
 import { SubPreviewPage } from '../pages/subscription/preview'
 
 interface Mail3RouterProps extends RouteProps {
