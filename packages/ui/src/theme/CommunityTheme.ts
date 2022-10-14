@@ -89,6 +89,8 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     previewDatetimeColor: '#6f6f6f',
     editorAddLinkDialogErrorColor: '#E53E3E',
     loadingOverlayBackground: 'rgba(255, 255, 255, 0.4)',
+    statusColorEnabled: '#14FF00',
+    statusColorDisabled: '#FF0000',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',

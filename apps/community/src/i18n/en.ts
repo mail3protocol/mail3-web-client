@@ -202,6 +202,12 @@ export default {
         'Please make sure you have adjusted the "subscribe to earn" dialog on your website or product integration before deactivating "subscribe to earn" to avoid situations where users cannot receive rewards after subscribing.',
       confirm: 'Confirm',
     },
+    status_field: 'Status: ',
+    status_value: {
+      disabled: 'Disabled',
+      enabled: 'Enabled',
+      loading: 'Loading',
+    },
   },
   login_home_page: {
     'Hello! Friends': 'Hello! Friends',

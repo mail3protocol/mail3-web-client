@@ -172,11 +172,42 @@ export const EarnNft: React.FC = () => {
             </Flex>
           </Center>
         ) : null}
-        <Box mb="32px">
+        <Flex mb="32px">
           <Heading as="h4" fontSize="18px" lineHeight="20px">
             {t('title')}
           </Heading>
-        </Box>
+          <Flex
+            ml="auto"
+            color="secondaryTitleColor"
+            fontSize="16px"
+            fontWeight="500"
+            align="center"
+          >
+            {t('status_field')}
+            <Box
+              w="8px"
+              h="8px"
+              bg={
+                state === SubscriptionState.Inactive
+                  ? 'statusColorDisabled'
+                  : 'statusColorEnabled'
+              }
+              rounded="full"
+              ml="8px"
+              mr="4px"
+              style={{ opacity: isLoading ? 0 : 1 }}
+            />
+            <Box color="primaryTextColor" w="72px">
+              {!isLoading
+                ? t(
+                    state === SubscriptionState.Inactive
+                      ? 'status_value.disabled'
+                      : 'status_value.enabled'
+                  )
+                : t('status_value.loading')}
+            </Box>
+          </Flex>
+        </Flex>
         <VStack spacing="24px" maxW="487px" mb="32px">
           <FormControl>
             <FormLabel>{t('to_earn')}</FormLabel>
@@ -290,6 +321,7 @@ export const EarnNft: React.FC = () => {
             colorScheme="red"
             type="submit"
             isLoading={isUpdating}
+            style={{ opacity: isLoading ? 0 : 1 }}
           >
             {t('disable')}
           </Button>
@@ -298,7 +330,7 @@ export const EarnNft: React.FC = () => {
             variant="solid-rounded"
             colorScheme="primaryButton"
             type="submit"
-            isLoading={isUpdating}
+            style={{ opacity: isLoading ? 0 : 1 }}
           >
             {t('enable')}
           </Button>
