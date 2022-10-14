@@ -254,7 +254,7 @@
         }
     },
     "testing": {
-        "title": "Mail3 Beta is opening now \uD83D\uDD25",
+        "title": "Connect wallet to get a mail system designed for web3 natives",
         "not-connected-desc": "Connect wallet to see if you are eligible to access the Beta",
         "success-desc": "Congratulations! \uD83C\uDF89 you are qualified for the beta access to Mail3.",
         "fail-desc": "\uD83D\uDE14 Sorry you are not qualified.",
@@ -306,6 +306,14 @@
             "content": "You need to approve the message signing request on your wallet software including Walletconnect in your mobile devices."
         },
         "need_to_open_wallet": "Need to open wallet. If already connected, please try again. "
+    },
+    "experience_user_guide_dialog": {
+        "title": "Get a web3 name to identify yourself",
+        "refresh": "I’ve got one, refresh to check",
+        "button": {
+            "bit": "Register .bit Name",
+            "ens": "Register ENS Name"
+        }
     },
     "preview":{
         "spam_title": {

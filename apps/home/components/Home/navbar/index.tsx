@@ -17,10 +17,9 @@ import { Logo, CONTAINER_MAX_WIDTH } from 'ui'
 import React from 'react'
 import { ReactComponent as HomeNavbarSvg } from '../../../assets/svg/home-navbar-menu.svg'
 import { Buttons, Menus } from './menu'
-import { RainbowBar } from '../rainbowBar'
 
 const isShowWhiteListStage = false
-export const HEADER_BAR_HEIGHT = 60 + 44
+export const HEADER_BAR_HEIGHT = 60
 
 export const Navbar: React.FC = () => {
   const {
@@ -38,7 +37,6 @@ export const Navbar: React.FC = () => {
       zIndex={99}
       direction="column"
     >
-      <RainbowBar />
       <Center bg="#fff" px="20px" h="60px">
         <Flex
           w="full"

@@ -4,10 +4,7 @@ import { PageContainer } from 'ui'
 import { RoutePath } from '../../route/path'
 import { Navbar } from '../Navbar'
 
-const hideNavbarPaths: Set<string> = new Set([
-  RoutePath.Unread,
-  RoutePath.Testing,
-])
+const hideNavbarPaths: Set<string> = new Set([RoutePath.Unread, RoutePath.Home])
 
 export const Layout: React.FC = () => {
   const location = useLocation()
