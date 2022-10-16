@@ -91,8 +91,9 @@ const tabIndexAtom = atomWithStorage('mail3-tab-index', 0, {
 
 export const ConnectModalWithMultichain: React.FC<{
   isOpen: boolean
+  show?: boolean
   onClose: () => void
-}> = ({ isOpen, onClose }) => {
+}> = ({ isOpen, onClose, show }) => {
   const [t] = useTranslation('common')
   const ethButtons = useEthButtons({ onClose })
   const chains: ChainItem[] = useMemo(
@@ -206,9 +207,11 @@ export const ConnectModalWithMultichain: React.FC<{
 
   const contentEl = (
     <>
-      <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
-        {t('connect.dialog-title')}
-      </Heading>
+      {show ? null : (
+        <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
+          {t('connect.dialog-title')}
+        </Heading>
+      )}
       <Tabs
         variant="unstyled"
         index={tabIndex}
@@ -270,7 +273,8 @@ export const ConnectModalWithMultichain: React.FC<{
           lineHeight="18px"
           color="#6F6F6F"
           textAlign="center"
-          my="24px"
+          mb="24px"
+          pt="24px"
         >
           {currentChain?.description}&nbsp;
         </Text>
@@ -341,6 +345,10 @@ export const ConnectModalWithMultichain: React.FC<{
       </Box>
     </>
   )
+
+  if (show) {
+    return contentEl
+  }
 
   if (isMobile) {
     return (

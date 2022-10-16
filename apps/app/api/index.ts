@@ -1,6 +1,8 @@
+/* eslint-disable no-promise-executor-return */
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SubmitMessage } from 'models/src/submitMessage'
 import { UploadMessage } from 'models/src/uploadMessage'
+import { CommunitySubscriptionResp } from 'models/src/subscribe'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
@@ -435,6 +437,25 @@ export class API {
   public getMessageOnChainIdentifier(messageId: string) {
     return this.axios.get<MessageOnChainIdentifierResponse>(
       `/mailbox/account/messages/${messageId}/on_chain_identifier`
+    )
+  }
+
+  public async getSubscribeStatus(
+    userId: string
+  ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    return this.axios.get(`/subscription/followings/${userId}`)
+  }
+
+  public async putSubscribeCampaign(
+    userId: string,
+    state: 'active' | 'inactive' = 'active'
+  ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    return this.axios.post(
+      `/subscription/community_users/${userId}/following`,
+      {
+        uuid: userId,
+        state,
+      }
     )
   }
 }

@@ -88,7 +88,13 @@ export function useRemember() {
             if (router.pathname === RoutePath.WhiteList) {
               trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
             }
-            navi(RoutePath.Home)
+            if (router.pathname === RoutePath.Testing) {
+              trackTestingConnect({ [TrackKey.TestingEntry]: true })
+            }
+            const [, pathname] = router.pathname.split('/')
+            if (`/${pathname}` !== RoutePath.Subscribe) {
+              navi(RoutePath.Home)
+            }
           }
           break
         }

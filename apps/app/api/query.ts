@@ -7,4 +7,6 @@ export enum Query {
   GetMessageEncryptionKeyState = 'get_message_encryption_key_state',
   GetMessageOnChainIdentifier = 'get_message_on_chain_identifier',
   Sent = 'sent',
+  GetSubscribeStatus = 'get_subscribe_status',
+  SetSubscribeStatus = 'set_subscribe_status',
 }

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
 import { defer, from, fromEvent, switchMap } from 'rxjs'
+import { useQuery } from 'react-query'
+import { isSupported } from 'firebase/messaging'
+import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/env'
 import {
   getIsEnabledNotification,
   getNotificationPermission,
@@ -9,7 +12,7 @@ import {
 import { useAPI } from './useAPI'
 import { useDeleteFCMToken, useGetFCMToken } from './useFCMToken'
 
-export function useNotification() {
+export function useNotification(shouldReload = true) {
   const api = useAPI()
   const [userInfo, setUserInfo] = useAtom(userPropertiesAtom)
   const [permission, setPermission] = useState<
@@ -92,7 +95,7 @@ export function useNotification() {
           const target = event.target as PermissionStatus
           const newPermission = target.state as NotificationPermission
           await onChangePermission(target.state as NotificationPermission)
-          if (newPermission === 'granted') {
+          if (newPermission === 'granted' && shouldReload) {
             location.reload()
           }
         })
@@ -116,10 +119,21 @@ export function useNotification() {
     return newPermission
   }, [setPermission])
 
+  const { data: isBrowserSupport } = useQuery(
+    ['isSupportedFCM'],
+    async () => (await isSupported()) && IS_CHROME && !IS_MOBILE && !IS_FIREFOX,
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  )
+
   return {
     requestPermission,
     onChangePermission,
     permission,
     webPushNotificationState,
+    isBrowserSupport,
   }
 }
