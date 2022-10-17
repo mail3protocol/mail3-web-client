@@ -12,6 +12,8 @@ import {
   usePopoverContext,
   HStack,
   Link,
+  Box,
+  Badge,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ReactComponent as DownTriangleSvg } from 'assets/svg/triangle-down.svg'
@@ -24,6 +26,9 @@ import {
   useTrackClick,
 } from 'hooks'
 import { DiscordIcon, Logo as UiLogo, MirrorIcon, TwitterIcon } from 'ui'
+import { useQuery } from 'react-query'
+import { atom, useAtomValue } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
 import {
   DISCORD_URL,
   MIRROR_URL,
@@ -35,6 +40,7 @@ import { ReactComponent as DraftSvg } from '../../assets/drafts.svg'
 import { ReactComponent as TrashSvg } from '../../assets/trash.svg'
 import { ReactComponent as SpamSvg } from '../../assets/spam.svg'
 import { ReactComponent as SentSvg } from '../../assets/sent.svg'
+import { ReactComponent as SubscriptionSvg } from '../../assets/subscription.svg'
 import { RoutePath } from '../../route/path'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
@@ -42,6 +48,7 @@ import { Auth, AuthModal } from '../Auth'
 import { RouterLink } from '../RouterLink'
 import { ConnectWallet } from '../ConnectWallet'
 import { NotificationSwitch } from '../NotificationSwitch'
+import { useAPI } from '../../hooks/useAPI'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -53,10 +60,13 @@ const LogoButton = styled(Button)`
   }
 `
 
+export const SubscribeUnreadCountAtom = atom(0)
+
 const LogoPopoverBody: React.FC = () => {
   const [t] = useTranslation('common')
   const trackMenuClick = useTrackClick(TrackEvent.ClickMail3Menu)
   const context = usePopoverContext()
+  const unreadCount = useAtomValue(SubscribeUnreadCountAtom)
   const btns: ButtonListItemProps[] = [
     {
       href: RoutePath.Drafts,
@@ -65,6 +75,15 @@ const LogoPopoverBody: React.FC = () => {
       onClick() {
         context.onClose()
         trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Drafts })
+      },
+    },
+    {
+      href: RoutePath.Sent,
+      label: t('navbar.sent'),
+      icon: <SentSvg />,
+      onClick() {
+        context.onClose()
+        trackMenuClick({ [TrackKey.Mail3MenuItem]: Mail3MenuItem.Sent })
       },
     },
     {
@@ -113,7 +132,7 @@ const LogoPopoverBody: React.FC = () => {
             </Center>
           </Button>
         </RouterLink>
-        <RouterLink href={RoutePath.Sent} passHref>
+        <RouterLink href={RoutePath.Subscription} passHref>
           <Button
             flex="1"
             ml="9px"
@@ -133,8 +152,28 @@ const LogoPopoverBody: React.FC = () => {
             as="a"
           >
             <Center flexDirection="column">
-              <SentSvg />
-              <Text>{t('navbar.sent')}</Text>
+              <Box position="relative">
+                <SubscriptionSvg />
+                {unreadCount > 0 ? (
+                  <Badge
+                    top="0"
+                    left="20px"
+                    minW="20px"
+                    position="absolute"
+                    h="16px"
+                    lineHeight="16px"
+                    fontSize="10px"
+                    bg="#4E51F4"
+                    color="#fff"
+                    fontWeight={700}
+                    borderRadius="27px"
+                    textAlign="center"
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </Badge>
+                ) : null}
+              </Box>
+              <Text>{t('navbar.subscription')}</Text>
             </Center>
           </Button>
         </RouterLink>
@@ -208,6 +247,22 @@ const LogoPopoverBody: React.FC = () => {
 }
 
 const Logo = () => {
+  const api = useAPI()
+  const setUnreadCount = useUpdateAtom(SubscribeUnreadCountAtom)
+  useQuery(
+    ['subscribeMessageCount'],
+    async () => {
+      const { data } = await api.SubscriptionMessageStats()
+      setUnreadCount(data?.unread_count ?? 0)
+    },
+    {
+      refetchOnReconnect: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchInterval: 10000,
+    }
+  )
+
   const isConnected = !!useAccount()
   const logoEl = (
     <UiLogo

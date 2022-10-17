@@ -111,6 +111,10 @@ export enum TrackEvent {
   CommunityClickCommunityPersonalcenter = 'click_community_personalcenter',
   CommunityClickInformationQRcodeDownload = 'click_information_QRcode_download',
   CommunityClickCommunitySendConfirm = 'click_community_send_confirm',
+  // subscription
+  ClickSubscribeNews = 'click_subscribe_news',
+  ClickSubscribeNewsAvatar = 'click_subscribe_news_avatar',
+  ClickUnsubscribe = 'click_unsubscribe',
 }
 
 // dimensions

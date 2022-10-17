@@ -6,6 +6,7 @@
             "drafts": "Drafts",
             "trash": "Trash",
             "spam": "Spam",
+            "subscription": "Subscription",
             "other-stuff": "Other Stuff",
             "settings": "Settings",
             "profile-link": "My Profile Link",
@@ -285,6 +286,7 @@
     },
     "inbox-nav": {
         "inbox": "Inbox",
+        "subscription": "Subscription",
         "developers": "Developers"
     },
     "ipfs": {
@@ -335,5 +337,10 @@
         "request-permission": "Claim Link will be sent to your inbox, <b>in case you miss the message</b>, please allow the desktop notification authorization for mail³.",
         "declined": "You have declined the desktop notification authorization, you can go to mail³ to claim your nft",
         "success": "Claim Link will be sent to your inbox, please check in mail³"
+    },
+    "subscription": {
+        "unsubscribe": "Are you sure you want to unsubscribe from this author？",
+        "Unsubscribe successfully": "Unsubscribe successfully",
+        "Subscribe successfully": "Subscribe successfully"
     }
 }

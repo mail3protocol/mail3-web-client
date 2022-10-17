@@ -8,6 +8,7 @@ import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdentifier'
+import { Subscription } from 'models'
 import { SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
@@ -456,6 +457,36 @@ export class API {
         uuid: userId,
         state,
       }
+    )
+  }
+
+  public async SubscriptionMessages(nextCursor: string) {
+    return this.axios.get<Subscription.MessageListResp>(
+      `/subscription/messages/?cursor=${nextCursor}&count=10`
+    )
+  }
+
+  public async SubscriptionMessageDetail(uuid: string) {
+    return this.axios.get<Subscription.MessageDetailResp>(
+      `/subscription/messages/${uuid}`
+    )
+  }
+
+  public async SubscriptionCommunityUserFollowing(uuid: string) {
+    return this.axios.post<void>(
+      `/subscription/community_users/${uuid}/following`
+    )
+  }
+
+  public async SubscriptionCommunityUserUnFollowing(uuid: string) {
+    return this.axios.delete<void>(
+      `/subscription/community_users/${uuid}/following`
+    )
+  }
+
+  public async SubscriptionMessageStats() {
+    return this.axios.get<Subscription.MessageStatsResp>(
+      `/subscription/message_stats`
     )
   }
 }

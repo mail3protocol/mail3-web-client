@@ -15,6 +15,8 @@ import { SpamPage } from '../pages/messages/spam'
 import { SetupSignaturePage } from '../pages/setup/signature'
 import { Developers } from '../pages/developers'
 import { SubscribePage } from '../pages/subscribe'
+import { SubPage } from '../pages/subscription/index'
+import { SubPreviewPage } from '../pages/subscription/preview'
 
 interface Mail3RouterProps extends RouteProps {
   key: string
@@ -88,6 +90,17 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Developers,
     key: 'developers',
     element: <Developers />,
+  },
+  {
+    path: RoutePath.Subscription,
+    key: 'subscription',
+    element: <SubPage />,
+  },
+  {
+    path: RoutePath.Subscription,
+    key: 'subscription-deatail',
+    params: '/:id',
+    element: <SubPreviewPage />,
   },
   {
     path: RoutePath.Unread,
