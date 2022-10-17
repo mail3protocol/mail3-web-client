@@ -25,6 +25,7 @@
         "formidable": "^2.0.1",
         "framer-motion": "^6",
         "jotai": "^1.6.1",
+        "lru-cache": "^7.14.0",
         "next": "12.1.4",
         "next-i18next": "^11.0.0",
         "nextjs-cors": "^2.1.1",
