@@ -16,6 +16,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 import { SubWrapEmptyAtom } from './wrap'
@@ -125,6 +126,8 @@ const SubList: FC<SubListProps> = ({ data }) => {
   const [id, setId] = useAtom(SubPreviewIdAtom)
   const [isClickMap, setIsClickMap] = useAtom(isClickMapAtom)
   const [, setUnreadCount] = useAtom(SubscribeUnreadCountAtom)
+  const trackNewClick = useTrackClick(TrackEvent.ClickSubscribeNews)
+
   return (
     <Box p="10px 0">
       {data.map((item) => {
@@ -138,6 +141,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
             onClick={() => {
               setIsOpen(true)
               setId(uuid)
+              trackNewClick()
               setIsClickMap({
                 ...isClickMap,
                 [uuid]: true,

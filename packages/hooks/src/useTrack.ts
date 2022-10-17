@@ -106,6 +106,11 @@ export enum TrackEvent {
   ExuserClickRegisterEns = 'exuser_click_register_ens',
   ExuserClickRegisterBit = 'exuser_click_register_bit',
   ExuserClickGotOne = 'exuser_click_got_one',
+
+  // subscription
+  ClickSubscribeNews = 'click_subscribe_news',
+  ClickSubscribeNewsAvatar = 'click_subscribe_news_avatar',
+  ClickUnsubscribe = 'click_unsubscribe',
 }
 
 // dimensions

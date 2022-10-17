@@ -16,7 +16,7 @@ import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
 import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useDialog, useToast } from 'hooks'
+import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { RenderHTML } from '../Preview/parser'
@@ -154,6 +154,7 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
   const dialog = useDialog()
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
+  const trackUnsubscribe = useTrackClick(TrackEvent.ClickUnsubscribe)
 
   return (
     <Link
@@ -172,6 +173,7 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
             showCloseButton: true,
             onConfirm: async () => {
               await api.SubscriptionCommunityUserUnFollowing(uuid)
+              trackUnsubscribe()
               setIsFollow(false)
               setIsLoading(false)
               toast(t('Unsubscribe successfully'), { status: 'success' })
@@ -207,6 +209,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
 }) => {
   const { id: _id } = useParams()
   const api = useAPI()
+  const trackAvatar = useTrackClick(TrackEvent.ClickSubscribeNewsAvatar)
   let id = useAtomValue(SubPreviewIdAtom)
   if (_id) {
     id = _id
@@ -248,7 +251,13 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     <Wrap isSingleMode={isSingleMode}>
       <Box className="header">
         <Flex alignItems="center">
-          <Avatar w="32px" h="32px" />
+          <Avatar
+            w="32px"
+            h="32px"
+            onClick={() => {
+              trackAvatar()
+            }}
+          />
           <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
             {detail?.writer_name}
           </Box>
