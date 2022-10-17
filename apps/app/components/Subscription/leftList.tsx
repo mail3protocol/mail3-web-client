@@ -88,9 +88,17 @@ export const SubListItem: FC<SubListItemProps> = ({
       className={isChoose ? 'cur' : ''}
     >
       <Box position="relative">
-        <Avatar w="48px" address={writer}>
-          {!seen && !isClicked ? <Badge boxSize="10px" bg="#9093F9" /> : null}
-        </Avatar>
+        {!seen && !isClicked ? (
+          <Badge
+            boxSize="10px"
+            bg="#9093F9"
+            position="absolute"
+            right="0"
+            top="0"
+            zIndex={9}
+          />
+        ) : null}
+        <Avatar w="48px" address={writer} />
       </Box>
       <Box pl="24px" w="100%">
         <Text
