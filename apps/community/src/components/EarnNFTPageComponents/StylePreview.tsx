@@ -9,14 +9,12 @@ import {
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Grid } from '@chakra-ui/layout'
-import { lazy, Suspense, useMemo, useState } from 'react'
-import DOMPurify from 'dompurify'
+import { lazy, Suspense, useState } from 'react'
 import { copyText } from 'shared'
-import {
-  subscribeButtonTemplateCode,
-  subscribeButtonTemplateCssCode,
-} from './SubscribeButtonTemplateCode'
+import { useLoginInfo } from 'hooks'
+import { subscribeButtonTemplateCode } from './SubscribeButtonTemplateCode'
 import { useToast } from '../../hooks/useToast'
+import { APP_URL } from '../../constants/env/url'
 
 const CodeEditor = lazy(() => import('../CodeEditor'))
 
@@ -28,8 +26,10 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
   isDisabledCopy,
 }) => {
   const { t } = useTranslation(['earn_nft', 'common'])
-  const [code, setCode] = useState(subscribeButtonTemplateCode(t))
-  const secureCode = useMemo(() => DOMPurify.sanitize(code), [code])
+  const loginInfo = useLoginInfo()
+  const [code, setCode] = useState(
+    subscribeButtonTemplateCode(loginInfo?.uuid || '')
+  )
   const toast = useToast()
 
   return (
@@ -47,21 +47,37 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
           />
         </Text>
       </Box>
-      <Heading as="h5" fontSize="14px" fontWeight="500" mb="16px">
-        {t('subscription_style_preview.preview_subtitle')}
-      </Heading>
       <Grid templateColumns="repeat(2, calc(50% - 4px))" gap="8px">
         <Box
           border="1px solid"
           borderColor="earnNftStylePreviewBorder"
           rounded="16px"
         >
-          <iframe
-            srcDoc={`<style>${subscribeButtonTemplateCssCode}</style>${secureCode}`}
-            frameBorder="0"
-            title="preview"
-            style={{ width: '100%', height: '100%' }}
-          />
+          <Box
+            borderBottom="1px solid"
+            borderColor="earnNftStylePreviewBorder"
+            h="52px"
+            lineHeight="52px"
+            textAlign="center"
+            w="full"
+            fontSize="14px"
+            fontWeight="500"
+          >
+            {t('subscription_style_preview.preview_subtitle')}
+          </Box>
+          <Center w="full" h="calc(100% - 53px)">
+            <a
+              href={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={`${APP_URL}/images/subscribe-btn.png`}
+                alt="subscribe"
+                style={{ width: '178px', height: 'auto', margin: 'auto' }}
+              />
+            </a>
+          </Center>
         </Box>
         <Box
           bg="earnNftStylePreviewCodeBackground"
