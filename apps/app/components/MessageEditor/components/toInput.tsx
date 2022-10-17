@@ -14,6 +14,7 @@ import {
   isZilpayAddress,
   isEnsDomain,
   isBitDomain,
+  isUdDomain,
 } from 'shared'
 import { removeMailSuffix } from '../../../utils'
 import { MAIL_SERVER_URL } from '../../../constants'
@@ -35,6 +36,7 @@ export const ToInput: React.FC<ToInputProps> = ({
       isZilpayAddress,
       isEnsDomain,
       isBitDomain,
+      isUdDomain,
     ].some((fn) => fn(value))
     if (value !== '' && (isValidAddress || isEmail)) {
       const addingAddress = isValidAddress

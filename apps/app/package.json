@@ -25,6 +25,7 @@
         "@remirror/react": "^1.0.39",
         "@sentry/react": "^7.7.0",
         "@sentry/tracing": "^7.7.0",
+        "@uauth/js": "^2.4.0",
         "assets": "*",
         "axios": "^0.26.1",
         "classnames": "^2.3.1",

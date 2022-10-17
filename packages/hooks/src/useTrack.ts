@@ -175,6 +175,7 @@ export enum DesiredWallet {
   Trust = 'Trust',
   ZilPay = 'ZilPay',
   Coinbase = 'Coinbase',
+  UD = 'UD',
 }
 
 export enum SignatureStatus {

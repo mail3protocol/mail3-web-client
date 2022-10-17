@@ -30,6 +30,7 @@ export enum ConnectorName {
   WalletConnect = 'WalletConnect',
   Zilpay = 'Zilpay',
   Coinbase = 'Coinbase',
+  UD = 'UD',
 
   // 👇 Not supported
   Phantom = 'Phantom',
@@ -74,6 +75,14 @@ export const useConnectedAccount = () => {
     }
   }
   return ''
+}
+
+export const useConnectedEthAccount = (connectorName?: ConnectorName) => {
+  const account = SupportedConnectors.useSelectedAccounts(
+    Connectors.get(connectorName) ?? metaMask
+  )
+
+  return account?.[0]
 }
 
 export const useAccount = () => {
