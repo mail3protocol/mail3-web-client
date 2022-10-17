@@ -4,11 +4,13 @@ import styled from '@emotion/styled'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useDidMount } from 'hooks'
+import { useAtomValue } from 'jotai'
 import { ReactComponent as InboxSvg } from '../../../assets/inbox.svg'
 import { ReactComponent as SubSvg } from '../../../assets/subscription.svg'
 import { ReactComponent as DevelopersSvg } from '../../../assets/developes.svg'
 import { RoutePath } from '../../../route/path'
 import { RouterLink } from '../../RouterLink'
+import { SubscribeUnreadCountAtom } from '../../Navbar'
 
 export enum InboxNavType {
   Inbox = 'Inbox',
@@ -60,6 +62,7 @@ export const InboxNav: React.FC<{
 }> = ({ initialScrollX }) => {
   const { pathname } = useLocation()
   const [t] = useTranslation('inbox-nav')
+  const unreadCount = useAtomValue(SubscribeUnreadCountAtom)
   const navItems: NavItem[] = [
     {
       type: InboxNavType.Inbox,
@@ -82,7 +85,7 @@ export const InboxNav: React.FC<{
   ]
   const numberMap = {
     [InboxNavType.Inbox]: 0,
-    [InboxNavType.Subscription]: 999,
+    [InboxNavType.Subscription]: unreadCount,
     [InboxNavType.Developers]: 0,
   }
   const containerRef = useRef<HTMLDivElement>(null)

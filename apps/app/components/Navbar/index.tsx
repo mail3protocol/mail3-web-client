@@ -26,6 +26,9 @@ import {
   useTrackClick,
 } from 'hooks'
 import { DiscordIcon, Logo as UiLogo, MirrorIcon, TwitterIcon } from 'ui'
+import { useQuery } from 'react-query'
+import { atom, useAtomValue } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
 import {
   DISCORD_URL,
   MIRROR_URL,
@@ -45,6 +48,7 @@ import { Auth, AuthModal } from '../Auth'
 import { RouterLink } from '../RouterLink'
 import { ConnectWallet } from '../ConnectWallet'
 import { NotificationSwitch } from '../NotificationSwitch'
+import { useAPI } from '../../hooks/useAPI'
 
 export interface NavbarProps {
   showInbox?: boolean
@@ -56,10 +60,13 @@ const LogoButton = styled(Button)`
   }
 `
 
+export const SubscribeUnreadCountAtom = atom(0)
+
 const LogoPopoverBody: React.FC = () => {
   const [t] = useTranslation('common')
   const trackMenuClick = useTrackClick(TrackEvent.ClickMail3Menu)
   const context = usePopoverContext()
+  const unreadCount = useAtomValue(SubscribeUnreadCountAtom)
   const btns: ButtonListItemProps[] = [
     {
       href: RoutePath.Drafts,
@@ -149,7 +156,8 @@ const LogoPopoverBody: React.FC = () => {
                 <SubscriptionSvg />
                 <Badge
                   top="0"
-                  right="-30px"
+                  left="20px"
+                  minW="20px"
                   position="absolute"
                   h="16px"
                   lineHeight="16px"
@@ -160,8 +168,7 @@ const LogoPopoverBody: React.FC = () => {
                   borderRadius="27px"
                   textAlign="center"
                 >
-                  {/* {count > 99 ? '99+' : count} */}
-                  99+
+                  {unreadCount > 99 ? '99+' : unreadCount}
                 </Badge>
               </Box>
               <Text>{t('navbar.subscription')}</Text>
@@ -238,6 +245,22 @@ const LogoPopoverBody: React.FC = () => {
 }
 
 const Logo = () => {
+  const api = useAPI()
+  const setUnreadCount = useUpdateAtom(SubscribeUnreadCountAtom)
+  useQuery(
+    ['subscribeMessageCount'],
+    async () => {
+      const { data } = await api.SubscriptionMessageStats()
+      setUnreadCount(data?.unread_count ?? 0)
+    },
+    {
+      refetchOnReconnect: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchInterval: 10000,
+    }
+  )
+
   const isConnected = !!useAccount()
   const logoEl = (
     <UiLogo

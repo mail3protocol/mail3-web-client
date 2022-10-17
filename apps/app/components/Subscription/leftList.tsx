@@ -20,6 +20,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 import { SubWrapEmptyAtom } from './wrap'
 import { SubFormatDate } from '../../utils'
+import { SubscribeUnreadCountAtom } from '../Navbar'
 
 const Container = styled(Box)`
   flex: 9;
@@ -123,11 +124,11 @@ const SubList: FC<SubListProps> = ({ data }) => {
   const setIsOpen = useUpdateAtom(SubPreviewIsOpenAtom)
   const [id, setId] = useAtom(SubPreviewIdAtom)
   const [isClickMap, setIsClickMap] = useAtom(isClickMapAtom)
-
+  const [, setUnreadCount] = useAtom(SubscribeUnreadCountAtom)
   return (
     <Box p="10px 0">
       {data.map((item) => {
-        const { uuid } = item
+        const { uuid, seen } = item
         return (
           <SubListItem
             isChoose={id === uuid}
@@ -141,6 +142,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
                 ...isClickMap,
                 [uuid]: true,
               })
+              if (!seen) setUnreadCount((value) => value - 1)
             }}
           />
         )

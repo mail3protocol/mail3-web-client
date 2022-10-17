@@ -7,6 +7,10 @@ export namespace Subscription {
     created_at: string
   }
 
+  export interface MessageStatsResp {
+    unread_count: number
+  }
+
   export interface MessageListResp {
     messages: MessageResp[]
     next_cursor: string

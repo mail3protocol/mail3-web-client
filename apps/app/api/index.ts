@@ -462,4 +462,10 @@ export class API {
       `/subscription/community_users/${uuid}/following`
     )
   }
+
+  public async SubscriptionMessageStats() {
+    return this.axios.get<Subscription.MessageStatsResp>(
+      `/subscription/message_stats`
+    )
+  }
 }
