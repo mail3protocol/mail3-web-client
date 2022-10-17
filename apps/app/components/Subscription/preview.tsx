@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Center,
   CloseButton,
@@ -19,12 +18,14 @@ import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import { Avatar } from 'ui'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
 import { ReactComponent as ArtEmptySvg } from '../../assets/subscription/article-empty.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { SubFormatDate } from '../../utils'
+import { HOME_URL } from '../../constants'
 
 const Mask = styled(Box)`
   height: 100%;
@@ -254,8 +255,10 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           <Avatar
             w="32px"
             h="32px"
+            address={detail?.writer_name}
             onClick={() => {
               trackAvatar()
+              window.open(`${HOME_URL}/${detail?.writer_name}`)
             }}
           />
           <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
@@ -270,7 +273,15 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         <Divider orientation="horizontal" mt="16px" />
       </Box>
       <Center className="mobile-header">
-        <Avatar w="14px" h="14px" />
+        <Avatar
+          w="14px"
+          h="14px"
+          address={detail?.writer_name}
+          onClick={() => {
+            trackAvatar()
+            window.open(`${HOME_URL}/${detail?.writer_name}`)
+          }}
+        />
         <Box
           ml="6px"
           fontWeight={400}

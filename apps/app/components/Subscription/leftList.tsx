@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Center,
   Circle,
@@ -17,6 +16,7 @@ import { Subscription } from 'models'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import { TrackEvent, useTrackClick } from 'hooks'
+import { Avatar } from 'ui'
 import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 import { SubWrapEmptyAtom } from './wrap'
@@ -88,7 +88,7 @@ export const SubListItem: FC<SubListItemProps> = ({
       className={isChoose ? 'cur' : ''}
     >
       <Box position="relative">
-        <Avatar w="48px">
+        <Avatar w="48px" address={writer}>
           {!seen && !isClicked ? <Badge boxSize="10px" bg="#9093F9" /> : null}
         </Avatar>
       </Box>
