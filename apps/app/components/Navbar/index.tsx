@@ -154,22 +154,24 @@ const LogoPopoverBody: React.FC = () => {
             <Center flexDirection="column">
               <Box position="relative">
                 <SubscriptionSvg />
-                <Badge
-                  top="0"
-                  left="20px"
-                  minW="20px"
-                  position="absolute"
-                  h="16px"
-                  lineHeight="16px"
-                  fontSize="10px"
-                  bg="#4E51F4"
-                  color="#fff"
-                  fontWeight={700}
-                  borderRadius="27px"
-                  textAlign="center"
-                >
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </Badge>
+                {unreadCount > 0 ? (
+                  <Badge
+                    top="0"
+                    left="20px"
+                    minW="20px"
+                    position="absolute"
+                    h="16px"
+                    lineHeight="16px"
+                    fontSize="10px"
+                    bg="#4E51F4"
+                    color="#fff"
+                    fontWeight={700}
+                    borderRadius="27px"
+                    textAlign="center"
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </Badge>
+                ) : null}
               </Box>
               <Text>{t('navbar.subscription')}</Text>
             </Center>
