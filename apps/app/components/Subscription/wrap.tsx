@@ -36,26 +36,24 @@ const Container = styled(Box)`
   }
 `
 
-export const SubWrapEmptyAtom = atom(false)
+export const SubWrapEmptyAtom = atom(true)
 
 export const SubWrap: FC = () => {
   const isEmpty = useAtomValue(SubWrapEmptyAtom)
+
   return (
     <Container>
-      <Flex h="100%">
-        {isEmpty ? (
-          <Center minH="200px" w="100%">
-            <Box>
-              <Empty />
-              <Text mt="10px">No new update here for now</Text>
-            </Box>
-          </Center>
-        ) : (
-          <>
-            <SubLeftList />
-            <SubPreview isSingleMode={false} />
-          </>
-        )}
+      <Flex h="100%" display={!isEmpty ? 'none' : 'flex'}>
+        <Center minH="200px" w="100%">
+          <Box>
+            <Empty />
+            <Text mt="10px">No new update here for now</Text>
+          </Box>
+        </Center>
+      </Flex>
+      <Flex h="100%" display={isEmpty ? 'none' : 'flex'}>
+        <SubLeftList />
+        <SubPreview isSingleMode={false} />
       </Flex>
     </Container>
   )

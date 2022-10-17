@@ -221,7 +221,7 @@ export const SubLeftList: FC = () => {
       </Container>
     )
 
-  if (!listData.length) return <Container>Empty</Container>
+  if (!listData.length) return <Container />
 
   return (
     <Container ref={containerRef}>
