@@ -99,6 +99,10 @@ export default {
     send_failed: 'Send failed, reason: {{message}}',
     mail_image_limit:
       'The total image size of this message cannot exceed {{size}}',
+    send_confirm: 'Please confirm you want to send this message',
+    send_description: 'You are about to send this message to your subscribers',
+    confirm: 'Confirm',
+    unsubscribe: 'Unsubscribe',
   },
   dashboard: {
     message: 'Message',

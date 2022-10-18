@@ -112,7 +112,7 @@ export const NewMessage = () => {
               }}
               w="138px"
             />
-            {!isPreview ? <SendButton subject={subjectText} /> : null}
+            <SendButton subject={subjectText} />
           </HStack>
         </Flex>
       </StateProvider>

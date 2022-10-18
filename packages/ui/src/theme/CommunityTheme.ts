@@ -35,6 +35,11 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
       100: 'rgba(0, 0, 0, 0.80)',
       500: 'rgba(0, 0, 0, 0.92)',
     },
+    blackButtonOutline: {
+      50: 'rgba(0, 0, 0, 0.64)',
+      100: 'rgba(0, 0, 0, 0.10)',
+      500: 'rgba(0, 0, 0, 0.92)',
+    },
     primaryButton: {
       100: '#A1A2F4',
       200: '#8183F5',

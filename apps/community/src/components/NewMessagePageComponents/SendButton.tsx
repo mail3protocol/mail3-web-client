@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHelpers } from '@remirror/react'
-import { useTrackClick, TrackEvent } from 'hooks'
+import { useTrackClick, TrackEvent, useDialog } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
 import { useToast } from '../../hooks/useToast'
 
@@ -17,6 +17,7 @@ export const SendButton: React.FC<SendButtonProps> = ({ subject, onSend }) => {
   const { getHTML } = useHelpers()
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
+  const dialog = useDialog()
 
   const trackClickCommunitySendConfirm = useTrackClick(
     TrackEvent.CommunityClickCommunitySendConfirm
@@ -52,7 +53,17 @@ export const SendButton: React.FC<SendButtonProps> = ({ subject, onSend }) => {
       variant="solid-rounded"
       colorScheme="blackButton"
       w="138px"
-      onClick={onSendMessage}
+      onClick={() => {
+        dialog({
+          title: t('send_confirm'),
+          description: t('send_description'),
+          okText: t('confirm'),
+          onConfirm: onSendMessage,
+          okButtonProps: {
+            colorScheme: 'blackButton',
+          },
+        })
+      }}
       isDisabled={isDisabled}
       isLoading={isLoading}
     >

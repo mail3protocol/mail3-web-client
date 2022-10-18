@@ -18,7 +18,7 @@ export const PreviewButton: React.FC<PreviewButtonProps> = ({
   return (
     <Button
       variant="outline-rounded"
-      colorScheme="blackAlpha"
+      colorScheme="blackButtonOutline"
       {...props}
       onClick={(e) => {
         onClick(e, getHTML())
