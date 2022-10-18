@@ -69,7 +69,7 @@ export const ConfirmDialog: React.FC = () => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent borderRadius="20px" {...modalContentProps}>
+      <ModalContent borderRadius="20px" w="450px" {...modalContentProps}>
         {showCloseButton ? <CloseButton onClick={onClose} /> : null}
         <ModalBody py="24px" px="20px" {...modalBodyProps}>
           {content ?? (
