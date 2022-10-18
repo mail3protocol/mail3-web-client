@@ -26,9 +26,7 @@ import { useTranslation } from 'next-i18next'
 import { Avatar, ProfileCard } from 'ui'
 import { useMemo, useRef, useState } from 'react'
 import {
-  ProfileScoialPlatformItem,
   TrackEvent,
-  TrackKey,
   useDidMount,
   useScreenshot,
   useToast,
@@ -46,14 +44,10 @@ import { useQuery } from 'react-query'
 import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
-import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
-import { ReactComponent as SvgCyber } from 'assets/profile/business/arrow.svg'
-import { ReactComponent as SvgZiliqa } from 'assets/svg/zilliqa.svg'
 import axios from 'axios'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
-import { useAPI } from '../../api'
 
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
@@ -61,12 +55,6 @@ enum ButtonType {
   Copy,
   Card,
   Twitter,
-}
-
-enum ScoialPlatform {
-  CyberConnect = 'CyberConnect',
-  Etherscan = 'Etherscan',
-  ViewBlock = 'ViewBlock',
 }
 
 const Container = styled(Box)`
@@ -108,16 +96,6 @@ const WrapLeft = styled(Center)`
   flex-direction: column;
 
   .avatar {
-  }
-
-  .button-list {
-    top: 5px;
-    right: 15px;
-    position: absolute;
-
-    .button-wrap-mobile {
-      display: none;
-    }
   }
 
   .address {
@@ -213,11 +191,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const trackTwitter = useTrackClick(TrackEvent.ClickProfileTwitter)
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
   const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
-  const trackScoialDimensions = useTrackClick(
-    TrackEvent.ClickProfileScoialPlatform
-  )
 
-  const api = useAPI()
   const toast = useToast()
   const { downloadScreenshot } = useScreenshot()
 
@@ -225,26 +199,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
 
-  const { data: _0xaddr, isLoading } = useQuery(
-    ['bit', address],
-    async () => {
-      try {
-        const { data } = await api.getBitToEthResponse(address)
-        return data.account_info.owner_key
-      } catch (error) {
-        return ''
-      }
-    },
-    {
-      refetchIntervalInBackground: false,
-      refetchOnMount: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      enabled: isBitDomain(address),
-    }
-  )
-
-  const { data: userInfo } = useQuery(
+  const { data: userInfo, isLoading } = useQuery(
     ['cluster', address],
     async () => {
       // const ret = await getNfts()
@@ -353,23 +308,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     },
   }
 
-  const ScoialConfig: Record<
-    ScoialPlatform,
-    {
-      Icon: any
-    }
-  > = {
-    [ScoialPlatform.CyberConnect]: {
-      Icon: SvgCyber,
-    },
-    [ScoialPlatform.Etherscan]: {
-      Icon: SvgEtherscan,
-    },
-    [ScoialPlatform.ViewBlock]: {
-      Icon: SvgZiliqa,
-    },
-  }
-
   const tabItemTypes = [TabItemType.Collection, TabItemType.Updates]
 
   const profileUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
@@ -417,32 +355,14 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     [mailAddress, address]
   )
 
-  const getHref = (type: ScoialPlatform) => {
-    const realAddr = _0xaddr || address
-
-    if (type === ScoialPlatform.CyberConnect) {
-      return `https://app.cyberconnect.me/address/${realAddr}`
-    }
-    if (type === ScoialPlatform.ViewBlock) {
-      return `https://viewblock.io/zilliqa/address/${address}`
-    }
-
-    return `https://etherscan.io/address/${realAddr}`
-  }
-
-  const socials = isZilpayAddress(address)
-    ? [ScoialConfig.ViewBlock]
-    : [ScoialConfig.CyberConnect, ScoialConfig.Etherscan]
-
-  const socialPlatforms = isZilpayAddress(address)
-    ? [ScoialPlatform.ViewBlock]
-    : [ScoialPlatform.CyberConnect, ScoialPlatform.Etherscan]
-
   useDidMount(() => {
     setIsDid(true)
   })
 
   if (!isDid) return null
+
+  const hadLength = userInfo?.poapList.filter((item) => item.hadGot).length ?? 0
+  const allLength = userInfo?.poapList.length ?? 0
 
   return (
     <>
@@ -452,86 +372,47 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             <Box className="avatar">
               <Avatar address={address} w="64px" h="64px" />
             </Box>
-            <Box className="button-list">
-              {isLoading ? (
-                <Spinner />
-              ) : (
-                <HStack className="button-wrap-pc">
-                  {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
-                    (type: ButtonType) => {
-                      const { Icon, label } = buttonConfig[type]
-                      const onClick = actionMap[type]
-                      return (
-                        <Popover
-                          arrowSize={8}
-                          key={type}
-                          trigger="hover"
-                          placement="top-start"
-                          size="md"
-                        >
-                          <PopoverTrigger>
-                            <Box as="button" p="10px" onClick={onClick}>
-                              <Icon />
-                            </Box>
-                          </PopoverTrigger>
-                          <PopoverContent width="auto">
-                            <PopoverArrow />
-                            <PopoverBody
-                              whiteSpace="nowrap"
-                              fontSize="14px"
-                              justifyContent="center"
-                            >
-                              {label}
-                            </PopoverBody>
-                          </PopoverContent>
-                        </Popover>
-                      )
-                    }
-                  )}
-                </HStack>
-              )}
-            </Box>
             <Box className="address">
               <Text className="p">{mailAddress}</Text>
             </Box>
             <Center mt="25px">
               <Mail3MeButton to={mailAddress} />
             </Center>
-            <Center mt="25px">
-              <HStack spacing="24px">
-                {socialPlatforms.map((itemKey: ScoialPlatform, index) => {
-                  const { Icon } = ScoialConfig[itemKey]
-                  return (
-                    <Box
-                      // eslint-disable-next-line react/no-array-index-key
-                      key={index}
-                      w={{ base: '24px', md: '36px' }}
-                      h={{ base: '24px', md: '36px' }}
-                      as="a"
-                      href={getHref(itemKey)}
-                      target="_blank"
-                      onClick={() => {
-                        if (itemKey === ScoialPlatform.CyberConnect) {
-                          trackScoialDimensions({
-                            [TrackKey.ProfileScoialPlatform]:
-                              ProfileScoialPlatformItem.CyberConnect,
-                          })
-                        }
-
-                        if (itemKey === ScoialPlatform.Etherscan) {
-                          trackScoialDimensions({
-                            [TrackKey.ProfileScoialPlatform]:
-                              ProfileScoialPlatformItem.Etherscan,
-                          })
-                        }
-                      }}
-                    >
-                      <Icon />
-                    </Box>
-                  )
-                })}
+            <Box mt="25px">
+              <HStack>
+                {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
+                  (type: ButtonType) => {
+                    const { Icon, label } = buttonConfig[type]
+                    const onClick = actionMap[type]
+                    return (
+                      <Popover
+                        arrowSize={8}
+                        key={type}
+                        trigger="hover"
+                        placement="top-start"
+                        size="md"
+                      >
+                        <PopoverTrigger>
+                          <Box as="button" p="10px" onClick={onClick}>
+                            <Icon />
+                          </Box>
+                        </PopoverTrigger>
+                        <PopoverContent width="auto">
+                          <PopoverArrow />
+                          <PopoverBody
+                            whiteSpace="nowrap"
+                            fontSize="14px"
+                            justifyContent="center"
+                          >
+                            {label}
+                          </PopoverBody>
+                        </PopoverContent>
+                      </Popover>
+                    )
+                  }
+                )}
               </HStack>
-            </Center>
+            </Box>
           </WrapLeft>
 
           <WrapRight>
@@ -601,110 +482,111 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               <Flex justifyContent="center" pt="8px" minH="200px">
                 <TabPanels>
                   <TabPanel p="0px">
-                    <Box w="100%">
-                      <Center
-                        background="#F9F9F9"
-                        borderRadius="24px"
-                        p="18px"
-                        w="100%"
-                        flexDirection={{ base: 'column', md: 'row' }}
-                      >
-                        <Center>
-                          <SvgRank />
-                          <Text
-                            ml="8px"
-                            fontWeight="700"
-                            fontSize="14px"
-                            lineHeight="26px"
-                          >
-                            Collection Rank
-                          </Text>
-                          <Text
-                            ml="16px"
-                            fontWeight="700"
-                            fontSize="24px"
-                            lineHeight="26px"
-                            color="#4E51F4"
-                          >
-                            {userInfo?.ranking}
-                          </Text>
-                        </Center>
-                        <Spacer />
-                        <Center mt={{ base: '5px', md: '0' }}>
-                          <Text
-                            fontWeight="400"
-                            fontSize="12px"
-                            lineHeight="26px"
-                          >
-                            Details of the ranking:
-                          </Text>
-                          <Link href="#" pl="5px">
-                            <Image w="100px" src={PngCluster3.src} />
-                          </Link>
-                        </Center>
+                    {isLoading ? (
+                      <Center minH="200px">
+                        <Spinner />
                       </Center>
-
-                      <Center p="24px 0">
+                    ) : (
+                      <Box w="100%">
                         <Center
-                          fontWeight="500"
-                          fontSize="16px"
-                          lineHeight="26px"
+                          background="#F9F9F9"
+                          borderRadius="24px"
+                          p="18px"
+                          w="100%"
+                          flexDirection={{ base: 'column', md: 'row' }}
                         >
-                          <Text color="#4E51F4">
-                            {
-                              userInfo?.poapList.filter((item) => item.hadGot)
-                                .length
-                            }
-                          </Text>
-                          /<Text>{userInfo?.poapList.length}</Text>
-                          <Text ml="5px">collected</Text>
+                          <Center>
+                            <SvgRank />
+                            <Text
+                              ml="8px"
+                              fontWeight="700"
+                              fontSize="14px"
+                              lineHeight="26px"
+                            >
+                              Collection Rank
+                            </Text>
+                            <Text
+                              ml="16px"
+                              fontWeight="700"
+                              fontSize="24px"
+                              lineHeight="26px"
+                              color="#4E51F4"
+                            >
+                              {userInfo?.ranking}
+                            </Text>
+                          </Center>
+                          <Spacer />
+                          <Center mt={{ base: '5px', md: '0' }}>
+                            <Text
+                              fontWeight="400"
+                              fontSize="12px"
+                              lineHeight="26px"
+                            >
+                              Details of the ranking:
+                            </Text>
+                            <Link href="#" pl="5px">
+                              <Image w="100px" src={PngCluster3.src} />
+                            </Link>
+                          </Center>
                         </Center>
-                        <Spacer />
-                      </Center>
 
-                      <Box
-                        background="#F9F9F9"
-                        borderRadius="24px"
-                        p={{ base: '8px', md: '16px' }}
-                        w="100%"
-                        h={{ base: 'auto', md: '500px' }}
-                        overflow={{ base: 'auto', md: 'hidden' }}
-                        overflowY={{ base: 'auto', md: 'scroll' }}
-                      >
-                        <Wrap spacing="10px">
-                          {userInfo?.poapList.map((item) => {
-                            const { name, img, hadGot } = item
-                            return (
-                              <WrapItem
-                                key={item.name}
-                                w={{ base: '105px', md: '118px' }}
-                                opacity={hadGot ? 1 : 0.4}
-                              >
-                                <Center flexDirection="column" w="100%">
-                                  <Flex
-                                    w="76px"
-                                    h="110px"
-                                    overflow="hidden"
-                                    alignItems="center"
-                                  >
-                                    <Image src={img} w="100%" />
-                                  </Flex>
-                                  <Text
-                                    w="100%"
-                                    mt="8px"
-                                    textAlign="center"
-                                    fontSize="12px"
-                                    noOfLines={2}
-                                  >
-                                    {name}
-                                  </Text>
-                                </Center>
-                              </WrapItem>
-                            )
-                          })}
-                        </Wrap>
+                        <Center p="24px 0">
+                          <Center
+                            fontWeight="500"
+                            fontSize="16px"
+                            lineHeight="26px"
+                          >
+                            <Text color="#4E51F4">{hadLength}</Text>/
+                            <Text>{allLength}</Text>
+                            <Text ml="5px">collected</Text>
+                          </Center>
+                          <Spacer />
+                        </Center>
+
+                        <Box
+                          background="#F9F9F9"
+                          borderRadius="24px"
+                          p={{ base: '8px', md: '16px' }}
+                          w="100%"
+                          h={{ base: 'auto', md: '500px' }}
+                          overflow={{ base: 'auto', md: 'hidden' }}
+                          overflowY={{ base: 'auto', md: 'scroll' }}
+                        >
+                          <Wrap spacing="10px">
+                            {userInfo?.poapList.map((item) => {
+                              const { name, img, hadGot } = item
+                              return (
+                                <WrapItem
+                                  key={item.name}
+                                  w={{ base: '105px', md: '118px' }}
+                                  opacity={hadGot ? 1 : 0.4}
+                                >
+                                  <Center flexDirection="column" w="100%">
+                                    <Flex
+                                      w="76px"
+                                      h="110px"
+                                      overflow="hidden"
+                                      alignItems="center"
+                                    >
+                                      <Image src={img} w="100%" />
+                                    </Flex>
+                                    <Text
+                                      w="100%"
+                                      mt="8px"
+                                      textAlign="center"
+                                      fontSize="12px"
+                                      noOfLines={2}
+                                    >
+                                      {name}
+                                    </Text>
+                                  </Center>
+                                </WrapItem>
+                              )
+                            })}
+                          </Wrap>
+                        </Box>
                       </Box>
-                    </Box>
+                    )}
                   </TabPanel>
                   <TabPanel>
                     <Center
@@ -724,18 +606,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </WrapMain>
       </Container>
 
-      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl}>
-        {socials.map(({ Icon }, index) => (
-          <Box
-            // eslint-disable-next-line react/no-array-index-key
-            key={index}
-            w="24px"
-            h="24px"
-          >
-            <Icon />
-          </Box>
-        ))}
-      </ProfileCard>
+      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl} />
     </>
   )
 }
