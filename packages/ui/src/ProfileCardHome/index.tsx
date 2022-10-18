@@ -54,7 +54,8 @@ const Container = styled(Box)`
 
   &.is-dev {
     top: 10px;
-    left: 10px;
+    left: auto;
+    right: 10px;
     position: absolute;
   }
 
@@ -101,7 +102,7 @@ const Container = styled(Box)`
 
   .qrCode {
     left: 50%;
-    bottom: 116px;
+    bottom: 90px;
     transform: translateX(-50%);
     position: absolute;
   }
@@ -140,7 +141,7 @@ const Container = styled(Box)`
   }
 `
 
-export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
+export const ProfileCardHome = forwardRef<HTMLDivElement, ProfileCardProps>(
   ({ mailAddress, isPic, isDev, children, homeUrl }, ref) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
     const mailSuffix = mailAddress.substring(mailAddress.indexOf('@'))

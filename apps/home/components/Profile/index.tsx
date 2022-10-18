@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
-import { Avatar, ProfileCard } from 'ui'
+import { Avatar, ProfileCardHome } from 'ui'
 import { useMemo, useRef, useState } from 'react'
 import {
   TrackEvent,
@@ -46,6 +46,7 @@ import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
 import axios from 'axios'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
+import { ReactComponent as SvgCollect } from '../../assets/svg/collect.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
 
@@ -606,7 +607,48 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         </WrapMain>
       </Container>
 
-      <ProfileCard ref={cardRef} mailAddress={mailAddress} homeUrl={homeUrl} />
+      <ProfileCardHome
+        ref={cardRef}
+        mailAddress={mailAddress}
+        homeUrl={homeUrl}
+        // isDev
+      >
+        <Center
+          w="325px"
+          h="64px"
+          background="#F3F3F3"
+          borderRadius="16px"
+          color="#000000"
+          fontSize="12px"
+          fontWeight="500"
+          justifyContent="space-around"
+          lineHeight={1}
+        >
+          <Box textAlign="center">
+            <Center mt="-7px">
+              <SvgRank />
+            </Center>
+            <Box p="3px" mt="-5px">
+              Collection Rank
+            </Box>
+            <Box mt="3px">{userInfo?.ranking}</Box>
+          </Box>
+          <Box>
+            <Center mt="-7px">
+              <SvgCollect />
+            </Center>
+            <Center p="3px" mt="-5px">
+              Colleced
+            </Center>
+            <Center mt="3px">
+              <Box color="#4E52F5" mr="2px">
+                {hadLength}
+              </Box>
+              / <Box ml="2px">{allLength}</Box>
+            </Center>
+          </Box>
+        </Center>
+      </ProfileCardHome>
     </>
   )
 }
