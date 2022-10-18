@@ -23,7 +23,7 @@ export default {
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
     send_time_limit:
-      'Only one message can be sent within 24 hours, please try again later.',
+      'Only one message can be sent within 1 day, please try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
   },
@@ -139,10 +139,7 @@ export default {
     disable: 'Disable',
     subscription_style_preview: {
       title: 'Subscription dialog style preview',
-      description_1:
-        'Edit the code area on the right to preview the style of the dialog box you want and get the code',
-      description_2:
-        'Read the development documentation to learn how to integrate: <a>How to integrate subscribe to earn</a>',
+      description: '<p>Click “Get the Code” button to copy the code.</p>',
       preview_subtitle: 'style preview',
       customize_the_button: 'Customize the button',
       get_the_code: 'Get the code',
@@ -151,6 +148,10 @@ export default {
     subscribe: 'Subscribe',
     update_failed: 'Setup failed, reason: {{message}}',
     update_succeed: 'Setup succeed!',
+    galax_input_value_verify_description:
+      'The value of the <b>Campaign Link</b>, <b>Credential ID</b>, <b>Credential Key</b> you filled in is not legal, please check and modify.',
+    quest3_input_value_verify_description:
+      'The value of the <b>Campaign Link</b> you filled in is not legal, please check and modify.',
     // language=html
     help: `<h3>What is Subscribe To Earn?</h3>
            <ul>

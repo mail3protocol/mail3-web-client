@@ -6,10 +6,12 @@ import {
   Text,
   TextProps,
   UseToastOptions,
+  AlertProps,
 } from '@chakra-ui/react'
 
 export interface ToastOptions extends UseToastOptions {
   textProps?: TextProps
+  alertProps?: AlertProps
 }
 
 export function useToast() {
@@ -17,7 +19,7 @@ export function useToast() {
   return useCallback(
     (message: React.ReactNode, options?: ToastOptions) => {
       toast.closeAll()
-      const { textProps, position = 'top', ...rest } = options ?? {}
+      const { textProps, position = 'top', alertProps, ...rest } = options ?? {}
       toast({
         duration: 2000,
         position,
@@ -34,8 +36,10 @@ export function useToast() {
             boxShadow="0px 0px 10px 4px rgb(25 25 100 / 10%)"
             px="24px"
             py="12px"
+            colorScheme="blackAlpha"
+            {...alertProps}
           >
-            <AlertIcon color="black" mr="6px" />
+            <AlertIcon mr="6px" />
             <Text fontSize="16px" fontWeight="500" {...textProps}>
               {message}
             </Text>

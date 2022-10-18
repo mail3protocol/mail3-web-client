@@ -22,9 +22,10 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDialog } from 'hooks'
+import { isHttpUriReg } from 'shared'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
@@ -113,6 +114,34 @@ export const EarnNft: React.FC = () => {
     }
   }
 
+  const isDisabledSubmit = useMemo(() => {
+    if (platform === SubscriptionPlatform.Galaxy)
+      return !campaignUrl || !credentialId || !accessToken
+    if (platform === SubscriptionPlatform.Quest3) return !campaignUrl
+    return false
+  }, [campaignUrl, credentialId, accessToken, platform])
+
+  const onUpdateTipsPanel = useUpdateTipsPanel()
+  useEffect(() => {
+    if (platform === SubscriptionPlatform.Galaxy) {
+      onUpdateTipsPanel(
+        <Trans
+          i18nKey="help"
+          t={t}
+          components={{
+            h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
+            ul: <UnorderedList />,
+            ol: <OrderedList />,
+            li: <ListItem fontSize="14px" fontWeight="400" />,
+            p: <Text fontSize="14px" fontWeight="400" />,
+          }}
+        />
+      )
+    } else {
+      onUpdateTipsPanel(null)
+    }
+  }, [platform])
+
   return (
     <Container
       as={Grid}
@@ -128,6 +157,40 @@ export const EarnNft: React.FC = () => {
         p="32px"
         onSubmit={(event) => {
           event.preventDefault()
+          if (
+            platform === SubscriptionPlatform.Galaxy &&
+            (accessToken.length !== 32 ||
+              credentialId.length !== 18 ||
+              isHttpUriReg.test(campaignUrl))
+          ) {
+            toast(
+              <Trans
+                t={t}
+                i18nKey="galax_input_value_verify_description"
+                components={{
+                  b: <b />,
+                }}
+              />,
+              { alertProps: { colorScheme: 'red' } }
+            )
+            return
+          }
+          if (
+            platform === SubscriptionPlatform.Quest3 &&
+            isHttpUriReg.test(campaignUrl)
+          ) {
+            toast(
+              <Trans
+                t={t}
+                i18nKey="quest3_input_value_verify_description"
+                components={{
+                  b: <b />,
+                }}
+              />,
+              { alertProps: { colorScheme: 'red' } }
+            )
+            return
+          }
           dialog({
             title:
               state === SubscriptionState.Inactive
@@ -324,7 +387,6 @@ export const EarnNft: React.FC = () => {
             type="submit"
             isLoading={isUpdating}
             style={{ opacity: isLoading ? 0 : undefined }}
-            isDisabled={!campaignUrl}
           >
             {t('disable')}
           </Button>
@@ -334,25 +396,13 @@ export const EarnNft: React.FC = () => {
             colorScheme="primaryButton"
             type="submit"
             style={{ opacity: isLoading ? 0 : undefined }}
-            isDisabled={!campaignUrl || !credentialId || !accessToken}
+            isDisabled={isDisabledSubmit}
           >
             {t('enable')}
           </Button>
         )}
       </Box>
-      <TipsPanel gridRow="1 / 3" gridColumn="2 / 3">
-        <Trans
-          i18nKey="help"
-          t={t}
-          components={{
-            h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
-            ul: <UnorderedList />,
-            ol: <OrderedList />,
-            li: <ListItem fontSize="14px" fontWeight="400" />,
-            p: <Text fontSize="14px" fontWeight="400" />,
-          }}
-        />
-      </TipsPanel>
+      <TipsPanel gridRow="1 / 3" gridColumn="2 / 3" useSharedContent />
       <StylePreview isDisabledCopy={state === SubscriptionState.Inactive} />
       <div />
     </Container>

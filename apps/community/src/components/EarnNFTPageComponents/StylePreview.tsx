@@ -38,14 +38,14 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
         {t('title')}
       </Heading>
       <Box fontSize="12px" fontWeight="400" mb="24px">
-        <Text>{t('subscription_style_preview.description_1')}</Text>
-        <Text>
-          <Trans
-            t={t}
-            i18nKey="subscription_style_preview.description_2"
-            components={{ a: <Link color="primary.900" fontWeight="500" /> }}
-          />
-        </Text>
+        <Trans
+          t={t}
+          i18nKey="subscription_style_preview.description"
+          components={{
+            a: <Link color="primary.900" fontWeight="500" />,
+            p: <Text />,
+          }}
+        />
       </Box>
       <Grid templateColumns="repeat(2, calc(50% - 4px))" gap="8px">
         <Box
