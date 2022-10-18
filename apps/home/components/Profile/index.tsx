@@ -49,6 +49,7 @@ import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
 import { ReactComponent as SvgEtherscan } from 'assets/profile/business/etherscan.svg'
 import { ReactComponent as SvgCyber } from 'assets/profile/business/arrow.svg'
 import { ReactComponent as SvgZiliqa } from 'assets/svg/zilliqa.svg'
+import axios from 'axios'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
@@ -178,6 +179,30 @@ const tabsConfig: Record<
   },
 }
 
+interface NftDetail {
+  name: string
+  img: string
+  hadGot: boolean
+  poapPlatform: string
+}
+
+interface ClusterInfoResp {
+  code: number
+  msg: string
+  data: {
+    uuid: string
+    eth: string
+    score: number
+    ranking: number
+    poapList: NftDetail[]
+  }
+}
+
+export const getNfts = () =>
+  axios.get<ClusterInfoResp>(
+    'https://openApi.cluster3.net/api/v1/communityUserInfo?uuid=b45339c7&address=0x59659e3270e7e143f8f1bba1af3d237d8c9f9354'
+  )
+
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
@@ -216,6 +241,94 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       enabled: isBitDomain(address),
+    }
+  )
+
+  const { data: userInfo } = useQuery(
+    ['cluster', address],
+    async () => {
+      // const ret = await getNfts()
+      // console.log(ret)
+      // return ret.data.data
+      const mock = {
+        code: 200,
+        msg: 'success',
+        data: {
+          uuid: 'b45339c7',
+          eth: '0x59659e3270e7e143f8f1bba1af3d237d8c9f9354',
+          score: 139,
+          ranking: 1,
+          poapList: [
+            {
+              name: 'Super Connection',
+              img: 'https://img2.flowingcloud.cn/rankback/j1rl85hmixpmimje5jtt.*, video',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GC3DEUt34w',
+            },
+            {
+              name: 'Mail³  Notification',
+              img: 'https://img2.flowingcloud.cn/rankback/a315x2ohwzvowfw2rlf9.*, video',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCD1yUtjD4',
+            },
+            {
+              name: 'Subscribe Mirror via Mail3',
+              img: 'https://img2.flowingcloud.cn/rankback/8r6oji0pm1yi3vbkwlym.*, video',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCmb8Utwk9',
+            },
+            {
+              name: 'Mail³ ✖️ RoaoGame Partnership OAT Giveaway',
+              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663299572281590951.png',
+              hadGot: false,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCk7uUtGee',
+            },
+            {
+              name: 'Ethereum Merge  Commemorative Stamps',
+              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663226563298228030.png',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCyZuUtXgK',
+            },
+            {
+              name: '"Galxe Passport" Souvenir Stamps',
+              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662968646319465618.png',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCicRUtqb6',
+            },
+            {
+              name: 'Mail³  Grant Donors for GR14',
+              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662542511968737738.png',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCSjDUtdKH',
+            },
+            {
+              name: 'Subscribe Mirror',
+              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662254725951904392.png',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GC1Q7UtNs8',
+            },
+            {
+              name: 'Mail³ ✖️ CCTIP Partnership',
+              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662529284427033926.png',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCmZeUtZt8',
+            },
+            {
+              name: 'Mail³ ✖️ Mojor Partnership',
+              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1661768348506253194.png',
+              hadGot: true,
+              poapPlatform: 'https://galxe.com/mail3/campaign/GCHHWUte4B',
+            },
+          ],
+        },
+      }
+      return mock.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
 
@@ -324,6 +437,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const socialPlatforms = isZilpayAddress(address)
     ? [ScoialPlatform.ViewBlock]
     : [ScoialPlatform.CyberConnect, ScoialPlatform.Etherscan]
+
   useDidMount(() => {
     setIsDid(true)
   })
@@ -512,7 +626,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                             lineHeight="26px"
                             color="#4E51F4"
                           >
-                            1000
+                            {userInfo?.ranking}
                           </Text>
                         </Center>
                         <Spacer />
@@ -536,62 +650,58 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                           fontSize="16px"
                           lineHeight="26px"
                         >
-                          <Text color="#4E51F4">4</Text>/<Text>8</Text>
+                          <Text color="#4E51F4">
+                            {
+                              userInfo?.poapList.filter((item) => item.hadGot)
+                                .length
+                            }
+                          </Text>
+                          /<Text>{userInfo?.poapList.length}</Text>
                           <Text ml="5px">collected</Text>
                         </Center>
                         <Spacer />
-                        <Link color="#4E51F4" fontSize="14px">
-                          view all
-                        </Link>
                       </Center>
 
                       <Box
                         background="#F9F9F9"
                         borderRadius="24px"
-                        p={{ base: '8px', md: '18px' }}
+                        p={{ base: '8px', md: '16px' }}
                         w="100%"
+                        h={{ base: 'auto', md: '500px' }}
+                        overflow={{ base: 'auto', md: 'hidden' }}
+                        overflowY={{ base: 'auto', md: 'scroll' }}
                       >
                         <Wrap spacing="10px">
-                          <WrapItem w="100px">
-                            <Center flexDirection="column">
-                              <Image src="#" w="76px" h="110px" />
-                              <Text mt="8px" textAlign="center">
-                                Mail of the Month 2022
-                              </Text>
-                            </Center>
-                          </WrapItem>
-                          <WrapItem w="100px">
-                            <Center flexDirection="column">
-                              <Image src="#" w="76px" h="110px" />
-                              <Text mt="8px" textAlign="center">
-                                Mail of the Month 2022
-                              </Text>
-                            </Center>
-                          </WrapItem>
-                          <WrapItem w="100px">
-                            <Center flexDirection="column">
-                              <Image src="#" w="76px" h="110px" />
-                              <Text mt="8px" textAlign="center">
-                                Mail of the Month 2022
-                              </Text>
-                            </Center>
-                          </WrapItem>
-                          <WrapItem w="100px">
-                            <Center flexDirection="column">
-                              <Image src="#" w="76px" h="110px" />
-                              <Text mt="8px" textAlign="center">
-                                Mail of the Month 2022
-                              </Text>
-                            </Center>
-                          </WrapItem>
-                          <WrapItem w="100px">
-                            <Center flexDirection="column">
-                              <Image src="#" w="76px" h="110px" />
-                              <Text mt="8px" textAlign="center">
-                                Mail of the Month 2022
-                              </Text>
-                            </Center>
-                          </WrapItem>
+                          {userInfo?.poapList.map((item) => {
+                            const { name, img, hadGot } = item
+                            return (
+                              <WrapItem
+                                key={item.name}
+                                w={{ base: '105px', md: '118px' }}
+                                opacity={hadGot ? 1 : 0.4}
+                              >
+                                <Center flexDirection="column" w="100%">
+                                  <Flex
+                                    w="76px"
+                                    h="110px"
+                                    overflow="hidden"
+                                    alignItems="center"
+                                  >
+                                    <Image src={img} w="100%" />
+                                  </Flex>
+                                  <Text
+                                    w="100%"
+                                    mt="8px"
+                                    textAlign="center"
+                                    fontSize="12px"
+                                    noOfLines={2}
+                                  >
+                                    {name}
+                                  </Text>
+                                </Center>
+                              </WrapItem>
+                            )
+                          })}
                         </Wrap>
                       </Box>
                     </Box>
