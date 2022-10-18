@@ -193,6 +193,7 @@ export enum DesiredWallet {
   Keplr = 'Keplr',
   Tron = 'Tron',
   Solflare = 'Solflare',
+  UD = 'UD',
 }
 
 export enum SignatureStatus {

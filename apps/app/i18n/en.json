@@ -23,6 +23,7 @@
             "dialog-title": "Connect Your Wallet",
             "connect-wallet": "Connect Wallet",
             "phantom": "Phantom",
+            "ud": "Unstoppable Domains",
             "blocto": "Blocto",
             "connecting": "Connecting",
             "coming-soon": "Coming soon",
@@ -32,6 +33,15 @@
             "imtoken-reject": "You have declined authorization, please refresh this page to authorize again.",
             "wechat": "The current environment does not support metamask. You can connect Metamask in the browser.",
             "coinbase": "Coinbase"
+        },
+        "ud": {
+            "title": "Connect Wallet",
+            "connect": "Connect",
+            "reconnect": "Reconnect Wallet",
+            "connect-wallet-desc": "Please connect your wallet with account: {{address}}",
+            "error-1": "The selected account ({{address}}) is not associated with domain {{domain}}.",
+            "error-2": "The expected account for this domain is {{address}}.",
+            "error-3": "Please check your wallet settings to ensure you have connected the correct Ethereum account."
         },
         "auth": {
             "connect": "Connect your Wallet",
@@ -228,9 +238,11 @@
             "default-hover": "This address will be the default address for sending emails.",
             "register-ens": "Register <a>new</a> ENS",
             "register-bit": "Register <a>new</a> .bit",
+            "register-ud": "Register <a>new</a> Unstoppable Domains",
             "request-failed": "Request change default address failed, please try again later.",
             "refresh": "Refresh",
             "refresh_failed": "Refresh Failed: ",
+            "timeout": "Request timeout, please try again later.",
             "not-found-p1": "Oops!!<br><br/>Cannot associate to your domain name",
             "not-found-p2": "please try clicking on the option above ：",
             "not-found-p3": "Refresh",

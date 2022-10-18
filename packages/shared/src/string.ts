@@ -17,6 +17,26 @@ export function truncateMiddle(
 export const isEnsDomain = (address: string) =>
   address.length >= 4 && address.slice(-4) === '.eth' && !address.includes(' ')
 
+export const supportedUdDomain = new Set([
+  'crypto',
+  'nft',
+  'wallet',
+  'blockchain',
+  'x',
+  'bitcoin',
+  'dao',
+  '888',
+  'zil',
+])
+
+export const isUdDomain = (address: string) => {
+  const [name, domain] = address.split('.')
+  if (name && domain) {
+    return supportedUdDomain.has(domain) && name.length >= 1
+  }
+  return false
+}
+
 export const isBitDomain = (address: string) =>
   /\.bit$/.test(address) && !address.includes(' ')
 
@@ -24,7 +44,10 @@ export const isPrimitiveEthAddress = (address: string) =>
   /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
 
 export const isEthAddress = (address: string) =>
-  isPrimitiveEthAddress(address) || isEnsDomain(address) || isBitDomain(address)
+  isPrimitiveEthAddress(address) ||
+  isEnsDomain(address) ||
+  isBitDomain(address) ||
+  isUdDomain(address)
 
 export const isZilpayAddress = (address: string) =>
   address != null && address.startsWith('zil') && address.length === 42
