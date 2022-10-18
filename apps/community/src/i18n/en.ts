@@ -46,6 +46,7 @@ export default {
       wallets: {
         metamask: 'Metamask',
         wallet_connect: 'Wallet Connect',
+        coinbase: 'Coinbase Wallet',
         zilpay: 'Zilpay',
         blocto: 'Blocto',
         phantom: 'Phantom',
@@ -57,7 +58,7 @@ export default {
       },
       chain_descriptions: {
         eth: 'EVM compatible chain: Ethereum, Polygon, BSC',
-        zilliqa: 'Coming soon',
+        zilliqa: '',
         flow: 'Coming soon',
         sol: 'Coming soon',
         tron: 'Coming soon',

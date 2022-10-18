@@ -28,15 +28,11 @@ import LikePng from '../../assets/LoginHomePage/like.png'
 import PlanePng from '../../assets/LoginHomePage/plane.png'
 import VisionPng from '../../assets/LoginHomePage/vision.png'
 import BackgroundPng from '../../assets/LoginHomePage/background.png'
-import { useRegisterDialog } from '../../hooks/useRegisterDialog'
 import { useOpenConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
-import {
-  useAuth,
-  useIsAuthenticated,
-  useIsCommunityUser,
-} from '../../hooks/useLogin'
+import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { useOpenAuthModal } from '../../hooks/useAuthDialog'
 import { RoutePath } from '../../route/path'
+import { APP_URL } from '../../constants/env/url'
 
 const MotionImage = chakra(motion.img, {
   shouldForwardProp: (prop) =>
@@ -109,7 +105,6 @@ export const AnimationImage: React.FC<
 
 export const Content: React.FC = () => {
   const { t } = useTranslation(['login_home_page', 'common'])
-  const onOpenRegisterDialog = useRegisterDialog()
   const onOpenConnectWalletDialog = useOpenConnectWalletDialog()
   const account = useAccount()
   const onOpenAuthDialog = useOpenAuthModal()
@@ -193,8 +188,10 @@ export const Content: React.FC = () => {
             variant="link"
             color="primary.900"
             _active={{ color: 'primary.900', opacity: 0.6 }}
-            onClick={onOpenRegisterDialog}
             fontSize="16px"
+            as="a"
+            target="_blank"
+            href={APP_URL}
           >
             {t('register', { ns: 'common' })}
           </Button>

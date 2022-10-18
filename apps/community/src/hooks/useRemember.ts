@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next'
 import {
   buildSignMessage,
   SignupResponseCode,
+  useAccount,
   useProvider,
   useSignup,
   useToast,
+  zilpay,
 } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { SERVER_URL } from '../constants/env/url'
@@ -26,8 +28,21 @@ export function useRemember() {
   const navi = useNavigate()
   const login = useLogin()
   const onOpenRegisterDialog = useRegisterDialog()
+  const account = useAccount()
+
+  const onSignZilpay = async (nonce: number) => {
+    if (!zilpay.isConnected) {
+      toast(t('auth.errors.wallet-not-connected'))
+      return null
+    }
+    const message = buildSignMessage(nonce, signatureDesc)
+    return zilpay.signMessage(message)
+  }
 
   const onSign = async (nonce: number) => {
+    if (account.startsWith('zil')) {
+      return onSignZilpay(nonce)
+    }
     if (provider == null) {
       toast(t('auth.errors.wallet-not-connected'))
       return null

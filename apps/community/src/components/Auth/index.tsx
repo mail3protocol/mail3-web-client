@@ -53,7 +53,7 @@ export const AuthContent: React.FC = () => {
         isFullWidth
         mt="20px"
         variant="solid-rounded"
-        colorScheme="primaryButton"
+        colorScheme="blackButton"
         isLoading={isLoading}
         onClick={async () => {
           await onRemember()

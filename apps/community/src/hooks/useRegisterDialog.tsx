@@ -11,6 +11,12 @@ export function useRegisterDialog() {
     () =>
       dialog({
         title: t('register_dialog.title'),
+        modalProps: {
+          size: 'md',
+        },
+        modalContentProps: {
+          width: '450px',
+        },
         description: (
           <>
             <Text>

@@ -20,6 +20,8 @@ import { PlaceholderButton } from '../ConnectWalletButtons/PlaceholderButton'
 import { WalletConnectButton } from '../ConnectWalletButtons/WalletConnectButton'
 import { MetamaskButton } from '../ConnectWalletButtons/MetamaskButton'
 import { useCloseConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
+import { CoinbaseWalletButton } from '../ConnectWalletButtons/CoinbaseWalletButton'
+import { ZilPayButton } from '../ConnectWalletButtons/ZilPayButton'
 
 interface ChainItem {
   name: string
@@ -41,6 +43,7 @@ export const SelectConnectWallet: React.FC = () => {
           key={ConnectorName.WalletConnect}
           onClose={onClose}
         />,
+        <CoinbaseWalletButton key={ConnectorName.Coinbase} onClose={onClose} />,
       ],
       description: t('select_connect_wallet.chain_descriptions.eth'),
     },
@@ -48,13 +51,7 @@ export const SelectConnectWallet: React.FC = () => {
       name: 'Zilliqa',
       icon: ZilliqaIconPath,
       walletButtons: [
-        <PlaceholderButton
-          key={ConnectorName.Zilpay}
-          icon={ZilpayPng}
-          trackDesiredWalletKey={DesiredWallet.ZilPay}
-        >
-          {t('select_connect_wallet.wallets.zilpay')}
-        </PlaceholderButton>,
+        <ZilPayButton key={ConnectorName.Zilpay} onClose={onClose} />,
       ],
       description: t('select_connect_wallet.chain_descriptions.zilliqa'),
     },

@@ -22,7 +22,7 @@ export const ConnectWalletDialog: React.FC = () => {
 
   return (
     <Modal
-      size="sm"
+      size="lg"
       autoFocus={false}
       isOpen={isAuthModalOpen}
       onClose={onCloseAuthDialog}
