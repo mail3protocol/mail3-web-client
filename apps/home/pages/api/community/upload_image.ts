@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import axios from 'axios'
 import NextCors from 'nextjs-cors'
 import LRU from 'lru-cache'
+import { isNextDay } from 'shared/src/isNextDay'
 import {
   COMMUNITY_IMAGE_UPLOAD_LIMIT,
   COMMUNITY_URL,
@@ -73,12 +74,9 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
         },
       })
       .then((r) => r.data.messages[0])
-    if (
-      lastMessage &&
-      dayjs.unix(lastMessage.created_at).add(1, 'day').isAfter(dayjs())
-    ) {
+    if (lastMessage && !isNextDay(dayjs.unix(lastMessage.created_at))) {
       throw new ParamError(
-        'Only one message can be sent within 24 hours, please try again later.'
+        'Only one message can be sent within 1 day, please try again later.'
       )
     }
     const uploadCount = uploadCountCache.get<number>(authorization) || 0

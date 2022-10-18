@@ -1,14 +1,15 @@
 import { Link as InsideLink } from 'react-router-dom'
 import { AddIcon } from '@chakra-ui/icons'
 import { Center, CenterProps } from '@chakra-ui/react'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
+import { isNextDay } from 'shared/src/isNextDay'
 import { RoutePath } from '../../route/path'
 import { useToast } from '../../hooks/useToast'
 
 export const NewMessageLinkButton: React.FC<
   CenterProps & {
-    lastMessageSentTime?: string | Dayjs
+    lastMessageSentTime?: Dayjs
   }
 > = ({ lastMessageSentTime, ...props }) => {
   const { t } = useTranslation('common')
@@ -29,12 +30,7 @@ export const NewMessageLinkButton: React.FC<
       onClick={
         lastMessageSentTime
           ? (e) => {
-              const allowTime = (
-                typeof lastMessageSentTime === 'string'
-                  ? dayjs(lastMessageSentTime)
-                  : lastMessageSentTime
-              ).add(1, 'day')
-              if (allowTime.isAfter(dayjs())) {
+              if (!isNextDay(lastMessageSentTime)) {
                 e.stopPropagation()
                 e.preventDefault()
                 toast(t('send_time_limit'))
