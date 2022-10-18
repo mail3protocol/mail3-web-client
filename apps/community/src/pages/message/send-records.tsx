@@ -53,11 +53,12 @@ export const SendRecords: React.FC = () => {
     }
   })
 
-  const lastMessageSentTime = useMemo(
-    () =>
-      dayjs.unix(Number(listQuery?.data?.pages[0].messages?.[0]?.created_at)),
-    [listQuery?.data?.pages[0].messages]
-  )
+  const lastMessageSentTime = useMemo(() => {
+    const createdAt = listQuery?.data?.pages[0].messages?.[0]?.created_at
+    if (!createdAt) return undefined
+    const createdAtNumber = Number(createdAt)
+    return createdAtNumber ? dayjs.unix(createdAtNumber) : undefined
+  }, [listQuery?.data?.pages[0].messages])
 
   return (
     <Container
