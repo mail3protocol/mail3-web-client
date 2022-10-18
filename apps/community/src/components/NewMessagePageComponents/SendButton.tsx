@@ -29,8 +29,8 @@ export const SendButton: React.FC<SendButtonProps> = ({ subject, onSend }) => {
     setIsLoading(true)
     try {
       await api.sendMessage(subject, getHTML())
-      onSend?.()
       t('send_succeed')
+      onSend?.()
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message ||

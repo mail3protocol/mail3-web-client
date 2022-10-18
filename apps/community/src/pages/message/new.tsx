@@ -1,6 +1,7 @@
 import { Box, Divider, Flex, HStack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import React, { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Container } from '../../components/Container'
 import { Content, StateProvider, Menus } from '../../components/Editor'
 import { SubjectInput } from '../../components/NewMessagePageComponents/SubjectInput'
@@ -9,6 +10,7 @@ import { PreviewSimulator } from '../../components/NewMessagePageComponents/Prev
 import { SendButton } from '../../components/NewMessagePageComponents/SendButton'
 import { MAIL_CONTENT_IMAGE_QUOTA_KB } from '../../constants/env/config'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { RoutePath } from '../../route/path'
 
 export const NewMessage = () => {
   useDocumentTitle('New Message')
@@ -19,6 +21,7 @@ export const NewMessage = () => {
   const contentRef = useRef<HTMLDivElement>(null)
   const fileMapRef = useRef<Map<string, File>>(new Map())
   const fileCacheMapRef = useRef<Map<string, string>>(new Map())
+  const navi = useNavigate()
 
   const uploadImageGuard = (file: File) => {
     const currentSize = Array.from(
@@ -112,7 +115,12 @@ export const NewMessage = () => {
               }}
               w="138px"
             />
-            <SendButton subject={subjectText} />
+            <SendButton
+              subject={subjectText}
+              onSend={() => {
+                navi(RoutePath.Dashboard)
+              }}
+            />
           </HStack>
         </Flex>
       </StateProvider>
