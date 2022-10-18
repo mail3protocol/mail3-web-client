@@ -1,5 +1,6 @@
 import { Box, Flex, Input, InputProps } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { MESSAGE_SUBJUECT_LENGTH_LIMIT } from '../../constants/env/config'
 
 export interface SubjectInputProps extends InputProps {
   limit?: number
@@ -7,7 +8,7 @@ export interface SubjectInputProps extends InputProps {
 }
 
 export const SubjectInput: React.FC<SubjectInputProps> = ({
-  limit = 60,
+  limit = MESSAGE_SUBJUECT_LENGTH_LIMIT,
   count,
   value,
   ...props
