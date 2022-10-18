@@ -323,7 +323,8 @@ export const EarnNft: React.FC = () => {
             colorScheme="red"
             type="submit"
             isLoading={isUpdating}
-            style={{ opacity: isLoading ? 0 : 1 }}
+            style={{ opacity: isLoading ? 0 : undefined }}
+            isDisabled={!campaignUrl}
           >
             {t('disable')}
           </Button>
@@ -332,7 +333,8 @@ export const EarnNft: React.FC = () => {
             variant="solid-rounded"
             colorScheme="primaryButton"
             type="submit"
-            style={{ opacity: isLoading ? 0 : 1 }}
+            style={{ opacity: isLoading ? 0 : undefined }}
+            isDisabled={!campaignUrl || !credentialId || !accessToken}
           >
             {t('enable')}
           </Button>
