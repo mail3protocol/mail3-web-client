@@ -1,17 +1,7 @@
 import html2canvas, { Options } from 'html2canvas'
 import { useState } from 'react'
 
-interface useScreenshotReturn {
-  image: string
-  takeScreenshot: (element: HTMLDivElement) => Promise<string>
-  downloadScreenshot: (
-    element: HTMLDivElement,
-    filename: string,
-    options?: Partial<Options>
-  ) => void
-}
-
-export const useScreenshot = (): useScreenshotReturn => {
+export const useScreenshot = () => {
   const [image, setImage] = useState('')
 
   const takeScreenshot = async (
@@ -19,7 +9,6 @@ export const useScreenshot = (): useScreenshotReturn => {
     options: Partial<Options> = {}
   ) =>
     html2canvas(element, {
-      ...options,
       useCORS: true,
       allowTaint: true,
       height: 566,
@@ -28,16 +17,17 @@ export const useScreenshot = (): useScreenshotReturn => {
       y: 0,
       scale: 2,
       backgroundColor: null,
+      ...options,
     }).then((canvas) => {
       const base64 = canvas.toDataURL()
       setImage(base64)
       return base64
     })
 
-  const downloadScreenshot: useScreenshotReturn['downloadScreenshot'] = async (
-    element,
-    filename,
-    options
+  const downloadScreenshot = async (
+    element: HTMLDivElement,
+    filename: string,
+    options?: Partial<Options>
   ) => {
     const dataSrc = await takeScreenshot(element, options)
     const a = document.createElement('a')

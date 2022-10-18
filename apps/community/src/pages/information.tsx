@@ -20,6 +20,7 @@ import {
   TrackEvent,
   TrackKey,
   useAccount,
+  useLoginInfo,
   useScreenshot,
   useTrackClick,
 } from 'hooks'
@@ -33,7 +34,7 @@ import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { QueryKey } from '../api/QueryKey'
 import { useAPI } from '../hooks/useAPI'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
-import { HOME_URL } from '../constants/env/url'
+import { APP_URL, HOME_URL } from '../constants/env/url'
 import { MAIL_SERVER_URL } from '../constants/env/mailServer'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
@@ -60,6 +61,7 @@ export const Information: React.FC = () => {
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const account = useAccount()
   const api = useAPI()
+  const loginInfo = useLoginInfo()
   const userInfo = useUserInfo()
   const setUserInfo = useSetUserInfo()
   const { data: userInfoData } = useQuery(
@@ -79,7 +81,10 @@ export const Information: React.FC = () => {
   const { takeScreenshot, downloadScreenshot } = useScreenshot()
   const { data: profileImage } = useQuery(
     ['RenderProfileImage', account],
-    () => takeScreenshot(cardRef.current!),
+    () =>
+      takeScreenshot(cardRef.current!, {
+        scale: 3,
+      }),
     {
       enabled: !!cardRef.current && !!account,
     }
@@ -110,7 +115,7 @@ export const Information: React.FC = () => {
           rounded="full"
           mt="32px"
         >
-          <Avatar address={account} w="68.5px" h="68.5px" />
+          <Avatar address={userInfo?.name || ''} w="68.5px" h="68.5px" />
         </Center>
         <VStack as="form" spacing="24px" mt="32px" w="400px" mx="auto">
           <FormControl>
@@ -156,7 +161,9 @@ export const Information: React.FC = () => {
                 <Flex justify="center" mb="16px" h="165px">
                   <ProfileCard
                     homeUrl={HOME_URL}
-                    mailAddress={`${account}@${MAIL_SERVER_URL}`}
+                    mailAddress={
+                      userInfo?.address || `${account}@${MAIL_SERVER_URL}`
+                    }
                     ref={cardRef}
                   />
                   {profileImage ? (
@@ -198,7 +205,7 @@ export const Information: React.FC = () => {
                   ref={qrcodeRef}
                 >
                   <QrCode
-                    value={`https://mail3.me/${account}`}
+                    value={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
                     size={68}
                     fgColor="black"
                   />
@@ -212,7 +219,10 @@ export const Information: React.FC = () => {
                     })
                     downloadScreenshot(
                       qrcodeRef.current!,
-                      `qrcode_${account}.png`
+                      `qrcode_${account}.png`,
+                      {
+                        scale: 3,
+                      }
                     )
                   }}
                 />

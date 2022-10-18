@@ -2,15 +2,14 @@ import { Box, Button, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { Content, Footer } from '../components/LoginHomePageComponents'
 import { Header } from '../components/Header'
-import { useRegisterDialog } from '../hooks/useRegisterDialog'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { APP_URL } from '../constants/env/url'
 
 export const MAX_WIDTH = 1920
 
 const RegisterButton = () => {
   useDocumentTitle('Index')
   const { t } = useTranslation('common')
-  const onOpenRegisterDialog = useRegisterDialog()
   return (
     <Box
       ml="auto"
@@ -31,10 +30,12 @@ const RegisterButton = () => {
       >
         <Box as="span">{t('no_mail3')}</Box>
         <Button
+          as="a"
           variant="link"
           color="primary.900"
           _active={{ color: 'primary.900', opacity: 0.6 }}
-          onClick={onOpenRegisterDialog}
+          target="_blank"
+          href={APP_URL}
         >
           {t('register')}
         </Button>

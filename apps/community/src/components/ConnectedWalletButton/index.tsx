@@ -16,23 +16,23 @@ import {
   usePopoverContext,
 } from '@chakra-ui/react'
 import {
-  useAccount,
   useTrackClick,
   TrackEvent,
   TrackKey,
   CommunityClickCommunityPersonalcenterItem,
 } from 'hooks'
-import { truncateMiddle } from 'shared'
+import { isSupportedAddress, truncateMiddle } from 'shared'
 import { Avatar, AvatarProps } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as InformationSvg } from 'assets/svg/information.svg'
 import { ReactComponent as DisconnectSvg } from 'assets/svg/disconnect.svg'
 import { ReactComponent as ChangeWalletSvg } from 'assets/svg/change_wallet.svg'
 import { Link } from 'react-router-dom'
-import { MAIL_SERVER_URL } from '../../constants/env/mailServer'
+import { useMemo } from 'react'
 import { useLogout } from '../../hooks/useLogin'
 import { useOpenConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
 import { RoutePath } from '../../route/path'
+import { useUserInfo } from '../../hooks/useUserInfo'
 
 export interface ConnectedWalletButtonProps extends ButtonProps {}
 
@@ -105,7 +105,7 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
 export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
   ...props
 }) => {
-  const account = useAccount()
+  const userInfo = useUserInfo()
   const {
     avatar: avatarProps,
     text: textProps,
@@ -121,7 +121,15 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
     listItem: ButtonProps
   }
 
-  if (!account) return null
+  const userName = useMemo(() => {
+    if (!userInfo?.name) return userInfo?.name
+    if (isSupportedAddress(userInfo.name)) {
+      return truncateMiddle(userInfo.name)
+    }
+    return userInfo.name
+  }, [userInfo?.name])
+
+  if (!userInfo?.address) return null
 
   return (
     <Popover arrowShadowColor="none" arrowSize={16}>
@@ -129,12 +137,10 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
         <Button display="flex" variant="unstyled" {...defaultProps} {...props}>
           <PopoverAnchor>
             <Box>
-              <Avatar address={account} {...avatarProps} />
+              <Avatar address={userInfo.name} {...avatarProps} />
             </Box>
           </PopoverAnchor>
-          <Text {...textProps}>
-            {truncateMiddle(account, 6, 4)}@{MAIL_SERVER_URL}
-          </Text>
+          <Text {...textProps}>{userName}</Text>
         </Button>
       </PopoverTrigger>
       <PopoverContent w="204px" top="10px">
