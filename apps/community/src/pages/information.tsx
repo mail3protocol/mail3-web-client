@@ -206,8 +206,9 @@ export const Information: React.FC = () => {
                 >
                   <QrCode
                     value={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
-                    size={68}
+                    size={272}
                     fgColor="black"
+                    style={{ width: '68px', height: '68px' }}
                   />
                 </Center>
                 <DownloadButton
