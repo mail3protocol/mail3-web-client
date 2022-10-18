@@ -105,6 +105,7 @@ const WrapLeft = styled(Center)`
     padding: 4px 8px;
     margin-top: 26px;
     text-align: center;
+    width: 180px;
 
     .p {
       font-style: normal;
@@ -117,6 +118,7 @@ const WrapLeft = styled(Center)`
   @media (max-width: 600px) {
     border: none;
     width: 100%;
+    padding: 0;
   }
 `
 
@@ -376,10 +378,10 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             <Box className="address">
               <Text className="p">{mailAddress}</Text>
             </Box>
-            <Center mt="25px">
+            <Center mt={{ base: '10px', md: '25px' }}>
               <Mail3MeButton to={mailAddress} />
             </Center>
-            <Box mt="25px">
+            <Box mt={{ base: '10px', md: '25px' }}>
               <HStack>
                 {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
                   (type: ButtonType) => {
