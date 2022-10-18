@@ -21,6 +21,7 @@ export enum AliasMailType {
   Bit = 'dot_bit_mail',
   Eth = 'eth_mail',
   Zilliqa = 'zilliqa_mail',
+  UD = 'unstoppable_mail',
 }
 
 export interface Alias {
@@ -418,6 +419,10 @@ export class API {
 
   public async updateAliasBitList() {
     return this.axios.put(`/account/dot_bit_aliases`)
+  }
+
+  public async updateAliasUDList() {
+    return this.axios.put(`/account/unstoppable_aliases`)
   }
 
   public updateMessageEncryptionKey(messageEncryptionKey: string) {

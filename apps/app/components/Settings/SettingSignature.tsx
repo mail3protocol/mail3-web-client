@@ -104,6 +104,7 @@ export const SettingSignature: React.FC = () => {
   const trackImageEdit = useTrackClick(TrackEvent.ClickImageSignature)
   const trackCyberConnect = useTrackClick(TrackEvent.ClickCyperConnect)
   const trackNext = useTrackClick(TrackEvent.ClickSignatureNext)
+  const setUserInfo = useUpdateAtom(userPropertiesAtom)
 
   const { isLoading } = useQuery(
     [Query.Signatures, account],
@@ -120,12 +121,15 @@ export const SettingSignature: React.FC = () => {
         setIsCardEnable(d.card_sig_state === 'enabled')
         setIsTextEnable(d.text_sig_state === 'enabled')
         setTextSignature(d.text_signature)
+        setUserInfo((prev) => ({
+          ...prev,
+          user_role: d.user_role,
+        }))
       },
     }
   )
   const toast = useToast()
   const userInfo = useAtomValue(userPropertiesAtom)
-  const setUserInfo = useUpdateAtom(userPropertiesAtom)
   const onChangeSignStatus = () => {
     const sigStatus = getSigStatus({
       card_sig_state: isCardEnable ? 'enabled' : 'disabled',

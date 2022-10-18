@@ -20,10 +20,11 @@ import {
   useSetLastConnector,
 } from 'hooks'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { atom, useAtomValue } from 'jotai'
+import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { isBitDomain, isEnsDomain } from 'shared'
 import { clear as clearIndexDBStore } from 'idb-keyval'
+import type { UserInfo as UDUserInfo } from '@uauth/js'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
@@ -42,6 +43,26 @@ export const useIsLoginExpired = () => {
     () => (loginInfo ? dayjs(loginInfo?.expires).isAfter(dayjs()) : false),
     [loginInfo]
   )
+}
+
+const unstaopableUserInfoAtom = atom<UDUserInfo | null>(null)
+
+export const isConnectingUDAtom = atom(false)
+
+export const useUnstaopable = () => {
+  const [unstaopableUserInfo, setUnstopableUserInfo] = useAtom(
+    unstaopableUserInfoAtom
+  )
+  const logout = () => setUnstopableUserInfo(null)
+  const [isConnectingUD, setIsConnectingUD] = useAtom(isConnectingUDAtom)
+
+  return {
+    logout,
+    unstaopableUserInfo,
+    setUnstopableUserInfo,
+    isConnectingUD,
+    setIsConnectingUD,
+  }
 }
 
 export const useIsAuthenticated = () => {
@@ -247,13 +268,16 @@ export const useLogout = () => {
   const connector = useConnector()
   const setUserInfo = useSetLoginInfo()
   const setLastConnector = useSetLastConnector()
+  const { logout } = useUnstaopable()
   const onDeleteFCMToken = useDeleteFCMToken()
   return useCallback(async () => {
     await onDeleteFCMToken()
     await clearIndexDBStore(notificationLogsStore)
     setUserInfo(null)
+    logout()
     setLastConnector(undefined)
     await connector?.deactivate()
+    location.reload()
   }, [connector])
 }
 
@@ -359,14 +383,15 @@ export const useAuth = () => {
   const location = useLocation()
   const navi = useNavigate()
   const isNotAutoOpenAuthModal = useIsNotAutoOpenAuthModal()
+  const isConnectingUD = useAtomValue(isConnectingUDAtom)
   useEffect(() => {
-    if (!isAuth && account && !isNotAutoOpenAuthModal) {
+    if (!isAuth && account && !isNotAutoOpenAuthModal && !isConnectingUD) {
       openAuthModal()
     }
     if (!account) {
       closeAuthModal()
     }
-  }, [isAuth, account])
+  }, [isAuth, account, isConnectingUD])
 
   useEffect(() => {
     if (!isAuth && !allowWithoutAuthPaths.has(location.pathname)) {

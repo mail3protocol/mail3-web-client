@@ -38,6 +38,7 @@ import {
 } from '../../utils/wallet'
 import { IS_MOBILE } from '../../constants'
 import { CoinbaseButton } from './CoinbaseButton'
+import { UnstopableButton } from './UnstopableButton'
 
 export interface EthButtonsProps {
   onClose: () => void
@@ -193,7 +194,7 @@ export function useEthButtons({ onClose }: EthButtonsProps) {
       if (isCoinbaseWallet()) {
         return [renderCoinbase()]
       }
-      return [renderMetamask()]
+      return [renderMetamask(), <UnstopableButton key={ConnectorName.UD} />]
     }
     return [
       renderMetamask(),
@@ -204,11 +205,13 @@ export function useEthButtons({ onClose }: EthButtonsProps) {
       renderImtoken(),
       renderTrust(),
       renderCoinbase(),
+      <UnstopableButton key={ConnectorName.UD} />,
     ]
   }
   return [
     renderMetamask(),
     <WalletConnectButton key={ConnectorName.WalletConnect} onClose={onClose} />,
     <CoinbaseButton key={ConnectorName.Coinbase} onClose={onClose} />,
+    <UnstopableButton key={ConnectorName.UD} />,
   ]
 }
