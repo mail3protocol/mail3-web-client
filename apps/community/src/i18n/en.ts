@@ -153,6 +153,8 @@ export default {
       'The value of the <b>Campaign Link</b>, <b>Credential ID</b>, <b>Credential Key</b> you filled in is not legal, please check and modify.',
     quest3_input_value_verify_description:
       'The value of the <b>Campaign Link</b> you filled in is not legal, please check and modify.',
+    illegal_error_message:
+      'The value you filled in is not legal, please check and modify.',
     // language=html
     help: `<h3>What is Subscribe To Earn?</h3>
            <ul>

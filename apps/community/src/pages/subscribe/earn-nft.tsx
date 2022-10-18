@@ -6,6 +6,7 @@ import {
   chakra,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Heading,
@@ -22,7 +23,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDialog } from 'hooks'
 import { isHttpUriReg } from 'shared'
@@ -41,10 +42,35 @@ import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
 import { StylePreview } from '../../components/EarnNFTPageComponents/StylePreview'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
+function isValidGalaxCampaignUrl(value: string) {
+  return isHttpUriReg.test(value) && value.includes('galxe.com')
+}
+
+function isValidQuest3CampaignUrl(value: string) {
+  return isHttpUriReg.test(value) && value.includes('quest3.xyz')
+}
+
+function isValidAccessToken(value: string) {
+  return value.length === 32 && /^([a-z]|[A-Z]|[0-9])+$/.test(value)
+}
+
+function isValidCredentialId(value: string) {
+  return value.length === 18 && /^[0-9]+$/.test(value)
+}
+
+interface GalaxState {
+  campaignUrl: string
+  credentialId: string
+  accessToken: string
+}
+
+interface Quest3State {
+  campaignUrl: string
+}
+
 export const EarnNft: React.FC = () => {
   useDocumentTitle('Subscribe To Earn NFT')
   const { t } = useTranslation(['earn_nft', 'common'])
-  const onUpdateTipsPanelContent = useUpdateTipsPanel()
   const api = useAPI()
   const toast = useToast()
 
@@ -56,6 +82,10 @@ export const EarnNft: React.FC = () => {
   const [state, setState] = useState(SubscriptionState.Inactive)
   const [isUpdating, setIsUpdating] = useState(false)
   const dialog = useDialog()
+
+  const platformStateMap = useRef(
+    new Map<SubscriptionPlatform, GalaxState | Quest3State>()
+  )
 
   const { isLoading, refetch } = useQuery(
     [QueryKey.GetSubscription],
@@ -114,12 +144,65 @@ export const EarnNft: React.FC = () => {
     }
   }
 
-  const isDisabledSubmit = useMemo(() => {
-    if (platform === SubscriptionPlatform.Galaxy)
-      return !campaignUrl || !credentialId || !accessToken
-    if (platform === SubscriptionPlatform.Quest3) return !campaignUrl
-    return false
-  }, [campaignUrl, credentialId, accessToken, platform])
+  const onSubmit = () =>
+    dialog({
+      title:
+        state === SubscriptionState.Inactive
+          ? t('enable_confirm.title')
+          : t('disable_confirm.title'),
+      description:
+        state === SubscriptionState.Inactive ? (
+          <Trans
+            t={t}
+            i18nKey="enable_confirm.description"
+            components={{ p: <Text /> }}
+          />
+        ) : (
+          t('disable_confirm.description')
+        ),
+      okText:
+        state === SubscriptionState.Inactive
+          ? t('enable_confirm.confirm')
+          : t('disable_confirm.confirm'),
+      okButtonProps: {
+        colorScheme:
+          state === SubscriptionState.Inactive ? 'blackButton' : 'red',
+      },
+      onConfirm: () => {
+        onUpdateSubscription()
+      },
+    })
+
+  const onChangePlatformWithSyncState = (newPlatform: SubscriptionPlatform) => {
+    if (platform === newPlatform) return
+    setPlatform(newPlatform)
+    if (platform === SubscriptionPlatform.Galaxy) {
+      platformStateMap.current.set(platform, {
+        campaignUrl,
+        credentialId,
+        accessToken,
+      })
+    }
+    if (platform === SubscriptionPlatform.Quest3) {
+      platformStateMap.current.set(platform, {
+        campaignUrl,
+      })
+    }
+    if (newPlatform === SubscriptionPlatform.Galaxy) {
+      const newPlatformState = platformStateMap.current.get(newPlatform) as
+        | GalaxState
+        | undefined
+      setCampaignUrl(newPlatformState?.campaignUrl || '')
+      setCredentialId(newPlatformState?.credentialId || '')
+      setAccessToken(newPlatformState?.accessToken || '')
+    }
+    if (newPlatform === SubscriptionPlatform.Quest3) {
+      const newPlatformState = platformStateMap.current.get(newPlatform) as
+        | Quest3State
+        | undefined
+      setCampaignUrl(newPlatformState?.campaignUrl || '')
+    }
+  }
 
   const onUpdateTipsPanel = useUpdateTipsPanel()
   useEffect(() => {
@@ -142,6 +225,36 @@ export const EarnNft: React.FC = () => {
     }
   }, [platform])
 
+  const currentIsValidGalaxCampaignUrl =
+    platform === SubscriptionPlatform.Galaxy
+      ? isValidGalaxCampaignUrl(campaignUrl)
+      : false
+  const currentIsValidQuest3CampaignUrl =
+    platform === SubscriptionPlatform.Quest3
+      ? isValidQuest3CampaignUrl(campaignUrl)
+      : false
+  const currentIsValidCampaignUrl =
+    currentIsValidGalaxCampaignUrl || currentIsValidQuest3CampaignUrl
+  const currentIsValidCredentialId = isValidCredentialId(credentialId)
+  const currentIsValidAccessToken = isValidAccessToken(accessToken)
+
+  const isDisabledSubmit = useMemo(() => {
+    if (platform === SubscriptionPlatform.Galaxy)
+      return (
+        !currentIsValidCampaignUrl ||
+        !currentIsValidCredentialId ||
+        !currentIsValidAccessToken
+      )
+    if (platform === SubscriptionPlatform.Quest3)
+      return !currentIsValidCampaignUrl
+    return false
+  }, [
+    currentIsValidCampaignUrl,
+    currentIsValidCredentialId,
+    currentIsValidAccessToken,
+    platform,
+  ])
+
   return (
     <Container
       as={Grid}
@@ -157,67 +270,7 @@ export const EarnNft: React.FC = () => {
         p="32px"
         onSubmit={(event) => {
           event.preventDefault()
-          if (
-            platform === SubscriptionPlatform.Galaxy &&
-            (accessToken.length !== 32 ||
-              credentialId.length !== 18 ||
-              isHttpUriReg.test(campaignUrl))
-          ) {
-            toast(
-              <Trans
-                t={t}
-                i18nKey="galax_input_value_verify_description"
-                components={{
-                  b: <b />,
-                }}
-              />,
-              { alertProps: { colorScheme: 'red' } }
-            )
-            return
-          }
-          if (
-            platform === SubscriptionPlatform.Quest3 &&
-            isHttpUriReg.test(campaignUrl)
-          ) {
-            toast(
-              <Trans
-                t={t}
-                i18nKey="quest3_input_value_verify_description"
-                components={{
-                  b: <b />,
-                }}
-              />,
-              { alertProps: { colorScheme: 'red' } }
-            )
-            return
-          }
-          dialog({
-            title:
-              state === SubscriptionState.Inactive
-                ? t('enable_confirm.title')
-                : t('disable_confirm.title'),
-            description:
-              state === SubscriptionState.Inactive ? (
-                <Trans
-                  t={t}
-                  i18nKey="enable_confirm.description"
-                  components={{ p: <Text /> }}
-                />
-              ) : (
-                t('disable_confirm.description')
-              ),
-            okText:
-              state === SubscriptionState.Inactive
-                ? t('enable_confirm.confirm')
-                : t('disable_confirm.confirm'),
-            okButtonProps: {
-              colorScheme:
-                state === SubscriptionState.Inactive ? 'blackButton' : 'red',
-            },
-            onConfirm: () => {
-              onUpdateSubscription()
-            },
-          })
+          onSubmit()
         }}
         position="relative"
       >
@@ -293,7 +346,9 @@ export const EarnNft: React.FC = () => {
             <RadioGroup
               isDisabled={isDisabled}
               value={platform}
-              onChange={(val) => setPlatform(val as SubscriptionPlatform)}
+              onChange={(val) =>
+                onChangePlatformWithSyncState(val as SubscriptionPlatform)
+              }
             >
               <HStack spacing="8px">
                 <Radio value={SubscriptionPlatform.Galaxy}>
@@ -305,16 +360,13 @@ export const EarnNft: React.FC = () => {
               </HStack>
             </RadioGroup>
           </FormControl>
-          <FormControl>
+          <FormControl
+            isInvalid={!currentIsValidCampaignUrl && campaignUrl !== ''}
+          >
             <FormLabel>{t('campaign_link_field')}</FormLabel>
             <Input
               placeholder={t('campaign_link_placeholder')}
               name="campaign_link"
-              onFocus={() =>
-                onUpdateTipsPanelContent(
-                  `current is: ${t('campaign_link_field')}`
-                )
-              }
               isDisabled={isDisabled}
               value={campaignUrl}
               onChange={(e) => setCampaignUrl(e.target.value)}
@@ -351,24 +403,27 @@ export const EarnNft: React.FC = () => {
                 />
               ) : null}
             </FormHelperText>
+            <FormErrorMessage>{t('illegal_error_message')}</FormErrorMessage>
           </FormControl>
           {platform === SubscriptionPlatform.Galaxy ? (
             <>
-              <FormControl>
+              <FormControl
+                isInvalid={!currentIsValidCredentialId && credentialId !== ''}
+              >
                 <FormLabel>{t('credential_id')}</FormLabel>
                 <Input
-                  onFocus={() =>
-                    onUpdateTipsPanelContent(
-                      `current is: ${t('credential_id')}`
-                    )
-                  }
                   isDisabled={isDisabled}
                   value={credentialId}
                   onChange={(e) => setCredentialId(e.target.value)}
                   placeholder={t('credential_id_placeholder')}
                 />
+                <FormErrorMessage>
+                  {t('illegal_error_message')}
+                </FormErrorMessage>
               </FormControl>
-              <FormControl>
+              <FormControl
+                isInvalid={!currentIsValidAccessToken && accessToken !== ''}
+              >
                 <FormLabel>{t('access_token')}</FormLabel>
                 <Input
                   isDisabled={isDisabled}
@@ -376,6 +431,9 @@ export const EarnNft: React.FC = () => {
                   onChange={(e) => setAccessToken(e.target.value)}
                   placeholder={t('access_token_placeholder')}
                 />
+                <FormErrorMessage>
+                  {t('illegal_error_message')}
+                </FormErrorMessage>
               </FormControl>
             </>
           ) : null}
@@ -395,8 +453,9 @@ export const EarnNft: React.FC = () => {
             variant="solid-rounded"
             colorScheme="primaryButton"
             type="submit"
-            style={{ opacity: isLoading ? 0 : undefined }}
+            isLoading={isUpdating}
             isDisabled={isDisabledSubmit}
+            style={{ opacity: isLoading ? 0 : undefined }}
           >
             {t('enable')}
           </Button>
