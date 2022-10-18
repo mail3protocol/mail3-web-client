@@ -61,12 +61,20 @@ const AlreadySubscribed = () => {
         border="1px solid #efefef"
         borderRadius="24px"
       >
-        <Heading mb="24px" fontSize="20px" fontWeight={700}>
+        <Heading mb="24px" fontSize={['14px', '20px', '20px']} fontWeight={700}>
           {t('already')}
         </Heading>
-        <Text mb="24px">{t('visit')}</Text>
+        <Text mb="24px" fontSize={['12px']}>
+          {t('visit')}
+        </Text>
         <Link to={RoutePath.Inbox}>
-          <Button w="168px">{t('continue')}</Button>
+          <Button
+            w={['138px', '168px', '168px']}
+            h={['40px']}
+            fontSize={['14px']}
+          >
+            {t('continue')}
+          </Button>
         </Link>
       </Center>
     </Center>
@@ -82,40 +90,61 @@ const Desc: React.FC = ({ children }) => (
     mb="16px"
     mt="8px"
     fontSize="12px"
+    whiteSpace="pre"
   >
     {children}
   </Box>
 )
 
 const SubscribeStatus = () => {
-  const {
-    isBrowserSupport,
-    webPushNotificationState,
-    permission,
-    requestPermission,
-  } = useNotification(false)
+  const { isBrowserSupport, permission, requestPermission } =
+    useNotification(false)
   const [t] = useTranslation('subscribe')
-  const isEnabledNotification =
-    permission === 'granted' && webPushNotificationState === 'enabled'
-  const [isSubscribed, setIsSubscribe] = useState(isEnabledNotification)
-  if (!isBrowserSupport || isSubscribed) {
+  const [isDeclined, setIsDeclined] = useState(false)
+  const [isRequesting, setIsRequesting] = useState(false)
+  if ((permission === 'default' && isBrowserSupport) || isRequesting) {
     return (
       <>
         <Text fontWeight={700} fontSize="14px">
           {t('nft')}
         </Text>
-        <Desc>{t('success')}</Desc>
-        <Link to={RoutePath.Inbox}>
-          <Button w="168px">{t('continue')}</Button>
-        </Link>
+        <Desc>
+          <Trans
+            components={{
+              b: <Text color="blue" />,
+            }}
+            ns="subscribe"
+            i18nKey="request-permission"
+            t={t}
+          />
+        </Desc>
+        <Button
+          w="168px"
+          isLoading={isRequesting}
+          onClick={async () => {
+            setIsRequesting(true)
+            try {
+              const ps = await requestPermission()
+              if (ps === 'denied') {
+                setIsDeclined(true)
+              }
+            } catch (error) {
+              //
+            } finally {
+              setIsRequesting(false)
+            }
+          }}
+        >
+          {t('ok')}
+        </Button>
       </>
     )
   }
 
-  if (permission === 'denied') {
+  if (isDeclined) {
     return (
       <>
-        <Text fontWeight={700} mb="16px">
+        <Text fontWeight={700} mb="16px" whiteSpace="pre-line">
           {t('declined')}
         </Text>
         <Link to={RoutePath.Inbox}>
@@ -130,27 +159,10 @@ const SubscribeStatus = () => {
       <Text fontWeight={700} fontSize="14px">
         {t('nft')}
       </Text>
-      <Desc>
-        <Trans
-          components={{
-            b: <Text color="blue" />,
-          }}
-          ns="subscribe"
-          i18nKey="request-permission"
-          t={t}
-        />
-      </Desc>
-      <Button
-        w="168px"
-        onClick={async () => {
-          const ps = await requestPermission()
-          if (ps === 'granted') {
-            setIsSubscribe(true)
-          }
-        }}
-      >
-        {t('ok')}
-      </Button>
+      <Desc>{t('success')}</Desc>
+      <Link to={RoutePath.Inbox}>
+        <Button w="168px">{t('continue')}</Button>
+      </Link>
     </>
   )
 }
