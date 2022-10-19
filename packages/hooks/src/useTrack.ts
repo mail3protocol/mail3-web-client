@@ -161,6 +161,7 @@ export enum Mail3MenuItem {
 export enum GlobalDimensions {
   OwnEnsAddress = 'own_ens_address',
   OwnBitAddress = 'own_bit_address',
+  OwnUDAddress = 'own_ud_address',
   ConnectedWalletName = 'connected_wallet_name',
   WalletAddress = 'wallet_address',
   SignatureStatus = 'signature_status',

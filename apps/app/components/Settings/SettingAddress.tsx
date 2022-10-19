@@ -296,12 +296,27 @@ export const SettingAddress: React.FC = () => {
           d.aliases.find((alias) => alias.is_default) || d.aliases[0]
         setActiveAccount(defaultAlias.uuid)
         const userInfo = await api.getUserInfo()
-        setUserProperties((config) => ({
-          ...config,
-          aliases: d.aliases,
-          defaultAddress: defaultAlias.address,
-          user_role: userInfo.data.user_role,
-        }))
+        const { aliases } = d
+        const defaultAddress = defaultAlias.address
+        const userRole = userInfo.data.user_role
+        const ownUDAddress = d.aliases.some(
+          (a) => a.email_type === AliasMailType.UD
+        )
+        setUserProperties((config) => {
+          const newConfig = {
+            ...config,
+            aliases,
+            defaultAddress,
+            user_role: userRole,
+            own_ud_address: ownUDAddress,
+          }
+          try {
+            gtag?.('set', 'user_properties', newConfig)
+          } catch (error) {
+            //
+          }
+          return newConfig
+        })
       },
     }
   )
@@ -481,7 +496,6 @@ export const SettingAddress: React.FC = () => {
       setTabIndex(index)
     }
   }
-
 
   return (
     <Container pb={{ md: '100px', base: 0 }}>
