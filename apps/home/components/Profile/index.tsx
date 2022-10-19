@@ -455,7 +455,11 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                             >
                               Details of the ranking:
                             </Text>
-                            <Link href="#" pl="5px">
+                            <Link
+                              href={`https://rank.cluster3.net/user/${address}`}
+                              target="_blank"
+                              pl="5px"
+                            >
                               <Image w="100px" src={PngCluster3.src} />
                             </Link>
                           </Center>
@@ -493,11 +497,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                     w={{ base: '105px', md: '118px' }}
                                     opacity={hadGot ? 1 : 0.4}
                                     cursor="pointer"
-                                    onClick={() => {
-                                      if (poapPlatform) {
-                                        window.open(poapPlatform)
-                                      }
-                                    }}
+                                    as="a"
+                                    href={poapPlatform}
+                                    target="_blank"
                                   >
                                     <Center flexDirection="column" w="100%">
                                       <Flex
