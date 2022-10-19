@@ -62,7 +62,7 @@ const AlreadySubscribed = () => {
         borderRadius="24px"
       >
         <Heading mb="24px" fontSize={['14px', '20px', '20px']} fontWeight={700}>
-          {t('already')}
+          {t('thank-you')}
         </Heading>
         <Text mb="24px" fontSize={['12px']}>
           {t('visit')}
