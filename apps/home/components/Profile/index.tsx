@@ -179,9 +179,9 @@ interface ClusterInfoResp {
   }
 }
 
-export const getNfts = () =>
+export const getNfts = (address: string) =>
   axios.get<ClusterInfoResp>(
-    'https://openApi.cluster3.net/api/v1/communityUserInfo?uuid=b45339c7&address=0x59659e3270e7e143f8f1bba1af3d237d8c9f9354'
+    `https://openApi.cluster3.net/api/v1/communityUserInfo?uuid=b45339c7&address=${address}`
   )
 
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
@@ -205,7 +205,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const { data: userInfo, isLoading } = useQuery(
     ['cluster', address],
     async () => {
-      const ret = await getNfts()
+      const ret = await getNfts(address)
       return ret.data.data
     },
     {
@@ -290,8 +290,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
   if (!isDid) return null
 
-  const hadLength = userInfo?.poapList.filter((item) => item.hadGot).length ?? 0
-  const allLength = userInfo?.poapList.length ?? 0
+  const poapList = userInfo?.poapList ?? []
+  const hadLength = poapList.filter((item) => item.hadGot).length ?? 0
+  const allLength = poapList.length ?? 0
 
   return (
     <>
@@ -473,55 +474,66 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                           <Spacer />
                         </Center>
 
-                        <Box
-                          background="#F9F9F9"
-                          borderRadius="24px"
-                          p={{ base: '8px', md: '16px' }}
-                          w="100%"
-                          h={{ base: 'auto', md: '400px' }}
-                          overflow={{ base: 'auto', md: 'hidden' }}
-                          overflowY={{ base: 'auto', md: 'scroll' }}
-                        >
-                          <Wrap spacing="10px">
-                            {userInfo?.poapList.map((item) => {
-                              const { name, img, hadGot } = item
-                              return (
-                                <WrapItem
-                                  key={item.name}
-                                  w={{ base: '105px', md: '118px' }}
-                                  opacity={hadGot ? 1 : 0.4}
-                                >
-                                  <Center flexDirection="column" w="100%">
-                                    <Flex
-                                      w="76px"
-                                      h="110px"
-                                      overflow="hidden"
-                                      alignItems="center"
-                                    >
-                                      <Image src={img} w="100%" />
-                                    </Flex>
-                                    <Text
-                                      w="100%"
-                                      mt="8px"
-                                      textAlign="center"
-                                      fontSize="12px"
-                                      noOfLines={2}
-                                    >
-                                      {name}
-                                    </Text>
-                                  </Center>
-                                </WrapItem>
-                              )
-                            })}
-                          </Wrap>
-                        </Box>
+                        {poapList.length ? (
+                          <Box
+                            background="#F9F9F9"
+                            borderRadius="24px"
+                            p={{ base: '8px', md: '16px' }}
+                            w="100%"
+                            h={{ base: 'auto', md: '400px' }}
+                            overflow={{ base: 'auto', md: 'hidden' }}
+                            overflowY={{ base: 'auto', md: 'scroll' }}
+                          >
+                            <Wrap spacing="10px">
+                              {poapList.map((item) => {
+                                const { name, img, hadGot } = item
+                                return (
+                                  <WrapItem
+                                    key={item.name}
+                                    w={{ base: '105px', md: '118px' }}
+                                    opacity={hadGot ? 1 : 0.4}
+                                  >
+                                    <Center flexDirection="column" w="100%">
+                                      <Flex
+                                        w="76px"
+                                        h="110px"
+                                        overflow="hidden"
+                                        alignItems="center"
+                                      >
+                                        <Image src={img} w="100%" />
+                                      </Flex>
+                                      <Text
+                                        w="100%"
+                                        mt="8px"
+                                        textAlign="center"
+                                        fontSize="12px"
+                                        noOfLines={2}
+                                      >
+                                        {name}
+                                      </Text>
+                                    </Center>
+                                  </WrapItem>
+                                )
+                              })}
+                            </Wrap>
+                          </Box>
+                        ) : (
+                          <Center
+                            w="100%"
+                            h="200px"
+                            alignContent="center"
+                            flexDirection="column"
+                          >
+                            <Image mt="20px" src={PngEmpty.src} w="106px" />
+                          </Center>
+                        )}
                       </Box>
                     )}
                   </TabPanel>
                   <TabPanel>
                     <Center
                       w="100%"
-                      h="200px"
+                      h="300px"
                       alignContent="center"
                       flexDirection="column"
                     >
