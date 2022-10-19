@@ -37,6 +37,12 @@ class API {
   ): Promise<AxiosResponse<getBitToEthResponse>> {
     return this.axios.get(`/dotbit/account_infos/${account}`)
   }
+
+  public async checkIsProject(address: string) {
+    return this.axios.get(`/community/users/${address}`)
+  }
 }
 
 export const useAPI = () => useMemo(() => new API(), [])
+
+export const getAPI = new API()

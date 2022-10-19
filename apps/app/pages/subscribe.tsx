@@ -1,5 +1,5 @@
 import React from 'react'
-import { Center } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
 import { Link } from 'react-router-dom'
 import { NAVBAR_HEIGHT } from '../constants'
@@ -9,11 +9,15 @@ import { AuthModal } from '../components/Auth'
 import { RoutePath } from '../route/path'
 
 const Navbar = () => (
-  <Center h={`${NAVBAR_HEIGHT}px`}>
+  <Flex
+    h={`${NAVBAR_HEIGHT}px`}
+    alignItems="center"
+    justifyContent={['flex-start', 'center', 'center']}
+  >
     <Link to={RoutePath.Home}>
       <Logo textProps={{ color: '#231815' }} />
     </Link>
-  </Center>
+  </Flex>
 )
 
 export const SubscribePage = () => {

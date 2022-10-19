@@ -12,13 +12,28 @@ import Head from 'next/head'
 
 import { APP_URL, MAIL_SERVER_URL } from '../constants/env'
 import { ProfileComponent } from '../components/Profile'
+import { getAPI } from '../api'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const api = getAPI
   const { locale, resolvedUrl } = context
   const [address] = resolvedUrl.slice(1).split('?')
   const errorCode = isSupportedAddress(address) ? false : 404
+
+  let isProject = false
+
+  try {
+    const retProject = await api.checkIsProject(address)
+    if (retProject.status === 200) {
+      isProject = true
+    }
+  } catch (error) {
+    // console.log('error', error)
+  }
+
   return {
     props: {
+      isProject,
       errorCode,
       ...(await serverSideTranslations(locale as string, [
         'common',
@@ -103,10 +118,11 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
   )
 }
 
-const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
-  errorCode,
-  address,
-}) => {
+const ProfilePage: NextPage<{
+  errorCode: number
+  address: string
+  isProject: boolean
+}> = ({ errorCode, address, isProject }) => {
   const account = useLoginAccount()
   const router = useRouter()
   const { id } = router.query as { id: string }
@@ -123,7 +139,11 @@ const ProfilePage: NextPage<{ errorCode: number; address: string }> = ({
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
       </Flex>
-      <ProfileComponent mailAddress={emailAddress} address={id} />
+      <ProfileComponent
+        mailAddress={emailAddress}
+        address={id}
+        isProject={isProject}
+      />
     </>
   )
 }
