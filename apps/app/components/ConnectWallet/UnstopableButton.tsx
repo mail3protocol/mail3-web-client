@@ -155,7 +155,7 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
       return (
         <>
           <Text>
-            {t('ud.error-1', { address: shortAddress, domain: userInfo?.sub })}
+            {t('ud.error-1', { address: account, domain: userInfo?.sub })}
           </Text>
           <Text>{t('ud.error-2', { address: shortAddress })}</Text>
           <Text>{t('ud.error-3', { address: shortAddress })}</Text>
@@ -163,7 +163,7 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
       )
     }
     return t('ud.connect-wallet-desc', { address: shortAddress })
-  }, [t, shortAddress, isWrongAddress])
+  }, [t, shortAddress, isWrongAddress, account])
   const isAuth = useIsAuthenticated()
   useEffect(() => {
     if (account) {
