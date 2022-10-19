@@ -2,16 +2,16 @@ import '@mail3/mail3-me'
 import React from 'react'
 
 const iconStyle = `
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   margin-right: 8px;
   `
 
 const bodyStyle = `
   font-weight: 700;
   font-size: 16px;
-  width: 150px;
-  height: 28px;
+  width: 104px;
+  height: 22px;
   border-radius: 100px;
   padding: 4px 24px;
 `

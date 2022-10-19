@@ -20,6 +20,7 @@ import {
   Text,
   Wrap,
   WrapItem,
+  Button,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
@@ -47,8 +48,10 @@ import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
 import axios from 'axios'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from '../../assets/svg/collect.svg'
+import { ReactComponent as SvgEarn } from '../../assets/svg/earn.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
+import { APP_URL } from '../../constants/env'
 
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
@@ -309,8 +312,31 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             </Box>
 
             {isProject ? (
-              <Center mt={{ base: '10px', md: '25px' }}>
-                <Mail3MeButton to={mailAddress} />
+              <Center mt={{ base: '10px', md: '25px' }} position="relative">
+                <Button
+                  w="150px"
+                  h="28px"
+                  variant="unstyled"
+                  border="1px solid #000000"
+                  fontSize="14px"
+                  bg="#fff"
+                  color="#000"
+                  borderRadius="100px"
+                  onClick={() => {
+                    window.open(`${APP_URL}/subscribe/${address}`)
+                  }}
+                >
+                  Subscribe
+                </Button>
+                <Box
+                  position="absolute"
+                  left="62px"
+                  top="-18px"
+                  zIndex={9}
+                  pointerEvents="none"
+                >
+                  <SvgEarn />
+                </Box>
               </Center>
             ) : null}
 
