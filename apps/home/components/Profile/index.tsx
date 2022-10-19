@@ -205,82 +205,8 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const { data: userInfo, isLoading } = useQuery(
     ['cluster', address],
     async () => {
-      // const ret = await getNfts()
-      // console.log(ret)
-      // return ret.data.data
-      const mock = {
-        code: 200,
-        msg: 'success',
-        data: {
-          uuid: 'b45339c7',
-          eth: '0x59659e3270e7e143f8f1bba1af3d237d8c9f9354',
-          score: 139,
-          ranking: 1,
-          poapList: [
-            {
-              name: 'Super Connection',
-              img: 'https://img2.flowingcloud.cn/rankback/j1rl85hmixpmimje5jtt.*, video',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GC3DEUt34w',
-            },
-            {
-              name: 'Mail³  Notification',
-              img: 'https://img2.flowingcloud.cn/rankback/a315x2ohwzvowfw2rlf9.*, video',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCD1yUtjD4',
-            },
-            {
-              name: 'Subscribe Mirror via Mail3',
-              img: 'https://img2.flowingcloud.cn/rankback/8r6oji0pm1yi3vbkwlym.*, video',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCmb8Utwk9',
-            },
-            {
-              name: 'Mail³ ✖️ RoaoGame Partnership OAT Giveaway',
-              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663299572281590951.png',
-              hadGot: false,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCk7uUtGee',
-            },
-            {
-              name: 'Ethereum Merge  Commemorative Stamps',
-              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663226563298228030.png',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCyZuUtXgK',
-            },
-            {
-              name: '"Galxe Passport" Souvenir Stamps',
-              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662968646319465618.png',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCicRUtqb6',
-            },
-            {
-              name: 'Mail³  Grant Donors for GR14',
-              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662542511968737738.png',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCSjDUtdKH',
-            },
-            {
-              name: 'Subscribe Mirror',
-              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662254725951904392.png',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GC1Q7UtNs8',
-            },
-            {
-              name: 'Mail³ ✖️ CCTIP Partnership',
-              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662529284427033926.png',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCmZeUtZt8',
-            },
-            {
-              name: 'Mail³ ✖️ Mojor Partnership',
-              img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1661768348506253194.png',
-              hadGot: true,
-              poapPlatform: 'https://galxe.com/mail3/campaign/GCHHWUte4B',
-            },
-          ],
-        },
-      }
-      return mock.data
+      const ret = await getNfts()
+      return ret.data.data
     },
     {
       refetchIntervalInBackground: false,
@@ -497,6 +423,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                           p="18px"
                           w="100%"
                           flexDirection={{ base: 'column', md: 'row' }}
+                          mt="20px"
                         >
                           <Center>
                             <SvgRank />
@@ -551,7 +478,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                           borderRadius="24px"
                           p={{ base: '8px', md: '16px' }}
                           w="100%"
-                          h={{ base: 'auto', md: '500px' }}
+                          h={{ base: 'auto', md: '400px' }}
                           overflow={{ base: 'auto', md: 'hidden' }}
                           overflowY={{ base: 'auto', md: 'scroll' }}
                         >
