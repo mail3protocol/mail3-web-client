@@ -17,6 +17,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from 'ui'
+import { atomWithStorage } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import { Query } from '../../api/query'
 import Welcomepng from '../../assets/subscribe/welcome.png'
 import { useAPI } from '../../hooks/useAPI'
@@ -95,6 +97,10 @@ const Desc: React.FC = ({ children }) => (
     {children}
   </Box>
 )
+
+const localSubscribeStatusAtom = atomWithStorage<
+  Record<string, Record<string, boolean>>
+>('subscribeStatus', {})
 
 const SubscribeStatus = () => {
   const { isBrowserSupport, permission, requestPermission } =
@@ -191,15 +197,20 @@ const Subscribing: React.FC = () => {
 export const Subscribe: React.FC = () => {
   useAuth()
   const isAuth = useIsAuthenticated()
-  const acccount = useAccount()
+  const account = useAccount()
   const api = useAPI()
   const { id } = useParams()
+  const [localSubscribeStatus, setLocalSubscribeStatus] = useAtom(
+    localSubscribeStatusAtom
+  )
+  const currentLocalSubscribeStatus =
+    localSubscribeStatus?.[account]?.[id ?? ''] ?? false
   const {
     isLoading: isLoadingStatus,
     data: subscribeStatus,
     error: getSubscribeStatusError,
   } = useQuery(
-    [Query.GetSubscribeStatus, acccount, id],
+    [Query.GetSubscribeStatus, account, id],
     async () => {
       try {
         await api.getSubscribeStatus(id!)
@@ -231,9 +242,14 @@ export const Subscribe: React.FC = () => {
     data: subscribeResult,
     error: putSubscribeError,
   } = useQuery(
-    [Query.SetSubscribeStatus, acccount, id],
+    [Query.SetSubscribeStatus, account, id],
     async () => {
       await api.putSubscribeCampaign(id!)
+      if (currentLocalSubscribeStatus) {
+        return {
+          state: 'resubscribed',
+        } as any
+      }
       return {
         state: 'active',
       } as any
@@ -243,6 +259,15 @@ export const Subscribe: React.FC = () => {
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      onSuccess() {
+        setLocalSubscribeStatus((s) => ({
+          [account]: {
+            ...s[account],
+            [id!]: true,
+          },
+          ...s,
+        }))
+      },
     }
   )
 
@@ -258,7 +283,10 @@ export const Subscribe: React.FC = () => {
     )
   }
 
-  if (subscribeStatus?.state === 'active') {
+  if (
+    subscribeStatus?.state === 'active' ||
+    subscribeResult?.state === 'resubscribed'
+  ) {
     return <AlreadySubscribed />
   }
   const error =
