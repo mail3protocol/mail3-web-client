@@ -22,6 +22,7 @@ export const NewMessage = () => {
   const fileMapRef = useRef<Map<string, File>>(new Map())
   const fileCacheMapRef = useRef<Map<string, string>>(new Map())
   const navi = useNavigate()
+  const [count, setCount] = useState(0)
 
   const uploadImageGuard = (file: File) => {
     const currentSize = Array.from(
@@ -63,6 +64,7 @@ export const NewMessage = () => {
         as={Flex}
         flexDirection="column"
         flex={1}
+        onChangeTextLengthCallback={setCount}
       >
         <Menus
           imageButtonProps={{
@@ -95,6 +97,7 @@ export const NewMessage = () => {
                     top: '-100%',
                     left: '-100%',
                     pointerEvents: 'none',
+                    opacity: 0,
                   }
                 : undefined
             }
@@ -117,6 +120,7 @@ export const NewMessage = () => {
             />
             <SendButton
               subject={subjectText}
+              isDisabled={count === 0}
               onSend={() => {
                 navi(RoutePath.Dashboard)
               }}

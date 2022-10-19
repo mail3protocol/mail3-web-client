@@ -8,22 +8,29 @@ import {
   BulletListExtension,
   StrikeExtension,
   LinkExtension,
-  ImageExtension,
 } from 'remirror/extensions'
 import { Box, BoxProps } from '@chakra-ui/react'
 import { useCallback } from 'react'
+import {
+  CustomizedImageExtension,
+  uploadHandlerFromHomeApi,
+} from './Extensions/CustomizedImageExtension'
+import { useHomeAPI } from '../../hooks/useHomeAPI'
 
 export interface StateProviderProps extends BoxProps {
   content?: string
   placeholder?: string
+  onChangeTextLengthCallback?: (textLength: number) => void
 }
 
 export const StateProvider: React.FC<StateProviderProps> = ({
   children,
   content = '',
   placeholder,
+  onChangeTextLengthCallback,
   ...props
 }) => {
+  const homeApi = useHomeAPI()
   const extensions = useCallback(
     () => [
       new BoldExtension(),
@@ -34,7 +41,10 @@ export const StateProvider: React.FC<StateProviderProps> = ({
       new StrikeExtension(),
       new PlaceholderExtension({ placeholder }),
       new LinkExtension(),
-      new ImageExtension(),
+      new CustomizedImageExtension({
+        enableResizing: true,
+        uploadHandler: (files) => uploadHandlerFromHomeApi(files, homeApi),
+      }),
     ],
     [placeholder]
   )
@@ -45,7 +55,15 @@ export const StateProvider: React.FC<StateProviderProps> = ({
     stringHandler: 'html',
   })
   return (
-    <Remirror manager={manager} initialContent={state}>
+    <Remirror
+      manager={manager}
+      initialContent={state}
+      onChange={({ helpers }) => {
+        if (onChangeTextLengthCallback) {
+          onChangeTextLengthCallback(helpers.getText().length)
+        }
+      }}
+    >
       <Box {...props}>{children}</Box>
     </Remirror>
   )

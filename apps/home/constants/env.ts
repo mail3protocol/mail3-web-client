@@ -44,4 +44,4 @@ export const COMMUNITY_URL =
   process.env.NEXT_PUBLIC_COMMUNITY_URL || 'https://subscribe.mail3.me'
 
 export const COMMUNITY_IMAGE_UPLOAD_LIMIT =
-  parseInt(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_LIMIT || `1`, 10) || 50
+  parseInt(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_LIMIT || `50`, 10) || 50

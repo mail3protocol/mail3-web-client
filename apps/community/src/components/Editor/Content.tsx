@@ -1,10 +1,10 @@
-import { Flex, FlexProps } from '@chakra-ui/react'
+import { Flex, FlexProps, useToken } from '@chakra-ui/react'
 import { useRemirrorContext } from '@remirror/react'
 import root from 'react-shadow'
 import { forwardRef } from 'react'
 
 // language=css
-const style = `
+const style = (selectionBgColor: string) => `
 * {
   font-size: 14px;
 }
@@ -24,11 +24,17 @@ div:focus-visible {
   height: 0;
   content: attr(data-placeholder);
 }
+
+::selection {
+  color: #fff;
+  background: ${selectionBgColor};
+}
 `
 
 export const Content = forwardRef<HTMLDivElement, FlexProps>(
   ({ ...props }, ref) => {
     const { getRootProps } = useRemirrorContext({ autoUpdate: true })
+    const primary900Color = useToken('colors', 'primary.900')
     return (
       <Flex
         flex={1}
@@ -42,7 +48,7 @@ export const Content = forwardRef<HTMLDivElement, FlexProps>(
         {...props}
       >
         <root.div ref={ref}>
-          <style>{style}</style>
+          <style>{style(primary900Color)}</style>
           <div className="content-container" {...getRootProps()} />
         </root.div>
       </Flex>

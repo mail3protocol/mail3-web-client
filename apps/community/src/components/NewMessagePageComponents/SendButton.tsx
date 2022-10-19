@@ -8,10 +8,15 @@ import { useToast } from '../../hooks/useToast'
 
 export interface SendButtonProps {
   subject: string
+  isDisabled?: boolean
   onSend?: () => void
 }
 
-export const SendButton: React.FC<SendButtonProps> = ({ subject, onSend }) => {
+export const SendButton: React.FC<SendButtonProps> = ({
+  subject,
+  onSend,
+  isDisabled: isPropsDisabled,
+}) => {
   const { t } = useTranslation('new_message')
   const api = useAPI()
   const { getHTML } = useHelpers()
@@ -46,7 +51,7 @@ export const SendButton: React.FC<SendButtonProps> = ({ subject, onSend }) => {
     }
   }
 
-  const isDisabled = !subject
+  const isDisabled = !subject || isPropsDisabled
 
   return (
     <Button
