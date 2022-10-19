@@ -129,7 +129,7 @@ export default {
     campaign_link_field: 'Campaign Link',
     campaign_link_placeholder: 'Campaign Link',
     go_to_galaxy_description:
-      'Go to <a>Galax</a> to create a marketing campaign and get the campaign link.',
+      'Go to <a>Galxe</a> to create a marketing campaign and get the campaign link.',
     go_to_quest3_description:
       'Go to <a>Quest3</a> to create a marketing campaign and get the campaign link.',
     credential_id: 'Credential ID',
@@ -149,14 +149,10 @@ export default {
     subscribe: 'Subscribe',
     update_failed: 'Setup failed, reason: {{message}}',
     update_succeed: 'Setup succeed!',
-    galax_input_value_verify_description:
-      'The value of the <b>Campaign Link</b>, <b>Credential ID</b>, <b>Credential Key</b> you filled in is not legal, please check and modify.',
-    quest3_input_value_verify_description:
-      'The value of the <b>Campaign Link</b> you filled in is not legal, please check and modify.',
     illegal_error_message:
       'The value you filled in is not legal, please check and modify.',
     // language=html
-    help: `<h3>What is Subscribe To Earn?</h3>
+    help_galxe: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
                Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project. 
@@ -195,6 +191,22 @@ export default {
              </li>
              <li>
                Please note: You need to synchronize and update the new Access Token to Mail3 community after each refresh to avoid possible error
+             </li>
+           </ul>
+    `,
+    // language=html
+    help_quest3: `<h3>What is Subscribe To Earn?</h3>
+           <ul>
+             <li>
+               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project. 
+             </li>
+             <li>
+               <p>Only a few simple steps are needed:</p>
+               <ol>
+                 <li>Create your rewards on a supported platform (currently only Project Galaxy OAT & NFT are supported);</li>
+                 <li>Follow the guide to complete the configuration below;</li>
+                 <li>Get the code to integrate into your website or product.</li>
+               </ol>
              </li>
            </ul>
     `,

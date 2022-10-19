@@ -206,23 +206,24 @@ export const EarnNft: React.FC = () => {
 
   const onUpdateTipsPanel = useUpdateTipsPanel()
   useEffect(() => {
-    if (platform === SubscriptionPlatform.Galaxy) {
-      onUpdateTipsPanel(
-        <Trans
-          i18nKey="help"
-          t={t}
-          components={{
-            h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
-            ul: <UnorderedList />,
-            ol: <OrderedList />,
-            li: <ListItem fontSize="14px" fontWeight="400" />,
-            p: <Text fontSize="14px" fontWeight="400" />,
-          }}
-        />
-      )
-    } else {
-      onUpdateTipsPanel(null)
-    }
+    const key = {
+      [SubscriptionPlatform.Galaxy]: 'help_galxe',
+      [SubscriptionPlatform.Quest3]: 'help_quest3',
+    }[platform]
+    if (!key) return
+    onUpdateTipsPanel(
+      <Trans
+        i18nKey={key}
+        t={t}
+        components={{
+          h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
+          ul: <UnorderedList />,
+          ol: <OrderedList />,
+          li: <ListItem fontSize="14px" fontWeight="400" />,
+          p: <Text fontSize="14px" fontWeight="400" />,
+        }}
+      />
+    )
   }, [platform])
 
   const currentIsValidGalaxCampaignUrl =
