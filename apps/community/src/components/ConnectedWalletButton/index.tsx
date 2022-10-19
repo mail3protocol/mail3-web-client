@@ -21,18 +21,17 @@ import {
   TrackKey,
   CommunityClickCommunityPersonalcenterItem,
 } from 'hooks'
-import { isSupportedAddress, truncateMiddle } from 'shared'
 import { Avatar, AvatarProps } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as InformationSvg } from 'assets/svg/information.svg'
 import { ReactComponent as DisconnectSvg } from 'assets/svg/disconnect.svg'
 import { ReactComponent as ChangeWalletSvg } from 'assets/svg/change_wallet.svg'
 import { Link } from 'react-router-dom'
-import { useMemo } from 'react'
 import { useLogout } from '../../hooks/useLogin'
 import { useOpenConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
 import { RoutePath } from '../../route/path'
 import { useUserInfo } from '../../hooks/useUserInfo'
+import { formatUserName } from '../../utils/string'
 
 export interface ConnectedWalletButtonProps extends ButtonProps {}
 
@@ -121,14 +120,6 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
     listItem: ButtonProps
   }
 
-  const userName = useMemo(() => {
-    if (!userInfo?.name) return userInfo?.name
-    if (isSupportedAddress(userInfo.name)) {
-      return truncateMiddle(userInfo.name)
-    }
-    return userInfo.name
-  }, [userInfo?.name])
-
   if (!userInfo?.address) return null
 
   return (
@@ -140,7 +131,7 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
               <Avatar address={userInfo.name} {...avatarProps} />
             </Box>
           </PopoverAnchor>
-          <Text {...textProps}>{userName}</Text>
+          <Text {...textProps}>{formatUserName(userInfo.name)}</Text>
         </Button>
       </PopoverTrigger>
       <PopoverContent w="204px" top="10px">

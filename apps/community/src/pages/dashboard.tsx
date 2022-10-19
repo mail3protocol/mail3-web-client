@@ -15,13 +15,12 @@ import {
   Skeleton,
   Spinner,
 } from '@chakra-ui/react'
-import { ReactNode, useEffect, useState, useMemo } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
 import { Avatar } from 'ui'
-import { isSupportedAddress, truncateMiddle } from 'shared'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { NewMessageLinkButton } from '../components/NewMessageLinkButton'
@@ -33,6 +32,7 @@ import { useDownloadSubscribers } from '../hooks/useDownloadSubscribers'
 import { useToast } from '../hooks/useToast'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { formatUserName } from '../utils/string'
 
 interface BaseInfo {
   key: string
@@ -170,14 +170,6 @@ export const Dashboard: React.FC = () => {
       ))
     )
 
-  const userName = useMemo(() => {
-    if (!userInfo?.name) return userInfo?.name
-    if (isSupportedAddress(userInfo.name)) {
-      return truncateMiddle(userInfo.name)
-    }
-    return userInfo.name
-  }, [userInfo?.name])
-
   return (
     <Container
       as={Grid}
@@ -197,7 +189,7 @@ export const Dashboard: React.FC = () => {
         <Center flexDirection="column">
           <Avatar w="48px" h="48px" address={userInfo?.name || ''} />
           <Text mt="4px" fontWeight="bold">
-            {userName}
+            {formatUserName(userInfo?.name)}
           </Text>
         </Center>
         {baseInfos.map((info) => (
