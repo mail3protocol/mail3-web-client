@@ -3,6 +3,7 @@ export enum TrackEvent {
   ClickImageSignature = 'click_image_signature_edit',
   ClickRegisterENS = 'click_register_new_ENS',
   ClickRegisterBIT = 'click_register_new_BIT',
+  ClickRegisterUD = 'click_register_new_UD',
   ClickCyperConnect = 'click_image_signature_edit_cyberconnect',
   ClickAddressNext = 'click_guide_your_email_address_next',
   ClickSignatureNext = 'click_show_your_own_signature_next',
@@ -161,6 +162,7 @@ export enum Mail3MenuItem {
 export enum GlobalDimensions {
   OwnEnsAddress = 'own_ens_address',
   OwnBitAddress = 'own_bit_address',
+  OwnUDAddress = 'own_ud_address',
   ConnectedWalletName = 'connected_wallet_name',
   WalletAddress = 'wallet_address',
   SignatureStatus = 'signature_status',
