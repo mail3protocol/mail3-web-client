@@ -13,9 +13,14 @@ import {
 } from 'hooks'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { SERVER_URL } from '../constants'
-import { useCloseAuthModal, useLogin, useSetGlobalTrack } from './useLogin'
+import {
+  isConnectingUDAtom,
+  useCloseAuthModal,
+  useLogin,
+  useSetGlobalTrack,
+} from './useLogin'
 import { RoutePath } from '../route/path'
 import { isCoinbaseWallet } from '../utils'
 
@@ -48,6 +53,7 @@ export function useRemember() {
     const message = buildSignMessage(nonce, signatureDesc)
     return zilpay.signMessage(message)
   }
+  const setIsConnectingUD = useUpdateAtom(isConnectingUDAtom)
   const onSign = async (nonce: number) => {
     if (account.startsWith('zil')) {
       return onSignZilpay(nonce)
@@ -88,7 +94,13 @@ export function useRemember() {
             if (router.pathname === RoutePath.WhiteList) {
               trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
             }
-            navi(RoutePath.Home)
+            if (router.pathname === RoutePath.Testing) {
+              trackTestingConnect({ [TrackKey.TestingEntry]: true })
+            }
+            const [, pathname] = router.pathname.split('/')
+            if (`/${pathname}` !== RoutePath.Subscribe) {
+              navi(RoutePath.Home)
+            }
           }
           break
         }
@@ -120,6 +132,7 @@ export function useRemember() {
           )
           break
       }
+      setIsConnectingUD(false)
     } catch (error: any) {
       if (error instanceof NoOnWhiteListError) {
         throw error

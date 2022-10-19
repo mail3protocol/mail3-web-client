@@ -36,12 +36,12 @@ import PolkawalletPng from 'assets/wallets/polkadot.png'
 import PlugPng from 'assets/wallets/plug.png'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import ZilliqaIconPath from '../../assets/chain-icons/zilliqa.png'
-import EthIconPath from '../../assets/chain-icons/eth.png'
-import FlowIconPath from '../../assets/chain-icons/flow.png'
-import SolIconPath from '../../assets/chain-icons/sol.png'
-import TronIconPath from '../../assets/chain-icons/tron.png'
-import OtherIconPath from '../../assets/chain-icons/other.png'
+import ZilliqaIconPath from 'assets/chain-icons/zilliqa.png'
+import EthIconPath from 'assets/chain-icons/eth.png'
+import FlowIconPath from 'assets/chain-icons/flow.png'
+import SolIconPath from 'assets/chain-icons/sol.png'
+import TronIconPath from 'assets/chain-icons/tron.png'
+import OtherIconPath from 'assets/chain-icons/other.png'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'
@@ -91,8 +91,9 @@ const tabIndexAtom = atomWithStorage('mail3-tab-index', 0, {
 
 export const ConnectModalWithMultichain: React.FC<{
   isOpen: boolean
+  show?: boolean
   onClose: () => void
-}> = ({ isOpen, onClose }) => {
+}> = ({ isOpen, onClose, show }) => {
   const [t] = useTranslation('common')
   const ethButtons = useEthButtons({ onClose })
   const chains: ChainItem[] = useMemo(
@@ -206,9 +207,11 @@ export const ConnectModalWithMultichain: React.FC<{
 
   const contentEl = (
     <>
-      <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
-        {t('connect.dialog-title')}
-      </Heading>
+      {show ? null : (
+        <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
+          {t('connect.dialog-title')}
+        </Heading>
+      )}
       <Tabs
         variant="unstyled"
         index={tabIndex}
@@ -270,7 +273,8 @@ export const ConnectModalWithMultichain: React.FC<{
           lineHeight="18px"
           color="#6F6F6F"
           textAlign="center"
-          my="24px"
+          mb="24px"
+          pt="24px"
         >
           {currentChain?.description}&nbsp;
         </Text>
@@ -341,6 +345,10 @@ export const ConnectModalWithMultichain: React.FC<{
       </Box>
     </>
   )
+
+  if (show) {
+    return contentEl
+  }
 
   if (isMobile) {
     return (
