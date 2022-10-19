@@ -70,6 +70,9 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
               href={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
               target="_blank"
               rel="noreferrer"
+              style={
+                isDisabledCopy ? { opacity: 0.6, pointerEvents: 'none' } : {}
+              }
             >
               <img
                 src={`${APP_URL}/images/subscribe-btn.png`}
@@ -96,7 +99,11 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
             {t('subscription_style_preview.customize_the_button')}
           </Heading>
           <Suspense fallback={<Skeleton w="full" h="207px" />}>
-            <CodeEditor value={code} onChange={setCode} readOnly />
+            <CodeEditor
+              value={isDisabledCopy ? '' : code}
+              onChange={setCode}
+              readOnly
+            />
           </Suspense>
         </Box>
         <Center gridColumn="2 / 3">
