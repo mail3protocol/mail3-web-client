@@ -486,12 +486,18 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                           >
                             <Wrap spacing="10px">
                               {poapList.map((item) => {
-                                const { name, img, hadGot } = item
+                                const { name, img, hadGot, poapPlatform } = item
                                 return (
                                   <WrapItem
                                     key={item.name}
                                     w={{ base: '105px', md: '118px' }}
                                     opacity={hadGot ? 1 : 0.4}
+                                    cursor="pointer"
+                                    onClick={() => {
+                                      if (poapPlatform) {
+                                        window.open(poapPlatform)
+                                      }
+                                    }}
                                   >
                                     <Center flexDirection="column" w="100%">
                                       <Flex
