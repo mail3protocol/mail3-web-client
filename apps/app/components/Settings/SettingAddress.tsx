@@ -755,7 +755,7 @@ export const SettingAddress: React.FC = () => {
                                             <Link
                                               isExternal
                                               onClick={() =>
-                                                trackClickRegisterENS()
+                                                trackClickRegisterUD()
                                               }
                                               href={UD_DOMAIN}
                                               color="#4E52F5"
@@ -866,7 +866,7 @@ export const SettingAddress: React.FC = () => {
                                             <Link
                                               isExternal
                                               onClick={() =>
-                                                trackClickRegisterUD()
+                                                trackClickRegisterENS()
                                               }
                                               href={ENS_DOMAIN}
                                               color="#4E52F5"
