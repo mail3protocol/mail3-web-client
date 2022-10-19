@@ -17,6 +17,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from 'ui'
+import { atomWithStorage } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import { Query } from '../../api/query'
 import Welcomepng from '../../assets/subscribe/welcome.png'
 import { useAPI } from '../../hooks/useAPI'
@@ -61,12 +63,20 @@ const AlreadySubscribed = () => {
         border="1px solid #efefef"
         borderRadius="24px"
       >
-        <Heading mb="24px" fontSize="20px" fontWeight={700}>
-          {t('already')}
+        <Heading mb="24px" fontSize={['14px', '20px', '20px']} fontWeight={700}>
+          {t('thank-you')}
         </Heading>
-        <Text mb="24px">{t('visit')}</Text>
+        <Text mb="24px" fontSize={['12px']}>
+          {t('visit')}
+        </Text>
         <Link to={RoutePath.Inbox}>
-          <Button w="168px">{t('continue')}</Button>
+          <Button
+            w={['138px', '168px', '168px']}
+            h={['40px']}
+            fontSize={['14px']}
+          >
+            {t('continue')}
+          </Button>
         </Link>
       </Center>
     </Center>
@@ -82,40 +92,65 @@ const Desc: React.FC = ({ children }) => (
     mb="16px"
     mt="8px"
     fontSize="12px"
+    whiteSpace="pre"
   >
     {children}
   </Box>
 )
 
+const localSubscribeStatusAtom = atomWithStorage<
+  Record<string, Record<string, boolean>>
+>('subscribeStatus', {})
+
 const SubscribeStatus = () => {
-  const {
-    isBrowserSupport,
-    webPushNotificationState,
-    permission,
-    requestPermission,
-  } = useNotification(false)
+  const { isBrowserSupport, permission, requestPermission } =
+    useNotification(false)
   const [t] = useTranslation('subscribe')
-  const isEnabledNotification =
-    permission === 'granted' && webPushNotificationState === 'enabled'
-  const [isSubscribed, setIsSubscribe] = useState(isEnabledNotification)
-  if (!isBrowserSupport || isSubscribed) {
+  const [isDeclined, setIsDeclined] = useState(false)
+  const [isRequesting, setIsRequesting] = useState(false)
+  if ((permission === 'default' && isBrowserSupport) || isRequesting) {
     return (
       <>
         <Text fontWeight={700} fontSize="14px">
           {t('nft')}
         </Text>
-        <Desc>{t('success')}</Desc>
-        <Link to={RoutePath.Inbox}>
-          <Button w="168px">{t('continue')}</Button>
-        </Link>
+        <Desc>
+          <Trans
+            components={{
+              b: <Text color="blue" />,
+            }}
+            ns="subscribe"
+            i18nKey="request-permission"
+            t={t}
+          />
+        </Desc>
+        <Button
+          w="168px"
+          isLoading={isRequesting}
+          onClick={async () => {
+            setIsRequesting(true)
+            try {
+              const ps = await requestPermission()
+              if (ps === 'denied') {
+                setIsDeclined(true)
+              }
+            } catch (error) {
+              //
+            } finally {
+              setIsRequesting(false)
+            }
+          }}
+        >
+          {t('ok')}
+        </Button>
       </>
     )
   }
 
-  if (permission === 'denied') {
+  if (isDeclined) {
     return (
       <>
-        <Text fontWeight={700} mb="16px">
+        <Text fontWeight={700} mb="16px" whiteSpace="pre-line">
           {t('declined')}
         </Text>
         <Link to={RoutePath.Inbox}>
@@ -130,27 +165,10 @@ const SubscribeStatus = () => {
       <Text fontWeight={700} fontSize="14px">
         {t('nft')}
       </Text>
-      <Desc>
-        <Trans
-          components={{
-            b: <Text color="blue" />,
-          }}
-          ns="subscribe"
-          i18nKey="request-permission"
-          t={t}
-        />
-      </Desc>
-      <Button
-        w="168px"
-        onClick={async () => {
-          const ps = await requestPermission()
-          if (ps === 'granted') {
-            setIsSubscribe(true)
-          }
-        }}
-      >
-        {t('ok')}
-      </Button>
+      <Desc>{t('success')}</Desc>
+      <Link to={RoutePath.Inbox}>
+        <Button w="168px">{t('continue')}</Button>
+      </Link>
     </>
   )
 }
@@ -179,15 +197,20 @@ const Subscribing: React.FC = () => {
 export const Subscribe: React.FC = () => {
   useAuth()
   const isAuth = useIsAuthenticated()
-  const acccount = useAccount()
+  const account = useAccount()
   const api = useAPI()
   const { id } = useParams()
+  const [localSubscribeStatus, setLocalSubscribeStatus] = useAtom(
+    localSubscribeStatusAtom
+  )
+  const currentLocalSubscribeStatus =
+    localSubscribeStatus?.[account]?.[id ?? ''] ?? false
   const {
     isLoading: isLoadingStatus,
     data: subscribeStatus,
     error: getSubscribeStatusError,
   } = useQuery(
-    [Query.GetSubscribeStatus, acccount, id],
+    [Query.GetSubscribeStatus, account, id],
     async () => {
       try {
         await api.getSubscribeStatus(id!)
@@ -219,9 +242,14 @@ export const Subscribe: React.FC = () => {
     data: subscribeResult,
     error: putSubscribeError,
   } = useQuery(
-    [Query.SetSubscribeStatus, acccount, id],
+    [Query.SetSubscribeStatus, account, id],
     async () => {
       await api.putSubscribeCampaign(id!)
+      if (currentLocalSubscribeStatus) {
+        return {
+          state: 'resubscribed',
+        } as any
+      }
       return {
         state: 'active',
       } as any
@@ -231,6 +259,15 @@ export const Subscribe: React.FC = () => {
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      onSuccess() {
+        setLocalSubscribeStatus((s) => ({
+          [account]: {
+            ...s[account],
+            [id!]: true,
+          },
+          ...s,
+        }))
+      },
     }
   )
 
@@ -246,7 +283,10 @@ export const Subscribe: React.FC = () => {
     )
   }
 
-  if (subscribeStatus?.state === 'active') {
+  if (
+    subscribeStatus?.state === 'active' ||
+    subscribeResult?.state === 'resubscribed'
+  ) {
     return <AlreadySubscribed />
   }
   const error =

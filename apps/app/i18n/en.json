@@ -346,9 +346,9 @@
         "already": "You have already subscribed to us",
         "thank-you": "🎉 Thank you for subscribing",
         "nft": "You have earned an NFT!",
-        "request-permission": "Claim Link will be sent to your inbox, <b>in case you miss the message</b>, please allow the desktop notification authorization for mail³.",
-        "declined": "You have declined the desktop notification authorization, you can go to mail³ to claim your nft",
-        "success": "Claim Link will be sent to your inbox, please check in mail³"
+        "request-permission": "Claim Link will be sent to your inbox, <b>in case you miss the message, </b>please allow the desktop notification authorization for mail³.",
+        "declined": "You have declined the desktop notification authorization,\n you can go to mail³ to claim your nft",
+        "success": "Claim Link will be sent to your inbox,\n please check in mail³"
     },
     "subscription": {
         "unsubscribe": "Are you sure you want to unsubscribe from this author？",
