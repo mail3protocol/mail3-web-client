@@ -19,6 +19,8 @@ body {
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    word-break: break-word;
+    white-space: pre-line;
 }
 
 @font-face {

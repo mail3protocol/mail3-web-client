@@ -8,6 +8,10 @@ const style = (selectionBgColor: string) => `
 * {
   font-size: 14px;
 }
+p {
+  word-break: break-word;
+  white-space: pre-line;
+}
 .content-container {
   display: flex;
 }
