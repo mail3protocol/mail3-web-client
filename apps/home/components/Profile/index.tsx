@@ -134,6 +134,7 @@ const WrapRight = styled(Box)`
 interface ProfileComponentProps {
   mailAddress: string
   address: string
+  isProject: boolean
 }
 
 let homeUrl = ''
@@ -187,6 +188,7 @@ export const getNfts = (address: string) =>
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
+  isProject,
 }) => {
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
@@ -305,6 +307,13 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             <Box className="address">
               <Text className="p">{mailAddress}</Text>
             </Box>
+
+            {isProject ? (
+              <Center mt={{ base: '10px', md: '25px' }}>
+                <Mail3MeButton to={mailAddress} />
+              </Center>
+            ) : null}
+
             <Center mt={{ base: '10px', md: '25px' }}>
               <Mail3MeButton to={mailAddress} />
             </Center>
