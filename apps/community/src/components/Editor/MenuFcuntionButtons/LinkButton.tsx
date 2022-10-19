@@ -51,8 +51,10 @@ export const LinkButton: React.FC = () => {
     [linkValue]
   )
   const errorTextMap: { [key in LinkErrorType]?: string } = {
-    [LinkErrorType.Invalid]: t('invalid_url'),
-    [LinkErrorType.NotHttps]: t('only_supported_https'),
+    [LinkErrorType.Invalid]: t('editor_menus.link_button.invalid_url'),
+    [LinkErrorType.NotHttps]: t(
+      'editor_menus.link_button.only_supported_https'
+    ),
   }
 
   return (

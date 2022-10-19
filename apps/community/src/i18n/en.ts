@@ -80,6 +80,8 @@ export default {
         add_link: 'Add Link',
         add_link_input_placeholder: 'Link URL',
         ok: 'OK',
+        invalid_url: 'Invalid url',
+        only_supported_https: 'Only supported https',
       },
     },
   },

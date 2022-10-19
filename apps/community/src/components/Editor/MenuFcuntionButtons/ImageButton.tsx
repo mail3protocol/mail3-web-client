@@ -41,7 +41,10 @@ export const ImageButton: React.FC<ImageButtonProps> = ({
           src: url,
         })
         onUploadImageCallback?.(file, url)
-        toast(t('upload_succeed'))
+        toast(t('upload_succeed'), {
+          status: 'success',
+          alertProps: { colorScheme: 'green' },
+        })
       } catch (err: any) {
         const errorMessage =
           err?.response?.data?.message || err?.message || t('unknown_error')
@@ -50,6 +53,7 @@ export const ImageButton: React.FC<ImageButtonProps> = ({
             message: errorMessage,
           })
         )
+        console.error(err)
       } finally {
         setIsUploading(false)
       }
