@@ -266,6 +266,7 @@ export const SettingAddress: React.FC = () => {
   const [userProps, setUserProperties] = useAtom(userPropertiesAtom)
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
   const trackClickRegisterBIT = useTrackClick(TrackEvent.ClickRegisterBIT)
+  const trackClickRegisterUD = useTrackClick(TrackEvent.ClickRegisterUD)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
   const [activeAccount, setActiveAccount] = useState(account)
@@ -865,7 +866,7 @@ export const SettingAddress: React.FC = () => {
                                             <Link
                                               isExternal
                                               onClick={() =>
-                                                trackClickRegisterENS()
+                                                trackClickRegisterUD()
                                               }
                                               href={ENS_DOMAIN}
                                               color="#4E52F5"
