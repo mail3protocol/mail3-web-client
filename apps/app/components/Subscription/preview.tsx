@@ -175,6 +175,7 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
       onClick={async () => {
         if (isLoading) return
         setIsLoading(true)
+
         if (isFollow) {
           dialog({
             type: 'text',
@@ -188,8 +189,12 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
               setIsLoading(false)
               toast(t('Unsubscribe successfully'), { status: 'success' })
             },
-            onCancel: () => {},
-            onClose: () => {},
+            onCancel: () => {
+              setIsLoading(false)
+            },
+            onClose: () => {
+              setIsLoading(false)
+            },
             okText: 'Yes',
             cancelText: 'No',
           })
