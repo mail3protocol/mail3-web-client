@@ -210,7 +210,7 @@ export default {
              <li>
                <p>Only a few simple steps are needed:</p>
                <ol>
-                 <li>Create your rewards on a supported platform (currently only Project Galaxy OAT & NFT are supported);</li>
+                 <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
                  <li>Follow the guide to complete the configuration below;</li>
                  <li>Get the code to integrate into your website or product.</li>
                </ol>
