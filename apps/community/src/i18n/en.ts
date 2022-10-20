@@ -235,6 +235,10 @@ export default {
       enabled: 'Enabled',
       loading: 'Loading',
     },
+    error_messages: {
+      DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL:
+        'subscription "Campaign Link" duplicated',
+    },
   },
   login_home_page: {
     'Hello! Friends': 'Hello! Friends',

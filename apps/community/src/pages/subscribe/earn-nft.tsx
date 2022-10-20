@@ -23,7 +23,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDialog } from 'hooks'
 import { isHttpUriReg } from 'shared'
@@ -41,6 +41,7 @@ import { useToast } from '../../hooks/useToast'
 import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
 import { StylePreview } from '../../components/EarnNFTPageComponents/StylePreview'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { ErrorCode } from '../../api/ErrorCode'
 
 function isValidGalaxCampaignUrl(value: string) {
   return isHttpUriReg.test(value) && value.includes('galxe.com')
@@ -130,7 +131,13 @@ export const EarnNft: React.FC = () => {
       await api.updateSubscription(body)
       await refetch()
     } catch (err: any) {
+      const errorMessageReasonMap: { [key: string]: ReactNode } = {
+        [ErrorCode.DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL]: t(
+          'error_messages.DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL'
+        ),
+      }
       const errorMessage =
+        errorMessageReasonMap[err?.response?.data?.reason] ||
         err?.response?.data?.message ||
         err?.message ||
         t('unknown_error', { ns: 'common' })
