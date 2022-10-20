@@ -29,11 +29,6 @@ const Container = styled(Box)`
   height: 100%;
   box-shadow: 0px 0px 10px rgba(25, 25, 100, 0.1);
 
-  &::-webkit-scrollbar {
-    width: 0 !important;
-    height: 0 !important;
-  }
-
   @media (max-width: 768px) {
     padding-top: 30px;
     box-shadow: none;
@@ -119,7 +114,9 @@ export const SubListItem: FC<SubListItemProps> = ({
           lineHeight="26px"
           whiteSpace="nowrap"
         >
-          <Text noOfLines={1}>{truncateAddress(writer)}</Text>
+          <Text noOfLines={1} w="120px">
+            {truncateAddress(writer)}
+          </Text>
           <Spacer />
           <Box>{SubFormatDate(time)}</Box>
         </Flex>

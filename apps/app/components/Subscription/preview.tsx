@@ -46,8 +46,6 @@ const Container = styled(Box)`
   flex: 16;
   height: 100%;
   padding: 32px;
-  overflow: hidden;
-  overflow-y: scroll;
   position: relative;
 
   .info {
@@ -61,6 +59,20 @@ const Container = styled(Box)`
 
   .mobile-header {
     display: none;
+  }
+
+  .scroll-main-wrap {
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none;
+    }
+
+    height: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+    position: relative;
+    z-index: 8;
   }
 
   @media (max-width: 768px) {
@@ -143,15 +155,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
             <CloseButton />
           </Box>
         ) : null}
-        <Box
-          h="100%"
-          overflow="hidden"
-          overflowY="scroll"
-          position="relative"
-          zIndex={8}
-        >
-          {children}
-        </Box>
+        <Box className="scroll-main-wrap">{children}</Box>
       </Container>
     </>
   )
