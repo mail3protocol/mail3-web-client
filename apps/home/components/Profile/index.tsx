@@ -137,7 +137,7 @@ const WrapRight = styled(Box)`
 interface ProfileComponentProps {
   mailAddress: string
   address: string
-  isProject: boolean
+  uuid: string
 }
 
 let homeUrl = ''
@@ -191,7 +191,7 @@ export const getNfts = (address: string) =>
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
-  isProject,
+  uuid,
 }) => {
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
@@ -311,7 +311,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               <Text className="p">{mailAddress}</Text>
             </Box>
 
-            {isProject ? (
+            {uuid ? (
               <Center mt={{ base: '10px', md: '25px' }} position="relative">
                 <Button
                   w="150px"
@@ -323,7 +323,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                   color="#000"
                   borderRadius="100px"
                   onClick={() => {
-                    window.open(`${APP_URL}/subscribe/${address}`)
+                    window.open(`${APP_URL}/subscribe/${uuid}`)
                   }}
                 >
                   Subscribe
