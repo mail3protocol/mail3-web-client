@@ -45,6 +45,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
         onConfirm() {
           navi(RoutePath.Dashboard)
         },
+        showCloseButton: false,
       })
       onSend?.()
     } catch (err: any) {
