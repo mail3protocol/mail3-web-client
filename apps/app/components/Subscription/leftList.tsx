@@ -17,6 +17,7 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { Avatar } from 'ui'
+import { truncateAddress } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 import { SubWrapEmptyAtom } from './wrap'
@@ -116,8 +117,9 @@ export const SubListItem: FC<SubListItemProps> = ({
           fontWeight={400}
           color="#818181"
           lineHeight="26px"
+          whiteSpace="nowrap"
         >
-          <Text noOfLines={1}>{writer}</Text>
+          <Text noOfLines={1}>{truncateAddress(writer)}</Text>
           <Spacer />
           <Box>{SubFormatDate(time)}</Box>
         </Flex>

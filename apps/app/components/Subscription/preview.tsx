@@ -19,6 +19,7 @@ import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Avatar } from 'ui'
+import { truncateAddress } from 'shared'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
@@ -140,7 +141,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
             <CloseButton />
           </Box>
         ) : null}
-        <Box h="100%" overflow="hidden" overflowY="scroll">
+        <Box h="100%" overflow="hidden" overflowY="scroll" position="relative">
           {children}
         </Box>
       </Container>
@@ -262,7 +263,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             }}
           />
           <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
-            {detail?.writer_name}
+            {truncateAddress(detail?.writer_name)}
           </Box>
           <Spacer />
           <SubscribeLink uuid={detail.writer_uuid} />
@@ -289,7 +290,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           lineHeight="26px"
           color="#818181"
         >
-          {detail.writer_name}
+          {truncateAddress(detail?.writer_name)}
         </Box>
       </Center>
       <Text
@@ -321,7 +322,13 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           from={{ name: '', address: '' }}
         />
       </Box>
-      <Center className="mobile-button" w="100%" mt="20px">
+      <Center
+        className="mobile-button"
+        w="100%"
+        mt="20px"
+        position="absolute"
+        bottom="20px"
+      >
         <Link fontWeight="400" fontSize="12px" lineHeight="18px" display="flex">
           <SubscribeLink uuid={detail.writer_uuid} />
         </Link>
