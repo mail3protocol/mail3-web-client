@@ -66,6 +66,7 @@ const Container = styled(Box)`
   @media (max-width: 768px) {
     &.not-single-mode {
       overflow: hidden;
+      height: auto;
       padding: 0;
       top: 143px;
       right: 0;
@@ -77,7 +78,7 @@ const Container = styled(Box)`
 
       border-radius: 22px 22px 0px 0px;
 
-      padding: 30px 30px 200px;
+      padding: 30px 30px 20px;
 
       .header {
         display: none;
@@ -134,6 +135,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
             position="absolute"
             top="20px"
             right="20px"
+            zIndex={9}
             onClick={() => {
               setIsOpen(false)
             }}
@@ -141,7 +143,13 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
             <CloseButton />
           </Box>
         ) : null}
-        <Box h="100%" overflow="hidden" overflowY="scroll" position="relative">
+        <Box
+          h="100%"
+          overflow="hidden"
+          overflowY="scroll"
+          position="relative"
+          zIndex={8}
+        >
           {children}
         </Box>
       </Container>
@@ -320,15 +328,10 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           attachments={[]}
           messageId=""
           from={{ name: '', address: '' }}
+          shadowStyle="main { min-height: 400px; }"
         />
       </Box>
-      <Center
-        className="mobile-button"
-        w="100%"
-        mt="20px"
-        position="absolute"
-        bottom="20px"
-      >
+      <Center className="mobile-button" w="100%" mt="20px">
         <Link fontWeight="400" fontSize="12px" lineHeight="18px" display="flex">
           <SubscribeLink uuid={detail.writer_uuid} />
         </Link>
