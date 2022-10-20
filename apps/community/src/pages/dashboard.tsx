@@ -11,8 +11,6 @@ import {
   List,
   ListItem,
   Icon,
-  VStack,
-  Skeleton,
   Spinner,
 } from '@chakra-ui/react'
 import { ReactNode, useEffect, useState } from 'react'
@@ -256,14 +254,18 @@ export const Dashboard: React.FC = () => {
         </Flex>
         <List mt="24px">
           {isLoadingMessageList ? (
-            <VStack>
-              {new Array(10)
-                .fill(0)
-                .map((_, i) => i)
-                .map((i) => (
-                  <Skeleton h="52px" w="full" key={i} />
-                ))}
-            </VStack>
+            <Flex
+              align="center"
+              color="secondaryTitleColor"
+              h="48px"
+              justify="center"
+              w="full"
+            >
+              <Spinner w="16px" h="16px" />
+              <Box as="span" ml="4px" fontWeight="500" fontSize="16px">
+                {t('loading', { ns: 'common' })}
+              </Box>
+            </Flex>
           ) : (
             listEl
           )}

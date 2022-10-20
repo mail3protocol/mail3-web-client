@@ -5,7 +5,7 @@ import { Flex, FlexProps } from '@chakra-ui/react'
 
 export interface CodeEditorProps extends Omit<FlexProps, 'onChange'> {
   value: string
-  onChange: (value: string) => void
+  onChange?: (value: string) => void
   readOnly?: boolean
 }
 

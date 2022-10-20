@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react'
+import { Button, ButtonProps } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHelpers } from '@remirror/react'
@@ -8,7 +8,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { useToast } from '../../hooks/useToast'
 import { RoutePath } from '../../route/path'
 
-export interface SendButtonProps {
+export interface SendButtonProps extends ButtonProps {
   subject: string
   isDisabled?: boolean
   onSend?: () => void
@@ -18,6 +18,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
   subject,
   onSend,
   isDisabled: isPropsDisabled,
+  ...props
 }) => {
   const { t } = useTranslation('new_message')
   const api = useAPI()
@@ -44,6 +45,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
         onConfirm() {
           navi(RoutePath.Dashboard)
         },
+        showCloseButton: false,
       })
       onSend?.()
     } catch (err: any) {
@@ -81,6 +83,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
       }}
       isDisabled={isDisabled}
       isLoading={isLoading}
+      {...props}
     >
       {t('send')}
     </Button>

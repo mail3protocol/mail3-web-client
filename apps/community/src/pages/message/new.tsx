@@ -106,7 +106,7 @@ export const NewMessage = () => {
             <Divider as="hr" mt="20px" />
             <Content mt="4px" flex={1} ref={contentRef} />
           </Box>
-          <HStack justify="flex-end">
+          <HStack justify="flex-end" h="40px">
             <PreviewButton
               isPreview={isPreview}
               onClick={(e, content) => {
@@ -114,8 +114,13 @@ export const NewMessage = () => {
                 setCurrentPreviewContent(content)
               }}
               w="138px"
+              h="inherit"
             />
-            <SendButton subject={subjectText} isDisabled={count === 0} />
+            <SendButton
+              subject={subjectText}
+              isDisabled={count === 0}
+              h="inherit"
+            />
           </HStack>
         </Flex>
       </StateProvider>

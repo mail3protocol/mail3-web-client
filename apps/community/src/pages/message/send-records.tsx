@@ -6,7 +6,6 @@ import {
   useStyleConfig,
   Box,
   VStack,
-  Skeleton,
   Spinner,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
@@ -60,6 +59,15 @@ export const SendRecords: React.FC = () => {
     return createdAtNumber ? dayjs.unix(createdAtNumber) : undefined
   }, [listQuery?.data?.pages[0].messages])
 
+  const loadingEl = (
+    <Flex align="center" color="secondaryTitleColor" h="48px">
+      <Spinner w="16px" h="16px" />
+      <Box as="span" ml="4px" fontWeight="500" fontSize="16px">
+        {t('loading', { ns: 'common' })}
+      </Box>
+    </Flex>
+  )
+
   return (
     <Container
       as={Grid}
@@ -78,40 +86,24 @@ export const SendRecords: React.FC = () => {
           {t('title')}
         </Heading>
         <VStack spacing="4px" mt="24px" w="full">
-          {listQuery.isLoading ? (
-            <>
-              {new Array(10)
-                .fill(0)
-                .map((_, i) => i)
-                .map((i) => (
-                  <Skeleton h="52px" w="full" key={i} />
-                ))}
-            </>
-          ) : (
-            listQuery.data?.pages?.map((page, i) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Fragment key={i}>
-                {page.messages?.map((message) => (
-                  <Box key={message.uuid} h="48px" w="full">
-                    <SentRecordItem
-                      time={dayjs.unix(Number(message.created_at))}
-                      subject={message.subject}
-                      viewCount={message.read_count}
-                    />
-                  </Box>
-                ))}
-              </Fragment>
-            ))
-          )}
+          {listQuery.isLoading
+            ? loadingEl
+            : listQuery.data?.pages?.map((page, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <Fragment key={i}>
+                  {page.messages?.map((message) => (
+                    <Box key={message.uuid} h="48px" w="full">
+                      <SentRecordItem
+                        time={dayjs.unix(Number(message.created_at))}
+                        subject={message.subject}
+                        viewCount={message.read_count}
+                      />
+                    </Box>
+                  ))}
+                </Fragment>
+              ))}
           <div ref={loadNextPageRef} />
-          {listQuery.isFetchingNextPage ? (
-            <Flex align="center" color="secondaryTitleColor" h="48px">
-              <Spinner w="16px" h="16px" />
-              <Box as="span" ml="4px" fontWeight="500" fontSize="16px">
-                {t('loading', { ns: 'common' })}
-              </Box>
-            </Flex>
-          ) : null}
+          {listQuery.isFetchingNextPage ? loadingEl : null}
           {!listQuery.isLoading &&
           !listQuery.isFetchingNextPage &&
           !listQuery.hasNextPage ? (

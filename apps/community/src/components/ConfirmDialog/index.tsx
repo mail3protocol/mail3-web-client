@@ -59,7 +59,6 @@ export const ConfirmDialog: React.FC = () => {
 
   return (
     <Modal
-      size="md"
       closeOnEsc={showCloseButton}
       closeOnOverlayClick={showCloseButton}
       autoFocus={false}
@@ -69,7 +68,12 @@ export const ConfirmDialog: React.FC = () => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent borderRadius="20px" w="450px" {...modalContentProps}>
+      <ModalContent
+        borderRadius="20px"
+        w="450px"
+        maxW="450px"
+        {...modalContentProps}
+      >
         {showCloseButton ? <CloseButton onClick={onClose} /> : null}
         <ModalBody py="24px" px="20px" {...modalBodyProps}>
           {content ?? (
