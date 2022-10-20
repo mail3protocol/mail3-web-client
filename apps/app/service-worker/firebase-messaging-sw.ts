@@ -7,6 +7,7 @@ import { notificationLogsStore } from '../utils/notification'
 
 interface PayloadData {
   message_id: string
+  notification_type: string
 }
 
 interface CurrentEvent extends ExtendableEvent {
@@ -53,10 +54,15 @@ declare let self: Self
 self.addEventListener(notificationclick, (e) => {
   const event = e as EventMap[typeof notificationclick]
   event.notification.close()
+
+  const openUrl = `${APP_URL}${
+    event.notification.data.notification_type === 'community_message'
+      ? RoutePath.Subscription
+      : RoutePath.Message
+  }/${event.notification.data.message_id}`
+
   clients
-    .openWindow(
-      `${APP_URL}${RoutePath.Message}/${event.notification.data.message_id}`
-    )
+    .openWindow(openUrl)
     .then((windowClient) => (windowClient ? windowClient.focus() : null))
 })
 
