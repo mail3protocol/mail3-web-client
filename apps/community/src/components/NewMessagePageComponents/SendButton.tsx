@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHelpers } from '@remirror/react'
 import { useTrackClick, TrackEvent, useDialog } from 'hooks'
+import { useNavigate } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAPI'
 import { useToast } from '../../hooks/useToast'
+import { RoutePath } from '../../route/path'
 
 export interface SendButtonProps {
   subject: string
@@ -23,6 +25,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
   const dialog = useDialog()
+  const navi = useNavigate()
 
   const trackClickCommunitySendConfirm = useTrackClick(
     TrackEvent.CommunityClickCommunitySendConfirm
@@ -34,7 +37,14 @@ export const SendButton: React.FC<SendButtonProps> = ({
     setIsLoading(true)
     try {
       await api.sendMessage(subject, getHTML())
-      t('send_succeed')
+      dialog({
+        title: t('successfully_sent.title'),
+        description: t('successfully_sent.description'),
+        okText: t('successfully_sent.confirm'),
+        onConfirm() {
+          navi(RoutePath.Dashboard)
+        },
+      })
       onSend?.()
     } catch (err: any) {
       const errorMessage =

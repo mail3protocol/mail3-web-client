@@ -106,6 +106,11 @@ export default {
     send_description: 'You are about to send this message to your subscribers',
     confirm: 'Confirm',
     unsubscribe: 'Unsubscribe',
+    successfully_sent: {
+      title: 'Successfully sent',
+      description: 'About to exit this page',
+      confirm: 'Confirm',
+    },
   },
   dashboard: {
     message: 'Message',
