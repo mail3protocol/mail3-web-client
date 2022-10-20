@@ -25,6 +25,7 @@ import {
 import { useAPI } from './useAPI'
 import { useCloseAuthModal, useOpenAuthModal } from './useAuthDialog'
 import { QueryKey } from '../api/QueryKey'
+import { useSetUserInfo } from './useUserInfo'
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
   'mail3_community_user_properties',
@@ -85,9 +86,11 @@ export function useInitUserProperties() {
 
 export function useLogout() {
   const connector = useConnector()
-  const setUserInfo = useSetLoginInfo()
+  const setLogoutInfo = useSetLoginInfo()
+  const setUserInfo = useSetUserInfo()
   const setLastConnector = useSetLastConnector()
   return useCallback(async () => {
+    setLogoutInfo(null)
     setUserInfo(null)
     setLastConnector(undefined)
     await connector?.deactivate()
