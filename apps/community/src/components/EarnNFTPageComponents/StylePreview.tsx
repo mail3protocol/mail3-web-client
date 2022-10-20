@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Grid } from '@chakra-ui/layout'
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 import { copyText } from 'shared'
 import { useLoginInfo } from 'hooks'
 import { subscribeButtonTemplateCode } from './SubscribeButtonTemplateCode'
@@ -27,8 +27,9 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
 }) => {
   const { t } = useTranslation(['earn_nft', 'common'])
   const loginInfo = useLoginInfo()
-  const [code, setCode] = useState(
-    subscribeButtonTemplateCode(loginInfo?.uuid || '')
+  const code = useMemo(
+    () => subscribeButtonTemplateCode(loginInfo?.uuid || ''),
+    [loginInfo?.uuid]
   )
   const toast = useToast()
 
@@ -99,11 +100,7 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
             {t('subscription_style_preview.customize_the_button')}
           </Heading>
           <Suspense fallback={<Skeleton w="full" h="207px" />}>
-            <CodeEditor
-              value={isDisabledCopy ? '' : code}
-              onChange={setCode}
-              readOnly
-            />
+            <CodeEditor value={isDisabledCopy ? '' : code} readOnly />
           </Suspense>
         </Box>
         <Center gridColumn="2 / 3">
