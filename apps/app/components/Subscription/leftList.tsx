@@ -210,7 +210,6 @@ export const SubLeftList: FC = () => {
   )
 
   useDidMount(() => {
-    console.log('refetch')
     refetch()
   })
 

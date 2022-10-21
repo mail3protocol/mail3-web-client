@@ -13,7 +13,7 @@ const Container = styled(Box)`
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
   overflow: hidden;
-  top: 170px;
+  top: 155px;
   left: calc((100% - 1200px) / 2);
   right: calc((100% - 1200px) / 2);
   max-width: 1200px;
