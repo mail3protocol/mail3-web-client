@@ -26,7 +26,6 @@ import { Trans, useTranslation } from 'react-i18next'
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDialog } from 'hooks'
-import { isHttpUriReg } from 'shared'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
@@ -43,12 +42,14 @@ import { StylePreview } from '../../components/EarnNFTPageComponents/StylePrevie
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
 
-function isValidGalaxCampaignUrl(value: string) {
-  return isHttpUriReg.test(value) && value.includes('galxe.com')
+function isValidGalxeCampaignUrl(value: string) {
+  return /https:\/\/galxe.com\/[a-zA-Z0-9]+\/campaign\/[a-zA-Z0-9]+$/.test(
+    value
+  )
 }
 
 function isValidQuest3CampaignUrl(value: string) {
-  return isHttpUriReg.test(value) && value.includes('quest3.xyz')
+  return /https:\/\/app.quest3.xyz\/quest\/[a-zA-Z0-9]+$/.test(value)
 }
 
 function isValidAccessToken(value: string) {
@@ -235,7 +236,7 @@ export const EarnNft: React.FC = () => {
 
   const currentIsValidGalaxCampaignUrl =
     platform === SubscriptionPlatform.Galaxy
-      ? isValidGalaxCampaignUrl(campaignUrl)
+      ? isValidGalxeCampaignUrl(campaignUrl)
       : false
   const currentIsValidQuest3CampaignUrl =
     platform === SubscriptionPlatform.Quest3
