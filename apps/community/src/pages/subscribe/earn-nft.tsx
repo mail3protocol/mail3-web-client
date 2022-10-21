@@ -386,9 +386,9 @@ export const EarnNft: React.FC = () => {
                   if (value === '') return ''
                   if (
                     (platform === SubscriptionPlatform.Quest3 &&
-                      !isValidQuest3CampaignUrl(campaignUrl)) ||
+                      !isValidQuest3CampaignUrl(value)) ||
                     (platform === SubscriptionPlatform.Galaxy &&
-                      !isValidGalxeCampaignUrl(campaignUrl))
+                      !isValidGalxeCampaignUrl(value))
                   ) {
                     return t('illegal_error_message')
                   }
