@@ -251,6 +251,37 @@ export const EarnNft: React.FC = () => {
     )
   }, [platform])
 
+  useEffect(() => {
+    setCampaignUrlErrorMessage(() => {
+      if (campaignUrl === '') return ''
+      if (
+        (platform === SubscriptionPlatform.Quest3 &&
+          !isValidQuest3CampaignUrl(campaignUrl)) ||
+        (platform === SubscriptionPlatform.Galaxy &&
+          !isValidGalxeCampaignUrl(campaignUrl))
+      ) {
+        return t('illegal_error_message')
+      }
+      return ''
+    })
+  }, [campaignUrl])
+
+  useEffect(() => {
+    setCredentialIdErrorMessage(() => {
+      if (credentialId === '') return ''
+      if (!isValidCredentialId(credentialId)) return t('illegal_error_message')
+      return ''
+    })
+  }, [credentialId])
+
+  useEffect(() => {
+    setAccessTokenErrorMessage(() => {
+      if (accessToken === '') return ''
+      if (!isValidAccessToken(accessToken)) return t('illegal_error_message')
+      return ''
+    })
+  }, [accessToken])
+
   const isDisabledSubmit = useMemo(() => {
     if (platform === SubscriptionPlatform.Galaxy)
       return (
@@ -380,21 +411,7 @@ export const EarnNft: React.FC = () => {
               name="campaign_link"
               isDisabled={isDisabled}
               value={campaignUrl}
-              onChange={({ target: { value } }) => {
-                setCampaignUrl(value)
-                setCampaignUrlErrorMessage(() => {
-                  if (value === '') return ''
-                  if (
-                    (platform === SubscriptionPlatform.Quest3 &&
-                      !isValidQuest3CampaignUrl(value)) ||
-                    (platform === SubscriptionPlatform.Galaxy &&
-                      !isValidGalxeCampaignUrl(value))
-                  ) {
-                    return t('illegal_error_message')
-                  }
-                  return ''
-                })
-              }}
+              onChange={({ target: { value } }) => setCampaignUrl(value)}
             />
             <FormHelperText whiteSpace="nowrap">
               {platform === SubscriptionPlatform.Galaxy ? (
@@ -437,15 +454,7 @@ export const EarnNft: React.FC = () => {
                 <Input
                   isDisabled={isDisabled}
                   value={credentialId}
-                  onChange={({ target: { value } }) => {
-                    setCredentialId(value)
-                    setCredentialIdErrorMessage(() => {
-                      if (value === '') return ''
-                      if (!isValidCredentialId(value))
-                        return t('illegal_error_message')
-                      return ''
-                    })
-                  }}
+                  onChange={({ target: { value } }) => setCredentialId(value)}
                   placeholder={t('credential_id_placeholder')}
                 />
                 <FormErrorMessage>{credentialIdErrorMessage}</FormErrorMessage>
@@ -455,15 +464,7 @@ export const EarnNft: React.FC = () => {
                 <Input
                   isDisabled={isDisabled}
                   value={accessToken}
-                  onChange={({ target: { value } }) => {
-                    setAccessToken(value)
-                    setAccessTokenErrorMessage(() => {
-                      if (value === '') return ''
-                      if (!isValidAccessToken(value))
-                        return t('illegal_error_message')
-                      return ''
-                    })
-                  }}
+                  onChange={({ target: { value } }) => setAccessToken(value)}
                   placeholder={t('access_token_placeholder')}
                 />
                 <FormErrorMessage>{accessTokenErrorMessage}</FormErrorMessage>
