@@ -43,7 +43,7 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
 
 function isValidGalxeCampaignUrl(value: string) {
-  return /https:\/\/galxe.com\/[a-zA-Z0-9]+\/campaign\/[a-zA-Z0-9]+$/.test(
+  return /https:\/\/galxe.com\/[a-zA-Z0-9_]+\/campaign\/[a-zA-Z0-9]+$/.test(
     value
   )
 }
