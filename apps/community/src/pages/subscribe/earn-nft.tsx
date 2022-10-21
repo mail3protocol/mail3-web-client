@@ -75,7 +75,8 @@ export const EarnNft: React.FC = () => {
   const { t } = useTranslation(['earn_nft', 'common'])
   const api = useAPI()
   const toast = useToast()
-
+  const dialog = useDialog()
+  const onUpdateTipsPanel = useUpdateTipsPanel()
   const [campaignUrl, setCampaignUrl] = useState('')
   const [rewardType, setRewardType] = useState(SubscriptionRewardType.NFT)
   const [platform, setPlatform] = useState(SubscriptionPlatform.Galaxy)
@@ -86,13 +87,9 @@ export const EarnNft: React.FC = () => {
   const [campaignUrlErrorMessage, setCampaignUrlErrorMessage] = useState('')
   const [credentialIdErrorMessage, setCredentialIdErrorMessage] = useState('')
   const [accessTokenErrorMessage, setAccessTokenErrorMessage] = useState('')
-
-  const dialog = useDialog()
-
   const platformStateMap = useRef(
     new Map<SubscriptionPlatform, GalaxState | Quest3State>()
   )
-
   const { isLoading, refetch } = useQuery(
     [QueryKey.GetSubscription],
     async () => api.getSubscription().then((r) => r.data),
@@ -233,7 +230,6 @@ export const EarnNft: React.FC = () => {
     }
   }
 
-  const onUpdateTipsPanel = useUpdateTipsPanel()
   useEffect(() => {
     const key = {
       [SubscriptionPlatform.Galaxy]: 'help_galxe',
