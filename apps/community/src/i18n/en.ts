@@ -170,6 +170,7 @@ export default {
                  <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
                  <li>Follow the guide to complete the configuration below;</li>
                  <li>Get the code to integrate into your website or product.</li>
+                 <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
              </li>
            </ul>
@@ -213,6 +214,7 @@ export default {
                  <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
                  <li>Follow the guide to complete the configuration below;</li>
                  <li>Get the code to integrate into your website or product.</li>
+                 <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
              </li>
            </ul>
