@@ -15,12 +15,12 @@ import { useUpdateAtom } from 'jotai/utils'
 import { Subscription } from 'models'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
-import { TrackEvent, useTrackClick } from 'hooks'
+import { TrackEvent, useDidMount, useTrackClick } from 'hooks'
 import { Avatar } from 'ui'
 import { truncateAddress } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
-import { SubWrapEmptyAtom } from './wrap'
+import { SubWrapEmptyAtom, SubWrapIsloadingAtom } from './wrap'
 import { SubFormatDate } from '../../utils'
 import { SubscribeUnreadCountAtom } from '../Navbar'
 
@@ -103,6 +103,7 @@ export const SubListItem: FC<SubListItemProps> = ({
           fontWeight={600}
           noOfLines={2}
           lineHeight="20px"
+          maxW="250px"
           color={!seen && !isClicked ? '#000' : '#6F6F6F'}
         >
           {subject}
@@ -135,6 +136,10 @@ const SubList: FC<SubListProps> = ({ data }) => {
   const [, setUnreadCount] = useAtom(SubscribeUnreadCountAtom)
   const trackNewClick = useTrackClick(TrackEvent.ClickSubscribeNews)
 
+  useDidMount(() => {
+    setId('')
+  })
+
   return (
     <Box p="10px 0">
       {data.map((item) => {
@@ -164,6 +169,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
 
 export const SubLeftList: FC = () => {
   const setEmpty = useUpdateAtom(SubWrapEmptyAtom)
+  const setIsLoading = useUpdateAtom(SubWrapIsloadingAtom)
   const api = useAPI()
   const containerRef = useRef<HTMLDivElement>(null)
   const [scrollHeight, setScrollHeight] = useState(0)
@@ -174,24 +180,25 @@ export const SubLeftList: FC = () => {
     setScrollHeight(containerRef.current?.clientHeight || 0)
   })
 
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ['SubscriptionList'],
-    async ({ pageParam = '' }) => {
-      const ret = await api.SubscriptionMessages(pageParam)
-      return ret.data
-    },
-    {
-      getNextPageParam: (lastPage) => {
-        if (lastPage.next_cursor) {
-          return lastPage.next_cursor
-        }
-        return undefined
+  const { data, isLoading, fetchNextPage, hasNextPage, refetch } =
+    useInfiniteQuery(
+      ['SubscriptionList'],
+      async ({ pageParam = '' }) => {
+        const ret = await api.SubscriptionMessages(pageParam)
+        return ret.data
       },
-      refetchOnReconnect: true,
-      refetchOnWindowFocus: false,
-      refetchOnMount: true,
-    }
-  )
+      {
+        getNextPageParam: (lastPage) => {
+          if (lastPage.next_cursor) {
+            return lastPage.next_cursor
+          }
+          return undefined
+        },
+        refetchOnReconnect: true,
+        refetchOnWindowFocus: false,
+        refetchOnMount: true,
+      }
+    )
 
   const listData = useMemo(
     () =>
@@ -202,7 +209,13 @@ export const SubLeftList: FC = () => {
     [data]
   )
 
+  useDidMount(() => {
+    refetch()
+  })
+
   useEffect(() => {
+    setIsLoading(isLoading)
+
     if (isLoading) return
     if (!listData?.length) {
       setEmpty(true)
