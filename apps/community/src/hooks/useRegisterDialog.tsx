@@ -1,8 +1,9 @@
 import { useDialog } from 'hooks'
 import { useCallback } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
-import { Box, Text, Flex } from '@chakra-ui/react'
-import '@mail3/mail3-me'
+import { Box, Text, Flex, Button } from '@chakra-ui/react'
+import { Logo } from 'ui'
+import { APP_URL } from '../constants/env/url'
 
 export function useRegisterDialog() {
   const dialog = useDialog()
@@ -30,16 +31,22 @@ export function useRegisterDialog() {
               />
             </Text>
             <Flex align="center" justify="flex-end" mt="24px">
-              <mail3-me
-                css={`
-                  line-height: 14px;
-                  font-weight: 700;
-                  font-size: 14px;
-                  border-radius: 40px;
-                  padding: 13px 22px;
-                  white-space: nowrap;
-                `}
-              />
+              <Button
+                as="a"
+                colorScheme="blackButton"
+                variant="solid-rounded"
+                href={`${APP_URL}?utm_source=${window.location.hostname}&utm_medium=click_mail_me_button&to=mail3.eth@mail3.me`}
+                target="_blank"
+                fontWeight="600"
+                fontSize="14px"
+              >
+                <Logo
+                  iconProps={{ w: '24px', h: '24px', mr: '6px' }}
+                  isHiddenText
+                />
+                Mail<sup>3 </sup>
+                <span> me</span>
+              </Button>
             </Flex>
           </>
         ),
