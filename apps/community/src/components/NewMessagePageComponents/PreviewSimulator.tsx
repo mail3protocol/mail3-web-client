@@ -7,6 +7,7 @@ import { ReactComponent as UnsubscribableSvg } from 'assets/svg/unsubscribe.svg'
 import { useTranslation } from 'react-i18next'
 import { Preview } from '../Preview'
 import { useUserInfo } from '../../hooks/useUserInfo'
+import { formatUserName } from '../../utils/string'
 
 export interface PreviewSimulatorProps {
   html: string
@@ -27,7 +28,7 @@ export const PreviewSimulator: React.FC<PreviewSimulatorProps> = ({
       <Flex align="center">
         <Avatar w="32px" h="32px" address={address} />
         <Box fontSize="14px" lineHeight="26px" fontWeight="600" ml="6px">
-          {userInfo?.name}
+          {formatUserName(userInfo?.name)}
         </Box>
         <Flex
           align="center"
