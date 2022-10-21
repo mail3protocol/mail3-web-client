@@ -287,12 +287,18 @@ export const EarnNft: React.FC = () => {
       return (
         !!campaignUrlErrorMessage ||
         !!credentialIdErrorMessage ||
-        !!accessTokenErrorMessage
+        !!accessTokenErrorMessage ||
+        !campaignUrl ||
+        !credentialId ||
+        !accessToken
       )
     if (platform === SubscriptionPlatform.Quest3)
-      return !!campaignUrlErrorMessage
+      return !!campaignUrlErrorMessage || !campaignUrl
     return false
   }, [
+    campaignUrl,
+    credentialId,
+    accessToken,
     campaignUrlErrorMessage,
     credentialIdErrorMessage,
     accessTokenErrorMessage,
