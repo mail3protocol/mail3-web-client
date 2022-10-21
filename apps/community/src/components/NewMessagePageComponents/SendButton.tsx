@@ -38,16 +38,26 @@ export const SendButton: React.FC<SendButtonProps> = ({
     setIsLoading(true)
     try {
       await api.sendMessage(subject, getHTML())
-      dialog({
+      setIsLoading(false)
+      onSend?.()
+      await dialog({
         title: t('successfully_sent.title'),
         description: t('successfully_sent.description'),
         okText: t('successfully_sent.confirm'),
+        okButtonProps: {
+          colorScheme: 'blackButton',
+          isLoading: false,
+        },
+        modalProps: {
+          onCloseComplete() {
+            navi(RoutePath.Dashboard)
+          },
+        },
         onConfirm() {
           navi(RoutePath.Dashboard)
         },
         showCloseButton: false,
       })
-      onSend?.()
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message ||
