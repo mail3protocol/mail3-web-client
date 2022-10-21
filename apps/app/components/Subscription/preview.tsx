@@ -240,6 +240,9 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       return messageDetail.data
     },
     {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
       enabled: !!id,
     }
   )

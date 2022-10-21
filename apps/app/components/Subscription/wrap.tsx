@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { atom, useAtomValue } from 'jotai'
 import { FC } from 'react'
 import { ReactComponent as Empty } from '../../assets/subscription/all-empty.svg'
+import { Loading } from '../Loading'
 import { SubLeftList } from './leftList'
 import { SubPreview } from './preview'
 
@@ -37,20 +38,29 @@ const Container = styled(Box)`
 `
 
 export const SubWrapEmptyAtom = atom(true)
+export const SubWrapIsloadingAtom = atom(true)
 
 export const SubWrap: FC = () => {
   const isEmpty = useAtomValue(SubWrapEmptyAtom)
+  const isLoading = useAtomValue(SubWrapIsloadingAtom)
 
   return (
     <Container>
-      <Flex h="100%" display={!isEmpty ? 'none' : 'flex'}>
-        <Center minH="200px" w="100%">
-          <Box>
-            <Empty />
-            <Text mt="10px">No new update here for now</Text>
-          </Box>
-        </Center>
-      </Flex>
+      {isLoading ? (
+        <Flex h="100%">
+          <Loading />
+        </Flex>
+      ) : (
+        <Flex h="100%" display={!isEmpty ? 'none' : 'flex'}>
+          <Center minH="200px" w="100%">
+            <Box>
+              <Empty />
+              <Text mt="10px">No new update here for now</Text>
+            </Box>
+          </Center>
+        </Flex>
+      )}
+
       <Flex h="100%" display={isEmpty ? 'none' : 'flex'}>
         <SubLeftList />
         <SubPreview isSingleMode={false} />
