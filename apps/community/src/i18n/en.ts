@@ -97,8 +97,9 @@ export default {
     editor_placeholder: 'Start writing here...',
     preview: 'Preview',
     send: 'Send',
+    sending: 'Sending...',
     edit: 'Edit',
-    send_succeed: 'Send Succeed!',
+    send_succeed: 'Message Sent',
     send_failed: 'Send failed, reason: {{message}}',
     mail_image_limit:
       'The total image size of this message cannot exceed {{size}}',
@@ -111,6 +112,7 @@ export default {
       description: 'About to exit this page',
       confirm: 'Confirm',
     },
+    ok: 'OK',
   },
   dashboard: {
     message: 'Message',
