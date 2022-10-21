@@ -23,7 +23,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDialog } from 'hooks'
 import { Container } from '../../components/Container'
@@ -83,6 +83,10 @@ export const EarnNft: React.FC = () => {
   const [accessToken, setAccessToken] = useState('')
   const [state, setState] = useState(SubscriptionState.Inactive)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [campaignUrlErrorMessage, setCampaignUrlErrorMessage] = useState('')
+  const [credentialIdErrorMessage, setCredentialIdErrorMessage] = useState('')
+  const [accessTokenErrorMessage, setAccessTokenErrorMessage] = useState('')
+
   const dialog = useDialog()
 
   const platformStateMap = useRef(
@@ -132,21 +136,38 @@ export const EarnNft: React.FC = () => {
       await api.updateSubscription(body)
       await refetch()
     } catch (err: any) {
-      const errorMessageReasonMap: { [key: string]: ReactNode } = {
-        [ErrorCode.DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL]: t(
-          'error_messages.DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL'
-        ),
+      switch (err?.response?.data?.reason) {
+        case ErrorCode.INVALID_COMMUNITY_SUBSCRIPTION_CREDENTIAL: {
+          if (
+            (err?.response?.data.message as string)?.includes('access token')
+          ) {
+            setAccessTokenErrorMessage(t('error_messages.invalid_parameter'))
+          } else {
+            setCredentialIdErrorMessage(t('error_messages.invalid_parameter'))
+          }
+          break
+        }
+        case ErrorCode.INVALID_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL: {
+          setCampaignUrlErrorMessage(t('error_messages.invalid_parameter'))
+          break
+        }
+        case ErrorCode.DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL: {
+          setCampaignUrlErrorMessage(t('error_messages.duplicated_parameter'))
+          break
+        }
+        default: {
+          const errorMessage =
+            err?.response?.data?.message ||
+            err?.message ||
+            t('unknown_error', { ns: 'common' })
+          toast(
+            t('update_failed', {
+              message: errorMessage,
+            })
+          )
+          break
+        }
       }
-      const errorMessage =
-        errorMessageReasonMap[err?.response?.data?.reason] ||
-        err?.response?.data?.message ||
-        err?.message ||
-        t('unknown_error', { ns: 'common' })
-      toast(
-        t('update_failed', {
-          message: errorMessage,
-        })
-      )
     } finally {
       setIsUpdating(false)
     }
@@ -234,33 +255,20 @@ export const EarnNft: React.FC = () => {
     )
   }, [platform])
 
-  const currentIsValidGalaxCampaignUrl =
-    platform === SubscriptionPlatform.Galaxy
-      ? isValidGalxeCampaignUrl(campaignUrl)
-      : false
-  const currentIsValidQuest3CampaignUrl =
-    platform === SubscriptionPlatform.Quest3
-      ? isValidQuest3CampaignUrl(campaignUrl)
-      : false
-  const currentIsValidCampaignUrl =
-    currentIsValidGalaxCampaignUrl || currentIsValidQuest3CampaignUrl
-  const currentIsValidCredentialId = isValidCredentialId(credentialId)
-  const currentIsValidAccessToken = isValidAccessToken(accessToken)
-
   const isDisabledSubmit = useMemo(() => {
     if (platform === SubscriptionPlatform.Galaxy)
       return (
-        !currentIsValidCampaignUrl ||
-        !currentIsValidCredentialId ||
-        !currentIsValidAccessToken
+        !!campaignUrlErrorMessage ||
+        !!credentialIdErrorMessage ||
+        !!accessTokenErrorMessage
       )
     if (platform === SubscriptionPlatform.Quest3)
-      return !currentIsValidCampaignUrl
+      return !!campaignUrlErrorMessage
     return false
   }, [
-    currentIsValidCampaignUrl,
-    currentIsValidCredentialId,
-    currentIsValidAccessToken,
+    campaignUrlErrorMessage,
+    credentialIdErrorMessage,
+    accessTokenErrorMessage,
     platform,
   ])
 
@@ -369,16 +377,28 @@ export const EarnNft: React.FC = () => {
               </HStack>
             </RadioGroup>
           </FormControl>
-          <FormControl
-            isInvalid={!currentIsValidCampaignUrl && campaignUrl !== ''}
-          >
+          <FormControl isInvalid={campaignUrlErrorMessage !== ''}>
             <FormLabel>{t('campaign_link_field')}</FormLabel>
             <Input
               placeholder={t('campaign_link_placeholder')}
               name="campaign_link"
               isDisabled={isDisabled}
               value={campaignUrl}
-              onChange={(e) => setCampaignUrl(e.target.value)}
+              onChange={({ target: { value } }) => {
+                setCampaignUrl(value)
+                setCampaignUrlErrorMessage(() => {
+                  if (value === '') return ''
+                  if (
+                    (platform === SubscriptionPlatform.Quest3 &&
+                      !isValidQuest3CampaignUrl(campaignUrl)) ||
+                    (platform === SubscriptionPlatform.Galaxy &&
+                      !isValidGalxeCampaignUrl(campaignUrl))
+                  ) {
+                    return t('illegal_error_message')
+                  }
+                  return ''
+                })
+              }}
             />
             <FormHelperText whiteSpace="nowrap">
               {platform === SubscriptionPlatform.Galaxy ? (
@@ -412,37 +432,45 @@ export const EarnNft: React.FC = () => {
                 />
               ) : null}
             </FormHelperText>
-            <FormErrorMessage>{t('illegal_error_message')}</FormErrorMessage>
+            <FormErrorMessage>{campaignUrlErrorMessage}</FormErrorMessage>
           </FormControl>
           {platform === SubscriptionPlatform.Galaxy ? (
             <>
-              <FormControl
-                isInvalid={!currentIsValidCredentialId && credentialId !== ''}
-              >
+              <FormControl isInvalid={credentialIdErrorMessage !== ''}>
                 <FormLabel>{t('credential_id')}</FormLabel>
                 <Input
                   isDisabled={isDisabled}
                   value={credentialId}
-                  onChange={(e) => setCredentialId(e.target.value)}
+                  onChange={({ target: { value } }) => {
+                    setCredentialId(value)
+                    setCredentialIdErrorMessage(() => {
+                      if (value === '') return ''
+                      if (!isValidCredentialId(value))
+                        return t('illegal_error_message')
+                      return ''
+                    })
+                  }}
                   placeholder={t('credential_id_placeholder')}
                 />
-                <FormErrorMessage>
-                  {t('illegal_error_message')}
-                </FormErrorMessage>
+                <FormErrorMessage>{credentialIdErrorMessage}</FormErrorMessage>
               </FormControl>
-              <FormControl
-                isInvalid={!currentIsValidAccessToken && accessToken !== ''}
-              >
+              <FormControl isInvalid={accessTokenErrorMessage !== ''}>
                 <FormLabel>{t('access_token')}</FormLabel>
                 <Input
                   isDisabled={isDisabled}
                   value={accessToken}
-                  onChange={(e) => setAccessToken(e.target.value)}
+                  onChange={({ target: { value } }) => {
+                    setAccessToken(value)
+                    setAccessTokenErrorMessage(() => {
+                      if (value === '') return ''
+                      if (!isValidAccessToken(value))
+                        return t('illegal_error_message')
+                      return ''
+                    })
+                  }}
                   placeholder={t('access_token_placeholder')}
                 />
-                <FormErrorMessage>
-                  {t('illegal_error_message')}
-                </FormErrorMessage>
+                <FormErrorMessage>{accessTokenErrorMessage}</FormErrorMessage>
               </FormControl>
             </>
           ) : null}

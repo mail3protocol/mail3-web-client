@@ -236,8 +236,8 @@ export default {
       loading: 'Loading',
     },
     error_messages: {
-      DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL:
-        'subscription "Campaign Link" duplicated',
+      duplicated_parameter: 'Duplicated parameter',
+      invalid_parameter: 'Invalid parameter',
     },
   },
   login_home_page: {
