@@ -79,13 +79,28 @@ const WrapMain = styled(Center)`
   height: 100%;
   width: 100%;
   margin: 0 auto;
-  max-width: 1100px;
+  max-width: 1000px;
   position: relative;
   align-items: flex-start;
+
+  .tablist {
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none;
+    }
+  }
 
   @media (max-width: 600px) {
     flex-direction: column;
     align-items: center;
+
+    .btn-wrap {
+      display: flex;
+      width: 100%;
+      margin-top: 30px;
+      justify-content: space-evenly;
+    }
   }
 `
 
@@ -138,6 +153,7 @@ interface ProfileComponentProps {
   mailAddress: string
   address: string
   uuid: string
+  priAddress: string
 }
 
 let homeUrl = ''
@@ -192,6 +208,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
   uuid,
+  priAddress,
 }) => {
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
@@ -208,9 +225,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const cardRef = useRef<HTMLDivElement>(null)
 
   const { data: userInfo, isLoading } = useQuery(
-    ['cluster', address],
+    ['cluster', priAddress],
     async () => {
-      const ret = await getNfts(address)
+      const ret = await getNfts(priAddress)
       return ret.data.data
     },
     {
@@ -311,38 +328,41 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               <Text className="p">{mailAddress}</Text>
             </Box>
 
-            {uuid ? (
-              <Center mt={{ base: '10px', md: '25px' }} position="relative">
-                <Button
-                  w="150px"
-                  h="28px"
-                  variant="unstyled"
-                  border="1px solid #000000"
-                  fontSize="14px"
-                  bg="#fff"
-                  color="#000"
-                  borderRadius="100px"
-                  onClick={() => {
-                    window.open(`${APP_URL}/subscribe/${uuid}`)
-                  }}
-                >
-                  Subscribe
-                </Button>
-                <Box
-                  position="absolute"
-                  left="62px"
-                  top="-18px"
-                  zIndex={9}
-                  pointerEvents="none"
-                >
-                  <SvgEarn />
-                </Box>
-              </Center>
-            ) : null}
+            <Box className="btn-wrap">
+              {uuid ? (
+                <Center mt={{ base: '10px', md: '25px' }} position="relative">
+                  <Button
+                    w="150px"
+                    h="28px"
+                    variant="unstyled"
+                    border="1px solid #000000"
+                    fontSize="14px"
+                    bg="#fff"
+                    color="#000"
+                    borderRadius="100px"
+                    onClick={() => {
+                      window.open(`${APP_URL}/subscribe/${uuid}`)
+                    }}
+                  >
+                    Subscribe
+                  </Button>
+                  <Box
+                    position="absolute"
+                    left="62px"
+                    top="-18px"
+                    zIndex={9}
+                    pointerEvents="none"
+                  >
+                    <SvgEarn />
+                  </Box>
+                </Center>
+              ) : null}
 
-            <Center mt={{ base: '10px', md: '25px' }}>
-              <Mail3MeButton to={mailAddress} />
-            </Center>
+              <Center mt={{ base: '10px', md: '25px' }}>
+                <Mail3MeButton to={mailAddress} />
+              </Center>
+            </Box>
+
             <Box mt={{ base: '10px', md: '25px' }}>
               <HStack>
                 {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
@@ -419,7 +439,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                             h: '4px',
                             bottom: '-1px',
                             bg: '#000',
-                            ml: '20px',
                             borderRadius: '4px',
                           },
                         }}
@@ -491,7 +510,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               Details of the ranking:
                             </Text>
                             <Link
-                              href={`https://rank.cluster3.net/user/${address}`}
+                              href={`https://rank.cluster3.net/user/${priAddress}`}
                               target="_blank"
                               pl="5px"
                             >
@@ -529,7 +548,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                 return (
                                   <WrapItem
                                     key={item.name}
-                                    w={{ base: '105px', md: '118px' }}
+                                    w={{ base: '110px', md: '125px' }}
                                     opacity={hadGot ? 1 : 0.4}
                                     cursor="pointer"
                                     as="a"
