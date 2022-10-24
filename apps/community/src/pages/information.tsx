@@ -1,4 +1,5 @@
 import {
+  Box,
   BoxProps,
   Button,
   ButtonProps,
@@ -26,9 +27,13 @@ import {
 } from 'hooks'
 import { Trans, useTranslation } from 'react-i18next'
 import QrCode from 'qrcode.react'
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
+import { ReactComponent as SvgRank } from 'assets/svg/rank.svg'
+import { ReactComponent as SvgCollect } from 'assets/svg/collect.svg'
+import axios from 'axios'
+import { ClusterInfoResp } from 'models'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { QueryKey } from '../api/QueryKey'
@@ -76,11 +81,27 @@ export const Information: React.FC = () => {
       },
     }
   )
+  const { data: nftInfo } = useQuery(
+    ['cluster', account],
+    async () => {
+      const res = await axios.get<ClusterInfoResp>(
+        `https://openApi.cluster3.net/api/v1/communityUserInfo?uuid=b45339c7&address=${account}`
+      )
+      return res.data.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
+
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const { takeScreenshot, downloadScreenshot } = useScreenshot()
   const { data: profileImage } = useQuery(
-    ['RenderProfileImage', account],
+    ['RenderProfileImage', account, nftInfo],
     () =>
       takeScreenshot(cardRef.current!, {
         scale: 3,
@@ -165,7 +186,48 @@ export const Information: React.FC = () => {
                       userInfo?.address || `${account}@${MAIL_SERVER_URL}`
                     }
                     ref={cardRef}
-                  />
+                  >
+                    <Center
+                      w="325px"
+                      h="64px"
+                      background="#F3F3F3"
+                      borderRadius="16px"
+                      color="#000000"
+                      fontSize="12px"
+                      fontWeight="500"
+                      justifyContent="space-around"
+                      lineHeight={1}
+                    >
+                      <Box textAlign="center">
+                        <Center mt="-7px">
+                          <SvgRank />
+                        </Center>
+                        <Box p="3px" mt="-5px">
+                          Collection Rank
+                        </Box>
+                        <Box mt="3px">{nftInfo?.ranking}</Box>
+                      </Box>
+                      <Box>
+                        <Center mt="-7px">
+                          <SvgCollect />
+                        </Center>
+                        <Center p="3px" mt="-5px">
+                          Colleced
+                        </Center>
+                        <Center mt="3px">
+                          <Box color="#4E52F5" mr="2px">
+                            {useMemo(
+                              () =>
+                                nftInfo?.poapList.filter((e) => e.hadGot)
+                                  .length ?? 0,
+                              [nftInfo?.poapList]
+                            )}
+                          </Box>
+                          / <Box ml="2px">{nftInfo?.poapList.length ?? 0}</Box>
+                        </Center>
+                      </Box>
+                    </Center>
+                  </ProfileCard>
                   {profileImage ? (
                     <Image
                       src={profileImage}
