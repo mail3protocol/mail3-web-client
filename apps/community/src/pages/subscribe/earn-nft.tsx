@@ -138,18 +138,34 @@ export const EarnNft: React.FC = () => {
           if (
             (err?.response?.data.message as string)?.includes('access token')
           ) {
-            setAccessTokenErrorMessage(t('error_messages.invalid_parameter'))
+            setAccessTokenErrorMessage(
+              t('error_messages.invalid_something', {
+                something: t('access_token'),
+              })
+            )
           } else {
-            setCredentialIdErrorMessage(t('error_messages.invalid_parameter'))
+            setCredentialIdErrorMessage(
+              t('error_messages.invalid_something', {
+                something: t('credential_id'),
+              })
+            )
           }
           break
         }
         case ErrorCode.INVALID_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL: {
-          setCampaignUrlErrorMessage(t('error_messages.invalid_parameter'))
+          setCampaignUrlErrorMessage(
+            t('error_messages.invalid_something', {
+              something: t('campaign_link_field'),
+            })
+          )
           break
         }
         case ErrorCode.DUPLICATED_COMMUNITY_SUBSCRIPTION_CAMPAIGN_URL: {
-          setCampaignUrlErrorMessage(t('error_messages.duplicated_parameter'))
+          setCampaignUrlErrorMessage(
+            t('error_messages.duplicated_something', {
+              something: t('campaign_link_field'),
+            })
+          )
           break
         }
         default: {
