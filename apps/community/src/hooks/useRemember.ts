@@ -10,8 +10,9 @@ import {
   zilpay,
 } from 'hooks'
 import { useNavigate } from 'react-router-dom'
+import { useUpdateAtom } from 'jotai/utils'
 import { SERVER_URL } from '../constants/env/url'
-import { useLogin } from './useLogin'
+import { isConnectingUDAtom, useLogin } from './useLogin'
 import { RoutePath } from '../route/path'
 import { useRegisterDialog } from './useRegisterDialog'
 
@@ -29,6 +30,7 @@ export function useRemember() {
   const login = useLogin()
   const onOpenRegisterDialog = useRegisterDialog()
   const account = useAccount()
+  const setIsConnectingUD = useUpdateAtom(isConnectingUDAtom)
 
   const onSignZilpay = async (nonce: number) => {
     if (!zilpay.isConnected) {
@@ -88,6 +90,7 @@ export function useRemember() {
           )
           break
       }
+      setIsConnectingUD(false)
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message || err?.message || t('unknown_error')

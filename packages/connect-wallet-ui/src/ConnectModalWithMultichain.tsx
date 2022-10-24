@@ -23,6 +23,7 @@ import { useAtom } from 'jotai'
 import React, { ReactNode, useMemo, useState } from 'react'
 import {
   ConnectorName,
+  noop,
   useCloseOnChangePathname,
   useDidMount,
   zilpay,
@@ -89,11 +90,9 @@ const tabIndexAtom = atomWithStorage('mail3-tab-index', 0, {
   ...createJSONStorage(() => sessionStorage),
 })
 
-export const ConnectModalWithMultichain: React.FC<{
-  isOpen: boolean
-  show?: boolean
-  onClose: () => void
-}> = ({ isOpen, onClose, show }) => {
+export const ConnectWalletSelector: React.FC<{
+  onClose?: () => void
+}> = ({ onClose = noop }) => {
   const [t] = useTranslation('common')
   const ethButtons = useEthButtons({ onClose })
   const chains: ChainItem[] = useMemo(
@@ -190,7 +189,6 @@ export const ConnectModalWithMultichain: React.FC<{
   const swipePower = (offset: number, velocity: number) =>
     Math.abs(offset) * velocity
 
-  useCloseOnChangePathname(onClose)
   const isMobile = useBreakpointValue({ base: true, md: false })
   const maximumLengthOfWalletButtons = useMemo(
     () => Math.max(...chains.map((chain) => chain.walletButtons.length)),
@@ -205,13 +203,8 @@ export const ConnectModalWithMultichain: React.FC<{
     }
   })
 
-  const contentEl = (
+  return (
     <>
-      {show ? null : (
-        <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
-          {t('connect.dialog-title')}
-        </Heading>
-      )}
       <Tabs
         variant="unstyled"
         index={tabIndex}
@@ -345,10 +338,27 @@ export const ConnectModalWithMultichain: React.FC<{
       </Box>
     </>
   )
+}
 
-  if (show) {
-    return contentEl
-  }
+export const ConnectModalWithMultichain: React.FC<{
+  isOpen: boolean
+  onClose: () => void
+}> = ({ isOpen, onClose }) => {
+  useCloseOnChangePathname(onClose)
+  const isMobile = useBreakpointValue({ base: true, md: false })
+  const [t] = useTranslation('common')
+
+  const contentEl = useMemo(
+    () => (
+      <>
+        <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
+          {t('connect.dialog-title')}
+        </Heading>
+        <ConnectWalletSelector onClose={onClose} />,
+      </>
+    ),
+    [t, onClose]
+  )
 
   if (isMobile) {
     return (

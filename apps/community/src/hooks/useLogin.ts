@@ -18,6 +18,8 @@ import {
 import dayjs from 'dayjs'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { useQuery } from 'react-query'
+import { atom, useAtom } from 'jotai'
+import type { UserInfo as UDUserInfo } from '@uauth/js'
 import {
   allowWithoutAuthPathnameSet,
   unauthorizedRedirectTo,
@@ -242,4 +244,34 @@ export function useAuth() {
 
   useInitUserProperties()
   useWalletChange()
+}
+
+const unstaopableUserInfoAtom = atom<UDUserInfo | null>(null)
+export const isConnectingUDAtom = atom(false)
+
+export const useUnstaopable = () => {
+  const [unstaopableUserInfo, setUnstopableUserInfo] = useAtom(
+    unstaopableUserInfoAtom
+  )
+  const logout = () => setUnstopableUserInfo(null)
+  const [isConnectingUD, setIsConnectingUD] = useAtom(isConnectingUDAtom)
+
+  return {
+    logout,
+    unstaopableUserInfo,
+    setUnstopableUserInfo,
+    isConnectingUD,
+    setIsConnectingUD,
+  }
+}
+
+export const useAuthModalOnBack = () => {
+  const connector = useConnector()
+  const { onOpen } = useConnectWalletDialog()
+  const closeAuthModal = useCloseAuthModal()
+  return useCallback(async () => {
+    await connector?.deactivate()
+    closeAuthModal()
+    onOpen()
+  }, [connector])
 }

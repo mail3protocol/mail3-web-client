@@ -19,16 +19,14 @@ import { Link, useParams } from 'react-router-dom'
 import { Button } from 'ui'
 import { atomWithStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
+import { ConnectWalletSelector } from 'connect-wallet-ui/src/ConnectModalWithMultichain'
 import { Query } from '../../api/query'
 import Welcomepng from '../../assets/subscribe/welcome.png'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
 import { useNotification } from '../../hooks/useNotification'
-import {
-  ConnectWalletApiContextProvider,
-  ConnectModalWithMultichain,
-} from '../ConnectWallet'
+import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 
 const ConnectWallet = () => {
   const [t] = useTranslation('subscribe')
@@ -49,7 +47,7 @@ const ConnectWallet = () => {
               <Image src={Welcomepng} w="191px" />
             </Center>
             <Box>
-              <ConnectModalWithMultichain show isOpen onClose={() => {}} />
+              <ConnectWalletSelector />
             </Box>
           </HStack>
         </Center>

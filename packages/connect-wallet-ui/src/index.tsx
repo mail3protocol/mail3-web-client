@@ -13,7 +13,10 @@ import {
 import { ButtonProps } from '@chakra-ui/react'
 import { isCoinbaseWallet } from 'shared/src/env'
 import { Button } from 'ui/src/Button'
-import { ConnectModalWithMultichain } from './ConnectModalWithMultichain'
+import {
+  ConnectModalWithMultichain,
+  ConnectWalletSelector,
+} from './ConnectModalWithMultichain'
 import { useEthButton } from './useEthButton'
 import { useConnectWalletApi } from './ConnectWalletApiContext'
 
@@ -122,5 +125,5 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
 }
 
 export { ConnectWalletApiContext } from './ConnectWalletApiContext'
-export * from './AuthModal'
-export { ConnectModalWithMultichain }
+export { AuthModal } from './AuthModal'
+export { ConnectModalWithMultichain, ConnectWalletSelector }

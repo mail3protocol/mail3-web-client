@@ -45,7 +45,9 @@
     "shared": "*",
     "ui": "*",
     "qrcode.react": "^3.0.2",
-    "rxjs": "^7.5.5"
+    "rxjs": "^7.5.5",
+    "connect-wallet-ui": "*",
+    "@uauth/js": "^2.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
