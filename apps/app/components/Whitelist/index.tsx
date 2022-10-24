@@ -15,7 +15,7 @@ import { useTranslation, Trans } from 'react-i18next'
 import React, { useMemo } from 'react'
 import styled from '@emotion/styled'
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import { Button, ConnectWallet } from 'ui'
+import { Button } from 'ui'
 import classNames from 'classnames'
 import landingBg from 'assets/svg/landing-bg.svg?url'
 import { truncateMiddle } from 'shared'
@@ -34,6 +34,7 @@ import {
   TWITTER_URL,
 } from '../../constants'
 import { AuthModal } from '../Auth'
+import { ConnectWallet } from '../ConnectWallet'
 
 const Container = styled(Flex)`
   height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);

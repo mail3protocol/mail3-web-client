@@ -13,13 +13,13 @@ import {
   useSetLoginInfo,
   useTrackClick,
 } from 'hooks'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import detectEthereumProvider from '@metamask/detect-provider'
 import CoinbasePng from 'assets/wallets/coinbase.png'
-import { generateMetamaskDeepLink, isRejectedMessage } from '../../utils/wallet'
+import { isWechat } from 'shared/src/env'
+import { generateMetamaskDeepLink, isRejectedMessage } from 'shared/src/wallet'
 import { ConnectButton, generateIcon } from './ConnectButton'
-import { isWechat } from '../../utils'
 
 export const CoinbaseButton: React.FC<{
   onClose?: () => void

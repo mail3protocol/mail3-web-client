@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import ZilpayPng from 'assets/wallets/zilpay.png'
 
 import { ConnectButton, generateIcon } from './ConnectButton'
-import { useIsAuthenticated } from '../../hooks/useLogin'
+import { useConnectWalletApi } from './ConnectWalletApiContext'
 
 export const ZilPayButton: React.FC<{
   onClose?: () => void
@@ -24,7 +24,7 @@ export const ZilPayButton: React.FC<{
   const [isConnecting, setIsConnecting] = useState(false)
   const setLastConnector = useSetLastConnector()
   const connectorName = useLastConectorName()
-  const isConnected = useIsAuthenticated()
+  const { isAuth: isConnected } = useConnectWalletApi()
 
   const trackWallet = useTrackClick(TrackEvent.ConnectWallet)
 

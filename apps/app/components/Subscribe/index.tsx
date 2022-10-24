@@ -24,32 +24,37 @@ import Welcomepng from '../../assets/subscribe/welcome.png'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
-import { ConnectModalWithMultichain } from '../ConnectWallet/ConnectModalWithMultichain'
 import { useNotification } from '../../hooks/useNotification'
+import {
+  ConnectWalletApiContextProvider,
+  ConnectModalWithMultichain,
+} from '../ConnectWallet'
 
 const ConnectWallet = () => {
   const [t] = useTranslation('subscribe')
   return (
-    <Center mt="40px">
-      <Center
-        padding="32px"
-        border="1px solid #efefef"
-        borderRadius="24px"
-        flexDirection="column"
-      >
-        <Heading mb="32px" fontSize="20px" fontWeight={700}>
-          {t('connect')}
-        </Heading>
-        <HStack spacing="48px">
-          <Center>
-            <Image src={Welcomepng} w="191px" />
-          </Center>
-          <Box>
-            <ConnectModalWithMultichain show isOpen onClose={() => {}} />
-          </Box>
-        </HStack>
+    <ConnectWalletApiContextProvider>
+      <Center mt="40px">
+        <Center
+          padding="32px"
+          border="1px solid #efefef"
+          borderRadius="24px"
+          flexDirection="column"
+        >
+          <Heading mb="32px" fontSize="20px" fontWeight={700}>
+            {t('connect')}
+          </Heading>
+          <HStack spacing="48px">
+            <Center>
+              <Image src={Welcomepng} w="191px" />
+            </Center>
+            <Box>
+              <ConnectModalWithMultichain show isOpen onClose={() => {}} />
+            </Box>
+          </HStack>
+        </Center>
       </Center>
-    </Center>
+    </ConnectWalletApiContextProvider>
   )
 }
 

@@ -21,9 +21,9 @@ import {
   generateMetamaskDeepLink,
   isImTokenReject,
   isRejectedMessage,
-} from '../../utils/wallet'
+} from 'shared/src/wallet'
+import { isWechat } from 'shared/src/env'
 import { ConnectButton, generateIcon } from './ConnectButton'
-import { isWechat } from '../../utils'
 
 export const MetamaskButton: React.FC<{
   onClose?: () => void
