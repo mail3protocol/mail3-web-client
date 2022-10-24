@@ -41,6 +41,10 @@ class API {
   public async checkIsProject(address: string) {
     return this.axios.get(`/community/users/${address}`)
   }
+
+  public async getPrimitiveAddress(domain: string) {
+    return this.axios.get(`/addresses/${domain}`)
+  }
 }
 
 export const useAPI = () => useMemo(() => new API(), [])
