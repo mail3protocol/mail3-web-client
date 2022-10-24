@@ -7,7 +7,11 @@ import styled from '@emotion/styled'
 import { Flex, Button, Text, Link } from '@chakra-ui/react'
 import { Avatar, Logo } from 'ui'
 import { useRouter } from 'next/router'
-import { isSupportedAddress, truncateMiddle } from 'shared'
+import {
+  isPrimitiveEthAddress,
+  isSupportedAddress,
+  truncateMiddle,
+} from 'shared'
 import Head from 'next/head'
 
 import { APP_URL, MAIL_SERVER_URL } from '../constants/env'
@@ -21,6 +25,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const errorCode = isSupportedAddress(address) ? false : 404
 
   let uuid = ''
+  let priAddress = address
 
   try {
     const retProject = await api.checkIsProject(address)
@@ -28,11 +33,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       uuid = retProject.data.uuid
     }
   } catch (error) {
-    // console.log('error', error)
+    console.log('error', error)
+  }
+
+  try {
+    if (!isPrimitiveEthAddress(priAddress)) {
+      const retAddress = await api.getPrimitiveAddress(address)
+      if (retAddress.status === 200) {
+        priAddress = retAddress.data.eth_address
+      }
+    }
+  } catch (error) {
+    console.log('error', error)
   }
 
   return {
     props: {
+      priAddress,
       uuid,
       errorCode,
       ...(await serverSideTranslations(locale as string, [
@@ -121,8 +138,9 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
 const ProfilePage: NextPage<{
   errorCode: number
   address: string
+  priAddress: string
   uuid: string
-}> = ({ errorCode, address, uuid }) => {
+}> = ({ errorCode, address, uuid, priAddress }) => {
   const account = useLoginAccount()
   const router = useRouter()
   const { id } = router.query as { id: string }
@@ -139,7 +157,12 @@ const ProfilePage: NextPage<{
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
       </Flex>
-      <ProfileComponent mailAddress={emailAddress} address={id} uuid={uuid} />
+      <ProfileComponent
+        mailAddress={emailAddress}
+        address={id}
+        uuid={uuid}
+        priAddress={priAddress}
+      />
     </>
   )
 }

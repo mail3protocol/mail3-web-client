@@ -153,6 +153,7 @@ interface ProfileComponentProps {
   mailAddress: string
   address: string
   uuid: string
+  priAddress: string
 }
 
 let homeUrl = ''
@@ -207,6 +208,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
   uuid,
+  priAddress,
 }) => {
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
@@ -223,9 +225,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const cardRef = useRef<HTMLDivElement>(null)
 
   const { data: userInfo, isLoading } = useQuery(
-    ['cluster', address],
+    ['cluster', priAddress],
     async () => {
-      const ret = await getNfts(address)
+      const ret = await getNfts(priAddress)
       return ret.data.data
     },
     {
@@ -508,7 +510,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               Details of the ranking:
                             </Text>
                             <Link
-                              href={`https://rank.cluster3.net/user/${address}`}
+                              href={`https://rank.cluster3.net/user/${priAddress}`}
                               target="_blank"
                               pl="5px"
                             >
