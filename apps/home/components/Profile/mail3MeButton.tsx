@@ -9,7 +9,7 @@ const iconStyle = `
 
 const bodyStyle = `
   font-weight: 700;
-  font-size: 16px;
+  font-size: 12px;
   width: 104px;
   height: 22px;
   border-radius: 100px;
