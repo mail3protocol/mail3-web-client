@@ -79,7 +79,7 @@ const WrapMain = styled(Center)`
   height: 100%;
   width: 100%;
   margin: 0 auto;
-  max-width: 1100px;
+  max-width: 1000px;
   position: relative;
   align-items: flex-start;
 
@@ -546,7 +546,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                 return (
                                   <WrapItem
                                     key={item.name}
-                                    w={{ base: '105px', md: '118px' }}
+                                    w={{ base: '110px', md: '125px' }}
                                     opacity={hadGot ? 1 : 0.4}
                                     cursor="pointer"
                                     as="a"
