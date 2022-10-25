@@ -72,9 +72,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   const [t] = useTranslation('common')
   const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
-  const xx = useConnectWalletApi()
-  console.log(xx)
-  const { isAuth } = xx
+  const { isAuth } = useConnectWalletApi()
   const [signError, setSignError] = useState<Error | null>(null)
 
   useEagerConnect()
