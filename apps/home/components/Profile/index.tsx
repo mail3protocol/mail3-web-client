@@ -539,7 +539,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                 return (
                                   <WrapItem
                                     key={item.name}
-                                    w={{ base: '108px', md: '124px' }}
+                                    w={{ base: '105px', md: '120px' }}
                                     opacity={hadGot ? 1 : 0.4}
                                     cursor="pointer"
                                     as="a"
