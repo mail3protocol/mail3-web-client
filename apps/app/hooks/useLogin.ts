@@ -226,7 +226,10 @@ export const useSetGlobalTrack = () => {
         }
         setUserProperties(config)
       } catch (error) {
-        // todo sentry
+        setUserProperties({
+          defaultAddress: `${account}@${MAIL_SERVER_URL}`,
+          aliases: [],
+        })
       }
     },
     [account, walletName, emailAddress]
