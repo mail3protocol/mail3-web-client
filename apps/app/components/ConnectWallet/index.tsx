@@ -2,7 +2,7 @@ import {
   ConnectWallet as ConnectWalletButton,
   ConnectWalletProps,
   ConnectWalletApiContext,
-} from 'connect-wallet-ui'
+} from 'connect-wallet'
 
 import { useMemo } from 'react'
 import {
@@ -13,7 +13,7 @@ import {
 import { useRemember } from '../../hooks/useRemember'
 import { UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants'
 
-export * from 'connect-wallet-ui'
+export * from 'connect-wallet'
 
 export const ConnectWalletApiContextProvider: React.FC = ({ children }) => {
   const isAuth = useIsAuthenticated()

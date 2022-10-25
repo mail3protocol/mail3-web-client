@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai/utils'
 import {
   ConnectModalWithMultichain,
   ConnectWalletApiContext,
-} from 'connect-wallet-ui'
+} from 'connect-wallet'
 import {
   isOpenConnectWalletDialogAtom,
   useCloseConnectWalletDialog,

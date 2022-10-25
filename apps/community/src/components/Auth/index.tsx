@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAccount } from 'hooks'
 import { useAtomValue } from 'jotai/utils'
-import { AuthModal } from 'connect-wallet-ui'
+import { AuthModal } from 'connect-wallet'
 import { useRemember } from '../../hooks/useRemember'
 import {
   isAuthModalOpenAtom,

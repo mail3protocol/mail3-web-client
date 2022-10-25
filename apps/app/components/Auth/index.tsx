@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAccount } from 'hooks'
-import { AuthModal as SharedAuthModal } from 'connect-wallet-ui'
+import { AuthModal as SharedAuthModal } from 'connect-wallet'
 import {
   useAuth,
   useAuthModalOnBack,

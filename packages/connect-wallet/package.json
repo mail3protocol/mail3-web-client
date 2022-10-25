@@ -1,5 +1,5 @@
 {
-    "name": "connect-wallet-ui",
+    "name": "connect-wallet",
     "version": "0.0.0",
     "main": "./src/index.tsx",
     "types": "./src/index.tsx",

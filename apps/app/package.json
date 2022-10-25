@@ -53,7 +53,7 @@
         "rxjs": "^7.5.5",
         "shared": "*",
         "ui": "*",
-        "connect-wallet-ui": "*"
+        "connect-wallet": "*"
     },
     "devDependencies": {
         "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
