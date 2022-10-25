@@ -91,7 +91,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
     }
   })
 
-
   if (isCoinbaseWallet() && !signError) {
     if (!isAuth) {
       return (
