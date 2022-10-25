@@ -28,6 +28,7 @@ import { useAPI } from './useAPI'
 import { useCloseAuthModal, useOpenAuthModal } from './useAuthDialog'
 import { QueryKey } from '../api/QueryKey'
 import { useSetUserInfo } from './useUserInfo'
+import { GOOGLE_ANALYTICS_ID } from '../constants/env/config'
 
 export const userPropertiesAtom = atomWithStorage<Record<string, any> | null>(
   'mail3_community_user_properties',
@@ -244,6 +245,28 @@ export function useAuth() {
 
   useInitUserProperties()
   useWalletChange()
+}
+
+export const useSetGlobalTrack = () => {
+  const address = useAccount()
+  const walletName = useLastConectorName()
+  const setUserProperties = useUpdateAtom(userPropertiesAtom)
+
+  return useCallback(() => {
+    const config = {
+      address,
+      walletName,
+    }
+    try {
+      gtag?.('set', 'user_properties', config)
+      gtag?.('config', `${GOOGLE_ANALYTICS_ID}`, {
+        user_id: `@${address}`,
+      })
+    } catch (error) {
+      //
+    }
+    setUserProperties(config)
+  }, [address, walletName])
 }
 
 const unstoppableUserInfoAtom = atom<UDUserInfo | null>(null)

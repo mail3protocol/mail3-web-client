@@ -277,6 +277,8 @@ export default {
     error_messages: {
       duplicated_parameter: 'Duplicated parameter',
       invalid_parameter: 'Invalid parameter',
+      invalid_something: 'Invalid {{something}}',
+      duplicated_something: 'Duplicated {{something}}',
     },
   },
   login_home_page: {

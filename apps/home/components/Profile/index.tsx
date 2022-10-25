@@ -46,6 +46,7 @@ import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
 import axios from 'axios'
+import { ClusterInfoResp } from 'models'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from '../../assets/svg/collect.svg'
 import { ReactComponent as SvgEarn } from '../../assets/svg/earn.svg'
@@ -144,6 +145,14 @@ const WrapRight = styled(Box)`
   width: 100%;
   padding: 40px;
 
+  .nft-list-wrap {
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none;
+    }
+  }
+
   @media (max-width: 600px) {
     padding: 10px;
   }
@@ -178,25 +187,6 @@ const tabsConfig: Record<
   [TabItemType.Updates]: {
     name: 'Updates',
   },
-}
-
-interface NftDetail {
-  name: string
-  img: string
-  hadGot: boolean
-  poapPlatform: string
-}
-
-interface ClusterInfoResp {
-  code: number
-  msg: string
-  data: {
-    uuid: string
-    eth: string
-    score: number
-    ranking: number
-    poapList: NftDetail[]
-  }
 }
 
 export const getNfts = (address: string) =>
@@ -534,6 +524,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
                         {poapList.length ? (
                           <Box
+                            className="nft-list-wrap"
                             background="#F9F9F9"
                             borderRadius="24px"
                             p={{ base: '8px', md: '16px' }}
@@ -609,7 +600,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
           </WrapRight>
         </WrapMain>
       </Container>
-
       <ProfileCardHome
         ref={cardRef}
         mailAddress={mailAddress}

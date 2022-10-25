@@ -21,7 +21,8 @@ import { atomWithStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { ConnectWalletSelector } from 'connect-wallet/src/ConnectModalWithMultichain'
 import { Query } from '../../api/query'
-import Welcomepng from '../../assets/subscribe/welcome.png'
+import WelcomePng from '../../assets/subscribe/welcome.png'
+import SubscribePng from '../../assets/subscribe/subscribe.png'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
@@ -44,7 +45,7 @@ const ConnectWallet = () => {
           </Heading>
           <HStack spacing="48px">
             <Center>
-              <Image src={Welcomepng} w="191px" />
+              <Image src={WelcomePng} w="191px" />
             </Center>
             <Box>
               <ConnectWalletSelector />
@@ -190,7 +191,7 @@ const Subscribing: React.FC = () => {
         <Heading mb="24px" fontSize="20px" fontWeight={700}>
           {t('subscribed')}
         </Heading>
-        <Image src={Welcomepng} w="180px" mb="24px" />
+        <Image src={SubscribePng} w="180px" mb="24px" />
         <SubscribeStatus />
       </Center>
     </Center>

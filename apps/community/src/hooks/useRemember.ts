@@ -12,7 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useUpdateAtom } from 'jotai/utils'
 import { SERVER_URL } from '../constants/env/url'
-import { isConnectingUDAtom, useLogin } from './useLogin'
+import { useLogin, useSetGlobalTrack, isConnectingUDAtom } from './useLogin'
 import { RoutePath } from '../route/path'
 import { useRegisterDialog } from './useRegisterDialog'
 
@@ -30,6 +30,7 @@ export function useRemember() {
   const login = useLogin()
   const onOpenRegisterDialog = useRegisterDialog()
   const account = useAccount()
+  const setTrackGlobal = useSetGlobalTrack()
   const setIsConnectingUD = useUpdateAtom(isConnectingUDAtom)
 
   const onSignZilpay = async (nonce: number) => {
@@ -71,12 +72,14 @@ export function useRemember() {
               signedData.signature,
               (signedData as any).publicKey
             )
+            await setTrackGlobal()
             navi(RoutePath.Dashboard)
           }
           break
         }
         case SignupResponseCode.Success: {
           await login(message!, signature!, pubkey)
+          await setTrackGlobal()
           navi(RoutePath.Dashboard)
           break
         }
