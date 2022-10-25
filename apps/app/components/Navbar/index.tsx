@@ -46,9 +46,9 @@ import { ButtonList, ButtonListItemProps } from '../ButtonList'
 import { ConnectedButton } from '../ConnectedButton'
 import { Auth, AuthModal } from '../Auth'
 import { RouterLink } from '../RouterLink'
-import { ConnectWallet } from '../ConnectWallet'
 import { NotificationSwitch } from '../NotificationSwitch'
 import { useAPI } from '../../hooks/useAPI'
+import { ConnectWallet } from '../ConnectWallet'
 
 export interface NavbarProps {
   showInbox?: boolean

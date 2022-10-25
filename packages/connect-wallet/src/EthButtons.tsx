@@ -20,23 +20,23 @@ import TrustPng from 'assets/wallets/trust.png'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { useTranslation } from 'react-i18next'
 import CoinbasePng from 'assets/wallets/coinbase.png'
-import { WalletConnectButton } from './WalletConnectButton'
-import { ConnectButton, generateIcon } from './ConnectButton'
 import {
-  generateCoinbaseWalletDeepLink,
   isCoinbaseWallet,
   isImToken,
   isTrust,
   isWechat,
-} from '../../utils'
+  IS_MOBILE,
+} from 'shared/src/env'
 import {
+  generateCoinbaseWalletDeepLink,
   generateImtokenDeepLink,
   generateTrustWalletDeepLink,
   generateMetamaskDeepLink,
   isImTokenReject,
   isRejectedMessage,
-} from '../../utils/wallet'
-import { IS_MOBILE } from '../../constants'
+} from 'shared/src/wallet'
+import { WalletConnectButton } from './WalletConnectButton'
+import { ConnectButton, generateIcon } from './ConnectButton'
 import { CoinbaseButton } from './CoinbaseButton'
 import { UnstopableButton } from './UnstopableButton'
 

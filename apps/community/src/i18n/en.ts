@@ -6,6 +6,25 @@ export default {
     connect: {
       notice: 'Notice',
       unknown_error: 'Unknown error',
+      metamask: 'MetaMask',
+      'wallet-connect': 'Wallet Connect',
+      zilpay: 'ZilPay',
+      'dialog-title': 'Connect Your Wallet',
+      'connect-wallet': 'Connect Wallet',
+      phantom: 'Phantom',
+      ud: 'Unstoppable Domains',
+      blocto: 'Blocto',
+      connecting: 'Connecting',
+      'coming-soon': 'Coming soon',
+      'desired-wallet':
+        'Click on the wallet below and let us know which one you need more',
+      footer:
+        'We do not own your private keys and cannot access your assets without your confirmation.',
+      'imtoken-reject':
+        'You have declined authorization, please refresh this page to authorize again.',
+      wechat:
+        'The current environment does not support metamask. You can connect Metamask in the browser.',
+      coinbase: 'Coinbase',
     },
     auth: {
       sign: "I authorize sending and checking my emails on mail3 from this device. This doesn't cost anything.",
@@ -16,6 +35,22 @@ export default {
         'condition-not-meet':
           'You do not have permission to participate in Beta testing.',
       },
+      connect: 'Connect your Wallet',
+      desc: 'Skip approving every interaction with your wallet by allowing Mail3 to remember you.',
+      remember: 'Check',
+      'check-wallet': 'Check Wallet',
+    },
+    ud: {
+      title: 'Connect Wallet',
+      connect: 'Connect',
+      reconnect: 'Reconnect Wallet',
+      'connect-wallet-desc':
+        'Please connect your wallet with account: {{address}}',
+      'error-1':
+        'The selected account ({{address}}) is not associated with domain {{domain}}.',
+      'error-2': 'The expected account for this domain is {{address}}.',
+      'error-3':
+        'Please check your wallet settings to ensure you have connected the correct Ethereum account.',
     },
     no_data: 'No Data',
     all_loaded: 'All Loaded',

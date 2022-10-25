@@ -41,21 +41,10 @@ import {
   generateMetamaskDeepLink,
   isImTokenReject,
   isRejectedMessage,
-} from '../../utils/wallet'
+} from 'shared/src/wallet'
+import { isWechat, IS_MOBILE } from 'shared/src/env'
 import { ConnectButton, generateIcon } from './ConnectButton'
-import { isWechat } from '../../utils'
-import {
-  useIsAuthenticated,
-  useOpenAuthModal,
-  useUnstaopable,
-} from '../../hooks/useLogin'
-import { IS_MOBILE, UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants'
-
-const uauth = new UAuth({
-  clientID: UD_CLIENT_ID,
-  scope: 'openid wallet',
-  redirectUri: UD_REDIRECT_URI,
-})
+import { useConnectWalletApi } from './ConnectWalletApiContext'
 
 interface UnstopableDialogProps {
   userInfo: UserInfo | null
@@ -69,7 +58,7 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
   isOpen,
 }) => {
   const [isConnecting, setIsConnecting] = useState(false)
-  const openAuthModal = useOpenAuthModal()
+  const { isAuth, openAuthModal } = useConnectWalletApi()
   const connectorName = useMemo(() => {
     switch (userInfo?.wallet_type_hint) {
       case 'web3':
@@ -164,7 +153,6 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
     }
     return t('ud.connect-wallet-desc', { address: shortAddress })
   }, [t, shortAddress, isWrongAddress])
-  const isAuth = useIsAuthenticated()
   useEffect(() => {
     if (account) {
       if (account === userInfo?.wallet_address && !isAuth) {
@@ -242,8 +230,22 @@ export const UnstopableButton: React.FC<{
   const [shouldUseDeeplink] = useState(false)
   const setLoginInfo = useSetLoginInfo()
   const logout = () => setLoginInfo(null)
-  const { setUnstopableUserInfo, unstaopableUserInfo, setIsConnectingUD } =
-    useUnstaopable()
+  const {
+    udClientId,
+    udRedirectUri,
+    setUnstoppableUserInfo,
+    unstoppableUserInfo,
+    setIsConnectingUD,
+  } = useConnectWalletApi()
+  const uauth = useMemo(
+    () =>
+      new UAuth({
+        clientID: udClientId,
+        scope: 'openid wallet',
+        redirectUri: udRedirectUri,
+      }),
+    [udClientId, udRedirectUri]
+  )
 
   const trackWallet = useTrackClick(TrackEvent.ConnectWallet)
   const {
@@ -281,7 +283,7 @@ export const UnstopableButton: React.FC<{
         await uauth.loginWithPopup()
       }
       const userInfo = await uauth.user()
-      setUnstopableUserInfo(userInfo)
+      setUnstoppableUserInfo(userInfo)
       openDialog()
     } catch (error: any) {
       //
@@ -317,7 +319,7 @@ export const UnstopableButton: React.FC<{
           setLastConector()
           setIsConnectingUD(false)
         }}
-        userInfo={unstaopableUserInfo}
+        userInfo={unstoppableUserInfo}
       />
     </>
   )

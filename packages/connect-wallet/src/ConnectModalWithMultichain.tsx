@@ -23,6 +23,7 @@ import { useAtom } from 'jotai'
 import React, { ReactNode, useMemo, useState } from 'react'
 import {
   ConnectorName,
+  noop,
   useCloseOnChangePathname,
   useDidMount,
   zilpay,
@@ -42,11 +43,11 @@ import FlowIconPath from 'assets/chain-icons/flow.png'
 import SolIconPath from 'assets/chain-icons/sol.png'
 import TronIconPath from 'assets/chain-icons/tron.png'
 import OtherIconPath from 'assets/chain-icons/other.png'
+import { IS_MOBILE } from 'shared/src/env'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'
 import { useEthButtons } from './EthButtons'
-import { IS_MOBILE } from '../../constants'
 
 interface ChainItem {
   name: string
@@ -89,11 +90,9 @@ const tabIndexAtom = atomWithStorage('mail3-tab-index', 0, {
   ...createJSONStorage(() => sessionStorage),
 })
 
-export const ConnectModalWithMultichain: React.FC<{
-  isOpen: boolean
-  show?: boolean
-  onClose: () => void
-}> = ({ isOpen, onClose, show }) => {
+export const ConnectWalletSelector: React.FC<{
+  onClose?: () => void
+}> = ({ onClose = noop }) => {
   const [t] = useTranslation('common')
   const ethButtons = useEthButtons({ onClose })
   const chains: ChainItem[] = useMemo(
@@ -190,7 +189,6 @@ export const ConnectModalWithMultichain: React.FC<{
   const swipePower = (offset: number, velocity: number) =>
     Math.abs(offset) * velocity
 
-  useCloseOnChangePathname(onClose)
   const isMobile = useBreakpointValue({ base: true, md: false })
   const maximumLengthOfWalletButtons = useMemo(
     () => Math.max(...chains.map((chain) => chain.walletButtons.length)),
@@ -205,13 +203,8 @@ export const ConnectModalWithMultichain: React.FC<{
     }
   })
 
-  const contentEl = (
+  return (
     <>
-      {show ? null : (
-        <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
-          {t('connect.dialog-title')}
-        </Heading>
-      )}
       <Tabs
         variant="unstyled"
         index={tabIndex}
@@ -345,10 +338,27 @@ export const ConnectModalWithMultichain: React.FC<{
       </Box>
     </>
   )
+}
 
-  if (show) {
-    return contentEl
-  }
+export const ConnectModalWithMultichain: React.FC<{
+  isOpen: boolean
+  onClose: () => void
+}> = ({ isOpen, onClose }) => {
+  useCloseOnChangePathname(onClose)
+  const isMobile = useBreakpointValue({ base: true, md: false })
+  const [t] = useTranslation('common')
+
+  const contentEl = useMemo(
+    () => (
+      <>
+        <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
+          {t('connect.dialog-title')}
+        </Heading>
+        <ConnectWalletSelector onClose={onClose} />,
+      </>
+    ),
+    [t, onClose]
+  )
 
   if (isMobile) {
     return (

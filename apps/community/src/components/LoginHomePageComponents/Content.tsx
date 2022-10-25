@@ -18,7 +18,7 @@ import {
   Transition,
   VariantLabels,
 } from 'framer-motion'
-import { useAccount, useConnector, useEagerConnect, useProvider } from 'hooks'
+import { useAccount, useEagerConnect } from 'hooks'
 import { Navigate } from 'react-router-dom'
 import MascotPng from '../../assets/LoginHomePage/mascot.png'
 import BellPng from '../../assets/LoginHomePage/bell.png'
@@ -108,8 +108,6 @@ export const Content: React.FC = () => {
   const onOpenConnectWalletDialog = useOpenConnectWalletDialog()
   const account = useAccount()
   const onOpenAuthDialog = useOpenAuthModal()
-  const provider = useProvider()
-  const connector = useConnector()
   const isAuth = useIsAuthenticated()
   useAuth()
   useEagerConnect()
@@ -170,9 +168,6 @@ export const Content: React.FC = () => {
           }}
           shadow="xl"
           onClick={async () => {
-            if (!account || provider == null) {
-              await connector?.activate()
-            }
             if (account) {
               onOpenAuthDialog()
             } else {

@@ -1,43 +1,59 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useAtomValue } from 'jotai/utils'
 import {
-  Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalOverlay,
-} from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { CloseButton } from '../ConfirmDialog'
-import { SelectConnectWallet } from './SelectConnectWallet'
+  ConnectModalWithMultichain,
+  ConnectWalletApiContext,
+} from 'connect-wallet'
 import {
   isOpenConnectWalletDialogAtom,
   useCloseConnectWalletDialog,
 } from '../../hooks/useConnectWalletDialog'
+import { useIsAuthenticated, useUnstoppable } from '../../hooks/useLogin'
+import { useRemember } from '../../hooks/useRemember'
+import { useOpenAuthModal } from '../../hooks/useAuthDialog'
+import { UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants/env/url'
 
 export const ConnectWalletDialog: React.FC = () => {
   const isAuthModalOpen = useAtomValue(isOpenConnectWalletDialogAtom)
   const onCloseAuthDialog = useCloseConnectWalletDialog()
-  const { t } = useTranslation('common')
+
+  const isAuth = useIsAuthenticated()
+  const { onRemember, isLoading: isRemembering } = useRemember()
+  const openAuthModal = useOpenAuthModal()
+  const { setUnstoppableUserInfo, unstoppableUserInfo, setIsConnectingUD } =
+    useUnstoppable()
 
   return (
-    <Modal
-      size="lg"
-      autoFocus={false}
-      isOpen={isAuthModalOpen}
-      onClose={onCloseAuthDialog}
-      isCentered
+    <ConnectWalletApiContext.Provider
+      value={useMemo(
+        () => ({
+          isAuth,
+          onRemember,
+          isRemembering,
+          openAuthModal,
+          udClientId: UD_CLIENT_ID,
+          udRedirectUri: UD_REDIRECT_URI,
+          setUnstoppableUserInfo,
+          unstoppableUserInfo,
+          setIsConnectingUD,
+        }),
+        [
+          isAuth,
+          onRemember,
+          isRemembering,
+          openAuthModal,
+          setUnstoppableUserInfo,
+          unstoppableUserInfo,
+          setIsConnectingUD,
+          UD_CLIENT_ID,
+          UD_REDIRECT_URI,
+        ]
+      )}
     >
-      <ModalOverlay />
-      <ModalContent>
-        <CloseButton onClick={onCloseAuthDialog} />
-        <ModalBody>
-          <Heading as="h3" fontSize="18px" mb="24px">
-            {t('connect_wallet')}
-          </Heading>
-          <SelectConnectWallet />
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+      <ConnectModalWithMultichain
+        isOpen={isAuthModalOpen}
+        onClose={onCloseAuthDialog}
+      />
+    </ConnectWalletApiContext.Provider>
   )
 }

@@ -18,3 +18,11 @@ export const QUEST3_URL =
 
 export const APP_URL =
   import.meta.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'
+
+export const UD_REDIRECT_URI =
+  import.meta.env.NEXT_PUBLIC_UD_REDIRECT_URI ||
+  'https://mail3-app-git-feat-ud-mail3-postoffice.vercel.app'
+
+export const UD_CLIENT_ID =
+  import.meta.env.NEXT_PUBLIC_UD_CLIENT_ID ||
+  '3d424113-5e87-4c17-a629-2632db580d64'
