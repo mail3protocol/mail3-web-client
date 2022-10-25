@@ -144,6 +144,14 @@ const WrapRight = styled(Box)`
   width: 100%;
   padding: 40px;
 
+  .nft-list-wrap {
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none;
+    }
+  }
+
   @media (max-width: 600px) {
     padding: 10px;
   }
@@ -534,6 +542,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
                         {poapList.length ? (
                           <Box
+                            className="nft-list-wrap"
                             background="#F9F9F9"
                             borderRadius="24px"
                             p={{ base: '8px', md: '16px' }}
