@@ -15,7 +15,7 @@ import {
   useStyleConfig,
   VStack,
 } from '@chakra-ui/react'
-import { Avatar, ProfileCard } from 'ui'
+import { Avatar, ProfileCardHome } from 'ui'
 import {
   CommunityQRcodeStyle,
   TrackEvent,
@@ -180,7 +180,7 @@ export const Information: React.FC = () => {
                 flexDirection="column"
               >
                 <Flex justify="center" mb="16px" h="165px">
-                  <ProfileCard
+                  <ProfileCardHome
                     homeUrl={HOME_URL}
                     mailAddress={
                       userInfo?.address || `${account}@${MAIL_SERVER_URL}`
@@ -227,7 +227,7 @@ export const Information: React.FC = () => {
                         </Center>
                       </Box>
                     </Center>
-                  </ProfileCard>
+                  </ProfileCardHome>
                   {profileImage ? (
                     <Image
                       src={profileImage}
