@@ -11,7 +11,7 @@ import {
 } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { SERVER_URL } from '../constants/env/url'
-import { useLogin } from './useLogin'
+import { useLogin, useSetGlobalTrack } from './useLogin'
 import { RoutePath } from '../route/path'
 import { useRegisterDialog } from './useRegisterDialog'
 
@@ -29,6 +29,7 @@ export function useRemember() {
   const login = useLogin()
   const onOpenRegisterDialog = useRegisterDialog()
   const account = useAccount()
+  const setTrackGlobal = useSetGlobalTrack()
 
   const onSignZilpay = async (nonce: number) => {
     if (!zilpay.isConnected) {
@@ -69,12 +70,14 @@ export function useRemember() {
               signedData.signature,
               (signedData as any).publicKey
             )
+            await setTrackGlobal()
             navi(RoutePath.Dashboard)
           }
           break
         }
         case SignupResponseCode.Success: {
           await login(message!, signature!, pubkey)
+          await setTrackGlobal()
           navi(RoutePath.Dashboard)
           break
         }
