@@ -116,7 +116,9 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
       }
     }
   }
-  const isWrongAddress = !!account && account !== userInfo?.wallet_address
+  const isWrongAddress =
+    !!account &&
+    account.toLowerCase() !== userInfo?.wallet_address?.toLocaleLowerCase()
   const connectWallet = async () => {
     setIsConnecting(true)
     try {
@@ -144,7 +146,10 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
       return (
         <>
           <Text>
-            {t('ud.error-1', { address: shortAddress, domain: userInfo?.sub })}
+            {t('ud.error-1', {
+              address: truncateMiddle(account, 6, 4),
+              domain: userInfo?.sub,
+            })}
           </Text>
           <Text>{t('ud.error-2', { address: shortAddress })}</Text>
           <Text>{t('ud.error-3', { address: shortAddress })}</Text>
@@ -152,10 +157,13 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
       )
     }
     return t('ud.connect-wallet-desc', { address: shortAddress })
-  }, [t, shortAddress, isWrongAddress])
+  }, [t, shortAddress, isWrongAddress, account])
   useEffect(() => {
     if (account) {
-      if (account === userInfo?.wallet_address && !isAuth) {
+      if (
+        account.toLowerCase() === userInfo?.wallet_address?.toLowerCase() &&
+        !isAuth
+      ) {
         openAuthModal()
       }
     }

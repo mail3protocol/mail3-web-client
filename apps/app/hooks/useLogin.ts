@@ -22,7 +22,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
-import { isBitDomain, isEnsDomain } from 'shared'
+import { isBitDomain, isEnsDomain, isUdDomain } from 'shared'
 import { clear as clearIndexDBStore } from 'idb-keyval'
 import type { UserInfo as UDUserInfo } from '@uauth/js'
 import { useAPI } from './useAPI'
@@ -193,6 +193,7 @@ export const useSetGlobalTrack = () => {
           `${account}@${MAIL_SERVER_URL}`
         let isOwnBitAddress = false
         let isOwnEnsAddress = false
+        let isOwnUDAddress = false
         for (let i = 0; i < aliases.aliases.length; i++) {
           const alias = aliases.aliases[i]
           const addr = removeMailSuffix(alias.address)
@@ -202,11 +203,15 @@ export const useSetGlobalTrack = () => {
           if (isBitDomain(addr)) {
             isOwnBitAddress = true
           }
+          if (isUdDomain(addr)) {
+            isOwnUDAddress = true
+          }
         }
         const config = {
           defaultAddress,
           [GlobalDimensions.OwnEnsAddress]: isOwnEnsAddress,
           [GlobalDimensions.OwnBitAddress]: isOwnBitAddress,
+          [GlobalDimensions.OwnUDAddress]: isOwnUDAddress,
           [GlobalDimensions.ConnectedWalletName]: walletName,
           [GlobalDimensions.WalletAddress]: `@${account}`,
           [GlobalDimensions.SignatureStatus]: sigStatus,
