@@ -233,8 +233,8 @@ export const UnstopableButton: React.FC<{
   const {
     udClientId,
     udRedirectUri,
-    setUnstopableUserInfo,
-    unstaopableUserInfo,
+    setUnstoppableUserInfo,
+    unstoppableUserInfo,
     setIsConnectingUD,
   } = useConnectWalletApi()
   const uauth = useMemo(
@@ -283,7 +283,7 @@ export const UnstopableButton: React.FC<{
         await uauth.loginWithPopup()
       }
       const userInfo = await uauth.user()
-      setUnstopableUserInfo(userInfo)
+      setUnstoppableUserInfo(userInfo)
       openDialog()
     } catch (error: any) {
       //
@@ -319,7 +319,7 @@ export const UnstopableButton: React.FC<{
           setLastConector()
           setIsConnectingUD(false)
         }}
-        userInfo={unstaopableUserInfo}
+        userInfo={unstoppableUserInfo}
       />
     </>
   )

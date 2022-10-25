@@ -8,8 +8,8 @@ export interface ConnectWalletApiContextValue {
   udClientId: string
   udRedirectUri: string
   openAuthModal: () => void
-  setUnstopableUserInfo: (update: SetStateAction<UserInfo | null>) => void
-  unstaopableUserInfo: UserInfo | null
+  setUnstoppableUserInfo: (update: SetStateAction<UserInfo | null>) => void
+  unstoppableUserInfo: UserInfo | null
   setIsConnectingUD: (update: SetStateAction<boolean>) => void
 }
 

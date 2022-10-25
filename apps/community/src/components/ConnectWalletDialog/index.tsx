@@ -8,7 +8,7 @@ import {
   isOpenConnectWalletDialogAtom,
   useCloseConnectWalletDialog,
 } from '../../hooks/useConnectWalletDialog'
-import { useIsAuthenticated, useUnstaopable } from '../../hooks/useLogin'
+import { useIsAuthenticated, useUnstoppable } from '../../hooks/useLogin'
 import { useRemember } from '../../hooks/useRemember'
 import { useOpenAuthModal } from '../../hooks/useAuthDialog'
 import { UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants/env/url'
@@ -20,8 +20,8 @@ export const ConnectWalletDialog: React.FC = () => {
   const isAuth = useIsAuthenticated()
   const { onRemember, isLoading: isRemembering } = useRemember()
   const openAuthModal = useOpenAuthModal()
-  const { setUnstopableUserInfo, unstaopableUserInfo, setIsConnectingUD } =
-    useUnstaopable()
+  const { setUnstoppableUserInfo, unstoppableUserInfo, setIsConnectingUD } =
+    useUnstoppable()
 
   return (
     <ConnectWalletApiContext.Provider
@@ -33,8 +33,8 @@ export const ConnectWalletDialog: React.FC = () => {
           openAuthModal,
           udClientId: UD_CLIENT_ID,
           udRedirectUri: UD_REDIRECT_URI,
-          setUnstopableUserInfo,
-          unstaopableUserInfo,
+          setUnstoppableUserInfo,
+          unstoppableUserInfo,
           setIsConnectingUD,
         }),
         [
@@ -42,8 +42,8 @@ export const ConnectWalletDialog: React.FC = () => {
           onRemember,
           isRemembering,
           openAuthModal,
-          setUnstopableUserInfo,
-          unstaopableUserInfo,
+          setUnstoppableUserInfo,
+          unstoppableUserInfo,
           setIsConnectingUD,
           UD_CLIENT_ID,
           UD_REDIRECT_URI,

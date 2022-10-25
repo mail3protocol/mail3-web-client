@@ -45,21 +45,21 @@ export const useIsLoginExpired = () => {
   )
 }
 
-const unstaopableUserInfoAtom = atom<UDUserInfo | null>(null)
+const unstoppableUserInfoAtom = atom<UDUserInfo | null>(null)
 
 export const isConnectingUDAtom = atom(false)
 
-export const useUnstaopable = () => {
-  const [unstaopableUserInfo, setUnstopableUserInfo] = useAtom(
-    unstaopableUserInfoAtom
+export const useUnstoppable = () => {
+  const [unstoppableUserInfo, setUnstoppableUserInfo] = useAtom(
+    unstoppableUserInfoAtom
   )
-  const logout = () => setUnstopableUserInfo(null)
+  const logout = () => setUnstoppableUserInfo(null)
   const [isConnectingUD, setIsConnectingUD] = useAtom(isConnectingUDAtom)
 
   return {
     logout,
-    unstaopableUserInfo,
-    setUnstopableUserInfo,
+    unstoppableUserInfo,
+    setUnstoppableUserInfo,
     isConnectingUD,
     setIsConnectingUD,
   }
@@ -270,7 +270,7 @@ export const useLogout = () => {
   const connector = useConnector()
   const setUserInfo = useSetLoginInfo()
   const setLastConnector = useSetLastConnector()
-  const { logout } = useUnstaopable()
+  const { logout } = useUnstoppable()
   const onDeleteFCMToken = useDeleteFCMToken()
   return useCallback(async () => {
     await onDeleteFCMToken()

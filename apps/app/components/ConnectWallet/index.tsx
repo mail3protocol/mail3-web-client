@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 import {
   useIsAuthenticated,
   useOpenAuthModal,
-  useUnstaopable,
+  useUnstoppable,
 } from '../../hooks/useLogin'
 import { useRemember } from '../../hooks/useRemember'
 import { UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants'
@@ -19,8 +19,8 @@ export const ConnectWalletApiContextProvider: React.FC = ({ children }) => {
   const isAuth = useIsAuthenticated()
   const { onRemember, isLoading: isRemembering } = useRemember()
   const openAuthModal = useOpenAuthModal()
-  const { setUnstopableUserInfo, unstaopableUserInfo, setIsConnectingUD } =
-    useUnstaopable()
+  const { setUnstoppableUserInfo, unstoppableUserInfo, setIsConnectingUD } =
+    useUnstoppable()
   const providerValue = useMemo(
     () => ({
       onRemember,
@@ -29,8 +29,8 @@ export const ConnectWalletApiContextProvider: React.FC = ({ children }) => {
       udClientId: UD_CLIENT_ID,
       udRedirectUri: UD_REDIRECT_URI,
       openAuthModal,
-      setUnstopableUserInfo,
-      unstaopableUserInfo,
+      setUnstoppableUserInfo,
+      unstoppableUserInfo,
       setIsConnectingUD,
     }),
     [
@@ -40,8 +40,8 @@ export const ConnectWalletApiContextProvider: React.FC = ({ children }) => {
       UD_CLIENT_ID,
       UD_REDIRECT_URI,
       openAuthModal,
-      setUnstopableUserInfo,
-      unstaopableUserInfo,
+      setUnstoppableUserInfo,
+      unstoppableUserInfo,
       setIsConnectingUD,
     ]
   )
