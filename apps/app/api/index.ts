@@ -467,7 +467,7 @@ export class API {
 
   public async SubscriptionMessages(nextCursor: string) {
     return this.axios.get<Subscription.MessageListResp>(
-      `/subscription/messages/?cursor=${nextCursor}&count=10`
+      `/subscription/messages/?cursor=${nextCursor}&count=20`
     )
   }
 
