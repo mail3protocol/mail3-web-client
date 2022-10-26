@@ -6,8 +6,8 @@ import NextCors from 'nextjs-cors'
 import LRU from 'lru-cache'
 import { isNextDay } from 'shared/src/isNextDay'
 import {
+  API_ALLOW_ORIGIN,
   COMMUNITY_IMAGE_UPLOAD_LIMIT,
-  COMMUNITY_URL,
   SERVER_URL,
 } from '../../../constants/env'
 import { S3_CONFIG } from '../../../constants/env/S3'
@@ -39,7 +39,7 @@ const uploadCountCache = new LRU({
 async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
   await NextCors(req, res, {
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-    origin: COMMUNITY_URL,
+    origin: API_ALLOW_ORIGIN,
     optionsSuccessStatus: 200,
   })
 
@@ -73,7 +73,7 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
           Authorization: authorization,
         },
       })
-      .then((r) => r.data.messages[0])
+      .then((r) => r.data.messages?.[0])
     if (lastMessage && !isNextDay(dayjs.unix(lastMessage.created_at))) {
       throw new ParamError(
         'Only one message can be sent within 1 day, please try again later.'
@@ -128,7 +128,7 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
     if (err.code === 'ERR_HTTP_INVALID_HEADER_VALUE') {
       return res.status(401).json({ message: err.message })
     }
-    if (err.response.status === 401) {
+    if (err?.response?.status === 401) {
       return res.status(401).json({ message: 'Permission error' })
     }
     if (err.code === 1009) {
