@@ -15,5 +15,7 @@ export enum RoutePath {
   Message = '/message',
   Unread = '/unread',
   Developers = '/developers',
+  Subscribe = '/subscribe',
+  Subscription = '/subscription',
   Testing = '/testing',
 }

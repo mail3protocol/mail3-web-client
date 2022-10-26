@@ -107,6 +107,15 @@ export enum TrackEvent {
   ExuserClickRegisterEns = 'exuser_click_register_ens',
   ExuserClickRegisterBit = 'exuser_click_register_bit',
   ExuserClickGotOne = 'exuser_click_got_one',
+
+  CommunityClickNewMessage = 'click_new_message',
+  CommunityClickCommunityPersonalcenter = 'click_community_personalcenter',
+  CommunityClickInformationQRcodeDownload = 'click_information_QRcode_download',
+  CommunityClickCommunitySendConfirm = 'click_community_send_confirm',
+  // subscription
+  ClickSubscribeNews = 'click_subscribe_news',
+  ClickSubscribeNewsAvatar = 'click_subscribe_news_avatar',
+  ClickUnsubscribe = 'click_unsubscribe',
 }
 
 // dimensions
@@ -133,6 +142,10 @@ export enum TrackKey {
   TestingEntry = 'beta1_check_eligilibity',
 
   LitepaperLanguage = 'litepaper_language',
+
+  CommunityClickCommunityPersonalcenterItem = 'click_community_personalcenter_item',
+
+  CommunityQRcodeStyle = 'QRcode_style',
 }
 
 export enum ProfileScoialPlatformItem {
@@ -177,6 +190,11 @@ export enum DesiredWallet {
   Trust = 'Trust',
   ZilPay = 'ZilPay',
   Coinbase = 'Coinbase',
+  Polkawallet = 'Polkawallet',
+  Plug = 'Plug',
+  Keplr = 'Keplr',
+  Tron = 'Tron',
+  Solflare = 'Solflare',
   UD = 'UD',
 }
 
@@ -205,6 +223,17 @@ export enum MailDetailPageItem {
   NotSpam = 'NotSpam',
 }
 
+export enum CommunityQRcodeStyle {
+  Mail3Style = 'mail3_style',
+  PureStyle = 'pure_style',
+}
+
+export enum CommunityClickCommunityPersonalcenterItem {
+  Information = 'Information',
+  ChangeWallet = 'ChangeWallet',
+  Disconnect = 'Disconnect',
+}
+
 export enum LitepaperLanguage {
   English = 'English',
   Japanese = 'Japanese',
@@ -222,6 +251,8 @@ export interface TrackProps {
   [TrackKey.ProfileScoialPlatform]?: ProfileScoialPlatformItem
   [TrackKey.Mail3MenuItem]?: Mail3MenuItem
   [TrackKey.LitepaperLanguage]?: LitepaperLanguage
+  [TrackKey.CommunityClickCommunityPersonalcenterItem]?: CommunityClickCommunityPersonalcenterItem
+  [TrackKey.CommunityQRcodeStyle]?: CommunityQRcodeStyle
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {

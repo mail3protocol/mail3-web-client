@@ -1,11 +1,14 @@
+/* eslint-disable no-promise-executor-return */
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SubmitMessage } from 'models/src/submitMessage'
 import { UploadMessage } from 'models/src/uploadMessage'
+import { CommunitySubscriptionResp } from 'models/src/subscribe'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdentifier'
+import { Subscription } from 'models'
 import { SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
@@ -440,6 +443,55 @@ export class API {
   public getMessageOnChainIdentifier(messageId: string) {
     return this.axios.get<MessageOnChainIdentifierResponse>(
       `/mailbox/account/messages/${messageId}/on_chain_identifier`
+    )
+  }
+
+  public async getSubscribeStatus(
+    userId: string
+  ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    return this.axios.get(`/subscription/followings/${userId}`)
+  }
+
+  public async putSubscribeCampaign(
+    userId: string,
+    state: 'active' | 'inactive' = 'active'
+  ): Promise<AxiosResponse<CommunitySubscriptionResp>> {
+    return this.axios.post(
+      `/subscription/community_users/${userId}/following`,
+      {
+        uuid: userId,
+        state,
+      }
+    )
+  }
+
+  public async SubscriptionMessages(nextCursor: string) {
+    return this.axios.get<Subscription.MessageListResp>(
+      `/subscription/messages/?cursor=${nextCursor}&count=10`
+    )
+  }
+
+  public async SubscriptionMessageDetail(uuid: string) {
+    return this.axios.get<Subscription.MessageDetailResp>(
+      `/subscription/messages/${uuid}`
+    )
+  }
+
+  public async SubscriptionCommunityUserFollowing(uuid: string) {
+    return this.axios.post<void>(
+      `/subscription/community_users/${uuid}/following`
+    )
+  }
+
+  public async SubscriptionCommunityUserUnFollowing(uuid: string) {
+    return this.axios.delete<void>(
+      `/subscription/community_users/${uuid}/following`
+    )
+  }
+
+  public async SubscriptionMessageStats() {
+    return this.axios.get<Subscription.MessageStatsResp>(
+      `/subscription/message_stats`
     )
   }
 }
