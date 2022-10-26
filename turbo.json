@@ -28,6 +28,16 @@
                 "dist/**"
             ]
         },
+        "community#build": {
+            "dependsOn": [
+                "^build",
+                "$NEXT_PUBLIC_ALCHEMY_KEY",
+                "$NEXT_PUBLIC_SERVER_URL"
+            ],
+            "outputs": [
+                "dist/**"
+            ]
+        },
         "home#build": {
             "dependsOn": [
                 "^build",
