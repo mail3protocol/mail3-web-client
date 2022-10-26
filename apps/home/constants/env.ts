@@ -46,5 +46,6 @@ export const COMMUNITY_URL =
 export const COMMUNITY_IMAGE_UPLOAD_LIMIT =
   parseInt(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_LIMIT || `50`, 10) || 50
 
-export const API_ALLOW_ORIGIN =
-  process.env.API_ALLOW_ORIGIN || [COMMUNITY_URL, APP_URL].join(', ')
+export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
+  (o) => o.trim()
+) || [COMMUNITY_URL, APP_URL]

@@ -131,11 +131,12 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
     if (err?.response?.status === 401) {
       return res.status(401).json({ message: 'Permission error' })
     }
-    if (err.code === 1009) {
+    if ([1009, 1010].includes(err.code)) {
       return res
         .status(400)
         .json({ message: err.message.replace('options.', '') })
     }
+    console.error(err)
     return res.status(500).json({ message: 'Internal Server Error' })
   }
 }
