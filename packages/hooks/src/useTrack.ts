@@ -90,6 +90,10 @@ export enum TrackEvent {
   clickDInfoBlockchainLink = 'click_dinfo_blockchain_link',
   clickDInfoIpfsLink = 'click_dinfo_ipfs_link',
 
+  // subscribe-btn
+  ClickSubscribeOk = 'subscribe_click_notification_OK',
+  ClickSubscribeVisit = 'subscribe_click_visti_mail3',
+
   // developers
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
@@ -141,6 +145,9 @@ export enum TrackKey {
   // testing
   TestingEntry = 'beta1_check_eligilibity',
 
+  // subscribe-btn
+  SubscribeBtnStatus = 'subscribe_to_visti_mail3',
+
   LitepaperLanguage = 'litepaper_language',
 
   CommunityClickCommunityPersonalcenterItem = 'click_community_personalcenter_item',
@@ -170,6 +177,14 @@ export enum Mail3MenuItem {
   Twitter = 'Twitter',
   Mirror = 'Mirror',
   Spam = 'Spam',
+}
+
+export enum SubscribeAction {
+  Repeat = 'Repeat Subscription',
+  Denial = 'Denial Notification',
+  Already = 'Already Authorized Notification',
+  Mobile = 'Mobile Subscription',
+  MobileRepeat = 'Mobile Repeat Subscription',
 }
 
 export enum GlobalDimensions {
@@ -253,6 +268,7 @@ export interface TrackProps {
   [TrackKey.LitepaperLanguage]?: LitepaperLanguage
   [TrackKey.CommunityClickCommunityPersonalcenterItem]?: CommunityClickCommunityPersonalcenterItem
   [TrackKey.CommunityQRcodeStyle]?: CommunityQRcodeStyle
+  [TrackKey.SubscribeBtnStatus]?: SubscribeAction
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {
