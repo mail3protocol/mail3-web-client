@@ -77,17 +77,23 @@ export interface MessageData {
 
 export const NewMessagePage = () => {
   const [searchParams] = useSearchParams()
-  const action = searchParams.get('action')
-  const id = searchParams.get('id')
-  const _to = searchParams.get('to')
-  const _cc = searchParams.get('cc')
-  const searchParamsSubject = searchParams.get('subject')
   const location = useLocation()
   const locationState = location.state as MessageData | undefined
-  const to = _to ? filterEmails(_to.split(',')) : null
-  const cc = _cc ? filterEmails(_cc.split(',')) : null
-  const _forceTo = searchParams.get('force_to')
-  const forceTo = _forceTo ? filterEmails(_forceTo.split(',')) : null
+  const { cc, to, forceTo, id, action, searchParamsSubject } = useMemo(() => {
+    const tempCc = searchParams.get('cc')
+    const tempBcc = searchParams.get('bcc')
+    const tempTo = searchParams.get('to')
+    const tempForceTo = searchParams.get('force_to')
+    return {
+      cc: tempCc ? filterEmails(tempCc.split(',')) : null,
+      bcc: tempBcc ? filterEmails(tempBcc.split(',')) : null,
+      to: tempTo ? filterEmails(tempTo.split(',')) : null,
+      forceTo: tempForceTo ? filterEmails(tempForceTo.split(',')) : null,
+      action: searchParams.get('action'),
+      id: searchParams.get('id'),
+      searchParamsSubject: searchParams.get('subject'),
+    }
+  }, [searchParams])
   const { isAuth, redirectHome } = useRedirectHome()
   const api = useAPI()
   const [t] = useTranslation('edit-message')
@@ -96,7 +102,6 @@ export const NewMessagePage = () => {
   const isEnableSignatureText =
     signatureStatus === SignatureStatus.OnlyText ||
     signatureStatus === SignatureStatus.BothEnabled
-  const [isLoadedSubjectInfo, setIsLoadedSubjectInfo] = useState(false)
   const {
     setSubject,
     setToAddresses,
@@ -153,8 +158,6 @@ export const NewMessagePage = () => {
   }
 
   function setSubjectAndOtherByMessageInfo(m?: GetMessage.Response | null) {
-    if (isLoadedSubjectInfo) return
-    setIsLoadedSubjectInfo(true)
     if (userProperties?.defaultAddress) {
       setFromAddress(userProperties.defaultAddress as string)
     }
@@ -225,11 +228,7 @@ export const NewMessagePage = () => {
 
   const [isFirstLoadMessage, setIsFirstLoadMessage] = useState(false)
   useEffect(() => {
-    if (
-      isFirstLoadMessage ||
-      !queryMessageInfoAndContentData.isSuccess ||
-      !messageInfo
-    ) {
+    if (isFirstLoadMessage || !queryMessageInfoAndContentData.isSuccess) {
       return
     }
     setIsFirstLoadMessage(true)
