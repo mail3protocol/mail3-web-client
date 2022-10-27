@@ -1,6 +1,6 @@
 export default {
   common: {
-    no_mail3: 'No mail3? ',
+    no_mail3: 'No Mail3? Claim it now! ',
     register: 'Register it now',
     connect_wallet: 'Connect Wallet',
     connect: {
@@ -213,7 +213,7 @@ export default {
              <li>
                <p>Only a few simple steps are needed:</p>
                <ol>
-                 <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
+                 <li>Create a Campaign/Quest on the supported platform;</li>
                  <li>Follow the guide to complete the configuration below;</li>
                  <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
