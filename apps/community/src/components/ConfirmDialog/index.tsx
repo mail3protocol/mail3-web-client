@@ -93,7 +93,7 @@ export const ConfirmDialog: React.FC = () => {
             {okText && onConfirm !== noop ? (
               <Button
                 variant="solid-rounded"
-                colorScheme="primaryButton"
+                colorScheme="blackButton"
                 mb="16px"
                 isLoading={isLoading}
                 onClick={onConfirm}

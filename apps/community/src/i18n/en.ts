@@ -63,6 +63,12 @@ export default {
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
     copy: 'Copy',
+    need_open_earn_nft_dialog: {
+      title: '👉Notice',
+      description:
+        'Please enable subscribe-to-earn feature before proceeding to the next step',
+      confirm: 'Confirm',
+    },
   },
   components: {
     header: {
@@ -126,6 +132,7 @@ export default {
     register_dialog: {
       title: '😔 Sorry you are not qualified!',
       description: `If you would like to apply for access to "mail<sup>3</sup> Community". \n Please send us an email via the "Mail me" button below, telling us about your project, <span>your needs and your contact information</span>, and we will contact you after evaluation.`,
+      register_mail_default_subject: 'Apply for Web3 subscription feature',
     },
   },
   new_message: {
@@ -216,7 +223,7 @@ export default {
            <h3>How to get the Credential ID?</h3>
            <ul>
              <li>
-               As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Crurated Credentials] > [Create] > [Select Type: EVM Address or Snapshot] > [Fill in the necessary information and create Credential] > [Create]
+               As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Curated Credentials] > [Create] > [Select Type: EVM Address or Snapshot] > [Fill in the necessary information and create Credential] > [Create]
              </li>
              <li>
                You can see the URL in the browser address bar of the successfully created Credential web page, for example: galxe.com/credential/20193934911****190
