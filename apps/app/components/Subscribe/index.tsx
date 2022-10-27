@@ -1,7 +1,6 @@
 import {
   Center,
   Heading,
-  HStack,
   Image,
   Box,
   Text,
@@ -10,6 +9,8 @@ import {
   AlertTitle,
   AlertDescription,
   AlertIcon,
+  VStack,
+  HStack,
 } from '@chakra-ui/react'
 import {
   SubscribeAction,
@@ -42,6 +43,7 @@ const useTrackOk = () => useTrackClick(TrackEvent.ClickSubscribeOk)
 
 const ConnectWallet = () => {
   const [t] = useTranslation('subscribe')
+  const Comp = IS_MOBILE ? VStack : HStack
   return (
     <ConnectWalletApiContextProvider>
       <Center mt="40px">
@@ -54,14 +56,14 @@ const ConnectWallet = () => {
           <Heading mb="32px" fontSize="20px" fontWeight={700}>
             {t('connect')}
           </Heading>
-          <HStack spacing="48px">
+          <Comp spacing="48px">
             <Center>
               <Image src={WelcomePng} w="191px" />
             </Center>
             <Box>
               <ConnectWalletSelector />
             </Box>
-          </HStack>
+          </Comp>
         </Center>
       </Center>
     </ConnectWalletApiContextProvider>
