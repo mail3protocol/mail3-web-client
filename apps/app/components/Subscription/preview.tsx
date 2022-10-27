@@ -191,24 +191,32 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
         if (isFollow) {
           dialog({
             type: 'text',
-            title: '',
             description: t('unsubscribe'),
             showCloseButton: true,
-            onConfirm: async () => {
+            modalBodyProps: {
+              mt: '0',
+            },
+            modalCloseButtonProps: {
+              zIndex: 9,
+            },
+            modalFooterProps: {
+              pt: 0,
+            },
+            onConfirm: () => {
+              setIsLoading(false)
+            },
+            onCancel: async () => {
               await api.SubscriptionCommunityUserUnFollowing(uuid)
               trackUnsubscribe()
               setIsFollow(false)
               setIsLoading(false)
               toast(t('Unsubscribe successfully'), { status: 'success' })
             },
-            onCancel: () => {
-              setIsLoading(false)
-            },
             onClose: () => {
               setIsLoading(false)
             },
-            okText: 'Yes',
-            cancelText: 'No',
+            okText: 'No',
+            cancelText: 'Yes',
           })
         } else {
           await api.SubscriptionCommunityUserFollowing(uuid)
