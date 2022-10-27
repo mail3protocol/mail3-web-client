@@ -61,6 +61,8 @@ export default {
       'Only one message can be sent within 1 day, please try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
+    copied: 'Copied',
+    copy: 'Copy',
   },
   components: {
     header: {
@@ -119,8 +121,6 @@ export default {
         only_supported_https: 'Only support https',
       },
     },
-    copy: 'Copy',
-    copied: 'Copied',
   },
   hooks: {
     register_dialog: {
