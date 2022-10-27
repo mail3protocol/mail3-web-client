@@ -219,6 +219,7 @@ export const Dashboard: React.FC = () => {
           {t('send_message')}
         </Heading>
         <NewMessageLinkButton
+          isLoading={isLoadingMessageList}
           lastMessageSentTime={
             messageList?.messages?.[0]?.created_at
               ? dayjs.unix(Number(messageList.messages[0].created_at))

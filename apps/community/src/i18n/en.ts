@@ -61,6 +61,12 @@ export default {
       'Only one message can be sent within 1 day, please try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
+    need_open_earn_nft_dialog: {
+      title: '👉Notice',
+      description:
+        'Please enable subscribe-to-earn feature before proceeding to the next step',
+      confirm: 'Confirm',
+    },
   },
   components: {
     header: {
