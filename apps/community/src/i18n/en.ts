@@ -61,6 +61,12 @@ export default {
       'Only one message can be sent within 1 day, please try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
+    need_open_earn_nft_dialog: {
+      title: '👉Notice',
+      description:
+        'Please enable subscribe-to-earn feature before proceeding to the next step',
+      confirm: 'Confirm',
+    },
   },
   components: {
     header: {
@@ -215,7 +221,7 @@ export default {
            <h3>How to get the Credential ID?</h3>
            <ul>
              <li>
-               As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Crurated Credentials] > [Create] > [Select Type: EVM Address or Snapshot] > [Fill in the necessary information and create Credential] > [Create]
+               As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Curated Credentials] > [Create] > [Select Type: EVM Address or Snapshot] > [Fill in the necessary information and create Credential] > [Create]
              </li>
              <li>
                You can see the URL in the browser address bar of the successfully created Credential web page, for example: galxe.com/credential/20193934911****190

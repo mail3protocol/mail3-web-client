@@ -15,6 +15,8 @@ import { SERVER_URL } from '../constants/env/url'
 import { useLogin, useSetGlobalTrack, isConnectingUDAtom } from './useLogin'
 import { RoutePath } from '../route/path'
 import { useRegisterDialog } from './useRegisterDialog'
+import { API } from '../api/api'
+import { SubscriptionState } from '../api/modals/SubscriptionResponse'
 
 export const rememberLoadingAtom = atom(false)
 
@@ -67,13 +69,21 @@ export function useRemember() {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
           if (signedData) {
-            await login(
+            const { jwt } = await login(
               signedData.message,
               signedData.signature,
               (signedData as any).publicKey
             )
+            const api = new API(account, jwt)
+            const earnNftState = await api
+              .getSubscription()
+              .then((r) => r.data.state)
             await setTrackGlobal()
-            navi(RoutePath.Dashboard)
+            if (earnNftState === SubscriptionState.Active) {
+              navi(RoutePath.Dashboard)
+            } else {
+              navi(RoutePath.EarnNft)
+            }
           }
           break
         }
