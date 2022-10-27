@@ -2,7 +2,7 @@ import { Link as InsideLink, useNavigate } from 'react-router-dom'
 import { AddIcon } from '@chakra-ui/icons'
 import { Center, CenterProps, Spinner } from '@chakra-ui/react'
 import { Dayjs } from 'dayjs'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { isNextDay } from 'shared/src/isNextDay'
 import { useTrackClick, TrackEvent, useDialog } from 'hooks'
 import { useQuery } from 'react-query'
@@ -56,7 +56,13 @@ export const NewMessageLinkButton: React.FC<
           e.preventDefault()
           dialog({
             title: t('need_open_earn_nft_dialog.title'),
-            description: t('need_open_earn_nft_dialog.description'),
+            description: (
+              <Trans
+                t={t}
+                i18nKey="need_open_earn_nft_dialog.description"
+                components={{ b: <b /> }}
+              />
+            ),
             okText: t('need_open_earn_nft_dialog.confirm'),
             onConfirm() {
               navi(RoutePath.EarnNft)

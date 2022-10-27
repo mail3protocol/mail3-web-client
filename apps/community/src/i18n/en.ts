@@ -66,7 +66,7 @@ export default {
     need_open_earn_nft_dialog: {
       title: '👉Notice',
       description:
-        'Please enable subscribe-to-earn feature before proceeding to the next step',
+        'Please enable <b>subscribe-to-earn</b> feature before proceeding to the next step',
       confirm: 'Confirm',
     },
   },
