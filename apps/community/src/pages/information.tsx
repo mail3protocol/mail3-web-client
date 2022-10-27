@@ -194,6 +194,7 @@ export const Information: React.FC = () => {
                   right="0"
                   w="40px"
                   onClick={() => onCopy(profilePageUrl)}
+                  style={{ cursor: isCopied ? 'default' : undefined }}
                 >
                   {isCopied ? (
                     <CheckIcon w="16px" h="16px" />
