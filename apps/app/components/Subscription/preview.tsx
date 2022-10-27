@@ -176,6 +176,7 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
       fontSize="12px"
       lineHeight="18px"
       display="flex"
+      alignItems="center"
       onClick={async () => {
         if (isLoading) return
         setIsLoading(true)
@@ -273,18 +274,20 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     <Wrap isSingleMode={isSingleMode}>
       <Box className="header">
         <Flex alignItems="center">
-          <Avatar
-            w="32px"
-            h="32px"
-            address={detail?.writer_name}
+          <Link
+            display="flex"
+            href={`${HOME_URL}/${detail?.writer_name}`}
+            target="_blank"
+            alignItems="center"
             onClick={() => {
               trackAvatar()
-              window.open(`${HOME_URL}/${detail?.writer_name}`)
             }}
-          />
-          <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
-            {truncateAddress(detail?.writer_name)}
-          </Box>
+          >
+            <Avatar w="32px" h="32px" address={detail?.writer_name} />
+            <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
+              {truncateAddress(detail?.writer_name)}
+            </Box>
+          </Link>
           <Spacer />
           <SubscribeLink uuid={detail.writer_uuid} />
         </Flex>
@@ -293,16 +296,14 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         </Box>
         <Divider orientation="horizontal" mt="16px" />
       </Box>
-      <Center className="mobile-header">
-        <Avatar
-          w="14px"
-          h="14px"
-          address={detail?.writer_name}
-          onClick={() => {
-            trackAvatar()
-            window.open(`${HOME_URL}/${detail?.writer_name}`)
-          }}
-        />
+      <Center
+        className="mobile-header"
+        onClick={() => {
+          trackAvatar()
+          window.open(`${HOME_URL}/${detail?.writer_name}`)
+        }}
+      >
+        <Avatar w="14px" h="14px" address={detail?.writer_name} />
         <Box
           ml="6px"
           fontWeight={400}

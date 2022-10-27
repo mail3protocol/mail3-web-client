@@ -113,7 +113,7 @@ const WrapLeft = styled(Center)`
   background-color: #ffffff;
   border: 1px solid #e7e7e7;
   border-radius: 24px;
-  height: calc(100vh - 206px);
+  height: calc(100vh - 202px);
   flex-direction: column;
   justify-content: flex-start;
 
