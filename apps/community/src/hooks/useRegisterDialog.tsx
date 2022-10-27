@@ -35,7 +35,11 @@ export function useRegisterDialog() {
                 as="a"
                 colorScheme="blackButton"
                 variant="solid-rounded"
-                href={`${APP_URL}/message/edit?utm_source=${window.location.hostname}&utm_medium=click_mail_me_button&to=mail3.eth@mail3.me`}
+                href={`${APP_URL}/message/edit?utm_source=${
+                  window.location.hostname
+                }&utm_medium=click_mail_me_button&to=mail3.eth@mail3.me&subject=${t(
+                  'register_dialog.register_mail_default_subject'
+                )}`}
                 target="_blank"
                 fontWeight="600"
                 fontSize="14px"
