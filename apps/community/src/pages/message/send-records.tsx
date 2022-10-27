@@ -79,7 +79,10 @@ export const SendRecords: React.FC = () => {
         <Heading as="h3" fontSize="16px">
           {t('new_message')}
         </Heading>
-        <NewMessageLinkButton lastMessageSentTime={lastMessageSentTime} />
+        <NewMessageLinkButton
+          isLoading={listQuery.isLoading}
+          lastMessageSentTime={lastMessageSentTime}
+        />
       </Flex>
       <Box {...cardStyleProps} p="32px">
         <Heading as="h2" fontSize="18px" fontWeight="700">

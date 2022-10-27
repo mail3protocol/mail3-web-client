@@ -88,6 +88,7 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
           rounded="16px"
           px="20px"
           py="16px"
+          h="272px"
         >
           <Heading
             as="h6"
