@@ -69,10 +69,11 @@ const Container = styled(Box)`
   max-width: 1220px;
   width: 100%;
   margin: 0 auto;
-  min-height: 700px;
+  height: calc(100vh - 106px);
 
   @media (max-width: 600px) {
     box-shadow: none;
+    height: auto;
   }
 `
 
@@ -113,7 +114,9 @@ const WrapLeft = styled(Center)`
   background-color: #ffffff;
   border: 1px solid #e7e7e7;
   border-radius: 24px;
+  height: calc(100vh - 202px);
   flex-direction: column;
+  justify-content: flex-start;
 
   .avatar {
   }
@@ -137,6 +140,7 @@ const WrapLeft = styled(Center)`
   @media (max-width: 600px) {
     border: none;
     width: 100%;
+    height: auto;
     padding: 0;
   }
 `
@@ -146,6 +150,8 @@ const WrapRight = styled(Box)`
   padding: 40px;
 
   .nft-list-wrap {
+    height: calc(100vh - 406px);
+
     &::-webkit-scrollbar {
       width: 0 !important;
       height: 0 !important;
@@ -155,6 +161,10 @@ const WrapRight = styled(Box)`
 
   @media (max-width: 600px) {
     padding: 10px;
+
+    .nft-list-wrap {
+      height: auto;
+    }
   }
 `
 
@@ -532,7 +542,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                             borderRadius="24px"
                             p={{ base: '8px', md: '16px' }}
                             w="100%"
-                            h={{ base: 'auto', md: '400px' }}
+                            maxH={{ base: 'auto', md: '100%' }}
                             overflow={{ base: 'auto', md: 'hidden' }}
                             overflowY={{ base: 'auto', md: 'scroll' }}
                           >
@@ -543,7 +553,6 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                   <WrapItem
                                     key={item.name}
                                     w={{ base: '105px', md: '120px' }}
-                                    opacity={hadGot ? 1 : 0.4}
                                     cursor="pointer"
                                     as="a"
                                     href={poapPlatform}
@@ -555,6 +564,11 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                         h="110px"
                                         overflow="hidden"
                                         alignItems="center"
+                                        filter={
+                                          hadGot
+                                            ? 'grayscale(0)'
+                                            : 'grayscale(1)'
+                                        }
                                       >
                                         <Image src={img} w="100%" />
                                       </Flex>
@@ -563,7 +577,10 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                         mt="8px"
                                         textAlign="center"
                                         fontSize="12px"
+                                        lineHeight="16px"
                                         noOfLines={2}
+                                        color="#000"
+                                        fontWeight="500"
                                       >
                                         {name}
                                       </Text>

@@ -44,7 +44,7 @@ const Badge = styled(Circle)`
 `
 
 const SubListItemWrap = styled(Flex)`
-  padding: 14px 20px 8px 32px;
+  padding: 16px 20px 8px 32px;
   cursor: pointer;
   position: relative;
   border-bottom: 1px solid #f3f3f3;
@@ -111,7 +111,7 @@ export const SubListItem: FC<SubListItemProps> = ({
         <Flex
           fontSize="12px"
           fontWeight={400}
-          color="#818181"
+          color="#6F6F6F"
           lineHeight="26px"
           whiteSpace="nowrap"
         >
@@ -141,7 +141,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
   })
 
   return (
-    <Box p="10px 0">
+    <Box p="32px 0">
       {data.map((item) => {
         const { uuid, seen } = item
         return (

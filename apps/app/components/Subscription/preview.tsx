@@ -61,18 +61,20 @@ const Container = styled(Box)`
     display: none;
   }
 
-  .scroll-main-wrap {
-    &::-webkit-scrollbar {
-      width: 0 !important;
-      height: 0 !important;
-      display: none;
-    }
+  &.not-single-mode {
+    .scroll-main-wrap {
+      max-height: calc(100vh - 300px);
+      overflow: hidden;
+      overflow-y: scroll;
+      position: relative;
+      z-index: 8;
 
-    height: 100%;
-    overflow: hidden;
-    overflow-y: scroll;
-    position: relative;
-    z-index: 8;
+      &::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        display: none;
+      }
+    }
   }
 
   @media (max-width: 768px) {
@@ -106,6 +108,11 @@ const Container = styled(Box)`
 
       .mobile-header {
         display: flex;
+      }
+
+      .scroll-main-wrap {
+        height: auto;
+        overflow: auto;
       }
     }
 
@@ -155,7 +162,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
             <CloseButton />
           </Box>
         ) : null}
-        <Box className="scroll-main-wrap">{children}</Box>
+        <Box>{children}</Box>
       </Container>
     </>
   )
@@ -176,31 +183,42 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
       fontSize="12px"
       lineHeight="18px"
       display="flex"
+      alignItems="center"
       onClick={async () => {
+        trackUnsubscribe()
+
         if (isLoading) return
         setIsLoading(true)
 
         if (isFollow) {
           dialog({
             type: 'text',
-            title: '',
             description: t('unsubscribe'),
             showCloseButton: true,
-            onConfirm: async () => {
+            modalBodyProps: {
+              mt: '0',
+            },
+            modalCloseButtonProps: {
+              zIndex: 9,
+            },
+            modalFooterProps: {
+              pt: 0,
+            },
+            onConfirm: () => {
+              setIsLoading(false)
+            },
+            onCancel: async () => {
               await api.SubscriptionCommunityUserUnFollowing(uuid)
-              trackUnsubscribe()
+
               setIsFollow(false)
               setIsLoading(false)
               toast(t('Unsubscribe successfully'), { status: 'success' })
             },
-            onCancel: () => {
-              setIsLoading(false)
-            },
             onClose: () => {
               setIsLoading(false)
             },
-            okText: 'Yes',
-            cancelText: 'No',
+            okText: 'No',
+            cancelText: 'Yes',
           })
         } else {
           await api.SubscriptionCommunityUserFollowing(uuid)
@@ -273,18 +291,20 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     <Wrap isSingleMode={isSingleMode}>
       <Box className="header">
         <Flex alignItems="center">
-          <Avatar
-            w="32px"
-            h="32px"
-            address={detail?.writer_name}
+          <Link
+            display="flex"
+            href={`${HOME_URL}/${detail?.writer_name}`}
+            target="_blank"
+            alignItems="center"
             onClick={() => {
               trackAvatar()
-              window.open(`${HOME_URL}/${detail?.writer_name}`)
             }}
-          />
-          <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
-            {truncateAddress(detail?.writer_name)}
-          </Box>
+          >
+            <Avatar w="32px" h="32px" address={detail?.writer_name} />
+            <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
+              {truncateAddress(detail?.writer_name)}
+            </Box>
+          </Link>
           <Spacer />
           <SubscribeLink uuid={detail.writer_uuid} />
         </Flex>
@@ -293,55 +313,55 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         </Box>
         <Divider orientation="horizontal" mt="16px" />
       </Box>
-      <Center className="mobile-header">
-        <Avatar
-          w="14px"
-          h="14px"
-          address={detail?.writer_name}
-          onClick={() => {
-            trackAvatar()
-            window.open(`${HOME_URL}/${detail?.writer_name}`)
-          }}
-        />
+      <Center
+        className="mobile-header"
+        onClick={() => {
+          trackAvatar()
+          window.open(`${HOME_URL}/${detail?.writer_name}`)
+        }}
+      >
+        <Avatar w="14px" h="14px" address={detail?.writer_name} />
         <Box
           ml="6px"
           fontWeight={400}
           fontSize="12px"
           lineHeight="26px"
-          color="#818181"
+          color="#6F6F6F"
         >
           {truncateAddress(detail?.writer_name)}
         </Box>
       </Center>
-      <Text
-        fontWeight={700}
-        fontSize={{ base: '16px', md: '28px' }}
-        textAlign="center"
-        pt={{ base: '15px', md: '20px' }}
-      >
-        {detail?.subject || 'no subject'}
-      </Text>
-      <Flex align="center" className="info">
-        <Divider orientation="horizontal" />
-        <Box
-          p="0px 50px"
-          fontSize="12px"
-          lineHeight="26px"
-          whiteSpace="nowrap"
-          color="#818181"
+      <Box className="scroll-main-wrap">
+        <Text
+          fontWeight={700}
+          fontSize={{ base: '16px', md: '28px' }}
+          textAlign="center"
+          pt={{ base: '15px', md: '20px' }}
         >
-          {SubFormatDate(detail.created_at)}
+          {detail?.subject || 'no subject'}
+        </Text>
+        <Flex align="center" className="info">
+          <Divider orientation="horizontal" />
+          <Box
+            p="0px 50px"
+            fontSize="12px"
+            lineHeight="26px"
+            whiteSpace="nowrap"
+            color="#6F6F6F"
+          >
+            {SubFormatDate(detail.created_at)}
+          </Box>
+          <Divider orientation="horizontal" />
+        </Flex>
+        <Box pt={{ base: '16px', md: '30px' }}>
+          <RenderHTML
+            html={detail?.content}
+            attachments={[]}
+            messageId=""
+            from={{ name: '', address: '' }}
+            shadowStyle="main { min-height: 400px; }"
+          />
         </Box>
-        <Divider orientation="horizontal" />
-      </Flex>
-      <Box pt={{ base: '16px', md: '30px' }}>
-        <RenderHTML
-          html={detail?.content}
-          attachments={[]}
-          messageId=""
-          from={{ name: '', address: '' }}
-          shadowStyle="main { min-height: 400px; }"
-        />
       </Box>
       <Center className="mobile-button" w="100%" mt="20px">
         <Link fontWeight="400" fontSize="12px" lineHeight="18px" display="flex">
