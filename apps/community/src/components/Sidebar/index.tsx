@@ -1,9 +1,12 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Icon } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLayoutStatus } from '../../hooks/useLayoutStatus'
 import { HEADER_HEIGHT } from '../Header'
 import { SidebarMenus } from '../SidebarMenus/SidebarMenus'
 import { RoutePath } from '../../route/path'
+import { ReactComponent as HomeSvg } from '../../assets/SidebarMenuIcons/home.svg'
+import { ReactComponent as MessageSvg } from '../../assets/SidebarMenuIcons/message.svg'
+import { ReactComponent as SubscribeSvg } from '../../assets/SidebarMenuIcons/subscribe.svg'
 
 export const SIDEBAR_WIDTH = 256
 
@@ -28,12 +31,22 @@ export const Sidebar: React.FC = () => {
       <SidebarMenus
         menus={[
           {
-            label: t('sidebar.home'),
+            label: (
+              <>
+                <Icon as={HomeSvg} w="16px" h="16px" mr="4px" />
+                {t('sidebar.home')}
+              </>
+            ),
             to: RoutePath.Dashboard,
             key: 'home',
           },
           {
-            label: t('sidebar.message'),
+            label: (
+              <>
+                <Icon as={MessageSvg} w="16px" h="16px" mr="4px" />
+                {t('sidebar.message')}
+              </>
+            ),
             key: 'message',
             children: [
               {
@@ -44,7 +57,12 @@ export const Sidebar: React.FC = () => {
             ],
           },
           {
-            label: t('sidebar.subscribe'),
+            label: (
+              <>
+                <Icon as={SubscribeSvg} w="16px" h="16px" mr="4px" />
+                {t('sidebar.subscribe')}
+              </>
+            ),
             key: 'subscribe',
             children: [
               {

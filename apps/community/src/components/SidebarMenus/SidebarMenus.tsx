@@ -39,6 +39,7 @@ export const SidebarMenuItem: React.FC<MenuItem> = ({
       fontSize="14px"
       fontWeight="600"
       transition="200ms"
+      align="center"
       {...((currentPathname || to) === pathname ? { bg: 'primary.100' } : {})}
       _hover={{
         textDecoration: isActive ? undefined : 'underline',
@@ -61,6 +62,8 @@ export const SidebarMenus: React.FC<SidebarMenusProps> = ({ menus }) => (
               lineHeight="23px"
               px="12px"
               color="primary.800"
+              display="flex"
+              alignItems="center"
             >
               {menu.label}
             </Heading>
