@@ -330,9 +330,12 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     bg="#fff"
                     color="#000"
                     borderRadius="100px"
-                    onClick={() => {
-                      window.open(`${APP_URL}/subscribe/${uuid}`)
-                    }}
+                    as="a"
+                    target="_blank"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    href={`${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`}
                   >
                     Subscribe
                   </Button>

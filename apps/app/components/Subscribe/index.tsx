@@ -11,7 +11,13 @@ import {
   AlertDescription,
   AlertIcon,
 } from '@chakra-ui/react'
-import { useAccount } from 'hooks'
+import {
+  SubscribeAction,
+  TrackEvent,
+  TrackKey,
+  useAccount,
+  useTrackClick,
+} from 'hooks'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
@@ -28,6 +34,11 @@ import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
 import { useNotification } from '../../hooks/useNotification'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
+import { IS_MOBILE } from '../../constants'
+
+const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
+
+const useTrackOk = () => useTrackClick(TrackEvent.ClickSubscribeOk)
 
 const ConnectWallet = () => {
   const [t] = useTranslation('subscribe')
@@ -57,8 +68,11 @@ const ConnectWallet = () => {
   )
 }
 
-const AlreadySubscribed = () => {
+const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
+  state,
+}) => {
   const [t] = useTranslation('subscribe')
+  const trackContinue = useTrackContinue()
   return (
     <Center h="calc(100vh - 180px)">
       <Center
@@ -78,6 +92,18 @@ const AlreadySubscribed = () => {
             w={['138px', '168px', '168px']}
             h={['40px']}
             fontSize={['14px']}
+            onClick={() => {
+              const repeat = IS_MOBILE
+                ? SubscribeAction.MobileRepeat
+                : SubscribeAction.Repeat
+              const already = IS_MOBILE
+                ? SubscribeAction.Mobile
+                : SubscribeAction.Already
+              trackContinue({
+                [TrackKey.SubscribeBtnStatus]:
+                  state === 'resubscribed' ? repeat : already,
+              })
+            }}
           >
             {t('continue')}
           </Button>
@@ -112,6 +138,8 @@ const SubscribeStatus = () => {
   const [t] = useTranslation('subscribe')
   const [isDeclined, setIsDeclined] = useState(false)
   const [isRequesting, setIsRequesting] = useState(false)
+  const trackOK = useTrackOk()
+  const trackContinue = useTrackContinue()
   if ((permission === 'default' && isBrowserSupport) || isRequesting) {
     return (
       <>
@@ -133,6 +161,7 @@ const SubscribeStatus = () => {
           isLoading={isRequesting}
           onClick={async () => {
             setIsRequesting(true)
+            trackOK()
             try {
               const ps = await requestPermission()
               if (ps === 'denied') {
@@ -158,7 +187,16 @@ const SubscribeStatus = () => {
           {t('declined')}
         </Text>
         <Link to={RoutePath.Inbox}>
-          <Button w="168px">{t('continue')}</Button>
+          <Button
+            w="168px"
+            onClick={() => {
+              trackContinue({
+                [TrackKey.SubscribeBtnStatus]: SubscribeAction.Denial,
+              })
+            }}
+          >
+            {t('continue')}
+          </Button>
         </Link>
       </>
     )
@@ -171,7 +209,16 @@ const SubscribeStatus = () => {
       </Text>
       <Desc>{t('success')}</Desc>
       <Link to={RoutePath.Inbox}>
-        <Button w="168px">{t('continue')}</Button>
+        <Button
+          w="168px"
+          onClick={() => {
+            trackContinue({
+              [TrackKey.SubscribeBtnStatus]: SubscribeAction.Already,
+            })
+          }}
+        >
+          {t('continue')}
+        </Button>
       </Link>
     </>
   )
@@ -291,7 +338,7 @@ export const Subscribe: React.FC = () => {
     subscribeStatus?.state === 'active' ||
     subscribeResult?.state === 'resubscribed'
   ) {
-    return <AlreadySubscribed />
+    return <AlreadySubscribed state={subscribeResult?.state} />
   }
   const error =
     // @ts-ignore
