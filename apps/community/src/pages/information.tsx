@@ -12,6 +12,7 @@ import {
   Icon,
   Image,
   Input,
+  Tooltip,
   useStyleConfig,
   VStack,
 } from '@chakra-ui/react'
@@ -21,6 +22,7 @@ import {
   TrackEvent,
   TrackKey,
   useAccount,
+  useCopyWithStatus,
   useLoginInfo,
   useScreenshot,
   useTrackClick,
@@ -34,6 +36,8 @@ import { ReactComponent as SvgRank } from 'assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from 'assets/svg/collect.svg'
 import axios from 'axios'
 import { ClusterInfoResp } from 'models'
+import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
+import { CheckIcon } from '@chakra-ui/icons'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { QueryKey } from '../api/QueryKey'
@@ -62,7 +66,7 @@ export const DownloadButton: React.FC<
 
 export const Information: React.FC = () => {
   useDocumentTitle('Information')
-  const { t } = useTranslation('user_information')
+  const { t } = useTranslation(['user_information', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const account = useAccount()
   const api = useAPI()
@@ -115,6 +119,9 @@ export const Information: React.FC = () => {
     TrackEvent.CommunityClickInformationQRcodeDownload
   )
 
+  const { onCopy, isCopied } = useCopyWithStatus()
+  const profilePageUrl = `${HOME_URL}/${userInfo?.name}`
+
   return (
     <Container as={Grid} gridTemplateRows="100%" gap="20px">
       <Flex
@@ -162,6 +169,40 @@ export const Information: React.FC = () => {
               isDisabled
               value={userInfo?.address || userInfoData?.address}
             />
+          </FormControl>
+          <FormControl>
+            <FormLabel>{t('profile_page_field')}</FormLabel>
+            <Box position="relative">
+              <Input
+                name="profile_page_url"
+                isDisabled
+                value={profilePageUrl}
+              />
+              <Tooltip
+                label={t(isCopied ? 'copied' : 'copy', { ns: 'common' })}
+                placement="top"
+                hasArrow
+              >
+                <Button
+                  variant="unstyled"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  h="full"
+                  position="absolute"
+                  top="0"
+                  right="0"
+                  w="40px"
+                  onClick={() => onCopy(profilePageUrl)}
+                >
+                  {isCopied ? (
+                    <CheckIcon w="16px" h="16px" />
+                  ) : (
+                    <Icon as={CopySvg} w="20px" h="20px" />
+                  )}
+                </Button>
+              </Tooltip>
+            </Box>
           </FormControl>
           <FormControl>
             <FormLabel>{t('qr_code')}</FormLabel>

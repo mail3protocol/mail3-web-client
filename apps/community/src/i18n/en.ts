@@ -61,6 +61,8 @@ export default {
       'Only one message can be sent within 1 day, please try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
+    copied: 'Copied',
+    copy: 'Copy',
     need_open_earn_nft_dialog: {
       title: '👉Notice',
       description:
@@ -301,6 +303,7 @@ export default {
     name_placeholder: 'Mail3.eth',
     address_field: 'Mail<sup>3</sup> Address',
     address_placeholder: 'robert@mail.com',
+    profile_page_field: 'Profile Page',
     qr_code: 'Profile QR Code',
     download: 'Download',
     title: 'Account Information',
