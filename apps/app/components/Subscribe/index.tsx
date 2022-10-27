@@ -215,7 +215,9 @@ const SubscribeStatus = () => {
           w="168px"
           onClick={() => {
             trackContinue({
-              [TrackKey.SubscribeBtnStatus]: SubscribeAction.Already,
+              [TrackKey.SubscribeBtnStatus]: IS_MOBILE
+                ? SubscribeAction.Mobile
+                : SubscribeAction.Already,
             })
           }}
         >
