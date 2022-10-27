@@ -291,9 +291,8 @@ export default {
     },
   },
   login_home_page: {
-    'Hello! Friends': 'Hello! Friends',
-    'Welcome to\nmail3 Community!': 'Welcome to\nmail3 Community!',
-    'Connect Wallet': 'Connect wallet',
+    say_hi: 'Hello! Friends',
+    title: 'Welcome to\nMail3 Community!',
     join_community: 'Join community',
     join_discord: 'Join Discord',
     follow_twitter: 'Follow Twitter',
