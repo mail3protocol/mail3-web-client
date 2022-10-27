@@ -185,6 +185,8 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
       display="flex"
       alignItems="center"
       onClick={async () => {
+        trackUnsubscribe()
+
         if (isLoading) return
         setIsLoading(true)
 
@@ -207,7 +209,7 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
             },
             onCancel: async () => {
               await api.SubscriptionCommunityUserUnFollowing(uuid)
-              trackUnsubscribe()
+
               setIsFollow(false)
               setIsLoading(false)
               toast(t('Unsubscribe successfully'), { status: 'success' })

@@ -141,7 +141,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
   })
 
   return (
-    <Box p="22px 0">
+    <Box p="32px 0">
       {data.map((item) => {
         const { uuid, seen } = item
         return (

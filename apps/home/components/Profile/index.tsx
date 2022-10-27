@@ -574,7 +574,10 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                                         mt="8px"
                                         textAlign="center"
                                         fontSize="12px"
+                                        lineHeight="16px"
                                         noOfLines={2}
+                                        color="#000"
+                                        fontWeight="500"
                                       >
                                         {name}
                                       </Text>
