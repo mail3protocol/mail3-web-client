@@ -1,7 +1,7 @@
 export default {
   common: {
-    no_mail3: 'No Mail3? Claim it now! ',
-    register: 'Register it now',
+    no_mail3: 'No Mail3? ',
+    register: 'Claim it now! ',
     connect_wallet: 'Connect Wallet',
     connect: {
       notice: 'Notice',
