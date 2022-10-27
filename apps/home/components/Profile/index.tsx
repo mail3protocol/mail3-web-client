@@ -73,6 +73,7 @@ const Container = styled(Box)`
 
   @media (max-width: 600px) {
     box-shadow: none;
+    height: auto;
   }
 `
 
@@ -139,6 +140,7 @@ const WrapLeft = styled(Center)`
   @media (max-width: 600px) {
     border: none;
     width: 100%;
+    height: auto;
     padding: 0;
   }
 `
@@ -159,6 +161,10 @@ const WrapRight = styled(Box)`
 
   @media (max-width: 600px) {
     padding: 10px;
+
+    .nft-list-wrap {
+      height: auto;
+    }
   }
 `
 

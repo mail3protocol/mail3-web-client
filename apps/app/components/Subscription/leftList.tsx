@@ -111,7 +111,7 @@ export const SubListItem: FC<SubListItemProps> = ({
         <Flex
           fontSize="12px"
           fontWeight={400}
-          color="#818181"
+          color="#6F6F6F"
           lineHeight="26px"
           whiteSpace="nowrap"
         >
