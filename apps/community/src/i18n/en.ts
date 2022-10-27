@@ -181,10 +181,12 @@ export default {
     },
     campaign_link_field: 'Campaign Link',
     campaign_link_placeholder: 'Campaign Link',
+    quest_link_field: 'Quest Link',
+    quest_link_placeholder: 'Quest Link',
     go_to_galaxy_description:
       'Go to <a>Galxe</a> to create a marketing campaign and get the campaign link.',
     go_to_quest3_description:
-      'Go to <a>Quest3</a> to create a marketing campaign and get the campaign link.',
+      'Go to <a>Quest3</a> to create a quest and get the quest link.',
     credential_id: 'Credential ID',
     credential_id_placeholder: 'Credential ID',
     access_token: 'Access Token',

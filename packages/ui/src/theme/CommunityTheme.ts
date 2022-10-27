@@ -170,6 +170,14 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
         },
       },
     },
+    FormError: {
+      baseStyle: {
+        text: {
+          fontSize: '12px',
+          fontWeight: 500,
+        },
+      },
+    },
     FormLabel: {
       baseStyle: {
         fontSize: '14px',
