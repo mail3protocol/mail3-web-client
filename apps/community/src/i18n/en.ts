@@ -119,6 +119,8 @@ export default {
         only_supported_https: 'Only support https',
       },
     },
+    copy: 'Copy',
+    copied: 'Copied',
   },
   hooks: {
     register_dialog: {
@@ -294,6 +296,7 @@ export default {
     name_placeholder: 'Mail3.eth',
     address_field: 'Mail<sup>3</sup> Address',
     address_placeholder: 'robert@mail.com',
+    profile_page_field: 'Profile Page',
     qr_code: 'Profile QR Code',
     download: 'Download',
     title: 'Account Information',
