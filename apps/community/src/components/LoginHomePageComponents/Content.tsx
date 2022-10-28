@@ -136,7 +136,7 @@ export const Content: React.FC = () => {
           mb={{ base: '22px', xxl: '34px' }}
           transition="200ms"
         >
-          {t('Hello! Friends')}
+          {t('say_hi')}
         </Heading>
         <Heading
           as="h1"
@@ -147,7 +147,7 @@ export const Content: React.FC = () => {
           mb={{ base: '32px', xxl: '50px' }}
           transition="200ms"
         >
-          {t('Welcome to\nmail3 Community!')}
+          {t('title')}
         </Heading>
         <Button
           rounded="99px"

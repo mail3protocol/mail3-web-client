@@ -427,9 +427,21 @@ export const EarnNft: React.FC = () => {
             </RadioGroup>
           </FormControl>
           <FormControl isInvalid={campaignUrlErrorMessage !== ''}>
-            <FormLabel>{t('campaign_link_field')}</FormLabel>
+            <FormLabel>
+              {
+                {
+                  [SubscriptionPlatform.Galaxy]: t('campaign_link_field'),
+                  [SubscriptionPlatform.Quest3]: t('quest_link_field'),
+                }[platform]
+              }
+            </FormLabel>
             <Input
-              placeholder={t('campaign_link_placeholder')}
+              placeholder={
+                {
+                  [SubscriptionPlatform.Galaxy]: t('campaign_link_placeholder'),
+                  [SubscriptionPlatform.Quest3]: t('quest_link_placeholder'),
+                }[platform]
+              }
               name="campaign_link"
               isDisabled={isDisabled}
               value={campaignUrl}

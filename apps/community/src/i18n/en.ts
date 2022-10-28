@@ -1,7 +1,7 @@
 export default {
   common: {
-    no_mail3: 'No mail3? ',
-    register: 'Register it now',
+    no_mail3: 'No Mail3? ',
+    register: 'Claim it now! ',
     connect_wallet: 'Connect Wallet',
     connect: {
       notice: 'Notice',
@@ -181,10 +181,12 @@ export default {
     },
     campaign_link_field: 'Campaign Link',
     campaign_link_placeholder: 'Campaign Link',
+    quest_link_field: 'Quest Link',
+    quest_link_placeholder: 'Quest Link',
     go_to_galaxy_description:
       'Go to <a>Galxe</a> to create a marketing campaign and get the campaign link.',
     go_to_quest3_description:
-      'Go to <a>Quest3</a> to create a marketing campaign and get the campaign link.',
+      'Go to <a>Quest3</a> to create a quest and get the quest link.',
     credential_id: 'Credential ID',
     credential_id_placeholder: 'Credential ID',
     access_token: 'Access Token',
@@ -213,7 +215,7 @@ export default {
              <li>
                <p>Only a few simple steps are needed:</p>
                <ol>
-                 <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
+                 <li>Create a Campaign/Quest on the supported platform;</li>
                  <li>Follow the guide to complete the configuration below;</li>
                  <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
@@ -291,9 +293,8 @@ export default {
     },
   },
   login_home_page: {
-    'Hello! Friends': 'Hello! Friends',
-    'Welcome to\nmail3 Community!': 'Welcome to\nmail3 Community!',
-    'Connect Wallet': 'Connect wallet',
+    say_hi: 'Hello! Friends',
+    title: 'Welcome to\nMail3 Community!',
     join_community: 'Join community',
     join_discord: 'Join Discord',
     follow_twitter: 'Follow Twitter',
