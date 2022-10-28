@@ -33,7 +33,7 @@ const areaData = `
 | MechCraftWorld | @MechcraftWorld | https://discord.gg/JYYrhSRfTS | 102
 | Nawarat | @0xNawarat | https://discord.gg/E7m3gDy7Xs | 102
 | NFTGO | @nftgoio | https://discord.gg/JAkFX3ZZ7k | 104
-| LuckyBuy | @LuckyBuy_io | discord.com/invite/luckybuy | 133
+| LuckyBuy | @LuckyBuy_io | https://discord.com/invite/luckybuy | 133
 `
   .split('\n')
   .filter((i) => i)
