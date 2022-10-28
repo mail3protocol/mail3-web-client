@@ -1,7 +1,11 @@
 import html2canvas from 'html2canvas'
 import { SubmitMessage } from 'models/src/submitMessage'
 import DOMPurify from 'dompurify'
+import { GetMessage } from 'models'
+import { generatePath } from 'react-router-dom'
 import { generateAttachmentContentId } from './string'
+import { Action } from '../pages/message/edit'
+import { RoutePath } from '../route/path'
 
 export async function onRenderElementToImage(element: HTMLDivElement) {
   return html2canvas(element, {
@@ -135,4 +139,81 @@ export function hasFilenameSpecialCharacters(filename: string) {
   return DISABLED_FILENAME_SPECIAL_CHARACTERS.some((char) =>
     filename.includes(char)
   )
+}
+
+export function generateMessageEditorUrl({
+  action,
+  messageInfo,
+  cc,
+  bcc,
+  to,
+  subject,
+}: {
+  action?: Action
+  messageInfo?: GetMessage.Response | null
+  cc?: string[]
+  bcc?: string[]
+  to?: string[]
+  subject?: string
+}) {
+  const replySubjectPrefix = 'Re: '
+  const forwardSubjectPrefix = 'Fwd: '
+  const setupSubjectPrefix = (add: string, remove: string) => {
+    if (!messageInfo?.subject) return ''
+    if (messageInfo.subject.startsWith(add)) {
+      return messageInfo.subject
+    }
+    const handled = messageInfo.subject.startsWith(remove)
+      ? messageInfo.subject.substring(remove.length)
+      : messageInfo.subject
+    return `${add}${handled}`
+  }
+  const generateQueryParameters = (
+    queryObject: Record<string, string | undefined>
+  ): string =>
+    Object.keys(queryObject)
+      .filter((key) => queryObject[key])
+      .map((key) => `${key}=${queryObject[key]}`)
+      .join('&')
+
+  if (action === 'reply' && messageInfo) {
+    const replySubject = setupSubjectPrefix(
+      replySubjectPrefix,
+      forwardSubjectPrefix
+    )
+    const queryParameters = generateQueryParameters({
+      to: [messageInfo.from.address, ...(to || [])].join(','),
+      cc: cc?.join(','),
+      bcc: bcc?.join(','),
+      subject: subject || replySubject,
+      action,
+      id: messageInfo.id,
+    })
+    return generatePath(`${RoutePath.NewMessage}?${queryParameters}`)
+  }
+
+  if (action === 'forward' && messageInfo) {
+    const forwardSubject = setupSubjectPrefix(
+      forwardSubjectPrefix,
+      replySubjectPrefix
+    )
+    const queryParameters = generateQueryParameters({
+      to: to?.join(','),
+      cc: cc?.join(','),
+      bcc: bcc?.join(','),
+      subject: subject || forwardSubject,
+      action,
+      id: messageInfo.id,
+    })
+    return generatePath(`${RoutePath.NewMessage}?${queryParameters}`)
+  }
+
+  const queryParameters = generateQueryParameters({
+    to: to?.join(','),
+    cc: cc?.join(','),
+    bcc: bcc?.join(','),
+    subject,
+    action,
+  })
+  return generatePath(`${RoutePath.NewMessage}?${queryParameters}`)
 }

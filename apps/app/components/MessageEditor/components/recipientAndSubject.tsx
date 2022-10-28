@@ -53,17 +53,17 @@ export const RecipientAndSubject: React.FC = () => {
   const [isEnabledBCC, setIsEnabledBCC] = useState(false)
   const isFoldCcAndBcc = useBreakpointValue({ base: false, md: true })
   useEffect(() => {
-    if (!isFoldCcAndBcc) {
-      if (isEnabledCC || isEnabledBCC) {
-        setIsEnabledCC(true)
-        setIsEnabledBCC(true)
-      }
-    }
-
-    if (ccAddresses.length) {
+    if (!isFoldCcAndBcc && (isEnabledCC || isEnabledBCC)) {
       setIsEnabledCC(true)
+      setIsEnabledBCC(true)
     }
-  }, [isFoldCcAndBcc, ccAddresses])
+  }, [isFoldCcAndBcc])
+  useEffect(() => {
+    if (ccAddresses.length) setIsEnabledCC(true)
+  }, [ccAddresses])
+  useEffect(() => {
+    if (bccAddresses.length) setIsEnabledBCC(true)
+  }, [bccAddresses])
   const trackClickCC = useTrackClick(TrackEvent.AppEditMessageClickCC)
   const trackClickBCC = useTrackClick(TrackEvent.AppEditMessageClickBCC)
   const trackClickMobileCCAndBCC = useTrackClick(
