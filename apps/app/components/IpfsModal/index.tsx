@@ -20,6 +20,7 @@ import {
   useProvider,
   useSignMessage,
   useToast,
+  zilpay,
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
@@ -101,7 +102,7 @@ export const IpfsModal: React.FC<{
   } = useDisclosure()
   const onGenerateKey = useCallback(async () => {
     try {
-      if (provider == null) {
+      if (provider == null && !zilpay.isConnected) {
         toast(t('need_to_open_wallet'))
         await connector?.activate()
         return
