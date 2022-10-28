@@ -1,18 +1,10 @@
-import { AspectRatio, Box, Button, Image, Link } from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
+import { AspectRatio, Box, Button, Flex, Image, Link } from '@chakra-ui/react'
 import { atomWithStorage } from 'jotai/utils'
 import { CloseIcon } from '@chakra-ui/icons'
 import React from 'react'
 import { useAtom } from 'jotai'
 import { TrackEvent, useTrackClick } from 'hooks'
-import ProductRecommendationsBannerImage from '../../assets/product_recommendations_banner/desktop.png'
-import ProductRecommendationsBannerMobileImage from '../../assets/product_recommendations_banner/mobile.png'
-import LetTalkImage from "../../assets/product_recommendations_banner/let's_talk.png"
-import {
-  PRODUCT_RECOMMENDATIONS_ADDRESS,
-  PRODUCT_RECOMMENDATIONS_SUBJECT,
-} from '../../constants'
-import { RoutePath } from '../../route/path'
+import ProductRecommendationsBannerImage from '../../assets/product_recommendations_banner/halloween.png'
 
 const isClosedBannerAtom = atomWithStorage<boolean>(
   'is_close_product_recommendations_banner_atom',
@@ -29,6 +21,34 @@ const isClosedBannerAtom = atomWithStorage<boolean>(
     },
   }
 )
+
+const areaData = `
+| For Metas | @4metas | https://discord.gg/NRVxq9Uqcz | 114
+| Chill | @chillweb3 | http://discord.gg/JRVvephUtZ | 105
+| Weirdo Ghost Gang | @WeirdoGhostGang | https://discord.com/invite/weirdoghost | 100
+| Link3 | @link3to | https://discord.gg/fGQFddXTEs | 109
+| MOJOR | @Mojorcom | https://discord.gg/qty56w3HKe | 114
+| Mail3 | @mail3dao | https://discord.gg/mRrdVQ2Gs8 | 142
+| .bit | @dotbitHQ | http://discord.gg/did | 105
+| MechCraftWorld | @MechcraftWorld | https://discord.gg/JYYrhSRfTS | 102
+| Nawarat | @0xNawarat | https://discord.gg/E7m3gDy7Xs | 102
+| NFTGO | @nftgoio | https://discord.gg/JAkFX3ZZ7k | 104
+| LuckyBuy | @LuckyBuy_io | https://discord.com/invite/luckybuy | 133
+`
+  .split('\n')
+  .filter((i) => i)
+  .map((item) => {
+    const arr = item
+      .trim()
+      .split('|')
+      .map((i) => i.trim())
+      .filter((i) => i)
+    return {
+      name: arr[0],
+      link: arr[2],
+      width: arr[3],
+    }
+  })
 
 export const ProductRecommendationsBanner: React.FC = () => {
   const trackClickBannerSuggestion = useTrackClick(
@@ -55,18 +75,20 @@ export const ProductRecommendationsBanner: React.FC = () => {
           e.preventDefault()
           setIsCloseBanner(true)
         }}
-        zIndex={1}
+        zIndex={3}
       >
-        <CloseIcon w="inherit" h="inherit" />
+        <CloseIcon w="inherit" h="inherit" color="#fff" />
       </Button>
-      <Link
-        as={RouterLink}
-        to={`${RoutePath.NewMessage}?to=${PRODUCT_RECOMMENDATIONS_ADDRESS}&subject=${PRODUCT_RECOMMENDATIONS_SUBJECT}`}
-        onClick={() => trackClickBannerSuggestion()}
+
+      <Box
+        position="relative"
+        zIndex={2}
+        onClick={() => {
+          trackClickBannerSuggestion()
+        }}
       >
         <AspectRatio
-          ratio={4880 / 800}
-          display={{ base: 'none', md: 'block' }}
+          ratio={1220 / 200}
           rounded="16px"
           shadow="0 0 10px 4px rgba(25, 25, 100, 0.1)"
           overflow="hidden"
@@ -78,41 +100,30 @@ export const ProductRecommendationsBanner: React.FC = () => {
             pointerEvents="none"
           />
         </AspectRatio>
-        <AspectRatio
-          ratio={1340 / 500}
-          display={{ base: 'block', md: 'none' }}
-          rounded="24px"
-          shadow="0 0 10px 4px rgba(25, 25, 100, 0.1)"
-          overflow="hidden"
-          w="full"
-        >
-          <Image
-            src={ProductRecommendationsBannerMobileImage}
-            alt="mobile_banner"
-            pointerEvents="none"
-          />
-        </AspectRatio>
-        <Image
-          src={LetTalkImage}
-          alt="let's talk"
+        <Flex
           position="absolute"
-          top="54%"
-          right="38%"
-          w={{ base: '20%', md: '10%' }}
-          css={`
-            @keyframes DriftbottleBannerButtonAnimation {
-              0%,
-              100% {
-                transform: scale(1);
-              }
-              50% {
-                transform: scale(1.05);
-              }
-            }
-            animation: DriftbottleBannerButtonAnimation 2s infinite linear;
-          `}
-        />
-      </Link>
+          top="0"
+          left="0"
+          w="100%"
+          h="100%"
+          display={{ base: 'none', md: 'flex' }}
+        >
+          {areaData.map((item, index) => {
+            const { name, link, width } = item
+
+            return (
+              <Link
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                w={`${width}px`}
+                href={link}
+                target="_blank"
+                title={name}
+              />
+            )
+          })}
+        </Flex>
+      </Box>
     </Box>
   )
 }
