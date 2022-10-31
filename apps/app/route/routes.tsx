@@ -5,6 +5,7 @@ import { DraftsPage } from '../pages/messages/drafts'
 import { NewMessagePage } from '../pages/message/edit'
 import { SentPage } from '../pages/messages/sent'
 import { SettingsAddressPage } from '../pages/settings/address'
+import { SettingsAvatarPage } from '../pages/settings/avatar'
 import { SettingsSignaturePage } from '../pages/settings/signature'
 import { SetupAddressPage } from '../pages/setup/address'
 import { SetupSharePage } from '../pages/setup/share'
@@ -57,6 +58,11 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Settings,
     key: 'settings',
     element: <SettingsAddressPage />,
+  },
+  {
+    path: RoutePath.SettingAvatar,
+    key: 'settings-avatar',
+    element: <SettingsAvatarPage />,
   },
   {
     path: RoutePath.SettingSignature,

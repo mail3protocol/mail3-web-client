@@ -3,17 +3,17 @@ import { PageContainer } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { Center, Heading } from '@chakra-ui/react'
 import { RoutePath } from '../../route/path'
-import { SettingAddress } from '../../components/Settings/SettingAddress'
+import { SettingAvatar } from '../../components/Settings/SettingAvatar'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { Tabs, Tab } from '../../components/Tabs'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 import { RouterLink } from '../../components/RouterLink'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-export const SettingsAddressPage = () => {
+export const SettingsAvatarPage = () => {
   const [t] = useTranslation('settings')
   const { redirectHome, isAuth } = useRedirectHome()
-  useDocumentTitle('Customize your email address')
+  useDocumentTitle('Set your avatar')
   if (!isAuth) {
     return redirectHome()
   }
@@ -33,12 +33,12 @@ export const SettingsAddressPage = () => {
         </Center>
         <Tabs mb="32px">
           <RouterLink href={RoutePath.Settings} passHref>
-            <Tab as="a" isActive>
+            <Tab as="a" isActive={false}>
               {t('settings.tabs.address')}
             </Tab>
           </RouterLink>
-          <RouterLink href={RoutePath.SettingAvatar} passHref>
-            <Tab as="a" isActive={false}>
+          <RouterLink href={RoutePath.Settings} passHref>
+            <Tab as="a" isActive>
               {t('settings.tabs.avatar')}
             </Tab>
           </RouterLink>
@@ -48,7 +48,7 @@ export const SettingsAddressPage = () => {
             </Tab>
           </RouterLink>
         </Tabs>
-        <SettingAddress />
+        <SettingAvatar />
       </SettingContainer>
     </PageContainer>
   )
