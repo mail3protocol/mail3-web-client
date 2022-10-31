@@ -131,7 +131,7 @@ export default {
   hooks: {
     register_dialog: {
       title: 'Apply for your Community',
-      description: `Please click the "mail me" button below to submit your application. It may take some time for your application to receive a response.`,
+      description: `Please click the "mail<sup>3</sup> me" button below to submit your application. It may take some time for your application to receive a response.`,
       register_mail_default_subject: 'Apply for Web3 subscription feature',
     },
   },
