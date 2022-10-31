@@ -78,7 +78,7 @@ export default {
       message: 'Message',
       subscribe: 'Subscribe',
       home: 'Home',
-      send_records: 'Send Records',
+      send_records: 'History',
       earn_nft: 'Earn NFT',
     },
     tips_panel: {
@@ -114,7 +114,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
-      information: 'Information',
+      information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
     },
@@ -130,8 +130,8 @@ export default {
   },
   hooks: {
     register_dialog: {
-      title: '😔 Sorry you are not qualified!',
-      description: `If you would like to apply for access to "mail<sup>3</sup> Community". \n Please send us an email via the "Mail me" button below, telling us about your project, <span>your needs and your contact information</span>, and we will contact you after evaluation.`,
+      title: 'Apply for your Community',
+      description: `Please click the "mail me" button below to submit your application. It may take some time for your application to receive a response.`,
       register_mail_default_subject: 'Apply for Web3 subscription feature',
     },
   },
@@ -164,14 +164,14 @@ export default {
     new_subscribers: 'New Subscribers',
     statistics_time: 'Statistics time: Yesterday 00:00 - 24:00',
     send_message: 'Send Message',
-    send_records: 'Send Records',
+    send_records: 'History',
     send_records_tooltip: 'Show 10 sent messages recently',
-    view_all_send_records: 'View all send records',
+    view_all_send_records: 'All history',
     download_failed: 'Download failed, reason: {{message}}',
     download_no_data: 'No data, unable to download.',
   },
   earn_nft: {
-    title: 'Subscribe To Earn NFT',
+    title: 'Subscribe To Earn',
     to_earn: 'To Earn',
     nft: 'NFT',
     distribution_platform: 'Distribution Platform',
@@ -270,7 +270,7 @@ export default {
     enable_confirm: {
       title: 'Please confirm this operation!',
       description:
-        '<p>Please evaluate whether your OAT/NFT issuance is in line with your expectation before enabling it, to avoid users not being able to collect their rewards due to insufficient issuance.</p><br/><p>Make sure your Project Galaxy campaign is active and started before enabling it.</p>',
+        '<p>Please make sure you have adjusted the "Subscribe To Earn" dialog on your website or product integration before deactivating "Subscribe To Earn" to avoid situations where users cannot receive rewards after subscription.</p>',
       confirm: 'Confirm',
     },
     disable_confirm: {
@@ -307,7 +307,7 @@ export default {
     profile_page_field: 'Profile Page',
     qr_code: 'Profile QR Code',
     download: 'Download',
-    title: 'Account Information',
+    title: 'Account',
   },
   send_message: {
     title: 'Send Records',
