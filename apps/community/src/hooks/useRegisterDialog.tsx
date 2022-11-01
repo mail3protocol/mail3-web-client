@@ -98,12 +98,7 @@ export function useRegisterDialog() {
         modalContentProps: {
           width: '450px',
         },
-        description: (
-          <>
-            {description}
-            <div />
-          </>
-        ),
+        description,
       })
     },
     [t, dialog]
