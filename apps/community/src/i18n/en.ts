@@ -57,16 +57,14 @@ export default {
     loading: 'Loading……',
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
-    send_time_limit:
-      'Only one message can be sent within 1 day, please try again later.',
+    send_time_limit: 'You can send 1 message a day. Please try it later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
     copy: 'Copy',
     need_open_earn_nft_dialog: {
       title: '👉Notice',
-      description:
-        'Please enable <b>subscribe-to-earn</b> feature before proceeding to the next step',
+      description: 'Please enable "subscribe-to-earn" feature',
       confirm: 'Confirm',
     },
   },
