@@ -5,9 +5,9 @@ import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-export const SetupAddressPage = () => {
+export const SetupAvatarPage = () => {
   const { isAuth, redirectHome } = useRedirectHome()
-  useDocumentTitle('Setup Address')
+  useDocumentTitle('Setup your avatar')
   if (!isAuth) {
     return redirectHome()
   }
@@ -15,7 +15,7 @@ export const SetupAddressPage = () => {
   return (
     <PageContainer>
       <SettingContainer>
-        <SettingAvatar />
+        <SettingAvatar isSetup />
       </SettingContainer>
     </PageContainer>
   )

@@ -8,6 +8,7 @@ import { SettingsAddressPage } from '../pages/settings/address'
 import { SettingsAvatarPage } from '../pages/settings/avatar'
 import { SettingsSignaturePage } from '../pages/settings/signature'
 import { SetupAddressPage } from '../pages/setup/address'
+import { SetupAvatarPage } from '../pages/setup/avatar'
 import { SetupSharePage } from '../pages/setup/share'
 import { UnReadPage } from '../pages/unread'
 import { MessagePage } from '../pages/message/[id]'
@@ -83,6 +84,11 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.SetupShare,
     key: 'setup-share',
     element: <SetupSharePage />,
+  },
+  {
+    path: RoutePath.SetupAvatar,
+    key: 'setup-avatar',
+    element: <SetupAvatarPage />,
   },
   {
     path: RoutePath.NewMessage,
