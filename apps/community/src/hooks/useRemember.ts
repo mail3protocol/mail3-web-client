@@ -17,6 +17,7 @@ import { RoutePath } from '../route/path'
 import { useRegisterDialog } from './useRegisterDialog'
 import { API } from '../api/api'
 import { SubscriptionState } from '../api/modals/SubscriptionResponse'
+import { ErrorCode } from '../api/ErrorCode'
 
 export const rememberLoadingAtom = atom(false)
 
@@ -107,8 +108,13 @@ export function useRemember() {
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message || err?.message || t('unknown_error')
-      if (err.response.status === 401) {
-        onOpenRegisterDialog()
+      if (
+        [
+          ErrorCode.USER_NOT_FOUND,
+          ErrorCode.COMMUNITY_ADDRESS_NOT_IN_WHITELIST,
+        ].includes(err?.response?.data?.reason)
+      ) {
+        onOpenRegisterDialog({ reason: err?.response?.data?.reason })
       } else {
         toast(errorMessage)
       }

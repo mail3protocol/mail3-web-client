@@ -132,7 +132,10 @@ export default {
     register_dialog: {
       title: 'Apply for your Community',
       description: `Please click the "mail<sup>3</sup> me" button below to submit your application. It may take some time for your application to receive a response.`,
+      no_white_list_description:
+        'If you would like to apply for access to "mail<sup>3</sup> Community". <br/><br/>Please visit <a>Mail3 Official Website</a> to claim your Mail3 first.',
       register_mail_default_subject: 'Apply for Web3 subscription feature',
+      continue: 'Continue',
     },
   },
   new_message: {
