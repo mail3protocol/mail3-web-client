@@ -177,20 +177,6 @@ export const Content: React.FC = () => {
         >
           {t('connect_wallet', { ns: 'common' })}
         </Button>
-        <Box fontWeight="500" fontSize="16px">
-          {t('no_mail3', { ns: 'common' })}
-          <Button
-            variant="link"
-            color="primary.900"
-            _active={{ color: 'primary.900', opacity: 0.6 }}
-            fontSize="16px"
-            as="a"
-            target="_blank"
-            href={APP_URL}
-          >
-            {t('register', { ns: 'common' })}
-          </Button>
-        </Box>
       </Box>
       <Image
         src={BackgroundPng}
