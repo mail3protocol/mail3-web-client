@@ -57,16 +57,14 @@ export default {
     loading: 'Loading……',
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
-    send_time_limit:
-      'Only one message can be sent within 1 day, please try again later.',
+    send_time_limit: 'You can send 1 message a day. Please try it later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
     copy: 'Copy',
     need_open_earn_nft_dialog: {
       title: '👉Notice',
-      description:
-        'Please enable <b>subscribe-to-earn</b> feature before proceeding to the next step',
+      description: 'Please enable "subscribe-to-earn" feature',
       confirm: 'Confirm',
     },
   },
@@ -78,7 +76,7 @@ export default {
       message: 'Message',
       subscribe: 'Subscribe',
       home: 'Home',
-      send_records: 'Send Records',
+      send_records: 'History',
       earn_nft: 'Earn NFT',
     },
     tips_panel: {
@@ -114,7 +112,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
-      information: 'Information',
+      information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
     },
@@ -130,9 +128,12 @@ export default {
   },
   hooks: {
     register_dialog: {
-      title: '😔 Sorry you are not qualified!',
-      description: `If you would like to apply for access to "mail<sup>3</sup> Community". \n Please send us an email via the "Mail me" button below, telling us about your project, <span>your needs and your contact information</span>, and we will contact you after evaluation.`,
+      title: 'Apply for your Community',
+      description: `Please click the "mail<sup>3</sup> me" button below to submit your application. It may take some time for your application to receive a response.`,
+      no_white_list_description:
+        'If you would like to apply for access to "mail<sup>3</sup> Community". <br/><br/>Please visit mail<sup>3</sup> official website to claim your Mail3 first.',
       register_mail_default_subject: 'Apply for Web3 subscription feature',
+      continue: 'Continue',
     },
   },
   new_message: {
@@ -148,7 +149,7 @@ export default {
     mail_image_limit:
       'The total image size of this message cannot exceed {{size}}',
     send_confirm: 'Please confirm you want to send this message',
-    send_description: 'You are about to send this message to your subscribers',
+    send_description: 'Do you want to send this message to subscriber?',
     confirm: 'Confirm',
     unsubscribe: 'Unsubscribe',
     successfully_sent: {
@@ -164,14 +165,14 @@ export default {
     new_subscribers: 'New Subscribers',
     statistics_time: 'Statistics time: Yesterday 00:00 - 24:00',
     send_message: 'Send Message',
-    send_records: 'Send Records',
+    send_records: 'History',
     send_records_tooltip: 'Show 10 sent messages recently',
-    view_all_send_records: 'View all send records',
+    view_all_send_records: 'All history',
     download_failed: 'Download failed, reason: {{message}}',
     download_no_data: 'No data, unable to download.',
   },
   earn_nft: {
-    title: 'Subscribe To Earn NFT',
+    title: 'Subscribe To Earn',
     to_earn: 'To Earn',
     nft: 'NFT',
     distribution_platform: 'Distribution Platform',
@@ -276,7 +277,7 @@ export default {
     disable_confirm: {
       title: 'Please confirm this operation!',
       description:
-        'Please make sure you have adjusted the "subscribe to earn" dialog on your website or product integration before deactivating "subscribe to earn" to avoid situations where users cannot receive rewards after subscribing.',
+        'Please make sure you have adjusted the "Subscribe To Earn" dialog on your website or product integration before deactivating "Subscribe To Earn" to avoid situations where users cannot receive rewards after subscription.',
       confirm: 'Confirm',
     },
     status_field: 'Status: ',
@@ -307,10 +308,10 @@ export default {
     profile_page_field: 'Profile Page',
     qr_code: 'Profile QR Code',
     download: 'Download',
-    title: 'Account Information',
+    title: 'Account',
   },
   send_message: {
-    title: 'Send Records',
+    title: 'History',
     new_message: 'New Message',
   },
 }
