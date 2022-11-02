@@ -66,14 +66,11 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       throw new FileError('The file is not supported')
     }
     const authorization = req.headers.authorization as string
-    await axios
-      .get(`${SERVER_URL}/community/messages`, {
-        params: { count: 1 },
-        headers: {
-          Authorization: authorization,
-        },
-      })
-      .then((r) => r.data.messages?.[0])
+    await axios.get(`${SERVER_URL}/account/settings/info`, {
+      headers: {
+        Authorization: authorization,
+      },
+    })
 
     const uploadCount = uploadCountCache.get<number>(authorization) || 0
     if (uploadCount >= COMMUNITY_IMAGE_UPLOAD_LIMIT) {
