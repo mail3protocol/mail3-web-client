@@ -311,7 +311,7 @@ export default {
     title: 'Account',
   },
   send_message: {
-    title: 'Send Records',
+    title: 'History',
     new_message: 'New Message',
   },
 }
