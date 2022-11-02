@@ -57,7 +57,6 @@ export function useRegisterDialog() {
             i18nKey="register_dialog.no_white_list_description"
             components={{
               sup: <sup />,
-              a: <Link target="_blank" href={HOME_URL} color="primary.900" />,
             }}
           />
         </Text>
