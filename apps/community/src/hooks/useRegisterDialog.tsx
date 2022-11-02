@@ -54,7 +54,7 @@ export function useRegisterDialog() {
         <Text>
           <Trans
             t={t}
-            i18nKey="register.no_white_list_description"
+            i18nKey="register_dialog.no_white_list_description"
             components={{
               sup: <sup />,
               a: <Link target="_blank" href={HOME_URL} color="primary.900" />,
@@ -71,7 +71,7 @@ export function useRegisterDialog() {
             fontWeight="600"
             fontSize="14px"
           >
-            {t('register_dialog.continua')}
+            {t('register_dialog.continue')}
           </Button>
         </Flex>
       </>
@@ -85,6 +85,7 @@ export function useRegisterDialog() {
         (
           {
             [ErrorCode.USER_NOT_FOUND]: noRegisterMail3Description,
+            [ErrorCode.ADDRESS_NOT_FOUND]: noRegisterMail3Description,
             [ErrorCode.COMMUNITY_ADDRESS_NOT_IN_WHITELIST]: defaultDescription,
           } as { [key in string]: JSX.Element }
         )[options?.reason || ErrorCode.USER_NOT_FOUND] ||

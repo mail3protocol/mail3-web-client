@@ -12,7 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useUpdateAtom } from 'jotai/utils'
 import { SERVER_URL } from '../constants/env/url'
-import { useLogin, useSetGlobalTrack, isConnectingUDAtom } from './useLogin'
+import { isConnectingUDAtom, useLogin, useSetGlobalTrack } from './useLogin'
 import { RoutePath } from '../route/path'
 import { useRegisterDialog } from './useRegisterDialog'
 import { API } from '../api/api'
@@ -65,7 +65,16 @@ export function useRemember() {
   const onRemember = async () => {
     setIsLoading(true)
     try {
-      const { nonce, error, code, signature, message, pubkey } = await signup()
+      const { nonce, error, code, signature, message, pubkey } = await signup({
+        throwGetNonceError: true,
+      })
+      if (
+        [ErrorCode.USER_NOT_FOUND, ErrorCode.ADDRESS_NOT_FOUND].includes(
+          (error as any)?.response?.data?.reason
+        )
+      ) {
+        throw error
+      }
       switch (code) {
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
@@ -112,6 +121,7 @@ export function useRemember() {
         [
           ErrorCode.USER_NOT_FOUND,
           ErrorCode.COMMUNITY_ADDRESS_NOT_IN_WHITELIST,
+          ErrorCode.ADDRESS_NOT_FOUND,
         ].includes(err?.response?.data?.reason)
       ) {
         onOpenRegisterDialog({ reason: err?.response?.data?.reason })
