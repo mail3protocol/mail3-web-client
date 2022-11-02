@@ -1,22 +1,95 @@
 import { AddIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Center, Heading, Input, Text } from '@chakra-ui/react'
+import { Box, Center, Heading, Input, InputGroup, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui'
+import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { RoutePath } from '../../route/path'
 import { RouterLink } from '../RouterLink'
 import AvatarPng from '../../assets/settings/avatar.png'
 
-const Container = styled(Box)``
+type FileUploadProps = {
+  register: UseFormRegisterReturn
+  accept?: string
+  multiple?: boolean
+}
 
 interface SettingAvatarProps {
   isSetup?: boolean
 }
 
+type FormValues = {
+  file_: FileList
+  nickname: string
+}
+
+const Container = styled(Box)``
+
+const FileUpload: React.FC<FileUploadProps> = (props) => {
+  const { register, accept, multiple, children } = props
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const { ref, ...rest } = register as {
+    ref: (instance: HTMLInputElement | null) => void
+  }
+
+  const handleClick = () => inputRef.current?.click()
+
+  return (
+    <InputGroup onClick={handleClick}>
+      <input
+        type="file"
+        multiple={multiple || false}
+        hidden
+        accept={accept}
+        {...rest}
+        ref={(e) => {
+          ref(e)
+          inputRef.current = e
+        }}
+      />
+      {children}
+    </InputGroup>
+  )
+}
+
+const validateFiles = (value: FileList) => {
+  if (value.length < 1) {
+    return 'Files is required'
+  }
+  // eslint-disable-next-line no-restricted-syntax
+  for (const file of Array.from(value)) {
+    const fsMb = file.size / (1024 * 1024)
+    const MAX_FILE_SIZE = 2
+    if (fsMb > MAX_FILE_SIZE) {
+      return 'Max file size 2mb'
+    }
+  }
+  return true
+}
+
 export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [t] = useTranslation('settings')
-  const [nicknameValue, setNicknameValue] = useState('')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<FormValues>()
+
+  const onSubmit = handleSubmit((data) => {
+    console.log('On Submit: ', data)
+    console.log(errors)
+  })
+
+  useEffect(() => {
+    const watchFile = watch((value, { name }) => {
+      if (name === 'file_') {
+        console.log(value.file_)
+      }
+    })
+    return () => watchFile.unsubscribe()
+  }, [watch])
 
   return (
     <Container>
@@ -70,7 +143,8 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             color="#000"
             minW="300px"
             maxW="375px"
-            value={nicknameValue}
+            _placeholder={{ color: 'rgba(0, 0, 0, 0.4)' }}
+            {...register('nickname')}
           />
         </Box>
         <Box color="#6F6F6F" fontSize="14px" mt="3px">
@@ -96,26 +170,24 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             bgPosition="center"
             bgSize="100% auto"
           />
-          <Button
-            leftIcon={<AddIcon />}
-            variant="outline"
-            fontSize="12px"
-            mt="16px"
-          >
-            Upload image
-          </Button>
+
+          <Box mt="16px">
+            <FileUpload
+              accept={'image/*'}
+              register={register('file_', { validate: validateFiles })}
+            >
+              <Button leftIcon={<AddIcon />} variant="outline" fontSize="12px">
+                Upload image
+              </Button>
+            </FileUpload>
+          </Box>
+
           <Box color="#6F6F6F" fontSize="14px" mt="6px">
             Image format only: BMP, JPEG, JPG, GIF, PNG, size not more than 2M
           </Box>
         </Center>
         <Box mt="24px">
-          <Button
-            w="120px"
-            onClick={() => {
-              console.log('save')
-            }}
-            disabled
-          >
+          <Button w="120px" onClick={onSubmit}>
             Save
           </Button>
         </Box>
