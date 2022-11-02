@@ -149,7 +149,7 @@ export default {
     mail_image_limit:
       'The total image size of this message cannot exceed {{size}}',
     send_confirm: 'Please confirm you want to send this message',
-    send_description: 'You are about to send this message to your subscribers',
+    send_description: 'Do you want to send this message to subscriber?',
     confirm: 'Confirm',
     unsubscribe: 'Unsubscribe',
     successfully_sent: {
