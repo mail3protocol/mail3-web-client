@@ -15,3 +15,7 @@ export const MESSAGE_SUBJUECT_LENGTH_LIMIT =
 
 export const GOOGLE_ANALYTICS_ID = import.meta.env
   .NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
+
+export const IS_DISABLED_QUEST3 = Boolean(
+  import.meta.env.NEXT_PUBLIC_IS_DISABLED_QUEST3 === 'true'
+)
