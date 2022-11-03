@@ -5,9 +5,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui'
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
+import { useDialog } from 'hooks'
 import { RoutePath } from '../../route/path'
 import { RouterLink } from '../RouterLink'
 import AvatarPng from '../../assets/settings/avatar.png'
+import { useHomeAPI } from '../../hooks/useAPI'
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -65,27 +67,53 @@ const validateFiles = (value: FileList) => {
       return 'Max file size 2mb'
     }
   }
-  return true
+  return false
 }
 
 export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [t] = useTranslation('settings')
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm<FormValues>()
+  const [isLoading, setIsLoading] = useState(false)
+  const [disable, setDisable] = useState(true)
+  const homeAPI = useHomeAPI()
+  const dialog = useDialog()
+  const [avatarSrc, setAvatarSrc] = useState(AvatarPng)
+
+  const { register, handleSubmit, watch } = useForm<FormValues>()
 
   const onSubmit = handleSubmit((data) => {
+    console.log('src', avatarSrc)
     console.log('On Submit: ', data)
-    console.log(errors)
   })
 
   useEffect(() => {
-    const watchFile = watch((value, { name }) => {
-      if (name === 'file_') {
-        console.log(value.file_)
+    const watchFile = watch(async (value, { name }) => {
+      if (name === 'nickname') {
+        if (value.nickname?.length) {
+          setDisable(false)
+        } else {
+          setDisable(true)
+        }
+      }
+
+      if (name === 'file_' && value.file_ && value.file_.length > 0) {
+        setIsLoading(true)
+        try {
+          const file = value.file_
+          const check = validateFiles(file)
+          if (check) {
+            dialog({
+              type: 'warning',
+              description: check,
+            })
+            throw check
+          }
+          const { data } = await homeAPI.uploadImage(file[0])
+          setAvatarSrc(data.url)
+          setDisable(false)
+        } catch (error) {
+          console.error(error)
+        }
+        setIsLoading(false)
       }
     })
     return () => watchFile.unsubscribe()
@@ -166,17 +194,24 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             h="150px"
             border="4px solid #000000"
             borderRadius="100px"
-            bgImage={AvatarPng}
+            bgImage={avatarSrc}
+            bgRepeat="no-repeat"
             bgPosition="center"
             bgSize="100% auto"
           />
 
           <Box mt="16px">
             <FileUpload
-              accept={'image/*'}
-              register={register('file_', { validate: validateFiles })}
+              accept=".jpg, .jpeg, .gif, .png, .bmp"
+              register={register('file_')}
             >
-              <Button leftIcon={<AddIcon />} variant="outline" fontSize="12px">
+              <Button
+                leftIcon={<AddIcon />}
+                variant="outline"
+                fontSize="12px"
+                loadingText="Uploading"
+                isLoading={isLoading}
+              >
                 Upload image
               </Button>
             </FileUpload>
@@ -187,7 +222,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           </Box>
         </Center>
         <Box mt="24px">
-          <Button w="120px" onClick={onSubmit}>
+          <Button w="120px" onClick={onSubmit} disabled={disable}>
             Save
           </Button>
         </Box>
