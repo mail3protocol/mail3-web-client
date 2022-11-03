@@ -211,12 +211,9 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             flex="1"
             className="next-header"
             position="absolute"
-            onClick={() => {
-              if (!disable) {
-                // onsubmit
-                // navi
-                return
-              }
+            isLoading={isSaveLoading}
+            onClick={async () => {
+              await onSubmit()
               navi(RoutePath.SetupSignature)
             }}
             right="60px"
