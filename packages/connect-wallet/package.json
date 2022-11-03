@@ -1,0 +1,36 @@
+{
+    "name": "connect-wallet",
+    "version": "0.0.0",
+    "main": "./src/index.tsx",
+    "types": "./src/index.tsx",
+    "scripts": {
+        "lint": "eslint ./src"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@metamask/detect-provider": "^1.2.0",
+        "assets": "*",
+        "boring-avatars": "1.5.8",
+        "shared": "*",
+        "hooks": "*",
+        "ui": "*",
+        "qrcode.react": "^3.0.2",
+        "@uauth/js": "^2.4.0"
+    },
+    "devDependencies": {
+        "@chakra-ui/react": "^1.8.6",
+        "@emotion/react": "^11",
+        "@emotion/styled": "^11",
+        "@types/react": "17.0.38",
+        "@types/react-dom": "^17.0.0",
+        "eslint": "8.13.0",
+        "framer-motion": "^6",
+        "jotai": "^1.6.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-query": "^3.34.16",
+        "scripts": "*",
+        "tsconfig": "*",
+        "typescript": "4.6.3"
+    }
+}

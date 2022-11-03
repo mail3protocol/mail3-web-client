@@ -30,6 +30,7 @@ export const theme = extendTheme({
     lg: '992px',
     xl: '1200px',
     xxl: '1400px',
+    xxxl: '1600px',
   },
   components: {
     Button: {

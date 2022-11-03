@@ -45,21 +45,21 @@ export const useIsLoginExpired = () => {
   )
 }
 
-const unstaopableUserInfoAtom = atom<UDUserInfo | null>(null)
+const unstoppableUserInfoAtom = atom<UDUserInfo | null>(null)
 
 export const isConnectingUDAtom = atom(false)
 
-export const useUnstaopable = () => {
-  const [unstaopableUserInfo, setUnstopableUserInfo] = useAtom(
-    unstaopableUserInfoAtom
+export const useUnstoppable = () => {
+  const [unstoppableUserInfo, setUnstoppableUserInfo] = useAtom(
+    unstoppableUserInfoAtom
   )
-  const logout = () => setUnstopableUserInfo(null)
+  const logout = () => setUnstoppableUserInfo(null)
   const [isConnectingUD, setIsConnectingUD] = useAtom(isConnectingUDAtom)
 
   return {
     logout,
-    unstaopableUserInfo,
-    setUnstopableUserInfo,
+    unstoppableUserInfo,
+    setUnstoppableUserInfo,
     isConnectingUD,
     setIsConnectingUD,
   }
@@ -116,6 +116,8 @@ export const useIsAuthModalOpen = () => useAtomValue(isAuthModalOpenAtom)
 export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.Home,
   RoutePath.WhiteList,
+  RoutePath.Testing,
+  RoutePath.Subscribe,
 ])
 
 export const useCurrentWalletStore = () => {
@@ -229,7 +231,10 @@ export const useSetGlobalTrack = () => {
         }
         setUserProperties(config)
       } catch (error) {
-        // todo sentry
+        setUserProperties({
+          defaultAddress: `${account}@${MAIL_SERVER_URL}`,
+          aliases: [],
+        })
       }
     },
     [account, walletName, emailAddress]
@@ -273,7 +278,7 @@ export const useLogout = () => {
   const connector = useConnector()
   const setUserInfo = useSetLoginInfo()
   const setLastConnector = useSetLastConnector()
-  const { logout } = useUnstaopable()
+  const { logout } = useUnstoppable()
   const onDeleteFCMToken = useDeleteFCMToken()
   return useCallback(async () => {
     await onDeleteFCMToken()
@@ -399,7 +404,8 @@ export const useAuth = () => {
   }, [isAuth, account, isConnectingUD])
 
   useEffect(() => {
-    if (!isAuth && !allowWithoutAuthPaths.has(location.pathname)) {
+    const [, pathname] = location.pathname.split('/')
+    if (!isAuth && !allowWithoutAuthPaths.has(`/${pathname}`)) {
       navi(RoutePath.Home, {
         replace: true,
       })

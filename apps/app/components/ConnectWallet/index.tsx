@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
   coinbase,
   coinbaseStore,
-  ConfirmDialog,
   ConnectorName,
   useAccount,
   useConnectWalletDialog,
@@ -11,16 +10,57 @@ import {
   useEagerConnect,
 } from 'hooks'
 import { Button } from 'ui/src/Button'
-import { ButtonProps } from '@chakra-ui/react'
-import { ConnectModalWithMultichain } from './ConnectModalWithMultichain'
+import {
+  ConnectWallet as ConnectWalletButton,
+  ConnectWalletProps,
+  ConnectWalletApiContext,
+} from 'connect-wallet'
 import { isCoinbaseWallet } from '../../utils'
 import { useEthButton } from '../../hooks/useEthButton'
-import { useIsAuthenticated } from '../../hooks/useLogin'
 import { NoOnWhiteListError, useRemember } from '../../hooks/useRemember'
+import {
+  useIsAuthenticated,
+  useOpenAuthModal,
+  useUnstoppable,
+} from '../../hooks/useLogin'
+import { UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants'
 
-export interface ConnectWalletProps extends ButtonProps {
-  renderConnected: (address: string) => React.ReactNode
-  onSignError?: (error: NoOnWhiteListError) => void
+export const ConnectWalletApiContextProvider: React.FC = ({ children }) => {
+  const isAuth = useIsAuthenticated()
+  const { onRemember, isLoading: isRemembering } = useRemember()
+  const openAuthModal = useOpenAuthModal()
+  const { setUnstoppableUserInfo, unstoppableUserInfo, setIsConnectingUD } =
+    useUnstoppable()
+  const providerValue = useMemo(
+    () => ({
+      onRemember,
+      isRemembering,
+      isAuth,
+      udClientId: UD_CLIENT_ID,
+      udRedirectUri: UD_REDIRECT_URI,
+      openAuthModal,
+      setUnstoppableUserInfo,
+      unstoppableUserInfo,
+      setIsConnectingUD,
+    }),
+    [
+      onRemember,
+      isRemembering,
+      isAuth,
+      UD_CLIENT_ID,
+      UD_REDIRECT_URI,
+      openAuthModal,
+      setUnstoppableUserInfo,
+      unstoppableUserInfo,
+      setIsConnectingUD,
+    ]
+  )
+
+  return (
+    <ConnectWalletApiContext.Provider value={providerValue}>
+      {children}
+    </ConnectWalletApiContext.Provider>
+  )
 }
 
 export interface ConnectWalletWithCoinbaseProps
@@ -74,14 +114,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   onSignError,
   ...props
 }) => {
-  const [t] = useTranslation('common')
-  const { isOpen, onOpen, onClose } = useConnectWalletDialog()
   const account = useAccount()
   const isAuth = useIsAuthenticated()
   const [signError, setSignError] = useState<NoOnWhiteListError | null>(null)
-
-  useEagerConnect()
-
+  const { onOpen } = useConnectWalletDialog()
   const isRedirectFromUD =
     location.hash.includes('code') && location.hash.includes('openid%20wallet')
 
@@ -91,6 +127,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
     }
   })
 
+  useEagerConnect()
 
   if (isCoinbaseWallet() && !signError) {
     if (!isAuth) {
@@ -109,21 +146,8 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   }
 
   return (
-    <>
-      {account ? (
-        renderConnected(account)
-      ) : (
-        <Button
-          onClick={onOpen}
-          w="200px"
-          loadingText={t('connect.connecting')}
-          {...props}
-        >
-          {t('connect.connect-wallet')}
-        </Button>
-      )}
-      <ConfirmDialog />
-      <ConnectModalWithMultichain isOpen={isOpen} onClose={onClose} />
-    </>
+    <ConnectWalletApiContextProvider>
+      <ConnectWalletButton renderConnected={renderConnected} {...props} />
+    </ConnectWalletApiContextProvider>
   )
 }

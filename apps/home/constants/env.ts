@@ -39,3 +39,13 @@ export const MAIL_SERVER_URL =
 
 export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || 'https://api.mail3.me/api/v1'
+
+export const COMMUNITY_URL =
+  process.env.NEXT_PUBLIC_COMMUNITY_URL || 'https://subscribe.mail3.me'
+
+export const COMMUNITY_IMAGE_UPLOAD_LIMIT =
+  parseInt(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_LIMIT || `50`, 10) || 50
+
+export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
+  (o) => o.trim()
+) || [COMMUNITY_URL, APP_URL]
