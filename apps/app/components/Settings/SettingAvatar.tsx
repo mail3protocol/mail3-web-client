@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { Button } from 'ui'
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { useDialog } from 'hooks'
+import { useNavigate } from 'react-router-dom'
 import { RoutePath } from '../../route/path'
-import { RouterLink } from '../RouterLink'
 import AvatarPng from '../../assets/settings/avatar.png'
 import { useHomeAPI } from '../../hooks/useAPI'
 
@@ -76,6 +76,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [disable, setDisable] = useState(true)
   const homeAPI = useHomeAPI()
   const dialog = useDialog()
+  const navi = useNavigate()
   const [avatarSrc, setAvatarSrc] = useState(AvatarPng)
 
   const { register, handleSubmit, watch } = useForm<FormValues>()
@@ -131,28 +132,31 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           <Heading fontSize={['20px', '20px', '28px']}>
             {t('setup.avatar.title')}
           </Heading>
-          <RouterLink href={RoutePath.SetupSignature} passHref>
-            <Button
-              bg="black"
-              color="white"
-              flex="1"
-              className="next-header"
-              position="absolute"
-              onClick={() => {
-                console.log('next')
-              }}
-              right="60px"
-              _hover={{
-                bg: 'brand.50',
-              }}
-              as="a"
-              rightIcon={<ChevronRightIcon color="white" />}
-            >
-              <Center flexDirection="column">
-                <Text>{t('setup.next')}</Text>
-              </Center>
-            </Button>
-          </RouterLink>
+
+          <Button
+            bg="black"
+            color="white"
+            flex="1"
+            className="next-header"
+            position="absolute"
+            onClick={() => {
+              if (!disable) {
+                // onsubmit
+                // navi
+                return
+              }
+              navi(RoutePath.SetupSignature)
+            }}
+            right="60px"
+            _hover={{
+              bg: 'brand.50',
+            }}
+            rightIcon={<ChevronRightIcon color="white" />}
+          >
+            <Center flexDirection="column">
+              <Text>{t('setup.next')}</Text>
+            </Center>
+          </Button>
         </Center>
       ) : null}
 
@@ -175,7 +179,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             {...register('nickname')}
           />
         </Box>
-        <Box color="#6F6F6F" fontSize="14px" mt="3px">
+        <Box color="#6F6F6F" fontSize="14px" mt="3px" textAlign="center">
           Need contain 1 to 16 numbers or letters and cannot contain special
           symbols or emoji
         </Box>
@@ -217,15 +221,17 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             </FileUpload>
           </Box>
 
-          <Box color="#6F6F6F" fontSize="14px" mt="6px">
+          <Box color="#6F6F6F" fontSize="14px" mt="6px" textAlign="center">
             Image format only: BMP, JPEG, JPG, GIF, PNG, size not more than 2M
           </Box>
         </Center>
-        <Box mt="24px">
-          <Button w="120px" onClick={onSubmit} disabled={disable}>
-            Save
-          </Button>
-        </Box>
+        {!isSetup ? (
+          <Box mt="24px">
+            <Button w="120px" onClick={onSubmit} disabled={disable}>
+              Save
+            </Button>
+          </Box>
+        ) : null}
       </Center>
     </Container>
   )
