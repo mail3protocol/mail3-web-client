@@ -1,5 +1,13 @@
 import { AddIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Center, Heading, Input, InputGroup, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Center,
+  Heading,
+  Input,
+  InputGroup,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -76,7 +84,8 @@ const validateFiles = (value: FileList) => {
 export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [t] = useTranslation('settings')
   const { register, handleSubmit, watch, setValue } = useForm<FormValues>()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isUpLoading, setIsUpLoading] = useState(false)
+  const [isSaveLoading, setIsSaveLoading] = useState(false)
   const [disable, setDisable] = useState(true)
   const homeAPI = useHomeAPI()
   const api = useAPI()
@@ -87,9 +96,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   )
   const userProps = useAtomValue(userPropertiesAtom)
 
-  console.log(userProps)
-
-  const { isInitLoading } = useQuery(
+  const { isLoading, data: info } = useQuery(
     ['settingAvatar'],
     async () => {
       const { data } = await api.getUserInfo()
@@ -101,23 +108,42 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
       refetchOnWindowFocus: false,
       onSuccess(d) {
         setAvatarSrc(d.avatar)
-        console.log('d', d)
+        setValue('nickname', d.nickname)
       },
     }
   )
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('On Submit: ', data)
-    if (!/^[0-9a-zA-Z_]{1,}$/.test(data.nickname)) {
-      console.log('error format')
+    if (!/^[0-9a-zA-Z_]{1,16}$/.test(data.nickname)) {
+      dialog({
+        type: 'warning',
+        description: 'Invalid nickname',
+      })
       return
     }
-    console.log('src', avatarSrc)
-    const ret = await api.setProfile(data.nickname, avatarSrc)
-    console.log(ret)
+    setIsSaveLoading(true)
+    try {
+      await api.setProfile(data.nickname, avatarSrc)
+      dialog({
+        type: 'success',
+        description: 'Settings are saved',
+      })
+    } catch (error) {
+      dialog({
+        type: 'warning',
+        description: 'Network error',
+      })
+    }
+    setIsSaveLoading(false)
   })
 
   useEffect(() => {
+    if (isLoading) {
+      return
+    }
+    if (info?.nickname) {
+      return
+    }
     if (userProps?.defaultAddress) {
       const address = userProps.defaultAddress.split('@')[0]
       let defaultNickname = 'nickname'
@@ -128,15 +154,14 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           ? address.split('.')[0]
           : address
       }
-
       setValue('nickname', defaultNickname)
     }
-  }, [userProps])
+  }, [userProps, isLoading, info])
 
   useEffect(() => {
     const watchFile = watch(async (value, { name }) => {
       if (name === 'nickname') {
-        if (value.nickname?.length) {
+        if (value.nickname?.length || value.nickname === info?.nickname) {
           setDisable(false)
         } else {
           setDisable(true)
@@ -144,7 +169,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
       }
 
       if (name === 'file_' && value.file_ && value.file_.length > 0) {
-        setIsLoading(true)
+        setIsUpLoading(true)
         try {
           const file = value.file_
           const check = validateFiles(file)
@@ -161,11 +186,11 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
         } catch (error) {
           console.error(error)
         }
-        setIsLoading(false)
+        setIsUpLoading(false)
       }
     })
     return () => watchFile.unsubscribe()
-  }, [watch])
+  }, [watch, info])
 
   return (
     <Container>
@@ -207,79 +232,90 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
         </Center>
       ) : null}
 
-      <Center flexDirection="column" justifyContent="center">
-        <Box>
-          <Input
-            placeholder="Nickname"
-            background="#F4F4F4"
-            border="1px solid #000000"
-            borderRadius="100px"
-            fontWeight="500"
-            fontSize="20px"
-            lineHeight="30px"
-            p="6px"
-            textAlign="center"
-            color="#000"
-            minW="300px"
-            maxW="375px"
-            _placeholder={{ color: 'rgba(0, 0, 0, 0.4)' }}
-            {...register('nickname')}
-          />
-        </Box>
-        <Box color="#6F6F6F" fontSize="14px" mt="3px" textAlign="center">
-          Need contain 1 to 16 numbers or letters and cannot contain special
-          symbols or emoji
-        </Box>
-
-        <Center
-          w="95%"
-          border="1px solid #E7E7E7"
-          borderRadius="24px"
-          flexDirection="column"
-          justifyContent="center"
-          p="24px"
-          mt="24px"
-        >
-          <Box
-            w="150px"
-            h="150px"
-            border="4px solid #000000"
-            borderRadius="100px"
-            bgImage={avatarSrc}
-            bgRepeat="no-repeat"
-            bgPosition="center"
-            bgSize="100% auto"
-          />
-
-          <Box mt="16px">
-            <FileUpload
-              accept=".jpg, .jpeg, .gif, .png, .bmp"
-              register={register('file_')}
-            >
-              <Button
-                leftIcon={<AddIcon />}
-                variant="outline"
-                fontSize="12px"
-                loadingText="Uploading"
-                isLoading={isLoading}
-              >
-                Upload image
-              </Button>
-            </FileUpload>
-          </Box>
-
-          <Box color="#6F6F6F" fontSize="14px" mt="6px" textAlign="center">
-            Image format only: BMP, JPEG, JPG, GIF, PNG, size not more than 2M
-          </Box>
+      {isLoading ? (
+        <Center minH="300px">
+          <Spinner />
         </Center>
-        {!isSetup ? (
-          <Box mt="24px">
-            <Button w="120px" onClick={onSubmit} disabled={disable}>
-              Save
-            </Button>
+      ) : (
+        <Center flexDirection="column" justifyContent="center">
+          <Box>
+            <Input
+              placeholder="Nickname"
+              background="#F4F4F4"
+              border="1px solid #000000"
+              borderRadius="100px"
+              fontWeight="500"
+              fontSize="20px"
+              lineHeight="30px"
+              p="6px"
+              textAlign="center"
+              color="#000"
+              minW="300px"
+              maxW="375px"
+              _placeholder={{ color: 'rgba(0, 0, 0, 0.4)' }}
+              {...register('nickname')}
+            />
           </Box>
-        ) : null}
-      </Center>
+          <Box color="#6F6F6F" fontSize="14px" mt="3px" textAlign="center">
+            Need contain 1 to 16 numbers or letters and cannot contain special
+            symbols or emoji
+          </Box>
+
+          <Center
+            w="95%"
+            border="1px solid #E7E7E7"
+            borderRadius="24px"
+            flexDirection="column"
+            justifyContent="center"
+            p="24px"
+            mt="24px"
+          >
+            <Box
+              w="150px"
+              h="150px"
+              border="4px solid #000000"
+              borderRadius="100px"
+              bgImage={avatarSrc}
+              bgRepeat="no-repeat"
+              bgPosition="center"
+              bgSize="100% auto"
+            />
+
+            <Box mt="16px">
+              <FileUpload
+                accept=".jpg, .jpeg, .gif, .png, .bmp"
+                register={register('file_')}
+              >
+                <Button
+                  leftIcon={<AddIcon />}
+                  variant="outline"
+                  fontSize="12px"
+                  loadingText="Uploading"
+                  isLoading={isUpLoading}
+                >
+                  Upload image
+                </Button>
+              </FileUpload>
+            </Box>
+
+            <Box color="#6F6F6F" fontSize="14px" mt="6px" textAlign="center">
+              Image format only: BMP, JPEG, JPG, GIF, PNG, size not more than 2M
+            </Box>
+          </Center>
+          {!isSetup ? (
+            <Box mt="24px">
+              <Button
+                w="120px"
+                onClick={onSubmit}
+                disabled={disable}
+                isLoading={isSaveLoading}
+              >
+                Save
+              </Button>
+            </Box>
+          ) : null}
+        </Center>
+      )}
     </Container>
   )
 }

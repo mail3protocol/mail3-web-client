@@ -118,6 +118,7 @@ export interface UserResponse {
   card_sig_state: 'enabled' | 'disabled'
   web_push_notification_state: 'enabled' | 'disabled'
   user_role: UserRole
+  nickname: string
 }
 
 interface putMessageResponse {
