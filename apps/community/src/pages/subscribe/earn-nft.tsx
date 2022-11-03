@@ -19,6 +19,7 @@ import {
   RadioGroup,
   Spinner,
   Text,
+  Tooltip,
   UnorderedList,
   VStack,
 } from '@chakra-ui/react'
@@ -420,9 +421,18 @@ export const EarnNft: React.FC = () => {
                 <Radio value={SubscriptionPlatform.Galaxy}>
                   {t('platforms.galaxy')}
                 </Radio>
-                <Radio value={SubscriptionPlatform.Quest3}>
-                  {t('platforms.quest3')}
-                </Radio>
+                <Tooltip label={t('coming_soon')} hasArrow placement="top">
+                  <Box
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      e.preventDefault()
+                    }}
+                  >
+                    <Radio value={SubscriptionPlatform.Quest3} isDisabled>
+                      {t('platforms.quest3')}
+                    </Radio>
+                  </Box>
+                </Tooltip>
               </HStack>
             </RadioGroup>
           </FormControl>
