@@ -7,9 +7,12 @@ import { Button } from 'ui'
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { useDialog } from 'hooks'
 import { useNavigate } from 'react-router-dom'
+import { useAtomValue } from 'jotai'
+import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
+import { useQuery } from 'react-query'
 import { RoutePath } from '../../route/path'
-import AvatarPng from '../../assets/settings/avatar.png'
-import { useHomeAPI } from '../../hooks/useAPI'
+import { useAPI, useHomeAPI } from '../../hooks/useAPI'
+import { userPropertiesAtom } from '../../hooks/useLogin'
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -72,19 +75,63 @@ const validateFiles = (value: FileList) => {
 
 export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [t] = useTranslation('settings')
+  const { register, handleSubmit, watch, setValue } = useForm<FormValues>()
   const [isLoading, setIsLoading] = useState(false)
   const [disable, setDisable] = useState(true)
   const homeAPI = useHomeAPI()
+  const api = useAPI()
   const dialog = useDialog()
   const navi = useNavigate()
-  const [avatarSrc, setAvatarSrc] = useState(AvatarPng)
+  const [avatarSrc, setAvatarSrc] = useState(
+    'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
+  )
+  const userProps = useAtomValue(userPropertiesAtom)
 
-  const { register, handleSubmit, watch } = useForm<FormValues>()
+  console.log(userProps)
 
-  const onSubmit = handleSubmit((data) => {
-    console.log('src', avatarSrc)
+  const { isInitLoading } = useQuery(
+    ['settingAvatar'],
+    async () => {
+      const { data } = await api.getUserInfo()
+      return data
+    },
+    {
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess(d) {
+        setAvatarSrc(d.avatar)
+        console.log('d', d)
+      },
+    }
+  )
+
+  const onSubmit = handleSubmit(async (data) => {
     console.log('On Submit: ', data)
+    if (!/^[0-9a-zA-Z_]{1,}$/.test(data.nickname)) {
+      console.log('error format')
+      return
+    }
+    console.log('src', avatarSrc)
+    const ret = await api.setProfile(data.nickname, avatarSrc)
+    console.log(ret)
   })
+
+  useEffect(() => {
+    if (userProps?.defaultAddress) {
+      const address = userProps.defaultAddress.split('@')[0]
+      let defaultNickname = 'nickname'
+      if (isPrimitiveEthAddress(address)) {
+        defaultNickname = truncateMiddle(address, 6, 4, '_')
+      } else if (isEthAddress(address)) {
+        defaultNickname = address.includes('.')
+          ? address.split('.')[0]
+          : address
+      }
+
+      setValue('nickname', defaultNickname)
+    }
+  }, [userProps])
 
   useEffect(() => {
     const watchFile = watch(async (value, { name }) => {

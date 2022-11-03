@@ -230,6 +230,16 @@ export class API {
     return this.axios.put(`/account/default_aliases/${uuid}`)
   }
 
+  public async setProfile(
+    nickname: string,
+    avatar: string
+  ): Promise<AxiosResponse<void>> {
+    return this.axios.put(`/account/settings/user_info`, {
+      nickname,
+      avatar,
+    })
+  }
+
   public async submitMessage(body: SubmitMessage.RequestBody) {
     return this.axios.post<SubmitMessage.Response>(
       `/mailbox/account/submit`,
