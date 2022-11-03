@@ -202,6 +202,7 @@ export default {
       get_the_code: 'Get the code',
     },
     earn_nft: '🎁 Earn NFT',
+    coming_soon: 'Coming soon',
     subscribe: 'Subscribe',
     update_failed: 'Setup failed, reason: {{message}}',
     update_succeed: 'Setup succeed!',

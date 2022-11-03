@@ -19,6 +19,7 @@ import {
   RadioGroup,
   Spinner,
   Text,
+  Tooltip,
   UnorderedList,
   VStack,
 } from '@chakra-ui/react'
@@ -41,6 +42,7 @@ import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
 import { StylePreview } from '../../components/EarnNFTPageComponents/StylePreview'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
+import { IS_DISABLED_QUEST3 } from '../../constants/env/config'
 
 function isValidGalxeCampaignUrl(value: string) {
   return /https:\/\/galxe.com\/[a-zA-Z0-9_]+\/campaign\/[a-zA-Z0-9]+$/.test(
@@ -420,9 +422,24 @@ export const EarnNft: React.FC = () => {
                 <Radio value={SubscriptionPlatform.Galaxy}>
                   {t('platforms.galaxy')}
                 </Radio>
-                <Radio value={SubscriptionPlatform.Quest3}>
-                  {t('platforms.quest3')}
-                </Radio>
+                {IS_DISABLED_QUEST3 ? (
+                  <Tooltip label={t('coming_soon')} hasArrow placement="top">
+                    <Box
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                      }}
+                    >
+                      <Radio value={SubscriptionPlatform.Quest3} isDisabled>
+                        {t('platforms.quest3')}
+                      </Radio>
+                    </Box>
+                  </Tooltip>
+                ) : (
+                  <Radio value={SubscriptionPlatform.Quest3}>
+                    {t('platforms.quest3')}
+                  </Radio>
+                )}
               </HStack>
             </RadioGroup>
           </FormControl>
