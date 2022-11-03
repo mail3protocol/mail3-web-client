@@ -11,10 +11,12 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useQuery } from 'react-query'
 import {
-  getCybertinoConnect,
   generateAvatarSrc,
   isEthAddress,
   isSupportedAddress,
+  getMail3Avatar,
+  getPrimitiveAddress,
+  isPrimitiveEthAddress,
 } from 'shared'
 import BoringAvatar from 'boring-avatars'
 import { useMemo } from 'react'
@@ -64,7 +66,15 @@ export const Avatar: React.FC<AvatarProps> = ({
   const width = props?.w
   const { isLoading } = useQuery(
     ['avatar', address],
-    async () => getCybertinoConnect(address),
+    async () => {
+      if (isPrimitiveEthAddress(address)) {
+        const { data } = await getMail3Avatar(address)
+        return data
+      }
+      const { data: info } = await getPrimitiveAddress(address)
+      const { data } = await getMail3Avatar(info.eth_address)
+      return data
+    },
     {
       enabled: avatar == null && isEthAddress(address),
       refetchIntervalInBackground: false,
@@ -74,7 +84,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       onSuccess(d) {
         setAvatars((prev) => ({
           ...prev,
-          [address]: d?.data?.identity?.avatar || EMPTY_PLACE_HOLDER_SRC,
+          [address]: d.avatar || EMPTY_PLACE_HOLDER_SRC,
         }))
       },
       onError() {
@@ -144,7 +154,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     />
   ) : (
     <RawAvatar
-      borderRadius={isSquare ? 2 : 0}
+      borderRadius={isSquare ? '50%' : 0}
       src={avatar}
       size={size}
       ignoreFallback
