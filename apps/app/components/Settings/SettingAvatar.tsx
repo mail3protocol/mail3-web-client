@@ -245,6 +245,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
               color="#000"
               minW="300px"
               maxW="375px"
+              maxLength={16}
               _placeholder={{ color: 'rgba(0, 0, 0, 0.4)' }}
               {...register('nickname')}
             />
