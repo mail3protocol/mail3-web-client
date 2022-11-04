@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse, PageConfig } from 'next'
 import S3, { ManagedUpload } from 'aws-sdk/clients/s3'
-import dayjs from 'dayjs'
 import axios from 'axios'
 import NextCors from 'nextjs-cors'
 import LRU from 'lru-cache'
