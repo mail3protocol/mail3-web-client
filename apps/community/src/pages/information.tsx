@@ -143,7 +143,11 @@ export const Information: React.FC = () => {
           rounded="full"
           mt="32px"
         >
-          <Avatar address={userInfo?.name || ''} w="68.5px" h="68.5px" />
+          <Avatar
+            address={userInfo?.address.split('@')[0] || ''}
+            w="68.5px"
+            h="68.5px"
+          />
         </Center>
         <VStack as="form" spacing="24px" mt="32px" w="400px" mx="auto">
           <FormControl>

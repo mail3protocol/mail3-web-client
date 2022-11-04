@@ -128,7 +128,11 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
         <Button display="flex" variant="unstyled" {...defaultProps} {...props}>
           <PopoverAnchor>
             <Box>
-              <Avatar address={userInfo.name} {...avatarProps} />
+              <Avatar
+                borderRadius="50%"
+                address={userInfo?.address.split('@')[0]}
+                {...avatarProps}
+              />
             </Box>
           </PopoverAnchor>
           <Text {...textProps}>{formatUserName(userInfo.name)}</Text>
