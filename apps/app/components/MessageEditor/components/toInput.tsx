@@ -109,6 +109,7 @@ export const ToInput: React.FC<ToInputProps> = ({
             minW="16px"
             h="16px"
             rounded="100px"
+            borderRadius="50%"
           />
           <TagLabel pl="4px" color="#6F6F6F" whiteSpace="pre-line">
             {address}

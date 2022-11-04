@@ -322,7 +322,12 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         <WrapMain>
           <WrapLeft>
             <Box className="avatar">
-              <Avatar address={priAddress} isSquare w="64px" h="64px" />
+              <Avatar
+                address={priAddress}
+                borderRadius="50%"
+                w="64px"
+                h="64px"
+              />
             </Box>
             <Box className="address">
               <Text className="p">{mailAddress}</Text>

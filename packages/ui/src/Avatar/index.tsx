@@ -154,7 +154,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     />
   ) : (
     <RawAvatar
-      borderRadius={isSquare ? '50%' : 0}
+      borderRadius={isSquare ? '2' : 0}
       src={avatar}
       size={size}
       ignoreFallback
