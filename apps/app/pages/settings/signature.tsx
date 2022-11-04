@@ -36,6 +36,11 @@ export const SettingsSignaturePage = () => {
               {t('settings.tabs.address')}
             </Tab>
           </RouterLink>
+          <RouterLink href={RoutePath.SettingAvatar} passHref>
+            <Tab as="a" isActive={false}>
+              {t('settings.tabs.avatar')}
+            </Tab>
+          </RouterLink>
           <RouterLink href={RoutePath.SettingSignature}>
             <Tab as="a" isActive>
               {t('settings.tabs.signature')}

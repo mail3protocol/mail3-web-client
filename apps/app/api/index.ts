@@ -121,6 +121,7 @@ export interface UserResponse {
   card_sig_state: 'enabled' | 'disabled'
   web_push_notification_state: 'enabled' | 'disabled'
   user_role: UserRole
+  nickname: string
 }
 
 interface putMessageResponse {
@@ -231,6 +232,16 @@ export class API {
     uuid: string
   ): Promise<AxiosResponse<void>> {
     return this.axios.put(`/account/default_aliases/${uuid}`)
+  }
+
+  public async setProfile(
+    nickname: string,
+    avatar: string
+  ): Promise<AxiosResponse<void>> {
+    return this.axios.put(`/account/settings/user_info`, {
+      nickname,
+      avatar,
+    })
   }
 
   public async submitMessage(body: SubmitMessage.RequestBody) {

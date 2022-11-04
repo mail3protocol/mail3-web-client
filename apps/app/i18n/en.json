@@ -213,6 +213,9 @@
                 "twitter": "Share on Twitter",
                 "card": "Share profile card"
             },
+            "avatar": {
+                "title": "Set your avatar"
+            },
             "next": "Next"
         },
         "settings": {
@@ -220,7 +223,8 @@
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
-                "signature": "Signature setup"
+                "signature": "Signature setup",
+                "avatar": "Set your avatar"
             }
         },
         "address": {
