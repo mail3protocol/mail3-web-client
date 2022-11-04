@@ -82,12 +82,7 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       secretAccessKey: S3_CONFIG.AccessKeySecret,
       region: S3_CONFIG.Region,
     })
-    const key = [
-      'tmp/posts',
-      fields.address,
-      dayjs().format('YYYYMMDD'),
-      files.image.newFilename,
-    ].join('/')
+    const key = ['avatars', fields.address].join('/')
 
     const s3UploadParams = {
       Bucket: S3_CONFIG.Bucket,
