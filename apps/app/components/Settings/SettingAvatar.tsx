@@ -13,7 +13,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui'
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
-import { useDialog } from 'hooks'
+import { useToast } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { useAtomValue } from 'jotai'
 import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
@@ -89,7 +89,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [disable, setDisable] = useState(true)
   const homeAPI = useHomeAPI()
   const api = useAPI()
-  const dialog = useDialog()
+  const toast = useToast()
   const navi = useNavigate()
   const [avatarSrc, setAvatarSrc] = useState(
     'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
@@ -107,31 +107,28 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        setAvatarSrc(d.avatar)
-        setValue('nickname', d.nickname)
+        if (d.avatar) setAvatarSrc(d.avatar)
+        if (d.nickname) setValue('nickname', d.nickname)
       },
     }
   )
 
   const onSubmit = handleSubmit(async (data) => {
     if (!/^[0-9a-zA-Z_]{1,16}$/.test(data.nickname)) {
-      dialog({
-        type: 'warning',
-        description: 'Invalid nickname',
+      toast('Invalid nickname', {
+        status: 'warning',
       })
       return
     }
     setIsSaveLoading(true)
     try {
       await api.setProfile(data.nickname, avatarSrc)
-      dialog({
-        type: 'success',
-        description: 'Settings are saved',
+      toast('Settings are saved', {
+        status: 'success',
       })
     } catch (error) {
-      dialog({
-        type: 'warning',
-        description: 'Network error',
+      toast('Network error', {
+        status: 'warning',
       })
     }
     setIsSaveLoading(false)
@@ -174,9 +171,8 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           const file = value.file_
           const check = validateFiles(file)
           if (check) {
-            dialog({
-              type: 'warning',
-              description: check,
+            toast(check, {
+              status: 'warning',
             })
             throw check
           }

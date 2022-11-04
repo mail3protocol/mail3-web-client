@@ -13,7 +13,7 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 export const SettingsAvatarPage = () => {
   const [t] = useTranslation('settings')
   const { redirectHome, isAuth } = useRedirectHome()
-  useDocumentTitle('Set your avatar')
+  useDocumentTitle('Set your Avatar')
   if (!isAuth) {
     return redirectHome()
   }
