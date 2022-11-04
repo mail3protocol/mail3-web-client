@@ -209,8 +209,8 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             bg="black"
             color="white"
             flex="1"
-            className="next-header"
             position="absolute"
+            className="next-header"
             isLoading={isSaveLoading}
             onClick={async () => {
               await onSubmit()
