@@ -60,6 +60,7 @@ import { IpfsInfoTable } from '../IpfsInfoTable'
 import type { MeesageDetailState } from '../Mailbox'
 import { pinUpMsgAtom } from '../Inbox'
 import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'
+import { generateMessageEditorUrl } from '../../utils/editor'
 
 const Container = styled(Box)`
   margin: 25px auto 150px;
@@ -332,13 +333,10 @@ export const PreviewComponent: React.FC = () => {
           [TrackKey.MailDetailPage]: MailDetailPageItem.Reply,
         })
         navi(
-          {
-            pathname: RoutePath.NewMessage,
-            search: createSearchParams({
-              id,
-              action: 'reply',
-            }).toString(),
-          },
+          generateMessageEditorUrl({
+            action: 'reply',
+            messageInfo: data?.messageInfo,
+          }),
           {
             state: {
               messageInfo: data?.messageInfo,
@@ -357,14 +355,11 @@ export const PreviewComponent: React.FC = () => {
         const isAllow = getIsAllowExperienceUserAction()
         if (!isAllow) return
         navi(
-          {
-            pathname: RoutePath.NewMessage,
-            search: createSearchParams({
-              id,
-              action: 'reply',
-              cc: replyAllList.join(','),
-            }).toString(),
-          },
+          generateMessageEditorUrl({
+            action: 'reply',
+            messageInfo: data?.messageInfo,
+            cc: replyAllList,
+          }),
           {
             state: {
               messageInfo: data?.messageInfo,
@@ -382,13 +377,10 @@ export const PreviewComponent: React.FC = () => {
         const isAllow = getIsAllowExperienceUserAction()
         if (!isAllow) return
         navi(
-          {
-            pathname: RoutePath.NewMessage,
-            search: createSearchParams({
-              id,
-              action: 'forward',
-            }).toString(),
-          },
+          generateMessageEditorUrl({
+            action: 'forward',
+            messageInfo: data?.messageInfo,
+          }),
           {
             state: {
               messageInfo: data?.messageInfo,

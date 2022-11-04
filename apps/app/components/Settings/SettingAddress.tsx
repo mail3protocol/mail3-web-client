@@ -478,7 +478,7 @@ export const SettingAddress: React.FC = () => {
   ]
 
   const defaultTabIndex = useMemo(() => {
-    if (!userProps) return 0
+    if (!userProps?.aliases) return 0
     const defaultAlias = (userProps.aliases as Alias[]).find(
       (alias) => alias.is_default
     )

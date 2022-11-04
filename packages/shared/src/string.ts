@@ -69,6 +69,17 @@ export const truncateMailAddress = (
   return mailAddress
 }
 
+export const truncateAddress = (
+  address: string,
+  takeLength = 6,
+  tailLength = 4
+) => {
+  if (isPrimitiveEthAddress(address) || isZilpayAddress(address))
+    return truncateMiddle(address, takeLength, tailLength)
+
+  return address
+}
+
 export function copyTextFallback(data: string): void {
   const input = document.createElement('input')
   input.readOnly = true
@@ -91,3 +102,5 @@ export async function copyText(s: string) {
     copyTextFallback(s)
   }
 }
+
+export const isHttpUriReg = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/

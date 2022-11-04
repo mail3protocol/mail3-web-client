@@ -12,6 +12,7 @@ interface htmlParserProps {
   messageId: string
   attachments: AttachmentItemResponse[] | null
   from: AddressResponse
+  shadowStyle?: string
 }
 
 const urlity = (text: string) => {
@@ -40,11 +41,11 @@ const shadowRootStyle = `
     min-height: 200px;
     position: relative;
   }
-  
+
   iframe {
     border: none;
   }
-  
+
   a {
     color: #4d51f3;
   }
@@ -55,6 +56,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   attachments,
   messageId,
   from,
+  shadowStyle,
 }) => {
   useEffect(
     () => () => {
@@ -153,6 +155,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
     <Box>
       <ReactShadowRoot>
         <style>{shadowRootStyle}</style>
+        {shadowStyle ? <style>{shadowStyle}</style> : null}
         <main>{content}</main>
       </ReactShadowRoot>
     </Box>

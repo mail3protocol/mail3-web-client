@@ -6,6 +6,7 @@
             "drafts": "Drafts",
             "trash": "Trash",
             "spam": "Spam",
+            "subscription": "Subscription",
             "other-stuff": "Other Stuff",
             "settings": "Settings",
             "profile-link": "My Profile Link",
@@ -219,7 +220,7 @@
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
-                "signature": "Signature setup"
+                "signature": "Signature Setup"
             }
         },
         "address": {
@@ -297,6 +298,7 @@
     },
     "inbox-nav": {
         "inbox": "Inbox",
+        "subscription": "Subscription",
         "developers": "Developers"
     },
     "ipfs": {
@@ -334,5 +336,23 @@
             "bot": "For your safety, we blocked all links, attachments, and replies.",
             "user": "For your safety, we blocked all links, attachments, and replies."
         }
+    },
+    "subscribe": {
+        "connect": "Subscribe for updates via Mail³",
+        "subscribed": "🎉 You're subscribed!",
+        "continue": "Continue",
+        "ok": "OK",
+        "visit": "Visit mail³ to receive our latest news",
+        "already": "You have already subscribed to us",
+        "thank-you": "🎉 Thank you for subscribing",
+        "nft": "You have earned an NFT!",
+        "request-permission": "Claim Link will be sent to your inbox, <b>in case you miss the message, </b>please allow the desktop notification authorization for mail³.",
+        "declined": "You have declined the desktop notification authorization,\n you can go to mail³ to claim your nft",
+        "success": "Claim Link will be sent to your inbox,\n please check in mail³"
+    },
+    "subscription": {
+        "unsubscribe": "Do you want to unsubscribe?",
+        "Unsubscribe successfully": "Unsubscribe successfully",
+        "Subscribe successfully": "Subscribe successfully"
     }
 }

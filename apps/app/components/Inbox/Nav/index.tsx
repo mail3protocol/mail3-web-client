@@ -1,16 +1,20 @@
 import React, { ReactNode, useRef } from 'react'
-import { Box, Flex, HStack } from '@chakra-ui/react'
+import { Badge, Box, Flex, HStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useDidMount } from 'hooks'
-import { ReactComponent as SVGInbox } from '../../../assets/inbox.svg'
+import { useAtomValue } from 'jotai'
+import { ReactComponent as InboxSvg } from '../../../assets/inbox.svg'
+import { ReactComponent as SubSvg } from '../../../assets/subscription.svg'
 import { ReactComponent as DevelopersSvg } from '../../../assets/developes.svg'
 import { RoutePath } from '../../../route/path'
 import { RouterLink } from '../../RouterLink'
+import { SubscribeUnreadCountAtom } from '../../Navbar'
 
 export enum InboxNavType {
   Inbox = 'Inbox',
+  Subscription = 'Subscription',
   Developers = 'Developers',
 }
 
@@ -58,12 +62,19 @@ export const InboxNav: React.FC<{
 }> = ({ initialScrollX }) => {
   const { pathname } = useLocation()
   const [t] = useTranslation('inbox-nav')
+  const unreadCount = useAtomValue(SubscribeUnreadCountAtom)
   const navItems: NavItem[] = [
     {
       type: InboxNavType.Inbox,
-      icon: <SVGInbox />,
+      icon: <InboxSvg />,
       title: t('inbox'),
       to: RoutePath.Home,
+    },
+    {
+      type: InboxNavType.Subscription,
+      icon: <SubSvg />,
+      title: t('subscription'),
+      to: RoutePath.Subscription,
     },
     {
       type: InboxNavType.Developers,
@@ -72,6 +83,11 @@ export const InboxNav: React.FC<{
       to: RoutePath.Developers,
     },
   ]
+  const numberMap = {
+    [InboxNavType.Inbox]: 0,
+    [InboxNavType.Subscription]: unreadCount,
+    [InboxNavType.Developers]: 0,
+  }
   const containerRef = useRef<HTMLDivElement>(null)
   useDidMount(() => {
     if (initialScrollX && containerRef.current) {
@@ -87,6 +103,7 @@ export const InboxNav: React.FC<{
     >
       {navItems.map(({ icon, title, type, to }) => {
         const isActive = to === pathname
+        const count = numberMap[type]
         return (
           <RouterLink key={type} href={to}>
             <Flex
@@ -99,6 +116,22 @@ export const InboxNav: React.FC<{
               <Box className={isActive ? 'box-cur' : ''} ml="5px">
                 {title}
               </Box>
+              {count > 0 ? (
+                <Badge
+                  ml="5px"
+                  h="18px"
+                  lineHeight="18px"
+                  fontSize="14px"
+                  bg="#4E51F4"
+                  color="#fff"
+                  fontWeight={700}
+                  w="38px"
+                  borderRadius="27px"
+                  textAlign="center"
+                >
+                  {count > 99 ? '99+' : count}
+                </Badge>
+              ) : null}
             </Flex>
           </RouterLink>
         )
