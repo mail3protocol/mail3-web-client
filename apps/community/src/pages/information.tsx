@@ -147,6 +147,7 @@ export const Information: React.FC = () => {
             address={userInfo?.address.split('@')[0] || ''}
             w="68.5px"
             h="68.5px"
+            borderRadius="50%"
           />
         </Center>
         <VStack as="form" spacing="24px" mt="32px" w="400px" mx="auto">
