@@ -1,10 +1,10 @@
-import { AspectRatio, Box, Button, Flex, Image, Link } from '@chakra-ui/react'
+import { AspectRatio, Box, Button, Image } from '@chakra-ui/react'
 import { atomWithStorage } from 'jotai/utils'
 import { CloseIcon } from '@chakra-ui/icons'
 import React from 'react'
 import { useAtom } from 'jotai'
 import { TrackEvent, useTrackClick } from 'hooks'
-import ProductRecommendationsBannerImage from '../../assets/product_recommendations_banner/halloween.png'
+import RegisterDigitBitImage from '../../assets/event_banners/register_digit_bit.png'
 
 const isClosedBannerAtom = atomWithStorage<boolean>(
   'is_close_product_recommendations_banner_atom',
@@ -21,34 +21,6 @@ const isClosedBannerAtom = atomWithStorage<boolean>(
     },
   }
 )
-
-const areaData = `
-| For Metas | @4metas | https://discord.gg/NRVxq9Uqcz | 114
-| Chill | @chillweb3 | http://discord.gg/JRVvephUtZ | 105
-| Weirdo Ghost Gang | @WeirdoGhostGang | https://discord.com/invite/weirdoghost | 100
-| Link3 | @link3to | https://discord.gg/fGQFddXTEs | 109
-| MOJOR | @Mojorcom | https://discord.gg/qty56w3HKe | 114
-| Mail3 | @mail3dao | https://discord.gg/mRrdVQ2Gs8 | 142
-| .bit | @dotbitHQ | http://discord.gg/did | 105
-| MechCraftWorld | @MechcraftWorld | https://discord.gg/JYYrhSRfTS | 102
-| Nawarat | @0xNawarat | https://discord.gg/E7m3gDy7Xs | 102
-| NFTGO | @nftgoio | https://discord.gg/JAkFX3ZZ7k | 104
-| LuckyBuy | @LuckyBuy_io | https://discord.com/invite/luckybuy | 133
-`
-  .split('\n')
-  .filter((i) => i)
-  .map((item) => {
-    const arr = item
-      .trim()
-      .split('|')
-      .map((i) => i.trim())
-      .filter((i) => i)
-    return {
-      name: arr[0],
-      link: arr[2],
-      width: arr[3],
-    }
-  })
 
 export const ProductRecommendationsBanner: React.FC = () => {
   const trackClickBannerSuggestion = useTrackClick(
@@ -77,10 +49,13 @@ export const ProductRecommendationsBanner: React.FC = () => {
         }}
         zIndex={3}
       >
-        <CloseIcon w="inherit" h="inherit" color="#fff" />
+        <CloseIcon w="inherit" h="inherit" color="#000" />
       </Button>
 
       <Box
+        as="a"
+        href="https://mirror.xyz/mail3.eth/A8PwBRQLHzRDTHTJlGdQC-RyHoD79qa6MrUs8yFQPbM"
+        target="_blank"
         position="relative"
         zIndex={2}
         onClick={() => {
@@ -95,34 +70,11 @@ export const ProductRecommendationsBanner: React.FC = () => {
           w="full"
         >
           <Image
-            src={ProductRecommendationsBannerImage}
+            src={RegisterDigitBitImage}
             alt="desktop_banner"
             pointerEvents="none"
           />
         </AspectRatio>
-        <Flex
-          position="absolute"
-          top="0"
-          left="0"
-          w="100%"
-          h="100%"
-          display={{ base: 'none', md: 'flex' }}
-        >
-          {areaData.map((item, index) => {
-            const { name, link, width } = item
-
-            return (
-              <Link
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                w={`${width}px`}
-                href={link}
-                target="_blank"
-                title={name}
-              />
-            )
-          })}
-        </Flex>
       </Box>
     </Box>
   )

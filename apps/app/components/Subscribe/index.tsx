@@ -315,13 +315,16 @@ export const Subscribe: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess() {
-        setLocalSubscribeStatus((s) => ({
-          [account]: {
-            ...s[account],
-            [id!]: true,
-          },
-          ...s,
-        }))
+        setLocalSubscribeStatus((s) => {
+          const newStatus = {
+            ...s,
+            [account]: {
+              ...s[account],
+              [id!]: true,
+            },
+          }
+          return newStatus
+        })
       },
     }
   )

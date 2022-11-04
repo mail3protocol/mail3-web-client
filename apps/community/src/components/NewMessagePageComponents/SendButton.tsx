@@ -9,7 +9,6 @@ import {
   ModalFooter,
   ModalOverlay,
   Spinner,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
@@ -91,14 +90,9 @@ export const SendButton: React.FC<SendButtonProps> = ({
       )
     }
     return (
-      <>
-        <Heading as="h3" fontSize="18px" mb="24px">
-          {t('send_confirm')}
-        </Heading>
-        <Text fontSize="16px" fontWeight="500">
-          {t('send_description')}
-        </Text>
-      </>
+      <Heading as="h3" fontSize="18px">
+        {t('send_description')}
+      </Heading>
     )
   }, [isSent, isLoading, t])
 
