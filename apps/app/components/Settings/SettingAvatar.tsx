@@ -15,9 +15,10 @@ import { Button } from 'ui'
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { useToast } from 'hooks'
 import { useNavigate } from 'react-router-dom'
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
 import { useQuery } from 'react-query'
+import { avatarsAtom } from 'ui/src/Avatar'
 import { RoutePath } from '../../route/path'
 import { useAPI, useHomeAPI } from '../../hooks/useAPI'
 import { userPropertiesAtom } from '../../hooks/useLogin'
@@ -81,6 +82,8 @@ const validateFiles = (value: FileList) => {
   return false
 }
 
+const DEFAULT_IMAGE_SRC =
+  'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [t] = useTranslation('settings')
   const { register, handleSubmit, watch, setValue } = useForm<FormValues>()
@@ -91,9 +94,10 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const api = useAPI()
   const toast = useToast()
   const navi = useNavigate()
-  const [avatarSrc, setAvatarSrc] = useState(
-    'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
-  )
+  const [avatars, setAvatars] = useAtom(avatarsAtom)
+
+  const [avatarSrc, setAvatarSrc] = useState('')
+
   const userProps = useAtomValue(userPropertiesAtom)
 
   const { isLoading, data: info } = useQuery(
@@ -126,6 +130,12 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
       toast('Settings are saved', {
         status: 'success',
       })
+      if (userProps?.defaultAddress) {
+        setAvatars((prev) => ({
+          ...prev,
+          [userProps.defaultAddress.split('@')[0]]: avatarSrc,
+        }))
+      }
     } catch (error) {
       toast('Network error', {
         status: 'warning',
@@ -151,6 +161,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           ? address.split('.')[0]
           : address
       }
+      setAvatarSrc(avatars?.[address] || DEFAULT_IMAGE_SRC)
       setValue('nickname', defaultNickname)
     }
   }, [userProps, isLoading, info])
@@ -272,7 +283,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
               bgImage={avatarSrc}
               bgRepeat="no-repeat"
               bgPosition="center"
-              bgSize="100% auto"
+              bgSize="cover"
             />
 
             <Box mt="16px">

@@ -19,7 +19,7 @@ import {
   isPrimitiveEthAddress,
 } from 'shared'
 import BoringAvatar from 'boring-avatars'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 const IS_IPHONE =
   typeof navigator !== 'undefined' &&
@@ -34,6 +34,7 @@ const IS_SAFARI =
 
 export interface AvatarProps extends RawAvatarProps {
   address: string
+  src?: string
   skeletonProps?: SkeletonProps
   w?: LayoutProps['w']
   h?: LayoutProps['h']
@@ -41,7 +42,7 @@ export interface AvatarProps extends RawAvatarProps {
   isUseSvg?: boolean
 }
 
-const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
+export const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
   'avatar_addresses',
   {},
   {
@@ -59,6 +60,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   isSquare,
   onClick,
   isUseSvg = false,
+  src,
   ...props
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
@@ -76,7 +78,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       return data
     },
     {
-      enabled: avatar == null && isEthAddress(address),
+      enabled: avatar == null && isEthAddress(address) && !src,
       refetchIntervalInBackground: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
@@ -95,6 +97,15 @@ export const Avatar: React.FC<AvatarProps> = ({
       },
     }
   )
+
+  useEffect(() => {
+    if (src) {
+      setAvatars((prev) => ({
+        ...prev,
+        [address]: src,
+      }))
+    }
+  }, [src])
 
   const isNonEthButValidAddress = useMemo(() => {
     if (isSupportedAddress(address) && !isEthAddress(address)) {
