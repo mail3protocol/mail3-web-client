@@ -25,7 +25,13 @@ class FileError extends Error {}
 class ParamError extends Error {}
 class UploadLimitError extends Error {}
 
-const allowMimes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp']
+const allowMimes = [
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/webp',
+  'image/bmp',
+]
 
 const allowMimeSet = new Set(allowMimes)
 
