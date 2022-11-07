@@ -89,7 +89,9 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const { register, handleSubmit, watch, setValue } = useForm<FormValues>()
   const [isUpLoading, setIsUpLoading] = useState(false)
   const [isSaveLoading, setIsSaveLoading] = useState(false)
-  const [disable, setDisable] = useState(true)
+  const [isModifyNickname, setIsModifyNickname] = useState(false)
+  const [isModifyAvatar, setIsModifyAvatar] = useState(false)
+
   const homeAPI = useHomeAPI()
   const api = useAPI()
   const toast = useToast()
@@ -168,12 +170,8 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
 
   useEffect(() => {
     const watchFile = watch(async (value, { name }) => {
-      if (name === 'nickname') {
-        if (value.nickname?.length || value.nickname === info?.nickname) {
-          setDisable(false)
-        } else {
-          setDisable(true)
-        }
+      if (name === 'nickname' && info && value.nickname !== info?.nickname) {
+        setIsModifyNickname(true)
       }
 
       if (name === 'file_' && value.file_ && value.file_.length > 0) {
@@ -189,7 +187,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           }
           const { data } = await homeAPI.uploadImage(file[0])
           setAvatarSrc(data.url)
-          setDisable(false)
+          setIsModifyAvatar(true)
         } catch (error) {
           console.error(error)
         }
@@ -312,7 +310,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
               <Button
                 w="120px"
                 onClick={onSubmit}
-                disabled={disable}
+                disabled={!isModifyNickname && !isModifyAvatar}
                 isLoading={isSaveLoading}
               >
                 Save
