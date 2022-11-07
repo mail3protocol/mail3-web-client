@@ -32,17 +32,32 @@ export const SettingsSignaturePage = () => {
         </Center>
         <Tabs mb="32px">
           <RouterLink href={RoutePath.Settings}>
-            <Tab as="a" isActive={false}>
+            <Tab
+              as="a"
+              isActive={false}
+              whiteSpace="nowrap"
+              marginInlineStart={{ base: '5% !important', md: '10%' }}
+            >
               {t('settings.tabs.address')}
             </Tab>
           </RouterLink>
           <RouterLink href={RoutePath.SettingAvatar} passHref>
-            <Tab as="a" isActive={false}>
+            <Tab
+              as="a"
+              isActive={false}
+              whiteSpace="nowrap"
+              marginInlineStart={{ base: '5% !important', md: '10%' }}
+            >
               {t('settings.tabs.avatar')}
             </Tab>
           </RouterLink>
           <RouterLink href={RoutePath.SettingSignature}>
-            <Tab as="a" isActive>
+            <Tab
+              as="a"
+              isActive
+              whiteSpace="nowrap"
+              marginInlineStart={{ base: '5% !important', md: '10%' }}
+            >
               {t('settings.tabs.signature')}
             </Tab>
           </RouterLink>
