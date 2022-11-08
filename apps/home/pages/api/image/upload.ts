@@ -92,7 +92,7 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
     const key = [
       'mail3-users',
       fields.address,
-      `avatar.${suffx.length > 1 ? suffx[1] : 'jpg'}`,
+      `avatar.${suffx.length > 1 ? suffx[1].toLocaleLowerCase() : 'jpg'}`,
     ].join('/')
 
     const s3UploadParams = {
