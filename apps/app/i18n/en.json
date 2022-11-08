@@ -214,7 +214,7 @@
                 "card": "Share profile card"
             },
             "avatar": {
-                "title": "Set your Avatar"
+                "title": "Set Your Avatar"
             },
             "next": "Next"
         },
@@ -223,8 +223,8 @@
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
-                "signature": "Signature setup",
-                "avatar": "Set your Avatar"
+                "signature": "Signature Setup",
+                "avatar": "Set Your Avatar"
             }
         },
         "address": {
