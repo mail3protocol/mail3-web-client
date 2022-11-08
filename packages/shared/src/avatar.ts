@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { CybertionConnect } from 'models'
-import { ShareSomeUrl } from './env'
 
 export const cybertinoConnectAvatarQuery = (
   address: string,
@@ -31,6 +30,24 @@ export const getCybertinoConnect = (address: string) =>
 
 export const generateAvatarSrc = (address: string) =>
   `https://source.boringavatars.com/marble/120/${address}?colors=92A1C6,146A7C,F0AB3D,C271B4,C20D90&square=false`
+
+class SomeUrl {
+  private serverUrl: string
+
+  constructor() {
+    this.serverUrl = 'https://api.mail3.me/api/v1'
+  }
+
+  public setServerUrl(url: string) {
+    this.serverUrl = url
+  }
+
+  public getServerUrl() {
+    return this.serverUrl
+  }
+}
+
+export const ShareSomeUrl = new SomeUrl()
 
 export const getMail3Avatar = (address: string) =>
   axios.get<{ avatar: string }>(
