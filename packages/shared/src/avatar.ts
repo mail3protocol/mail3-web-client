@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { CybertionConnect } from 'models'
+import { ShareSomeUrl } from './env'
 
 export const cybertinoConnectAvatarQuery = (
   address: string,
@@ -33,10 +34,10 @@ export const generateAvatarSrc = (address: string) =>
 
 export const getMail3Avatar = (address: string) =>
   axios.get<{ avatar: string }>(
-    `https://api.mail3.imibao.net/api/v1/avatar/${address}`
+    `${ShareSomeUrl.getServerUrl()}/avatar/${address}`
   )
 
 export const getPrimitiveAddress = (domain: string) =>
   axios.get<{ eth_address: string }>(
-    `https://api.mail3.imibao.net/api/v1/addresses/${domain}`
+    `${ShareSomeUrl.getServerUrl()}/addresses/${domain}`
   )
