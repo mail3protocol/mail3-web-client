@@ -29,7 +29,7 @@ import {
 } from 'hooks'
 import { Trans, useTranslation } from 'react-i18next'
 import QrCode from 'qrcode.react'
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
 import { ReactComponent as SvgRank } from 'assets/svg/rank.svg'
@@ -38,6 +38,7 @@ import axios from 'axios'
 import { ClusterInfoResp } from 'models'
 import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
 import { CheckIcon } from '@chakra-ui/icons'
+import { truncateAddress } from 'shared'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/download.svg'
 import { QueryKey } from '../api/QueryKey'
@@ -73,6 +74,9 @@ export const Information: React.FC = () => {
   const loginInfo = useLoginInfo()
   const userInfo = useUserInfo()
   const setUserInfo = useSetUserInfo()
+  const [currentAvatar, setCurrentAvatar] = useState<string | undefined>(
+    undefined
+  )
   const { data: userInfoData } = useQuery(
     [QueryKey.GetUserInfo],
     async () => api.getUserInfo().then((r) => r.data),
@@ -105,7 +109,7 @@ export const Information: React.FC = () => {
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const { takeScreenshot, downloadScreenshot } = useScreenshot()
   const { data: profileImage } = useQuery(
-    ['RenderProfileImage', account, nftInfo],
+    ['RenderProfileImage', account, nftInfo, currentAvatar],
     () =>
       takeScreenshot(cardRef.current!, {
         scale: 3,
@@ -120,7 +124,7 @@ export const Information: React.FC = () => {
   )
 
   const { onCopy, isCopied } = useCopyWithStatus()
-  const profilePageUrl = `${HOME_URL}/${userInfo?.name}`
+  const profilePageUrl = `${HOME_URL}/${userInfo?.address.split('@')[0] || ''}`
 
   return (
     <Container as={Grid} gridTemplateRows="100%" gap="20px">
@@ -157,7 +161,13 @@ export const Information: React.FC = () => {
               placeholder={t('name_placeholder')}
               name="name"
               isDisabled
-              value={userInfo?.name || userInfoData?.name}
+              value={truncateAddress(
+                userInfo?.name ||
+                  userInfoData?.name ||
+                  userInfo?.address.split('@')[0] ||
+                  '',
+                '_'
+              )}
             />
           </FormControl>
           <FormControl>
@@ -233,6 +243,7 @@ export const Information: React.FC = () => {
                       userInfo?.address || `${account}@${MAIL_SERVER_URL}`
                     }
                     ref={cardRef}
+                    onChangeAvatarCallback={setCurrentAvatar}
                   >
                     <Center
                       w="325px"

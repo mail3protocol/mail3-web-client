@@ -71,11 +71,12 @@ export const truncateMailAddress = (
 
 export const truncateAddress = (
   address: string,
+  pad?: string,
   takeLength = 6,
   tailLength = 4
 ) => {
   if (isPrimitiveEthAddress(address) || isZilpayAddress(address))
-    return truncateMiddle(address, takeLength, tailLength)
+    return truncateMiddle(address, takeLength, tailLength, pad)
 
   return address
 }

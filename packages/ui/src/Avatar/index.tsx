@@ -40,6 +40,7 @@ export interface AvatarProps extends RawAvatarProps {
   h?: LayoutProps['h']
   isSquare?: boolean
   isUseSvg?: boolean
+  onChangeAvatarCallback?: (currentAvatar?: string) => void
 }
 
 export const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
@@ -61,6 +62,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   onClick,
   isUseSvg = false,
   src,
+  onChangeAvatarCallback,
   ...props
 }) => {
   const [avatars, setAvatars] = useAtom(avatarsAtom)
@@ -106,6 +108,10 @@ export const Avatar: React.FC<AvatarProps> = ({
       }))
     }
   }, [src])
+
+  useEffect(() => {
+    onChangeAvatarCallback?.(avatar)
+  }, [avatar])
 
   const isNonEthButValidAddress = useMemo(() => {
     if (isSupportedAddress(address) && !isEthAddress(address)) {
