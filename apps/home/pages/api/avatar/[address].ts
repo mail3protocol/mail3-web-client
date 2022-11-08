@@ -1,11 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import {
-  getMail3Avatar,
-  getPrimitiveAddress,
-  isPrimitiveEthAddress,
-} from 'shared'
+import { isPrimitiveEthAddress } from 'shared'
+import { SERVER_URL } from '../../../constants/env'
+
+const getMail3Avatar = (ethAddress: string) =>
+  axios.get<{ avatar: string }>(`${SERVER_URL}/avatar/${ethAddress}`)
+
+const getPrimitiveAddress = (domain: string) =>
+  axios.get<{ eth_address: string }>(`${SERVER_URL}/addresses/${domain}`)
 
 function getAvatarByUrl<T>(url: string) {
   const catchReturn = { data: '', contentType: '' }

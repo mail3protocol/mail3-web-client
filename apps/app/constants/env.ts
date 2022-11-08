@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { EnvStorage } from 'shared'
 import { MAIL_SERVER_URL } from './env/mailServer'
 
 export * from './env/apps'
@@ -120,3 +121,5 @@ export const BIT_DOMAIN =
   'https://www.did.id/?inviter=mail3dao.bit&channel=mail3dao.bit'
 export const UD_DOMAIN =
   import.meta.env.NEXT_PUBLIC_UD_DOMAIN || 'https://unstoppabledomains.com/'
+
+EnvStorage.setServerUrl(SERVER_URL)
