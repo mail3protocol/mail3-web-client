@@ -11,7 +11,9 @@ function getAvatarByUrl<T>(url: string) {
   const catchReturn = { data: '', contentType: '' }
   if (!url) return catchReturn
   return axios
-    .get<T>(url)
+    .get<T>(url, {
+      responseType: 'stream',
+    })
     .then((axiosResponse) => ({
       data: axiosResponse.data,
       contentType: axiosResponse.headers['content-type'],
@@ -38,7 +40,6 @@ function handleSendFile(
 
 async function address(req: NextApiRequest, res: NextApiResponse) {
   const userAddress = (req.query.address ?? '') as string
-
   if (isPrimitiveEthAddress(userAddress)) {
     const avatarResponse = await getMail3Avatar(userAddress)
       .then((r) => r.data.avatar)
