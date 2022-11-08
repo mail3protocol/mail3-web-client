@@ -1,8 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import { generateAvatarSrc, getCybertinoConnect } from 'shared'
-import sharp from 'sharp'
+import {
+  getMail3Avatar,
+  getPrimitiveAddress,
+  isPrimitiveEthAddress,
+} from 'shared'
 
 function getAvatarByUrl<T>(url: string) {
   const catchReturn = { data: '', contentType: '' }
@@ -14,28 +17,6 @@ function getAvatarByUrl<T>(url: string) {
       contentType: axiosResponse.headers['content-type'],
     }))
     .catch(() => catchReturn)
-}
-
-async function convertSvgToPng(svg: string) {
-  return sharp(Buffer.from(svg), { density: 300 }).png().toBuffer()
-}
-
-async function handleSendFileWithConvertSvgToPng(
-  res: NextApiResponse,
-  {
-    data,
-    contentType,
-  }: {
-    data: string | Buffer
-    contentType: string
-  }
-) {
-  if (contentType === 'image/svg+xml' && typeof data === 'string') {
-    const pngBuffer = await convertSvgToPng(data)
-    res.status(200).setHeader('Content-Type', 'image/png').send(pngBuffer)
-    return true
-  }
-  return false
 }
 
 function handleSendFile(
@@ -58,26 +39,25 @@ function handleSendFile(
 async function address(req: NextApiRequest, res: NextApiResponse) {
   const userAddress = (req.query.address ?? '') as string
 
-  const cybertinoConnectResponse = await getCybertinoConnect(userAddress)
-    .then((r) => r.data.identity.avatar)
-    .catch(() => '')
-    .then((avatar) => getAvatarByUrl<string | Buffer>(avatar))
+  if (isPrimitiveEthAddress(userAddress)) {
+    const avatarResponse = await getMail3Avatar(userAddress)
+      .then((r) => r.data.avatar)
+      .catch(() => '')
+      .then((avatar) => getAvatarByUrl<string | Buffer>(avatar))
 
-  if (await handleSendFileWithConvertSvgToPng(res, cybertinoConnectResponse)) {
-    return
-  }
-  if (handleSendFile(res, cybertinoConnectResponse)) {
-    return
-  }
+    if (handleSendFile(res, avatarResponse)) {
+      return
+    }
+  } else {
+    const ethAddressResponse = await getPrimitiveAddress(userAddress)
+      .then((r) => r.data.eth_address)
+      .catch(() => '')
+      .then((ethAddress) => getMail3Avatar(ethAddress))
+      .then((avatar) => getAvatarByUrl<string | Buffer>(avatar.data.avatar))
 
-  const boringAvatarResponse = await getAvatarByUrl<string>(
-    generateAvatarSrc(userAddress)
-  )
-  if (await handleSendFileWithConvertSvgToPng(res, boringAvatarResponse)) {
-    return
-  }
-  if (handleSendFile(res, boringAvatarResponse)) {
-    return
+    if (handleSendFile(res, ethAddressResponse)) {
+      return
+    }
   }
 
   res.status(404).send('')

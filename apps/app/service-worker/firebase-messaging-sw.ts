@@ -78,9 +78,7 @@ self.addEventListener(push, async (e) => {
     payload.notification?.title || ''
   )
   const notificationIcon = payload.notification?.title
-    ? await generateAvatarUrl(payload.notification.title, {
-        omitMailSuffix: true,
-      })
+    ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
     : undefined
   const notificationOptions = {
     body: payload.notification?.body,
