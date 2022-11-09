@@ -5,6 +5,8 @@ import { TrackEvent, useToast, useTrackClick } from 'hooks'
 import { defer, lastValueFrom, retry } from 'rxjs'
 import { useTranslation } from 'react-i18next'
 import { SubmitMessage } from 'models/src/submitMessage'
+import { useAtomValue } from 'jotai'
+import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
 import { useAPI } from '../../../hooks/useAPI'
 import { useSubject } from './useSubject'
 import { useAttachment } from './useAttachment'
@@ -23,6 +25,7 @@ import {
 } from '../../../constants'
 import { useSending } from '../../../hooks/useSending'
 import { AddressNonceErrorReason } from '../../../api/ErrorCode'
+import { userPropertiesAtom } from '../../../hooks/useLogin'
 
 export const ID_NAME = 'id'
 export const ACTION_NAME = 'action'
@@ -63,6 +66,7 @@ export function useSubmitMessage() {
     toAddresses.length <= 0,
     !subject,
   ].some((item) => item)
+  const userProps = useAtomValue(userPropertiesAtom)
   const toast = useToast()
   const { attachments } = useAttachment()
   const { isEnableCardSignature } = useCardSignature()
@@ -109,7 +113,7 @@ export function useSubmitMessage() {
         attachments: imageAttachments,
       } = await outputHtmlWithAttachmentImages(html)
       html = replacedAttachmentImageHtml
-      const body = {
+      const body: any = {
         from: {
           address: fromAddress,
         },
@@ -124,6 +128,22 @@ export function useSubmitMessage() {
             .concat(imageAttachments)
         ),
       }
+
+      if (userProps?.nickname) {
+        body.from.name = userProps.nickname
+      } else if (userProps?.defaultAddress) {
+        const address = userProps.defaultAddress.split('@')[0]
+        let defaultNickname = ''
+        if (isPrimitiveEthAddress(address)) {
+          defaultNickname = truncateMiddle(address, 6, 4, '_')
+        } else if (isEthAddress(address)) {
+          defaultNickname = address.includes('.')
+            ? address.split('.')[0]
+            : address
+        }
+        body.from.name = defaultNickname
+      }
+
       const submitMessageResult = await api.submitMessage(body)
       addSendingMessage({ messageId: submitMessageResult.data.messageId })
       setIsSubmitted(true)

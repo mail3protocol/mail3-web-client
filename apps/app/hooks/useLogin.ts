@@ -220,6 +220,7 @@ export const useSetGlobalTrack = () => {
           aliases: aliases.aliases,
           notification_state: userInfo.web_push_notification_state,
           user_role: userInfo.user_role,
+          nickname: userInfo.nickname,
         }
         try {
           gtag?.('set', 'user_properties', config)

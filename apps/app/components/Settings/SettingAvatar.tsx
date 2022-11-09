@@ -15,7 +15,7 @@ import { Button } from 'ui'
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { useToast } from 'hooks'
 import { useNavigate } from 'react-router-dom'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
 import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
 import { useQuery } from 'react-query'
 import { avatarsAtom } from 'ui/src/Avatar'
@@ -107,7 +107,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
 
   const [avatarSrc, setAvatarSrc] = useState('')
 
-  const userProps = useAtomValue(userPropertiesAtom)
+  const [userProps, setUserProps] = useAtom(userPropertiesAtom)
 
   const { isLoading, data: info } = useQuery(
     ['settingAvatar'],
@@ -145,6 +145,10 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           [userProps.defaultAddress.split('@')[0]]: avatarSrc,
         }))
       }
+      setUserProps((prev) => ({
+        ...prev,
+        nickname: data.nickname,
+      }))
     } catch (error) {
       toast('Network error', {
         status: 'warning',
