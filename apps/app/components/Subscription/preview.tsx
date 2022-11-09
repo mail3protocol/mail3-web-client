@@ -300,7 +300,12 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
               trackAvatar()
             }}
           >
-            <Avatar w="32px" h="32px" address={detail?.writer_name} />
+            <Avatar
+              w="32px"
+              h="32px"
+              address={detail?.writer_name}
+              borderRadius="50%"
+            />
             <Box ml="6px" fontWeight={600} fontSize="14px" lineHeight="26px">
               {truncateAddress(detail?.writer_name)}
             </Box>
@@ -320,7 +325,12 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           window.open(`${HOME_URL}/${detail?.writer_name}`)
         }}
       >
-        <Avatar w="14px" h="14px" address={detail?.writer_name} />
+        <Avatar
+          w="14px"
+          h="14px"
+          address={detail?.writer_name}
+          borderRadius="50%"
+        />
         <Box
           ml="6px"
           fontWeight={400}

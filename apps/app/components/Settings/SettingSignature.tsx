@@ -308,6 +308,7 @@ export const SettingSignature: React.FC = () => {
               account={removeMailSuffix(userInfo?.defaultAddress || account)}
             />
             <HStack
+              display="none"
               spacing="6px"
               className="edit-button"
               onClick={() => {

@@ -3,20 +3,21 @@ import { PageContainer } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { Center, Heading } from '@chakra-ui/react'
 import { RoutePath } from '../../route/path'
+import { SettingAvatar } from '../../components/Settings/SettingAvatar'
 import { SettingContainer } from '../../components/Settings/SettingContainer'
 import { Tabs, Tab } from '../../components/Tabs'
-import { SettingSignature } from '../../components/Settings/SettingSignature'
 import { useRedirectHome } from '../../hooks/useRedirectHome'
 import { RouterLink } from '../../components/RouterLink'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-export const SettingsSignaturePage = () => {
+export const SettingsAvatarPage = () => {
   const [t] = useTranslation('settings')
-  const { isAuth, redirectHome } = useRedirectHome()
-  useDocumentTitle('Setting Signature')
+  const { redirectHome, isAuth } = useRedirectHome()
+  useDocumentTitle('Set your Avatar')
   if (!isAuth) {
     return redirectHome()
   }
+
   return (
     <PageContainer>
       <SettingContainer>
@@ -31,7 +32,7 @@ export const SettingsSignaturePage = () => {
           </Heading>
         </Center>
         <Tabs mb="32px">
-          <RouterLink href={RoutePath.Settings}>
+          <RouterLink href={RoutePath.Settings} passHref>
             <Tab
               as="a"
               isActive={false}
@@ -41,20 +42,20 @@ export const SettingsSignaturePage = () => {
               {t('settings.tabs.address')}
             </Tab>
           </RouterLink>
-          <RouterLink href={RoutePath.SettingAvatar} passHref>
+          <RouterLink href={RoutePath.Settings} passHref>
             <Tab
               as="a"
-              isActive={false}
+              isActive
               whiteSpace="nowrap"
               marginInlineStart={{ base: '5% !important', md: '10%' }}
             >
               {t('settings.tabs.avatar')}
             </Tab>
           </RouterLink>
-          <RouterLink href={RoutePath.SettingSignature}>
+          <RouterLink href={RoutePath.SettingSignature} passHref>
             <Tab
               as="a"
-              isActive
+              isActive={false}
               whiteSpace="nowrap"
               marginInlineStart={{ base: '5% !important', md: '10%' }}
             >
@@ -62,7 +63,7 @@ export const SettingsSignaturePage = () => {
             </Tab>
           </RouterLink>
         </Tabs>
-        <SettingSignature />
+        <SettingAvatar />
       </SettingContainer>
     </PageContainer>
   )

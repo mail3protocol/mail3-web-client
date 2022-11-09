@@ -22,6 +22,7 @@ interface ProfileCardProps {
   homeUrl: string
   children?: React.ReactNode
   isDev?: boolean
+  onChangeAvatarCallback?: (currentAvatar?: string) => void
 }
 
 const Container = styled(Box)`
@@ -142,7 +143,10 @@ const Container = styled(Box)`
 `
 
 export const ProfileCardHome = forwardRef<HTMLDivElement, ProfileCardProps>(
-  ({ mailAddress, isPic, isDev, children, homeUrl }, ref) => {
+  (
+    { mailAddress, isPic, isDev, children, homeUrl, onChangeAvatarCallback },
+    ref
+  ) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
     const mailSuffix = mailAddress.substring(mailAddress.indexOf('@'))
 
@@ -167,7 +171,13 @@ export const ProfileCardHome = forwardRef<HTMLDivElement, ProfileCardProps>(
             </Box>
             <Box mt="20px" className="avatar-wrap">
               <Box position="relative" zIndex={2}>
-                <Avatar address={address} w="72px" h="72px" />
+                <Avatar
+                  address={address}
+                  w="72px"
+                  h="72px"
+                  borderRadius="50%"
+                  onChangeAvatarCallback={onChangeAvatarCallback}
+                />
               </Box>
               <Image src={PngSeal} className="seal" />
             </Box>

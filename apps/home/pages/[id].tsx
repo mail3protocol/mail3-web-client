@@ -122,7 +122,12 @@ const Navbar: React.FC<{ address: string }> = ({ address }) => {
                   bg: '#f5f5f5',
                 }}
               >
-                <Avatar w="32px" h="32px" address={address} />
+                <Avatar
+                  w="32px"
+                  h="32px"
+                  address={address}
+                  borderRadius="50%"
+                />
                 <Text ml="6px" fontSize="12px">
                   {emailAddress}
                 </Text>
