@@ -1,3 +1,5 @@
+import { EnvStorage } from 'shared'
+
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'
 export const TWITTER_URL =
   process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com/mail3dao'
@@ -49,3 +51,5 @@ export const COMMUNITY_IMAGE_UPLOAD_LIMIT =
 export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
   (o) => o.trim()
 ) || [COMMUNITY_URL, APP_URL]
+
+EnvStorage.setServerUrl(SERVER_URL)
