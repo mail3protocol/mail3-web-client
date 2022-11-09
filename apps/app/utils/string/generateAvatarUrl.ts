@@ -13,7 +13,7 @@ export function generateAvatarUrl(
     !address.endsWith(`@${MAIL_SERVER_URL}`) &&
     !isSupportedAddress(address)
   ) {
-    return `${APP_URL}/images/default_avatar.png`
+    return `${APP_URL}/images/outside_avatar.png`
   }
   const addressParam = options?.omitMailSuffix
     ? removeMailSuffix(address)
