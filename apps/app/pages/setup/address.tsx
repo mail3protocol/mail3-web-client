@@ -32,7 +32,7 @@ export const SetupAddressPage = () => {
           <Heading fontSize={['20px', '20px', '28px']}>
             {t('setup.address.title')}
           </Heading>
-          <RouterLink href={RoutePath.SetupSignature} passHref>
+          <RouterLink href={RoutePath.SetupAvatar} passHref>
             <Button
               bg="black"
               color="white"

@@ -185,7 +185,12 @@ export const Dashboard: React.FC = () => {
         h="full"
       >
         <Center flexDirection="column">
-          <Avatar w="48px" h="48px" address={userInfo?.name || ''} />
+          <Avatar
+            w="48px"
+            h="48px"
+            address={userInfo?.address.split('@')[0] || ''}
+            borderRadius="50%"
+          />
           <Text mt="4px" fontWeight="bold">
             {formatUserName(userInfo?.name)}
           </Text>

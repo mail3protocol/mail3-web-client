@@ -35,7 +35,6 @@
         "react-query": "^3.34.16",
         "rxjs": "^7.5.5",
         "shared": "*",
-        "sharp": "^0.30.7",
         "ui": "*"
     },
     "devDependencies": {

@@ -991,7 +991,7 @@ export const SettingAddress: React.FC = () => {
 
       {(router.pathname as any) !== RoutePath.Settings ? (
         <Center className="footer" w="full">
-          <RouterLink href={RoutePath.SetupSignature} passHref>
+          <RouterLink href={RoutePath.SetupAvatar} passHref>
             <Button
               bg="black"
               color="white"

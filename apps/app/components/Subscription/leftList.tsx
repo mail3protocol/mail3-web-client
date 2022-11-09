@@ -94,7 +94,7 @@ export const SubListItem: FC<SubListItemProps> = ({
             zIndex={9}
           />
         ) : null}
-        <Avatar w="48px" h="48px" address={writer} />
+        <Avatar w="48px" h="48px" address={writer} borderRadius="50%" />
       </Box>
       <Box pl="24px" w="100%">
         <Text

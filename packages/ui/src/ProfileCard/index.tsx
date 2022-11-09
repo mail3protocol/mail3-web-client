@@ -166,7 +166,12 @@ export const ProfileCard = forwardRef<HTMLDivElement, ProfileCardProps>(
             </Box>
             <Box mt="20px" className="avatar-wrap">
               <Box position="relative" zIndex={2}>
-                <Avatar address={address} w="72px" h="72px" />
+                <Avatar
+                  address={address}
+                  w="72px"
+                  h="72px"
+                  borderRadius="50%"
+                />
               </Box>
               <Image src={PngSeal} className="seal" />
             </Box>

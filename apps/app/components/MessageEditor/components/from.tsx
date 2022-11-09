@@ -70,6 +70,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
               address={removeMailSuffix(emailAddress)}
               w="24px"
               h="24px"
+              borderRadius="50%"
             />
             <Box
               as="span"
@@ -119,6 +120,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
               address={removeMailSuffix(alias.address)}
               w="24px"
               h="24px"
+              borderRadius="50%"
             />
             <Box whiteSpace="pre-line" w="calc(100% - 28px)" ml="4px">
               {alias.address}

@@ -164,6 +164,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
                   address={removeMailSuffix(
                     userProps?.defaultAddress || address
                   )}
+                  borderRadius="50%"
                 />
               </Box>
             </PopoverAnchor>

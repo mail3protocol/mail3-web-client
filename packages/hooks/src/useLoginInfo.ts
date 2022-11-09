@@ -1,6 +1,6 @@
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 
-export const COOKIE_KEY = '__MAIL3__'
+export const COOKIE_KEY = '__MAIL3__v2'
 
 export interface LoginInfo {
   address: string
