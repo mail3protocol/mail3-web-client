@@ -19,6 +19,7 @@ import { useAtom } from 'jotai'
 import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
 import { useQuery } from 'react-query'
 import { avatarsAtom } from 'ui/src/Avatar'
+import axios from 'axios'
 import { RoutePath } from '../../route/path'
 import { useAPI, useHomeAPI } from '../../hooks/useAPI'
 import { userPropertiesAtom } from '../../hooks/useLogin'
@@ -74,21 +75,6 @@ const FileUpload: React.FC<FileUploadProps> = (props) => {
       {children}
     </InputGroup>
   )
-}
-
-const validateFiles = (value: FileList) => {
-  if (value.length < 1) {
-    return 'Files is required'
-  }
-  // eslint-disable-next-line no-restricted-syntax
-  for (const file of Array.from(value)) {
-    const fsMb = file.size / (1024 * 1024)
-    const MAX_FILE_SIZE = 2
-    if (fsMb > MAX_FILE_SIZE) {
-      return 'Max file size 2mb'
-    }
-  }
-  return false
 }
 
 export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
@@ -188,19 +174,27 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
       if (name === 'file_' && value.file_ && value.file_.length > 0) {
         setIsUpLoading(true)
         try {
-          const file = value.file_
-          const check = validateFiles(file)
-          if (check) {
-            toast(check, {
-              status: 'warning',
-            })
-            throw check
+          const file = value.file_[0]
+          const fsMb = file.size / (1024 * 1024)
+          const MAX_FILE_SIZE = 2
+          if (fsMb > MAX_FILE_SIZE) {
+            throw new Error('Max file size 2mb')
           }
-          const { data } = await homeAPI.uploadImage(file[0])
+          const { data } = await homeAPI.uploadImage(file)
           setAvatarSrc(data.url)
           setIsModifyAvatar(true)
-        } catch (error) {
-          console.error(error)
+        } catch (error: any) {
+          if (axios.isAxiosError(error)) {
+            toast({
+              status: 'error',
+              title: error.message,
+              description: error?.response?.data?.message,
+            })
+          } else {
+            toast(error.message, {
+              status: 'warning',
+            })
+          }
         }
         setIsUpLoading(false)
       }
