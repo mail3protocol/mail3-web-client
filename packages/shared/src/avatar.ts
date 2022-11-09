@@ -47,14 +47,14 @@ class EnvironmentVariableStorage {
   }
 }
 
-export const EnvStorage = new EnvironmentVariableStorage()
+export const envStorage = new EnvironmentVariableStorage()
 
 export const getMail3Avatar = (address: string) =>
   axios.get<{ avatar: string }>(
-    `${EnvStorage.getServerUrl()}/avatar/${address}`
+    `${envStorage.getServerUrl()}/avatar/${address}`
   )
 
 export const getPrimitiveAddress = (domain: string) =>
   axios.get<{ eth_address: string }>(
-    `${EnvStorage.getServerUrl()}/addresses/${domain}`
+    `${envStorage.getServerUrl()}/addresses/${domain}`
   )

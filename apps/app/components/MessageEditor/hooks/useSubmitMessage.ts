@@ -113,7 +113,7 @@ export function useSubmitMessage() {
         attachments: imageAttachments,
       } = await outputHtmlWithAttachmentImages(html)
       html = replacedAttachmentImageHtml
-      const body: any = {
+      const body: SubmitMessage.RequestBody = {
         from: {
           address: fromAddress,
         },
@@ -130,7 +130,10 @@ export function useSubmitMessage() {
       }
 
       if (userProps?.nickname) {
-        body.from.name = userProps.nickname
+        body.from = {
+          address: fromAddress,
+          name: userProps.nickname,
+        }
       } else if (userProps?.defaultAddress) {
         const address = userProps.defaultAddress.split('@')[0]
         let defaultNickname = ''
@@ -141,7 +144,10 @@ export function useSubmitMessage() {
             ? address.split('.')[0]
             : address
         }
-        body.from.name = defaultNickname
+        body.from = {
+          address: fromAddress,
+          name: defaultNickname,
+        }
       }
 
       const submitMessageResult = await api.submitMessage(body)

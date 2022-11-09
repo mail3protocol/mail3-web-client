@@ -1,4 +1,4 @@
-import { EnvStorage } from 'shared'
+import { envStorage } from 'shared'
 
 export const DISCORD_URL =
   import.meta.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
@@ -29,4 +29,4 @@ export const UD_CLIENT_ID =
   import.meta.env.NEXT_PUBLIC_UD_CLIENT_ID ||
   '3d424113-5e87-4c17-a629-2632db580d64'
 
-EnvStorage.setServerUrl(SERVER_URL)
+envStorage.setServerUrl(SERVER_URL)

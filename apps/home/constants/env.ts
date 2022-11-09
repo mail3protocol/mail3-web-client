@@ -1,4 +1,4 @@
-import { EnvStorage } from 'shared'
+import { envStorage } from 'shared'
 
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'
 export const TWITTER_URL =
@@ -52,4 +52,4 @@ export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
   (o) => o.trim()
 ) || [COMMUNITY_URL, APP_URL]
 
-EnvStorage.setServerUrl(SERVER_URL)
+envStorage.setServerUrl(SERVER_URL)
