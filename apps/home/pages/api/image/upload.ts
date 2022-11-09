@@ -6,7 +6,7 @@ import LRU from 'lru-cache'
 
 import {
   API_ALLOW_ORIGIN,
-  COMMUNITY_IMAGE_UPLOAD_LIMIT,
+  AVATAR_IMAGE_UPLOAD_LIMIT,
   SERVER_URL,
 } from '../../../constants/env'
 import { S3_CONFIG } from '../../../constants/env/S3'
@@ -78,7 +78,7 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
     })
 
     const uploadCount = uploadCountCache.get<number>(authorization) || 0
-    if (uploadCount >= COMMUNITY_IMAGE_UPLOAD_LIMIT) {
+    if (uploadCount >= AVATAR_IMAGE_UPLOAD_LIMIT) {
       throw new UploadLimitError('Uploaded quota has been used up')
     }
     uploadCountCache.set(authorization, uploadCount + 1)
