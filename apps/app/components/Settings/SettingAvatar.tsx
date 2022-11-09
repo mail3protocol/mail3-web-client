@@ -22,6 +22,7 @@ import { avatarsAtom } from 'ui/src/Avatar'
 import { RoutePath } from '../../route/path'
 import { useAPI, useHomeAPI } from '../../hooks/useAPI'
 import { userPropertiesAtom } from '../../hooks/useLogin'
+import { DEFAULT_AVATAR_SRC } from '../../constants'
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -82,8 +83,6 @@ const validateFiles = (value: FileList) => {
   return false
 }
 
-const DEFAULT_IMAGE_SRC =
-  'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const [t] = useTranslation('settings')
   const { register, handleSubmit, watch, setValue } = useForm<FormValues>()
@@ -163,7 +162,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           ? address.split('.')[0]
           : address
       }
-      setAvatarSrc(avatars?.[address] || DEFAULT_IMAGE_SRC)
+      setAvatarSrc(avatars?.[address] || DEFAULT_AVATAR_SRC)
       setValue('nickname', defaultNickname)
     }
   }, [userProps, isLoading, info])

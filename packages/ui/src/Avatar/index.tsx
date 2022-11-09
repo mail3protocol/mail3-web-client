@@ -11,26 +11,13 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { useQuery } from 'react-query'
 import {
-  generateAvatarSrc,
   isEthAddress,
   isSupportedAddress,
   getMail3Avatar,
   getPrimitiveAddress,
   isPrimitiveEthAddress,
 } from 'shared'
-import BoringAvatar from 'boring-avatars'
-import { useEffect, useMemo } from 'react'
-
-const IS_IPHONE =
-  typeof navigator !== 'undefined' &&
-  navigator.userAgent.toLowerCase().includes('iphone') &&
-  !navigator.vendor.includes('Google')
-
-const IS_SAFARI =
-  typeof navigator !== 'undefined' &&
-  navigator.vendor?.includes('Apple') &&
-  !navigator.userAgent.includes('CriOS') &&
-  !navigator.userAgent.includes('FxiOS')
+import { useEffect } from 'react'
 
 export interface AvatarProps extends RawAvatarProps {
   address: string
@@ -53,6 +40,8 @@ export const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
 )
 
 const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
+export const DEFAULT_AVATAR_SRC =
+  'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
@@ -60,7 +49,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   skeletonProps,
   isSquare,
   onClick,
-  isUseSvg = false,
   src,
   onChangeAvatarCallback,
   ...props
@@ -113,14 +101,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     onChangeAvatarCallback?.(avatar)
   }, [avatar])
 
-  const isNonEthButValidAddress = useMemo(() => {
-    if (isSupportedAddress(address) && !isEthAddress(address)) {
-      return true
-    }
-    return false
-  }, [address])
-
-  if (avatar === EMPTY_PLACE_HOLDER_SRC || isNonEthButValidAddress) {
+  if (avatar === EMPTY_PLACE_HOLDER_SRC) {
     return isSupportedAddress(address) ? (
       <WrapItem
         w={width}
@@ -133,21 +114,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         cursor={onClick ? 'pointer' : undefined}
         {...props}
       >
-        {!IS_IPHONE || !IS_SAFARI || isUseSvg ? (
-          <BoringAvatar
-            name={address.toLowerCase()}
-            variant="marble"
-            square
-            size="100%"
-            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-          />
-        ) : (
-          <Image
-            src={generateAvatarSrc(address.toLowerCase())}
-            w={width}
-            h={width}
-          />
-        )}
+        <Image src={DEFAULT_AVATAR_SRC} w={width} h={width} />
       </WrapItem>
     ) : (
       <RawAvatar

@@ -123,3 +123,7 @@ export const UD_DOMAIN =
   import.meta.env.NEXT_PUBLIC_UD_DOMAIN || 'https://unstoppabledomains.com/'
 
 EnvStorage.setServerUrl(SERVER_URL)
+
+export const DEFAULT_AVATAR_SRC =
+  import.meta.env.DEFAULT_AVATAR_SRC ||
+  'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
