@@ -7,8 +7,7 @@ import {
   WrapItem,
   Image,
 } from '@chakra-ui/react'
-import { atomWithStorage, createJSONStorage } from 'jotai/utils'
-import { useAtom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { useQuery } from 'react-query'
 import {
   isEthAddress,
@@ -30,14 +29,7 @@ export interface AvatarProps extends RawAvatarProps {
   onChangeAvatarCallback?: (currentAvatar?: string) => void
 }
 
-export const avatarsAtom = atomWithStorage<Record<string, string | undefined>>(
-  'avatar_addresses',
-  {},
-  {
-    ...createJSONStorage(() => sessionStorage),
-    delayInit: false,
-  }
-)
+export const avatarsAtom = atom<Record<string, string | undefined>>({})
 
 const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
 export const DEFAULT_AVATAR_SRC =
