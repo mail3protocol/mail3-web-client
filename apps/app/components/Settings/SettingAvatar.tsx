@@ -39,7 +39,15 @@ type FormValues = {
   nickname: string
 }
 
-const Container = styled(Box)``
+const Container = styled(Box)`
+  .footer {
+    display: none;
+    @media (max-width: 930px) {
+      display: flex;
+      margin-top: 10px;
+    }
+  }
+`
 
 const FileUpload: React.FC<FileUploadProps> = (props) => {
   const { register, accept, multiple, children } = props
@@ -315,7 +323,29 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
                 Save
               </Button>
             </Box>
-          ) : null}
+          ) : (
+            <Center pt="25px" className="footer">
+              <Button
+                bg="black"
+                color="white"
+                w="250px"
+                h="50px"
+                isLoading={isSaveLoading}
+                onClick={async () => {
+                  await onSubmit()
+                  navi(RoutePath.SetupSignature)
+                }}
+                _hover={{
+                  bg: 'brand.50',
+                }}
+                rightIcon={<ChevronRightIcon color="white" />}
+              >
+                <Center flexDirection="column">
+                  <Text>{t('setup.next')}</Text>
+                </Center>
+              </Button>
+            </Center>
+          )}
         </Center>
       )}
     </Container>
