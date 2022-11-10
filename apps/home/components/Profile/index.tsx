@@ -656,7 +656,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               <SvgCollect />
             </Center>
             <Center p="3px" mt="-5px">
-              Colleced
+              Collected
             </Center>
             <Center mt="3px">
               <Box color="#4E52F5" mr="2px">

@@ -212,7 +212,7 @@ export default {
     help_galxe: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project. 
+               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -256,7 +256,7 @@ export default {
     help_quest3: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project. 
+               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -310,6 +310,8 @@ export default {
     qr_code: 'Profile QR Code',
     download: 'Download',
     title: 'Account',
+    collection_rank: 'Collection Rank',
+    collected: 'Collected',
   },
   send_message: {
     title: 'History',

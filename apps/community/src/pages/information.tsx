@@ -261,7 +261,7 @@ export const Information: React.FC = () => {
                           <SvgRank />
                         </Center>
                         <Box p="3px" mt="-5px">
-                          Collection Rank
+                          {t('collection_rank')}
                         </Box>
                         <Box mt="3px">{nftInfo?.ranking}</Box>
                       </Box>
@@ -270,7 +270,7 @@ export const Information: React.FC = () => {
                           <SvgCollect />
                         </Center>
                         <Center p="3px" mt="-5px">
-                          Colleced
+                          {t('collected')}
                         </Center>
                         <Center mt="3px">
                           <Box color="#4E52F5" mr="2px">
