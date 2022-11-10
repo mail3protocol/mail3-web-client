@@ -1,11 +1,11 @@
 import {
-  Avatar as RawAvatar,
   AvatarProps as RawAvatarProps,
   SkeletonCircle,
   SkeletonProps,
   LayoutProps,
   WrapItem,
   Image,
+  ImageProps,
 } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { useQuery } from 'react-query'
@@ -17,6 +17,7 @@ import {
   isPrimitiveEthAddress,
 } from 'shared'
 import { useEffect } from 'react'
+import { RawAvatar } from './rawAvatar'
 
 export interface AvatarProps extends RawAvatarProps {
   address: string
@@ -26,6 +27,7 @@ export interface AvatarProps extends RawAvatarProps {
   h?: LayoutProps['h']
   isSquare?: boolean
   isUseSvg?: boolean
+  crossOrigin?: ImageProps['crossOrigin']
   onChangeAvatarCallback?: (currentAvatar?: string) => void
 }
 
@@ -104,9 +106,15 @@ export const Avatar: React.FC<AvatarProps> = ({
         overflow="hidden"
         onClick={onClick}
         cursor={onClick ? 'pointer' : undefined}
+        bg="white"
         {...props}
       >
-        <Image src={DEFAULT_AVATAR_SRC} w={width} h={width} />
+        <Image
+          src={DEFAULT_AVATAR_SRC}
+          w={width}
+          h={width}
+          crossOrigin="anonymous"
+        />
       </WrapItem>
     ) : (
       <RawAvatar
@@ -115,6 +123,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         size={size}
         ignoreFallback
         onClick={onClick}
+        bg="white"
         {...props}
       />
     )
@@ -135,6 +144,8 @@ export const Avatar: React.FC<AvatarProps> = ({
       size={size}
       ignoreFallback
       onClick={onClick}
+      crossOrigin="anonymous"
+      bg={avatar ? 'white' : undefined}
       {...props}
     />
   )

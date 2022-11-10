@@ -3,6 +3,7 @@ import {
   Box,
   Center,
   Heading,
+  Image,
   Input,
   InputGroup,
   Spinner,
@@ -283,11 +284,11 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
               h="150px"
               border="4px solid #000000"
               borderRadius="100px"
-              bgImage={avatarSrc}
-              bgRepeat="no-repeat"
-              bgPosition="center"
-              bgSize="cover"
-            />
+              overflow="hidden"
+              bgColor="#fff"
+            >
+              <Image src={avatarSrc} objectFit="cover" crossOrigin="" />
+            </Box>
 
             <Box mt="16px">
               <FileUpload
