@@ -106,6 +106,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         overflow="hidden"
         onClick={onClick}
         cursor={onClick ? 'pointer' : undefined}
+        bg="white"
         {...props}
       >
         <Image
@@ -122,6 +123,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         size={size}
         ignoreFallback
         onClick={onClick}
+        bg="white"
         {...props}
       />
     )
@@ -143,6 +145,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       ignoreFallback
       onClick={onClick}
       crossOrigin="anonymous"
+      bg={avatar ? 'white' : undefined}
       {...props}
     />
   )
