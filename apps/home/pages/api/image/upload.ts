@@ -88,12 +88,9 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       region: S3_CONFIG.Region,
     })
     // demo mail3-community.s3.amazonaws.com/mail3-users/0x1111/avatar.jpg
-    const suffx = files.image.newFilename.split('.')
-    const key = [
-      'mail3-users',
-      fields.address,
-      `avatar.${suffx.length > 1 ? suffx[1].toLocaleLowerCase() : 'jpg'}`,
-    ].join('/')
+    const key = ['mail3-users', fields.address, files.image.newFilename].join(
+      '/'
+    )
 
     const s3UploadParams = {
       Bucket: S3_CONFIG.Bucket,
