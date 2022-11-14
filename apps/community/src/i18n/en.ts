@@ -212,7 +212,7 @@ export default {
     help_galxe: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project. 
+               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -227,7 +227,7 @@ export default {
            <h3>How to get the Credential ID?</h3>
            <ul>
              <li>
-               As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Curated Credentials] > [Create] > [Select Type: EVM Address or Snapshot] > [Fill in the necessary information and create Credential] > [Create]
+               As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Curated Credentials] > [Create] > [Select Type: Import Your Own Data] > [ID Type: EVM Address]>[Credential Source: CSV]>[Fill in the other necessary information and create Credential] > [Create]As a Galxe resident project party, you can obtain your Credential ID by following the path: [Click on Avatar] > [Curated Credentials] > [Create] > [Select Type: Import Your Own Data] > [ID Type: EVM Address]>[Credential Source: CSV]>[Fill in the other necessary information and create Credential] > [Create]
              </li>
              <li>
                You can see the URL in the browser address bar of the successfully created Credential web page, for example: galxe.com/credential/20193934911****190
@@ -256,7 +256,7 @@ export default {
     help_quest3: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project. 
+               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
