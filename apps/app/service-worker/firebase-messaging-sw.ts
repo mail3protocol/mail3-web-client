@@ -86,8 +86,8 @@ self.addEventListener(push, async (e) => {
     data: payload.data,
   }
   await setIndexedDbById(key, payload, notificationLogsStore)
-  await self.registration.showNotification(
-    notificationTitle,
-    notificationOptions
+
+  event.waitUntil(
+    self.registration.showNotification(notificationTitle, notificationOptions)
   )
 })
