@@ -37,12 +37,11 @@ function getImageAttributes({
   element: HTMLElement
   parse: ApplySchemaAttributes['parse']
 }) {
-  const { width, height } = getDimensions(element)
+  const { width } = getDimensions(element)
   return {
     ...parse(element),
     style: 'max-width: 100%;',
     alt: element.getAttribute('alt') ?? '',
-    height: Number.parseInt(height || '0', 10) || null,
     src: element.getAttribute('src') ?? null,
     title: element.getAttribute('title') ?? '',
     width: Number.parseInt(width || '0', 10) || null,
@@ -75,7 +74,6 @@ export function uploadHandlerFromHomeApi(
         }
       }
   )
-  console.log(promises)
 
   return promises
 }
@@ -96,7 +94,6 @@ export class CustomizedImageExtension extends ImageExtension {
         ...extra.defaults(),
         alt: { default: '' },
         crop: { default: null },
-        height: { default: null },
         width: { default: null },
         rotate: { default: null },
         src: { default: null },

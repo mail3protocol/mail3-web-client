@@ -1,9 +1,7 @@
-import { get as getIndexedDbById, set as setIndexedDbById } from 'idb-keyval'
 import { APP_URL } from '../constants/env/apps'
 import { RoutePath } from '../route/path'
 import { generateAvatarUrl } from '../utils/string/generateAvatarUrl'
 import { truncateMiddle0xMail } from '../utils/string/truncateMiddle0xMail'
-import { notificationLogsStore } from '../utils/notification'
 
 interface PayloadData {
   message_id: string
@@ -67,27 +65,25 @@ self.addEventListener(notificationclick, (e) => {
 })
 
 self.addEventListener(push, async (e) => {
-  const event = e as EventMap[typeof push]
-  const text = event.data?.text()
-  if (!text) return
-  const payload = JSON.parse(text) as Payload
-  if (!payload) return
-  const key = payload.data.message_id
-  if (await getIndexedDbById(key, notificationLogsStore)) return
+  const event = e as PushEvent
+  const payload: Payload = event.data?.json() ?? {}
+
   const notificationTitle = truncateMiddle0xMail(
     payload.notification?.title || ''
   )
+
   const notificationIcon = payload.notification?.title
     ? generateAvatarUrl(payload.notification.title, { omitMailSuffix: true })
     : undefined
+
   const notificationOptions = {
     body: payload.notification?.body,
     icon: notificationIcon,
     data: payload.data,
+    tag: payload.data.message_id,
   }
-  await setIndexedDbById(key, payload, notificationLogsStore)
-  await self.registration.showNotification(
-    notificationTitle,
-    notificationOptions
+
+  event.waitUntil(
+    self.registration.showNotification(notificationTitle, notificationOptions)
   )
 })
