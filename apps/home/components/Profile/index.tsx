@@ -49,7 +49,6 @@ import axios from 'axios'
 import { ClusterInfoResp } from 'models'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from '../../assets/svg/collect.svg'
-import { ReactComponent as SvgEarn } from '../../assets/svg/earn.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
 import { APP_URL } from '../../constants/env'
@@ -204,6 +203,59 @@ export const getNfts = (address: string) =>
     `https://openApi.cluster3.net/api/v1/communityUserInfo?uuid=b45339c7&address=${address}`
   )
 
+const SubscribeButton = ({ uuid }: { uuid: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  const ButtonRemote = (
+    <iframe
+      style={{
+        display: 'block',
+        width: isLoaded ? '100%' : '0px',
+        height: isLoaded ? '28px' : '0px',
+        overflow: 'hidden',
+      }}
+      src={`http://localhost:3000/subscribe/button?uuid=${uuid}&redirect=${encodeURIComponent(
+        `${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`
+      )}`}
+      onLoad={() => {
+        setIsLoaded(true)
+      }}
+      title="subscribe"
+    />
+  )
+
+  const ButtonLocal = (
+    <Center position="relative">
+      <Button
+        w="150px"
+        h="28px"
+        variant="unstyled"
+        border="1px solid #000000"
+        fontSize="14px"
+        bg="#fff"
+        color="#000"
+        borderRadius="100px"
+        as="a"
+        target="_blank"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        href={`${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`}
+        isLoading={!isLoaded}
+      >
+        Subscribe
+      </Button>
+    </Center>
+  )
+
+  return (
+    <Box mt={{ base: '10px', md: '25px' }}>
+      {ButtonRemote}
+      {!isLoaded ? ButtonLocal : null}
+    </Box>
+  )
+}
+
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
@@ -333,39 +385,8 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               <Text className="p">{mailAddress}</Text>
             </Box>
 
-            <Box className="btn-wrap">
-              {uuid ? (
-                <Center mt={{ base: '10px', md: '25px' }} position="relative">
-                  <Button
-                    w="150px"
-                    h="28px"
-                    variant="unstyled"
-                    border="1px solid #000000"
-                    fontSize="14px"
-                    bg="#fff"
-                    color="#000"
-                    borderRadius="100px"
-                    as="a"
-                    target="_blank"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    href={`${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`}
-                  >
-                    Subscribe
-                  </Button>
-                  <Box
-                    position="absolute"
-                    left="62px"
-                    top="-18px"
-                    zIndex={9}
-                    pointerEvents="none"
-                  >
-                    <SvgEarn />
-                  </Box>
-                </Center>
-              ) : null}
-
+            <Box className="btn-wrap" mt={{ base: '10px', md: '25px' }}>
+              {uuid ? <SubscribeButton uuid={uuid} /> : null}
               <Center mt={{ base: '10px', md: '25px' }}>
                 <Mail3MeButton to={mailAddress} />
               </Center>
