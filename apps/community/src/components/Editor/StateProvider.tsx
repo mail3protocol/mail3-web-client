@@ -46,7 +46,7 @@ export const StateProvider: React.FC<StateProviderProps> = ({
         uploadHandler: (files) => uploadHandlerFromHomeApi(files, homeApi),
       }),
     ],
-    [placeholder]
+    [placeholder, homeApi]
   )
   const { manager, state } = useRemirror({
     extensions,

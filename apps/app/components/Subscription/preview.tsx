@@ -369,7 +369,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             attachments={[]}
             messageId=""
             from={{ name: '', address: '' }}
-            shadowStyle="main { min-height: 400px; }"
+            shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
           />
         </Box>
       </Box>
