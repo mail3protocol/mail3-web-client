@@ -211,7 +211,7 @@ const SubscribeButton = ({ uuid }: { uuid: string }) => {
       style={{
         display: 'block',
         width: isLoaded ? '100%' : '0px',
-        height: isLoaded ? '28px' : '0px',
+        height: isLoaded ? '50px' : '0px',
         overflow: 'hidden',
       }}
       src={`http://localhost:3000/subscribe/button?uuid=${uuid}&redirect=${encodeURIComponent(
@@ -225,7 +225,7 @@ const SubscribeButton = ({ uuid }: { uuid: string }) => {
   )
 
   const ButtonLocal = (
-    <Center position="relative">
+    <Center position="absolute" bottom="0">
       <Button
         w="150px"
         h="28px"
@@ -249,7 +249,7 @@ const SubscribeButton = ({ uuid }: { uuid: string }) => {
   )
 
   return (
-    <Box mt={{ base: '10px', md: '25px' }}>
+    <Box mt={{ base: '10px', md: '25px' }} h="50px">
       {ButtonRemote}
       {!isLoaded ? ButtonLocal : null}
     </Box>
