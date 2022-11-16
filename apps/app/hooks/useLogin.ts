@@ -23,18 +23,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { isBitDomain, isEnsDomain, isUdDomain } from 'shared'
-import { clear as clearIndexDBStore } from 'idb-keyval'
 import type { UserInfo as UDUserInfo } from '@uauth/js'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
 import { GOOGLE_ANALYTICS_ID, MAIL_SERVER_URL } from '../constants'
 import { useEmailAddress } from './useEmailAddress'
-import {
-  removeMailSuffix,
-  notificationLogsStore,
-  isCoinbaseWallet,
-} from '../utils'
+import { removeMailSuffix, isCoinbaseWallet } from '../utils'
 import { useDeleteFCMToken } from './useFCMToken'
 
 export const useIsLoginExpired = () => {
@@ -283,7 +278,6 @@ export const useLogout = () => {
   const onDeleteFCMToken = useDeleteFCMToken()
   return useCallback(async () => {
     await onDeleteFCMToken()
-    await clearIndexDBStore(notificationLogsStore)
     setUserInfo(null)
     logout()
     setLastConnector(undefined)
@@ -307,7 +301,6 @@ export const useWalletChange = () => {
 
       if (acc === undefined) {
         onDeleteFCMToken().then(async () => {
-          await clearIndexDBStore(notificationLogsStore)
           setLoginInfo(null)
         })
         return
@@ -326,7 +319,6 @@ export const useWalletChange = () => {
         return
       }
       onDeleteFCMToken().then(async () => {
-        await clearIndexDBStore(notificationLogsStore)
         setLoginInfo(null)
       })
     },
