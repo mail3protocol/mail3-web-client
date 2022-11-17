@@ -1,10 +1,11 @@
 import React from 'react'
-import { Button, Center } from '@chakra-ui/react'
+import { Box, Button, Center } from '@chakra-ui/react'
 import { useAccount } from 'hooks'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
+import { ReactComponent as SvgEarn } from '../../assets/subscribe/earn.svg'
 
 enum SubscribeState {
   Active,
@@ -32,7 +33,6 @@ export const SubscribeButton = () => {
         return {
           state: SubscribeState.Active,
         }
-        // eslint-disable-next-line @typescript-eslint/no-shadow
       } catch (error) {
         return {
           state: SubscribeState.Inactive,
@@ -48,7 +48,7 @@ export const SubscribeButton = () => {
   )
 
   return (
-    <Center position="absolute" bottom="0">
+    <Center position="absolute" top="20px" left="0px">
       <Button
         w="150px"
         h="28px"
@@ -69,6 +69,17 @@ export const SubscribeButton = () => {
       >
         {data?.state === SubscribeState.Active ? 'Subscribed' : 'Subscribe'}
       </Button>
+      {!isLoading && data?.state !== SubscribeState.Active ? (
+        <Box
+          position="absolute"
+          left="62px"
+          top="-18px"
+          zIndex={9}
+          pointerEvents="none"
+        >
+          <SvgEarn />
+        </Box>
+      ) : null}
     </Center>
   )
 }

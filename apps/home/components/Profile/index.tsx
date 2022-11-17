@@ -20,11 +20,10 @@ import {
   Text,
   Wrap,
   WrapItem,
-  Button,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
-import { Avatar, ProfileCardHome } from 'ui'
+import { Avatar, ProfileCardHome, SubscribeButton } from 'ui'
 import { useMemo, useRef, useState } from 'react'
 import {
   TrackEvent,
@@ -203,59 +202,6 @@ export const getNfts = (address: string) =>
     `https://openApi.cluster3.net/api/v1/communityUserInfo?uuid=b45339c7&address=${address}`
   )
 
-const SubscribeButton = ({ uuid }: { uuid: string }) => {
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  const ButtonRemote = (
-    <iframe
-      style={{
-        display: 'block',
-        width: isLoaded ? '100%' : '0px',
-        height: isLoaded ? '50px' : '0px',
-        overflow: 'hidden',
-      }}
-      src={`http://localhost:3000/subscribe/button?uuid=${uuid}&redirect=${encodeURIComponent(
-        `${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`
-      )}`}
-      onLoad={() => {
-        setIsLoaded(true)
-      }}
-      title="subscribe"
-    />
-  )
-
-  const ButtonLocal = (
-    <Center position="absolute" bottom="0">
-      <Button
-        w="150px"
-        h="28px"
-        variant="unstyled"
-        border="1px solid #000000"
-        fontSize="14px"
-        bg="#fff"
-        color="#000"
-        borderRadius="100px"
-        as="a"
-        target="_blank"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        href={`${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`}
-        isLoading={!isLoaded}
-      >
-        Subscribe
-      </Button>
-    </Center>
-  )
-
-  return (
-    <Box mt={{ base: '10px', md: '25px' }} h="50px">
-      {ButtonRemote}
-      {!isLoaded ? ButtonLocal : null}
-    </Box>
-  )
-}
-
 export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   mailAddress,
   address,
@@ -385,8 +331,8 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               <Text className="p">{mailAddress}</Text>
             </Box>
 
-            <Box className="btn-wrap" mt={{ base: '10px', md: '25px' }}>
-              {uuid ? <SubscribeButton uuid={uuid} /> : null}
+            <Box className="btn-wrap">
+              {uuid ? <SubscribeButton uuid={uuid} host={APP_URL} /> : null}
               <Center mt={{ base: '10px', md: '25px' }}>
                 <Mail3MeButton to={mailAddress} />
               </Center>
