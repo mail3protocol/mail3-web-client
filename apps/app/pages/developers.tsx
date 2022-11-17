@@ -59,7 +59,6 @@ export const Developers: React.FC = () => {
                   onClick={() => trackClickSubGithub()}
                   icon="interest"
                   text={t('subscribe-button.github')}
-                  display={{ base: 'none', md: 'flex' }}
                 />
               </>
             }
