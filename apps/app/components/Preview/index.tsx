@@ -755,7 +755,6 @@ export const PreviewComponent: React.FC = () => {
         </Box>
         <Box
           padding={{ base: '20px 0', md: '20px 24px 65px 24px' }}
-          borderBottom="1px solid #ccc"
           pointerEvents={isOriginSpam ? 'none' : 'auto'}
         >
           {isLoadingContent ? (
