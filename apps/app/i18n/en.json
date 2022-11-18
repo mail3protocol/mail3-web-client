@@ -293,11 +293,11 @@
             "github": "Check out the source code on Github",
             "mirror": "View our best practice cases on Mirror"
         },
-        "community-mail": {
-            "title": "Community mail",
-            "description": "Customize your email audience through filters to achieve precise push",
-            "interest": "Tell us you are interested in this feature \uD83D\uDE09",
-            "coming_soon": "Coming soon"
+        "subscribe-button": {
+            "title": "Subscribe to earn",
+            "description": "Mail3 push notification feature for all dApps",
+            "github": "Visit our functional backend to set up or deploy",
+            "mirror": "View our best practice cases on Mirror"
         }
     },
     "inbox-nav": {

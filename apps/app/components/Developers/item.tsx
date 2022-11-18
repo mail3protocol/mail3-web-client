@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import React, { ReactNode, useMemo } from 'react'
 import { GithubIcon, InterestIcon, MirrorIcon, RightArrowIcon } from 'ui'
+import { ReactComponent as SubscribeIcon } from '../../assets/developers/subscribe.svg'
 
 export const Item: React.FC<{
   title: string
@@ -84,10 +85,10 @@ export const Item: React.FC<{
 
 export const ItemLink: React.FC<
   LinkProps & {
-    icon: 'github' | 'mirror' | 'interest' | ReactNode
+    icon: 'github' | 'mirror' | 'interest' | 'subscribe' | ReactNode
     text: ReactNode
   }
-> = ({ icon, text, ...props }) => {
+> = ({ icon, text, display, ...props }) => {
   const iconSize = { base: '30px', md: '40px' }
   const iconEl = useMemo(
     () =>
@@ -95,26 +96,29 @@ export const ItemLink: React.FC<
         github: <GithubIcon w={iconSize} h={iconSize} />,
         mirror: <MirrorIcon w={iconSize} h={iconSize} />,
         interest: <InterestIcon w={iconSize} h={iconSize} />,
+        subscribe: <SubscribeIcon />,
       }[icon as string] || icon),
     [icon]
   )
   return (
-    <Link
-      className="item"
-      target="_blank"
-      pl={{ base: '10px', md: '24px' }}
-      pr={{ base: '10px', md: '20px' }}
-      h={{ base: '62px', md: '66px' }}
-      position="relative"
-      {...props}
-    >
-      {iconEl}
-      <Box ml={{ base: '7px', md: '18px' }}>{text}</Box>
-      <RightArrowIcon
-        w={{ base: '20px', md: '24px' }}
-        h={{ base: '20px', md: '24px' }}
-        ml="auto"
-      />
-    </Link>
+    <Box w="100%" display={display}>
+      <Link
+        className="item"
+        target="_blank"
+        pl={{ base: '10px', md: '24px' }}
+        pr={{ base: '10px', md: '20px' }}
+        h={{ base: '62px', md: '66px' }}
+        position="relative"
+        {...props}
+      >
+        {iconEl}
+        <Box ml={{ base: '7px', md: '18px' }}>{text}</Box>
+        <RightArrowIcon
+          w={{ base: '20px', md: '24px' }}
+          h={{ base: '20px', md: '24px' }}
+          ml="auto"
+        />
+      </Link>
+    </Box>
   )
 }
