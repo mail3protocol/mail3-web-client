@@ -1,15 +1,26 @@
 import React from 'react'
-import { Box, Button, Center } from '@chakra-ui/react'
+import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
 import { useAccount } from 'hooks'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { ReactComponent as SvgEarn } from '../../assets/subscribe/earn.svg'
+import { ReactComponent as SvgEarnWhite } from '../../assets/subscribe/earnWhite.svg'
 
 enum SubscribeState {
   Active,
   Inactive,
+}
+
+enum EarnIconType {
+  Blue = 'blue',
+  White = 'white',
+}
+
+const earnIcons = {
+  [EarnIconType.Blue]: <SvgEarn />,
+  [EarnIconType.White]: <SvgEarnWhite />,
 }
 
 export const SubscribeButton = () => {
@@ -17,10 +28,16 @@ export const SubscribeButton = () => {
   const isAuth = useIsAuthenticated()
 
   const [searchParams] = useSearchParams()
-  const uuid = searchParams.get('uuid')
+  const iconType = searchParams.get('earnIconType') ?? EarnIconType.Blue
+
   let redirect = searchParams.get('redirect')
   if (redirect) {
     redirect = decodeURIComponent(redirect)
+  }
+  const uuid = searchParams.get('uuid')
+  let buttonStyle = searchParams.get('buttonStyle')
+  if (buttonStyle) {
+    buttonStyle = JSON.parse(decodeURIComponent(buttonStyle))
   }
 
   const account = useAccount()
@@ -61,6 +78,7 @@ export const SubscribeButton = () => {
         display="flex"
         alignItems="center"
         justifyContent="center"
+        {...(buttonStyle as ButtonProps)}
         onClick={() => {
           if (redirect) window.open(redirect)
         }}
@@ -77,7 +95,7 @@ export const SubscribeButton = () => {
           zIndex={9}
           pointerEvents="none"
         >
-          <SvgEarn />
+          {earnIcons[iconType as EarnIconType]}
         </Box>
       ) : null}
     </Center>

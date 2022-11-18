@@ -332,7 +332,27 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             </Box>
 
             <Box className="btn-wrap">
-              {uuid ? <SubscribeButton uuid={uuid} host={APP_URL} /> : null}
+              {uuid ? (
+                <Box mt={{ base: '10px', md: '25px' }}>
+                  <SubscribeButton
+                    uuid={uuid}
+                    host={APP_URL}
+                    utmSource={location.host}
+                    iframeHeight="48px"
+                    w="150px"
+                    h="28px"
+                    variant="unstyled"
+                    border="1px solid #000000"
+                    fontSize="14px"
+                    bg="#fff"
+                    color="#000"
+                    borderRadius="100px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  />
+                </Box>
+              ) : null}
               <Center mt={{ base: '10px', md: '25px' }}>
                 <Mail3MeButton to={mailAddress} />
               </Center>
