@@ -1,14 +1,28 @@
 import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
 import { useState } from 'react'
 
+export interface EarnIconStyle {
+  type: string
+  top: string
+  left: string
+}
+
 export const SubscribeButton: React.FC<
   ButtonProps & {
     uuid: string
     host: string
     iframeHeight: string
     utmSource: string
+    earnIconStyle: EarnIconStyle
   }
-> = ({ uuid, host, iframeHeight, utmSource, ...buttonProps }) => {
+> = ({
+  uuid,
+  host,
+  iframeHeight,
+  utmSource,
+  earnIconStyle,
+  ...buttonProps
+}) => {
   const [isLoaded, setIsLoaded] = useState(false)
   const ButtonRemote = (
     <Box position="absolute" bottom="0px" left="0">
@@ -24,7 +38,7 @@ export const SubscribeButton: React.FC<
           `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_medium=click_subscribe_button`
         )}
         &buttonStyle=${encodeURIComponent(JSON.stringify(buttonProps))}
-        &earnIconType=blue
+        &earnIconStyle=${encodeURIComponent(JSON.stringify(earnIconStyle))}
         `}
         onLoad={() => {
           setIsLoaded(true)

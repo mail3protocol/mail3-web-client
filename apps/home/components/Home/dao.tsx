@@ -9,7 +9,7 @@ import {
   Flex,
   Box,
 } from '@chakra-ui/react'
-import { CONTAINER_MAX_WIDTH } from 'ui'
+import { CONTAINER_MAX_WIDTH, SubscribeButton } from 'ui'
 import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { fromEvent } from 'rxjs'
@@ -18,7 +18,12 @@ import { ReactComponent as Illustration2Svg } from '../../assets/svg/illustratio
 import { ReactComponent as TwitterIconSvg } from '../../assets/svg/socialMedia/twitter.svg'
 import { ReactComponent as MirrorIconSvg } from '../../assets/svg/socialMedia/mirror.svg'
 import { ReactComponent as DiscordIconSvg } from '../../assets/svg/socialMedia/discord.svg'
-import { DISCORD_URL, MIRROR_URL, TWITTER_URL } from '../../constants/env'
+import {
+  APP_URL,
+  DISCORD_URL,
+  MIRROR_URL,
+  TWITTER_URL,
+} from '../../constants/env'
 
 const IllustrationText = styled(Box)`
   font-family: NanumPenScript-Regular, serif;
@@ -135,13 +140,38 @@ export const Dao = () => {
               base: 'space-between',
               md: 'start',
             }}
+            alignItems="center"
             spacing={{
               base: '30px',
-              md: '56px',
+              md: '80px',
             }}
             maxW={{ base: '200px', md: 'unset' }}
             mx={{ base: 'auto', md: 0 }}
+            mt="90px"
           >
+            <Box>
+              <SubscribeButton
+                uuid="c334e372-6e43-4078-8b52-6acb876e70eb"
+                host={APP_URL}
+                utmSource="https://mail3.me"
+                iframeHeight="90px"
+                w="224px"
+                h="56px"
+                border="1px solid #4E4E4E"
+                fontSize="24px"
+                bg="#4E51F4"
+                color="#FFF"
+                borderRadius="20px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                earnIconStyle={{
+                  type: 'white',
+                  left: '100px',
+                  top: '-32px',
+                }}
+              />
+            </Box>
             <Link
               href={DISCORD_URL}
               _hover={{ transform: 'scale(1.2)' }}

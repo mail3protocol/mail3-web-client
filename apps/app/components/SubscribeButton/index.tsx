@@ -3,6 +3,7 @@ import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
 import { useAccount } from 'hooks'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
+import { EarnIconStyle } from 'ui/src/SubscribeButton'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { ReactComponent as SvgEarn } from '../../assets/subscribe/earn.svg'
@@ -28,7 +29,6 @@ export const SubscribeButton = () => {
   const isAuth = useIsAuthenticated()
 
   const [searchParams] = useSearchParams()
-  const iconType = searchParams.get('earnIconType') ?? EarnIconType.Blue
 
   let redirect = searchParams.get('redirect')
   if (redirect) {
@@ -39,6 +39,11 @@ export const SubscribeButton = () => {
   if (buttonStyle) {
     buttonStyle = JSON.parse(decodeURIComponent(buttonStyle))
   }
+  const earnIconStyle: EarnIconStyle = searchParams.get('earnIconStyle')
+    ? JSON.parse(decodeURIComponent(searchParams.get('earnIconStyle')!))
+    : {}
+
+  const iconType = earnIconStyle.type ?? EarnIconType.Blue
 
   const account = useAccount()
   const api = useAPI()
@@ -65,7 +70,11 @@ export const SubscribeButton = () => {
   )
 
   return (
-    <Center position="absolute" top="20px" left="0px">
+    <Center
+      position="absolute"
+      top={`${Math.abs(parseInt(earnIconStyle.top, 10))}px`}
+      left="0px"
+    >
       <Button
         w="150px"
         h="28px"
@@ -78,20 +87,21 @@ export const SubscribeButton = () => {
         display="flex"
         alignItems="center"
         justifyContent="center"
+        // TODO just allow style attribute
         {...(buttonStyle as ButtonProps)}
         onClick={() => {
+          if (data?.state === SubscribeState.Active) return
           if (redirect) window.open(redirect)
         }}
         isLoading={isLoading}
-        disabled={data?.state === SubscribeState.Active}
       >
         {data?.state === SubscribeState.Active ? 'Subscribed' : 'Subscribe'}
       </Button>
       {!isLoading && data?.state !== SubscribeState.Active ? (
         <Box
           position="absolute"
-          left="62px"
-          top="-18px"
+          left={earnIconStyle.left}
+          top={earnIconStyle.top}
           zIndex={9}
           pointerEvents="none"
         >

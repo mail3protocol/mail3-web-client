@@ -338,7 +338,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     uuid={uuid}
                     host={APP_URL}
                     utmSource={location.host}
-                    iframeHeight="48px"
+                    iframeHeight="46px"
                     w="150px"
                     h="28px"
                     variant="unstyled"
@@ -350,6 +350,11 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
+                    earnIconStyle={{
+                      type: 'blue',
+                      left: '62px',
+                      top: '-18px',
+                    }}
                   />
                 </Box>
               ) : null}
