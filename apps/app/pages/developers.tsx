@@ -57,7 +57,7 @@ export const Developers: React.FC = () => {
                 <ItemLink
                   href={GITHUB_SUBSCRIBE_BUTTON_URL}
                   onClick={() => trackClickSubGithub()}
-                  icon="interest"
+                  icon="subscribe"
                   text={t('subscribe-button.github')}
                 />
               </>
