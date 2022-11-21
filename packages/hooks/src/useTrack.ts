@@ -98,6 +98,8 @@ export enum TrackEvent {
   // mmb
   ClickMmbMirror = 'click_mmb_mirror',
   ClickMmbGithub = 'click_mmb_github',
+  ClickSubMirror = 'click_subscribe_mirror',
+  ClickSubGithub = 'click_subscribe_github',
   // community
   ClickCommunity = 'click_community',
 
