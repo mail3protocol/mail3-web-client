@@ -56,3 +56,6 @@ export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
 ) || [COMMUNITY_URL, APP_URL]
 
 envStorage.setServerUrl(SERVER_URL)
+
+export const SUBSCRIBE_MAIL3_UUID =
+  process.env.SUBSCRIBE_MAIL3_UUID || 'c334e372-6e43-4078-8b52-6acb876e70eb'

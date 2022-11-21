@@ -22,6 +22,7 @@ import {
   APP_URL,
   DISCORD_URL,
   MIRROR_URL,
+  SUBSCRIBE_MAIL3_UUID,
   TWITTER_URL,
 } from '../../constants/env'
 
@@ -131,7 +132,7 @@ export const Dao = () => {
             </Box>
           </Text>
           <Stack
-            direction="row"
+            direction={{ md: 'row', base: 'column' }}
             fontWeight="500"
             fontSize="20px"
             w="full"
@@ -147,11 +148,11 @@ export const Dao = () => {
             }}
             maxW={{ base: '200px', md: 'unset' }}
             mx={{ base: 'auto', md: 0 }}
-            mt="90px"
+            mt={{ base: '45px', md: '90px' }}
           >
             <Box>
               <SubscribeButton
-                uuid="c334e372-6e43-4078-8b52-6acb876e70eb"
+                uuid={SUBSCRIBE_MAIL3_UUID}
                 host={APP_URL}
                 utmSource="https://mail3.me"
                 iframeHeight="90px"
@@ -172,63 +173,71 @@ export const Dao = () => {
                 }}
               />
             </Box>
-            <Link
-              href={DISCORD_URL}
-              _hover={{ transform: 'scale(1.2)' }}
-              transition="100ms"
-              h="40px"
-              rounded="100px"
-              target="_blank"
-              onClick={() => {
-                trackClickCommunity({
-                  [TrackKey.HomeCommunity]: HomeCommunity.Discord,
-                })
+            <Stack
+              direction="row"
+              spacing={{
+                base: '30px',
+                md: '80px',
               }}
             >
-              <Icon
-                as={DiscordIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
-            <Link
-              href={TWITTER_URL}
-              _hover={{ transform: 'scale(1.2)' }}
-              transition="100ms"
-              h="40px"
-              rounded="100px"
-              target="_blank"
-              onClick={() => {
-                trackClickCommunity({
-                  [TrackKey.HomeCommunity]: HomeCommunity.Twitter,
-                })
-              }}
-            >
-              <Icon
-                as={TwitterIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
-            <Link
-              href={MIRROR_URL}
-              _hover={{ transform: 'scale(1.2)' }}
-              transition="100ms"
-              h="40px"
-              rounded="100px"
-              target="_blank"
-              onClick={() => {
-                trackClickCommunity({
-                  [TrackKey.HomeCommunity]: HomeCommunity.Mirror,
-                })
-              }}
-            >
-              <Icon
-                as={MirrorIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
+              <Link
+                href={DISCORD_URL}
+                _hover={{ transform: 'scale(1.2)' }}
+                transition="100ms"
+                h="40px"
+                rounded="100px"
+                target="_blank"
+                onClick={() => {
+                  trackClickCommunity({
+                    [TrackKey.HomeCommunity]: HomeCommunity.Discord,
+                  })
+                }}
+              >
+                <Icon
+                  as={DiscordIconSvg}
+                  w={{ base: '25px', md: '40px' }}
+                  h="auto"
+                />
+              </Link>
+              <Link
+                href={TWITTER_URL}
+                _hover={{ transform: 'scale(1.2)' }}
+                transition="100ms"
+                h="40px"
+                rounded="100px"
+                target="_blank"
+                onClick={() => {
+                  trackClickCommunity({
+                    [TrackKey.HomeCommunity]: HomeCommunity.Twitter,
+                  })
+                }}
+              >
+                <Icon
+                  as={TwitterIconSvg}
+                  w={{ base: '25px', md: '40px' }}
+                  h="auto"
+                />
+              </Link>
+              <Link
+                href={MIRROR_URL}
+                _hover={{ transform: 'scale(1.2)' }}
+                transition="100ms"
+                h="40px"
+                rounded="100px"
+                target="_blank"
+                onClick={() => {
+                  trackClickCommunity({
+                    [TrackKey.HomeCommunity]: HomeCommunity.Mirror,
+                  })
+                }}
+              >
+                <Icon
+                  as={MirrorIconSvg}
+                  w={{ base: '25px', md: '40px' }}
+                  h="auto"
+                />
+              </Link>
+            </Stack>
           </Stack>
         </Flex>
         <Center ref={illustrationContainerRef} w="full">
