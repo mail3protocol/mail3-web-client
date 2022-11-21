@@ -6,6 +6,7 @@ import {
   Heading,
   Icon,
   Link,
+  Spacer,
   Stack,
 } from '@chakra-ui/react'
 import { CONTAINER_MAX_WIDTH, Logo, SubscribeButton } from 'ui'
@@ -16,6 +17,7 @@ import { ReactComponent as TwitterIconSvg } from '../../assets/svg/socialMedia/t
 import { ReactComponent as DiscordIconSvg } from '../../assets/svg/socialMedia/discord.svg'
 import { ReactComponent as MirrorIconSvg } from '../../assets/svg/socialMedia/mirror.svg'
 import { ReactComponent as GithubSvg } from '../../assets/svg/socialMedia/github.svg'
+import { ReactComponent as SvgToTop } from '../../assets/svg/back-to-top.svg'
 import {
   APP_URL,
   DISCORD_URL,
@@ -185,32 +187,50 @@ export const Footer = () => {
           </Grid>
         </Flex>
       </Center>
-      <Flex
-        justifyContent={{ base: 'center', md: 'flex-end' }}
-        p={{ base: '60px', md: '0 100px 60px 0' }}
-      >
-        <SubscribeButton
-          uuid={SUBSCRIBE_MAIL3_UUID}
-          host={APP_URL}
-          utmSource="https://mail3.me"
-          iframeHeight="90px"
-          w="224px"
-          h="56px"
-          border="1px solid #4E4E4E"
-          fontSize="24px"
-          bg="#4E51F4"
-          color="#FFF"
-          borderRadius="20px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          earnIconStyle={{
-            type: 'white',
-            left: '100px',
-            top: '-32px',
-          }}
-        />
-      </Flex>
+      <Center>
+        <Flex
+          justifyContent={{ base: 'center', md: 'flex-end' }}
+          p={{ base: '60px', md: '0 0px 60px 0px' }}
+          w="full"
+          maxW={`${CONTAINER_MAX_WIDTH}px`}
+          justify="space-between"
+        >
+          <Link href="#top">
+            <Flex
+              color="#fff"
+              fontSize="14px"
+              fontWeight="500"
+              lineHeight="24px"
+              p="10px"
+            >
+              <SvgToTop />
+              <Box ml="5px">Back to Top</Box>
+            </Flex>
+          </Link>
+          <Spacer />
+          <SubscribeButton
+            uuid={SUBSCRIBE_MAIL3_UUID}
+            host={APP_URL}
+            utmSource="https://mail3.me"
+            iframeHeight="90px"
+            w="224px"
+            h="56px"
+            border="1px solid #4E4E4E"
+            fontSize="24px"
+            bg="#4E51F4"
+            color="#FFF"
+            borderRadius="20px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            earnIconStyle={{
+              type: 'white',
+              left: '100px',
+              top: '-32px',
+            }}
+          />
+        </Flex>
+      </Center>
     </Box>
   )
 }
