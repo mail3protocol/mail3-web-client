@@ -45,6 +45,12 @@ class API {
   public async getPrimitiveAddress(domain: string) {
     return this.axios.get(`/addresses/${domain}`)
   }
+
+  public async getUserInfo(address: string) {
+    return this.axios.get<{ nickname: string; avatar: string }>(
+      `/user_info/${address}`
+    )
+  }
 }
 
 export const useAPI = () => useMemo(() => new API(), [])

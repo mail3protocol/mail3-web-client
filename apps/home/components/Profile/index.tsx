@@ -53,6 +53,7 @@ import { ReactComponent as SvgEarn } from '../../assets/svg/earn.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
 import { APP_URL } from '../../constants/env'
+import { useAPI } from '../../api'
 
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
@@ -100,7 +101,7 @@ const WrapMain = styled(Center)`
     .btn-wrap {
       display: flex;
       width: 100%;
-      margin-top: 30px;
+      margin-top: 8px;
       justify-content: space-evenly;
     }
   }
@@ -125,7 +126,7 @@ const WrapLeft = styled(Center)`
     background: #f3f3f3;
     border-radius: 16px;
     padding: 4px 8px;
-    margin-top: 26px;
+    margin-top: 5px;
     text-align: center;
     width: 180px;
 
@@ -142,6 +143,10 @@ const WrapLeft = styled(Center)`
     width: 100%;
     height: auto;
     padding: 0;
+
+    .address {
+      margin-top: 0;
+    }
   }
 `
 
@@ -217,6 +222,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
   const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
 
+  const api = useAPI()
   const toast = useToast()
   const { downloadScreenshot } = useScreenshot()
 
@@ -224,11 +230,25 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
 
-  const { data: userInfo, isLoading } = useQuery(
+  const { data: clusterInfo, isLoading } = useQuery(
     ['cluster', priAddress],
     async () => {
       const ret = await getNfts(priAddress)
       return ret.data.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
+
+  const { data: userInfo } = useQuery(
+    ['userInfo', priAddress],
+    async () => {
+      const ret = await api.getUserInfo(priAddress)
+      return ret.data
     },
     {
       refetchIntervalInBackground: false,
@@ -312,7 +332,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
   if (!isDid) return null
 
-  const poapList = userInfo?.poapList ?? []
+  const poapList = clusterInfo?.poapList ?? []
   const hadLength = poapList.filter((item) => item.hadGot).length ?? 0
   const allLength = poapList.length ?? 0
 
@@ -329,6 +349,9 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                 h="64px"
               />
             </Box>
+            <Center fontWeight="700" fontSize="14px" lineHeight="26px" w="full">
+              <Text>{userInfo?.nickname}</Text>
+            </Center>
             <Box className="address">
               <Text className="p">{mailAddress}</Text>
             </Box>
@@ -505,7 +528,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               lineHeight="26px"
                               color="#4E51F4"
                             >
-                              {userInfo?.ranking}
+                              {clusterInfo?.ranking}
                             </Text>
                           </Center>
                           <Spacer />
@@ -649,7 +672,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             <Box p="3px" mt="-5px">
               Collection Rank
             </Box>
-            <Box mt="3px">{userInfo?.ranking}</Box>
+            <Box mt="3px">{clusterInfo?.ranking}</Box>
           </Box>
           <Box>
             <Center mt="-7px">
