@@ -652,6 +652,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         ref={cardRef}
         mailAddress={mailAddress}
         homeUrl={homeUrl}
+        nickname={userInfo?.nickname}
         // isDev
       >
         <Center
