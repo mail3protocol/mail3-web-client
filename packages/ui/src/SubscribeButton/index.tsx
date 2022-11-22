@@ -1,5 +1,5 @@
 import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 export interface EarnIconStyle {
   type: string
@@ -24,6 +24,18 @@ export const SubscribeButton: React.FC<
   ...buttonProps
 }) => {
   const [isLoaded, setIsLoaded] = useState(false)
+
+  const iframeSrc = useMemo(
+    () => `${host}/subscribe/button?uuid=${uuid}
+    &redirect=${encodeURIComponent(
+      `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_medium=click_subscribe_button`
+    )}
+    &buttonStyle=${encodeURIComponent(JSON.stringify(buttonProps))}
+    &earnIconStyle=${encodeURIComponent(JSON.stringify(earnIconStyle))}
+    `,
+    [host, uuid, utmSource, buttonProps, earnIconStyle]
+  )
+
   const ButtonRemote = (
     <Box position="absolute" bottom="0px" left="0">
       <iframe
@@ -33,13 +45,7 @@ export const SubscribeButton: React.FC<
           height: isLoaded ? iframeHeight : '0px',
           overflow: 'hidden',
         }}
-        src={`${host}/subscribe/button?uuid=${uuid}
-        &redirect=${encodeURIComponent(
-          `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_medium=click_subscribe_button`
-        )}
-        &buttonStyle=${encodeURIComponent(JSON.stringify(buttonProps))}
-        &earnIconStyle=${encodeURIComponent(JSON.stringify(earnIconStyle))}
-        `}
+        src={iframeSrc}
         onLoad={() => {
           setIsLoaded(true)
         }}
