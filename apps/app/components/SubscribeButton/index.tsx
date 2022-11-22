@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
 import { useAccount } from 'hooks'
 import { useQuery } from 'react-query'
@@ -30,18 +30,51 @@ export const SubscribeButton = () => {
 
   const [searchParams] = useSearchParams()
 
-  let redirect = searchParams.get('redirect')
-  if (redirect) {
-    redirect = decodeURIComponent(redirect)
-  }
   const uuid = searchParams.get('uuid')
-  let buttonStyle = searchParams.get('buttonStyle')
-  if (buttonStyle) {
-    buttonStyle = JSON.parse(decodeURIComponent(buttonStyle))
-  }
-  const earnIconStyle: EarnIconStyle = searchParams.get('earnIconStyle')
-    ? JSON.parse(decodeURIComponent(searchParams.get('earnIconStyle')!))
-    : {}
+  const urlRedirect = searchParams.get('redirect')
+  const urlButtonStyle = searchParams.get('buttonStyle')
+  const urlEarnIconStyle = searchParams.get('earnIconStyle')
+
+  const redirect = useMemo(
+    () => (urlRedirect ? decodeURIComponent(urlRedirect) : ''),
+    [urlRedirect]
+  )
+
+  const allowAttr = [
+    'w',
+    'h',
+    'width',
+    'height',
+    'variant',
+    'border',
+    'fontSize',
+    'bg',
+    'color',
+    'borderRadius',
+    'display',
+    'alignItems',
+    'justifyContent',
+  ]
+  const buttonStyle: ButtonProps = useMemo(() => {
+    const style = urlButtonStyle
+      ? JSON.parse(decodeURIComponent(urlButtonStyle))
+      : {}
+    return Object.keys(style)
+      .filter((key) => allowAttr.includes(key))
+      .reduce(
+        (obj, key) => ({
+          ...obj,
+          [key]: style[key],
+        }),
+        {}
+      )
+  }, [urlButtonStyle])
+
+  const earnIconStyle: EarnIconStyle = useMemo(
+    () =>
+      urlEarnIconStyle ? JSON.parse(decodeURIComponent(urlEarnIconStyle)) : {},
+    [urlEarnIconStyle]
+  )
 
   const iconType = earnIconStyle.type ?? EarnIconType.Blue
 
@@ -87,8 +120,7 @@ export const SubscribeButton = () => {
         display="flex"
         alignItems="center"
         justifyContent="center"
-        // TODO just allow style attribute
-        {...(buttonStyle as ButtonProps)}
+        {...buttonStyle}
         onClick={() => {
           if (data?.state === SubscribeState.Active) return
           if (redirect) window.open(redirect)
