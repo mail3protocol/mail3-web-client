@@ -187,7 +187,7 @@ export const Footer = () => {
           </Grid>
         </Flex>
       </Center>
-      <Center>
+      <Center px={{ base: 0, md: '33px' }}>
         <Flex
           justifyContent={{ base: 'center', md: 'flex-end' }}
           p={{ base: '60px', md: '0 0px 60px 0px' }}
