@@ -39,6 +39,9 @@ import {
   isBitDomain,
   shareToTwitter,
   isEnsDomain,
+  isPrimitiveEthAddress,
+  truncateMiddle,
+  isEthAddress,
 } from 'shared'
 import dynamic from 'next/dynamic'
 import { useQuery } from 'react-query'
@@ -326,6 +329,19 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     [mailAddress, address]
   )
 
+  const nickname = useMemo(() => {
+    if (userInfo?.nickname) {
+      return userInfo.nickname
+    }
+    if (isPrimitiveEthAddress(address)) {
+      return truncateMiddle(address, 6, 4, '_')
+    }
+    if (isEthAddress(address)) {
+      return address.includes('.') ? address.split('.')[0] : address
+    }
+    return ''
+  }, [userInfo])
+
   useDidMount(() => {
     setIsDid(true)
   })
@@ -350,7 +366,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
               />
             </Box>
             <Center fontWeight="700" fontSize="14px" lineHeight="26px" w="full">
-              <Text>{userInfo?.nickname}</Text>
+              <Text>{nickname}</Text>
             </Center>
             <Box className="address">
               <Text className="p">{mailAddress}</Text>
@@ -652,7 +668,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         ref={cardRef}
         mailAddress={mailAddress}
         homeUrl={homeUrl}
-        nickname={userInfo?.nickname}
+        nickname={nickname}
         // isDev
       >
         <Center
