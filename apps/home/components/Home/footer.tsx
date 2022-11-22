@@ -195,7 +195,7 @@ export const Footer = () => {
           maxW={`${CONTAINER_MAX_WIDTH}px`}
           justify="space-between"
         >
-          <Link href="#top">
+          <Link href="#top" display={{ md: 'block', base: 'none' }}>
             <Flex
               color="#fff"
               fontSize="14px"
@@ -207,7 +207,7 @@ export const Footer = () => {
               <Box ml="5px">Back to Top</Box>
             </Flex>
           </Link>
-          <Spacer />
+          <Spacer display={{ md: 'block', base: 'none' }} />
           <SubscribeButton
             uuid={SUBSCRIBE_MAIL3_UUID}
             host={APP_URL}
