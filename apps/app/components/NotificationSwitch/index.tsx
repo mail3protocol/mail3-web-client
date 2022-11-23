@@ -17,7 +17,6 @@ import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
 import { BaseSwitch } from './BaseSwitch'
 import { GifGuideDialog } from './GifGuideDialog'
-import { RoutePath } from '../../route/path'
 
 export const NotificationSwitch: React.FC = () => {
   const {
@@ -72,15 +71,12 @@ export const NotificationSwitch: React.FC = () => {
 
   useEffect(() => {
     let timeout: NodeJS.Timeout | undefined
-    const isAllowTips = () =>
-      window.location.pathname === RoutePath.Inbox &&
-      isBrowserSupport &&
-      isAllowOpenPopover
+    const isAllowTips = () => isBrowserSupport && isAllowOpenPopover
     if (isAllowTips()) {
       timeout = setTimeout(() => {
         if (!isAllowTips()) return
         onOpenPopover()
-      }, 10000)
+      }, 5000)
     }
     return () => {
       if (timeout) clearTimeout(timeout)
