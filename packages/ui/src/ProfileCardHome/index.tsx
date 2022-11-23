@@ -21,6 +21,7 @@ interface ProfileCardProps {
   isPic?: boolean
   homeUrl: string
   children?: React.ReactNode
+  nickname?: string
   isDev?: boolean
   onChangeAvatarCallback?: (currentAvatar?: string) => void
 }
@@ -69,7 +70,7 @@ const Container = styled(Box)`
   .address {
     max-width: 310px;
     min-width: 280px;
-    /* margin-top: 15px; */
+    margin-top: 10px;
     /* background: #f3f3f3; */
     /* border-radius: 16px; */
     padding: 13px;
@@ -144,7 +145,15 @@ const Container = styled(Box)`
 
 export const ProfileCardHome = forwardRef<HTMLDivElement, ProfileCardProps>(
   (
-    { mailAddress, isPic, isDev, children, homeUrl, onChangeAvatarCallback },
+    {
+      mailAddress,
+      isPic,
+      isDev,
+      children,
+      homeUrl,
+      nickname,
+      onChangeAvatarCallback,
+    },
     ref
   ) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
@@ -178,6 +187,16 @@ export const ProfileCardHome = forwardRef<HTMLDivElement, ProfileCardProps>(
                   borderRadius="50%"
                   onChangeAvatarCallback={onChangeAvatarCallback}
                 />
+                <Center
+                  position="absolute"
+                  bottom="-15px"
+                  fontWeight="700"
+                  fontSize="14px"
+                  lineHeight="26px"
+                  w="full"
+                >
+                  {nickname}
+                </Center>
               </Box>
               <Image src={PngSeal} className="seal" />
             </Box>
