@@ -155,6 +155,7 @@ export const Dao = () => {
                 uuid={SUBSCRIBE_MAIL3_UUID}
                 host={APP_URL}
                 utmSource="https://mail3.me"
+                utmCampaign="mail3.eth"
                 iframeHeight="90px"
                 w="224px"
                 h="56px"

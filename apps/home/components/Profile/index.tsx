@@ -377,6 +377,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     uuid={uuid}
                     host={APP_URL}
                     utmSource={location.host}
+                    utmCampaign={address}
                     iframeHeight="46px"
                     w="150px"
                     h="28px"
