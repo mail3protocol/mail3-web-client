@@ -243,6 +243,13 @@ export const Information: React.FC = () => {
                       userInfo?.address || `${account}@${MAIL_SERVER_URL}`
                     }
                     ref={cardRef}
+                    nickname={truncateAddress(
+                      userInfo?.name ||
+                        userInfoData?.name ||
+                        userInfo?.address.split('@')[0] ||
+                        '',
+                      '_'
+                    )}
                     onChangeAvatarCallback={setCurrentAvatar}
                   >
                     <Center

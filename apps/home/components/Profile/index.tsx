@@ -20,11 +20,10 @@ import {
   Text,
   Wrap,
   WrapItem,
-  Button,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
-import { Avatar, ProfileCardHome } from 'ui'
+import { Avatar, ProfileCardHome, SubscribeButton } from 'ui'
 import { useMemo, useRef, useState } from 'react'
 import {
   TrackEvent,
@@ -39,6 +38,9 @@ import {
   isBitDomain,
   shareToTwitter,
   isEnsDomain,
+  isPrimitiveEthAddress,
+  truncateMiddle,
+  isEthAddress,
 } from 'shared'
 import dynamic from 'next/dynamic'
 import { useQuery } from 'react-query'
@@ -49,10 +51,10 @@ import axios from 'axios'
 import { ClusterInfoResp } from 'models'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from '../../assets/svg/collect.svg'
-import { ReactComponent as SvgEarn } from '../../assets/svg/earn.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
 import { APP_URL } from '../../constants/env'
+import { useAPI } from '../../api'
 
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
@@ -100,7 +102,7 @@ const WrapMain = styled(Center)`
     .btn-wrap {
       display: flex;
       width: 100%;
-      margin-top: 30px;
+      margin-top: 8px;
       justify-content: space-evenly;
     }
   }
@@ -125,7 +127,7 @@ const WrapLeft = styled(Center)`
     background: #f3f3f3;
     border-radius: 16px;
     padding: 4px 8px;
-    margin-top: 26px;
+    margin-top: 5px;
     text-align: center;
     width: 180px;
 
@@ -142,6 +144,10 @@ const WrapLeft = styled(Center)`
     width: 100%;
     height: auto;
     padding: 0;
+
+    .address {
+      margin-top: 0;
+    }
   }
 `
 
@@ -217,6 +223,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const trackCopy = useTrackClick(TrackEvent.ClickProfileCopy)
   const trackCard = useTrackClick(TrackEvent.ClickProfileDownloadCard)
 
+  const api = useAPI()
   const toast = useToast()
   const { downloadScreenshot } = useScreenshot()
 
@@ -224,11 +231,25 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
 
-  const { data: userInfo, isLoading } = useQuery(
+  const { data: clusterInfo, isLoading } = useQuery(
     ['cluster', priAddress],
     async () => {
       const ret = await getNfts(priAddress)
       return ret.data.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
+
+  const { data: userInfo } = useQuery(
+    ['userInfo', priAddress],
+    async () => {
+      const ret = await api.getUserInfo(priAddress)
+      return ret.data
     },
     {
       refetchIntervalInBackground: false,
@@ -306,13 +327,26 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
     [mailAddress, address]
   )
 
+  const nickname = useMemo(() => {
+    if (userInfo?.nickname) {
+      return userInfo.nickname
+    }
+    if (isPrimitiveEthAddress(address)) {
+      return truncateMiddle(address, 6, 4, '_')
+    }
+    if (isEthAddress(address)) {
+      return address.includes('.') ? address.split('.')[0] : address
+    }
+    return ''
+  }, [userInfo])
+
   useDidMount(() => {
     setIsDid(true)
   })
 
   if (!isDid) return null
 
-  const poapList = userInfo?.poapList ?? []
+  const poapList = clusterInfo?.poapList ?? []
   const hadLength = poapList.filter((item) => item.hadGot).length ?? 0
   const allLength = poapList.length ?? 0
 
@@ -329,14 +363,21 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                 h="64px"
               />
             </Box>
+            <Center fontWeight="700" fontSize="14px" lineHeight="26px" w="full">
+              <Text>{nickname}</Text>
+            </Center>
             <Box className="address">
               <Text className="p">{mailAddress}</Text>
             </Box>
 
             <Box className="btn-wrap">
               {uuid ? (
-                <Center mt={{ base: '10px', md: '25px' }} position="relative">
-                  <Button
+                <Box mt={{ base: '10px', md: '25px' }}>
+                  <SubscribeButton
+                    uuid={uuid}
+                    host={APP_URL}
+                    utmSource={location.host}
+                    iframeHeight="46px"
                     w="150px"
                     h="28px"
                     variant="unstyled"
@@ -345,27 +386,17 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     bg="#fff"
                     color="#000"
                     borderRadius="100px"
-                    as="a"
-                    target="_blank"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    href={`${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`}
-                  >
-                    Subscribe
-                  </Button>
-                  <Box
-                    position="absolute"
-                    left="62px"
-                    top="-18px"
-                    zIndex={9}
-                    pointerEvents="none"
-                  >
-                    <SvgEarn />
-                  </Box>
-                </Center>
+                    earnIconStyle={{
+                      type: 'blue',
+                      left: '62px',
+                      top: '-18px',
+                    }}
+                  />
+                </Box>
               ) : null}
-
               <Center mt={{ base: '10px', md: '25px' }}>
                 <Mail3MeButton to={mailAddress} />
               </Center>
@@ -505,7 +536,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                               lineHeight="26px"
                               color="#4E51F4"
                             >
-                              {userInfo?.ranking}
+                              {clusterInfo?.ranking}
                             </Text>
                           </Center>
                           <Spacer />
@@ -629,6 +660,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
         ref={cardRef}
         mailAddress={mailAddress}
         homeUrl={homeUrl}
+        nickname={nickname}
         // isDev
       >
         <Center
@@ -649,7 +681,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
             <Box p="3px" mt="-5px">
               Collection Rank
             </Box>
-            <Box mt="3px">{userInfo?.ranking}</Box>
+            <Box mt="3px">{clusterInfo?.ranking}</Box>
           </Box>
           <Box>
             <Center mt="-7px">

@@ -4,6 +4,13 @@ const font =
   "'Poppins', Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
 
 export const theme = extendTheme({
+  styles: {
+    global: () => ({
+      body: {
+        bg: '',
+      },
+    }),
+  },
   shadows: {
     outline: 'none',
   },
