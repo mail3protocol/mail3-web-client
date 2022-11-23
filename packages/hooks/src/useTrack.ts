@@ -100,6 +100,7 @@ export enum TrackEvent {
   ClickMmbGithub = 'click_mmb_github',
   ClickSubMirror = 'click_subscribe_mirror',
   ClickSubGithub = 'click_subscribe_github',
+  ClickSubBackend = 'click_subscribe_backend',
   // community
   ClickCommunity = 'click_community',
 

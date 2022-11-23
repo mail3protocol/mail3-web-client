@@ -20,11 +20,10 @@ import {
   Text,
   Wrap,
   WrapItem,
-  Button,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useTranslation } from 'next-i18next'
-import { Avatar, ProfileCardHome } from 'ui'
+import { Avatar, ProfileCardHome, SubscribeButton } from 'ui'
 import { useMemo, useRef, useState } from 'react'
 import {
   TrackEvent,
@@ -52,7 +51,6 @@ import axios from 'axios'
 import { ClusterInfoResp } from 'models'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from '../../assets/svg/collect.svg'
-import { ReactComponent as SvgEarn } from '../../assets/svg/earn.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import PngEmpty from '../../assets/png/empty.png'
 import { APP_URL } from '../../constants/env'
@@ -374,8 +372,12 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
             <Box className="btn-wrap">
               {uuid ? (
-                <Center mt={{ base: '10px', md: '25px' }} position="relative">
-                  <Button
+                <Box mt={{ base: '10px', md: '25px' }}>
+                  <SubscribeButton
+                    uuid={uuid}
+                    host={APP_URL}
+                    utmSource={location.host}
+                    iframeHeight="46px"
                     w="150px"
                     h="28px"
                     variant="unstyled"
@@ -384,27 +386,17 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     bg="#fff"
                     color="#000"
                     borderRadius="100px"
-                    as="a"
-                    target="_blank"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    href={`${APP_URL}/subscribe/${uuid}?utm_source=${location.host}&utm_medium=click_subscribe_button`}
-                  >
-                    Subscribe
-                  </Button>
-                  <Box
-                    position="absolute"
-                    left="62px"
-                    top="-18px"
-                    zIndex={9}
-                    pointerEvents="none"
-                  >
-                    <SvgEarn />
-                  </Box>
-                </Center>
+                    earnIconStyle={{
+                      type: 'blue',
+                      left: '62px',
+                      top: '-18px',
+                    }}
+                  />
+                </Box>
               ) : null}
-
               <Center mt={{ base: '10px', md: '25px' }}>
                 <Mail3MeButton to={mailAddress} />
               </Center>

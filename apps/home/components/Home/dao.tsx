@@ -9,7 +9,7 @@ import {
   Flex,
   Box,
 } from '@chakra-ui/react'
-import { CONTAINER_MAX_WIDTH } from 'ui'
+import { CONTAINER_MAX_WIDTH, SubscribeButton } from 'ui'
 import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { fromEvent } from 'rxjs'
@@ -18,7 +18,13 @@ import { ReactComponent as Illustration2Svg } from '../../assets/svg/illustratio
 import { ReactComponent as TwitterIconSvg } from '../../assets/svg/socialMedia/twitter.svg'
 import { ReactComponent as MirrorIconSvg } from '../../assets/svg/socialMedia/mirror.svg'
 import { ReactComponent as DiscordIconSvg } from '../../assets/svg/socialMedia/discord.svg'
-import { DISCORD_URL, MIRROR_URL, TWITTER_URL } from '../../constants/env'
+import {
+  APP_URL,
+  DISCORD_URL,
+  MIRROR_URL,
+  SUBSCRIBE_MAIL3_UUID,
+  TWITTER_URL,
+} from '../../constants/env'
 
 const IllustrationText = styled(Box)`
   font-family: NanumPenScript-Regular, serif;
@@ -126,7 +132,7 @@ export const Dao = () => {
             </Box>
           </Text>
           <Stack
-            direction="row"
+            direction={{ md: 'row', base: 'column' }}
             fontWeight="500"
             fontSize="20px"
             w="full"
@@ -135,70 +141,103 @@ export const Dao = () => {
               base: 'space-between',
               md: 'start',
             }}
+            alignItems="center"
             spacing={{
               base: '30px',
-              md: '56px',
+              md: '80px',
             }}
             maxW={{ base: '200px', md: 'unset' }}
             mx={{ base: 'auto', md: 0 }}
+            mt={{ base: '45px', md: '90px' }}
           >
-            <Link
-              href={DISCORD_URL}
-              _hover={{ transform: 'scale(1.2)' }}
-              transition="100ms"
-              h="40px"
-              rounded="100px"
-              target="_blank"
-              onClick={() => {
-                trackClickCommunity({
-                  [TrackKey.HomeCommunity]: HomeCommunity.Discord,
-                })
+            <Box>
+              <SubscribeButton
+                uuid={SUBSCRIBE_MAIL3_UUID}
+                host={APP_URL}
+                utmSource="https://mail3.me"
+                iframeHeight="90px"
+                w="224px"
+                h="56px"
+                border="1px solid #4E4E4E"
+                fontSize="24px"
+                bg="#4E51F4"
+                color="#FFF"
+                borderRadius="20px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                earnIconStyle={{
+                  type: 'white',
+                  left: '100px',
+                  top: '-32px',
+                }}
+              />
+            </Box>
+            <Stack
+              direction="row"
+              spacing={{
+                base: '30px',
+                md: '80px',
               }}
             >
-              <Icon
-                as={DiscordIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
-            <Link
-              href={TWITTER_URL}
-              _hover={{ transform: 'scale(1.2)' }}
-              transition="100ms"
-              h="40px"
-              rounded="100px"
-              target="_blank"
-              onClick={() => {
-                trackClickCommunity({
-                  [TrackKey.HomeCommunity]: HomeCommunity.Twitter,
-                })
-              }}
-            >
-              <Icon
-                as={TwitterIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
-            <Link
-              href={MIRROR_URL}
-              _hover={{ transform: 'scale(1.2)' }}
-              transition="100ms"
-              h="40px"
-              rounded="100px"
-              target="_blank"
-              onClick={() => {
-                trackClickCommunity({
-                  [TrackKey.HomeCommunity]: HomeCommunity.Mirror,
-                })
-              }}
-            >
-              <Icon
-                as={MirrorIconSvg}
-                w={{ base: '25px', md: '40px' }}
-                h="auto"
-              />
-            </Link>
+              <Link
+                href={DISCORD_URL}
+                _hover={{ transform: 'scale(1.2)' }}
+                transition="100ms"
+                h="40px"
+                rounded="100px"
+                target="_blank"
+                onClick={() => {
+                  trackClickCommunity({
+                    [TrackKey.HomeCommunity]: HomeCommunity.Discord,
+                  })
+                }}
+              >
+                <Icon
+                  as={DiscordIconSvg}
+                  w={{ base: '25px', md: '40px' }}
+                  h="auto"
+                />
+              </Link>
+              <Link
+                href={TWITTER_URL}
+                _hover={{ transform: 'scale(1.2)' }}
+                transition="100ms"
+                h="40px"
+                rounded="100px"
+                target="_blank"
+                onClick={() => {
+                  trackClickCommunity({
+                    [TrackKey.HomeCommunity]: HomeCommunity.Twitter,
+                  })
+                }}
+              >
+                <Icon
+                  as={TwitterIconSvg}
+                  w={{ base: '25px', md: '40px' }}
+                  h="auto"
+                />
+              </Link>
+              <Link
+                href={MIRROR_URL}
+                _hover={{ transform: 'scale(1.2)' }}
+                transition="100ms"
+                h="40px"
+                rounded="100px"
+                target="_blank"
+                onClick={() => {
+                  trackClickCommunity({
+                    [TrackKey.HomeCommunity]: HomeCommunity.Mirror,
+                  })
+                }}
+              >
+                <Icon
+                  as={MirrorIconSvg}
+                  w={{ base: '25px', md: '40px' }}
+                  h="auto"
+                />
+              </Link>
+            </Stack>
           </Stack>
         </Flex>
         <Center ref={illustrationContainerRef} w="full">

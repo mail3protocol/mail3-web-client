@@ -19,6 +19,7 @@ import { Developers } from '../pages/developers'
 import { SubscribePage } from '../pages/subscribe'
 import { SubPage } from '../pages/subscription/index'
 import { SubPreviewPage } from '../pages/subscription/preview'
+import { SubscribeButtonPage } from '../pages/subscribeButtonPage'
 
 interface Mail3RouterProps extends RouteProps {
   key: string
@@ -128,5 +129,10 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.Testing,
     key: 'testing',
     element: <Navigate to={RoutePath.Inbox} />,
+  },
+  {
+    path: RoutePath.SubscribeButton,
+    key: 'subscribe-button',
+    element: <SubscribeButtonPage />,
   },
 ]

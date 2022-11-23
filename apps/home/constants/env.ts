@@ -56,3 +56,14 @@ export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
 ) || [COMMUNITY_URL, APP_URL]
 
 envStorage.setServerUrl(SERVER_URL)
+
+export const SUBSCRIBE_MAIL3_UUID =
+  process.env.SUBSCRIBE_MAIL3_UUID || 'c334e372-6e43-4078-8b52-6acb876e70eb'
+
+export const SUBSCRIBE_BUTTON_MIRROR_URL =
+  process.env.NEXT_PUBLIC_SUBSCRIBE_BUTTON_MIRRIR_URL ||
+  'https://mirror.xyz/mail3.eth/WUmKSwNyE__BUb657KvLFt0CeQ1aSC5p3Tg03unfCsY'
+
+export const SUBSCRIBE_BUTTON_BACKEND_URL =
+  process.env.NEXT_PUBLIC_SUBSCRIBE_BACKEND_BUTTON_URL ||
+  'https://subscribe.mail3.me'
