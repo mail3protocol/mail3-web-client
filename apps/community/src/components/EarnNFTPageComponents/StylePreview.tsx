@@ -27,8 +27,13 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
 }) => {
   const { t } = useTranslation(['earn_nft', 'common'])
   const loginInfo = useLoginInfo()
+
   const code = useMemo(
-    () => subscribeButtonTemplateCode(loginInfo?.uuid || ''),
+    () =>
+      subscribeButtonTemplateCode(
+        loginInfo?.uuid || '',
+        loginInfo?.address || ''
+      ),
     [loginInfo?.uuid]
   )
   const toast = useToast()
@@ -68,7 +73,7 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
           </Box>
           <Center w="full" h="calc(100% - 53px)">
             <a
-              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=click_subscribe_button`}
+              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=click_subscribe_button&utm_campaign=${loginInfo?.address}`}
               target="_blank"
               rel="noreferrer"
               style={
