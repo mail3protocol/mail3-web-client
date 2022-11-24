@@ -69,6 +69,15 @@ export const truncateMailAddress = (
   return mailAddress
 }
 
+export const mailAddressToAddress = (mailAddress: string) => {
+  if (verifyEmail(mailAddress)) {
+    const [address] = mailAddress.split('@')
+    return address
+  }
+
+  return mailAddress
+}
+
 export const truncateAddress = (
   address: string,
   pad?: string,
