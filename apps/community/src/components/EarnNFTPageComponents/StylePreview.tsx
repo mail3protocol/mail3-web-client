@@ -10,11 +10,12 @@ import {
 import { Trans, useTranslation } from 'react-i18next'
 import { Grid } from '@chakra-ui/layout'
 import { lazy, Suspense, useMemo } from 'react'
-import { copyText } from 'shared'
+import { copyText, verifyEmail } from 'shared'
 import { useLoginInfo } from 'hooks'
 import { subscribeButtonTemplateCode } from './SubscribeButtonTemplateCode'
 import { useToast } from '../../hooks/useToast'
 import { APP_URL } from '../../constants/env/url'
+import { useUserInfo } from '../../hooks/useUserInfo'
 
 const CodeEditor = lazy(() => import('../CodeEditor'))
 
@@ -27,8 +28,18 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
 }) => {
   const { t } = useTranslation(['earn_nft', 'common'])
   const loginInfo = useLoginInfo()
+  const userInfo = useUserInfo()
+
+  const address = useMemo(() => {
+    if (userInfo?.address && verifyEmail(userInfo.address)) {
+      const [addr] = userInfo.address.split('@')
+      return addr
+    }
+    return userInfo?.address || ''
+  }, [userInfo?.address])
+
   const code = useMemo(
-    () => subscribeButtonTemplateCode(loginInfo?.uuid || ''),
+    () => subscribeButtonTemplateCode(loginInfo?.uuid || '', address),
     [loginInfo?.uuid]
   )
   const toast = useToast()
@@ -68,7 +79,7 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
           </Box>
           <Center w="full" h="calc(100% - 53px)">
             <a
-              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=click_subscribe_button`}
+              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=click_subscribe_button&utm_campaign=${address}`}
               target="_blank"
               rel="noreferrer"
               style={
