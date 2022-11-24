@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --port 3002 --host 0.0.0.0",
     "start": "vite",
-    "build": "vite build",
+    "build": "node ../../packages/scripts/robots-txt.js && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "report": "REPORT=true vite build",

@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "scripts": {
         "dev": "vite dev",
-        "build": "vite build && vite build -c vite.sw.config.ts",
+        "build": "node ../../packages/scripts/robots-txt.js && vite build && vite build -c vite.sw.config.ts",
         "start": "vite",
         "lint": "eslint .",
         "report": "REPORT=true vite build",
