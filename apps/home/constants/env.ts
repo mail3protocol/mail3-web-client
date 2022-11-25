@@ -58,7 +58,7 @@ export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
 envStorage.setServerUrl(SERVER_URL)
 
 export const SUBSCRIBE_MAIL3_UUID =
-  process.env.SUBSCRIBE_MAIL3_UUID || 'c334e372-6e43-4078-8b52-6acb876e70eb'
+  process.env.SUBSCRIBE_MAIL3_UUID || '63398e16-6541-45a6-a497-d17775d5bfd6'
 
 export const SUBSCRIBE_BUTTON_MIRROR_URL =
   process.env.NEXT_PUBLIC_SUBSCRIBE_BUTTON_MIRRIR_URL ||

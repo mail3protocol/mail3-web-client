@@ -13,6 +13,7 @@ export const SubscribeButton: React.FC<
     host: string
     iframeHeight: string
     utmSource: string
+    utmCampaign?: string
     earnIconStyle: EarnIconStyle
   }
 > = ({
@@ -20,6 +21,7 @@ export const SubscribeButton: React.FC<
   host,
   iframeHeight,
   utmSource,
+  utmCampaign = '',
   earnIconStyle,
   ...buttonProps
 }) => {
@@ -28,7 +30,7 @@ export const SubscribeButton: React.FC<
   const iframeSrc = useMemo(
     () => `${host}/subscribe/button?uuid=${uuid}
     &redirect=${encodeURIComponent(
-      `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_medium=click_subscribe_button`
+      `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_campaign=${utmCampaign}&utm_medium=click_subscribe_button`
     )}
     &buttonStyle=${encodeURIComponent(JSON.stringify(buttonProps))}
     &earnIconStyle=${encodeURIComponent(JSON.stringify(earnIconStyle))}

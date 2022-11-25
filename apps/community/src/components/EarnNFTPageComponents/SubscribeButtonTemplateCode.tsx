@@ -1,8 +1,11 @@
 import { APP_URL } from '../../constants/env/url'
 
-export const subscribeButtonTemplateCode = (communityId: string) =>
+export const subscribeButtonTemplateCode = (
+  communityId: string,
+  address: string
+) =>
   // language=html
-  `<a href="${APP_URL}/subscribe/${communityId}" target="_blank">
+  `<a href="${APP_URL}/subscribe/${communityId}?utm_medium=click_subscribe_button&utm_campaign=${address}" target="_blank">
   <img src="${APP_URL}/images/subscribe-btn.png" alt="subscribe" style="width: 178px; height: auto; margin: auto">
 </a>
 `
