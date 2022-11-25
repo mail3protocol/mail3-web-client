@@ -144,6 +144,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
     <>
       {isMobileOpen ? <Mask /> : null}
       <Container
+        maxW="856px"
         transform={
           !isMaxWdith600 || isMobileOpen ? 'translateY(0)' : 'translateY(100%)'
         }
