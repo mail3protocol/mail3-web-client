@@ -108,7 +108,11 @@ export function useRemember() {
             trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
           }
           closeAuthModal()
-          if (router.pathname !== RoutePath.WhiteList) {
+          const [, pathname] = router.pathname.split('/')
+          if (
+            router.pathname !== RoutePath.WhiteList &&
+            `/${pathname}` !== RoutePath.Subscribe
+          ) {
             navi(RoutePath.Setup)
           }
           break
