@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { isEnsDomain, isBitDomain, mailAddressToAddress } from 'shared'
+import { mailAddressToAddress } from 'shared'
 
 interface EchoIframeProps {
   targetUri: string
@@ -10,8 +10,6 @@ export const EchoIframe: React.FC<EchoIframeProps> = ({
   targetUri,
   mailAddress,
 }) => {
-  const allowDomains = [isBitDomain, isEnsDomain]
-
   const address = useMemo(
     () => mailAddressToAddress(mailAddress) || '',
     [mailAddress]
@@ -21,7 +19,7 @@ export const EchoIframe: React.FC<EchoIframeProps> = ({
     const src = new URL('https://embed.0xecho.com.ipns.page')
     const params: { [key: string]: string } = {
       'color-theme': 'light',
-      modules: 'comment',
+      modules: 'comment,like,tip',
       receiver: 'mail3.eth',
       desc: '',
       target_uri: targetUri,
@@ -32,8 +30,6 @@ export const EchoIframe: React.FC<EchoIframeProps> = ({
     })
     return src.href
   }, [targetUri, address])
-
-  if (!allowDomains.some((fn) => fn(address))) return null
 
   return (
     <iframe
