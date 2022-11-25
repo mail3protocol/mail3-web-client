@@ -197,7 +197,7 @@ const SubscribeStatus = () => {
               })
             }}
           >
-            {t('continue')}
+            {t('Get-the-Claim-Link')}
           </Button>
         </Link>
       </>
@@ -221,7 +221,7 @@ const SubscribeStatus = () => {
             })
           }}
         >
-          {t('continue')}
+          {t('Get-the-Claim-Link')}
         </Button>
       </Link>
     </>
