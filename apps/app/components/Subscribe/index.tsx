@@ -176,7 +176,7 @@ const SubscribeStatus = () => {
             }
           }}
         >
-          {t('ok')}
+          {t('Get-the-Claim-Link')}
         </Button>
       </>
     )
