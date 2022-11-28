@@ -19,8 +19,8 @@ export const EchoIframe: React.FC<EchoIframeProps> = ({
     const src = new URL('https://embed.0xecho.com.ipns.page')
     const params: { [key: string]: string } = {
       'color-theme': 'light',
-      modules: 'comment,like,tip',
-      receiver: 'mail3.eth',
+      modules: 'comment,like',
+      receiver: '',
       desc: '',
       target_uri: targetUri,
     }
