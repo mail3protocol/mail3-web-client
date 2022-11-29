@@ -27,6 +27,7 @@ import { Button } from 'ui'
 import { atomWithStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import { ConnectWalletSelector } from 'connect-wallet/src/ConnectModalWithMultichain'
+import styled from '@emotion/styled'
 import { Query } from '../../api/query'
 import WelcomePng from '../../assets/subscribe/welcome.png'
 import SubscribePng from '../../assets/subscribe/subscribe.png'
@@ -40,6 +41,46 @@ import { IS_MOBILE } from '../../constants'
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
 
 const useTrackOk = () => useTrackClick(TrackEvent.ClickSubscribeOk)
+
+const ScanAnimate = styled(Center)`
+  overflow: hidden;
+  position: relative;
+
+  .light {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 200%;
+    height: 100px;
+
+    /* linear-gradient() make a light */
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0)
+    );
+
+    /* rotate light */
+    transform-origin: center center;
+    transform: translate(-100%, 50%) rotate(-60deg);
+
+    /* keyframes animation */
+    animation: ScanLights 4s linear 2s infinite;
+  }
+
+  @keyframes ScanLights {
+    0% {
+      transform: translate(-200%, 50%) rotate(-60deg);
+    }
+    100% {
+      transform: translate(200%, 50%) rotate(-60deg);
+    }
+  }
+`
 
 const ConnectWallet = () => {
   const [t] = useTranslation('subscribe')
@@ -57,9 +98,10 @@ const ConnectWallet = () => {
             {t('connect')}
           </Heading>
           <Comp spacing="48px">
-            <Center>
+            <ScanAnimate w="191px">
               <Image src={WelcomePng} w="191px" />
-            </Center>
+              <Box className="light" />
+            </ScanAnimate>
             <Box>
               <ConnectWalletSelector />
             </Box>
