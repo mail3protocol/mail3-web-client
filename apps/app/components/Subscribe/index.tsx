@@ -309,7 +309,12 @@ const Subscribing: React.FC = () => {
   return (
     <Center h="calc(100vh - 180px)" textAlign="center">
       <Center padding="0 32px" flexDirection="column">
-        <Heading mb="24px" fontSize="28px" lineHeight="42px" fontWeight={700}>
+        <Heading
+          mb="24px"
+          fontSize={{ base: '22px', md: '28px' }}
+          lineHeight="42px"
+          fontWeight={700}
+        >
           {t('subscribed')}
         </Heading>
 
