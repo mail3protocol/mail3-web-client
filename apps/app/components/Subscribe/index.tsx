@@ -21,7 +21,7 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -40,6 +40,7 @@ import { RoutePath } from '../../route/path'
 import { useNotification } from '../../hooks/useNotification'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 import { IS_MOBILE } from '../../constants'
+import start from './confetti'
 
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
 
@@ -85,7 +86,7 @@ const ScanAnimate = styled(Center)`
   }
 `
 
-const atomWaitPermission = atom(true)
+const atomWaitPermission = atom(false)
 
 const ConnectWallet = () => {
   const Comp = IS_MOBILE ? VStack : HStack
@@ -122,7 +123,7 @@ const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
   })
 
   return (
-    <Center>
+    <Center p="30px 0">
       <Flex flexDir="column" width="400px">
         <Steps labelOrientation="vertical" activeStep={activeStep}>
           {steps.map(({ label }) => (
@@ -198,15 +199,15 @@ const localSubscribeStatusAtom = atomWithStorage<
   Record<string, Record<string, boolean>>
 >('subscribeStatus', {})
 
-const SubscribeStatus = () => {
-  const { isBrowserSupport, permission, requestPermission } =
-    useNotification(false)
+const SubscribeStatus: React.FC<{
+  permission: 'default' | 'denied' | 'granted' | 'prompt'
+  isBrowserSupport?: boolean
+  isDeclined: boolean
+}> = ({ permission, isBrowserSupport, isDeclined }) => {
   const [t] = useTranslation('subscribe')
-  const [isDeclined, setIsDeclined] = useState(false)
-  const [isRequesting, setIsRequesting] = useState(false)
-  const trackOK = useTrackOk()
+
   const trackContinue = useTrackContinue()
-  if ((permission === 'default' && isBrowserSupport) || isRequesting) {
+  if (permission === 'default' && isBrowserSupport) {
     return (
       <>
         <Text fontWeight={700} fontSize="14px">
@@ -222,26 +223,7 @@ const SubscribeStatus = () => {
             t={t}
           />
         </Desc>
-        <Button
-          w="168px"
-          isLoading={isRequesting}
-          onClick={async () => {
-            setIsRequesting(true)
-            trackOK()
-            try {
-              const ps = await requestPermission()
-              if (ps === 'denied') {
-                setIsDeclined(true)
-              }
-            } catch (error) {
-              //
-            } finally {
-              setIsRequesting(false)
-            }
-          }}
-        >
-          {t('ok')}
-        </Button>
+        <Button w="168px">{t('ok')}</Button>
       </>
     )
   }
@@ -249,7 +231,14 @@ const SubscribeStatus = () => {
   if (isDeclined) {
     return (
       <>
-        <Text fontWeight={700} mb="16px" whiteSpace="pre-line">
+        <Text
+          mb="16px"
+          whiteSpace="pre-line"
+          w="283px"
+          fontWeight="700"
+          fontSize="14px"
+          lineHeight="18px"
+        >
           {t('declined')}
         </Text>
         <Link to={RoutePath.Inbox}>
@@ -261,7 +250,7 @@ const SubscribeStatus = () => {
               })
             }}
           >
-            {t('Get-the-Claim-Link')}
+            {t('continue')}
           </Button>
         </Link>
       </>
@@ -270,10 +259,19 @@ const SubscribeStatus = () => {
 
   return (
     <>
-      <Text fontWeight={700} fontSize="14px">
+      <Text fontWeight={700} fontSize="20px" lineHeight="30px">
         {t('nft')}
       </Text>
-      <Desc>{t('success')}</Desc>
+      <Text
+        w="283px"
+        color="#4E51F4"
+        fontWeight="700"
+        fontSize="14px"
+        lineHeight="18px"
+        m="20px 0"
+      >
+        {t('success')}
+      </Text>
       <Link to={RoutePath.Inbox}>
         <Button
           w="168px"
@@ -285,7 +283,7 @@ const SubscribeStatus = () => {
             })
           }}
         >
-          {t('Get-the-Claim-Link')}
+          {t('continue')}
         </Button>
       </Link>
     </>
@@ -294,77 +292,111 @@ const SubscribeStatus = () => {
 
 const Subscribing: React.FC = () => {
   const [t] = useTranslation('subscribe')
-  const [isWaitPermission] = useAtom(atomWaitPermission)
+  const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
+  const { isBrowserSupport, permission, requestPermission } =
+    useNotification(false)
+  const [isDeclined, setIsDeclined] = useState(false)
+  const [isRequesting, setIsRequesting] = useState(false)
+  const trackOK = useTrackOk()
+
+  useEffect(() => {
+    console.log(permission, isDeclined, isWaitPermission)
+    if (permission === 'granted' && !isDeclined && !isWaitPermission) {
+      start()
+    }
+  }, [permission, isDeclined, isWaitPermission])
 
   return (
     <Center h="calc(100vh - 180px)" textAlign="center">
-      {isWaitPermission ? (
-        <Center padding="0 32px" flexDirection="column">
-          <Heading mb="24px" fontSize="28px" lineHeight="42px" fontWeight={700}>
-            {t('subscribed')}
-          </Heading>
-          <StepsWrap initialStep={1} />
-          <Center
-            w="600px"
-            h="255px"
-            mt="25px"
-            mb="15px"
-            background="#FFFFFF"
-            border="1px solid rgba(0, 0, 0, 0.2)"
-            borderRadius="48px"
-            justifyContent="center"
-          >
-            <video width="320" height="208" autoPlay loop muted>
-              <source src={GuideMp4} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </Center>
-          <Box
-            textAlign="center"
-            fontWeight="500"
-            fontSize="16px"
-            lineHeight="24px"
-          >
-            <Flex>
-              <Trans
-                components={{
-                  b: <Text color="blue" p="0 2px" />,
-                }}
-                ns="subscribe"
-                i18nKey="claim-p1"
-                t={t}
-              />
-            </Flex>
-            <Text>{t('claim-p2')}</Text>
-          </Box>
-          <Center mt="16px">
-            <Button
-              w="175px"
-              background="#4E51F4"
-              _hover={{
-                bg: '#4E51E0',
-              }}
+      <Center padding="0 32px" flexDirection="column">
+        <Heading mb="24px" fontSize="28px" lineHeight="42px" fontWeight={700}>
+          {t('subscribed')}
+        </Heading>
+
+        {(isWaitPermission && isBrowserSupport) || isRequesting ? (
+          <>
+            <StepsWrap initialStep={1} />
+            <Center
+              w="600px"
+              h="255px"
+              mt="25px"
+              mb="15px"
+              background="#FFFFFF"
+              border="1px solid rgba(0, 0, 0, 0.2)"
+              borderRadius="48px"
+              justifyContent="center"
             >
-              🎁 Claim !
-            </Button>
-          </Center>
-        </Center>
-      ) : (
-        <Center
-          padding="32px"
-          flexDirection="column"
-          w="375px"
-          border="1px solid #efefef"
-          borderRadius="24px"
-        >
-          <Heading mb="24px" fontSize="20px" fontWeight={700}>
-            {t('subscribed')}
-          </Heading>
-          <StepsWrap initialStep={1} />
-          <Image src={SubscribePng} w="180px" mb="24px" />
-          <SubscribeStatus />
-        </Center>
-      )}
+              <video width="320" height="208" autoPlay loop muted>
+                <source src={GuideMp4} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </Center>
+            <Box
+              textAlign="center"
+              fontWeight="500"
+              fontSize="16px"
+              lineHeight="24px"
+            >
+              <Flex>
+                <Trans
+                  components={{
+                    b: <Text color="blue" p="0 2px" />,
+                  }}
+                  ns="subscribe"
+                  i18nKey="claim-p1"
+                  t={t}
+                />
+              </Flex>
+              <Text>{t('claim-p2')}</Text>
+            </Box>
+            <Center mt="16px">
+              <Button
+                w="175px"
+                background="#4E51F4"
+                _hover={{
+                  bg: '#4E51E0',
+                }}
+                isLoading={isRequesting}
+                onClick={async () => {
+                  setIsRequesting(true)
+                  trackOK()
+                  try {
+                    const ps = await requestPermission()
+                    if (ps === 'denied') {
+                      setIsDeclined(true)
+                    }
+                  } catch (error) {
+                    //
+                  } finally {
+                    setIsRequesting(false)
+                    setIsWaitPermission(false)
+                  }
+                }}
+              >
+                🎁 Claim !
+              </Button>
+            </Center>
+          </>
+        ) : (
+          <>
+            <StepsWrap initialStep={2} />
+            <ScanAnimate w="180px">
+              <Image src={SubscribePng} w="180px" mb="24px" />
+              <Box className="light" />
+            </ScanAnimate>
+            <SubscribeStatus
+              isBrowserSupport
+              isDeclined={false}
+              permission="granted"
+            />
+            {/* <SubscribeStatus
+            isBrowserSupport={isBrowserSupport}
+            isDeclined={isDeclined}
+            permission={permission}
+          /> */}
+          </>
+        )}
+      </Center>
     </Center>
   )
 }
