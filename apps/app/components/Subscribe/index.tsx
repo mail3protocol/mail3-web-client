@@ -86,13 +86,13 @@ const ScanAnimate = styled(Center)`
   }
 `
 
-const atomWaitPermission = atom(false)
+const atomWaitPermission = atom(true)
 
 const ConnectWallet = () => {
   const Comp = IS_MOBILE ? VStack : HStack
   return (
     <ConnectWalletApiContextProvider>
-      <Center mt="40px">
+      <Center mt="20px">
         <Center
           padding="32px"
           border="1px solid #efefef"
@@ -123,11 +123,11 @@ const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
   })
 
   return (
-    <Center p="30px 0">
+    <Center p="20px 0">
       <Flex flexDir="column" width="400px">
-        <Steps labelOrientation="vertical" activeStep={activeStep}>
+        <Steps labelOrientation="vertical" activeStep={activeStep} size="sm">
           {steps.map(({ label }) => (
-            <Step label={label} key={label} />
+            <Step description={label} key={label} />
           ))}
         </Steps>
       </Flex>
@@ -300,10 +300,10 @@ const Subscribing: React.FC = () => {
   const trackOK = useTrackOk()
 
   useEffect(() => {
-    console.log(permission, isDeclined, isWaitPermission)
     if (permission === 'granted' && !isDeclined && !isWaitPermission) {
-      start()
+      return start()
     }
+    return () => {}
   }, [permission, isDeclined, isWaitPermission])
 
   return (
@@ -337,10 +337,10 @@ const Subscribing: React.FC = () => {
               fontSize="16px"
               lineHeight="24px"
             >
-              <Flex>
+              <Flex justifyContent="center">
                 <Trans
                   components={{
-                    b: <Text color="blue" p="0 2px" />,
+                    b: <Text color="#4E51F4" p="0 2px" />,
                   }}
                   ns="subscribe"
                   i18nKey="claim-p1"
@@ -385,15 +385,10 @@ const Subscribing: React.FC = () => {
               <Box className="light" />
             </ScanAnimate>
             <SubscribeStatus
-              isBrowserSupport
-              isDeclined={false}
-              permission="granted"
+              isBrowserSupport={isBrowserSupport}
+              isDeclined={isDeclined}
+              permission={permission}
             />
-            {/* <SubscribeStatus
-            isBrowserSupport={isBrowserSupport}
-            isDeclined={isDeclined}
-            permission={permission}
-          /> */}
           </>
         )}
       </Center>
@@ -469,10 +464,11 @@ export const Subscribe: React.FC = () => {
       refetchOnWindowFocus: false,
       onSuccess() {
         setLocalSubscribeStatus((s) => {
+          const oldMsg = s[account] ?? {}
           const newStatus = {
             ...s,
             [account]: {
-              ...s[account],
+              ...oldMsg,
               [id!]: true,
             },
           }
@@ -485,12 +481,7 @@ export const Subscribe: React.FC = () => {
   if (!isAuth) {
     return (
       <Box>
-        <Center
-          fontWeight="700"
-          fontSize="28px"
-          lineHeight="42px"
-          marginBottom="35px"
-        >
+        <Center fontWeight="700" fontSize="28px" lineHeight="42px" m="30px 0">
           {t('connect')}
         </Center>
 
@@ -506,13 +497,6 @@ export const Subscribe: React.FC = () => {
         <Spinner size="lg" />
       </Center>
     )
-  }
-
-  if (
-    subscribeStatus?.state === 'active' ||
-    subscribeResult?.state === 'resubscribed'
-  ) {
-    return <Subscribing />
   }
 
   if (

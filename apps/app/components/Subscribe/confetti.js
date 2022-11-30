@@ -201,11 +201,12 @@ function start() {
 
       if (timer || confetti.length)
         return frame = requestAnimationFrame(loop);
-
-      // Cleanup
+    });
+    // Cleanup
+    return () => {
       document.body.removeChild(container);
       frame = undefined;
-    });
+    }
   }
 }
 
