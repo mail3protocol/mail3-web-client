@@ -124,8 +124,13 @@ const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
 
   return (
     <Center p="20px 0">
-      <Flex flexDir="column" width="400px">
-        <Steps labelOrientation="vertical" activeStep={activeStep} size="sm">
+      <Flex flexDir="column" width={{ base: '300px', md: '400px' }}>
+        <Steps
+          labelOrientation="vertical"
+          activeStep={activeStep}
+          size="sm"
+          responsive={false}
+        >
           {steps.map(({ label }) => (
             <Step description={label} key={label} />
           ))}
@@ -293,8 +298,12 @@ const SubscribeStatus: React.FC<{
 const Subscribing: React.FC = () => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
-  const { isBrowserSupport, permission, requestPermission } =
-    useNotification(false)
+  const {
+    isBrowserSupport,
+    permission,
+    requestPermission,
+    isBrowserSupportChecking,
+  } = useNotification(false)
   const [isDeclined, setIsDeclined] = useState(false)
   const [isRequesting, setIsRequesting] = useState(false)
   const trackOK = useTrackOk()
@@ -305,6 +314,12 @@ const Subscribing: React.FC = () => {
     }
     return () => {}
   }, [permission, isDeclined, isWaitPermission])
+
+  if (isBrowserSupportChecking) {
+    return null
+  }
+
+  const activeStep = isWaitPermission && isBrowserSupport ? 1 : 2
 
   return (
     <Center h="calc(100vh - 180px)" textAlign="center">
@@ -318,9 +333,10 @@ const Subscribing: React.FC = () => {
           {t('subscribed')}
         </Heading>
 
+        <StepsWrap initialStep={activeStep} key={activeStep} />
+
         {(isWaitPermission && isBrowserSupport) || isRequesting ? (
           <>
-            <StepsWrap initialStep={1} />
             <Center
               w="600px"
               h="255px"
@@ -384,7 +400,6 @@ const Subscribing: React.FC = () => {
           </>
         ) : (
           <>
-            <StepsWrap initialStep={2} />
             <ScanAnimate w="180px">
               <Image src={SubscribePng} w="180px" mb="24px" />
               <Box className="light" />
@@ -504,12 +519,21 @@ export const Subscribe: React.FC = () => {
     )
   }
 
+  // use to dev
+  // if (
+  //   subscribeStatus?.state === 'active' ||
+  //   subscribeResult?.state === 'resubscribed'
+  // ) {
+  //   return <Subscribing />
+  // }
+
   if (
     subscribeStatus?.state === 'active' ||
     subscribeResult?.state === 'resubscribed'
   ) {
     return <AlreadySubscribed state={subscribeResult?.state} />
   }
+
   const error =
     // @ts-ignore
     getSubscribeStatusError?.response?.data.message ??
