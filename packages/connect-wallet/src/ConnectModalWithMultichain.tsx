@@ -354,7 +354,7 @@ export const ConnectModalWithMultichain: React.FC<{
         <Heading fontSize="16px" lineHeight="24px" mb="32px" textAlign="center">
           {t('connect.dialog-title')}
         </Heading>
-        <ConnectWalletSelector onClose={onClose} />,
+        <ConnectWalletSelector onClose={onClose} />
       </>
     ),
     [t, onClose]
