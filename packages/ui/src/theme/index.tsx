@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react'
+import { StepsStyleConfig as Steps } from 'chakra-ui-steps'
 
 const font =
   "'Poppins', Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
@@ -40,6 +41,7 @@ export const theme = extendTheme({
     xxxl: '1600px',
   },
   components: {
+    Steps,
     Button: {
       colorScheme: {
         empty: {

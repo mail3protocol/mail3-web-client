@@ -11,7 +11,9 @@ import {
   AlertIcon,
   VStack,
   HStack,
+  Flex,
 } from '@chakra-ui/react'
+import { Step, Steps, useSteps } from 'chakra-ui-steps'
 import {
   SubscribeAction,
   TrackEvent,
@@ -83,7 +85,6 @@ const ScanAnimate = styled(Center)`
 `
 
 const ConnectWallet = () => {
-  const [t] = useTranslation('subscribe')
   const Comp = IS_MOBILE ? VStack : HStack
   return (
     <ConnectWalletApiContextProvider>
@@ -94,9 +95,6 @@ const ConnectWallet = () => {
           borderRadius="24px"
           flexDirection="column"
         >
-          <Heading mb="32px" fontSize="20px" fontWeight={700}>
-            {t('connect')}
-          </Heading>
           <Comp spacing="48px">
             <ScanAnimate w="191px">
               <Image src={WelcomePng} w="191px" />
@@ -292,6 +290,7 @@ const Subscribing: React.FC = () => {
 }
 
 export const Subscribe: React.FC = () => {
+  const [t] = useTranslation('subscribe')
   useAuth()
   const isAuth = useIsAuthenticated()
   const account = useAccount()
@@ -371,8 +370,35 @@ export const Subscribe: React.FC = () => {
     }
   )
 
+  const steps = [{ label: t('steps.one') }, { label: t('steps.two') }]
+
+  const { activeStep } = useSteps({
+    initialStep: 0,
+  })
+
   if (!isAuth) {
-    return <ConnectWallet />
+    return (
+      <Box>
+        <Center
+          fontWeight="700"
+          fontSize="28px"
+          lineHeight="42px"
+          marginBottom="35px"
+        >
+          {t('connect')}
+        </Center>
+        <Center>
+          <Flex flexDir="column" width="400px">
+            <Steps labelOrientation="vertical" activeStep={activeStep}>
+              {steps.map(({ label }) => (
+                <Step label={label} key={label} />
+              ))}
+            </Steps>
+          </Flex>
+        </Center>
+        <ConnectWallet />
+      </Box>
+    )
   }
 
   if (isSubscribing || isLoadingStatus) {

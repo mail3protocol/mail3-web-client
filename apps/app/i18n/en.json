@@ -342,7 +342,11 @@
         }
     },
     "subscribe": {
-        "connect": "Subscribe for updates via Mail³",
+        "steps": {
+            "one": "Connect Wallet",
+            "two": "Claim NFT"
+        },
+        "connect": "One step short of earnning NFT",
         "subscribed": "🎉 You're subscribed!",
         "continue": "Continue",
         "Get-the-Claim-Link": "Get the Claim Link",
