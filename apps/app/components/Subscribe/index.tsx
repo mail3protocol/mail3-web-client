@@ -27,12 +27,13 @@ import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from 'ui'
 import { atomWithStorage } from 'jotai/utils'
-import { useAtom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { ConnectWalletSelector } from 'connect-wallet/src/ConnectModalWithMultichain'
 import styled from '@emotion/styled'
 import { Query } from '../../api/query'
 import WelcomePng from '../../assets/subscribe/welcome.png'
 import SubscribePng from '../../assets/subscribe/subscribe.png'
+import GuideMp4 from '../../assets/subscribe/guide-claim.mp4'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
@@ -84,6 +85,8 @@ const ScanAnimate = styled(Center)`
   }
 `
 
+const atomWaitPermission = atom(true)
+
 const ConnectWallet = () => {
   const Comp = IS_MOBILE ? VStack : HStack
   return (
@@ -107,6 +110,27 @@ const ConnectWallet = () => {
         </Center>
       </Center>
     </ConnectWalletApiContextProvider>
+  )
+}
+
+const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
+  const [t] = useTranslation('subscribe')
+  const steps = [{ label: t('steps.one') }, { label: t('steps.two') }]
+
+  const { activeStep } = useSteps({
+    initialStep,
+  })
+
+  return (
+    <Center>
+      <Flex flexDir="column" width="400px">
+        <Steps labelOrientation="vertical" activeStep={activeStep}>
+          {steps.map(({ label }) => (
+            <Step label={label} key={label} />
+          ))}
+        </Steps>
+      </Flex>
+    </Center>
   )
 }
 
@@ -270,21 +294,77 @@ const SubscribeStatus = () => {
 
 const Subscribing: React.FC = () => {
   const [t] = useTranslation('subscribe')
+  const [isWaitPermission] = useAtom(atomWaitPermission)
+
   return (
     <Center h="calc(100vh - 180px)" textAlign="center">
-      <Center
-        padding="32px"
-        flexDirection="column"
-        w="375px"
-        border="1px solid #efefef"
-        borderRadius="24px"
-      >
-        <Heading mb="24px" fontSize="20px" fontWeight={700}>
-          {t('subscribed')}
-        </Heading>
-        <Image src={SubscribePng} w="180px" mb="24px" />
-        <SubscribeStatus />
-      </Center>
+      {isWaitPermission ? (
+        <Center padding="0 32px" flexDirection="column">
+          <Heading mb="24px" fontSize="28px" lineHeight="42px" fontWeight={700}>
+            {t('subscribed')}
+          </Heading>
+          <StepsWrap initialStep={1} />
+          <Center
+            w="600px"
+            h="255px"
+            mt="25px"
+            mb="15px"
+            background="#FFFFFF"
+            border="1px solid rgba(0, 0, 0, 0.2)"
+            borderRadius="48px"
+            justifyContent="center"
+          >
+            <video width="320" height="208" autoPlay loop muted>
+              <source src={GuideMp4} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </Center>
+          <Box
+            textAlign="center"
+            fontWeight="500"
+            fontSize="16px"
+            lineHeight="24px"
+          >
+            <Flex>
+              <Trans
+                components={{
+                  b: <Text color="blue" p="0 2px" />,
+                }}
+                ns="subscribe"
+                i18nKey="claim-p1"
+                t={t}
+              />
+            </Flex>
+            <Text>{t('claim-p2')}</Text>
+          </Box>
+          <Center mt="16px">
+            <Button
+              w="175px"
+              background="#4E51F4"
+              _hover={{
+                bg: '#4E51E0',
+              }}
+            >
+              🎁 Claim !
+            </Button>
+          </Center>
+        </Center>
+      ) : (
+        <Center
+          padding="32px"
+          flexDirection="column"
+          w="375px"
+          border="1px solid #efefef"
+          borderRadius="24px"
+        >
+          <Heading mb="24px" fontSize="20px" fontWeight={700}>
+            {t('subscribed')}
+          </Heading>
+          <StepsWrap initialStep={1} />
+          <Image src={SubscribePng} w="180px" mb="24px" />
+          <SubscribeStatus />
+        </Center>
+      )}
     </Center>
   )
 }
@@ -370,12 +450,6 @@ export const Subscribe: React.FC = () => {
     }
   )
 
-  const steps = [{ label: t('steps.one') }, { label: t('steps.two') }]
-
-  const { activeStep } = useSteps({
-    initialStep: 0,
-  })
-
   if (!isAuth) {
     return (
       <Box>
@@ -387,15 +461,8 @@ export const Subscribe: React.FC = () => {
         >
           {t('connect')}
         </Center>
-        <Center>
-          <Flex flexDir="column" width="400px">
-            <Steps labelOrientation="vertical" activeStep={activeStep}>
-              {steps.map(({ label }) => (
-                <Step label={label} key={label} />
-              ))}
-            </Steps>
-          </Flex>
-        </Center>
+
+        <StepsWrap initialStep={0} />
         <ConnectWallet />
       </Box>
     )
@@ -407,6 +474,13 @@ export const Subscribe: React.FC = () => {
         <Spinner size="lg" />
       </Center>
     )
+  }
+
+  if (
+    subscribeStatus?.state === 'active' ||
+    subscribeResult?.state === 'resubscribed'
+  ) {
+    return <Subscribing />
   }
 
   if (
