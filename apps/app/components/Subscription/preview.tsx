@@ -3,6 +3,10 @@ import {
   Center,
   CloseButton,
   Divider,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
   Flex,
   Link,
   Spacer,
@@ -84,15 +88,15 @@ const Container = styled(Box)`
       overflow: hidden;
       height: auto;
       padding: 0;
-      top: 143px;
-      right: 0;
+      /* top: 143px; */
+      /* right: 0;
       bottom: 0;
-      left: 0;
-      z-index: 999;
+      left: 0; */
+      /* z-index: 999; */
       background-color: #fff;
-      position: fixed;
+      /* position: fixed; */
 
-      border-radius: 22px 22px 0px 0px;
+      /* border-radius: 22px 22px 0px 0px; */
 
       padding: 30px 30px 20px;
 
@@ -136,11 +140,37 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   const isMobileOpen = isMaxWdith600 && isOpen
 
   if (isSingleMode)
+    return <Container className="single-mode">{children}</Container>
+
+  if (isMaxWdith600) {
     return (
-      <Container className={isSingleMode ? 'single-mode' : 'not-single-mode'}>
-        {children}
-      </Container>
+      <Box>
+        <Drawer placement="bottom" isOpen={isOpen} onClose={() => {}}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerBody>
+              <Box h="calc(100vh - 100px)">
+                <Container className="not-single-mode">
+                  <Box
+                    position="absolute"
+                    top="20px"
+                    right="20px"
+                    zIndex={9}
+                    onClick={() => {
+                      setIsOpen(false)
+                    }}
+                  >
+                    <CloseButton />
+                  </Box>
+                  {children}
+                </Container>
+              </Box>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </Box>
     )
+  }
 
   return (
     <>
