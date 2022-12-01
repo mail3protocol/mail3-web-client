@@ -149,7 +149,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
           placement="bottom"
           isOpen={isOpen}
           onClose={() => {}}
-          blockScrollOnMount={false}
+          // blockScrollOnMount={false}
         >
           <DrawerOverlay />
           <DrawerContent>
