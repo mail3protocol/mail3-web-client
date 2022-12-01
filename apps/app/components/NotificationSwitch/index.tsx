@@ -130,7 +130,7 @@ export const NotificationSwitch: React.FC = () => {
               </PopoverTrigger>
               <PopoverContent
                 w="calc(100vw - 40px)"
-                maxW="267px"
+                maxW="344px"
                 border="none"
                 shadow="0 0 16px 12px rgba(192, 192, 192, 0.25)"
                 _focus={{
