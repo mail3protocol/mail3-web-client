@@ -201,6 +201,7 @@
         }
     },
     "settings": {
+        "username_description": "Enter a name that’s less than or equal to 16 characters.",
         "setup": {
             "address": {
                 "title": "Customize your email address"
