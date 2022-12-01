@@ -5,6 +5,7 @@ import { forwardRef } from 'react'
 export interface SwitchProps extends FlexProps {
   checked?: boolean
   handleStyle?: MotionStyle
+  inactiveBg?: string
   activeBg?: string
   activeBorderColor?: string
 }
@@ -14,6 +15,7 @@ export const BaseSwitch = forwardRef<HTMLLabelElement, SwitchProps>(
     {
       checked,
       handleStyle = {},
+      inactiveBg = '#F3F3F3',
       activeBg = '#fff',
       activeBorderColor = '#000',
       children,
@@ -26,7 +28,7 @@ export const BaseSwitch = forwardRef<HTMLLabelElement, SwitchProps>(
       h="30px"
       w="55px"
       display="inline-flex"
-      bg="#F3F3F3"
+      bg={inactiveBg}
       rounded={props.w || props.h || '100px'}
       align="center"
       px="4px"

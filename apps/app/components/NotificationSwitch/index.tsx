@@ -105,7 +105,10 @@ export const NotificationSwitch: React.FC = () => {
             >
               <PopoverTrigger>
                 <RowButton variant="unstyled" onClick={onClickSwitch}>
-                  <BaseSwitch checked={isEnabledNotification}>
+                  <BaseSwitch
+                    checked={isEnabledNotification}
+                    inactiveBg="#4E52F5"
+                  >
                     <Icon as={BellSvg} w="14px" h="14px" />
                     <Box
                       borderLeft="1px solid #000"
