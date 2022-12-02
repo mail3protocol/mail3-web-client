@@ -170,7 +170,7 @@ function Confetto(theme) {
   };
 }
 
-function start() {
+function confettiAni() {
   if (!frame) {
     // Append the container
     document.body.appendChild(container);
@@ -203,11 +203,20 @@ function start() {
         return frame = requestAnimationFrame(loop);
     });
     // Cleanup
-    return () => {
-      document.body.removeChild(container);
-      frame = undefined;
+    return {
+      cleanup:() => {
+        document.body.removeChild(container);
+        frame = undefined;
+      },
+      autoCleanup: (countdown, fn) => {
+        setTimeout(() => {
+          document.body.removeChild(container);
+          frame = undefined;
+          typeof fn === 'function' && fn()
+        }, countdown)
+      }
     }
   }
 }
 
-export default start
+export default confettiAni

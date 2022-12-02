@@ -40,7 +40,7 @@ import { RoutePath } from '../../route/path'
 import { useNotification } from '../../hooks/useNotification'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 import { IS_MOBILE } from '../../constants'
-import start from './confetti'
+import confettiAni from './confetti'
 
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
 
@@ -310,7 +310,7 @@ const Subscribing: React.FC = () => {
 
   useEffect(() => {
     if (permission === 'granted' && !isDeclined && !isWaitPermission) {
-      return start()
+      return confettiAni()?.cleanup
     }
     return () => {}
   }, [permission, isDeclined, isWaitPermission])

@@ -17,6 +17,7 @@ import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
 import { BaseSwitch } from './BaseSwitch'
 import { GifGuideDialog } from './GifGuideDialog'
+import confettiAni from '../Subscribe/confetti'
 
 export const NotificationSwitch: React.FC = () => {
   const {
@@ -35,7 +36,7 @@ export const NotificationSwitch: React.FC = () => {
     onChangePermission,
     webPushNotificationState,
     isBrowserSupport,
-  } = useNotification()
+  } = useNotification(false)
   const isEnabledNotification =
     permission === 'granted' && webPushNotificationState === 'enabled'
   const [isHide, setHide] = useState(isEnabledNotification)
@@ -154,6 +155,17 @@ export const NotificationSwitch: React.FC = () => {
                       await onChangePermission('granted')
                     } else {
                       await requestPermission()
+                      try {
+                        const ps = await requestPermission()
+                        if (ps === 'granted') {
+                          // play animation
+                          confettiAni()?.autoCleanup(4000, () => {
+                            // reload
+                          })
+                        }
+                      } catch (error) {
+                        //
+                      }
                     }
                   }}
                 />
