@@ -32,7 +32,6 @@ export const NotificationSwitch: React.FC = () => {
   } = useDisclosure()
   const {
     permission,
-    requestPermission,
     onChangePermission,
     webPushNotificationState,
     isBrowserSupport,
@@ -155,13 +154,16 @@ export const NotificationSwitch: React.FC = () => {
                       await onChangePermission('granted')
                     } else {
                       try {
-                        const ps = await requestPermission()
-                        if (ps === 'granted') {
+                        const newPermission =
+                          await window.Notification.requestPermission()
+
+                        if (newPermission === 'granted') {
                           // play animation
                           confettiAni()?.autoCleanup(4000, () => {
                             window.location.reload()
                           })
                         }
+                        await onChangePermission(newPermission)
                       } catch (error) {
                         //
                       }
