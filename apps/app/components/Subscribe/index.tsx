@@ -310,9 +310,8 @@ const Subscribing: React.FC = () => {
 
   useEffect(() => {
     if (permission === 'granted' && !isDeclined && !isWaitPermission) {
-      return confettiAni()?.cleanup
+      confettiAni()?.cleanup()
     }
-    return () => {}
   }, [permission, isDeclined, isWaitPermission])
 
   if (isBrowserSupportChecking) {
@@ -335,7 +334,8 @@ const Subscribing: React.FC = () => {
 
         <StepsWrap initialStep={activeStep} key={activeStep} />
 
-        {(isWaitPermission && isBrowserSupport) || isRequesting ? (
+        {(isWaitPermission && isBrowserSupport && permission === 'default') ||
+        isRequesting ? (
           <>
             <Center
               w="600px"
@@ -484,7 +484,7 @@ export const Subscribe: React.FC = () => {
       refetchOnWindowFocus: false,
       onSuccess() {
         setLocalSubscribeStatus((s) => {
-          const oldMsg = s[account] ?? {}
+          const oldMsg = s?.account || {}
           const newStatus = {
             ...s,
             [account]: {

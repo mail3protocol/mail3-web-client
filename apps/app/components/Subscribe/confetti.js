@@ -205,8 +205,10 @@ function confettiAni() {
     // Cleanup
     return {
       cleanup:() => {
-        document.body.removeChild(container);
-        frame = undefined;
+        setTimeout(() => {
+          document.body.removeChild(container);
+          frame = undefined;
+        }, 4000)
       },
       autoCleanup: (countdown, fn) => {
         setTimeout(() => {
