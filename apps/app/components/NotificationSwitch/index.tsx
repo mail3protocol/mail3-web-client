@@ -154,7 +154,6 @@ export const NotificationSwitch: React.FC = () => {
                     ) {
                       await onChangePermission('granted')
                     } else {
-                      await requestPermission()
                       try {
                         const ps = await requestPermission()
                         if (ps === 'granted') {
