@@ -160,7 +160,7 @@ export const NotificationSwitch: React.FC = () => {
                         if (ps === 'granted') {
                           // play animation
                           confettiAni()?.autoCleanup(4000, () => {
-                            // reload
+                            window.location.reload()
                           })
                         }
                       } catch (error) {

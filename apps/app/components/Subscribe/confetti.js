@@ -210,7 +210,7 @@ function confettiAni() {
       },
       autoCleanup: (countdown, fn) => {
         setTimeout(() => {
-          document.body.removeChild(container);
+          // document.body.removeChild(container);
           frame = undefined;
           typeof fn === 'function' && fn()
         }, countdown)
