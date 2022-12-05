@@ -158,36 +158,34 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
 
   if (isMaxWdith600) {
     return (
-      <Box>
-        <Drawer
-          placement="bottom"
-          isOpen={isOpen}
-          onClose={() => {}}
-          blockScrollOnMount={false}
-        >
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerBody p="0">
-              <Box h="calc(100vh - 180px)">
-                <Container className="not-single-mode">
-                  <Box
-                    position="absolute"
-                    top="20px"
-                    right="20px"
-                    zIndex={9}
-                    onClick={() => {
-                      setIsOpen(false)
-                    }}
-                  >
-                    <CloseButton />
-                  </Box>
-                  {children}
-                </Container>
+      <Drawer
+        placement="bottom"
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false)
+        }}
+        blockScrollOnMount={false}
+      >
+        <DrawerOverlay />
+        <DrawerContent h="calc(100vh - 180px)">
+          <DrawerBody p="0">
+            <Container className="not-single-mode">
+              <Box
+                position="absolute"
+                top="20px"
+                right="20px"
+                zIndex={9}
+                onClick={() => {
+                  setIsOpen(false)
+                }}
+              >
+                <CloseButton />
               </Box>
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
-      </Box>
+              {children}
+            </Container>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     )
   }
 
