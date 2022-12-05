@@ -133,8 +133,11 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   useEffect(() => {
     if (!isMaxWdith600 && !isSingleMode) {
       document.body.style.overflow = 'hidden'
-      return
+      return () => {
+        document.body.style.overflow = 'auto'
+      }
     }
+
     if (isOpen) {
       document.body.style.overflow = 'hidden'
       document.body.style.height = '100vh'
@@ -142,6 +145,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
       document.body.style.overflow = 'auto'
       document.body.style.height = 'auto'
     }
+    return () => {}
   }, [isOpen, isMaxWdith600])
 
   if (isSingleMode)
