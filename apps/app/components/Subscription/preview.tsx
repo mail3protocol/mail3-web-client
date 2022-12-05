@@ -69,7 +69,7 @@ const Container = styled(Box)`
 
   &.not-single-mode {
     .scroll-main-wrap {
-      max-height: calc(100vh - 300px);
+      max-height: calc(100vh - 180px);
       overflow: hidden;
       overflow-y: scroll;
       position: relative;
@@ -167,7 +167,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
         blockScrollOnMount={false}
       >
         <DrawerOverlay />
-        <DrawerContent h="calc(100vh - 180px)">
+        <DrawerContent h="calc(100vh - 60px)">
           <DrawerBody p="0">
             <Container className="not-single-mode">
               <Box
