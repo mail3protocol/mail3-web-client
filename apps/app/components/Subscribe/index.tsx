@@ -11,7 +11,9 @@ import {
   AlertIcon,
   VStack,
   HStack,
+  Flex,
 } from '@chakra-ui/react'
+import { Step, Steps, useSteps } from 'chakra-ui-steps'
 import {
   SubscribeAction,
   TrackEvent,
@@ -19,47 +21,89 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from 'ui'
 import { atomWithStorage } from 'jotai/utils'
-import { useAtom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { ConnectWalletSelector } from 'connect-wallet/src/ConnectModalWithMultichain'
+import styled from '@emotion/styled'
 import { Query } from '../../api/query'
 import WelcomePng from '../../assets/subscribe/welcome.png'
 import SubscribePng from '../../assets/subscribe/subscribe.png'
+import GuideMp4 from '../../assets/subscribe/guide-claim.mp4'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
 import { useNotification } from '../../hooks/useNotification'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 import { IS_MOBILE } from '../../constants'
+import confettiAni from './confetti'
 
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
 
 const useTrackOk = () => useTrackClick(TrackEvent.ClickSubscribeOk)
 
+const ScanAnimate = styled(Center)`
+  overflow: hidden;
+  position: relative;
+
+  .light {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 200%;
+    height: 100px;
+
+    /* linear-gradient() make a light */
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0)
+    );
+
+    /* rotate light */
+    transform-origin: center center;
+    transform: translate(-100%, 50%) rotate(-60deg);
+
+    /* keyframes animation */
+    animation: ScanLights 4s linear 2s infinite;
+  }
+
+  @keyframes ScanLights {
+    0% {
+      transform: translate(-200%, 50%) rotate(-60deg);
+    }
+    100% {
+      transform: translate(200%, 50%) rotate(-60deg);
+    }
+  }
+`
+
+const atomWaitPermission = atom(true)
+
 const ConnectWallet = () => {
-  const [t] = useTranslation('subscribe')
   const Comp = IS_MOBILE ? VStack : HStack
   return (
     <ConnectWalletApiContextProvider>
-      <Center mt="40px">
+      <Center mt="20px">
         <Center
           padding="32px"
           border="1px solid #efefef"
           borderRadius="24px"
           flexDirection="column"
         >
-          <Heading mb="32px" fontSize="20px" fontWeight={700}>
-            {t('connect')}
-          </Heading>
           <Comp spacing="48px">
-            <Center>
+            <ScanAnimate w="191px">
               <Image src={WelcomePng} w="191px" />
-            </Center>
+              <Box className="light" />
+            </ScanAnimate>
             <Box>
               <ConnectWalletSelector />
             </Box>
@@ -67,6 +111,32 @@ const ConnectWallet = () => {
         </Center>
       </Center>
     </ConnectWalletApiContextProvider>
+  )
+}
+
+const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
+  const [t] = useTranslation('subscribe')
+  const steps = [{ label: t('steps.one') }, { label: t('steps.two') }]
+
+  const { activeStep } = useSteps({
+    initialStep,
+  })
+
+  return (
+    <Center p="20px 0">
+      <Flex flexDir="column" width={{ base: '300px', md: '400px' }}>
+        <Steps
+          labelOrientation="vertical"
+          activeStep={activeStep}
+          size="sm"
+          responsive={false}
+        >
+          {steps.map(({ label }) => (
+            <Step description={label} key={label} />
+          ))}
+        </Steps>
+      </Flex>
+    </Center>
   )
 }
 
@@ -134,15 +204,15 @@ const localSubscribeStatusAtom = atomWithStorage<
   Record<string, Record<string, boolean>>
 >('subscribeStatus', {})
 
-const SubscribeStatus = () => {
-  const { isBrowserSupport, permission, requestPermission } =
-    useNotification(false)
+const SubscribeStatus: React.FC<{
+  permission: 'default' | 'denied' | 'granted' | 'prompt'
+  isBrowserSupport?: boolean
+  isDeclined: boolean
+}> = ({ permission, isBrowserSupport, isDeclined }) => {
   const [t] = useTranslation('subscribe')
-  const [isDeclined, setIsDeclined] = useState(false)
-  const [isRequesting, setIsRequesting] = useState(false)
-  const trackOK = useTrackOk()
+
   const trackContinue = useTrackContinue()
-  if ((permission === 'default' && isBrowserSupport) || isRequesting) {
+  if (permission === 'default' && isBrowserSupport) {
     return (
       <>
         <Text fontWeight={700} fontSize="14px">
@@ -158,26 +228,7 @@ const SubscribeStatus = () => {
             t={t}
           />
         </Desc>
-        <Button
-          w="168px"
-          isLoading={isRequesting}
-          onClick={async () => {
-            setIsRequesting(true)
-            trackOK()
-            try {
-              const ps = await requestPermission()
-              if (ps === 'denied') {
-                setIsDeclined(true)
-              }
-            } catch (error) {
-              //
-            } finally {
-              setIsRequesting(false)
-            }
-          }}
-        >
-          {t('ok')}
-        </Button>
+        <Button w="168px">{t('ok')}</Button>
       </>
     )
   }
@@ -185,7 +236,14 @@ const SubscribeStatus = () => {
   if (isDeclined) {
     return (
       <>
-        <Text fontWeight={700} mb="16px" whiteSpace="pre-line">
+        <Text
+          mb="16px"
+          whiteSpace="pre-line"
+          w="283px"
+          fontWeight="700"
+          fontSize="14px"
+          lineHeight="18px"
+        >
           {t('declined')}
         </Text>
         <Link to={RoutePath.Inbox}>
@@ -197,7 +255,7 @@ const SubscribeStatus = () => {
               })
             }}
           >
-            {t('Get-the-Claim-Link')}
+            {t('continue')}
           </Button>
         </Link>
       </>
@@ -206,10 +264,19 @@ const SubscribeStatus = () => {
 
   return (
     <>
-      <Text fontWeight={700} fontSize="14px">
+      <Text fontWeight={700} fontSize="20px" lineHeight="30px">
         {t('nft')}
       </Text>
-      <Desc>{t('success')}</Desc>
+      <Text
+        w="283px"
+        color="#4E51F4"
+        fontWeight="700"
+        fontSize="14px"
+        lineHeight="18px"
+        m="20px 0"
+      >
+        {t('success')}
+      </Text>
       <Link to={RoutePath.Inbox}>
         <Button
           w="168px"
@@ -221,7 +288,7 @@ const SubscribeStatus = () => {
             })
           }}
         >
-          {t('Get-the-Claim-Link')}
+          {t('continue')}
         </Button>
       </Link>
     </>
@@ -230,26 +297,127 @@ const SubscribeStatus = () => {
 
 const Subscribing: React.FC = () => {
   const [t] = useTranslation('subscribe')
+  const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
+  const {
+    isBrowserSupport,
+    permission,
+    requestPermission,
+    isBrowserSupportChecking,
+  } = useNotification(false)
+  const [isDeclined, setIsDeclined] = useState(false)
+  const [isRequesting, setIsRequesting] = useState(false)
+  const trackOK = useTrackOk()
+
+  useEffect(() => {
+    if (permission === 'granted' && !isDeclined && !isWaitPermission) {
+      confettiAni()?.cleanup()
+    }
+  }, [permission, isDeclined, isWaitPermission])
+
+  if (isBrowserSupportChecking) {
+    return null
+  }
+
+  const activeStep = isWaitPermission && isBrowserSupport ? 1 : 2
+
   return (
     <Center h="calc(100vh - 180px)" textAlign="center">
-      <Center
-        padding="32px"
-        flexDirection="column"
-        w="375px"
-        border="1px solid #efefef"
-        borderRadius="24px"
-      >
-        <Heading mb="24px" fontSize="20px" fontWeight={700}>
+      <Center padding="0 32px" flexDirection="column">
+        <Heading
+          mb="24px"
+          fontSize={{ base: '22px', md: '28px' }}
+          lineHeight="42px"
+          fontWeight={700}
+        >
           {t('subscribed')}
         </Heading>
-        <Image src={SubscribePng} w="180px" mb="24px" />
-        <SubscribeStatus />
+
+        <StepsWrap initialStep={activeStep} key={activeStep} />
+
+        {(isWaitPermission && isBrowserSupport && permission === 'default') ||
+        isRequesting ? (
+          <>
+            <Center
+              w="600px"
+              h="255px"
+              mt="25px"
+              mb="15px"
+              background="#FFFFFF"
+              border="1px solid rgba(0, 0, 0, 0.2)"
+              borderRadius="48px"
+              justifyContent="center"
+            >
+              <video width="320" height="208" autoPlay loop muted>
+                <source src={GuideMp4} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </Center>
+            <Box
+              textAlign="center"
+              fontWeight="500"
+              fontSize="16px"
+              lineHeight="24px"
+            >
+              <Flex justifyContent="center">
+                <Trans
+                  components={{
+                    b: <Text color="#4E51F4" p="0 2px" />,
+                  }}
+                  ns="subscribe"
+                  i18nKey="claim-p1"
+                  t={t}
+                />
+              </Flex>
+              <Text>{t('claim-p2')}</Text>
+            </Box>
+            <Center mt="16px">
+              <Button
+                w="175px"
+                background="#4E51F4"
+                _hover={{
+                  bg: '#4E51E0',
+                }}
+                isLoading={isRequesting}
+                onClick={async () => {
+                  setIsRequesting(true)
+                  trackOK()
+                  try {
+                    const ps = await requestPermission()
+                    if (ps === 'denied') {
+                      setIsDeclined(true)
+                    }
+                  } catch (error) {
+                    //
+                  } finally {
+                    setIsRequesting(false)
+                    setIsWaitPermission(false)
+                  }
+                }}
+              >
+                🎁 Claim !
+              </Button>
+            </Center>
+          </>
+        ) : (
+          <>
+            <ScanAnimate w="180px">
+              <Image src={SubscribePng} w="180px" mb="24px" />
+              <Box className="light" />
+            </ScanAnimate>
+            <SubscribeStatus
+              isBrowserSupport={isBrowserSupport}
+              isDeclined={isDeclined}
+              permission={permission}
+            />
+          </>
+        )}
       </Center>
     </Center>
   )
 }
 
 export const Subscribe: React.FC = () => {
+  const [t] = useTranslation('subscribe')
   useAuth()
   const isAuth = useIsAuthenticated()
   const account = useAccount()
@@ -316,10 +484,11 @@ export const Subscribe: React.FC = () => {
       refetchOnWindowFocus: false,
       onSuccess() {
         setLocalSubscribeStatus((s) => {
+          const oldMsg = s?.account || {}
           const newStatus = {
             ...s,
             [account]: {
-              ...s[account],
+              ...oldMsg,
               [id!]: true,
             },
           }
@@ -330,7 +499,16 @@ export const Subscribe: React.FC = () => {
   )
 
   if (!isAuth) {
-    return <ConnectWallet />
+    return (
+      <Box>
+        <Center fontWeight="700" fontSize="28px" lineHeight="42px" m="30px 0">
+          {t('connect')}
+        </Center>
+
+        <StepsWrap initialStep={0} />
+        <ConnectWallet />
+      </Box>
+    )
   }
 
   if (isSubscribing || isLoadingStatus) {
@@ -341,12 +519,21 @@ export const Subscribe: React.FC = () => {
     )
   }
 
+  // use to dev
+  // if (
+  //   subscribeStatus?.state === 'active' ||
+  //   subscribeResult?.state === 'resubscribed'
+  // ) {
+  //   return <Subscribing />
+  // }
+
   if (
     subscribeStatus?.state === 'active' ||
     subscribeResult?.state === 'resubscribed'
   ) {
     return <AlreadySubscribed state={subscribeResult?.state} />
   }
+
   const error =
     // @ts-ignore
     getSubscribeStatusError?.response?.data.message ??
