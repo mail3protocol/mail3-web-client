@@ -79,7 +79,6 @@ const Container = styled(Box)`
     &.not-single-mode {
       overflow: hidden;
       height: auto;
-      padding: 0;
       background-color: #fff;
       padding: 30px 30px 20px;
 
@@ -118,7 +117,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   children,
   isSingleMode,
 }) => {
-  const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
+  const [isMaxWidth600] = useMediaQuery(`(max-width: 768px)`)
   const [isOpen, setIsOpen] = useAtom(SubPreviewIsOpenAtom)
 
   useEffect(() => {
@@ -133,12 +132,12 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
       document.body.style.overflow = ''
       document.body.style.height = ''
     }
-  }, [isOpen, isMaxWdith600])
+  }, [isOpen, isMaxWidth600])
 
   if (isSingleMode)
     return <Container className="single-mode">{children}</Container>
 
-  if (isMaxWdith600) {
+  if (isMaxWidth600) {
     return (
       <Drawer
         placement="bottom"
