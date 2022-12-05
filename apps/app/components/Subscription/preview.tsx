@@ -34,22 +34,8 @@ import { APP_URL, HOME_URL } from '../../constants'
 import { RoutePath } from '../../route/path'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
-const Mask = styled(Box)`
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  position: fixed;
-  display: none;
-  background-color: rgba(0, 0, 0, 0.5);
-  @media (max-width: 768px) {
-    display: block;
-  }
-`
-
 const Container = styled(Box)`
-  flex: 16;
+  width: 56.25%;
   height: 100%;
   padding: 32px;
   position: relative;
@@ -69,7 +55,7 @@ const Container = styled(Box)`
 
   &.not-single-mode {
     .scroll-main-wrap {
-      max-height: calc(100vh - 180px);
+      max-height: calc(100vh - 200px);
       overflow: hidden;
       overflow-y: scroll;
       position: relative;
@@ -83,7 +69,13 @@ const Container = styled(Box)`
     }
   }
 
+  &.single-mode {
+    width: 100%;
+  }
+
   @media (max-width: 768px) {
+    width: 100%;
+
     &.not-single-mode {
       overflow: hidden;
       height: auto;
@@ -128,16 +120,8 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
 }) => {
   const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
   const [isOpen, setIsOpen] = useAtom(SubPreviewIsOpenAtom)
-  const isMobileOpen = isMaxWdith600 && isOpen
 
   useEffect(() => {
-    if (!isMaxWdith600 && !isSingleMode) {
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = ''
-      }
-    }
-
     if (isOpen) {
       document.body.style.overflow = 'hidden'
       document.body.style.height = '100vh'
@@ -183,31 +167,9 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   }
 
   return (
-    <>
-      {isMobileOpen ? <Mask /> : null}
-      <Container
-        maxW="856px"
-        transform={
-          !isMaxWdith600 || isMobileOpen ? 'translateY(0)' : 'translateY(100%)'
-        }
-        className={isSingleMode ? 'single-mode' : 'not-single-mode'}
-      >
-        {isMaxWdith600 ? (
-          <Box
-            position="absolute"
-            top="20px"
-            right="20px"
-            zIndex={9}
-            onClick={() => {
-              setIsOpen(false)
-            }}
-          >
-            <CloseButton />
-          </Box>
-        ) : null}
-        <Box>{children}</Box>
-      </Container>
-    </>
+    <Container maxW="856px" className="not-single-mode">
+      {children}
+    </Container>
   )
 }
 
