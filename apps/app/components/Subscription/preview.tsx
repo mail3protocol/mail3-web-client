@@ -129,7 +129,10 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
       document.body.style.overflow = 'auto'
       document.body.style.height = 'auto'
     }
-    return () => {}
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.height = ''
+    }
   }, [isOpen, isMaxWdith600])
 
   if (isSingleMode)
