@@ -132,7 +132,7 @@ export default {
       description: `Please click the "mail<sup>3</sup> me" button below to submit your application. It may take some time for your application to receive a response.`,
       no_white_list_description:
         'If you would like to apply for access to "mail<sup>3</sup> Community". <br/><br/>Please visit mail<sup>3</sup> official website to claim your Mail3 first.',
-      register_mail_default_subject: 'Apply for Web3 subscription feature',
+      register_mail_default_subject: '[Apply for Mail3 Community whitelist]',
       continue: 'Continue',
     },
   },

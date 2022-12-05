@@ -8,6 +8,7 @@ import { useQuery } from 'react-query'
 import { GetMessage } from 'models/src/getMessage'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { GetMessageContent } from 'models/src/getMessageContent'
+import { UploadMessage } from 'models'
 import { MessageEditor } from '../../components/MessageEditor'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
 import { userPropertiesAtom } from '../../hooks/useLogin'
@@ -60,6 +61,19 @@ function replaceSignContentUrlToATag(signContent: string) {
 
 export type Action = SubmitMessage.ReferenceAction
 
+const templates = {
+  [UploadMessage.TemplateType.ApplyCommunityWhitelist]: getDefaultTemplate(`
+   (Please provide the following information so that we can process your application and get in touch with you as soon as possible)
+   <ul>
+    <li> Name of you or your project:</li>
+    <li> Twitter link of you or your project:</li>
+    <li> A brief introduction to you or your project:</li>
+    <li> Your Telegram contacts:</li>
+   </ul>
+   Please look out for return email.
+  `),
+}
+
 export interface MessageData {
   messageInfo: GetMessage.Response
   messageContent: GetMessageContent.Response
@@ -69,19 +83,23 @@ export const NewMessagePage = () => {
   const [searchParams] = useSearchParams()
   const location = useLocation()
   const locationState = location.state as MessageData | undefined
-  const { cc, bcc, to, forceTo, id, action, subject } = useMemo(() => {
-    const handleAddresses = (str?: string | null) =>
-      str ? filterEmails(str.split(',')) : null
-    return {
-      cc: handleAddresses(searchParams.get('cc')),
-      bcc: handleAddresses(searchParams.get('bcc')),
-      to: handleAddresses(searchParams.get('to')),
-      forceTo: handleAddresses(searchParams.get('forceTo')),
-      action: searchParams.get('action') as Action,
-      id: searchParams.get('id'),
-      subject: searchParams.get('subject'),
-    }
-  }, [searchParams])
+  const { cc, bcc, to, forceTo, id, action, subject, template } =
+    useMemo(() => {
+      const handleAddresses = (str?: string | null) =>
+        str ? filterEmails(str.split(',')) : null
+      return {
+        cc: handleAddresses(searchParams.get('cc')),
+        bcc: handleAddresses(searchParams.get('bcc')),
+        to: handleAddresses(searchParams.get('to')),
+        forceTo: handleAddresses(searchParams.get('forceTo')),
+        action: searchParams.get('action') as Action,
+        id: searchParams.get('id'),
+        subject: searchParams.get('subject'),
+        template: searchParams.get('template') as
+          | UploadMessage.TemplateType
+          | undefined,
+      }
+    }, [searchParams])
   const { isAuth, redirectHome } = useRedirectHome()
   const api = useAPI()
   const userProperties = useAtomValue(userPropertiesAtom)
@@ -171,6 +189,9 @@ export const NewMessagePage = () => {
   }, [messageInfo, queryMessageInfoAndContentData.isSuccess])
 
   const defaultContent = useMemo(() => {
+    if (template && templates[template]) {
+      return templates[template]
+    }
     const signContent =
       isEnableSignatureText && userProperties?.text_signature
         ? replaceSignContentUrlToATag(userProperties?.text_signature)
