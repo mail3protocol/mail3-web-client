@@ -88,16 +88,7 @@ const Container = styled(Box)`
       overflow: hidden;
       height: auto;
       padding: 0;
-      /* top: 143px; */
-      /* right: 0;
-      bottom: 0;
-      left: 0; */
-      /* z-index: 999; */
       background-color: #fff;
-      /* position: fixed; */
-
-      /* border-radius: 22px 22px 0px 0px; */
-
       padding: 30px 30px 20px;
 
       .header {
