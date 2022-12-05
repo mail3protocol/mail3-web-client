@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
 import { Logo } from 'ui'
+import { UploadMessage } from 'models'
 import { APP_URL } from '../constants/env/url'
 import { ErrorCode } from '../api/ErrorCode'
 
@@ -31,7 +32,7 @@ export function useRegisterDialog() {
               window.location.hostname
             }&utm_medium=click_mail_me_button&to=mail3.eth@mail3.me&subject=${t(
               'register_dialog.register_mail_default_subject'
-            )}&template=ApplyCommunityWhitelist`}
+            )}&template=${UploadMessage.TemplateType.ApplyCommunityWhitelist}`}
             target="_blank"
             fontWeight="600"
             fontSize="14px"

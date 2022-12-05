@@ -8,6 +8,7 @@ import { useQuery } from 'react-query'
 import { GetMessage } from 'models/src/getMessage'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { GetMessageContent } from 'models/src/getMessageContent'
+import { UploadMessage } from 'models'
 import { MessageEditor } from '../../components/MessageEditor'
 import { useSubject } from '../../components/MessageEditor/hooks/useSubject'
 import { userPropertiesAtom } from '../../hooks/useLogin'
@@ -60,12 +61,8 @@ function replaceSignContentUrlToATag(signContent: string) {
 
 export type Action = SubmitMessage.ReferenceAction
 
-export enum TemplateType {
-  ApplyCommunityWhitelist = 'ApplyCommunityWhitelist',
-}
-
 const templates = {
-  [TemplateType.ApplyCommunityWhitelist]: getDefaultTemplate(`
+  [UploadMessage.TemplateType.ApplyCommunityWhitelist]: getDefaultTemplate(`
    (Please provide the following information so that we can process your application and get in touch with you as soon as possible)
    <ul>
     <li> Name of you or your project:</li>
@@ -98,7 +95,9 @@ export const NewMessagePage = () => {
         action: searchParams.get('action') as Action,
         id: searchParams.get('id'),
         subject: searchParams.get('subject'),
-        template: searchParams.get('template') as TemplateType | undefined,
+        template: searchParams.get('template') as
+          | UploadMessage.TemplateType
+          | undefined,
       }
     }, [searchParams])
   const { isAuth, redirectHome } = useRedirectHome()
