@@ -60,6 +60,27 @@ function replaceSignContentUrlToATag(signContent: string) {
 
 export type Action = SubmitMessage.ReferenceAction
 
+export enum TemplateType {
+  ApplyCommunityWhitelist = 'ApplyCommunityWhitelist',
+}
+
+const templates = {
+  [TemplateType.ApplyCommunityWhitelist]: getDefaultTemplate(`
+   (Please provide the following information so that we can process your application and get in touch with you as soon as possible)
+
+   <li> Name of you or your project:</li>
+
+   <li> Twitter link of you or your project:</li>
+
+   <li> A brief introduction to you or your project:</li>
+
+   <li> Your Telegram contacts:</li>
+
+   Please look out for return email.
+
+  `),
+}
+
 export interface MessageData {
   messageInfo: GetMessage.Response
   messageContent: GetMessageContent.Response
@@ -69,6 +90,7 @@ export const NewMessagePage = () => {
   const [searchParams] = useSearchParams()
   const location = useLocation()
   const locationState = location.state as MessageData | undefined
+  const templateType = searchParams.get('template') as TemplateType | undefined
   const { cc, bcc, to, forceTo, id, action, subject } = useMemo(() => {
     const handleAddresses = (str?: string | null) =>
       str ? filterEmails(str.split(',')) : null
@@ -171,6 +193,9 @@ export const NewMessagePage = () => {
   }, [messageInfo, queryMessageInfoAndContentData.isSuccess])
 
   const defaultContent = useMemo(() => {
+    if (templateType && templates[templateType]) {
+      return templates[templateType]
+    }
     const signContent =
       isEnableSignatureText && userProperties?.text_signature
         ? replaceSignContentUrlToATag(userProperties?.text_signature)
