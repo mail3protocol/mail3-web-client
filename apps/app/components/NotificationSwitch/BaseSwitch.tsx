@@ -15,7 +15,6 @@ export const BaseSwitch = forwardRef<HTMLLabelElement, SwitchProps>(
     {
       checked,
       handleStyle = {},
-      inactiveBg = '#F3F3F3',
       activeBg = '#fff',
       activeBorderColor = '#000',
       children,
@@ -28,7 +27,7 @@ export const BaseSwitch = forwardRef<HTMLLabelElement, SwitchProps>(
       h="30px"
       w="55px"
       display="inline-flex"
-      bg={inactiveBg}
+      bg="#F3F3F3"
       rounded={props.w || props.h || '100px'}
       align="center"
       px="4px"
