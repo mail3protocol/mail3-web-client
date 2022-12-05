@@ -25,13 +25,13 @@ var particles = 10
 
 var colorThemes = [
   function () {
-    return color(200 * random() | 0, 200 * random() | 0, 200 * random() | 0);
+    return color(255 * random() | 0, 255 * random() | 0, 255 * random() | 0);
   }, function () {
-    var black = 200 * random() | 0; return color(200, black, black);
+    var black = 255 * random() | 0; return color(200, black, black);
   }, function () {
-    var black = 200 * random() | 0; return color(black, 200, black);
+    var black = 255 * random() | 0; return color(black, 200, black);
   }, function () {
-    var black = 200 * random() | 0; return color(black, black, 200);
+    var black = 255 * random() | 0; return color(black, black, 200);
   }, function () {
     return color(200, 100, 200 * random() | 0);
   }, function () {
