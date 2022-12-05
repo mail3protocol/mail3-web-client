@@ -134,7 +134,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
     if (!isMaxWdith600 && !isSingleMode) {
       document.body.style.overflow = 'hidden'
       return () => {
-        document.body.style.overflow = 'auto'
+        document.body.style.overflow = ''
       }
     }
 
@@ -165,7 +165,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
         <DrawerContent h="calc(100vh - 60px)">
           <DrawerBody p="0">
             <Container className="not-single-mode">
-              <Box
+              <CloseButton
                 position="absolute"
                 top="20px"
                 right="20px"
@@ -173,9 +173,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
                 onClick={() => {
                   setIsOpen(false)
                 }}
-              >
-                <CloseButton />
-              </Box>
+              />
               {children}
             </Container>
           </DrawerBody>
