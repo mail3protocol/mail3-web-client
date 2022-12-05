@@ -25,7 +25,7 @@ import { SubFormatDate } from '../../utils'
 import { SubscribeUnreadCountAtom } from '../Navbar'
 
 const Container = styled(Box)`
-  width: 43.75%;
+  width: 35.57%;
   height: 100%;
   box-shadow: 0px 0px 10px rgba(25, 25, 100, 0.1);
 

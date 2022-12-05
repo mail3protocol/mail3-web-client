@@ -35,7 +35,7 @@ import { RoutePath } from '../../route/path'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
 const Container = styled(Box)`
-  width: 56.25%;
+  width: 64.43%;
   height: 100%;
   padding: 32px;
   position: relative;
