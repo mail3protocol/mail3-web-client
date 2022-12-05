@@ -3,6 +3,10 @@ import {
   Center,
   CloseButton,
   Divider,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
   Flex,
   Link,
   Spacer,
@@ -13,7 +17,7 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
@@ -65,7 +69,7 @@ const Container = styled(Box)`
 
   &.not-single-mode {
     .scroll-main-wrap {
-      max-height: calc(100vh - 300px);
+      max-height: calc(100vh - 180px);
       overflow: hidden;
       overflow-y: scroll;
       position: relative;
@@ -84,16 +88,7 @@ const Container = styled(Box)`
       overflow: hidden;
       height: auto;
       padding: 0;
-      top: 143px;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 999;
       background-color: #fff;
-      position: fixed;
-
-      border-radius: 22px 22px 0px 0px;
-
       padding: 30px 30px 20px;
 
       .header {
@@ -135,12 +130,55 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   const [isOpen, setIsOpen] = useAtom(SubPreviewIsOpenAtom)
   const isMobileOpen = isMaxWdith600 && isOpen
 
+  useEffect(() => {
+    if (!isMaxWdith600 && !isSingleMode) {
+      document.body.style.overflow = 'hidden'
+      return
+    }
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.height = '100vh'
+    } else {
+      document.body.style.overflow = 'auto'
+      document.body.style.height = 'auto'
+    }
+  }, [isOpen, isMaxWdith600])
+
   if (isSingleMode)
+    return <Container className="single-mode">{children}</Container>
+
+  if (isMaxWdith600) {
     return (
-      <Container className={isSingleMode ? 'single-mode' : 'not-single-mode'}>
-        {children}
-      </Container>
+      <Drawer
+        placement="bottom"
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false)
+        }}
+        blockScrollOnMount={false}
+      >
+        <DrawerOverlay />
+        <DrawerContent h="calc(100vh - 60px)">
+          <DrawerBody p="0">
+            <Container className="not-single-mode">
+              <Box
+                position="absolute"
+                top="20px"
+                right="20px"
+                zIndex={9}
+                onClick={() => {
+                  setIsOpen(false)
+                }}
+              >
+                <CloseButton />
+              </Box>
+              {children}
+            </Container>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     )
+  }
 
   return (
     <>
