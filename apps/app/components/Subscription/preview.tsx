@@ -17,7 +17,7 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
@@ -139,6 +139,20 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   const [isOpen, setIsOpen] = useAtom(SubPreviewIsOpenAtom)
   const isMobileOpen = isMaxWdith600 && isOpen
 
+  useEffect(() => {
+    if (!isMaxWdith600 && !isSingleMode) {
+      document.body.style.overflow = 'hidden'
+      return
+    }
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.height = '100vh'
+    } else {
+      document.body.style.overflow = 'auto'
+      document.body.style.height = 'auto'
+    }
+  }, [isOpen, isMaxWdith600])
+
   if (isSingleMode)
     return <Container className="single-mode">{children}</Container>
 
@@ -149,7 +163,7 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
           placement="bottom"
           isOpen={isOpen}
           onClose={() => {}}
-          // blockScrollOnMount={false}
+          blockScrollOnMount={false}
         >
           <DrawerOverlay />
           <DrawerContent>
