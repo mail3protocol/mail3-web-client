@@ -32,4 +32,8 @@ export namespace UploadMessage {
     uid: number
     seq: number
   }
+
+  export enum TemplateType {
+    ApplyCommunityWhitelist = 'ApplyCommunityWhitelist',
+  }
 }

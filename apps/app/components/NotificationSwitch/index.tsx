@@ -17,6 +17,7 @@ import { ReactComponent as BellSvg } from '../../assets/bell.svg'
 import { TextGuide } from './TextGuide'
 import { BaseSwitch } from './BaseSwitch'
 import { GifGuideDialog } from './GifGuideDialog'
+import confettiAni from '../Subscribe/confetti'
 
 export const NotificationSwitch: React.FC = () => {
   const {
@@ -31,11 +32,10 @@ export const NotificationSwitch: React.FC = () => {
   } = useDisclosure()
   const {
     permission,
-    requestPermission,
     onChangePermission,
     webPushNotificationState,
     isBrowserSupport,
-  } = useNotification()
+  } = useNotification(false)
   const isEnabledNotification =
     permission === 'granted' && webPushNotificationState === 'enabled'
   const [isHide, setHide] = useState(isEnabledNotification)
@@ -105,7 +105,7 @@ export const NotificationSwitch: React.FC = () => {
             >
               <PopoverTrigger>
                 <RowButton variant="unstyled" onClick={onClickSwitch}>
-                  <BaseSwitch checked={isEnabledNotification}>
+                  <BaseSwitch checked={isEnabledNotification} bg="#4E52F5">
                     <Icon as={BellSvg} w="14px" h="14px" />
                     <Box
                       borderLeft="1px solid #000"
@@ -127,7 +127,7 @@ export const NotificationSwitch: React.FC = () => {
               </PopoverTrigger>
               <PopoverContent
                 w="calc(100vw - 40px)"
-                maxW="267px"
+                maxW="344px"
                 border="none"
                 shadow="0 0 16px 12px rgba(192, 192, 192, 0.25)"
                 _focus={{
@@ -150,7 +150,20 @@ export const NotificationSwitch: React.FC = () => {
                     ) {
                       await onChangePermission('granted')
                     } else {
-                      await requestPermission()
+                      try {
+                        const newPermission =
+                          await window.Notification.requestPermission()
+
+                        if (newPermission === 'granted') {
+                          // play animation
+                          confettiAni()?.autoCleanup(4000, () => {
+                            window.location.reload()
+                          })
+                        }
+                        await onChangePermission(newPermission)
+                      } catch (error) {
+                        //
+                      }
                     }
                   }}
                 />

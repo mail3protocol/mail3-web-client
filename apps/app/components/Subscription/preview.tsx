@@ -3,6 +3,10 @@ import {
   Center,
   CloseButton,
   Divider,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
   Flex,
   Link,
   Spacer,
@@ -13,7 +17,7 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
@@ -30,22 +34,8 @@ import { APP_URL, HOME_URL } from '../../constants'
 import { RoutePath } from '../../route/path'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
-const Mask = styled(Box)`
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  position: fixed;
-  display: none;
-  background-color: rgba(0, 0, 0, 0.5);
-  @media (max-width: 768px) {
-    display: block;
-  }
-`
-
 const Container = styled(Box)`
-  flex: 16;
+  width: 64.43%;
   height: 100%;
   padding: 32px;
   position: relative;
@@ -65,7 +55,7 @@ const Container = styled(Box)`
 
   &.not-single-mode {
     .scroll-main-wrap {
-      max-height: calc(100vh - 300px);
+      max-height: calc(100vh - 200px);
       overflow: hidden;
       overflow-y: scroll;
       position: relative;
@@ -79,21 +69,17 @@ const Container = styled(Box)`
     }
   }
 
+  &.single-mode {
+    width: 100%;
+  }
+
   @media (max-width: 768px) {
+    width: 100%;
+
     &.not-single-mode {
       overflow: hidden;
       height: auto;
-      padding: 0;
-      top: 143px;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 999;
       background-color: #fff;
-      position: fixed;
-
-      border-radius: 22px 22px 0px 0px;
-
       padding: 30px 30px 20px;
 
       .header {
@@ -131,43 +117,61 @@ const Wrap: React.FC<{ isSingleMode: boolean }> = ({
   children,
   isSingleMode,
 }) => {
-  const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
+  const [isMaxWidth600] = useMediaQuery(`(max-width: 768px)`)
   const [isOpen, setIsOpen] = useAtom(SubPreviewIsOpenAtom)
-  const isMobileOpen = isMaxWdith600 && isOpen
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.height = '100vh'
+    } else {
+      document.body.style.overflow = 'auto'
+      document.body.style.height = 'auto'
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.height = ''
+    }
+  }, [isOpen, isMaxWidth600])
 
   if (isSingleMode)
+    return <Container className="single-mode">{children}</Container>
+
+  if (isMaxWidth600) {
     return (
-      <Container className={isSingleMode ? 'single-mode' : 'not-single-mode'}>
-        {children}
-      </Container>
+      <Drawer
+        placement="bottom"
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false)
+        }}
+        blockScrollOnMount={false}
+      >
+        <DrawerOverlay />
+        <DrawerContent h="calc(100vh - 60px)">
+          <DrawerBody p="0">
+            <Container className="not-single-mode">
+              <CloseButton
+                position="absolute"
+                top="20px"
+                right="20px"
+                zIndex={9}
+                onClick={() => {
+                  setIsOpen(false)
+                }}
+              />
+              {children}
+            </Container>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     )
+  }
 
   return (
-    <>
-      {isMobileOpen ? <Mask /> : null}
-      <Container
-        maxW="856px"
-        transform={
-          !isMaxWdith600 || isMobileOpen ? 'translateY(0)' : 'translateY(100%)'
-        }
-        className={isSingleMode ? 'single-mode' : 'not-single-mode'}
-      >
-        {isMaxWdith600 ? (
-          <Box
-            position="absolute"
-            top="20px"
-            right="20px"
-            zIndex={9}
-            onClick={() => {
-              setIsOpen(false)
-            }}
-          >
-            <CloseButton />
-          </Box>
-        ) : null}
-        <Box>{children}</Box>
-      </Container>
-    </>
+    <Container maxW="856px" className="not-single-mode">
+      {children}
+    </Container>
   )
 }
 

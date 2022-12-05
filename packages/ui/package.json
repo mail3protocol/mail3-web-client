@@ -11,9 +11,10 @@
         "@metamask/detect-provider": "^1.2.0",
         "assets": "*",
         "boring-avatars": "1.5.8",
-        "shared": "*",
+        "chakra-ui-steps": "^1.8.0",
         "hooks": "*",
-        "qrcode.react": "^3.0.2"
+        "qrcode.react": "^3.0.2",
+        "shared": "*"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",

@@ -25,13 +25,14 @@ import { SubFormatDate } from '../../utils'
 import { SubscribeUnreadCountAtom } from '../Navbar'
 
 const Container = styled(Box)`
-  flex: 9;
+  width: 35.57%;
   height: 100%;
   box-shadow: 0px 0px 10px rgba(25, 25, 100, 0.1);
 
   @media (max-width: 768px) {
-    padding-top: 30px;
+    padding-top: 0px;
     box-shadow: none;
+    width: 100%;
   }
 `
 
@@ -141,7 +142,7 @@ const SubList: FC<SubListProps> = ({ data }) => {
   })
 
   return (
-    <Box p="32px 0">
+    <Box p={{ md: '32px 0', base: 0 }}>
       {data.map((item) => {
         const { uuid, seen } = item
         return (

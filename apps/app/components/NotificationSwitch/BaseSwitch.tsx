@@ -5,6 +5,7 @@ import { forwardRef } from 'react'
 export interface SwitchProps extends FlexProps {
   checked?: boolean
   handleStyle?: MotionStyle
+  inactiveBg?: string
   activeBg?: string
   activeBorderColor?: string
 }

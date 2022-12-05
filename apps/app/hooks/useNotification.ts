@@ -119,15 +119,17 @@ export function useNotification(shouldReload = true) {
     return newPermission
   }, [setPermission])
 
-  const { data: isBrowserSupport } = useQuery(
-    ['isSupportedFCM'],
-    async () => (await isSupported()) && IS_CHROME && !IS_MOBILE && !IS_FIREFOX,
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    }
-  )
+  const { data: isBrowserSupport, isLoading: isBrowserSupportChecking } =
+    useQuery(
+      ['isSupportedFCM'],
+      async () =>
+        (await isSupported()) && IS_CHROME && !IS_MOBILE && !IS_FIREFOX,
+      {
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+      }
+    )
 
   return {
     requestPermission,
@@ -135,5 +137,6 @@ export function useNotification(shouldReload = true) {
     permission,
     webPushNotificationState,
     isBrowserSupport,
+    isBrowserSupportChecking,
   }
 }

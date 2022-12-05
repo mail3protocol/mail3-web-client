@@ -12,28 +12,17 @@ const Container = styled(Box)`
   box-shadow: 0px 0px 10px 4px rgba(25, 25, 100, 0.1);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  overflow: hidden;
-  top: 155px;
-  left: calc((100% - 1200px) / 2);
-  right: calc((100% - 1200px) / 2);
+  height: calc(100vh - 155px);
   max-width: 1200px;
-  bottom: 0;
-  position: fixed;
-
-  @media (max-width: 1220px) {
-    left: 30px;
-    right: 30px;
-  }
+  margin: 20px auto 0;
+  overflow: hidden;
+  position: relative;
 
   @media (max-width: 768px) {
-    top: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    position: relative;
+    height: auto;
     box-shadow: none;
-    border-top-left-radius: none;
-    border-top-right-radius: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 `
 

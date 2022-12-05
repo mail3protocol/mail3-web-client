@@ -1,16 +1,8 @@
-import {
-  Flex,
-  ListItem,
-  PopoverBody,
-  PopoverHeader,
-  UnorderedList,
-  Image,
-  Center,
-} from '@chakra-ui/react'
-import { Trans, useTranslation } from 'react-i18next'
+import { PopoverBody, PopoverHeader, Center, Text } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 import { Button } from 'ui'
 import React from 'react'
-import NftPngPath from '../../assets/notification/nft.png'
+import GuideMp4 from '../../assets/subscribe/guide-claim.mp4'
 
 export const TextGuide: React.FC<{
   onConfirm?: () => void | Promise<void>
@@ -19,13 +11,14 @@ export const TextGuide: React.FC<{
   return (
     <>
       <PopoverHeader
-        fontSize="14px"
         border="none"
+        fontSize="14px"
         fontWeight="bold"
         textAlign="center"
         p="0"
       >
-        {t('bell.title')}
+        <Text color="#4E51F4">{t('bell.title')}</Text>
+        <Text>{t('bell.sub-title')}</Text>
       </PopoverHeader>
       <PopoverBody
         fontSize="12px"
@@ -36,42 +29,30 @@ export const TextGuide: React.FC<{
           }
         `}
       >
-        <Center h="86px" py="10px">
-          <Image
-            src={NftPngPath}
-            alt="nft"
-            w="66px"
-            h="66px"
-            objectFit="cover"
-          />
-        </Center>
-        <UnorderedList
-          py="16px"
-          pr="8px"
-          pl="24px"
-          bg="rgba(243, 243, 243, 0.5)"
-          rounded="16px"
-          mb="6px"
-          mx="0"
-          css={`
-            li:not(:last-child) {
-              margin-bottom: 16px;
-            }
-          `}
+        <Center
+          h="200px"
+          mt="20px"
+          mb="20px"
+          background="#FFFFFF"
+          justifyContent="center"
         >
-          <Trans
-            i18nKey="bell.open_notification_prompt_list"
-            t={t}
-            components={{
-              li: <ListItem />,
+          <video width="320" autoPlay loop muted>
+            <source src={GuideMp4} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </Center>
+        <Center>
+          <Button
+            onClick={onConfirm}
+            w="175px"
+            background="#4E51F4"
+            _hover={{
+              bg: '#4E51E0',
             }}
-          />
-        </UnorderedList>
-        <Flex justify="flex-end">
-          <Button ml="auto" size="xs" onClick={onConfirm}>
+          >
             {t('bell.open_notification_confirm')}
           </Button>
-        </Flex>
+        </Center>
       </PopoverBody>
     </>
   )

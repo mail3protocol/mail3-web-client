@@ -61,11 +61,12 @@
             "cancel": "Cancel"
         },
         "bell": {
-            "title": "\uD83D\uDD14 Open the mail notification and claim the NFT",
+            "title": "\uD83D\uDD14 Claim Free NFT",
+            "sub-title": "by allowing new emails notification",
             "gif_guide_title": "\uD83D\uDCA1 Follow the reminders to\nturn on email notifications",
             "open_notification_prompt": "<p>You can authorize our email push service at any time by flipping the switch above and clicking \"<strong>Allow</strong>\".</p><p><strong>Don't worry, we will only notify you when you receive new emails.</strong></p><p>Complete the authorization and we will send you a confirmation email with a special <strong>NFT</strong> ;)</p>",
             "open_notification_prompt_list": "<li>Authorize our email push service at any time by flipping the switch above and clicking <strong>\"Allow\"</strong>.</li><li><strong>Don't worry, we will only notify you when you receive new emails.</strong></li>",
-            "open_notification_confirm": "Confirm"
+            "open_notification_confirm": "🎁 Claim !"
         },
         "image_not_found": "Missing image"
     },
@@ -201,6 +202,7 @@
         }
     },
     "settings": {
+        "username_description": "Enter a name that’s less than or equal to 16 characters.",
         "setup": {
             "address": {
                 "title": "Customize your email address"
@@ -342,18 +344,24 @@
         }
     },
     "subscribe": {
-        "connect": "Subscribe for updates via Mail³",
+        "steps": {
+            "one": "Connect Wallet",
+            "two": "Claim NFT"
+        },
+        "connect": "One step away from earning NFT",
         "subscribed": "🎉 You're subscribed!",
-        "continue": "Continue",
+        "continue": "Open Inbox",
         "Get-the-Claim-Link": "Get the Claim Link",
         "ok": "OK",
         "visit": "Visit mail³ to receive our latest news",
-        "already": "You have already subscribed to us",
+        "already": "You have subscribed",
         "thank-you": "🎉 Thank you for subscribing",
         "nft": "You have earned an NFT!",
+        "claim-p1": "To claim the NFT, please click <b>\"Allow\"</b> button in Pop-up",
+        "claim-p2": "",
         "request-permission": "Claim Link will be sent to your inbox, <b>in case you miss the message, </b>please allow the desktop notification authorization for mail³.",
-        "declined": "You have declined the desktop notification authorization,\n you can go to mail³ to claim your nft",
-        "success": "Claim Link will be sent to your inbox,\n please check in mail³"
+        "declined": "Open your Mail3 inbox and claim now!",
+        "success": "Open your Mail3 inbox and claim now!"
     },
     "subscription": {
         "unsubscribe": "Do you want to unsubscribe?",

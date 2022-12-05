@@ -266,8 +266,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
             />
           </Box>
           <Box color="#6F6F6F" fontSize="14px" mt="3px" textAlign="center">
-            Need contain 1 to 16 numbers or letters and cannot contain special
-            symbols or emoji
+            {t('username_description')}
           </Box>
 
           <Center
