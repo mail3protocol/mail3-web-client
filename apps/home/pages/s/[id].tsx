@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React, { useMemo, useState } from 'react'
 import ErrorPage from 'next/error'
 import styled from '@emotion/styled'
-import { Flex, Button, Text, Link, Box } from '@chakra-ui/react'
+import { Flex, Button, Text, Link } from '@chakra-ui/react'
 import { Avatar, Logo } from 'ui'
 import { useRouter } from 'next/router'
 import {
@@ -16,12 +16,12 @@ import Head from 'next/head'
 
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { getAPI } from '../../api'
+import { SubscribePage } from '../../components/SubscribePage'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const api = getAPI
-  const { locale, resolvedUrl } = context
-  console.log('context', context)
-  const [address] = resolvedUrl.slice(1).split('?')
+  const { locale, params } = context
+  const address = (params as { id: string | undefined }).id ?? ''
   const errorCode = isSupportedAddress(address) ? false : 404
 
   let uuid = ''
@@ -162,14 +162,12 @@ const ProfilePage: NextPage<{
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
       </Flex>
-      <Box>{uuid}</Box>
-      <Box>{priAddress}</Box>
-      {/* <ProfileComponent
+      <SubscribePage
         mailAddress={emailAddress}
         address={id}
         uuid={uuid}
         priAddress={priAddress}
-      /> */}
+      />
     </>
   )
 }
