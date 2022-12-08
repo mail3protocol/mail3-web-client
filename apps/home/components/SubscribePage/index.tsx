@@ -488,14 +488,18 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
                           >
                             <Box
                               position="absolute"
-                              filter="blur(80px)"
+                              filter="blur(50px)"
                               top="0"
                               left="0"
                               w="100%"
                               h="100%"
                               zIndex="1"
                             >
-                              <Image src={img} w="200%" objectFit="cover" />
+                              <Image
+                                src={img}
+                                objectFit="cover"
+                                transform="scale(1.1)"
+                              />
                             </Box>
                             <Flex
                               m="8px 0 10px 0"
