@@ -21,8 +21,10 @@ import {
   WrapItem,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { Avatar, Button } from 'ui'
+import { useMemo } from 'react'
+import { Avatar, Button, SubscribeButton } from 'ui'
 import defaultBannerPng from '../../assets/png/subscribe/bg.png'
+import { APP_URL } from '../../constants/env'
 
 const CONTAINER_MAX_WIDTH = 1220
 
@@ -66,6 +68,7 @@ const PageContainer = styled(Box)`
     height: auto;
     padding: 0;
     box-shadow: none;
+    margin: 0;
   }
 `
 
@@ -321,17 +324,24 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     ],
   }
 
+  const bgImage = useMemo(() => defaultBannerPng.src, [])
+
   return (
     <PageContainer>
-      <Center h={{ base: '100px', md: '200px' }}>
-        <Image src={defaultBannerPng.src} objectFit="cover" alt="" />
-      </Center>
-      <Box p={{ base: '48px 20px', md: '70px 60px' }} position="relative">
+      <Box
+        h={{ base: '100px', md: '200px' }}
+        bgImage={bgImage}
+        bgRepeat="no-repeat"
+        bgSize="auto 100%"
+        bgPosition="center"
+      />
+
+      <Box p={{ base: '48px 20px', md: '70px 60px 0' }} position="relative">
         <Box
           w={{ base: '60px', md: '120px' }}
           h={{ base: '60px', md: '120px' }}
           left={{ base: '20px', md: '60px' }}
-          top={{ base: '-10px', md: '-60px' }}
+          top={{ base: '-30px', md: '-60px' }}
           position="absolute"
           boxShadow="0px 0px 8px rgba(0, 0, 0, 0.25)"
           bgColor="#fff"
@@ -339,6 +349,37 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           overflow="hidden"
         >
           <Avatar address={priAddress} w="100%" h="100%" />
+        </Box>
+        <Box
+          position="absolute"
+          top={{ base: 'auto', md: '26px' }}
+          right={{ base: '50%', md: '54px' }}
+          bottom={{ base: '0px', md: 'auto' }}
+          transform={{ base: 'translateX(50%)', md: 'none' }}
+        >
+          <SubscribeButton
+            uuid={uuid}
+            host={APP_URL}
+            utmSource=""
+            utmCampaign={address}
+            iframeHeight="46px"
+            w="150px"
+            h="28px"
+            variant="unstyled"
+            border="1px solid #000000"
+            fontSize="14px"
+            bg="#fff"
+            color="#000"
+            borderRadius="100px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            earnIconStyle={{
+              type: 'blue',
+              left: '62px',
+              top: '-18px',
+            }}
+          />
         </Box>
         <Text fontWeight="700" fontSize="18px" lineHeight="20px">
           mail3
@@ -380,162 +421,161 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             Show {isOpen ? 'Less' : 'More'}
           </RawButton>
         </Box>
-
-        <Tabs position="relative" mt="30px">
-          <TabList
-            className="tablist"
-            w={{ base: '100%', md: 'auto' }}
-            overflowX="scroll"
-            overflowY="hidden"
-            justifyContent="flex-start"
-            border="none"
-            position="relative"
-          >
-            <Box
-              w="100%"
-              bottom="0"
-              position="absolute"
-              zIndex="1"
-              bg="#F3F3F3"
-              h="1px"
-            />
-            <HStack
-              spacing={{ base: '20px', md: '50px' }}
-              position="relative"
-              zIndex="2"
-            >
-              {tabItemTypes.map((type) => {
-                // eslint-disable-next-line @typescript-eslint/no-shadow
-                const { name } = tabsConfig[type]
-                return (
-                  <Tab
-                    key={type}
-                    _selected={{
-                      fontWeight: 600,
-                      _before: {
-                        content: '""',
-                        position: 'absolute',
-                        w: '50px',
-                        h: '4px',
-                        bottom: '-1px',
-                        bg: '#000',
-                        borderRadius: '4px',
-                      },
-                    }}
-                    position="relative"
-                    p={{ base: '5px', md: 'auto' }}
-                  >
-                    <HStack>
-                      <Box
-                        whiteSpace="nowrap"
-                        fontSize={{ base: '14px', md: '18px' }}
-                        marginInlineStart={{
-                          base: '0px !important',
-                          md: '0px !important',
-                        }}
-                      >
-                        {name}
-                      </Box>
-                    </HStack>
-                  </Tab>
-                )
-              })}
-            </HStack>
-          </TabList>
-
-          <Flex justifyContent="center" pt="20px" minH="200px">
-            <TabPanels>
-              <TabPanel p="0">
-                <SimpleGrid
-                  columns={{ base: 1, md: 3 }}
-                  spacing={{ base: '0', md: '20px' }}
-                >
-                  {mock.list.map((item, index) => {
-                    console.log(item)
-                    const { title, content, date } = item
-                    return (
-                      <Card
-                        // eslint-disable-next-line react/no-array-index-key
-                        key={index}
-                        title={title}
-                        content={content}
-                        date={date}
-                      />
-                    )
-                  })}
-                </SimpleGrid>
-              </TabPanel>
-              <TabPanel p="0">
-                <Wrap spacing={{ base: '15px', md: '26px' }}>
-                  {mock.nft.map((item) => {
-                    const { name, img, poapPlatform } = item
-                    return (
-                      <WrapItem
-                        key={item.name}
-                        w="160px"
-                        cursor="pointer"
-                        as="a"
-                        href={poapPlatform}
-                        target="_blank"
-                        border="1px solid #E1E1E1"
-                        borderRadius="8px"
-                      >
-                        <Center flexDirection="column" w="100%">
-                          <Center
-                            w="100%"
-                            position="relative"
-                            overflow="hidden"
-                          >
-                            <Box
-                              position="absolute"
-                              filter="blur(50px)"
-                              top="0"
-                              left="0"
-                              w="100%"
-                              h="100%"
-                              zIndex="1"
-                            >
-                              <Image
-                                src={img}
-                                objectFit="cover"
-                                transform="scale(1.1)"
-                              />
-                            </Box>
-                            <Flex
-                              m="8px 0 10px 0"
-                              w="79px"
-                              h="114px"
-                              overflow="hidden"
-                              alignItems="center"
-                              position="relative"
-                              zIndex="2"
-                            >
-                              <Image src={img} w="100%" />
-                            </Flex>
-                          </Center>
-                          <Box p="10px 10px 20px 10px">
-                            <Text
-                              w="100%"
-                              fontSize="12px"
-                              textAlign="center"
-                              lineHeight="16px"
-                              noOfLines={2}
-                              color="#000"
-                              fontWeight="500"
-                            >
-                              {name}
-                            </Text>
-                          </Box>
-                        </Center>
-                      </WrapItem>
-                    )
-                  })}
-                </Wrap>
-              </TabPanel>
-            </TabPanels>
-          </Flex>
-        </Tabs>
       </Box>
+      <Tabs position="relative" mt="30px" p={{ base: '0', md: '0px 58px' }}>
+        <TabList
+          className="tablist"
+          w={{ base: '100%', md: 'auto' }}
+          overflowX="scroll"
+          overflowY="hidden"
+          justifyContent="flex-start"
+          border="none"
+          position="relative"
+        >
+          <Box
+            w="100%"
+            bottom="0"
+            position="absolute"
+            zIndex="1"
+            bg="#F3F3F3"
+            h="1px"
+          />
+          <HStack
+            spacing={{ base: '20px', md: '50px' }}
+            position="relative"
+            zIndex="2"
+          >
+            {tabItemTypes.map((type) => {
+              // eslint-disable-next-line @typescript-eslint/no-shadow
+              const { name } = tabsConfig[type]
+              return (
+                <Tab
+                  key={type}
+                  _selected={{
+                    fontWeight: 600,
+                    _before: {
+                      content: '""',
+                      position: 'absolute',
+                      w: '50px',
+                      h: '4px',
+                      bottom: '-1px',
+                      bg: '#000',
+                      borderRadius: '4px',
+                    },
+                  }}
+                  position="relative"
+                  p={{ base: '5px', md: 'auto' }}
+                >
+                  <HStack>
+                    <Box
+                      whiteSpace="nowrap"
+                      fontSize={{ base: '14px', md: '18px' }}
+                      marginInlineStart={{
+                        base: '5px !important',
+                        md: '0px !important',
+                      }}
+                    >
+                      {name}
+                    </Box>
+                  </HStack>
+                </Tab>
+              )
+            })}
+          </HStack>
+        </TabList>
+
+        <Flex
+          justifyContent="center"
+          p={{ base: '20px', md: '20px 58px' }}
+          minH="200px"
+        >
+          <TabPanels>
+            <TabPanel p="0">
+              <SimpleGrid
+                columns={{ base: 1, md: 3 }}
+                spacing={{ base: '0', md: '20px' }}
+              >
+                {mock.list.map((item, index) => {
+                  console.log(item)
+                  const { title, content, date } = item
+                  return (
+                    <Card
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
+                      title={title}
+                      content={content}
+                      date={date}
+                    />
+                  )
+                })}
+              </SimpleGrid>
+            </TabPanel>
+            <TabPanel p="0">
+              <Wrap spacing={{ base: '15px', md: '26px' }}>
+                {mock.nft.map((item) => {
+                  const { name, img, poapPlatform } = item
+                  return (
+                    <WrapItem
+                      key={item.name}
+                      w="160px"
+                      cursor="pointer"
+                      as="a"
+                      href={poapPlatform}
+                      target="_blank"
+                      border="1px solid #E1E1E1"
+                      borderRadius="8px"
+                    >
+                      <Center flexDirection="column" w="100%">
+                        <Center w="100%" position="relative" overflow="hidden">
+                          <Box
+                            position="absolute"
+                            filter="blur(50px)"
+                            top="0"
+                            left="0"
+                            w="100%"
+                            h="100%"
+                            zIndex="1"
+                          >
+                            <Image
+                              src={img}
+                              objectFit="cover"
+                              transform="scale(1.1)"
+                            />
+                          </Box>
+                          <Flex
+                            m="8px 0 10px 0"
+                            w="79px"
+                            h="114px"
+                            overflow="hidden"
+                            alignItems="center"
+                            position="relative"
+                            zIndex="2"
+                          >
+                            <Image src={img} w="100%" />
+                          </Flex>
+                        </Center>
+                        <Box p="10px 10px 20px 10px">
+                          <Text
+                            w="100%"
+                            fontSize="12px"
+                            textAlign="center"
+                            lineHeight="16px"
+                            noOfLines={2}
+                            color="#000"
+                            fontWeight="500"
+                          >
+                            {name}
+                          </Text>
+                        </Box>
+                      </Center>
+                    </WrapItem>
+                  )
+                })}
+              </Wrap>
+            </TabPanel>
+          </TabPanels>
+        </Flex>
+      </Tabs>
     </PageContainer>
   )
 }
