@@ -13,6 +13,12 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Spacer,
+  LinkBox,
+  LinkOverlay,
+  SimpleGrid,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Avatar, Button } from 'ui'
@@ -63,6 +69,73 @@ const PageContainer = styled(Box)`
   }
 `
 
+const Card: React.FC<{
+  date?: string
+  title?: string
+  content?: string
+}> = ({ date, title, content }) => {
+  console.log(title, content, date)
+
+  const isBigTitle = !content
+
+  return (
+    <LinkBox
+      as="article"
+      border="1px solid #EAEAEA"
+      borderRadius="16px"
+      p="16px"
+      mb={{ base: '13px', md: 0 }}
+    >
+      <LinkOverlay href="#">
+        <Flex
+          fontWeight="400"
+          fontSize="12px"
+          lineHeight="26px"
+          color="#6F6F6F"
+          mb="6px"
+        >
+          <Box>9:07 am · 27 Aug</Box>
+          <Spacer />
+          <Box>2022</Box>
+        </Flex>
+        {!isBigTitle ? (
+          <Box>
+            <Text
+              noOfLines={2}
+              fontWeight="700"
+              fontSize="16px"
+              lineHeight="1.4"
+            >
+              The More Important the Work, the More Important the RestThe More
+              Important the Work, the More Important the RestThe More Important
+              the Work, the More Important the Rest
+            </Text>
+            <Text
+              noOfLines={3}
+              fontWeight="400"
+              fontSize="12px"
+              lineHeight="18px"
+              mt="16px"
+            >
+              Things you can do on a contact’s page Decide if their email should
+              go to The Imbox, The Feed, or The Paper Trail. Just click the
+              “Delivering to, The Feed, or The Paper Trail. Just click the
+              “Delivering to The Feed, or The Paper Trail. Just click the
+              “Delivering to
+            </Text>
+          </Box>
+        ) : (
+          <Text noOfLines={3} fontWeight="700" fontSize="24px" lineHeight="1.5">
+            The More Important the Work, the More Important the RestThe More
+            Important the Work, the More Important the RestThe More Important
+            the Work, the More Important the Rest
+          </Text>
+        )}
+      </LinkOverlay>
+    </LinkBox>
+  )
+}
+
 export const SubscribePage: React.FC<SubscribePageProps> = ({
   mailAddress,
   address,
@@ -76,6 +149,177 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   console.log(priAddress)
 
   const tabItemTypes = [TabItemType.Updates, TabItemType.Items]
+
+  const mock = {
+    list: [
+      {
+        date: '',
+        title: '',
+        content: '123',
+      },
+      {
+        date: '',
+        title: '',
+        content: '',
+      },
+      {
+        date: '',
+        title: '',
+        content: '123',
+      },
+      {
+        date: '',
+        title: '',
+        content: '',
+      },
+    ],
+    nft: [
+      {
+        name: 'Super Connection',
+        img: 'https://img2.flowingcloud.cn/rankback/j1rl85hmixpmimje5jtt.*, video',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GC3DEUt34w',
+      },
+      {
+        name: 'Mail³  Notification',
+        img: 'https://img2.flowingcloud.cn/rankback/a315x2ohwzvowfw2rlf9.*, video',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCD1yUtjD4',
+      },
+      {
+        name: 'Subscribe Mirror via Mail3',
+        img: 'https://img2.flowingcloud.cn/rankback/8r6oji0pm1yi3vbkwlym.*, video',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCmb8Utwk9',
+      },
+      {
+        name: 'Mail³ ✖️ RoaoGame Partnership OAT Giveaway',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663299572281590951.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCk7uUtGee',
+      },
+      {
+        name: 'Ethereum Merge  Commemorative Stamps',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663226563298228030.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCyZuUtXgK',
+      },
+      {
+        name: '"Galxe Passport" Souvenir Stamps',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662968646319465618.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCicRUtqb6',
+      },
+      {
+        name: 'Mail³  Grant Donors for GR14',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662542511968737738.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCSjDUtdKH',
+      },
+      {
+        name: 'Subscribe Mirror',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662254725951904392.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GC1Q7UtNs8',
+      },
+      {
+        name: 'Mail³ ✖️ CCTIP Partnership',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662529284427033926.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCmZeUtZt8',
+      },
+      {
+        name: 'Mail³ ✖️ Mojor Partnership',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1661768348506253194.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCHHWUte4B',
+      },
+      {
+        name: 'Mail Handler',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665926900481398785.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCb8MUtEkp',
+      },
+      {
+        name: 'Mail³ ✖️ UD Partnership',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665398877811359646.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCvHGUt6sF',
+      },
+      {
+        name: '[MDP-01] Whether to use the GR14/15 fund to promote future marketing？',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1664581703237395297.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCqzLUt2JA',
+      },
+      {
+        name: 'Mailer of the Month',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665905365369089610.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCoKsUtGGa',
+      },
+      {
+        name: 'Rookie Mailer of the Month',
+        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665905310408600671.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCoJsUtG7C',
+      },
+      {
+        name: 'Mail3 Gitcoin Funding Governance',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1664176355567457846.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCg79UtgNR',
+      },
+      {
+        name: 'Mail³ ✖️ Cluster3 Partnership OAT Giveaway',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1663572317896162757.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCsDHUt9nT',
+      },
+      {
+        name: 'Mail³ Halloween Carnival',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1666923477707362851.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GC1LGUtdef',
+      },
+      {
+        name: 'MDP-02: Airdrop of $100 worth of domain name every month',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1667288068989041767.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCmPdUwZnn',
+      },
+      {
+        name: 'Web3 Subscription',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1667800054707738503.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCAyvUwE2i',
+      },
+      {
+        name: 'VOTER OF Mail³',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1668679064484170864.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCcb1UwjkD',
+      },
+      {
+        name: 'Sticker Contest Winner',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1669032161179357695.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GC8uYUwsKD',
+      },
+      {
+        name: 'MDP-0201: Which supported domain name will be airdropped for December 2022?',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1669239679838899602.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCYQQUwC2b',
+      },
+      {
+        name: ' AZADI-TOWER',
+        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1669339235815482737.png',
+        hadGot: false,
+        poapPlatform: 'https://galxe.com/mail3/campaign/GCuNWUwZuP',
+      },
+    ],
+  }
 
   return (
     <PageContainer>
@@ -199,10 +443,91 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             </HStack>
           </TabList>
 
-          <Flex justifyContent="center" pt="8px" minH="200px">
+          <Flex justifyContent="center" pt="20px" minH="200px">
             <TabPanels>
-              <TabPanel>Updates</TabPanel>
-              <TabPanel>Items</TabPanel>
+              <TabPanel p="0">
+                <SimpleGrid
+                  columns={{ base: 1, md: 3 }}
+                  spacing={{ base: '0', md: '20px' }}
+                >
+                  {mock.list.map((item, index) => {
+                    console.log(item)
+                    const { title, content, date } = item
+                    return (
+                      <Card
+                        // eslint-disable-next-line react/no-array-index-key
+                        key={index}
+                        title={title}
+                        content={content}
+                        date={date}
+                      />
+                    )
+                  })}
+                </SimpleGrid>
+              </TabPanel>
+              <TabPanel p="0">
+                <Wrap spacing={{ base: '15px', md: '26px' }}>
+                  {mock.nft.map((item) => {
+                    const { name, img, poapPlatform } = item
+                    return (
+                      <WrapItem
+                        key={item.name}
+                        w="160px"
+                        cursor="pointer"
+                        as="a"
+                        href={poapPlatform}
+                        target="_blank"
+                        border="1px solid #E1E1E1"
+                        borderRadius="8px"
+                      >
+                        <Center flexDirection="column" w="100%">
+                          <Center
+                            w="100%"
+                            position="relative"
+                            overflow="hidden"
+                          >
+                            <Box
+                              position="absolute"
+                              filter="blur(80px)"
+                              top="0"
+                              left="0"
+                              w="100%"
+                              h="100%"
+                              zIndex="1"
+                            >
+                              <Image src={img} w="200%" objectFit="cover" />
+                            </Box>
+                            <Flex
+                              m="8px 0 10px 0"
+                              w="79px"
+                              h="114px"
+                              overflow="hidden"
+                              alignItems="center"
+                              position="relative"
+                              zIndex="2"
+                            >
+                              <Image src={img} w="100%" />
+                            </Flex>
+                          </Center>
+                          <Box p="10px 10px 20px 10px">
+                            <Text
+                              w="100%"
+                              fontSize="12px"
+                              textAlign="center"
+                              lineHeight="16px"
+                              noOfLines={2}
+                              color="#000"
+                              fontWeight="500"
+                            >
+                              {name}
+                            </Text>
+                          </Box>
+                        </Center>
+                      </WrapItem>
+                    )
+                  })}
+                </Wrap>
+              </TabPanel>
             </TabPanels>
           </Flex>
         </Tabs>
