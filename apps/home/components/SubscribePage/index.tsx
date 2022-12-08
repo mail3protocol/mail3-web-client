@@ -19,14 +19,31 @@ import {
   SimpleGrid,
   Wrap,
   WrapItem,
+  Popover,
+  useToast,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useMemo } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Avatar, Button, SubscribeButton } from 'ui'
-import defaultBannerPng from '../../assets/png/subscribe/bg.png'
+import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
+import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
+import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
+import { useTranslation } from 'next-i18next'
+import { useDidMount } from 'hooks'
 import { APP_URL } from '../../constants/env'
+import defaultBannerPng from '../../assets/png/subscribe/bg.png'
 
 const CONTAINER_MAX_WIDTH = 1220
+
+enum ButtonType {
+  Copy,
+  Card,
+  Twitter,
+}
 
 enum TabItemType {
   Updates,
@@ -145,11 +162,73 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   uuid,
   priAddress,
 }) => {
+  const [t] = useTranslation('profile')
+  const [t2] = useTranslation('common')
+  const toast = useToast()
+
+  const [isDid, setIsDid] = useState(false)
+  const popoverRef = useRef<HTMLElement>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   console.log(mailAddress)
   console.log(address)
   console.log(uuid)
   console.log(priAddress)
+
+  const buttonConfig: Record<
+    ButtonType,
+    {
+      Icon: any
+      label: string
+    }
+  > = {
+    [ButtonType.Card]: {
+      Icon: SvgShare,
+      label: t('profile.share'),
+    },
+    [ButtonType.Copy]: {
+      Icon: SvgCopy,
+      label: t('profile.copy'),
+    },
+    [ButtonType.Twitter]: {
+      Icon: SvgTwitter,
+      label: t('profile.twitter'),
+    },
+  }
+
+  const actionMap = useMemo(
+    () => ({
+      [ButtonType.Copy]: async () => {
+        // await copyText(profileUrl)
+        toast(t2('navbar.copied'))
+        popoverRef?.current?.blur()
+      },
+      [ButtonType.Twitter]: () => {
+        // shareToTwitter({
+        //   text: 'Hey, contact me using my Mail3 email address @mail3dao',
+        //   url: profileUrl,
+        //   hashtags: hashTag ? ['web3', 'mail3', hashTag] : ['web3', 'mail3'],
+        // })
+      },
+      [ButtonType.Card]: async () => {
+        if (!cardRef?.current) return
+        try {
+          // downloadScreenshot(cardRef.current, 'share.png', {
+          //   ignoreElements: (dom) => {
+          //     if (dom.id === 'mail3-me-button-wrap') return true
+          //     return false
+          //   },
+          // })
+        } catch (error) {
+          // toast('Download screenshot Error!')
+        }
+
+        popoverRef?.current?.blur()
+      },
+    }),
+    [mailAddress, address]
+  )
 
   const tabItemTypes = [TabItemType.Updates, TabItemType.Items]
 
@@ -326,6 +405,12 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
 
   const bgImage = useMemo(() => defaultBannerPng.src, [])
 
+  useDidMount(() => {
+    setIsDid(true)
+  })
+
+  if (!isDid) return null
+
   return (
     <PageContainer>
       <Box
@@ -334,7 +419,51 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
         bgRepeat="no-repeat"
         bgSize="auto 100%"
         bgPosition="center"
-      />
+        position="relative"
+      >
+        <Box
+          top={{ base: '10px', md: '32px' }}
+          right={{ base: '10px', md: '32px' }}
+          position="absolute"
+          bgColor="rgba(0, 0, 0, 0.4)"
+          backdropFilter="blur(5px)"
+          borderRadius="100px"
+        >
+          <HStack>
+            {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
+              (type: ButtonType) => {
+                const { Icon, label } = buttonConfig[type]
+                const onClick = actionMap[type]
+                return (
+                  <Popover
+                    arrowSize={8}
+                    key={type}
+                    trigger="hover"
+                    placement="top-start"
+                    size="md"
+                  >
+                    <PopoverTrigger>
+                      <Box as="button" p="10px" onClick={onClick}>
+                        <Icon />
+                      </Box>
+                    </PopoverTrigger>
+                    <PopoverContent width="auto">
+                      <PopoverArrow />
+                      <PopoverBody
+                        whiteSpace="nowrap"
+                        fontSize="14px"
+                        justifyContent="center"
+                      >
+                        {label}
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                )
+              }
+            )}
+          </HStack>
+        </Box>
+      </Box>
 
       <Box p={{ base: '48px 20px', md: '70px 60px 0' }} position="relative">
         <Box
