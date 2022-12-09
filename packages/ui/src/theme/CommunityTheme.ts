@@ -187,6 +187,17 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     },
     Button: {
       variants: {
+        upload: ({ colorScheme }: { colorScheme: string }) => ({
+          background: `${colorScheme}.500`,
+          border: `1px solid ${colorScheme}.500`,
+          borderRadius: '8px',
+          fontWeight: '600',
+          fontSize: '12px',
+          lineHeight: '14px',
+          color: '#fff',
+          padding: '4px 8px',
+          height: '28px',
+        }),
         'solid-rounded': ({ colorScheme }: { colorScheme: string }) => ({
           rounded: '99px',
           lineHeight: '1.2',
