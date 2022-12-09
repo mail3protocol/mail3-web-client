@@ -162,15 +162,15 @@ export const Information: React.FC = () => {
         </Heading>
         <Tabs w="full" variant="normal" mt="38px">
           <TabList>
-            <Tab>Branding&Promotion</Tab>
-            <Tab>Items</Tab>
-            <Tab>Basic info</Tab>
+            <Tab>{t('tabs.Branding_Promotion')}</Tab>
+            <Tab>{t('tabs.Items')}</Tab>
+            <Tab>{t('tabs.Basic_info')}</Tab>
           </TabList>
 
           <TabPanels>
             <TabPanel p="32px 0">
               <FormControl w="400px">
-                <Title>Subscribe Page Link</Title>
+                <Title>{t('Subscribe Page Link')}</Title>
                 <Box position="relative">
                   <Input
                     name="profile_page_url"
@@ -232,8 +232,7 @@ export const Information: React.FC = () => {
                 </Center>
                 <Box>
                   <Box fontWeight="500" fontSize="14px" lineHeight="20px">
-                    Your profile avatar, which currently only supports
-                    synchronization with mail3`s avatar.
+                    {t('avatar_p')}
                   </Box>
                   <Box
                     mt="16px"
@@ -241,12 +240,24 @@ export const Information: React.FC = () => {
                     fontSize="12px"
                     lineHeight="16px"
                   >
-                    To change it, please go to your personal center in Mail3:
-                    Setting Set Your Avatar
+                    <Trans
+                      t={t}
+                      i18nKey="avatar_setting"
+                      components={{
+                        a: (
+                          <Link
+                            color="primary.900"
+                            href={APP_URL}
+                            target="_blank"
+                          />
+                        ),
+                        span: <Box as="span" color="#FF6B00" />,
+                      }}
+                    />
                   </Box>
                 </Box>
               </HStack>
-              <Title>Banner image</Title>
+              <Title>{t('Banner image')}</Title>
               <Center
                 w="610px"
                 h="100px"
@@ -275,10 +286,15 @@ export const Information: React.FC = () => {
                     fontSize="12px"
                     lineHeight="16px"
                     color="#fff"
+                    userSelect="none"
                   >
-                    For the best results on all devices,
-                    <br />
-                    use an image that’s at least 2440 x 480 px and 5MB or less.
+                    <Trans
+                      t={t}
+                      i18nKey="upload.prompt"
+                      components={{
+                        span: <Box as="span" color="#FF6B00" />,
+                      }}
+                    />
                   </Text>
                   <Center mt="5px">
                     <Button
@@ -286,7 +302,7 @@ export const Information: React.FC = () => {
                       variant="upload"
                       colorScheme="primaryButton"
                     >
-                      Upload
+                      {t('upload.button')}
                     </Button>
                     {hasBanner ? (
                       <Button
@@ -300,7 +316,7 @@ export const Information: React.FC = () => {
                         _active={{ bg: 'transparent' }}
                         _hover={{ bg: 'transparent' }}
                       >
-                        Remove
+                        {t('upload.remove')}
                       </Button>
                     ) : null}
                   </Center>
@@ -308,7 +324,7 @@ export const Information: React.FC = () => {
               </Center>
 
               <FormControl w="400px">
-                <Title>Profile QR Code</Title>
+                <Title>{t('qr_code')}</Title>
                 <Grid
                   templateColumns="repeat(2, 1fr)"
                   templateRows="100%"
@@ -449,23 +465,14 @@ export const Information: React.FC = () => {
               </FormControl>
             </TabPanel>
             <TabPanel>
-              <Title>Cluster3 Community Page Link</Title>
+              <Title>{t('Cluster3_Link')}</Title>
               <FormControl>
                 <Input
-                // placeholder={
-                //   {
-                //     [SubscriptionPlatform.Galaxy]: t(
-                //       'campaign_link_placeholder'
-                //     ),
-                //     [SubscriptionPlatform.Quest3]: t(
-                //       'quest_link_placeholder'
-                //     ),
-                //   }[platform]
-                // }
-                // name="campaign_link"
-                // isDisabled={isDisabled}
-                // value={campaignUrl}
-                // onChange={({ target: { value } }) => setCampaignUrl(value)}
+                  placeholder="Link"
+                  // name="campaign_link"
+                  // isDisabled={isDisabled}
+                  // value={campaignUrl}
+                  // onChange={({ target: { value } }) => setCampaignUrl(value)}
                 />
               </FormControl>
               <Text
@@ -474,19 +481,24 @@ export const Information: React.FC = () => {
                 lineHeight="20px"
                 p="5px 0"
               >
-                This will appear on the Items section of your Subscribe Page.
+                {t('appear')}
               </Text>
               <Text fontWeight="400" fontSize="12px" lineHeight="18px">
-                Please go to{' '}
-                <Link href="#" color="blue">
-                  Cluscer3
-                </Link>{' '}
-                search your project name, enter your project profile page,{' '}
-                <b>
-                  copy the Url (Like: https://rank.cluster3.net/community/1373)
-                </b>{' '}
-                of the page and fill it in here, we will automatically show you
-                the poap you have released, please make sure the url is yours.
+                <Trans
+                  t={t}
+                  i18nKey="appear_text"
+                  components={{
+                    a: (
+                      <Link
+                        fontWeight={700}
+                        color="primary.900"
+                        href={APP_URL}
+                        target="_blank"
+                      />
+                    ),
+                    b: <b />,
+                  }}
+                />
               </Text>
             </TabPanel>
             <TabPanel>
@@ -563,7 +575,7 @@ export const Information: React.FC = () => {
                     <FormLabel>Mail Me Button</FormLabel>
                     <Flex justifyContent="space-between" alignItems="center">
                       <Box fontWeight="500" fontSize="12px" lineHeight="15px">
-                        Display Mail Me Button on the subscribe page
+                        {t('Display_Mail_Me_Button')}
                       </Box>
                       <Switch id="email-alerts" />
                     </Flex>

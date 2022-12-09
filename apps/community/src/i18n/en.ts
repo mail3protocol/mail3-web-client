@@ -312,6 +312,28 @@ export default {
     title: 'Account',
     collection_rank: 'Collection Rank',
     collected: 'Collected',
+    tabs: {
+      Branding_Promotion: 'Branding&Promotion',
+      Items: 'Items',
+      Basic_info: 'Basic info',
+    },
+    'Banner image': 'Banner image',
+    'Subscribe Page Link': 'Subscribe Page Link',
+    avatar_p:
+      'Your profile avatar, which currently only supports synchronization with mail3`s avatar.',
+    avatar_setting:
+      'To change it, please go to your personal center in <a>Mail3: </a><span>Setting->Set Your Avatar</span>',
+    upload: {
+      button: 'Upload',
+      remove: 'Remove',
+      prompt:
+        'For the best results on all devices, <br> use an image that’s at least <span>2440 x 480 px</span> and <span>5MB</span> or less.',
+    },
+    Cluster3_Link: 'Cluster3 Community Page Link',
+    appear: 'This will appear on the Items section of your Subscribe Page.',
+    appear_text: `
+    Please go to <a>Cluscer3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
+    Display_Mail_Me_Button: 'Display Mail Me Button on the subscribe page',
   },
   send_message: {
     title: 'History',
