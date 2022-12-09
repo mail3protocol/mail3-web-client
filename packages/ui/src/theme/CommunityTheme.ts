@@ -417,6 +417,25 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
             },
           },
         },
+        normal: {
+          tablist: {
+            borderBottom: '3px solid',
+            borderColor: 'inherit',
+          },
+          tab: {
+            marginBottom: '-3px',
+            borderBottom: '3px solid',
+            borderColor: 'transparent',
+            _selected: {
+              color: 'primary.900',
+              borderColor: 'currentColor',
+            },
+            fontWeight: '600',
+            fontSize: '14px',
+            lineHeight: '20px',
+            color: '#1D1B23',
+          },
+        },
       },
     },
     Modal: {

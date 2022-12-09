@@ -160,11 +160,11 @@ export const Information: React.FC = () => {
         <Heading fontSize="18px" lineHeight="20px" w="full">
           {t('title')}
         </Heading>
-        <Tabs w="full">
+        <Tabs w="full" variant="normal" mt="38px">
           <TabList>
-            <Tab>One</Tab>
-            <Tab>Two</Tab>
-            <Tab>Three</Tab>
+            <Tab>Branding&Promotion</Tab>
+            <Tab>Items</Tab>
+            <Tab>Basic info</Tab>
           </TabList>
 
           <TabPanels>
