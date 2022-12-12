@@ -62,7 +62,8 @@ import { MAIL_SERVER_URL } from '../constants/env/mailServer'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { TipsPanel } from '../components/TipsPanel'
 import { FileUpload } from '../components/FileUpload'
-// import { UserSettingResponse } from '../api/modals/UserInfoResponse'
+import { useHomeAPI } from '../hooks/useHomeAPI'
+import { useToast } from '../hooks/useToast'
 
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }
@@ -88,15 +89,33 @@ const Title = styled(Box)`
   padding: 16px 0 8px;
 `
 
+const verifyImageSize = (imgFile: File, width: number, height: number) =>
+  new Promise((resolve) => {
+    const img: HTMLImageElement = document.createElement('img')
+    img.onload = () => {
+      if (img.width > width && img.height > height) {
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    }
+    img.onerror = () => {
+      resolve(false)
+    }
+    img.src = URL.createObjectURL(imgFile)
+  })
+
 export const Information: React.FC = () => {
   useDocumentTitle('Information')
   const { t } = useTranslation(['user_information', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const account = useAccount()
   const api = useAPI()
+  const homeApi = useHomeAPI()
   const loginInfo = useLoginInfo()
   const userInfo = useUserInfo()
   const setUserInfo = useSetUserInfo()
+  const toast = useToast()
   const [currentAvatar, setCurrentAvatar] = useState<string | undefined>(
     undefined
   )
@@ -183,9 +202,36 @@ export const Information: React.FC = () => {
 
   const hasBanner = true
 
-  const onUploadHandle = (files: FileList) => {
-    setIsUploading(true)
-    console.log(files)
+  const onUploadHandle = async (files: FileList) => {
+    const MAX_FILE_SIZE = 5
+
+    if (files.length) {
+      setIsUploading(true)
+      try {
+        const file = files[0]
+        const isErrorSize = await verifyImageSize(file, 2440, 480)
+        if (!isErrorSize) {
+          throw new Error('Images must be at least 2440X480 pixels')
+        }
+        const fsMb = file.size / (1024 * 1024)
+        if (fsMb > MAX_FILE_SIZE) {
+          throw new Error('Max file size 5mb')
+        }
+        const { data } = await homeApi.uploadImage(file)
+        setBannerUrl(data.url)
+      } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+          toast(error.message, {
+            status: 'error',
+          })
+        } else {
+          toast(error.message, {
+            status: 'error',
+          })
+        }
+      }
+      setIsUploading(false)
+    }
   }
 
   return (
