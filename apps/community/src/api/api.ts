@@ -1,7 +1,10 @@
 import axios, { AxiosInstance } from 'axios'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
-import { UserInfoResponse } from './modals/UserInfoResponse'
+import {
+  UserInfoResponse,
+  UserSettingResponse,
+} from './modals/UserInfoResponse'
 import { MessageListResponse } from './modals/MessageListResponse'
 import { StatisticsResponse } from './modals/StatisticsResponse'
 import { SubscribersResponse } from './modals/SubscribersResponse'
@@ -59,6 +62,12 @@ export class API {
 
   getUserInfo() {
     return this.axios.get<UserInfoResponse>(`/community/user_info`)
+  }
+
+  getUserSetting() {
+    return this.axios.get<UserSettingResponse>(
+      `/public/community/user_setting/${this.account}`
+    )
   }
 
   getMessageList(queryParams: PagingRequest) {

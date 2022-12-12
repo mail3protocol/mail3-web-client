@@ -6,6 +6,7 @@ import {
   Center,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Grid,
   Heading,
@@ -21,6 +22,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  Textarea,
   Tooltip,
   useStyleConfig,
   VStack,
@@ -59,6 +61,8 @@ import { APP_URL, HOME_URL } from '../constants/env/url'
 import { MAIL_SERVER_URL } from '../constants/env/mailServer'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { TipsPanel } from '../components/TipsPanel'
+import { FileUpload } from '../components/FileUpload'
+// import { UserSettingResponse } from '../api/modals/UserInfoResponse'
 
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }
@@ -96,6 +100,19 @@ export const Information: React.FC = () => {
   const [currentAvatar, setCurrentAvatar] = useState<string | undefined>(
     undefined
   )
+  const [bannerUrl, setBannerUrl] = useState(BannerPng)
+  const [description, setDescription] = useState('')
+  const [itemsLink, setItemsLink] = useState('')
+  const [mmbState, setMmbState] = useState(true)
+  const [isUploading, setIsUploading] = useState(false)
+  // const [pubDisable, setPubDisable] = useState(false)
+  // const [isPublishing, setIsPublishing] = useState(false)
+
+  const remoteSettingRef = useRef<object>({})
+  const cardRef = useRef<HTMLDivElement>(null)
+  const qrcodeRef = useRef<HTMLDivElement>(null)
+  const { takeScreenshot, downloadScreenshot } = useScreenshot()
+
   const { data: userInfoData } = useQuery(
     [QueryKey.GetUserInfo],
     async () => api.getUserInfo().then((r) => r.data),
@@ -124,9 +141,28 @@ export const Information: React.FC = () => {
     }
   )
 
-  const cardRef = useRef<HTMLDivElement>(null)
-  const qrcodeRef = useRef<HTMLDivElement>(null)
-  const { takeScreenshot, downloadScreenshot } = useScreenshot()
+  useQuery(
+    ['userSetting', account],
+    async () => {
+      const res = await api.getUserSetting()
+      return res.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess(d) {
+        console.log(d)
+        remoteSettingRef.current = d
+        setBannerUrl(d.banner_url || BannerPng)
+        setDescription(d.description)
+        setItemsLink(d.items_link)
+        setMmbState(d.mmb_state === 'enabled')
+      },
+    }
+  )
+
   const { data: profileImage } = useQuery(
     ['RenderProfileImage', account, nftInfo, currentAvatar],
     () =>
@@ -146,6 +182,11 @@ export const Information: React.FC = () => {
   const profilePageUrl = `${HOME_URL}/${userInfo?.address.split('@')[0] || ''}`
 
   const hasBanner = true
+
+  const onUploadHandle = (files: FileList) => {
+    setIsUploading(true)
+    console.log(files)
+  }
 
   return (
     <Container as={Grid} gridTemplateColumns="3fr 1fr" gap="20px">
@@ -276,7 +317,7 @@ export const Information: React.FC = () => {
                 w="610px"
                 h="100px"
                 justifyContent="center"
-                bgImage={BannerPng}
+                bgImage={bannerUrl}
                 bgSize="auto 100%"
                 bgRepeat="no-repeat"
                 bgPosition="center"
@@ -311,13 +352,21 @@ export const Information: React.FC = () => {
                     />
                   </Text>
                   <Center mt="5px">
-                    <Button
-                      leftIcon={<AddIcon />}
-                      variant="upload"
-                      colorScheme="primaryButton"
+                    <FileUpload
+                      accept=".jpg, .jpeg, .gif, .png, .bmp"
+                      onChange={onUploadHandle}
                     >
-                      {t('upload.button')}
-                    </Button>
+                      <Button
+                        leftIcon={<AddIcon />}
+                        variant="upload"
+                        colorScheme="primaryButton"
+                        loadingText="Uploading"
+                        isLoading={isUploading}
+                      >
+                        {t('upload.button')}
+                      </Button>
+                    </FileUpload>
+
                     {hasBanner ? (
                       <Button
                         variant="ghost"
@@ -483,10 +532,8 @@ export const Information: React.FC = () => {
               <FormControl>
                 <Input
                   placeholder="Link"
-                  // name="campaign_link"
-                  // isDisabled={isDisabled}
-                  // value={campaignUrl}
-                  // onChange={({ target: { value } }) => setCampaignUrl(value)}
+                  value={itemsLink}
+                  onChange={({ target: { value } }) => setItemsLink(value)}
                 />
               </FormControl>
               <Text
@@ -585,13 +632,29 @@ export const Information: React.FC = () => {
                       </Tooltip>
                     </Box>
                   </FormControl>
+                  <FormControl isInvalid={description.length > 100}>
+                    <FormLabel>{t('description')}</FormLabel>
+                    <Textarea
+                      placeholder={t('description_placeholder')}
+                      value={description}
+                      onChange={({ target: { value } }) =>
+                        setDescription(value)
+                      }
+                    />
+                    <FormErrorMessage>Max 100</FormErrorMessage>
+                  </FormControl>
                   <FormControl>
                     <FormLabel>Mail Me Button</FormLabel>
                     <Flex justifyContent="space-between" alignItems="center">
                       <Box fontWeight="500" fontSize="12px" lineHeight="15px">
                         {t('display_Mail_Me_Button')}
                       </Box>
-                      <Switch id="email-alerts" />
+                      <Switch
+                        isChecked={mmbState}
+                        onChange={({ target: { checked } }) =>
+                          setMmbState(checked)
+                        }
+                      />
                     </Flex>
                   </FormControl>
                 </VStack>

@@ -336,6 +336,8 @@ export default {
     Please go to <a>Cluscer3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
     display_Mail_Me_Button: 'Display Mail Me Button on the subscribe page',
     dublish: 'Publish',
+    description: 'Description',
+    description_placeholder: 'Description',
   },
   send_message: {
     title: 'History',
