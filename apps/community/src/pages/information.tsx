@@ -157,9 +157,23 @@ export const Information: React.FC = () => {
         h="full"
         p="32px"
       >
-        <Heading fontSize="18px" lineHeight="20px" w="full">
-          {t('title')}
-        </Heading>
+        <Flex justifyContent="space-between" w="full">
+          <Heading fontSize="18px" lineHeight="20px">
+            {t('title')}
+          </Heading>
+          <Button
+            h="28px"
+            w="94px"
+            variant="solid-rounded"
+            colorScheme="primaryButton"
+            type="submit"
+            // isLoading={isUpdating}
+            // isDisabled={isDisabledSubmit}
+            // style={{ opacity: isLoading ? 0 : undefined }}
+          >
+            {t('dublish')}
+          </Button>
+        </Flex>
         <Tabs w="full" variant="normal" mt="38px">
           <TabList>
             <Tab>{t('tabs.Branding_Promotion')}</Tab>
@@ -170,7 +184,7 @@ export const Information: React.FC = () => {
           <TabPanels>
             <TabPanel p="32px 0">
               <FormControl w="400px">
-                <Title>{t('Subscribe Page Link')}</Title>
+                <Title>{t('subscribe_link')}</Title>
                 <Box position="relative">
                   <Input
                     name="profile_page_url"
@@ -207,7 +221,7 @@ export const Information: React.FC = () => {
                 </Box>
               </FormControl>
 
-              <Title>Avatar</Title>
+              <Title>{t('avatar')}</Title>
               <HStack spacing="24px">
                 <Center
                   background="#F2F2F2"
@@ -257,7 +271,7 @@ export const Information: React.FC = () => {
                   </Box>
                 </Box>
               </HStack>
-              <Title>{t('Banner image')}</Title>
+              <Title>{t('banner_image')}</Title>
               <Center
                 w="610px"
                 h="100px"
@@ -465,7 +479,7 @@ export const Information: React.FC = () => {
               </FormControl>
             </TabPanel>
             <TabPanel>
-              <Title>{t('Cluster3_Link')}</Title>
+              <Title>{t('cluster3_Link')}</Title>
               <FormControl>
                 <Input
                   placeholder="Link"
@@ -575,7 +589,7 @@ export const Information: React.FC = () => {
                     <FormLabel>Mail Me Button</FormLabel>
                     <Flex justifyContent="space-between" alignItems="center">
                       <Box fontWeight="500" fontSize="12px" lineHeight="15px">
-                        {t('Display_Mail_Me_Button')}
+                        {t('display_Mail_Me_Button')}
                       </Box>
                       <Switch id="email-alerts" />
                     </Flex>
