@@ -233,10 +233,15 @@ export const Information: React.FC = () => {
     try {
       setIsPublishing(true)
       await api.updateUserSetting(requestBody)
+      toast('Publish Successfully', {
+        status: 'success',
+        alertProps: { colorScheme: 'green' },
+      })
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         toast(error.message, {
           status: 'error',
+          alertProps: { colorScheme: 'red' },
         })
       }
     }
@@ -264,10 +269,12 @@ export const Information: React.FC = () => {
         if (axios.isAxiosError(error)) {
           toast(error.message, {
             status: 'error',
+            alertProps: { colorScheme: 'red' },
           })
         } else {
           toast(error.message, {
             status: 'error',
+            alertProps: { colorScheme: 'red' },
           })
         }
       }
