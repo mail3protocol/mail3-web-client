@@ -13,9 +13,6 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Spacer,
-  LinkBox,
-  LinkOverlay,
   SimpleGrid,
   Wrap,
   WrapItem,
@@ -25,17 +22,22 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverBody,
+  Spinner,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { Avatar, Button, SubscribeButton } from 'ui'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
 import { useTranslation } from 'next-i18next'
 import { useDidMount } from 'hooks'
+import { useInfiniteQuery } from 'react-query'
 import { APP_URL } from '../../constants/env'
 import defaultBannerPng from '../../assets/png/subscribe/bg.png'
+import { useAPI } from '../../api'
+import { CommunityCard } from './card'
 
 const CONTAINER_MAX_WIDTH = 1220
 
@@ -89,73 +91,6 @@ const PageContainer = styled(Box)`
   }
 `
 
-const Card: React.FC<{
-  date?: string
-  title?: string
-  content?: string
-}> = ({ date, title, content }) => {
-  console.log(title, content, date)
-
-  const isBigTitle = !content
-
-  return (
-    <LinkBox
-      as="article"
-      border="1px solid #EAEAEA"
-      borderRadius="16px"
-      p="16px"
-      mb={{ base: '13px', md: 0 }}
-    >
-      <LinkOverlay href="#">
-        <Flex
-          fontWeight="400"
-          fontSize="12px"
-          lineHeight="26px"
-          color="#6F6F6F"
-          mb="6px"
-        >
-          <Box>9:07 am · 27 Aug</Box>
-          <Spacer />
-          <Box>2022</Box>
-        </Flex>
-        {!isBigTitle ? (
-          <Box>
-            <Text
-              noOfLines={2}
-              fontWeight="700"
-              fontSize="16px"
-              lineHeight="1.4"
-            >
-              The More Important the Work, the More Important the RestThe More
-              Important the Work, the More Important the RestThe More Important
-              the Work, the More Important the Rest
-            </Text>
-            <Text
-              noOfLines={3}
-              fontWeight="400"
-              fontSize="12px"
-              lineHeight="18px"
-              mt="16px"
-            >
-              Things you can do on a contact’s page Decide if their email should
-              go to The Imbox, The Feed, or The Paper Trail. Just click the
-              “Delivering to, The Feed, or The Paper Trail. Just click the
-              “Delivering to The Feed, or The Paper Trail. Just click the
-              “Delivering to
-            </Text>
-          </Box>
-        ) : (
-          <Text noOfLines={3} fontWeight="700" fontSize="24px" lineHeight="1.5">
-            The More Important the Work, the More Important the RestThe More
-            Important the Work, the More Important the RestThe More Important
-            the Work, the More Important the Rest
-          </Text>
-        )}
-      </LinkOverlay>
-    </LinkBox>
-  )
-}
-
 export const SubscribePage: React.FC<SubscribePageProps> = ({
   mailAddress,
   address,
@@ -165,6 +100,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   const [t] = useTranslation('profile')
   const [t2] = useTranslation('common')
   const toast = useToast()
+  const api = useAPI()
 
   const [isDid, setIsDid] = useState(false)
   const popoverRef = useRef<HTMLElement>(null)
@@ -228,6 +164,30 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
       },
     }),
     [mailAddress, address]
+  )
+
+  const {
+    data,
+    isLoading: isLoadingCommunityMsg,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    ['CommunityMessageList', priAddress],
+    async ({ pageParam = '' }) => {
+      const ret = await api.getCommunityMessages(priAddress, pageParam)
+      return ret.data
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage.next_cursor) {
+          return lastPage.next_cursor
+        }
+        return undefined
+      },
+      refetchOnReconnect: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+    }
   )
 
   const tabItemTypes = [TabItemType.Updates, TabItemType.Items]
@@ -404,6 +364,15 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   }
 
   const bgImage = useMemo(() => defaultBannerPng.src, [])
+
+  const communityList = useMemo(
+    () =>
+      data?.pages
+        .map((item) => item.messages)
+        .filter((item) => item?.length)
+        .flat() || [],
+    [data]
+  )
 
   useDidMount(() => {
     setIsDid(true)
@@ -615,29 +584,50 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
 
         <Flex
           justifyContent="center"
-          p={{ base: '20px', md: '20px 58px' }}
+          p={{ base: '10px', md: '20px 0px' }}
           minH="200px"
         >
           <TabPanels>
             <TabPanel p="0">
-              <SimpleGrid
-                columns={{ base: 1, md: 3 }}
-                spacing={{ base: '0', md: '20px' }}
-              >
-                {mock.list.map((item, index) => {
-                  console.log(item)
-                  const { title, content, date } = item
-                  return (
-                    <Card
-                      // eslint-disable-next-line react/no-array-index-key
-                      key={index}
-                      title={title}
-                      content={content}
-                      date={date}
-                    />
-                  )
-                })}
-              </SimpleGrid>
+              {isLoadingCommunityMsg ? (
+                <Center minH="400px">
+                  <Spinner />
+                </Center>
+              ) : (
+                <InfiniteScroll
+                  dataLength={communityList.length}
+                  next={fetchNextPage}
+                  hasMore={hasNextPage === true}
+                  loader={
+                    <Center h="50px">
+                      <Spinner />
+                    </Center>
+                  }
+                >
+                  <SimpleGrid
+                    columns={{ base: 1, md: 3 }}
+                    spacing={{ base: '0', md: '20px' }}
+                  >
+                    {communityList.map((item) => {
+                      const {
+                        uuid: id,
+                        subject,
+                        summary,
+                        created_at: date,
+                      } = item
+                      return (
+                        <CommunityCard
+                          key={id}
+                          uuid={id}
+                          title={subject}
+                          content={summary}
+                          date={date}
+                        />
+                      )
+                    })}
+                  </SimpleGrid>
+                </InfiniteScroll>
+              )}
             </TabPanel>
             <TabPanel p="0">
               <Wrap spacing={{ base: '15px', md: '26px' }}>

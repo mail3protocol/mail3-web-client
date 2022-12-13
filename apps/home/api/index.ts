@@ -1,4 +1,5 @@
 import axios, { Axios, AxiosResponse } from 'axios'
+import { HomeCommunity } from 'models'
 import { useMemo } from 'react'
 import { SERVER_URL } from '../constants/env'
 
@@ -49,6 +50,12 @@ class API {
   public async getUserInfo(address: string) {
     return this.axios.get<{ nickname: string; avatar: string }>(
       `/user_info/${address}`
+    )
+  }
+
+  public async getCommunityMessages(address: string, nextCursor: string) {
+    return this.axios.get<HomeCommunity.ListResp>(
+      `/public/community/messages/${address}/?cursor=${nextCursor}&count=20`
     )
   }
 }
