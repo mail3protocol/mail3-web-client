@@ -45,7 +45,7 @@ import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { ClusterInfoResp } from 'models'
 import { Trans, useTranslation } from 'react-i18next'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ReactComponent as SvgRank } from 'assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from 'assets/svg/collect.svg'
 import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
@@ -64,6 +64,7 @@ import { TipsPanel } from '../components/TipsPanel'
 import { FileUpload } from '../components/FileUpload'
 import { useHomeAPI } from '../hooks/useHomeAPI'
 import { useToast } from '../hooks/useToast'
+import { UserSettingResponse } from '../api/modals/UserInfoResponse'
 
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }
@@ -93,7 +94,7 @@ const verifyImageSize = (imgFile: File, width: number, height: number) =>
   new Promise((resolve) => {
     const img: HTMLImageElement = document.createElement('img')
     img.onload = () => {
-      if (img.width > width && img.height > height) {
+      if (img.width >= width && img.height >= height) {
         resolve(true)
       } else {
         resolve(false)
@@ -124,10 +125,10 @@ export const Information: React.FC = () => {
   const [itemsLink, setItemsLink] = useState('')
   const [mmbState, setMmbState] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
-  // const [pubDisable, setPubDisable] = useState(false)
-  // const [isPublishing, setIsPublishing] = useState(false)
+  const [pubDisable, setPubDisable] = useState(true)
+  const [isPublishing, setIsPublishing] = useState(false)
 
-  const remoteSettingRef = useRef<object>({})
+  const remoteSettingRef = useRef<UserSettingResponse | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const { takeScreenshot, downloadScreenshot } = useScreenshot()
@@ -200,7 +201,45 @@ export const Information: React.FC = () => {
   const { onCopy, isCopied } = useCopyWithStatus()
   const profilePageUrl = `${HOME_URL}/${userInfo?.address.split('@')[0] || ''}`
 
-  const hasBanner = true
+  const hasBanner = bannerUrl !== BannerPng
+
+  const requestBody = useMemo<UserSettingResponse>(
+    () => ({
+      banner_url: hasBanner ? bannerUrl : '',
+      items_link: itemsLink,
+      mmb_state: mmbState ? 'enabled' : 'disabled',
+      description,
+    }),
+    [hasBanner, bannerUrl, itemsLink, mmbState, description]
+  )
+
+  useEffect(() => {
+    if (
+      (Object.keys(requestBody) as (keyof typeof requestBody)[]).some((key) => {
+        if (!remoteSettingRef.current) return false
+        const oldValue = remoteSettingRef.current[key]
+        return requestBody[key] !== oldValue
+      })
+    ) {
+      setPubDisable(false)
+    } else {
+      setPubDisable(true)
+    }
+  }, [requestBody, remoteSettingRef?.current])
+
+  const onSubmit = async () => {
+    try {
+      setIsPublishing(true)
+      await api.updateUserSetting(requestBody)
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        toast(error.message, {
+          status: 'error',
+        })
+      }
+    }
+    setIsPublishing(false)
+  }
 
   const onUploadHandle = async (files: FileList) => {
     const MAX_FILE_SIZE = 5
@@ -209,7 +248,7 @@ export const Information: React.FC = () => {
       setIsUploading(true)
       try {
         const file = files[0]
-        const isErrorSize = await verifyImageSize(file, 2440, 480)
+        const isErrorSize = await verifyImageSize(file, 2440 / 2, 480 / 2)
         if (!isErrorSize) {
           throw new Error('Images must be at least 2440X480 pixels')
         }
@@ -254,11 +293,11 @@ export const Information: React.FC = () => {
             variant="solid-rounded"
             colorScheme="primaryButton"
             type="submit"
-            // isLoading={isUpdating}
-            // isDisabled={isDisabledSubmit}
-            // style={{ opacity: isLoading ? 0 : undefined }}
+            onClick={onSubmit}
+            isLoading={isPublishing}
+            isDisabled={pubDisable}
           >
-            {t('dublish')}
+            {t('publish')}
           </Button>
         </Flex>
         <Tabs w="full" variant="normal" mt="38px">
@@ -364,7 +403,7 @@ export const Information: React.FC = () => {
                 h="100px"
                 justifyContent="center"
                 bgImage={bannerUrl}
-                bgSize="auto 100%"
+                bgSize="100% auto"
                 bgRepeat="no-repeat"
                 bgPosition="center"
                 borderRadius="8px"
@@ -424,6 +463,7 @@ export const Information: React.FC = () => {
                         height="28px"
                         _active={{ bg: 'transparent' }}
                         _hover={{ bg: 'transparent' }}
+                        onClick={() => setBannerUrl(BannerPng)}
                       >
                         {t('upload.remove')}
                       </Button>

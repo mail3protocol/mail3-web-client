@@ -3,6 +3,7 @@ import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
   UserInfoResponse,
+  UserSettingRequest,
   UserSettingResponse,
 } from './modals/UserInfoResponse'
 import { MessageListResponse } from './modals/MessageListResponse'
@@ -62,6 +63,10 @@ export class API {
 
   getUserInfo() {
     return this.axios.get<UserInfoResponse>(`/community/user_info`)
+  }
+
+  updateUserSetting(body: UserSettingRequest) {
+    return this.axios.put<void>(`/community/user_setting`, body)
   }
 
   getUserSetting() {
