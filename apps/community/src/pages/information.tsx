@@ -199,7 +199,9 @@ export const Information: React.FC = () => {
   )
 
   const { onCopy, isCopied } = useCopyWithStatus()
-  const profilePageUrl = `${HOME_URL}/${userInfo?.address.split('@')[0] || ''}`
+  const subscribePageUrl = `${HOME_URL}/s/${
+    userInfo?.address.split('@')[0] || ''
+  }`
 
   const hasBanner = bannerUrl !== BannerPng
 
@@ -315,7 +317,7 @@ export const Information: React.FC = () => {
                   <Input
                     name="profile_page_url"
                     isDisabled
-                    value={profilePageUrl}
+                    value={subscribePageUrl}
                   />
                   <Tooltip
                     label={t(isCopied ? 'copied' : 'copy', {
@@ -334,7 +336,7 @@ export const Information: React.FC = () => {
                       top="0"
                       right="0"
                       w="40px"
-                      onClick={() => onCopy(profilePageUrl)}
+                      onClick={() => onCopy(subscribePageUrl)}
                       style={{ cursor: isCopied ? 'default' : undefined }}
                     >
                       {isCopied ? (
@@ -680,43 +682,6 @@ export const Information: React.FC = () => {
                       isDisabled
                       value={userInfo?.address || userInfoData?.address}
                     />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>{t('profile_page_field')}</FormLabel>
-                    <Box position="relative">
-                      <Input
-                        name="profile_page_url"
-                        isDisabled
-                        value={profilePageUrl}
-                      />
-                      <Tooltip
-                        label={t(isCopied ? 'copied' : 'copy', {
-                          ns: 'common',
-                        })}
-                        placement="top"
-                        hasArrow
-                      >
-                        <Button
-                          variant="unstyled"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          h="full"
-                          position="absolute"
-                          top="0"
-                          right="0"
-                          w="40px"
-                          onClick={() => onCopy(profilePageUrl)}
-                          style={{ cursor: isCopied ? 'default' : undefined }}
-                        >
-                          {isCopied ? (
-                            <CheckIcon w="16px" h="16px" />
-                          ) : (
-                            <Icon as={CopySvg} w="20px" h="20px" />
-                          )}
-                        </Button>
-                      </Tooltip>
-                    </Box>
                   </FormControl>
                   <FormControl isInvalid={description.length > 100}>
                     <FormLabel>{t('description')}</FormLabel>
