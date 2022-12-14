@@ -33,9 +33,10 @@ import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.sv
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
 import { useTranslation } from 'next-i18next'
 import { useDidMount } from 'hooks'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import { APP_URL } from '../../constants/env'
-import defaultBannerPng from '../../assets/png/subscribe/bg.png'
+import PngDefaultBanner from '../../assets/png/subscribe/bg.png'
+import PngEmpty from '../../assets/png/empty.png'
 import { useAPI } from '../../api'
 import { CommunityCard } from './card'
 
@@ -164,6 +165,20 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
       },
     }),
     [mailAddress, address]
+  )
+
+  const { data: settings } = useQuery(
+    ['userSetting', priAddress],
+    async () => {
+      const res = await api.getUserSetting(priAddress)
+      return res.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
   )
 
   const {
@@ -363,7 +378,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     ],
   }
 
-  const bgImage = useMemo(() => defaultBannerPng.src, [])
+  const bgImage = useMemo(() => PngDefaultBanner.src, [])
 
   const communityList = useMemo(
     () =>
@@ -384,7 +399,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     <PageContainer>
       <Box
         h={{ base: '100px', md: '200px' }}
-        bgImage={bgImage}
+        bgImage={settings?.banner_url || bgImage}
         bgRepeat="no-repeat"
         bgSize="auto 100%"
         bgPosition="center"
@@ -458,7 +473,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           <SubscribeButton
             uuid={uuid}
             host={APP_URL}
-            utmSource=""
+            utmSource="subscribe_page"
             utmCampaign={address}
             iframeHeight="46px"
             w="150px"
@@ -492,33 +507,34 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           >
             <Text fontWeight="400" fontSize="16px" lineHeight="24px">
               mail3.eth@mail3.me
-              <Button />
+              {settings?.mmb_state === 'enabled' ? <Button /> : null}
             </Text>
           </Box>
         </Flex>
-        <Box mt="8px" w={{ base: '100%', md: '560px' }}>
-          <Collapse startingHeight={20} in={isOpen}>
-            <Text fontWeight="400" fontSize="12px" lineHeight="20px">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life
-              accusamus terry richardson ad squid. Nihil anim keffiyeh
-              helvetica, craft beer labore wes anderson cred nesciunt sapiente
-              ea proident.
-            </Text>
-          </Collapse>
-          <RawButton
-            size="xs"
-            onClick={() => {
-              if (isOpen) {
-                onClose()
-              } else {
-                onOpen()
-              }
-            }}
-            variant="link"
-          >
-            Show {isOpen ? 'Less' : 'More'}
-          </RawButton>
-        </Box>
+        {settings?.description ? (
+          <Box mt="8px" w={{ base: '100%', md: '560px' }}>
+            <Collapse startingHeight={20} in={isOpen}>
+              <Text fontWeight="400" fontSize="12px" lineHeight="20px">
+                {settings?.description}
+              </Text>
+            </Collapse>
+            {settings?.description.length > 85 ? (
+              <RawButton
+                size="xs"
+                onClick={() => {
+                  if (isOpen) {
+                    onClose()
+                  } else {
+                    onOpen()
+                  }
+                }}
+                variant="link"
+              >
+                Show {isOpen ? 'Less' : 'More'}
+              </RawButton>
+            ) : null}
+          </Box>
+        ) : null}
       </Box>
       <Tabs position="relative" mt="30px" p={{ base: '0', md: '0px 58px' }}>
         <TabList
@@ -589,6 +605,60 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
         >
           <TabPanels>
             <TabPanel p="0">
+              {!communityList.length ? (
+                <Center h="200px" alignContent="center" flexDirection="column">
+                  {isLoadingCommunityMsg ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <Image mt="20px" src={PngEmpty.src} w="106px" />
+                      <Text
+                        fontWeight="300"
+                        fontSize="18px"
+                        lineHeight="48px"
+                        color="#B3B3B3"
+                      >
+                        There are no updates on this page
+                      </Text>
+                    </>
+                  )}
+                </Center>
+              ) : (
+                <InfiniteScroll
+                  dataLength={communityList.length}
+                  next={fetchNextPage}
+                  hasMore={hasNextPage === true}
+                  loader={
+                    <Center h="50px">
+                      <Spinner />
+                    </Center>
+                  }
+                >
+                  <SimpleGrid
+                    columns={{ base: 1, md: 3 }}
+                    spacing={{ base: '0', md: '20px' }}
+                  >
+                    {communityList.map((item) => {
+                      const {
+                        uuid: id,
+                        subject,
+                        summary,
+                        created_at: date,
+                      } = item
+                      return (
+                        <CommunityCard
+                          key={id}
+                          uuid={id}
+                          title={subject}
+                          content={summary}
+                          date={date}
+                        />
+                      )
+                    })}
+                  </SimpleGrid>
+                </InfiniteScroll>
+              )}
+
               {isLoadingCommunityMsg ? (
                 <Center minH="400px">
                   <Spinner />

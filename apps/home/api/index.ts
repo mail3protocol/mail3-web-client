@@ -24,6 +24,13 @@ interface getBitToEthResponse {
   }
 }
 
+export interface UserSettingResponse {
+  banner_url: string
+  description: string
+  items_link: string
+  mmb_state: 'enabled' | 'disabled'
+}
+
 class API {
   private axios: Axios
 
@@ -56,6 +63,12 @@ class API {
   public async getCommunityMessages(address: string, nextCursor: string) {
     return this.axios.get<HomeCommunity.ListResp>(
       `/public/community/messages/${address}/?cursor=${nextCursor}&count=20`
+    )
+  }
+
+  public async getUserSetting(account: string) {
+    return this.axios.get<UserSettingResponse>(
+      `/public/community/user_setting/${account}`
     )
   }
 }
