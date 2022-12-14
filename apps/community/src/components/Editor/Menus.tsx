@@ -54,10 +54,10 @@ export const Menus: React.FC<
   )
   return (
     <HStack
-      rounded="12px"
+      position="sticky"
+      top="60px"
       bgColor="cardBackground"
       h="40px"
-      px="24px"
       spacing="12px"
       {...props}
     >

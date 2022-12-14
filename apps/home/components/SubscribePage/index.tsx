@@ -658,46 +658,6 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
                   </SimpleGrid>
                 </InfiniteScroll>
               )}
-
-              {isLoadingCommunityMsg ? (
-                <Center minH="400px">
-                  <Spinner />
-                </Center>
-              ) : (
-                <InfiniteScroll
-                  dataLength={communityList.length}
-                  next={fetchNextPage}
-                  hasMore={hasNextPage === true}
-                  loader={
-                    <Center h="50px">
-                      <Spinner />
-                    </Center>
-                  }
-                >
-                  <SimpleGrid
-                    columns={{ base: 1, md: 3 }}
-                    spacing={{ base: '0', md: '20px' }}
-                  >
-                    {communityList.map((item) => {
-                      const {
-                        uuid: id,
-                        subject,
-                        summary,
-                        created_at: date,
-                      } = item
-                      return (
-                        <CommunityCard
-                          key={id}
-                          uuid={id}
-                          title={subject}
-                          content={summary}
-                          date={date}
-                        />
-                      )
-                    })}
-                  </SimpleGrid>
-                </InfiniteScroll>
-              )}
             </TabPanel>
             <TabPanel p="0">
               <Wrap spacing={{ base: '15px', md: '26px' }}>

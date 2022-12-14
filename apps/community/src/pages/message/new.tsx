@@ -1,4 +1,12 @@
-import { Box, Divider, Flex, HStack } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  HStack,
+  Textarea,
+} from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import React, { useRef, useState } from 'react'
 import { Container } from '../../components/Container'
@@ -14,6 +22,7 @@ export const NewMessage = () => {
   useDocumentTitle('New Message')
   const { t } = useTranslation('new_message')
   const [subjectText, setSubjectText] = useState('')
+  const [abstract, setAbstract] = useState('')
   const [isPreview, setIsPreview] = useState(false)
   const [currentPreviewContent, setCurrentPreviewContent] = useState('')
   const contentRef = useRef<HTMLDivElement>(null)
@@ -63,13 +72,6 @@ export const NewMessage = () => {
         flex={1}
         onChangeTextLengthCallback={setCount}
       >
-        <Menus
-          imageButtonProps={{
-            uploadImageGuard,
-            onUploadImageCallback,
-            getImageUrlCache,
-          }}
-        />
         <Flex
           rounded="12px"
           bgColor="cardBackground"
@@ -104,25 +106,75 @@ export const NewMessage = () => {
               value={subjectText}
             />
             <Divider as="hr" mt="20px" />
+            <Menus
+              imageButtonProps={{
+                uploadImageGuard,
+                onUploadImageCallback,
+                getImageUrlCache,
+              }}
+            />
             <Content mt="4px" flex={1} ref={contentRef} />
           </Box>
-          <HStack justify="flex-end" h="40px">
-            <PreviewButton
-              isPreview={isPreview}
-              onClick={(e, content) => {
-                setIsPreview((p) => !p)
-                setCurrentPreviewContent(content)
-              }}
-              w="138px"
-              h="inherit"
-            />
-            <SendButton
-              subject={subjectText}
-              isDisabled={count === 0}
-              h="inherit"
-            />
-          </HStack>
         </Flex>
+
+        {!isPreview ? (
+          <FormControl
+            p="32px 24px"
+            h="217px"
+            background="#FFFFFF"
+            borderRadius="20px"
+            mt="20px"
+          >
+            <FormLabel>Abstract</FormLabel>
+            <Textarea
+              h="120px"
+              placeholder={t('abstract_holder')}
+              value={abstract}
+              maxLength={100}
+              fontSize="14px"
+              fontWeight="500"
+              lineHeight="20px"
+              onChange={({ target: { value } }) => setAbstract(value)}
+            />
+            <Box
+              whiteSpace="nowrap"
+              fontSize="14px"
+              color="secondaryTextColor"
+              position="absolute"
+              bottom="40px"
+              right="40px"
+              zIndex={99}
+              textDecorationLine="underline"
+            >
+              {abstract.length} / 100
+            </Box>
+          </FormControl>
+        ) : null}
+
+        <HStack
+          p="16px 16px 16px 0px"
+          justify="flex-end"
+          mt="20px"
+          bgColor="#FFFFFF"
+          boxShadow="0px 0px 8px rgba(0, 0, 0, 0.25)"
+          borderRadius="20px"
+        >
+          <PreviewButton
+            isPreview={isPreview}
+            onClick={(e, content) => {
+              setIsPreview((p) => !p)
+              setCurrentPreviewContent(content)
+            }}
+            w="138px"
+            h="40px"
+          />
+          <SendButton
+            abstract={abstract}
+            subject={subjectText}
+            isDisabled={count === 0}
+            h="40px"
+          />
+        </HStack>
       </StateProvider>
     </Container>
   )

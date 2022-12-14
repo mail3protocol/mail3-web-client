@@ -24,6 +24,7 @@ import { CloseButton } from '../ConfirmDialog'
 
 export interface SendButtonProps extends ButtonProps {
   subject: string
+  abstract: string
   isDisabled?: boolean
   onSend?: () => void
 }
@@ -31,6 +32,7 @@ export interface SendButtonProps extends ButtonProps {
 export const SendButton: React.FC<SendButtonProps> = ({
   subject,
   onSend,
+  abstract,
   isDisabled: isPropsDisabled,
   ...props
 }) => {
@@ -52,7 +54,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
     trackClickCommunitySendConfirm()
     setIsLoading(true)
     try {
-      await api.sendMessage(subject, getHTML())
+      await api.sendMessage(subject, getHTML(), abstract)
       setIsSent(true)
       onSend?.()
     } catch (err: any) {

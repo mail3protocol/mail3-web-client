@@ -102,10 +102,11 @@ export class API {
     )
   }
 
-  sendMessage(subject: string, content: string) {
+  sendMessage(subject: string, content: string, abstract: string) {
     return this.axios.post(`/community/message`, {
       subject,
       content,
+      summary: abstract,
     })
   }
 }
