@@ -22,6 +22,8 @@ import {
   PopoverArrow,
   PopoverBody,
   Spinner,
+  Spacer,
+  Link,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
@@ -36,10 +38,17 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 import dynamic from 'next/dynamic'
 import axios from 'axios'
 import { ClusterCommunityResp } from 'models'
-import { copyText, shareToTwitter } from 'shared'
+import {
+  copyText,
+  isEthAddress,
+  isPrimitiveEthAddress,
+  shareToTwitter,
+  truncateMiddle,
+} from 'shared'
 import { APP_URL } from '../../constants/env'
 import PngDefaultBanner from '../../assets/png/subscribe/bg.png'
 import PngEmpty from '../../assets/png/empty.png'
+import PngCluster3 from '../../assets/png/cluster3.png'
 import { useAPI } from '../../api'
 import { CommunityCard } from './card'
 
@@ -178,6 +187,20 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     [mailAddress, address]
   )
 
+  const { data: userInfo } = useQuery(
+    ['userInfo', priAddress],
+    async () => {
+      const ret = await api.getUserInfo(priAddress)
+      return ret.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
+
   const { data: settings } = useQuery(
     ['userSetting', priAddress],
     async () => {
@@ -240,6 +263,19 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
       refetchOnMount: true,
     }
   )
+
+  const nickname = useMemo(() => {
+    if (userInfo?.nickname) {
+      return userInfo.nickname
+    }
+    if (isPrimitiveEthAddress(address)) {
+      return truncateMiddle(address, 6, 4, '_')
+    }
+    if (isEthAddress(address)) {
+      return address.includes('.') ? address.split('.')[0] : address
+    }
+    return ''
+  }, [userInfo])
 
   const tabList = useMemo(() => {
     if (items && items?.poapList.length > 0) {
@@ -368,7 +404,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           />
         </Box>
         <Text fontWeight="700" fontSize="18px" lineHeight="20px">
-          mail3
+          {nickname}
         </Text>
         <Flex mt={{ base: '4px', md: '8px' }}>
           <Box
@@ -533,7 +569,19 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
               )}
             </TabPanel>
             <TabPanel p="0">
-              <Wrap spacing={{ base: '15px', md: '26px' }}>
+              <Center pb="17px">
+                <Text fontWeight="500" fontSize="12px" lineHeight="24px">
+                  {items?.poapList?.length} items
+                </Text>
+                <Spacer />
+                <Flex fontWeight="400" fontSize="12px" lineHeight="24px">
+                  Data source:
+                  <Link href={settings?.items_link} target="_blank">
+                    <Image w="100px" ml="10px" src={PngCluster3.src} />
+                  </Link>
+                </Flex>
+              </Center>
+              <Wrap spacing={{ base: '15px', md: '28px' }}>
                 {items?.poapList.map((item) => {
                   const { name, img, poapPlatform } = item
                   return (
