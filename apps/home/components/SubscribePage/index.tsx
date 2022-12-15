@@ -27,18 +27,21 @@ import {
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Avatar, Button, SubscribeButton } from 'ui'
+import { Avatar, SubscribeButton } from 'ui'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
 import { useTranslation } from 'next-i18next'
 import { useDidMount } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
+import dynamic from 'next/dynamic'
 import { APP_URL } from '../../constants/env'
 import PngDefaultBanner from '../../assets/png/subscribe/bg.png'
 import PngEmpty from '../../assets/png/empty.png'
 import { useAPI } from '../../api'
 import { CommunityCard } from './card'
+
+const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
 const CONTAINER_MAX_WIDTH = 1220
 
@@ -503,11 +506,12 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             p="4px 4px 4px 8px"
             background="#F0F0F0"
             borderRadius="100px"
-            overflow="hidden"
           >
             <Text fontWeight="400" fontSize="16px" lineHeight="24px">
-              mail3.eth@mail3.me
-              {settings?.mmb_state === 'enabled' ? <Button /> : null}
+              {mailAddress}
+              {settings?.mmb_state === 'enabled' ? (
+                <Mail3MeButton to={mailAddress} />
+              ) : null}
             </Text>
           </Box>
         </Flex>
