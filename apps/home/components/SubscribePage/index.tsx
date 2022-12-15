@@ -17,7 +17,6 @@ import {
   Wrap,
   WrapItem,
   Popover,
-  useToast,
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
@@ -32,9 +31,12 @@ import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
 import { useTranslation } from 'next-i18next'
-import { useDidMount } from 'hooks'
+import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import dynamic from 'next/dynamic'
+import axios from 'axios'
+import { ClusterCommunityResp } from 'models'
+import { copyText, shareToTwitter } from 'shared'
 import { APP_URL } from '../../constants/env'
 import PngDefaultBanner from '../../assets/png/subscribe/bg.png'
 import PngEmpty from '../../assets/png/empty.png'
@@ -44,6 +46,9 @@ import { CommunityCard } from './card'
 const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
 const CONTAINER_MAX_WIDTH = 1220
+
+const homeUrl =
+  typeof window !== 'undefined' ? `${window?.location?.origin}` : ''
 
 enum ButtonType {
   Copy,
@@ -95,6 +100,11 @@ const PageContainer = styled(Box)`
   }
 `
 
+export const getCommunityNfts = (uuid: string) =>
+  axios.get<ClusterCommunityResp>(
+    `https://openApi.cluster3.net/api/v1/community?uuid=${uuid}`
+  )
+
 export const SubscribePage: React.FC<SubscribePageProps> = ({
   mailAddress,
   address,
@@ -105,16 +115,15 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   const [t2] = useTranslation('common')
   const toast = useToast()
   const api = useAPI()
+  const { downloadScreenshot } = useScreenshot()
 
   const [isDid, setIsDid] = useState(false)
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  console.log(mailAddress)
-  console.log(address)
-  console.log(uuid)
-  console.log(priAddress)
+
+  const shareUrl: string = useMemo(() => `${homeUrl}/s/${address}`, [address])
 
   const buttonConfig: Record<
     ButtonType,
@@ -140,28 +149,27 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   const actionMap = useMemo(
     () => ({
       [ButtonType.Copy]: async () => {
-        // await copyText(profileUrl)
+        await copyText(shareUrl)
         toast(t2('navbar.copied'))
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {
-        // shareToTwitter({
-        //   text: 'Hey, contact me using my Mail3 email address @mail3dao',
-        //   url: profileUrl,
-        //   hashtags: hashTag ? ['web3', 'mail3', hashTag] : ['web3', 'mail3'],
-        // })
+        shareToTwitter({
+          text: 'Hey, contact me using my Mail3 email address @mail3dao',
+          url: shareUrl,
+        })
       },
       [ButtonType.Card]: async () => {
         if (!cardRef?.current) return
         try {
-          // downloadScreenshot(cardRef.current, 'share.png', {
-          //   ignoreElements: (dom) => {
-          //     if (dom.id === 'mail3-me-button-wrap') return true
-          //     return false
-          //   },
-          // })
+          downloadScreenshot(cardRef.current, 'share.png', {
+            ignoreElements: (dom) => {
+              if (dom.id === 'screenshot-ignore-element') return true
+              return false
+            },
+          })
         } catch (error) {
-          // toast('Download screenshot Error!')
+          toast('Download screenshot Error!')
         }
 
         popoverRef?.current?.blur()
@@ -181,6 +189,31 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+    }
+  )
+
+  const communityId: string | undefined = useMemo(() => {
+    if (settings?.items_link) {
+      const itemsId = settings.items_link.match(/community\/(\d+)$/)
+      if (itemsId && itemsId.length > 1) {
+        return itemsId[1]
+      }
+    }
+    return undefined
+  }, [settings])
+
+  const { data: items } = useQuery(
+    ['communityNfts'],
+    async () => {
+      const ret = await getCommunityNfts(communityId!)
+      return ret.data.data
+    },
+    {
+      refetchIntervalInBackground: false,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      enabled: !!communityId,
     }
   )
 
@@ -208,180 +241,17 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     }
   )
 
-  const tabItemTypes = [TabItemType.Updates, TabItemType.Items]
+  const tabList = useMemo(() => {
+    if (items && items?.poapList.length > 0) {
+      return [TabItemType.Updates, TabItemType.Items]
+    }
+    return [TabItemType.Updates]
+  }, [items])
 
-  const mock = {
-    list: [
-      {
-        date: '',
-        title: '',
-        content: '123',
-      },
-      {
-        date: '',
-        title: '',
-        content: '',
-      },
-      {
-        date: '',
-        title: '',
-        content: '123',
-      },
-      {
-        date: '',
-        title: '',
-        content: '',
-      },
-    ],
-    nft: [
-      {
-        name: 'Super Connection',
-        img: 'https://img2.flowingcloud.cn/rankback/j1rl85hmixpmimje5jtt.*, video',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GC3DEUt34w',
-      },
-      {
-        name: 'Mail³  Notification',
-        img: 'https://img2.flowingcloud.cn/rankback/a315x2ohwzvowfw2rlf9.*, video',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCD1yUtjD4',
-      },
-      {
-        name: 'Subscribe Mirror via Mail3',
-        img: 'https://img2.flowingcloud.cn/rankback/8r6oji0pm1yi3vbkwlym.*, video',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCmb8Utwk9',
-      },
-      {
-        name: 'Mail³ ✖️ RoaoGame Partnership OAT Giveaway',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663299572281590951.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCk7uUtGee',
-      },
-      {
-        name: 'Ethereum Merge  Commemorative Stamps',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1663226563298228030.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCyZuUtXgK',
-      },
-      {
-        name: '"Galxe Passport" Souvenir Stamps',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662968646319465618.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCicRUtqb6',
-      },
-      {
-        name: 'Mail³  Grant Donors for GR14',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662542511968737738.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCSjDUtdKH',
-      },
-      {
-        name: 'Subscribe Mirror',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662254725951904392.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GC1Q7UtNs8',
-      },
-      {
-        name: 'Mail³ ✖️ CCTIP Partnership',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1662529284427033926.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCmZeUtZt8',
-      },
-      {
-        name: 'Mail³ ✖️ Mojor Partnership',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1661768348506253194.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCHHWUte4B',
-      },
-      {
-        name: 'Mail Handler',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665926900481398785.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCb8MUtEkp',
-      },
-      {
-        name: 'Mail³ ✖️ UD Partnership',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665398877811359646.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCvHGUt6sF',
-      },
-      {
-        name: '[MDP-01] Whether to use the GR14/15 fund to promote future marketing？',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1664581703237395297.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCqzLUt2JA',
-      },
-      {
-        name: 'Mailer of the Month',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665905365369089610.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCoKsUtGGa',
-      },
-      {
-        name: 'Rookie Mailer of the Month',
-        img: 'https://d257b89266utxb.cloudfront.net/galaxy/images/mail3/1665905310408600671.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCoJsUtG7C',
-      },
-      {
-        name: 'Mail3 Gitcoin Funding Governance',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1664176355567457846.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCg79UtgNR',
-      },
-      {
-        name: 'Mail³ ✖️ Cluster3 Partnership OAT Giveaway',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1663572317896162757.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCsDHUt9nT',
-      },
-      {
-        name: 'Mail³ Halloween Carnival',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1666923477707362851.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GC1LGUtdef',
-      },
-      {
-        name: 'MDP-02: Airdrop of $100 worth of domain name every month',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1667288068989041767.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCmPdUwZnn',
-      },
-      {
-        name: 'Web3 Subscription',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1667800054707738503.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCAyvUwE2i',
-      },
-      {
-        name: 'VOTER OF Mail³',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1668679064484170864.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCcb1UwjkD',
-      },
-      {
-        name: 'Sticker Contest Winner',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1669032161179357695.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GC8uYUwsKD',
-      },
-      {
-        name: 'MDP-0201: Which supported domain name will be airdropped for December 2022?',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1669239679838899602.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCYQQUwC2b',
-      },
-      {
-        name: ' AZADI-TOWER',
-        img: 'https://cdn-2.galxe.com/galaxy/images/mail3/1669339235815482737.png',
-        hadGot: false,
-        poapPlatform: 'https://galxe.com/mail3/campaign/GCuNWUwZuP',
-      },
-    ],
-  }
-
-  const bgImage = useMemo(() => PngDefaultBanner.src, [])
+  const bgImage = useMemo(
+    () => settings?.banner_url || PngDefaultBanner.src,
+    [settings]
+  )
 
   const communityList = useMemo(
     () =>
@@ -402,7 +272,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     <PageContainer>
       <Box
         h={{ base: '100px', md: '200px' }}
-        bgImage={settings?.banner_url || bgImage}
+        bgImage={bgImage}
         bgRepeat="no-repeat"
         bgSize="auto 100%"
         bgPosition="center"
@@ -563,8 +433,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             position="relative"
             zIndex="2"
           >
-            {tabItemTypes.map((type) => {
-              // eslint-disable-next-line @typescript-eslint/no-shadow
+            {tabList.map((type) => {
               const { name } = tabsConfig[type]
               return (
                 <Tab
@@ -665,7 +534,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             </TabPanel>
             <TabPanel p="0">
               <Wrap spacing={{ base: '15px', md: '26px' }}>
-                {mock.nft.map((item) => {
+                {items?.poapList.map((item) => {
                   const { name, img, poapPlatform } = item
                   return (
                     <WrapItem
