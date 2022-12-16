@@ -4,21 +4,20 @@ import path from 'path'
 import fs from 'fs'
 import axios from 'axios'
 import { isPrimitiveEthAddress } from 'shared'
-import getConfig from 'next/config'
-import PngAvatar from 'assets/png/default_avatar.png'
+// import getConfig from 'next/config'
 import { SERVER_URL } from '../../../constants/env'
 
-const { serverRuntimeConfig } = getConfig()
+// const { serverRuntimeConfig } = getConfig()
 
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
-// enum DefaultAvatarType {
-//   Normal = 'normal',
-//   Christmas = 'christmas',
-// }
+enum DefaultAvatarType {
+  Normal = 'normal',
+  Christmas = 'christmas',
+}
 
-// const currentDefaultAvatar = DefaultAvatarType.Christmas
+const currentDefaultAvatar = DefaultAvatarType.Christmas
 
 const getMail3Avatar = (ethAddress: string) =>
   axios.get<{ avatar: string }>(`${SERVER_URL}/avatar/${ethAddress}`)
@@ -58,7 +57,7 @@ function handleSendFile(
 }
 
 function getLocalImage(imgPath: string) {
-  const filePath = path.join(__dirname, '../../../../', imgPath)
+  const filePath = path.join(process.cwd(), imgPath)
   console.log(filePath)
   const imageBuffer = fs.readFileSync(filePath)
   return {
@@ -67,24 +66,33 @@ function getLocalImage(imgPath: string) {
   }
 }
 
-function getDirectories(p: string) {
-  return fs
-    .readdirSync(p)
-    .filter((file) => fs.statSync(`${p}/${file}`).isDirectory())
+const files: any = []
+
+function ThroughDirectory(Directory: any) {
+  fs.readdirSync(Directory).forEach((File) => {
+    const Absolute = path.join(Directory, File)
+    if (fs.statSync(Absolute).isDirectory()) {
+      files.push(Absolute)
+      return ThroughDirectory(Absolute)
+    }
+  })
 }
 
 async function address(req: NextApiRequest, res: NextApiResponse) {
-  console.log('__dirname', __dirname)
-  console.log('process', process.cwd())
-  console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
-  console.log('__filename', __filename)
-  console.log('PngAvatar', PngAvatar.src)
-  console.log(fs.readdirSync(process.cwd()))
-  console.log(fs.readdirSync(path.join(__dirname, '../../../../')))
-  console.log('getDirectories', getDirectories(process.cwd()))
+  // console.log('__dirname', __dirname)
+  // console.log('process', process.cwd())
+  // console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
+  // console.log('__filename', __filename)
+  // // console.log('PngAvatar', PngAvatar.src)
+  // console.log(fs.readdirSync(process.cwd()))
+  // console.log(fs.readdirSync(path.join(__dirname, '../../../../')))
+  // console.log('getDirectories', getDirectories(process.cwd()))
 
-  // const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
-  const avatarPath = PngAvatar.src
+  ThroughDirectory(process.cwd())
+  console.log(files)
+
+  const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
+  // const avatarPath = PngAvatar.src
 
   const userAddress = (req.query.address ?? '') as string
   if (isPrimitiveEthAddress(userAddress)) {
