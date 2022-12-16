@@ -4,10 +4,10 @@ import path from 'path'
 import fs from 'fs'
 import axios from 'axios'
 import { isPrimitiveEthAddress } from 'shared'
-// import getConfig from 'next/config'
+import getConfig from 'next/config'
 import { SERVER_URL } from '../../../constants/env'
 
-// const { serverRuntimeConfig } = getConfig()
+const { serverRuntimeConfig } = getConfig()
 
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
@@ -66,33 +66,35 @@ function getLocalImage(imgPath: string) {
   }
 }
 
-const files: any = []
-
 function ThroughDirectory(Directory: any) {
   // eslint-disable-next-line consistent-return
   fs.readdirSync(Directory).forEach((File) => {
     const Absolute = path.join(Directory, File)
     if (fs.statSync(Absolute).isDirectory()) {
-      files.push(Absolute)
+      console.log(Absolute)
       return ThroughDirectory(Absolute)
     }
   })
 }
 
 async function address(req: NextApiRequest, res: NextApiResponse) {
-  // console.log('__dirname', __dirname)
-  // console.log('process', process.cwd())
-  // console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
-  // console.log('__filename', __filename)
-  // // console.log('PngAvatar', PngAvatar.src)
-  // console.log(fs.readdirSync(process.cwd()))
-  // console.log(fs.readdirSync(path.join(__dirname, '../../../../')))
-  // console.log('getDirectories', getDirectories(process.cwd()))
+  console.log('__dirname', __dirname)
+  console.log('process', process.cwd())
+  console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
+  console.log('__filename', __filename)
+  console.log(fs.readdirSync(process.cwd()))
+  console.log(fs.readdirSync(serverRuntimeConfig.PROJECT_ROOT))
 
   ThroughDirectory(process.cwd())
-  console.log(files)
+  ThroughDirectory(path.join(__dirname, './../../../../'))
+  ThroughDirectory(serverRuntimeConfig.PROJECT_ROOT)
 
-  const avatarPath = `./../../public/avatar/${currentDefaultAvatar}.png`
+  const img = `${currentDefaultAvatar}.png`
+  const avatarPath = `./../../public/avatar/${img}`
+  // const filePath2 = path.join(process.cwd(), img)
+  // console.log('filePath2', filePath2)
+  // const filePath3 = path.join(__dirname, img)
+  // console.log('filePath3', filePath3)
   // const avatarPath = PngAvatar.src
 
   const userAddress = (req.query.address ?? '') as string
