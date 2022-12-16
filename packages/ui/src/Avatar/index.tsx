@@ -17,6 +17,8 @@ import {
   isPrimitiveEthAddress,
 } from 'shared'
 import { useEffect } from 'react'
+import PngAvatarChristmas from 'assets/png/default_avatar_christmas.png'
+import PngAvatar from 'assets/png/default_avatar.png'
 import { RawAvatar } from './rawAvatar'
 
 export interface AvatarProps extends RawAvatarProps {
@@ -36,6 +38,25 @@ export const avatarsAtom = atom<Record<string, string | undefined>>({})
 const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
 export const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
+
+enum DefaultAvatarType {
+  Normal = 'normal',
+  Christmas = 'christmas',
+}
+
+const getImageSrc = (img: string | { src: string }) => {
+  if (typeof img === 'string') return img
+  return img.src
+}
+
+const defaultAvatarMap = {
+  [DefaultAvatarType.Normal]: getImageSrc(PngAvatar),
+  [DefaultAvatarType.Christmas]: getImageSrc(PngAvatarChristmas),
+}
+
+const currentAvatarType = DefaultAvatarType.Christmas
+
+export const defaultAvatar = defaultAvatarMap[currentAvatarType]
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
@@ -70,7 +91,10 @@ export const Avatar: React.FC<AvatarProps> = ({
       onSuccess(d) {
         setAvatars((prev) => ({
           ...prev,
-          [address]: d.avatar || EMPTY_PLACE_HOLDER_SRC,
+          [address]:
+            d.avatar && d.avatar !== DEFAULT_AVATAR_SRC
+              ? d.avatar
+              : EMPTY_PLACE_HOLDER_SRC,
         }))
       },
       onError() {
@@ -110,7 +134,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         {...props}
       >
         <Image
-          src={DEFAULT_AVATAR_SRC}
+          src={defaultAvatar}
           w={width}
           h={width}
           crossOrigin="anonymous"
