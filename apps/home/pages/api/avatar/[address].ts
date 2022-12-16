@@ -1,13 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
-import path from 'path'
-import fs from 'fs'
 import axios from 'axios'
 import { isPrimitiveEthAddress } from 'shared'
-import getConfig from 'next/config'
-import { SERVER_URL } from '../../../constants/env'
 
-const { serverRuntimeConfig } = getConfig()
+import { SERVER_URL } from '../../../constants/env'
 
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
@@ -56,29 +52,19 @@ function handleSendFile(
   return false
 }
 
-function getLocalImage(imgPath: string) {
-  const filePath = path.join(serverRuntimeConfig.PROJECT_ROOT, imgPath)
-  const imageBuffer = fs.readFileSync(filePath)
-  return {
-    data: imageBuffer,
-    contentType: 'image/png',
-  }
-}
-
 async function address(req: NextApiRequest, res: NextApiResponse) {
-  const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
+  const defaultAvatarUrl = `http://${req.headers.host}/avatar/${currentDefaultAvatar}.png`
 
   const userAddress = (req.query.address ?? '') as string
   if (isPrimitiveEthAddress(userAddress)) {
     const avatarResponse = await getMail3Avatar(userAddress)
       .then((r) => r.data.avatar)
       .catch(() => '')
-      .then((avatar) => {
-        if (avatar && avatar !== DEFAULT_AVATAR_SRC)
-          return getAvatarByUrl<string | Buffer>(avatar)
-
-        return getLocalImage(avatarPath)
-      })
+      .then((avatar) =>
+        getAvatarByUrl<string | Buffer>(
+          avatar && avatar !== DEFAULT_AVATAR_SRC ? avatar : defaultAvatarUrl
+        )
+      )
 
     if (handleSendFile(res, avatarResponse)) {
       return
@@ -89,11 +75,12 @@ async function address(req: NextApiRequest, res: NextApiResponse) {
       .catch(() => '')
       .then((ethAddress) => getMail3Avatar(ethAddress))
       .then((avatar) => {
-        const url = avatar.data.avatar
-        if (url && url !== DEFAULT_AVATAR_SRC)
-          return getAvatarByUrl<string | Buffer>(url)
-
-        return getLocalImage(avatarPath)
+        const avatarUrl = avatar.data.avatar
+        return getAvatarByUrl<string | Buffer>(
+          avatarUrl && avatarUrl !== DEFAULT_AVATAR_SRC
+            ? avatarUrl
+            : defaultAvatarUrl
+        )
       })
 
     if (handleSendFile(res, ethAddressResponse)) {
