@@ -83,7 +83,7 @@ async function address(req: NextApiRequest, res: NextApiResponse) {
   console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
   console.log('__filename', __filename)
   console.log(fs.readdirSync(process.cwd()))
-  console.log(fs.readdirSync(serverRuntimeConfig.PROJECT_ROOT))
+  // console.log(fs.readdirSync(serverRuntimeConfig.PROJECT_ROOT))
 
   ThroughDirectory(process.cwd())
   ThroughDirectory(path.join(__dirname, './../../../../'))
