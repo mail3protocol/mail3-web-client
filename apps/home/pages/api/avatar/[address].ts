@@ -69,6 +69,7 @@ function getLocalImage(imgPath: string) {
 const files: any = []
 
 function ThroughDirectory(Directory: any) {
+  // eslint-disable-next-line consistent-return
   fs.readdirSync(Directory).forEach((File) => {
     const Absolute = path.join(Directory, File)
     if (fs.statSync(Absolute).isDirectory()) {
