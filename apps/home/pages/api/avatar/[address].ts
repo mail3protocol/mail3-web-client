@@ -73,6 +73,8 @@ async function address(req: NextApiRequest, res: NextApiResponse) {
   console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
   console.log('__filename', __filename)
   console.log('PngAvatar', PngAvatar.src)
+  console.log(fs.readdirSync('/'))
+  console.log(fs.readdirSync(path.join(__dirname, '../../../../')))
 
   // const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
   const avatarPath = PngAvatar.src
