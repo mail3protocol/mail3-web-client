@@ -5,6 +5,7 @@ import fs from 'fs'
 import axios from 'axios'
 import { isPrimitiveEthAddress } from 'shared'
 import getConfig from 'next/config'
+import PngAvatar from 'assets/png/default_avatar.png'
 import { SERVER_URL } from '../../../constants/env'
 
 const { serverRuntimeConfig } = getConfig()
@@ -12,12 +13,12 @@ const { serverRuntimeConfig } = getConfig()
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
-enum DefaultAvatarType {
-  Normal = 'normal',
-  Christmas = 'christmas',
-}
+// enum DefaultAvatarType {
+//   Normal = 'normal',
+//   Christmas = 'christmas',
+// }
 
-const currentDefaultAvatar = DefaultAvatarType.Christmas
+// const currentDefaultAvatar = DefaultAvatarType.Christmas
 
 const getMail3Avatar = (ethAddress: string) =>
   axios.get<{ avatar: string }>(`${SERVER_URL}/avatar/${ethAddress}`)
@@ -57,7 +58,8 @@ function handleSendFile(
 }
 
 function getLocalImage(imgPath: string) {
-  const filePath = path.join(serverRuntimeConfig.PROJECT_ROOT, imgPath)
+  const filePath = path.join(__dirname, '../../../../', imgPath)
+  console.log(filePath)
   const imageBuffer = fs.readFileSync(filePath)
   return {
     data: imageBuffer,
@@ -70,8 +72,10 @@ async function address(req: NextApiRequest, res: NextApiResponse) {
   console.log('process', process.cwd())
   console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
   console.log('__filename', __filename)
+  console.log('PngAvatar', PngAvatar.src)
 
-  const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
+  // const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
+  const avatarPath = PngAvatar.src
 
   const userAddress = (req.query.address ?? '') as string
   if (isPrimitiveEthAddress(userAddress)) {
