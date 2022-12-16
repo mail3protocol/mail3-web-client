@@ -92,7 +92,7 @@ async function address(req: NextApiRequest, res: NextApiResponse) {
   ThroughDirectory(process.cwd())
   console.log(files)
 
-  const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
+  const avatarPath = `./../../public/avatar/${currentDefaultAvatar}.png`
   // const avatarPath = PngAvatar.src
 
   const userAddress = (req.query.address ?? '') as string
