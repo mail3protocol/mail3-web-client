@@ -67,14 +67,21 @@ function getLocalImage(imgPath: string) {
   }
 }
 
+function getDirectories(p: string) {
+  return fs
+    .readdirSync(p)
+    .filter((file) => fs.statSync(`${p}/${file}`).isDirectory())
+}
+
 async function address(req: NextApiRequest, res: NextApiResponse) {
   console.log('__dirname', __dirname)
   console.log('process', process.cwd())
   console.log('serverRuntimeConfig', serverRuntimeConfig.PROJECT_ROOT)
   console.log('__filename', __filename)
   console.log('PngAvatar', PngAvatar.src)
-  console.log(fs.readdirSync('/'))
+  console.log(fs.readdirSync(process.cwd()))
   console.log(fs.readdirSync(path.join(__dirname, '../../../../')))
+  console.log('getDirectories', getDirectories(process.cwd()))
 
   // const avatarPath = `/public/avatar/${currentDefaultAvatar}.png`
   const avatarPath = PngAvatar.src
