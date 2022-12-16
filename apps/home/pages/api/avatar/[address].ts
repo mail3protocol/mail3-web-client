@@ -4,7 +4,10 @@ import path from 'path'
 import fs from 'fs'
 import axios from 'axios'
 import { isPrimitiveEthAddress } from 'shared'
+import getConfig from 'next/config'
 import { SERVER_URL } from '../../../constants/env'
+
+const { serverRuntimeConfig } = getConfig()
 
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
@@ -54,7 +57,7 @@ function handleSendFile(
 }
 
 function getLocalImage(imgPath: string) {
-  const filePath = path.join(process.cwd(), imgPath)
+  const filePath = path.join(serverRuntimeConfig.PROJECT_ROOT, imgPath)
   const imageBuffer = fs.readFileSync(filePath)
   return {
     data: imageBuffer,

@@ -20,4 +20,7 @@ module.exports = withTM({
 
     return config
   },
+  serverRuntimeConfig: {
+    PROJECT_ROOT: __dirname,
+  },
 })
