@@ -24,11 +24,12 @@ import {
   Spinner,
   Spacer,
   Link,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Avatar, SubscribeButton } from 'ui'
+import { Avatar, SubscribeButton, SubscribeCard } from 'ui'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
@@ -124,6 +125,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   const [t2] = useTranslation('common')
   const toast = useToast()
   const api = useAPI()
+  const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
   const { downloadScreenshot } = useScreenshot()
 
   const [isDid, setIsDid] = useState(false)
@@ -143,15 +145,15 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   > = {
     [ButtonType.Card]: {
       Icon: SvgShare,
-      label: t('profile.share'),
+      label: t('subcribe.share'),
     },
     [ButtonType.Copy]: {
       Icon: SvgCopy,
-      label: t('profile.copy'),
+      label: t('subcribe.copy'),
     },
     [ButtonType.Twitter]: {
       Icon: SvgTwitter,
-      label: t('profile.twitter'),
+      label: t('subcribe.twitter'),
     },
   }
 
@@ -172,6 +174,9 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
         if (!cardRef?.current) return
         try {
           downloadScreenshot(cardRef.current, 'share.png', {
+            width: 335,
+            height: 535,
+            scale: 1,
             ignoreElements: (dom) => {
               if (dom.id === 'screenshot-ignore-element') return true
               return false
@@ -302,6 +307,11 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     setIsDid(true)
   })
 
+  const buttonList = useMemo(() => {
+    if (isMaxWdith600) return [ButtonType.Twitter, ButtonType.Copy]
+    return [ButtonType.Twitter, ButtonType.Copy, ButtonType.Card]
+  }, [isMaxWdith600])
+
   if (!isDid) return null
 
   return (
@@ -323,37 +333,35 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           borderRadius="100px"
         >
           <HStack>
-            {[ButtonType.Twitter, ButtonType.Copy, ButtonType.Card].map(
-              (type: ButtonType) => {
-                const { Icon, label } = buttonConfig[type]
-                const onClick = actionMap[type]
-                return (
-                  <Popover
-                    arrowSize={8}
-                    key={type}
-                    trigger="hover"
-                    placement="top-start"
-                    size="md"
-                  >
-                    <PopoverTrigger>
-                      <Box as="button" p="10px" onClick={onClick}>
-                        <Icon />
-                      </Box>
-                    </PopoverTrigger>
-                    <PopoverContent width="auto">
-                      <PopoverArrow />
-                      <PopoverBody
-                        whiteSpace="nowrap"
-                        fontSize="14px"
-                        justifyContent="center"
-                      >
-                        {label}
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                )
-              }
-            )}
+            {buttonList.map((type: ButtonType) => {
+              const { Icon, label } = buttonConfig[type]
+              const onClick = actionMap[type]
+              return (
+                <Popover
+                  arrowSize={8}
+                  key={type}
+                  trigger="hover"
+                  placement="top-start"
+                  size="md"
+                >
+                  <PopoverTrigger>
+                    <Box as="button" p="10px" onClick={onClick}>
+                      <Icon />
+                    </Box>
+                  </PopoverTrigger>
+                  <PopoverContent width="auto">
+                    <PopoverArrow />
+                    <PopoverBody
+                      whiteSpace="nowrap"
+                      fontSize="14px"
+                      justifyContent="center"
+                    >
+                      {label}
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
+              )
+            })}
           </HStack>
         </Box>
       </Box>
@@ -646,6 +654,14 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           </TabPanels>
         </Flex>
       </Tabs>
+
+      <SubscribeCard
+        // isDev
+        mailAddress={mailAddress}
+        desc={settings?.description}
+        ref={cardRef}
+        nickname={nickname}
+      />
     </PageContainer>
   )
 }

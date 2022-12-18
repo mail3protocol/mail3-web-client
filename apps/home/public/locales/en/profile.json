@@ -5,5 +5,10 @@
         "share": "Share profile card",
         "copy": "Copy profile URL",
         "twitter": "Share on Twitter"
+    },
+    "subcribe": {
+        "share": "Share Subscibe card",
+        "copy": "Copy Subscibe Page URL",
+        "twitter": "Share on Twitter"
     }
 }
