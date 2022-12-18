@@ -27,7 +27,7 @@ import {
   useStyleConfig,
   VStack,
 } from '@chakra-ui/react'
-import { Avatar, ProfileCardHome } from 'ui'
+import { Avatar, SubscribeCard } from 'ui'
 import {
   CommunityQRcodeStyle,
   TrackEvent,
@@ -43,11 +43,8 @@ import axios from 'axios'
 import QrCode from 'qrcode.react'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
-import { ClusterInfoResp } from 'models'
 import { Trans, useTranslation } from 'react-i18next'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { ReactComponent as SvgRank } from 'assets/svg/rank.svg'
-import { ReactComponent as SvgCollect } from 'assets/svg/collect.svg'
 import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
 import { truncateAddress } from 'shared'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
@@ -145,21 +142,6 @@ export const Information: React.FC = () => {
       },
     }
   )
-  const { data: nftInfo } = useQuery(
-    ['cluster', account],
-    async () => {
-      const res = await axios.get<ClusterInfoResp>(
-        `https://openApi.cluster3.net/api/v1/communityUserInfo?uuid=b45339c7&address=${account}`
-      )
-      return res.data.data
-    },
-    {
-      refetchIntervalInBackground: false,
-      refetchOnMount: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  )
 
   useQuery(
     ['userSetting', account],
@@ -173,7 +155,6 @@ export const Information: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        console.log(d)
         remoteSettingRef.current = d
         setBannerUrl(d.banner_url || BannerPng)
         setDescription(d.description)
@@ -184,10 +165,12 @@ export const Information: React.FC = () => {
   )
 
   const { data: profileImage } = useQuery(
-    ['RenderProfileImage', account, nftInfo, currentAvatar],
+    ['RenderProfileImage', account, currentAvatar],
     () =>
       takeScreenshot(cardRef.current!, {
-        scale: 3,
+        scale: 2,
+        width: 335,
+        height: 535,
       }),
     {
       enabled: !!cardRef.current && !!account,
@@ -498,11 +481,12 @@ export const Information: React.FC = () => {
                     flexDirection="column"
                   >
                     <Flex justify="center" mb="16px" h="165px">
-                      <ProfileCardHome
-                        homeUrl={HOME_URL}
+                      <SubscribeCard
+                        // isDev
                         mailAddress={
                           userInfo?.address || `${account}@${MAIL_SERVER_URL}`
                         }
+                        desc={description}
                         ref={cardRef}
                         nickname={truncateAddress(
                           userInfo?.name ||
@@ -512,51 +496,7 @@ export const Information: React.FC = () => {
                           '_'
                         )}
                         onChangeAvatarCallback={setCurrentAvatar}
-                      >
-                        <Center
-                          w="325px"
-                          h="64px"
-                          background="#F3F3F3"
-                          borderRadius="16px"
-                          color="#000000"
-                          fontSize="12px"
-                          fontWeight="500"
-                          justifyContent="space-around"
-                          lineHeight={1}
-                        >
-                          <Box textAlign="center">
-                            <Center mt="-7px">
-                              <SvgRank />
-                            </Center>
-                            <Box p="3px" mt="-5px">
-                              {t('collection_rank')}
-                            </Box>
-                            <Box mt="3px">{nftInfo?.ranking}</Box>
-                          </Box>
-                          <Box>
-                            <Center mt="-7px">
-                              <SvgCollect />
-                            </Center>
-                            <Center p="3px" mt="-5px">
-                              {t('collected')}
-                            </Center>
-                            <Center mt="3px">
-                              <Box color="#4E52F5" mr="2px">
-                                {useMemo(
-                                  () =>
-                                    nftInfo?.poapList.filter((e) => e.hadGot)
-                                      .length ?? 0,
-                                  [nftInfo?.poapList]
-                                )}
-                              </Box>
-                              /{' '}
-                              <Box ml="2px">
-                                {nftInfo?.poapList.length ?? 0}
-                              </Box>
-                            </Center>
-                          </Box>
-                        </Center>
-                      </ProfileCardHome>
+                      />
                       {profileImage ? (
                         <Image
                           src={profileImage}
