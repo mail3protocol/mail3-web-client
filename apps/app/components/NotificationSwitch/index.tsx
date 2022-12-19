@@ -157,7 +157,7 @@ export const NotificationSwitch: React.FC = () => {
                         if (newPermission === 'granted') {
                           // play animation
                           confettiAni()?.autoCleanup(4000, () => {
-                            // window.location.reload()
+                            window.location.reload()
                           })
                         }
                         await onChangePermission(newPermission)
