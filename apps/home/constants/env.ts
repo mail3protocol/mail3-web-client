@@ -67,3 +67,5 @@ export const SUBSCRIBE_BUTTON_MIRROR_URL =
 export const SUBSCRIBE_BUTTON_BACKEND_URL =
   process.env.NEXT_PUBLIC_SUBSCRIBE_BACKEND_BUTTON_URL ||
   'https://subscribe.mail3.me'
+
+export const HOME_URL = process.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'

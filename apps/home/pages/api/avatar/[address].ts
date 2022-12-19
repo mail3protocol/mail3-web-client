@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 import { isPrimitiveEthAddress } from 'shared'
 
-import { SERVER_URL } from '../../../constants/env'
+import { SERVER_URL, HOME_URL } from '../../../constants/env'
 
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
@@ -53,7 +53,7 @@ function handleSendFile(
 }
 
 async function address(req: NextApiRequest, res: NextApiResponse) {
-  const defaultAvatarUrl = `http://${req.headers.host}/avatar/${currentDefaultAvatar}.png`
+  const defaultAvatarUrl = `${HOME_URL}/avatar/${currentDefaultAvatar}.png`
 
   const userAddress = (req.query.address ?? '') as string
   if (isPrimitiveEthAddress(userAddress)) {
