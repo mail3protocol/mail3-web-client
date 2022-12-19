@@ -166,7 +166,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
       },
       [ButtonType.Twitter]: () => {
         shareToTwitter({
-          text: 'Hey, contact me using my Mail3 email address @mail3dao',
+          text: 'Hey, visit my Subscription Page to view my latest content @mail3dao',
           url: shareUrl,
         })
       },
