@@ -54,6 +54,7 @@ import BannerPng from '../assets/banner.png'
 import { QueryKey } from '../api/QueryKey'
 import { useAPI } from '../hooks/useAPI'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
+import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
 import { APP_URL, HOME_URL } from '../constants/env/url'
 import { MAIL_SERVER_URL } from '../constants/env/mailServer'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -128,6 +129,7 @@ export const Information: React.FC = () => {
   const remoteSettingRef = useRef<UserSettingResponse | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
+  const onUpdateTipsPanel = useUpdateTipsPanel()
   const { takeScreenshot, downloadScreenshot } = useScreenshot()
 
   const { data: userInfoData } = useQuery(
@@ -264,6 +266,19 @@ export const Information: React.FC = () => {
       setIsUploading(false)
     }
   }
+
+  useEffect(() => {
+    onUpdateTipsPanel(
+      <Trans
+        i18nKey="help_qr_code"
+        t={t}
+        components={{
+          h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
+          p: <Text fontSize="14px" fontWeight="400" color="#737373;" />,
+        }}
+      />
+    )
+  }, [])
 
   return (
     <Container as={Grid} gridTemplateColumns="3fr 1fr" gap="20px">
@@ -463,6 +478,9 @@ export const Information: React.FC = () => {
                   </Center>
                 </Center>
               </Center>
+              <Text mt="8px" fontWeight="400" fontSize="14px" lineHeight="20px">
+                {t('upload.appear')}
+              </Text>
 
               <FormControl w="400px">
                 <Title>{t('qr_code')}</Title>
@@ -577,7 +595,13 @@ export const Information: React.FC = () => {
                 lineHeight="20px"
                 p="5px 0"
               >
-                {t('appear')}
+                <Trans
+                  t={t}
+                  i18nKey="appear"
+                  components={{
+                    span: <Box as="span" color="#FF6B00" />,
+                  }}
+                />
               </Text>
               <Text fontWeight="400" fontSize="12px" lineHeight="18px">
                 <Trans
@@ -588,7 +612,7 @@ export const Information: React.FC = () => {
                       <Link
                         fontWeight={700}
                         color="primary.900"
-                        href={APP_URL}
+                        href="https://rank.cluster3.net"
                         target="_blank"
                       />
                     ),
