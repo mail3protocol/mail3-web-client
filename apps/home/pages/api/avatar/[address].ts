@@ -1,19 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import { isPrimitiveEthAddress } from 'shared'
+import { envStorage, isPrimitiveEthAddress } from 'shared'
 
 import { SERVER_URL, HOME_URL } from '../../../constants/env'
 
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
-enum DefaultAvatarType {
-  Normal = 'normal',
-  Christmas = 'christmas',
-}
-
-const currentDefaultAvatar = DefaultAvatarType.Christmas
+const currentDefaultAvatar = envStorage.getCurrentAvatar()
 
 const getMail3Avatar = (ethAddress: string) =>
   axios.get<{ avatar: string }>(`${SERVER_URL}/avatar/${ethAddress}`)

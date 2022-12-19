@@ -21,6 +21,7 @@ import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
 import { useQuery } from 'react-query'
 import { avatarsAtom, DEFAULT_AVATAR_SRC, defaultAvatar } from 'ui/src/Avatar'
 import axios from 'axios'
+import { useUpdateAtom } from 'jotai/utils'
 import { RoutePath } from '../../route/path'
 import { useAPI, useHomeAPI } from '../../hooks/useAPI'
 import { userPropertiesAtom } from '../../hooks/useLogin'
@@ -89,7 +90,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const api = useAPI()
   const toast = useToast()
   const navi = useNavigate()
-  const [, setAvatars] = useAtom(avatarsAtom)
+  const setAvatars = useUpdateAtom(avatarsAtom)
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null)
 
   const [userProps, setUserProps] = useAtom(userPropertiesAtom)

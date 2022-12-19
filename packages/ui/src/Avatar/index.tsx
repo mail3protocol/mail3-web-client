@@ -15,6 +15,8 @@ import {
   getMail3Avatar,
   getPrimitiveAddress,
   isPrimitiveEthAddress,
+  DefaultAvatarType,
+  envStorage,
 } from 'shared'
 import { useEffect } from 'react'
 import PngAvatarChristmas from 'assets/png/default_avatar_christmas.png'
@@ -39,24 +41,15 @@ const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
 export const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
-enum DefaultAvatarType {
-  Normal = 'normal',
-  Christmas = 'christmas',
-}
-
-const getImageSrc = (img: string | { src: string }) => {
-  if (typeof img === 'string') return img
-  return img.src
-}
+const getImageSrc = (img: string | { src: string }) =>
+  typeof img === 'string' ? img : img.src
 
 const defaultAvatarMap = {
   [DefaultAvatarType.Normal]: getImageSrc(PngAvatar),
   [DefaultAvatarType.Christmas]: getImageSrc(PngAvatarChristmas),
 }
 
-const currentAvatarType = DefaultAvatarType.Christmas
-
-export const defaultAvatar = defaultAvatarMap[currentAvatarType]
+export const defaultAvatar = defaultAvatarMap[envStorage.getCurrentAvatar()]
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
