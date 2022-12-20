@@ -42,7 +42,7 @@ class EnvironmentVariableStorage {
 
   constructor() {
     this.serverUrl = 'https://api.mail3.me/api/v1'
-    this.currentAvatar = DefaultAvatarType.Normal
+    this.currentAvatar = DefaultAvatarType.Christmas
   }
 
   public setServerUrl(url: string) {
