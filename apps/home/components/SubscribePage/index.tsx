@@ -517,7 +517,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
 
         <Flex
           justifyContent="center"
-          p={{ base: '10px', md: '20px 0px' }}
+          p={{ base: '20px', md: '20px 0px' }}
           minH="200px"
         >
           <TabPanels>
