@@ -38,6 +38,7 @@ export interface AvatarProps extends RawAvatarProps {
 export const avatarsAtom = atom<Record<string, string | undefined>>({})
 
 const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
+// Constant will never change
 export const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 

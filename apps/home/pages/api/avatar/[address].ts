@@ -4,7 +4,7 @@ import axios from 'axios'
 import { envStorage, isPrimitiveEthAddress } from 'shared'
 
 import { SERVER_URL, HOME_URL } from '../../../constants/env'
-
+// Constant will never change
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
