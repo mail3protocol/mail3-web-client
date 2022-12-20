@@ -1,8 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import { isPrimitiveEthAddress } from 'shared'
-import { SERVER_URL } from '../../../constants/env'
+import { envStorage, isPrimitiveEthAddress } from 'shared'
+
+import { SERVER_URL, HOME_URL } from '../../../constants/env'
+// Solve problems left over by history
+const DEFAULT_AVATAR_SRC =
+  'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
+
+const currentDefaultAvatar = envStorage.getCurrentAvatar()
 
 const getMail3Avatar = (ethAddress: string) =>
   axios.get<{ avatar: string }>(`${SERVER_URL}/avatar/${ethAddress}`)
@@ -42,12 +48,18 @@ function handleSendFile(
 }
 
 async function address(req: NextApiRequest, res: NextApiResponse) {
+  const defaultAvatarUrl = `${HOME_URL}/avatar/${currentDefaultAvatar}.png`
+
   const userAddress = (req.query.address ?? '') as string
   if (isPrimitiveEthAddress(userAddress)) {
     const avatarResponse = await getMail3Avatar(userAddress)
       .then((r) => r.data.avatar)
       .catch(() => '')
-      .then((avatar) => getAvatarByUrl<string | Buffer>(avatar))
+      .then((avatar) =>
+        getAvatarByUrl<string | Buffer>(
+          avatar && avatar !== DEFAULT_AVATAR_SRC ? avatar : defaultAvatarUrl
+        )
+      )
 
     if (handleSendFile(res, avatarResponse)) {
       return
@@ -57,7 +69,14 @@ async function address(req: NextApiRequest, res: NextApiResponse) {
       .then((r) => r.data.eth_address)
       .catch(() => '')
       .then((ethAddress) => getMail3Avatar(ethAddress))
-      .then((avatar) => getAvatarByUrl<string | Buffer>(avatar.data.avatar))
+      .then((avatar) => {
+        const avatarUrl = avatar.data.avatar
+        return getAvatarByUrl<string | Buffer>(
+          avatarUrl && avatarUrl !== DEFAULT_AVATAR_SRC
+            ? avatarUrl
+            : defaultAvatarUrl
+        )
+      })
 
     if (handleSendFile(res, ethAddressResponse)) {
       return

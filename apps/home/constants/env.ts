@@ -1,4 +1,4 @@
-import { envStorage } from 'shared'
+import { DefaultAvatarType, envStorage } from 'shared'
 
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'
 export const TWITTER_URL =
@@ -55,8 +55,6 @@ export const API_ALLOW_ORIGIN = process.env.API_ALLOW_ORIGIN?.split(',').map(
   (o) => o.trim()
 ) || [COMMUNITY_URL, APP_URL]
 
-envStorage.setServerUrl(SERVER_URL)
-
 export const SUBSCRIBE_MAIL3_UUID =
   process.env.SUBSCRIBE_MAIL3_UUID || '63398e16-6541-45a6-a497-d17775d5bfd6'
 
@@ -67,3 +65,11 @@ export const SUBSCRIBE_BUTTON_MIRROR_URL =
 export const SUBSCRIBE_BUTTON_BACKEND_URL =
   process.env.NEXT_PUBLIC_SUBSCRIBE_BACKEND_BUTTON_URL ||
   'https://subscribe.mail3.me'
+
+export const HOME_URL = process.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'
+
+export const AVATAR_TYPE =
+  process.env.NEXT_PUBLIC_AVATAR_TYPE || DefaultAvatarType.Normal
+
+envStorage.setCurrentAvatar(AVATAR_TYPE as DefaultAvatarType)
+envStorage.setServerUrl(SERVER_URL)
