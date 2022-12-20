@@ -31,11 +31,18 @@ export const getCybertinoConnect = (address: string) =>
 export const generateAvatarSrc = (address: string) =>
   `https://source.boringavatars.com/marble/120/${address}?colors=92A1C6,146A7C,F0AB3D,C271B4,C20D90&square=false`
 
+export enum DefaultAvatarType {
+  Normal = 'normal',
+  Christmas = 'christmas',
+}
 class EnvironmentVariableStorage {
   private serverUrl: string
 
+  private currentAvatar: DefaultAvatarType
+
   constructor() {
     this.serverUrl = 'https://api.mail3.me/api/v1'
+    this.currentAvatar = DefaultAvatarType.Christmas
   }
 
   public setServerUrl(url: string) {
@@ -44,6 +51,14 @@ class EnvironmentVariableStorage {
 
   public getServerUrl() {
     return this.serverUrl
+  }
+
+  public setCurrentAvatar(type: DefaultAvatarType) {
+    this.currentAvatar = type
+  }
+
+  public getCurrentAvatar() {
+    return this.currentAvatar
   }
 }
 

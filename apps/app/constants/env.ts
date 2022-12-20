@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { envStorage } from 'shared'
+import { DefaultAvatarType, envStorage } from 'shared'
 import { MAIL_SERVER_URL } from './env/mailServer'
 
 export * from './env/apps'
@@ -130,8 +130,8 @@ export const BIT_DOMAIN =
 export const UD_DOMAIN =
   import.meta.env.NEXT_PUBLIC_UD_DOMAIN || 'https://unstoppabledomains.com/'
 
-envStorage.setServerUrl(SERVER_URL)
+export const AVATAR_TYPE =
+  import.meta.env.NEXT_PUBLIC_AVATAR_TYPE || DefaultAvatarType.Normal
 
-export const DEFAULT_AVATAR_SRC =
-  import.meta.env.DEFAULT_AVATAR_SRC ||
-  'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
+envStorage.setCurrentAvatar(AVATAR_TYPE as DefaultAvatarType)
+envStorage.setServerUrl(SERVER_URL)

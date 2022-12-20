@@ -19,12 +19,12 @@ import { useNavigate } from 'react-router-dom'
 import { useAtom } from 'jotai'
 import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
 import { useQuery } from 'react-query'
-import { avatarsAtom } from 'ui/src/Avatar'
+import { avatarsAtom, DEFAULT_AVATAR_SRC, defaultAvatar } from 'ui/src/Avatar'
 import axios from 'axios'
+import { useUpdateAtom } from 'jotai/utils'
 import { RoutePath } from '../../route/path'
 import { useAPI, useHomeAPI } from '../../hooks/useAPI'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import { DEFAULT_AVATAR_SRC } from '../../constants'
 
 type FileUploadProps = {
   register: UseFormRegisterReturn
@@ -90,9 +90,8 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   const api = useAPI()
   const toast = useToast()
   const navi = useNavigate()
-  const [avatars, setAvatars] = useAtom(avatarsAtom)
-
-  const [avatarSrc, setAvatarSrc] = useState('')
+  const setAvatars = useUpdateAtom(avatarsAtom)
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null)
 
   const [userProps, setUserProps] = useAtom(userPropertiesAtom)
 
@@ -107,7 +106,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
-        if (d.avatar) setAvatarSrc(d.avatar)
+        if (d.avatar && d.avatar !== DEFAULT_AVATAR_SRC) setAvatarSrc(d.avatar)
         if (d.nickname) setValue('nickname', d.nickname)
       },
     }
@@ -122,11 +121,11 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
     }
     setIsSaveLoading(true)
     try {
-      await api.setProfile(data.nickname, avatarSrc)
+      await api.setProfile(data.nickname, avatarSrc ?? '')
       toast('Settings are saved', {
         status: 'success',
       })
-      if (userProps?.defaultAddress) {
+      if (userProps?.defaultAddress && avatarSrc) {
         setAvatars((prev) => ({
           ...prev,
           [userProps.defaultAddress.split('@')[0]]: avatarSrc,
@@ -161,7 +160,6 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
           ? address.split('.')[0]
           : address
       }
-      setAvatarSrc(avatars?.[address] || DEFAULT_AVATAR_SRC)
       setValue('nickname', defaultNickname)
     }
   }, [userProps, isLoading, info])
@@ -286,7 +284,11 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
               overflow="hidden"
               bgColor="#fff"
             >
-              <Image src={avatarSrc} objectFit="cover" crossOrigin="" />
+              <Image
+                src={avatarSrc || defaultAvatar}
+                objectFit="cover"
+                crossOrigin=""
+              />
             </Box>
 
             <Box mt="16px">
