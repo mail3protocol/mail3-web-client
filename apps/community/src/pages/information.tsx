@@ -654,7 +654,7 @@ export const Information: React.FC = () => {
                       value={userInfo?.address || userInfoData?.address}
                     />
                   </FormControl>
-                  <FormControl isInvalid={description.length > 100}>
+                  <FormControl>
                     <FormLabel>{t('description')}</FormLabel>
                     <Textarea
                       placeholder={t('description_placeholder')}
@@ -662,8 +662,8 @@ export const Information: React.FC = () => {
                       onChange={({ target: { value } }) =>
                         setDescription(value)
                       }
+                      maxLength="100"
                     />
-                    <FormErrorMessage>Max 100</FormErrorMessage>
                   </FormControl>
                   <FormControl>
                     <FormLabel>Mail Me Button</FormLabel>
