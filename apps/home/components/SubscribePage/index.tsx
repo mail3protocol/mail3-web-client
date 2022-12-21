@@ -404,8 +404,8 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             variant="unstyled"
             border="1px solid #000000"
             fontSize="14px"
-            bg="#fff"
-            color="#000"
+            bg="#000"
+            color="#fff"
             borderRadius="100px"
             display="flex"
             alignItems="center"
@@ -426,8 +426,13 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             p="4px 4px 4px 8px"
             background="#F0F0F0"
             borderRadius="100px"
+            maxW="100%"
           >
-            <Text fontWeight="400" fontSize="16px" lineHeight="24px">
+            <Text
+              fontWeight="400"
+              fontSize={{ base: '14px', md: '16px' }}
+              lineHeight="24px"
+            >
               {mailAddress}
               <Box
                 ml="10px"
@@ -436,8 +441,10 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
                 verticalAlign="middle"
                 target="_blank"
                 href={`${APP_URL}/message/edit?utm_source=${HOME_URL}&utm_medium=click_mail_me_button&to=${mailAddress}`}
+                w={{ base: '24px', md: '36px' }}
+                h={{ base: '24px', md: '36px' }}
               >
-                <Image src={PngMailMeButton.src} />
+                <Image src={PngMailMeButton.src} w="100%" h="100%" />
               </Box>
             </Text>
           </Box>
@@ -467,7 +474,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           </Box>
         ) : null}
       </Box>
-      <Tabs position="relative" mt="30px" p={{ base: '0', md: '0px 58px' }}>
+      <Tabs position="relative" mt="30px" p={{ base: '0px', md: '0px 58px' }}>
         <TabList
           className="tablist"
           w={{ base: '100%', md: 'auto' }}
@@ -476,6 +483,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           justifyContent="flex-start"
           border="none"
           position="relative"
+          px={{ base: '10px', md: 0 }}
         >
           <Box
             w="100%"

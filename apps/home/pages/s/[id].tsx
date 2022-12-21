@@ -157,7 +157,7 @@ const ProfilePage: NextPage<{
   return (
     <>
       <Head>
-        <title>Mail3: Subsribe Page - {emailAddress}</title>
+        <title>Mail3: Subsribe Page</title>
       </Head>
       <Flex padding={0} flexDirection="column" position="relative">
         <Navbar address={account || address} />
