@@ -6,7 +6,6 @@ import {
   Center,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Grid,
   Heading,
@@ -662,7 +661,7 @@ export const Information: React.FC = () => {
                       onChange={({ target: { value } }) =>
                         setDescription(value)
                       }
-                      maxLength="100"
+                      maxLength={100}
                     />
                   </FormControl>
                   <FormControl>

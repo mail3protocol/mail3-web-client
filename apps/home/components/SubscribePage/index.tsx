@@ -36,7 +36,6 @@ import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-whit
 import { useTranslation } from 'next-i18next'
 import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
-import dynamic from 'next/dynamic'
 import axios from 'axios'
 import { ClusterCommunityResp } from 'models'
 import {
@@ -46,14 +45,13 @@ import {
   shareToTwitter,
   truncateMiddle,
 } from 'shared'
-import { APP_URL } from '../../constants/env'
+import { APP_URL, HOME_URL } from '../../constants/env'
 import PngDefaultBanner from '../../assets/png/subscribe/bg.png'
+import PngMailMeButton from '../../assets/png/subscribe/mail-me-button.png'
 import PngEmpty from '../../assets/png/empty.png'
 import PngCluster3 from '../../assets/png/cluster3.png'
 import { useAPI } from '../../api'
 import { CommunityCard } from './card'
-
-const Mail3MeButton = dynamic(() => import('./mail3MeButton'), { ssr: false })
 
 const CONTAINER_MAX_WIDTH = 1220
 
@@ -107,6 +105,14 @@ const PageContainer = styled(Box)`
     padding: 0;
     box-shadow: none;
     margin: 0;
+  }
+
+  .tablist {
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none;
+    }
   }
 `
 
@@ -423,9 +429,16 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
           >
             <Text fontWeight="400" fontSize="16px" lineHeight="24px">
               {mailAddress}
-              {settings?.mmb_state === 'enabled' ? (
-                <Mail3MeButton to={mailAddress} />
-              ) : null}
+              <Box
+                ml="10px"
+                as="a"
+                display="inline-block"
+                verticalAlign="middle"
+                target="_blank"
+                href={`${APP_URL}/message/edit?utm_source=${HOME_URL}&utm_medium=click_mail_me_button&to=${mailAddress}`}
+              >
+                <Image src={PngMailMeButton.src} />
+              </Box>
             </Text>
           </Box>
         </Flex>
