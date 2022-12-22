@@ -347,8 +347,8 @@ export default {
     help_qr_code: `<h3>Profile QR Code</h3>
         <p>Download profilepage card or QR code for promotion and sharing.</p>
  `,
-    pixels: 'Images must be at least 2440X480 pixels',
-    exceed: 'Images should not exceed 5M',
+    pixels: 'Images must be at least <span>2440X480</span> pixels',
+    exceed: 'Images should not exceed <span>5M</span>',
   },
   send_message: {
     title: 'History',

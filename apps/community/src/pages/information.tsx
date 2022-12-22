@@ -247,11 +247,11 @@ export const Information: React.FC = () => {
         const file = files[0]
         const isErrorSize = await verifyImageSize(file, 2440 / 2, 480 / 2)
         if (!isErrorSize) {
-          throw new Error('Images must be at least 2440X480 pixels')
+          throw new Error('pixels')
         }
         const fsMb = file.size / (1024 * 1024)
         if (fsMb > MAX_FILE_SIZE) {
-          throw new Error('Images should not exceed 5M ')
+          throw new Error('exceed')
         }
         const { data } = await homeApi.uploadImage(file)
         setBannerUrl(data.url)
@@ -262,10 +262,19 @@ export const Information: React.FC = () => {
             alertProps: { colorScheme: 'red' },
           })
         } else {
-          toast(error.message, {
-            status: 'error',
-            alertProps: { colorScheme: 'red' },
-          })
+          toast(
+            <Trans
+              t={t}
+              i18nKey={error.message}
+              components={{
+                span: <Box as="span" color="#FF6B00" />,
+              }}
+            />,
+            {
+              status: 'error',
+              alertProps: { colorScheme: 'red' },
+            }
+          )
         }
       }
       setIsUploading(false)
