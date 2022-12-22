@@ -87,6 +87,12 @@ const Title = styled(Box)`
   padding: 16px 0 8px;
 `
 
+const SwitchWrap = styled(Switch)`
+  .chakra-switch__track[data-checked] {
+    background: #4e51f4;
+  }
+`
+
 const verifyImageSize = (imgFile: File, width: number, height: number) =>
   new Promise((resolve) => {
     const img: HTMLImageElement = document.createElement('img')
@@ -245,7 +251,7 @@ export const Information: React.FC = () => {
         }
         const fsMb = file.size / (1024 * 1024)
         if (fsMb > MAX_FILE_SIZE) {
-          throw new Error('Max file size 5mb')
+          throw new Error('Images should not exceed 5M ')
         }
         const { data } = await homeApi.uploadImage(file)
         setBannerUrl(data.url)
@@ -308,7 +314,7 @@ export const Information: React.FC = () => {
         </Flex>
         <Tabs w="full" variant="normal" mt="38px">
           <TabList>
-            <Tab>{t('tabs.Branding_Promotion')}</Tab>
+            <Tab>{t('tabs.Profile')}</Tab>
             <Tab>{t('tabs.Items')}</Tab>
             <Tab>{t('tabs.Basic_info')}</Tab>
           </TabList>
@@ -589,7 +595,7 @@ export const Information: React.FC = () => {
                 />
               </FormControl>
               <Text
-                fontWeight="500"
+                fontWeight="600"
                 fontSize="12px"
                 lineHeight="20px"
                 p="5px 0"
@@ -670,7 +676,7 @@ export const Information: React.FC = () => {
                       <Box fontWeight="500" fontSize="12px" lineHeight="15px">
                         {t('display_Mail_Me_Button')}
                       </Box>
-                      <Switch
+                      <SwitchWrap
                         isChecked={mmbState}
                         onChange={({ target: { checked } }) =>
                           setMmbState(checked)

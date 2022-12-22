@@ -128,7 +128,6 @@ export const NewMessage = () => {
             <FormLabel>Abstract</FormLabel>
             <Textarea
               h="120px"
-              placeholder={t('abstract_holder')}
               value={abstract}
               maxLength={100}
               fontSize="14px"
