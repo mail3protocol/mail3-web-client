@@ -678,6 +678,8 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
 
       <SubscribeCard
         // isDev
+        bannerUrl={settings?.banner_url}
+        qrUrl={`${APP_URL}/subscribe/${uuid}`}
         mailAddress={mailAddress}
         desc={settings?.description}
         ref={cardRef}

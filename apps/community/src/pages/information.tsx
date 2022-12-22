@@ -11,7 +11,6 @@ import {
   Heading,
   HStack,
   Icon,
-  Image,
   Input,
   Link,
   Switch,
@@ -120,10 +119,9 @@ export const Information: React.FC = () => {
   const userInfo = useUserInfo()
   const setUserInfo = useSetUserInfo()
   const toast = useToast()
-  const [currentAvatar, setCurrentAvatar] = useState<string | undefined>(
-    undefined
-  )
+
   const [bannerUrl, setBannerUrl] = useState(BannerPng)
+  const [bannerUrlOnline, setBannerUrlOnline] = useState(BannerPng)
   const [description, setDescription] = useState('')
   const [itemsLink, setItemsLink] = useState('')
   const [mmbState, setMmbState] = useState(true)
@@ -135,7 +133,7 @@ export const Information: React.FC = () => {
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const onUpdateTipsPanel = useUpdateTipsPanel()
-  const { takeScreenshot, downloadScreenshot } = useScreenshot()
+  const { downloadScreenshot } = useScreenshot()
 
   const { data: userInfoData } = useQuery(
     [QueryKey.GetUserInfo],
@@ -150,7 +148,7 @@ export const Information: React.FC = () => {
     }
   )
 
-  useQuery(
+  const { isLoading } = useQuery(
     ['userSetting', account],
     async () => {
       const res = await api.getUserSetting()
@@ -164,23 +162,11 @@ export const Information: React.FC = () => {
       onSuccess(d) {
         remoteSettingRef.current = d
         setBannerUrl(d.banner_url || BannerPng)
+        setBannerUrlOnline(d.banner_url || BannerPng)
         setDescription(d.description)
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
       },
-    }
-  )
-
-  const { data: profileImage } = useQuery(
-    ['RenderProfileImage', account, currentAvatar],
-    () =>
-      takeScreenshot(cardRef.current!, {
-        scale: 2,
-        width: 335,
-        height: 535,
-      }),
-    {
-      enabled: !!cardRef.current && !!account,
     }
   )
 
@@ -223,6 +209,8 @@ export const Information: React.FC = () => {
     try {
       setIsPublishing(true)
       await api.updateUserSetting(requestBody)
+      remoteSettingRef.current = requestBody
+      setBannerUrlOnline(requestBody.banner_url)
       toast('Publish Successfully', {
         status: 'success',
         alertProps: { colorScheme: 'green' },
@@ -245,7 +233,7 @@ export const Information: React.FC = () => {
       setIsUploading(true)
       try {
         const file = files[0]
-        const isErrorSize = await verifyImageSize(file, 2440 / 2, 480 / 2)
+        const isErrorSize = await verifyImageSize(file, 2440, 480)
         if (!isErrorSize) {
           throw new Error('pixels')
         }
@@ -423,7 +411,7 @@ export const Information: React.FC = () => {
                 w="610px"
                 h="100px"
                 justifyContent="center"
-                bgImage={bannerUrl}
+                bgImage={isLoading ? '' : bannerUrl}
                 bgSize="100% auto"
                 bgRepeat="no-repeat"
                 bgPosition="center"
@@ -512,38 +500,45 @@ export const Information: React.FC = () => {
                     p="16px"
                     flexDirection="column"
                   >
-                    <Flex justify="center" mb="16px" h="165px">
-                      <SubscribeCard
-                        // isDev
-                        mailAddress={
-                          userInfo?.address || `${account}@${MAIL_SERVER_URL}`
-                        }
-                        desc={description}
-                        ref={cardRef}
-                        nickname={truncateAddress(
-                          userInfo?.name ||
-                            userInfoData?.name ||
-                            userInfo?.address.split('@')[0] ||
-                            '',
-                          '_'
-                        )}
-                        onChangeAvatarCallback={setCurrentAvatar}
-                      />
-                      {profileImage ? (
-                        <Image
-                          src={profileImage}
-                          alt="profile_card"
-                          h="full"
-                          w="auto"
-                        />
-                      ) : null}
+                    <Flex justify="center" mb="16px" h="180px">
+                      <Box w="112px" h="180px">
+                        <Box
+                          transform={`scale(${112 / 335})`}
+                          transformOrigin="0 0"
+                        >
+                          <SubscribeCard
+                            isPic
+                            mailAddress={
+                              userInfo?.address ||
+                              `${account}@${MAIL_SERVER_URL}`
+                            }
+                            bannerUrl={bannerUrlOnline}
+                            desc={description}
+                            nickname={truncateAddress(
+                              userInfo?.name ||
+                                userInfoData?.name ||
+                                userInfo?.address.split('@')[0] ||
+                                '',
+                              '_'
+                            )}
+                            qrUrl={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
+                          />
+                        </Box>
+                      </Box>
                     </Flex>
                     <DownloadButton
                       mt="auto"
-                      as="a"
-                      href={profileImage}
-                      download={`profile_card_${account}.png`}
                       onClick={() => {
+                        if (!cardRef.current) return
+                        downloadScreenshot(
+                          cardRef.current,
+                          `profile_card_${account}.png`,
+                          {
+                            width: 335,
+                            height: 535,
+                            scale: 2,
+                          }
+                        )
                         trackClickInformationQRcodeDownload({
                           [TrackKey.CommunityQRcodeStyle]:
                             CommunityQRcodeStyle.Mail3Style,
@@ -700,6 +695,21 @@ export const Information: React.FC = () => {
         </Tabs>
       </Flex>
       <TipsPanel useSharedContent />
+      <SubscribeCard
+        // isDev
+        mailAddress={userInfo?.address || `${account}@${MAIL_SERVER_URL}`}
+        bannerUrl={bannerUrlOnline}
+        desc={description}
+        ref={cardRef}
+        nickname={truncateAddress(
+          userInfo?.name ||
+            userInfoData?.name ||
+            userInfo?.address.split('@')[0] ||
+            '',
+          '_'
+        )}
+        qrUrl={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
+      />
     </Container>
   )
 }

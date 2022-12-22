@@ -1,6 +1,7 @@
 import { Box, Text } from '@chakra-ui/react'
 import React, { forwardRef } from 'react'
 import styled from '@emotion/styled'
+import QrCode from 'qrcode.react'
 import { Avatar } from 'ui'
 import classNames from 'classnames'
 
@@ -15,6 +16,8 @@ interface SubscribeProps {
   nickname?: string
   isDev?: boolean
   desc?: string
+  bannerUrl?: string
+  qrUrl: string
   onChangeAvatarCallback?: (currentAvatar?: string) => void
 }
 
@@ -42,11 +45,26 @@ const Container = styled(Box)`
     z-index: 9999;
     position: fixed;
   }
+
+  .qrCode {
+    right: 25px;
+    bottom: 17px;
+    position: absolute;
+  }
 `
 
 export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
   (
-    { mailAddress, isPic, isDev, nickname, desc, onChangeAvatarCallback },
+    {
+      mailAddress,
+      isPic,
+      isDev,
+      nickname,
+      desc,
+      onChangeAvatarCallback,
+      bannerUrl,
+      qrUrl,
+    },
     ref
   ) => {
     const address = mailAddress.substring(0, mailAddress.indexOf('@'))
@@ -60,13 +78,28 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
         })}
         color="#fff"
         p="74px 24px"
+        overflow="hidden"
+        rounded="24px"
       >
+        <Box
+          w="100%"
+          h="100px"
+          position="absolute"
+          top="0"
+          left="0"
+          bgImage={bannerUrl}
+          bgRepeat="no-repeat"
+          bgSize="auto 100%"
+          bgPosition="center"
+        />
         <Avatar
           address={address}
           w="60px"
           h="60px"
           borderRadius="50%"
           onChangeAvatarCallback={onChangeAvatarCallback}
+          position="relative"
+          zIndex="2"
         />
         <Text fontWeight="700" fontSize="20px" lineHeight="28px" mb="4px">
           {nickname}
@@ -78,6 +111,10 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
 
         <Box fontWeight="600" fontSize="14px" lineHeight="20px" mt="16px">
           {desc}
+        </Box>
+
+        <Box className="qrCode">
+          <QrCode value={qrUrl} size={66} />
         </Box>
       </Container>
     )
