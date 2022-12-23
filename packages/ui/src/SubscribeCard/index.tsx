@@ -82,7 +82,13 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
         rounded="24px"
       >
         <Center w="100%" h="100px" position="absolute" top="0" left="0">
-          <Image src={bannerUrl} w="auto" h="100%" crossOrigin="anonymous" />
+          <Image
+            src={bannerUrl}
+            w="auto"
+            h="100px"
+            crossOrigin="anonymous"
+            maxW="none"
+          />
         </Center>
         <Avatar
           address={address}

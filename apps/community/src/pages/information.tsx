@@ -32,7 +32,6 @@ import {
   TrackKey,
   useAccount,
   useCopyWithStatus,
-  useLoginInfo,
   useScreenshot,
   useTrackClick,
 } from 'hooks'
@@ -115,7 +114,6 @@ export const Information: React.FC = () => {
   const account = useAccount()
   const api = useAPI()
   const homeApi = useHomeAPI()
-  const loginInfo = useLoginInfo()
   const userInfo = useUserInfo()
   const setUserInfo = useSetUserInfo()
   const toast = useToast()
@@ -210,7 +208,7 @@ export const Information: React.FC = () => {
       setIsPublishing(true)
       await api.updateUserSetting(requestBody)
       remoteSettingRef.current = requestBody
-      setBannerUrlOnline(requestBody.banner_url)
+      setBannerUrlOnline(bannerUrl)
       toast('Publish Successfully', {
         status: 'success',
         alertProps: { colorScheme: 'green' },
@@ -233,7 +231,7 @@ export const Information: React.FC = () => {
       setIsUploading(true)
       try {
         const file = files[0]
-        const isErrorSize = await verifyImageSize(file, 2440, 480)
+        const isErrorSize = await verifyImageSize(file, 2440, 400)
         if (!isErrorSize) {
           throw new Error('pixels')
         }
@@ -521,7 +519,7 @@ export const Information: React.FC = () => {
                                 '',
                               '_'
                             )}
-                            qrUrl={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
+                            qrUrl={subscribePageUrl}
                           />
                         </Box>
                       </Box>
@@ -563,7 +561,7 @@ export const Information: React.FC = () => {
                       ref={qrcodeRef}
                     >
                       <QrCode
-                        value={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
+                        value={subscribePageUrl}
                         size={272}
                         fgColor="black"
                         style={{ width: '68px', height: '68px' }}
@@ -708,7 +706,7 @@ export const Information: React.FC = () => {
             '',
           '_'
         )}
-        qrUrl={`${APP_URL}/subscribe/${loginInfo?.uuid}`}
+        qrUrl={subscribePageUrl}
       />
     </Container>
   )

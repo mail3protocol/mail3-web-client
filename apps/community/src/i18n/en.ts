@@ -330,7 +330,7 @@ export default {
       button: 'Upload',
       remove: 'Remove',
       prompt:
-        'For the best results on all devices, <br> use an image that’s at least <span>2440 x 480 px</span> and <span>5MB</span> or less.',
+        'For the best results on all devices, <br> use an image that’s at least <span>2440 x 400 px</span> and <span>5MB</span> or less.',
       appear:
         'This image will appear across the top of your subscription page. ',
     },
@@ -347,7 +347,7 @@ export default {
     help_qr_code: `<h3>Profile QR Code</h3>
         <p>Download profilepage card or QR code for promotion and sharing.</p>
  `,
-    pixels: 'Images must be at least <span>2440X480</span> pixels',
+    pixels: 'Images must be at least <span>2440X400</span> pixels',
     exceed: 'Images should not exceed <span>5M</span>',
   },
   send_message: {
