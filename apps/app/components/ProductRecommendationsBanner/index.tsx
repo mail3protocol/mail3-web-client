@@ -5,7 +5,7 @@ import {
   Flex,
   Image,
   Link,
-  useMediaQuery,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { atomWithStorage } from 'jotai/utils'
 import { CloseIcon } from '@chakra-ui/icons'
@@ -33,7 +33,7 @@ const isClosedBannerAtom = atomWithStorage<boolean>(
 )
 
 export const ProductRecommendationsBanner: React.FC = () => {
-  const [isMb] = useMediaQuery(`(max-width: 768px)`)
+  const isMobileSizeImage = useBreakpointValue({ base: true, md: false })
 
   const trackClickBannerSuggestion = useTrackClick(
     TrackEvent.ClickBannerSuggestion
@@ -79,7 +79,7 @@ export const ProductRecommendationsBanner: React.FC = () => {
           w="full"
         >
           <Image
-            src={isMb ? ChristmasBannerMobile : ChristmasBanner}
+            src={isMobileSizeImage ? ChristmasBannerMobile : ChristmasBanner}
             alt="desktop_banner"
             pointerEvents="none"
           />
