@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   Image,
+  Link,
   useMediaQuery,
 } from '@chakra-ui/react'
 import { atomWithStorage } from 'jotai/utils'
@@ -81,19 +82,16 @@ export const ProductRecommendationsBanner: React.FC = () => {
             src={isMb ? ChristmasBannerMobile : ChristmasBanner}
             alt="desktop_banner"
             pointerEvents="none"
-            display={{ base: 'none', md: 'block' }}
           />
         </AspectRatio>
         <Flex position="absolute" zIndex={3} top="0" left="0" w="100%" h="100%">
-          <Box
-            flex="1"
-            as="a"
+          <Link
+            flex={1}
             target="_blank"
             href="https://app.quest3.xyz/quest/719686609371394514"
           />
-          <Box
-            flex="1"
-            as="a"
+          <Link
+            flex={1}
             target="_blank"
             href="https://app.quest3.xyz/quest/719793922881487089"
           />
