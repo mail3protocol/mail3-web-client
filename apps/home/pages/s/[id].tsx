@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const api = getAPI
   const { locale, params } = context
   const address = (params as { id: string | undefined }).id ?? ''
-  const errorCode = isSupportedAddress(address) ? false : 404
+  let errorCode = isSupportedAddress(address) ? false : 404
 
   let uuid = ''
   let priAddress = address
@@ -34,6 +34,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   } catch (error) {
     console.log('error', error)
+    errorCode = 404
   }
 
   try {
@@ -45,6 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   } catch (error) {
     console.log('error', error)
+    errorCode = 404
   }
 
   return {

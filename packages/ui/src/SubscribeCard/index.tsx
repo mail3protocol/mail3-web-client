@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Box, Center, Image, Text } from '@chakra-ui/react'
 import React, { forwardRef } from 'react'
 import styled from '@emotion/styled'
 import QrCode from 'qrcode.react'
@@ -81,17 +81,9 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
         overflow="hidden"
         rounded="24px"
       >
-        <Box
-          w="100%"
-          h="100px"
-          position="absolute"
-          top="0"
-          left="0"
-          bgImage={bannerUrl}
-          bgRepeat="no-repeat"
-          bgSize="auto 100%"
-          bgPosition="center"
-        />
+        <Center w="100%" h="100px" position="absolute" top="0" left="0">
+          <Image src={bannerUrl} w="auto" h="100%" crossOrigin="anonymous" />
+        </Center>
         <Avatar
           address={address}
           w="60px"
