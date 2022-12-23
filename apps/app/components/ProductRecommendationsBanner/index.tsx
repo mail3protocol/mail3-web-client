@@ -72,7 +72,7 @@ export const ProductRecommendationsBanner: React.FC = () => {
         }}
       >
         <AspectRatio
-          ratio={isMb ? 670 / 200 : 1220 / 200}
+          ratio={{ base: 670 / 200, md: 1220 / 200 }}
           rounded="16px"
           shadow="0 0 10px 4px rgba(25, 25, 100, 0.1)"
           overflow="hidden"
