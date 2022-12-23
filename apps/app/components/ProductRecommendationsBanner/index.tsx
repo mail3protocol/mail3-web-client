@@ -1,10 +1,19 @@
-import { AspectRatio, Box, Button, Image } from '@chakra-ui/react'
+import {
+  AspectRatio,
+  Box,
+  Button,
+  Flex,
+  Image,
+  useMediaQuery,
+} from '@chakra-ui/react'
 import { atomWithStorage } from 'jotai/utils'
 import { CloseIcon } from '@chakra-ui/icons'
 import React from 'react'
 import { useAtom } from 'jotai'
 import { TrackEvent, useTrackClick } from 'hooks'
-import RegisterDigitBitImage from '../../assets/event_banners/register_digit_bit.png'
+
+import ChristmasBanner from '../../assets/event_banners/christmas.png'
+import ChristmasBannerMobile from '../../assets/event_banners/christmas-mobile.png'
 
 const isClosedBannerAtom = atomWithStorage<boolean>(
   'is_close_product_recommendations_banner_atom',
@@ -23,6 +32,8 @@ const isClosedBannerAtom = atomWithStorage<boolean>(
 )
 
 export const ProductRecommendationsBanner: React.FC = () => {
+  const [isMb] = useMediaQuery(`(max-width: 768px)`)
+
   const trackClickBannerSuggestion = useTrackClick(
     TrackEvent.ClickBannerSuggestion
   )
@@ -53,9 +64,6 @@ export const ProductRecommendationsBanner: React.FC = () => {
       </Button>
 
       <Box
-        as="a"
-        href="https://mirror.xyz/mail3.eth/A8PwBRQLHzRDTHTJlGdQC-RyHoD79qa6MrUs8yFQPbM"
-        target="_blank"
         position="relative"
         zIndex={2}
         onClick={() => {
@@ -63,18 +71,33 @@ export const ProductRecommendationsBanner: React.FC = () => {
         }}
       >
         <AspectRatio
-          ratio={1220 / 200}
+          ratio={isMb ? 670 / 200 : 1220 / 200}
           rounded="16px"
           shadow="0 0 10px 4px rgba(25, 25, 100, 0.1)"
           overflow="hidden"
           w="full"
         >
           <Image
-            src={RegisterDigitBitImage}
+            src={isMb ? ChristmasBannerMobile : ChristmasBanner}
             alt="desktop_banner"
             pointerEvents="none"
+            display={{ base: 'none', md: 'block' }}
           />
         </AspectRatio>
+        <Flex position="absolute" zIndex={3} top="0" left="0" w="100%" h="100%">
+          <Box
+            flex="1"
+            as="a"
+            target="_blank"
+            href="https://app.quest3.xyz/quest/719686609371394514"
+          />
+          <Box
+            flex="1"
+            as="a"
+            target="_blank"
+            href="https://app.quest3.xyz/quest/719793922881487089"
+          />
+        </Flex>
       </Box>
     </Box>
   )
