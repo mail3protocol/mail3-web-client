@@ -430,18 +430,20 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
               lineHeight="24px"
             >
               {mailAddress}
-              <Box
-                ml="10px"
-                as="a"
-                display="inline-block"
-                verticalAlign="middle"
-                target="_blank"
-                href={`${APP_URL}/message/edit?utm_source=${HOME_URL}&utm_medium=click_mail_me_button&to=${mailAddress}`}
-                w={{ base: '24px', md: '36px' }}
-                h={{ base: '24px', md: '36px' }}
-              >
-                <Image src={PngMailMeButton.src} w="100%" h="100%" />
-              </Box>
+              {settings?.mmb_state === 'enabled' ? (
+                <Box
+                  ml="10px"
+                  as="a"
+                  display="inline-block"
+                  verticalAlign="middle"
+                  target="_blank"
+                  href={`${APP_URL}/message/edit?utm_source=${HOME_URL}&utm_medium=click_mail_me_button&to=${mailAddress}`}
+                  w={{ base: '24px', md: '36px' }}
+                  h={{ base: '24px', md: '36px' }}
+                >
+                  <Image src={PngMailMeButton.src} w="100%" h="100%" />
+                </Box>
+              ) : null}
             </Text>
           </Box>
         </Flex>
