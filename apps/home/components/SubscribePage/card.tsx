@@ -2,6 +2,8 @@ import { Box, Flex, LinkBox, LinkOverlay, Spacer, Text } from '@chakra-ui/react'
 import dayjs from 'dayjs'
 import { APP_URL } from '../../constants/env'
 
+const dateStringFormat = `h:mm a · D MMM`
+
 export const CommunityCard: React.FC<{
   date?: string
   title: string
@@ -10,7 +12,7 @@ export const CommunityCard: React.FC<{
 }> = ({ date, title, content, uuid }) => {
   const formatDayjs = dayjs(Number(date) * 1000)
   const year = formatDayjs.year()
-  const day = formatDayjs.format('h:mm a · D MMM')
+  const day = formatDayjs.format(dateStringFormat)
 
   return (
     <LinkBox

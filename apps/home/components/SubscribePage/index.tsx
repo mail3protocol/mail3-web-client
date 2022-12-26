@@ -183,10 +183,6 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
             width: 335,
             height: 535,
             scale: 1,
-            ignoreElements: (dom) => {
-              if (dom.id === 'screenshot-ignore-element') return true
-              return false
-            },
           })
         } catch (error) {
           toast('Download screenshot Error!')
