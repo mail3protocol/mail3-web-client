@@ -187,6 +187,17 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     },
     Button: {
       variants: {
+        upload: ({ colorScheme }: { colorScheme: string }) => ({
+          background: `${colorScheme}.500`,
+          border: `1px solid ${colorScheme}.500`,
+          borderRadius: '8px',
+          fontWeight: '600',
+          fontSize: '12px',
+          lineHeight: '14px',
+          color: '#fff',
+          padding: '4px 8px',
+          height: '28px',
+        }),
         'solid-rounded': ({ colorScheme }: { colorScheme: string }) => ({
           rounded: '99px',
           lineHeight: '1.2',
@@ -404,6 +415,25 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
                 borderBottom: '2px solid currentColor',
               },
             },
+          },
+        },
+        normal: {
+          tablist: {
+            borderBottom: '3px solid',
+            borderColor: 'inherit',
+          },
+          tab: {
+            marginBottom: '-3px',
+            borderBottom: '3px solid',
+            borderColor: 'transparent',
+            _selected: {
+              color: 'primary.900',
+              borderColor: 'currentColor',
+            },
+            fontWeight: '600',
+            fontSize: '14px',
+            lineHeight: '20px',
+            color: '#1D1B23',
           },
         },
       },
