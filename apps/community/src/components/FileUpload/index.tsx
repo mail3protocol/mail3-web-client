@@ -21,6 +21,10 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
         hidden
         accept={accept}
         ref={inputRef}
+        onClick={(e: any) => {
+          // allow upload the same file
+          e.target.value = null
+        }}
         onChange={() => {
           const files = inputRef.current?.files
           if (!files) {
