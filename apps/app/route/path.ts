@@ -1,6 +1,7 @@
 export enum RoutePath {
   Home = '/',
   Inbox = '/',
+  SubscribeProfile = '/',
   Sent = '/messages/sent',
   Drafts = '/messages/drafts',
   Trash = '/messages/trash',

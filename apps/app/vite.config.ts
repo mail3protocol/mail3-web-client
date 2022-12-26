@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import svgrPlugin from 'vite-plugin-svgr'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import pluginRewriteAll from 'vite-plugin-rewrite-all'
 // import nodePolyfills from 'rollup-plugin-polyfill-node'
 import { visualizer } from 'rollup-plugin-visualizer'
 import radar from 'vite-plugin-radar'
@@ -36,6 +37,7 @@ export default defineConfig((c) => {
       },
     },
     plugins: [
+      pluginRewriteAll(),
       radar({
         enableDev: true,
         analytics: {
