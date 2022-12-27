@@ -327,8 +327,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
         bgPosition="center"
         position="relative"
         overflow="hidden"
-        borderTopLeftRadius="25px"
-        borderTopRightRadius="25px"
+        borderTopLeftRadius={{ base: 0, md: '25px' }}
+        borderTopRightRadius={{ base: 0, md: '25px' }}
       >
         <Box
           top={{ base: '10px', md: '32px' }}
