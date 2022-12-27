@@ -6,10 +6,9 @@ import { useQuery } from 'react-query'
 import { isPrimitiveEthAddress, isSupportedAddress } from 'shared'
 import { MAIL_SERVER_URL, NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-// import { SubscribeProfileBody } from '../components/SubscribeProfileBody'
+import { SubscribeProfileBody } from '../components/SubscribeProfileBody'
 import { RoutePath } from '../route/path'
 import { useAPI } from '../hooks/useAPI'
-import { SubscribeProfileBody } from '../components/SubscribeProfileBody'
 
 const Navbar = () => (
   <Flex

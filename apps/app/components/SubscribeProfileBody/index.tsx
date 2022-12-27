@@ -57,7 +57,7 @@ import { useAPI } from '../../hooks/useAPI'
 const CONTAINER_MAX_WIDTH = 1220
 
 const homeUrl =
-  typeof window !== 'undefined' ? `${window?.location?.origin}` : ''
+  typeof window !== 'undefined' ? `${window?.location?.origin}` : APP_URL
 
 enum ButtonType {
   Copy,
@@ -141,7 +141,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const shareUrl: string = useMemo(() => `${homeUrl}/s/${address}`, [address])
+  const shareUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
 
   const buttonConfig: Record<
     ButtonType,
@@ -326,6 +326,9 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
         bgSize="auto 100%"
         bgPosition="center"
         position="relative"
+        overflow="hidden"
+        borderTopLeftRadius="25px"
+        borderTopRightRadius="25px"
       >
         <Box
           top={{ base: '10px', md: '32px' }}
@@ -677,8 +680,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
       <SubscribeCard
         // isDev
-        bannerUrl={settings?.banner_url}
-        qrUrl={`${HOME_URL}/s/${address}`}
+        bannerUrl={bgImage}
+        qrUrl={`${APP_URL}/${address}`}
         mailAddress={mailAddress}
         desc={settings?.description}
         ref={cardRef}
