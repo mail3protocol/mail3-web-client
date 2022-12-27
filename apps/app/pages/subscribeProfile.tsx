@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Box, Flex, Spinner } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
@@ -39,7 +39,6 @@ export const SubscribeProfile = () => {
         uuid = retProject.data.uuid
       }
     } catch (error) {
-      console.log('error', error)
       errorCode = 404
     }
 
@@ -51,7 +50,6 @@ export const SubscribeProfile = () => {
         }
       }
     } catch (error) {
-      console.log('error', error)
       errorCode = 404
     }
 
@@ -73,7 +71,7 @@ export const SubscribeProfile = () => {
         />
       )
     }
-    return <Box>404</Box>
+    return null
   }, [data, address])
 
   return (
@@ -81,7 +79,7 @@ export const SubscribeProfile = () => {
       <PageContainer>
         <Navbar />
       </PageContainer>
-      {isLoading ? <Spinner /> : Content}
+      {!isLoading ? Content : null}
     </>
   )
 }

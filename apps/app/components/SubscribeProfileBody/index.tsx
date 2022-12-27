@@ -33,9 +33,9 @@ import { Avatar, SubscribeButton, SubscribeCard } from 'ui'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
-import { useTranslation } from 'next-i18next'
 import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
+import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import { ClusterCommunityResp } from 'models'
 import {
@@ -128,7 +128,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   uuid,
   priAddress,
 }) => {
-  const [t] = useTranslation('profile')
+  const [t] = useTranslation('subscribeProfile')
   const [t2] = useTranslation('common')
   const toast = useToast()
   const api = useAPI()
@@ -152,15 +152,15 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   > = {
     [ButtonType.Card]: {
       Icon: SvgShare,
-      label: t('subcribe.share'),
+      label: t('share'),
     },
     [ButtonType.Copy]: {
       Icon: SvgCopy,
-      label: t('subcribe.copy'),
+      label: t('copy'),
     },
     [ButtonType.Twitter]: {
       Icon: SvgTwitter,
-      label: t('subcribe.twitter'),
+      label: t('twitter'),
     },
   }
 

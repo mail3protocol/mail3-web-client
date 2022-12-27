@@ -367,5 +367,10 @@
         "unsubscribe": "Do you want to unsubscribe?",
         "Unsubscribe successfully": "Unsubscribe successfully",
         "Subscribe successfully": "Subscribe successfully"
+    },
+    "subscribeProfile": {
+        "share": "Share Subscription Card",
+        "copy": "Copy Subscription Page URL",
+        "twitter": "Share on Twitter"
     }
 }
