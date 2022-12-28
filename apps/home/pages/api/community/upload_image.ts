@@ -138,19 +138,18 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       )
     })
 
-    const retUrl = (() => {
-      const url = `${S3_CONFIG.Host}/${key}`
+    const queryParams = (() => {
       switch (type) {
         case ImageType.Banner:
-          return `${url}?h=${files.image.hash?.slice(0, 8)}`
+          return `?h=${files.image.hash?.slice(0, 8)}`
 
         default:
-          return url
+          return ''
       }
     })()
 
     return res.json({
-      url: retUrl,
+      url: `${S3_CONFIG.Host}/${key}${queryParams}`,
     })
   } catch (err: any) {
     if (

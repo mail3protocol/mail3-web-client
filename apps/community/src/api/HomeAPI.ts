@@ -32,19 +32,12 @@ export class HomeAPI {
     return this.account
   }
 
-  uploadImage(image: File, type?: UploadImageType) {
+  uploadImage(image: File, options?: { type?: UploadImageType }) {
     const formData = new FormData()
     formData.set('image', image)
     formData.set('address', this.account)
 
-    switch (type) {
-      case UploadImageType.Banner:
-        formData.set('type', UploadImageType.Banner)
-        break
-
-      default:
-        break
-    }
+    if (options?.type) formData.set('type', options.type)
 
     return this.axios.post<{ url: string }>(`/community/upload_image`, formData)
   }

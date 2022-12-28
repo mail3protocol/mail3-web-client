@@ -238,7 +238,9 @@ export const Information: React.FC = () => {
         if (fsMb > MAX_FILE_SIZE) {
           throw new Error('exceed')
         }
-        const { data } = await homeApi.uploadImage(file, UploadImageType.Banner)
+        const { data } = await homeApi.uploadImage(file, {
+          type: UploadImageType.Banner,
+        })
         setBannerUrl(data.url)
       } catch (error: any) {
         if (axios.isAxiosError(error)) {
