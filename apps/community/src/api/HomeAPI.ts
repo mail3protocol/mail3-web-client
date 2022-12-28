@@ -36,9 +36,7 @@ export class HomeAPI {
     const formData = new FormData()
     formData.set('image', image)
     formData.set('address', this.account)
-
     if (options?.type) formData.set('type', options.type)
-
     return this.axios.post<{ url: string }>(`/community/upload_image`, formData)
   }
 }
