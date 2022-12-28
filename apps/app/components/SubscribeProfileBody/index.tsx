@@ -24,7 +24,7 @@ import {
   Spinner,
   Spacer,
   Link,
-  useMediaQuery,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
@@ -33,9 +33,9 @@ import { Avatar, SubscribeButton, SubscribeCard } from 'ui'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
-import { useTranslation } from 'next-i18next'
 import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
+import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import { ClusterCommunityResp } from 'models'
 import {
@@ -46,17 +46,17 @@ import {
   truncateMiddle,
 } from 'shared'
 import { APP_URL, HOME_URL } from '../../constants/env'
-import PngDefaultBanner from '../../assets/png/subscribe/bg.png'
-import PngMailMeButton from '../../assets/png/subscribe/mail-me-button.png'
-import PngEmpty from '../../assets/png/empty.png'
-import PngCluster3 from '../../assets/png/cluster3.png'
-import { useAPI } from '../../api'
+import PngDefaultBanner from '../../assets/subscribeProfile/bg.png'
+import PngMailMeButton from '../../assets/subscribeProfile/mail-me-button.png'
+import PngEmpty from '../../assets/subscribeProfile/empty.png'
+import PngCluster3 from '../../assets/subscribeProfile/cluster3.png'
+
 import { CommunityCard } from './card'
+import { useAPI } from '../../hooks/useAPI'
 
 const CONTAINER_MAX_WIDTH = 1220
 
-const homeUrl =
-  typeof window !== 'undefined' ? `${window?.location?.origin}` : ''
+const homeUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL
 
 enum ButtonType {
   Copy,
@@ -83,7 +83,7 @@ const tabsConfig: Record<
   },
 }
 
-interface SubscribePageProps {
+interface SubscribeProfileBodyProps {
   mailAddress: string
   address: string
   uuid: string
@@ -121,17 +121,17 @@ export const getCommunityNfts = (uuid: string) =>
     `https://openApi.cluster3.net/api/v1/community?uuid=${uuid}`
   )
 
-export const SubscribePage: React.FC<SubscribePageProps> = ({
+export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   mailAddress,
   address,
   uuid,
   priAddress,
 }) => {
-  const [t] = useTranslation('profile')
-  const [t2] = useTranslation('common')
+  const [t] = useTranslation(['subscribe-profile', 'common'])
+
   const toast = useToast()
   const api = useAPI()
-  const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
+  const isMobile = useBreakpointValue({ base: true, md: false })
   const { downloadScreenshot } = useScreenshot()
 
   const [isDid, setIsDid] = useState(false)
@@ -140,7 +140,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const shareUrl: string = useMemo(() => `${homeUrl}/s/${address}`, [address])
+  const shareUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
 
   const buttonConfig: Record<
     ButtonType,
@@ -151,15 +151,15 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   > = {
     [ButtonType.Card]: {
       Icon: SvgShare,
-      label: t('subcribe.share'),
+      label: t('share'),
     },
     [ButtonType.Copy]: {
       Icon: SvgCopy,
-      label: t('subcribe.copy'),
+      label: t('copy'),
     },
     [ButtonType.Twitter]: {
       Icon: SvgTwitter,
-      label: t('subcribe.twitter'),
+      label: t('twitter'),
     },
   }
 
@@ -167,7 +167,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     () => ({
       [ButtonType.Copy]: async () => {
         await copyText(shareUrl)
-        toast(t2('navbar.copied'))
+        toast(t('navbar.copied', { ns: 'common' }))
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {
@@ -197,7 +197,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   const { data: userInfo } = useQuery(
     ['userInfo', priAddress],
     async () => {
-      const ret = await api.getUserInfo(priAddress)
+      const ret = await api.getSubscribeUserInfo(priAddress)
       return ret.data
     },
     {
@@ -208,7 +208,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
     }
   )
 
-  const { data: settings } = useQuery(
+  const { data: settings, isLoading } = useQuery(
     ['userSetting', priAddress],
     async () => {
       const res = await api.getUserSetting(priAddress)
@@ -292,8 +292,8 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   }, [items])
 
   const bgImage = useMemo(
-    () => settings?.banner_url || PngDefaultBanner.src,
-    [settings]
+    () => (isLoading ? '' : settings?.banner_url || PngDefaultBanner),
+    [settings, isLoading]
   )
 
   const communityList = useMemo(
@@ -310,9 +310,9 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
   })
 
   const buttonList = useMemo(() => {
-    if (isMaxWdith600) return [ButtonType.Twitter, ButtonType.Copy]
+    if (isMobile) return [ButtonType.Twitter, ButtonType.Copy]
     return [ButtonType.Twitter, ButtonType.Copy, ButtonType.Card]
-  }, [isMaxWdith600])
+  }, [isMobile])
 
   if (!isDid) return null
 
@@ -325,6 +325,9 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
         bgSize="auto 100%"
         bgPosition="center"
         position="relative"
+        overflow="hidden"
+        borderTopLeftRadius={{ base: 0, md: '25px' }}
+        borderTopRightRadius={{ base: 0, md: '25px' }}
       >
         <Box
           top={{ base: '10px', md: '32px' }}
@@ -441,7 +444,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
                   w={{ base: '24px', md: '36px' }}
                   h={{ base: '24px', md: '36px' }}
                 >
-                  <Image src={PngMailMeButton.src} w="100%" h="100%" />
+                  <Image src={PngMailMeButton} w="100%" h="100%" />
                 </Box>
               ) : null}
             </Text>
@@ -547,7 +550,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
                     <Spinner />
                   ) : (
                     <>
-                      <Image mt="20px" src={PngEmpty.src} w="106px" />
+                      <Image mt="20px" src={PngEmpty} w="106px" />
                       <Text
                         fontWeight="300"
                         fontSize="18px"
@@ -604,7 +607,7 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
                 <Flex fontWeight="400" fontSize="12px" lineHeight="24px">
                   Data source:
                   <Link href={settings?.items_link} target="_blank">
-                    <Image w="100px" ml="10px" src={PngCluster3.src} />
+                    <Image w="100px" ml="10px" src={PngCluster3} />
                   </Link>
                 </Flex>
               </Center>
@@ -676,8 +679,8 @@ export const SubscribePage: React.FC<SubscribePageProps> = ({
 
       <SubscribeCard
         // isDev
-        bannerUrl={settings?.banner_url}
-        qrUrl={`${HOME_URL}/s/${address}`}
+        bannerUrl={bgImage}
+        qrUrl={`${APP_URL}/${address}`}
         mailAddress={mailAddress}
         desc={settings?.description}
         ref={cardRef}

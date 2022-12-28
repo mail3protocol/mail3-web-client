@@ -52,7 +52,7 @@ import { QueryKey } from '../api/QueryKey'
 import { useAPI } from '../hooks/useAPI'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
 import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
-import { APP_URL, HOME_URL } from '../constants/env/url'
+import { APP_URL } from '../constants/env/url'
 import { MAIL_SERVER_URL } from '../constants/env/mailServer'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { TipsPanel } from '../components/TipsPanel'
@@ -173,9 +173,7 @@ export const Information: React.FC = () => {
   )
 
   const { onCopy, isCopied } = useCopyWithStatus()
-  const subscribePageUrl = `${HOME_URL}/s/${
-    userInfo?.address.split('@')[0] || ''
-  }`
+  const subscribePageUrl = `${APP_URL}/${userInfo?.address.split('@')[0] || ''}`
 
   const hasBanner = bannerUrl !== BannerPng
 

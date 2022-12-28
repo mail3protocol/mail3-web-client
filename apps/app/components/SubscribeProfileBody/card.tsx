@@ -1,6 +1,6 @@
 import { Box, Flex, LinkBox, LinkOverlay, Spacer, Text } from '@chakra-ui/react'
 import dayjs from 'dayjs'
-import { APP_URL } from '../../constants/env'
+import { APP_URL } from '../../constants'
 
 const dateStringFormat = `h:mm a · D MMM`
 
