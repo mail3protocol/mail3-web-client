@@ -24,7 +24,7 @@ import {
   Spinner,
   Spacer,
   Link,
-  useMediaQuery,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
@@ -128,11 +128,11 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   uuid,
   priAddress,
 }) => {
-  const [t] = useTranslation('subscribeProfile')
-  const [tCommon] = useTranslation('common')
+  const [t] = useTranslation(['subscribe-profile', 'common'])
+
   const toast = useToast()
   const api = useAPI()
-  const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
+  const isMobile = useBreakpointValue({ base: true, md: false })
   const { downloadScreenshot } = useScreenshot()
 
   const [isDid, setIsDid] = useState(false)
@@ -168,7 +168,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     () => ({
       [ButtonType.Copy]: async () => {
         await copyText(shareUrl)
-        toast(tCommon('navbar.copied'))
+        toast(t('navbar.copied', { ns: 'common' }))
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {
@@ -311,9 +311,9 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   })
 
   const buttonList = useMemo(() => {
-    if (isMaxWdith600) return [ButtonType.Twitter, ButtonType.Copy]
+    if (isMobile) return [ButtonType.Twitter, ButtonType.Copy]
     return [ButtonType.Twitter, ButtonType.Copy, ButtonType.Card]
-  }, [isMaxWdith600])
+  }, [isMobile])
 
   if (!isDid) return null
 
