@@ -9,4 +9,5 @@ export enum Query {
   Sent = 'sent',
   GetSubscribeStatus = 'get_subscribe_status',
   SetSubscribeStatus = 'set_subscribe_status',
+  SubscribeProfileInit = 'subscribe profile init',
 }

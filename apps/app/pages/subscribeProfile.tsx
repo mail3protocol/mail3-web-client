@@ -11,6 +11,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { SubscribeProfileBody } from '../components/SubscribeProfileBody'
 import { RoutePath } from '../route/path'
 import { useAPI } from '../hooks/useAPI'
+import { Query } from '../api/query'
 
 const ErrPage = styled(Center)`
   height: 100vh;
@@ -56,21 +57,18 @@ export const SubscribeProfile = () => {
   const isAllow = isSupportedAddress(address)
 
   const { isLoading, data, error } = useQuery(
-    ['subscribe profile init'],
+    [Query.SubscribeProfileInit],
     async () => {
-      let priAddress = address
-
       const uuid =
         (await api
           .checkIsProject(address)
           .then((res) => (res.status === 200 ? res.data.uuid : ''))) || ''
 
-      if (!isPrimitiveEthAddress(priAddress)) {
-        const retAddress = await api.getPrimitiveAddress(address)
-        if (retAddress.status === 200) {
-          priAddress = retAddress.data.eth_address
-        }
-      }
+      const priAddress = isPrimitiveEthAddress(address)
+        ? address
+        : await api
+            .getPrimitiveAddress(address)
+            .then((res) => (res.status === 200 ? res.data.eth_address : ''))
 
       return {
         uuid,
