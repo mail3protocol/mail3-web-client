@@ -209,7 +209,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     }
   )
 
-  const { data: settings } = useQuery(
+  const { data: settings, isLoading } = useQuery(
     ['userSetting', priAddress],
     async () => {
       const res = await api.getUserSetting(priAddress)
@@ -293,8 +293,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   }, [items])
 
   const bgImage = useMemo(
-    () => settings?.banner_url || PngDefaultBanner,
-    [settings]
+    () => (isLoading ? '' : settings?.banner_url || PngDefaultBanner),
+    [settings, isLoading]
   )
 
   const communityList = useMemo(
