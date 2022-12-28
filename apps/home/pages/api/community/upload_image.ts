@@ -57,7 +57,8 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       ...formidableConfig,
       fileWriteStreamHandler: () => fileConsumer(chunks),
     })
-    const isBannerImage = fields.imageType === ImageType.Banner
+    const type = fields.type as ImageType
+
     const fileData = Buffer.concat(chunks)
     if (!fields.address) {
       throw new ParamError('`address` required')
@@ -97,22 +98,26 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       region: S3_CONFIG.Region,
     })
 
-    const key = (
-      isBannerImage
-        ? [
+    const key = (() => {
+      switch (type) {
+        case ImageType.Banner:
+          return [
             'tmp/banners',
             fields.address,
             `${fields.address}.${files.image.originalFilename
               ?.split('.')
               .pop()}`,
-          ]
-        : [
+          ].join('/')
+
+        default:
+          return [
             'tmp/posts',
             fields.address,
             dayjs().format('YYYYMMDD'),
             files.image.newFilename,
-          ]
-    ).join('/')
+          ].join('/')
+      }
+    })()
 
     const s3UploadParams = {
       Bucket: S3_CONFIG.Bucket,
@@ -133,10 +138,19 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       )
     })
 
+    const retUrl = (() => {
+      const url = `${S3_CONFIG.Host}/${key}`
+      switch (type) {
+        case ImageType.Banner:
+          return `${url}?h=${files.image.hash?.slice(0, 8)}`
+
+        default:
+          return url
+      }
+    })()
+
     return res.json({
-      url: `${S3_CONFIG.Host}/${key}${
-        !isBannerImage ? '' : `?h=${files.image.hash?.slice(0, 8)}`
-      }`,
+      url: retUrl,
     })
   } catch (err: any) {
     if (
