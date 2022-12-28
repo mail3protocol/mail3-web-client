@@ -56,8 +56,7 @@ import { useAPI } from '../../hooks/useAPI'
 
 const CONTAINER_MAX_WIDTH = 1220
 
-const homeUrl =
-  typeof window !== 'undefined' ? `${window.location.origin}` : APP_URL
+const homeUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL
 
 enum ButtonType {
   Copy,
