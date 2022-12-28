@@ -27,10 +27,13 @@ export class HomeAPI {
     return this.account
   }
 
-  uploadImage(image: File) {
+  uploadImage(image: File, isBanner = false) {
     const formData = new FormData()
     formData.set('image', image)
     formData.set('address', this.account)
+    if (isBanner) {
+      formData.set('imageType', 'banner')
+    }
     return this.axios.post<{ url: string }>(`/community/upload_image`, formData)
   }
 }

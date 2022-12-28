@@ -17,9 +17,10 @@ const formidableConfig = {
   keepExtensions: true,
   maxFileSize: 5120000,
   maxFieldsSize: 10_000_000,
-  maxFields: 1,
+  maxFields: 1000,
   allowEmptyFiles: false,
   multiples: false,
+  hashAlgorithm: 'sha1',
 }
 
 class FileError extends Error {}
@@ -36,6 +37,11 @@ const uploadCountCache = new LRU({
   maxAge: 86_400_000,
 })
 
+enum ImageType {
+  Normal = 'normal',
+  Banner = 'banner',
+}
+
 async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
   await NextCors(req, res, {
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
@@ -51,6 +57,7 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       ...formidableConfig,
       fileWriteStreamHandler: () => fileConsumer(chunks),
     })
+    const isBannerImage = fields.imageType === ImageType.Banner
     const fileData = Buffer.concat(chunks)
     if (!fields.address) {
       throw new ParamError('`address` required')
@@ -89,12 +96,23 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       secretAccessKey: S3_CONFIG.AccessKeySecret,
       region: S3_CONFIG.Region,
     })
-    const key = [
-      'tmp/posts',
-      fields.address,
-      dayjs().format('YYYYMMDD'),
-      files.image.newFilename,
-    ].join('/')
+
+    const key = (
+      isBannerImage
+        ? [
+            'tmp/banners',
+            fields.address,
+            `${fields.address}.${files.image.originalFilename
+              ?.split('.')
+              .pop()}`,
+          ]
+        : [
+            'tmp/posts',
+            fields.address,
+            dayjs().format('YYYYMMDD'),
+            files.image.newFilename,
+          ]
+    ).join('/')
 
     const s3UploadParams = {
       Bucket: S3_CONFIG.Bucket,
@@ -114,8 +132,11 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
         }
       )
     })
+
     return res.json({
-      url: `${S3_CONFIG.Host}/${key}`,
+      url: `${S3_CONFIG.Host}/${key}${
+        !isBannerImage ? '' : `?h=${files.image.hash?.slice(0, 8)}`
+      }`,
     })
   } catch (err: any) {
     if (
