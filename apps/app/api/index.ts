@@ -8,7 +8,7 @@ import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdentifier'
-import { Subscription } from 'models'
+import { HomeCommunity, Subscription } from 'models'
 import { SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
@@ -55,6 +55,13 @@ export enum MessageFlagAction {
 export interface AddressResponse {
   name?: string
   address: string
+}
+
+export interface UserSettingResponse {
+  banner_url: string
+  description: string
+  items_link: string
+  mmb_state: 'enabled' | 'disabled'
 }
 
 export type AddressListResponse = Array<AddressResponse>
@@ -503,6 +510,32 @@ export class API {
   public async SubscriptionMessageStats() {
     return this.axios.get<Subscription.MessageStatsResp>(
       `/subscription/message_stats`
+    )
+  }
+
+  public async checkIsProject(address: string) {
+    return this.axios.get(`/community/users/${address}`)
+  }
+
+  public async getPrimitiveAddress(domain: string) {
+    return this.axios.get(`/addresses/${domain}`)
+  }
+
+  public async getUserSetting(account: string) {
+    return this.axios.get<UserSettingResponse>(
+      `/public/community/user_setting/${account}`
+    )
+  }
+
+  public async getCommunityMessages(address: string, nextCursor: string) {
+    return this.axios.get<HomeCommunity.ListResp>(
+      `/public/community/messages/${address}/?cursor=${nextCursor}&count=20`
+    )
+  }
+
+  public async getSubscribeUserInfo(address: string) {
+    return this.axios.get<{ nickname: string; avatar: string }>(
+      `/user_info/${address}`
     )
   }
 }

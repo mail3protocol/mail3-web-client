@@ -367,5 +367,11 @@
         "unsubscribe": "Do you want to unsubscribe?",
         "Unsubscribe successfully": "Unsubscribe successfully",
         "Subscribe successfully": "Subscribe successfully"
+    },
+    "subscribe-profile": {
+        "share": "Share Subscription Card",
+        "copy": "Copy Subscription Page URL",
+        "twitter": "Share on Twitter",
+        "404": "This page could not be found."
     }
 }

@@ -29,6 +29,7 @@
         "assets": "*",
         "axios": "^0.26.1",
         "classnames": "^2.3.1",
+        "connect-wallet": "*",
         "dayjs": "^1.11.2",
         "dompurify": "^2.3.12",
         "events": "^3.3.0",
@@ -54,7 +55,7 @@
         "rxjs": "^7.5.5",
         "shared": "*",
         "ui": "*",
-        "connect-wallet": "*"
+        "vite-plugin-rewrite-all": "^1.0.1"
     },
     "devDependencies": {
         "@esbuild-plugins/node-globals-polyfill": "^0.1.1",

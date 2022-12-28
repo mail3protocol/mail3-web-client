@@ -158,6 +158,8 @@ export default {
       confirm: 'Confirm',
     },
     ok: 'OK',
+    abstract_holder:
+      'The abstract will be displayed on your subscribe page to help subscribers quickly understand the content, if not filled in, it will not be displayed.',
   },
   dashboard: {
     message: 'Message',
@@ -312,6 +314,41 @@ export default {
     title: 'Account',
     collection_rank: 'Collection Rank',
     collected: 'Collected',
+    tabs: {
+      Profile: 'Profile',
+      Items: 'Items',
+      Basic_info: 'Basic info',
+    },
+    banner_image: 'Banner image',
+    subscribe_link: 'Subscription page',
+    avatar: 'Avatar',
+    avatar_p:
+      'Your profile avatar, which currently only supports synchronization with mail3`s avatar.',
+    avatar_setting:
+      'To change it, please go to your personal center in <a>Mail3: </a><span>Setting->Set Your Avatar</span>',
+    upload: {
+      button: 'Upload',
+      remove: 'Remove',
+      prompt:
+        'For the best results on all devices, <br> use an image that’s at least <span>2440 x 400 px</span> and <span>5MB</span> or less.',
+      appear:
+        'This image will appear across the top of your subscription page. ',
+    },
+    cluster3_Link: 'Cluster3 Community Page Link',
+    appear:
+      'This will appear on the <span>Items</span> section of your Subscription Page.',
+    appear_text: `
+    Please go to <a>Cluscer3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
+    display_Mail_Me_Button: 'Display Mail Me Button on the Subscription Page',
+    publish: 'Publish',
+    description: 'Description',
+    description_placeholder: 'Description',
+    // language=html
+    help_qr_code: `<h3>Profile QR Code</h3>
+        <p>Download profilepage card or QR code for promotion and sharing.</p>
+ `,
+    pixels: 'Images must be at least <span>2440X400</span> pixels',
+    exceed: 'Images should not exceed <span>5M</span>',
   },
   send_message: {
     title: 'History',
