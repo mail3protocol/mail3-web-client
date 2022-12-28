@@ -58,13 +58,12 @@ export const SubscribeProfile = () => {
   const { isLoading, data, error } = useQuery(
     ['subscribe profile init'],
     async () => {
-      let uuid = ''
       let priAddress = address
 
-      const retProject = await api.checkIsProject(address)
-      if (retProject.status === 200) {
-        uuid = retProject.data.uuid
-      }
+      const uuid =
+        (await api
+          .checkIsProject(address)
+          .then((res) => (res.status === 200 ? res.data.uuid : ''))) || ''
 
       if (!isPrimitiveEthAddress(priAddress)) {
         const retAddress = await api.getPrimitiveAddress(address)
