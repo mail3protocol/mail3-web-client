@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { isPrimitiveEthAddress, isSupportedAddress } from 'shared'
 import styled from '@emotion/styled'
+import { useTranslation } from 'react-i18next'
 import { MAIL_SERVER_URL, NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { SubscribeProfileBody } from '../components/SubscribeProfileBody'
@@ -48,6 +49,7 @@ const Navbar = () => (
 
 export const SubscribeProfile = () => {
   useDocumentTitle('Mail3: Subsribe Page')
+  const [t] = useTranslation('subscribeProfile')
   const { id: address } = useParams() as { id: string }
   const api = useAPI()
 
@@ -88,7 +90,7 @@ export const SubscribeProfile = () => {
       <ErrPage>
         <Center>
           <Box className="code">404</Box>
-          <Box className="text">This page could not be found.</Box>
+          <Box className="text">{t('404')}</Box>
         </Center>
       </ErrPage>
     )

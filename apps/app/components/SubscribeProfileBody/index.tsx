@@ -57,7 +57,7 @@ import { useAPI } from '../../hooks/useAPI'
 const CONTAINER_MAX_WIDTH = 1220
 
 const homeUrl =
-  typeof window !== 'undefined' ? `${window?.location?.origin}` : APP_URL
+  typeof window !== 'undefined' ? `${window.location.origin}` : APP_URL
 
 enum ButtonType {
   Copy,
@@ -129,7 +129,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   priAddress,
 }) => {
   const [t] = useTranslation('subscribeProfile')
-  const [t2] = useTranslation('common')
+  const [tCommon] = useTranslation('common')
   const toast = useToast()
   const api = useAPI()
   const [isMaxWdith600] = useMediaQuery(`(max-width: 768px)`)
@@ -168,7 +168,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     () => ({
       [ButtonType.Copy]: async () => {
         await copyText(shareUrl)
-        toast(t2('navbar.copied'))
+        toast(tCommon('navbar.copied'))
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {

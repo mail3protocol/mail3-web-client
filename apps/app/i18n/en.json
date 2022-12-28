@@ -371,6 +371,7 @@
     "subscribeProfile": {
         "share": "Share Subscription Card",
         "copy": "Copy Subscription Page URL",
-        "twitter": "Share on Twitter"
+        "twitter": "Share on Twitter",
+        "404": "This page could not be found."
     }
 }
