@@ -53,39 +53,37 @@ export const SubscribeProfile = () => {
   const { id: address } = useParams() as { id: string }
   const api = useAPI()
 
-  const { isLoading, data } = useQuery(['subscribe profile init'], async () => {
-    let errorCode = isSupportedAddress(address) ? false : 404
-    let uuid = ''
-    let priAddress = address
+  const isAllow = isSupportedAddress(address)
 
-    try {
+  const { isLoading, data, error } = useQuery(
+    ['subscribe profile init'],
+    async () => {
+      let uuid = ''
+      let priAddress = address
+
       const retProject = await api.checkIsProject(address)
       if (retProject.status === 200) {
         uuid = retProject.data.uuid
       }
-    } catch (error) {
-      errorCode = 404
-    }
 
-    try {
       if (!isPrimitiveEthAddress(priAddress)) {
         const retAddress = await api.getPrimitiveAddress(address)
         if (retAddress.status === 200) {
           priAddress = retAddress.data.eth_address
         }
       }
-    } catch (error) {
-      errorCode = 404
-    }
 
-    return {
-      errorCode,
-      uuid,
-      priAddress,
+      return {
+        uuid,
+        priAddress,
+      }
+    },
+    {
+      enabled: isAllow,
     }
-  })
+  )
 
-  if (data?.errorCode === 404) {
+  if (!isAllow || error) {
     return (
       <ErrPage>
         <Center>
