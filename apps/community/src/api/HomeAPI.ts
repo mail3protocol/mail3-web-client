@@ -1,6 +1,11 @@
 import axios, { AxiosInstance } from 'axios'
 import { HOME_URL } from '../constants/env/url'
 
+export enum UploadImageType {
+  Normal = 'normal',
+  Banner = 'banner',
+}
+
 export class HomeAPI {
   private readonly axios: AxiosInstance
 
@@ -27,10 +32,11 @@ export class HomeAPI {
     return this.account
   }
 
-  uploadImage(image: File) {
+  uploadImage(image: File, options?: { type?: UploadImageType }) {
     const formData = new FormData()
     formData.set('image', image)
     formData.set('address', this.account)
+    if (options?.type) formData.set('type', options.type)
     return this.axios.post<{ url: string }>(`/community/upload_image`, formData)
   }
 }

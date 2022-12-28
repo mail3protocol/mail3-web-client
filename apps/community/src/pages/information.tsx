@@ -60,6 +60,7 @@ import { FileUpload } from '../components/FileUpload'
 import { useHomeAPI } from '../hooks/useHomeAPI'
 import { useToast } from '../hooks/useToast'
 import { UserSettingResponse } from '../api/modals/UserInfoResponse'
+import { UploadImageType } from '../api/HomeAPI'
 
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }
@@ -237,7 +238,9 @@ export const Information: React.FC = () => {
         if (fsMb > MAX_FILE_SIZE) {
           throw new Error('exceed')
         }
-        const { data } = await homeApi.uploadImage(file)
+        const { data } = await homeApi.uploadImage(file, {
+          type: UploadImageType.Banner,
+        })
         setBannerUrl(data.url)
       } catch (error: any) {
         if (axios.isAxiosError(error)) {
