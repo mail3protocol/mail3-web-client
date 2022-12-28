@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
-import { Box, Center, Flex } from '@chakra-ui/react'
+import React from 'react'
+import { Box, Center, Flex, Spinner } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
@@ -83,20 +83,6 @@ export const SubscribeProfile = () => {
     }
   })
 
-  const Content = useMemo(() => {
-    if (data?.errorCode !== 404 && data?.uuid && data.priAddress) {
-      return (
-        <SubscribeProfileBody
-          mailAddress={`${address}@${MAIL_SERVER_URL}`}
-          address={address}
-          uuid={data.uuid}
-          priAddress={data.priAddress}
-        />
-      )
-    }
-    return null
-  }, [data, address])
-
   if (data?.errorCode === 404) {
     return (
       <ErrPage>
@@ -108,12 +94,25 @@ export const SubscribeProfile = () => {
     )
   }
 
+  if (isLoading || !data?.uuid || !data?.priAddress) {
+    return (
+      <ErrPage>
+        <Spinner />
+      </ErrPage>
+    )
+  }
+
   return (
     <>
       <PageContainer>
         <Navbar />
       </PageContainer>
-      {!isLoading ? Content : null}
+      <SubscribeProfileBody
+        mailAddress={`${address}@${MAIL_SERVER_URL}`}
+        address={address}
+        uuid={data.uuid}
+        priAddress={data.priAddress}
+      />
     </>
   )
 }
