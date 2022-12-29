@@ -1,4 +1,21 @@
-<!DOCTYPE html>
+import { renderToString } from 'react-dom/server'
+import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr'
+import type { PageContextServer } from './types'
+import { Providers } from './Providers'
+
+export async function render(pageContext: PageContextServer) {
+  const { Page, pageProps } = pageContext
+  const pageHtml = renderToString(
+    <Providers>
+      <Page {...pageProps} />
+    </Providers>
+  )
+  const { documentProps } = pageContext.exports
+  const title =
+    (documentProps && documentProps.title) ||
+    'Mail3: Build valuable connections in the decentralized society'
+
+  const documentHtml = escapeInject`<!DOCTYPE html>
 <html>
   <head>
     <meta charSet="utf-8" />
@@ -16,7 +33,7 @@
       content="web3 mail, decentralized mail, blockchain mail, privacy, end-to-end encryption"
     />
     <title>
-      Mail3: Build valuable connections in the decentralized society
+      ${title}
     </title>
     <meta
       property="og:title"
@@ -52,12 +69,20 @@
     <link rel="apple-touch-icon" href="/icons/icon-144x144.png" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">${dangerouslySkipEscape(pageHtml)}</div>
     <script>
       if (typeof global === 'undefined') {
         global = globalThis;
       }
     </script>
-    <script type="module" src="/pages/main.tsx"></script>
   </body>
 </html>
+`
+
+  return {
+    documentHtml,
+    pageContext: {
+      // We can add some `pageContext` here, which is useful if we want to do page redirection https://vite-plugin-ssr.com/page-redirection
+    },
+  }
+}

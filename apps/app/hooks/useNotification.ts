@@ -3,7 +3,6 @@ import { useAtom } from 'jotai'
 import { defer, from, fromEvent, switchMap } from 'rxjs'
 import { useQuery } from 'react-query'
 import { isSupported } from 'firebase/messaging'
-import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/env'
 import {
   getIsEnabledNotification,
   getNotificationPermission,
@@ -11,6 +10,7 @@ import {
 } from './useLogin'
 import { useAPI } from './useAPI'
 import { useDeleteFCMToken, useGetFCMToken } from './useFCMToken'
+import { isChrome, isFirefox, isMobile } from '../utils/env'
 
 export function useNotification(shouldReload = true) {
   const api = useAPI()
@@ -123,7 +123,7 @@ export function useNotification(shouldReload = true) {
     useQuery(
       ['isSupportedFCM'],
       async () =>
-        (await isSupported()) && IS_CHROME && !IS_MOBILE && !IS_FIREFOX,
+        (await isSupported()) && isChrome() && !isMobile() && !isFirefox(),
       {
         refetchOnMount: false,
         refetchOnWindowFocus: false,

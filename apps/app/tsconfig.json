@@ -6,7 +6,7 @@
         "**/*.ts",
         "**/*.tsx",
         "@types/gtag.js",
-        "pages/_error.js"
+      "csr-pages/_error.js"
     ],
     "exclude": [
         "node_modules"

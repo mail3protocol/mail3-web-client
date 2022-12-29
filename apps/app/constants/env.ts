@@ -84,29 +84,6 @@ export const SUBSCRIBE_BUTTON_MIRROR_URL =
   import.meta.env.NEXT_PUBLIC_SUBSCRIBE_BUTTON_MIRRIR_URL ||
   'https://mirror.xyz/mail3.eth/WUmKSwNyE__BUb657KvLFt0CeQ1aSC5p3Tg03unfCsY'
 
-export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')
-
-export const IS_CHROME =
-  navigator.userAgent.toLowerCase().includes('chrome') || !!window.chrome
-
-export const IS_FIREFOX = navigator.userAgent.toLowerCase().includes('firefox')
-
-export const IS_EDGE = navigator.userAgent.toLowerCase().includes('edg') // edge ua is "edg"
-
-export const IS_WIN = /windows|win32/i.test(navigator.userAgent)
-
-export const IS_OPERA = window.opr !== undefined
-
-export const IS_IPAD = navigator.userAgent.toLowerCase().includes('ipad')
-
-export const IS_IPHONE =
-  navigator.userAgent.toLowerCase().includes('iphone') &&
-  !navigator.vendor.includes('Google')
-
-export const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-
-export const IS_IOS = IS_IPAD || IS_IPHONE
-
 export const SENTRY_DSN = import.meta.env.NEXT_PUBLIC_SENTRY_DSN
 
 export const PRODUCT_RECOMMENDATIONS_ADDRESS =

@@ -39,8 +39,8 @@ import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
 import { useNotification } from '../../hooks/useNotification'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
-import { IS_MOBILE } from '../../constants'
 import confettiAni from './confetti'
+import { isMobile } from '../../utils'
 
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
 
@@ -89,7 +89,7 @@ const ScanAnimate = styled(Center)`
 const atomWaitPermission = atom(true)
 
 const ConnectWallet = () => {
-  const Comp = IS_MOBILE ? VStack : HStack
+  const Comp = isMobile() ? VStack : HStack
   return (
     <ConnectWalletApiContextProvider>
       <Center mt="20px">
@@ -165,10 +165,10 @@ const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
             h={['40px']}
             fontSize={['14px']}
             onClick={() => {
-              const repeat = IS_MOBILE
+              const repeat = isMobile()
                 ? SubscribeAction.MobileRepeat
                 : SubscribeAction.Repeat
-              const already = IS_MOBILE
+              const already = isMobile()
                 ? SubscribeAction.Mobile
                 : SubscribeAction.Already
               trackContinue({
@@ -282,7 +282,7 @@ const SubscribeStatus: React.FC<{
           w="168px"
           onClick={() => {
             trackContinue({
-              [TrackKey.SubscribeBtnStatus]: IS_MOBILE
+              [TrackKey.SubscribeBtnStatus]: isMobile()
                 ? SubscribeAction.Mobile
                 : SubscribeAction.Already,
             })

@@ -12,7 +12,7 @@ import {
   FIREBASE_MESSAGING_VAPID_KEY,
 } from '../constants/env/firebase'
 
-class FirebaseUtils {
+export class FirebaseUtils {
   readonly app?: FirebaseApp
 
   readonly messaging?: Messaging
@@ -54,7 +54,3 @@ class FirebaseUtils {
     return this.messaging ? onMessage(this.messaging, callback as any) : null
   }
 }
-
-const firebaseUtils = new FirebaseUtils()
-
-export { firebaseUtils }
