@@ -163,7 +163,7 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     },
     Textarea: {
       variants: {
-        outline: {
+        black: {
           background: 'inputBackground',
           border: '1px solid',
           borderColor: 'primaryTextColor',

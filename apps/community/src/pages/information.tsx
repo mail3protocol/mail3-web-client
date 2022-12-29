@@ -667,7 +667,7 @@ export const Information: React.FC = () => {
                   <FormControl>
                     <FormLabel>{t('description')}</FormLabel>
                     <Textarea
-                      variant="outline"
+                      variant="black"
                       resize="none"
                       placeholder={t('description_placeholder')}
                       value={description}
