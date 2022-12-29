@@ -19,6 +19,11 @@ enum EarnIconType {
   White = 'white',
 }
 
+enum RewardType {
+  NFT = 'nft',
+  AIR = 'air',
+}
+
 const earnIcons = {
   [EarnIconType.Blue]: <SvgEarn />,
   [EarnIconType.White]: <SvgEarnWhite />,
@@ -31,6 +36,7 @@ export const SubscribeButton = () => {
   const [searchParams] = useSearchParams()
 
   const uuid = searchParams.get('uuid')
+  const rewardType = searchParams.get('rewardType')
   const urlRedirect = searchParams.get('redirect')
   const urlButtonStyle = searchParams.get('buttonStyle')
   const urlEarnIconStyle = searchParams.get('earnIconStyle')
@@ -129,7 +135,9 @@ export const SubscribeButton = () => {
       >
         {data?.state === SubscribeState.Active ? 'Subscribed' : 'Subscribe'}
       </Button>
-      {!isLoading && data?.state !== SubscribeState.Active ? (
+      {!isLoading &&
+      data?.state !== SubscribeState.Active &&
+      rewardType !== RewardType.AIR ? (
         <Box
           position="absolute"
           left={earnIconStyle.left}

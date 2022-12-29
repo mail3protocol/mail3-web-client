@@ -85,7 +85,7 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
           </Box>
           <Center w="full" h="calc(100% - 53px)">
             <a
-              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=click_subscribe_button&utm_campaign=${address}&rewardType=${rewardType}`}
+              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=click_subscribe_button&utm_campaign=${address}&reward_type=${rewardType}`}
               target="_blank"
               rel="noreferrer"
               style={

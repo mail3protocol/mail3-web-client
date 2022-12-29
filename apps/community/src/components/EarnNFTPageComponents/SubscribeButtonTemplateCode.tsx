@@ -9,7 +9,7 @@ export const subscribeButtonTemplateCode = (
   }
 ) =>
   // language=html
-  `<a href="${APP_URL}/subscribe/${communityId}?utm_medium=click_subscribe_button&utm_campaign=${address}&rewardType=${opt?.type}" target="_blank">
+  `<a href="${APP_URL}/subscribe/${communityId}?utm_medium=click_subscribe_button&utm_campaign=${address}&reward_type=${opt?.type}" target="_blank">
   <img src="${APP_URL}/images/subscribe-btn-${opt?.type}.png" alt="subscribe" style="width: 178px; height: auto; margin: auto">
 </a>
 `

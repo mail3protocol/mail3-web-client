@@ -62,6 +62,7 @@ export interface UserSettingResponse {
   description: string
   items_link: string
   mmb_state: 'enabled' | 'disabled'
+  reward_type: 'nft' | 'air'
 }
 
 export type AddressListResponse = Array<AddressResponse>
