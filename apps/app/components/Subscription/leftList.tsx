@@ -99,7 +99,7 @@ export const SubListItem: FC<SubListItemProps> = ({
       </Box>
       <Box pl="24px" w="100%">
         <Text
-          h="44px"
+          h="42px"
           fontSize="14px"
           fontWeight={600}
           noOfLines={2}
