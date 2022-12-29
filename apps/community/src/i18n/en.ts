@@ -177,6 +177,9 @@ export default {
     title: 'Subscribe To Earn',
     to_earn: 'To Earn',
     nft: 'NFT',
+    air: 'No Rewards',
+    air_p: `Choosing “No Rewards” means you don't have to offer any rewards to
+    subscribers.`,
     distribution_platform: 'Distribution Platform',
     platforms: {
       galaxy: 'Galxe',
@@ -200,7 +203,7 @@ export default {
       title: 'Subscription dialog style preview',
       description: '<p>Click “Get the Code” button to copy the code.</p>',
       preview_subtitle: 'style preview',
-      customize_the_button: 'Customize the button',
+      customize_the_button: 'Code',
       get_the_code: 'Get the code',
     },
     earn_nft: '🎁 Earn NFT',

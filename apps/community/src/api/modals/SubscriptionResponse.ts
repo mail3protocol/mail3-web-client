@@ -12,6 +12,7 @@ UpdateCommunitySubscriptionReq {
 
 export enum SubscriptionRewardType {
   NFT = 'nft',
+  AIR = 'air',
 }
 
 export enum SubscriptionPlatform {
