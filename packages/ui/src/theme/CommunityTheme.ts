@@ -161,6 +161,36 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
         },
       },
     },
+    Textarea: {
+      variants: {
+        outline: {
+          background: 'inputBackground',
+          border: '1px solid',
+          borderColor: 'primaryTextColor',
+          rounded: '8px',
+          fontSize: '14px',
+          fontWeight: '500',
+          color: 'primaryTextColor',
+          _placeholder: {
+            color: 'inputPlaceholder',
+            fontSize: '14px',
+            fontWeight: '500',
+          },
+          _hover: {
+            borderColor: 'primaryTextColor',
+          },
+          _focus: {
+            borderColor: 'primary.900',
+            shadow: 'none',
+          },
+          _disabled: {
+            opacity: 1,
+            color: 'secondaryTitleColor',
+            borderColor: 'inputBackground',
+          },
+        },
+      },
+    },
     Form: {
       baseStyle: {
         helperText: {

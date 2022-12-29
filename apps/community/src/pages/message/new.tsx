@@ -127,6 +127,7 @@ export const NewMessage = () => {
           >
             <FormLabel>Abstract</FormLabel>
             <Textarea
+              resize="none"
               h="120px"
               value={abstract}
               maxLength={100}

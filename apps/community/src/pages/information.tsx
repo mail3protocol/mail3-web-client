@@ -324,6 +324,7 @@ export const Information: React.FC = () => {
                     name="profile_page_url"
                     isDisabled
                     value={subscribePageUrl}
+                    paddingInlineEnd="40px"
                   />
                   <Tooltip
                     label={t(isCopied ? 'copied' : 'copy', {
@@ -415,6 +416,7 @@ export const Information: React.FC = () => {
                 bgRepeat="no-repeat"
                 bgPosition="center"
                 borderRadius="8px"
+                overflow="hidden"
               >
                 <Center
                   w="full"
@@ -665,6 +667,8 @@ export const Information: React.FC = () => {
                   <FormControl>
                     <FormLabel>{t('description')}</FormLabel>
                     <Textarea
+                      variant="outline"
+                      resize="none"
                       placeholder={t('description_placeholder')}
                       value={description}
                       onChange={({ target: { value } }) =>
