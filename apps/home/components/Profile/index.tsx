@@ -248,8 +248,12 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   const { data: userInfo } = useQuery(
     ['userInfo', priAddress],
     async () => {
-      const ret = await api.getUserInfo(priAddress)
-      return ret.data
+      const info = await api.getUserInfo(priAddress)
+      const setting = await api.getUserSetting(priAddress)
+      return {
+        info: info.data,
+        settings: setting.data,
+      }
     },
     {
       refetchIntervalInBackground: false,
@@ -328,8 +332,8 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
   )
 
   const nickname = useMemo(() => {
-    if (userInfo?.nickname) {
-      return userInfo.nickname
+    if (userInfo?.info?.nickname) {
+      return userInfo.info?.nickname
     }
     if (isPrimitiveEthAddress(address)) {
       return truncateMiddle(address, 6, 4, '_')
@@ -390,6 +394,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
+                    rewardType={userInfo?.settings.reward_type}
                     earnIconStyle={{
                       type: 'blue',
                       left: '62px',
