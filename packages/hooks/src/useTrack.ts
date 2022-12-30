@@ -92,7 +92,9 @@ export enum TrackEvent {
 
   // subscribe-btn
   ClickSubscribeOk = 'subscribe_click_notification_OK',
+  ClickSubscribeAirOk = 'subscribe_default_click_notification_continue',
   ClickSubscribeVisit = 'subscribe_click_visti_mail3',
+  ClickSubscribeAirVisit = 'subscribe_default_click_visti_mail3',
 
   // developers
   // mmb
@@ -150,6 +152,7 @@ export enum TrackKey {
 
   // subscribe-btn
   SubscribeBtnStatus = 'subscribe_to_visti_mail3',
+  SubscribeBtnAirStatus = 'subscribe_default_click_visti_mail3',
 
   LitepaperLanguage = 'litepaper_language',
 
@@ -272,6 +275,7 @@ export interface TrackProps {
   [TrackKey.CommunityClickCommunityPersonalcenterItem]?: CommunityClickCommunityPersonalcenterItem
   [TrackKey.CommunityQRcodeStyle]?: CommunityQRcodeStyle
   [TrackKey.SubscribeBtnStatus]?: SubscribeAction
+  [TrackKey.SubscribeBtnAirStatus]?: SubscribeAction
 }
 
 export const useTrackClick = (event: TrackEvent) => (props?: TrackProps) => {
