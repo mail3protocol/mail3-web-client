@@ -27,6 +27,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useDialog } from 'hooks'
+import { RewardType } from 'models'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { useUpdateTipsPanel } from '../../hooks/useUpdateTipsPanel'
@@ -34,7 +35,6 @@ import { useAPI } from '../../hooks/useAPI'
 import { QueryKey } from '../../api/QueryKey'
 import {
   SubscriptionPlatform,
-  SubscriptionRewardType,
   SubscriptionState,
 } from '../../api/modals/SubscriptionResponse'
 import { useToast } from '../../hooks/useToast'
@@ -80,7 +80,7 @@ export const EarnNft: React.FC = () => {
   const dialog = useDialog()
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const [campaignUrl, setCampaignUrl] = useState('')
-  const [rewardType, setRewardType] = useState(SubscriptionRewardType.NFT)
+  const [rewardType, setRewardType] = useState(RewardType.NFT)
   const [platform, setPlatform] = useState(SubscriptionPlatform.Galaxy)
   const [credentialId, setCredentialId] = useState('')
   const [accessToken, setAccessToken] = useState('')
@@ -400,19 +400,19 @@ export const EarnNft: React.FC = () => {
             <RadioGroup
               isDisabled={isDisabled}
               value={rewardType}
-              onChange={(val) => setRewardType(val as SubscriptionRewardType)}
+              onChange={(val) => setRewardType(val as RewardType)}
             >
               <HStack spacing="8px">
-                <Radio variant="outline" value={SubscriptionRewardType.NFT}>
+                <Radio variant="outline" value={RewardType.NFT}>
                   {t('nft')}
                 </Radio>
-                <Radio variant="outline" value={SubscriptionRewardType.AIR}>
+                <Radio variant="outline" value={RewardType.AIR}>
                   {t('air')}
                 </Radio>
               </HStack>
             </RadioGroup>
           </FormControl>
-          {rewardType === SubscriptionRewardType.NFT ? (
+          {rewardType === RewardType.NFT ? (
             <>
               <FormControl>
                 <FormLabel>{t('distribution_platform')}</FormLabel>

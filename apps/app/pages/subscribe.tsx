@@ -1,7 +1,8 @@
 import React from 'react'
 import { Flex } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import { RewardType } from 'models'
 import { NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { Subscribe } from '../components/Subscribe'
@@ -21,7 +22,14 @@ const Navbar = () => (
 )
 
 export const SubscribePage = () => {
-  useDocumentTitle('Subscribe')
+  const [searchParams] = useSearchParams()
+
+  const rewardType = searchParams.get('reward_type')
+
+  useDocumentTitle(
+    rewardType === RewardType.AIR ? 'Subscribe Default' : 'Subscribe'
+  )
+
   return (
     <PageContainer>
       <Navbar />

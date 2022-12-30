@@ -12,17 +12,17 @@ import { Grid } from '@chakra-ui/layout'
 import { lazy, Suspense, useMemo } from 'react'
 import { copyText, verifyEmail } from 'shared'
 import { useLoginInfo } from 'hooks'
+import { RewardType } from 'models'
 import { subscribeButtonTemplateCode } from './SubscribeButtonTemplateCode'
 import { useToast } from '../../hooks/useToast'
 import { APP_URL } from '../../constants/env/url'
 import { useUserInfo } from '../../hooks/useUserInfo'
-import { SubscriptionRewardType } from '../../api/modals/SubscriptionResponse'
 
 const CodeEditor = lazy(() => import('../CodeEditor'))
 
 export interface StylePreviewProps {
   isDisabledCopy?: boolean
-  rewardType: SubscriptionRewardType
+  rewardType: RewardType
 }
 
 export const StylePreview: React.FC<StylePreviewProps> = ({

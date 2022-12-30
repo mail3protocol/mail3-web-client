@@ -1,11 +1,11 @@
-import { SubscriptionRewardType } from '../../api/modals/SubscriptionResponse'
+import { RewardType } from 'models'
 import { APP_URL } from '../../constants/env/url'
 
 export const subscribeButtonTemplateCode = (
   communityId: string,
   address: string,
   opt?: {
-    type: SubscriptionRewardType
+    type: RewardType
   }
 ) =>
   // language=html
