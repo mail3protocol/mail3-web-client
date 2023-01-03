@@ -188,7 +188,12 @@ export const EarnNft: React.FC = () => {
     }
   }
 
-  const onSubmit = () =>
+  const onSubmit = () => {
+    if (rewardType === RewardType.AIR) {
+      onUpdateSubscription()
+      return
+    }
+
     dialog({
       title:
         state === SubscriptionState.Inactive
@@ -216,6 +221,7 @@ export const EarnNft: React.FC = () => {
         onUpdateSubscription()
       },
     })
+  }
 
   const onChangePlatformWithSyncState = (newPlatform: SubscriptionPlatform) => {
     if (platform === newPlatform) return
