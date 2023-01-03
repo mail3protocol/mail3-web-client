@@ -4,7 +4,7 @@
     "main": "index.js",
     "private": true,
     "files": [
-      "eslint-preset.cjs"
+        "eslint-preset.js"
     ],
     "scripts": {
       "clean": "rm -rf .turbo && rm -rf node_modules"

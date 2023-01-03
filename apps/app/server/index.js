@@ -2,21 +2,23 @@ const express = require('express')
 const compression = require('compression')
 const { renderPage } = require('vite-plugin-ssr')
 const sirv = require('sirv')
+const path = require('path')
 
-const root = __dirname
+const staticPath = path.join(__dirname, '..', 'dist', 'client')
 
 async function startServer() {
   const app = express()
 
   app.use(compression())
 
-  app.use(sirv(`${root}/dist/client`))
+  app.use(sirv(staticPath))
 
   // eslint-disable-next-line consistent-return
   app.get('*', async (req, res, next) => {
     const pageContextInit = {
       urlOriginal: req.originalUrl,
     }
+    console.log(pageContextInit)
     const pageContext = await renderPage(pageContextInit)
     const { httpResponse } = pageContext
     if (!httpResponse) return next()

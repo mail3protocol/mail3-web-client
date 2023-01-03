@@ -1,2 +1,2 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-module.exports = require('scripts/eslint-preset.cjs')
+module.exports = require('scripts/eslint-preset')

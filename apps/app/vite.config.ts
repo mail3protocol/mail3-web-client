@@ -15,6 +15,9 @@ import ssr from 'vite-plugin-ssr/plugin'
 export default defineConfig(() =>
   // const env = loadEnv(c.mode, process.cwd(), '')
   ({
+    ssr: {
+      noExternal: ['styled-components', '@emotion/*']
+    },
     server: {
       https: false,
     },
