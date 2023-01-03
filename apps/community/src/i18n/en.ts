@@ -70,7 +70,7 @@ export default {
   },
   components: {
     header: {
-      logo_name: 'Community',
+      logo_name: 'Subscriptions',
     },
     sidebar: {
       message: 'Message',
@@ -128,7 +128,7 @@ export default {
   },
   hooks: {
     register_dialog: {
-      title: 'Apply for your Community',
+      title: 'Apply for your Web3 Subscription',
       description: `Please click the "mail<sup>3</sup> me" button below to submit your application. It may take some time for your application to receive a response.`,
       no_white_list_description:
         'If you would like to apply for access to "mail<sup>3</sup> Community". <br/><br/>Please visit mail<sup>3</sup> official website to claim your Mail3 first.',
@@ -298,7 +298,7 @@ export default {
   },
   login_home_page: {
     say_hi: 'Hello! Friends',
-    title: 'Welcome to\nMail3 Community!',
+    title: 'Welcome to\nMail3 Subscriptions!',
     join_community: 'Join community',
     join_discord: 'Join Discord',
     follow_twitter: 'Follow Twitter',

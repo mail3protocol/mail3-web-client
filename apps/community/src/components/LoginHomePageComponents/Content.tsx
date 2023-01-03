@@ -32,7 +32,6 @@ import { useOpenConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { useOpenAuthModal } from '../../hooks/useAuthDialog'
 import { RoutePath } from '../../route/path'
-import { APP_URL } from '../../constants/env/url'
 
 const MotionImage = chakra(motion.img, {
   shouldForwardProp: (prop) =>
