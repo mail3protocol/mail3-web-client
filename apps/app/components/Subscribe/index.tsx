@@ -235,7 +235,7 @@ const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
               }
             }}
           >
-            {t('open-inbox')}
+            {t('visit-button')}
           </Button>
         </Link>
       </Center>
@@ -486,6 +486,8 @@ const SubscribingAir: React.FC = () => {
 
   const [isRequesting, setIsRequesting] = useState(false)
   const trackOK = useTrackAirOk()
+  const trackContinueAir = useTrackContinueAir()
+  const [isDeclined, setIsDeclined] = useState(false)
 
   if (isBrowserSupportChecking) {
     return null
@@ -545,7 +547,10 @@ const SubscribingAir: React.FC = () => {
                   setIsRequesting(true)
                   trackOK()
                   try {
-                    await requestPermission()
+                    const ps = await requestPermission()
+                    if (ps === 'denied') {
+                      setIsDeclined(true)
+                    }
                   } catch (error) {
                     //
                   } finally {
@@ -569,7 +574,20 @@ const SubscribingAir: React.FC = () => {
             </Text>
             <Center mt="16px">
               <Link to={RoutePath.Inbox}>
-                <Button w="168px" onClick={() => {}}>
+                <Button
+                  w="168px"
+                  onClick={() => {
+                    const status = IS_MOBILE
+                      ? SubscribeAction.Mobile
+                      : SubscribeAction.Already
+
+                    trackContinueAir({
+                      [TrackKey.SubscribeBtnAirStatus]: isDeclined
+                        ? SubscribeAction.Denial
+                        : status,
+                    })
+                  }}
+                >
                   {t('visit-button')}
                 </Button>
               </Link>
