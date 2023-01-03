@@ -1,5 +1,4 @@
 import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
-import { RewardType } from 'models'
 import { useMemo, useState } from 'react'
 
 export interface EarnIconStyle {
@@ -15,7 +14,7 @@ export const SubscribeButton: React.FC<
     iframeHeight: string
     utmSource: string
     utmCampaign?: string
-    rewardType?: RewardType
+    rewardType?: string
     earnIconStyle: EarnIconStyle
   }
 > = ({
@@ -34,7 +33,7 @@ export const SubscribeButton: React.FC<
     () => `${host}/subscribe/button?uuid=${uuid}
     &redirect=${encodeURIComponent(
       `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_campaign=${utmCampaign}&utm_medium=${
-        rewardType === RewardType.AIR
+        rewardType === 'air'
           ? 'click_subscribe_default_button'
           : 'click_subscribe_button'
       }&reward_type=${rewardType}`
