@@ -48,9 +48,7 @@ export default defineConfig(() =>
       nodeResolve(),
       react(),
       ssr({
-        prerender: {
-          noExtraDir: true,
-        },
+        prerender: false,
       }),
       svgrPlugin({
         svgrOptions: {

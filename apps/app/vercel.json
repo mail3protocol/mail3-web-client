@@ -4,5 +4,6 @@
             "source": "/((?!assets/).*)",
             "destination": "/api/ssr.js"
         }
-    ]
+    ],
+    "outputDirectory": "dist/client"
 }
