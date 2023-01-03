@@ -93,8 +93,8 @@ export enum TrackEvent {
   // subscribe-btn
   ClickSubscribeOk = 'subscribe_click_notification_OK',
   ClickSubscribeAirOk = 'subscribe_default_click_notification_continue',
-  ClickSubscribeVisit = 'subscribe_click_visti_mail3',
-  ClickSubscribeAirVisit = 'subscribe_default_click_visti_mail3',
+  ClickSubscribeVisit = 'subscribe_click_visit_mail3',
+  ClickSubscribeAirVisit = 'subscribe_default_click_visit_mail3',
 
   // developers
   // mmb

@@ -395,8 +395,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           <SubscribeButton
             uuid={uuid}
             host={APP_URL}
-            utmSource="subscribe_page"
-            utmCampaign={address}
+            utmSource={location.host}
+            utmCampaign={`s/${address}`}
             iframeHeight="46px"
             w="150px"
             h="28px"

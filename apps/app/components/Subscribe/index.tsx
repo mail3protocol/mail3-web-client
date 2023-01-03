@@ -235,7 +235,7 @@ const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
               }
             }}
           >
-            {t('continue')}
+            {t('open-inbox')}
           </Button>
         </Link>
       </Center>
@@ -313,7 +313,7 @@ const SubscribeStatus: React.FC<{
               })
             }}
           >
-            {t('continue')}
+            {t('open-inbox')}
           </Button>
         </Link>
       </>
@@ -346,7 +346,7 @@ const SubscribeStatus: React.FC<{
             })
           }}
         >
-          {t('continue')}
+          {t('open-inbox')}
         </Button>
       </Link>
     </>
@@ -570,7 +570,7 @@ const SubscribingAir: React.FC = () => {
             <Center mt="16px">
               <Link to={RoutePath.Inbox}>
                 <Button w="168px" onClick={() => {}}>
-                  {t('continue')}
+                  {t('visit-button')}
                 </Button>
               </Link>
             </Center>
