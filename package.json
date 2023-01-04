@@ -22,11 +22,16 @@
         "apps/*"
     ],
     "engines": {
-        "node": "16",
-        "yarn": "1.22"
+        "node": ">=16.0.0"
     },
     "devDependencies": {
         "prettier": "^2.5.1",
         "turbo": "^1.2.3"
+    },
+    "packageManager": "pnpm@7.13.5",
+    "pnpm": {
+        "overrides": {
+            "qs@>=6.9.0 <6.9.7": ">=6.9.7"
+        }
     }
 }
