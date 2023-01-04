@@ -1,14 +1,16 @@
-import { Box, Center, Flex, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Center, Flex, Text, useBreakpointValue } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
 import { useToast } from 'hooks'
 import { useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
 import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
+import { Avatar } from 'ui'
 import { APP_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
+import { UserInfo } from './userInfo'
 
-const CONTAINER_MAX_WIDTH = 1220
+const CONTAINER_MAX_WIDTH = 1064
 
 interface SubscriptionArticleBodyProps {
   mailAddress: string
@@ -21,7 +23,6 @@ interface SubscriptionArticleBodyProps {
 const PageContainer = styled(Box)`
   max-width: ${CONTAINER_MAX_WIDTH}px;
   margin: 20px auto;
-  padding: 78px;
   min-height: 800px;
   background-color: #ffffff;
 
@@ -87,14 +88,12 @@ export const SubscriptionArticleBody: React.FC<
   return (
     <PageContainer>
       <Flex>
-        <Center
-          p="48px 32px"
-          w="305px"
-          flexDirection="column"
-          border="1px solid rgba(0, 0, 0, 0.1)"
-        >
-          <p>{nickname}</p>
-        </Center>
+        <UserInfo
+          priAddress={priAddress}
+          nickname={nickname}
+          mailAddress={mailAddress}
+          desc={settings?.description}
+        />
         <Box h="1000px">
           <p>{nickname}</p>
         </Box>

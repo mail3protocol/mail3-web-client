@@ -9,9 +9,9 @@ import { OFFICE_ADDRESS_LIST, IMAGE_PROXY_URL } from '../../constants'
 
 interface htmlParserProps {
   html: string
-  messageId: string
-  attachments: AttachmentItemResponse[] | null
-  from: AddressResponse
+  messageId?: string
+  attachments?: AttachmentItemResponse[] | null
+  from?: AddressResponse
   shadowStyle?: string
 }
 
@@ -68,7 +68,7 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   const replace = useCallback(
     (dom: DOMNode) => {
       if (dom instanceof Element) {
-        if (dom.attribs?.src?.startsWith('cid:') && attachments) {
+        if (dom.attribs?.src?.startsWith('cid:') && attachments && messageId) {
           return (
             <AttachmentImage
               attachments={attachments}
@@ -110,13 +110,13 @@ export const RenderHTML: React.FC<htmlParserProps> = ({
   )
 
   const isOfficeMail = OFFICE_ADDRESS_LIST.some(
-    (address) => from.address === address
+    (address) => from?.address === address
   )
 
   const addTags = useMemo(() => {
     if (isOfficeMail) return ['iframe']
     return []
-  }, [from.address])
+  }, [from?.address])
 
   const content = useMemo(() => {
     DOMPurify.removeHook('afterSanitizeAttributes')
