@@ -225,8 +225,8 @@
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
-                "signature": "Signature Setup",
-                "avatar": "Set Your Avatar"
+                "signature": "Signature",
+                "avatar": "Avatar"
             }
         },
         "address": {
