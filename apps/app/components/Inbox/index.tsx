@@ -22,7 +22,7 @@ import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 
 import { SendingDialog } from '../SendingDialog'
 import { GoToWriteMailButton } from '../GoToWriteMailButton'
-import { ProductRecommendationsBanner } from '../ProductRecommendationsBanner'
+// import { ProductRecommendationsBanner } from '../ProductRecommendationsBanner'
 import { Mailboxes } from '../../api/mailboxes'
 import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'
 
@@ -286,7 +286,10 @@ export const InboxComponent: React.FC = () => {
         />
       )}
       <Box paddingTop={{ base: '25px', md: '35px' }}>
-        <ProductRecommendationsBanner />
+        {
+          // offline banner
+          /* <ProductRecommendationsBanner /> */
+        }
         <Flex justify="space-between" pl="20px">
           <InboxNav />
           <GoToWriteMailButton />
