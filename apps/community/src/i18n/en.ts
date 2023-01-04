@@ -70,7 +70,7 @@ export default {
   },
   components: {
     header: {
-      logo_name: 'Subscriptions',
+      logo_name: 'Subscription',
     },
     sidebar: {
       message: 'Message',
@@ -298,7 +298,7 @@ export default {
   },
   login_home_page: {
     say_hi: 'Hello! Friends',
-    title: 'Welcome to\nMail3 Subscriptions!',
+    title: 'Welcome to\nMail3 Subscription!',
     join_community: 'Join community',
     join_discord: 'Join Discord',
     follow_twitter: 'Follow Twitter',
