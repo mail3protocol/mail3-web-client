@@ -1,9 +1,9 @@
 import { Box, Center, Image, Text } from '@chakra-ui/react'
 import React, { forwardRef } from 'react'
+import classNames from 'classnames'
 import styled from '@emotion/styled'
 import QrCode from 'qrcode.react'
-import { Avatar } from 'ui'
-import classNames from 'classnames'
+import { Avatar } from '../Avatar'
 
 import _PngBg from './assets/bg.png'
 import { unifyImage } from '../utils'

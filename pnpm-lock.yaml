@@ -20,6 +20,7 @@ importers:
       '@emotion/react': ^11
       '@emotion/styled': ^11
       '@esbuild-plugins/node-globals-polyfill': ^0.1.1
+      '@metamask/detect-provider': 1.2.0
       '@remirror/extension-react-tables': ^1.0.39
       '@remirror/pm': ^1.0.20
       '@remirror/react': ^1.0.39
@@ -34,9 +35,11 @@ importers:
       '@types/react-dom': ^17.0.0
       '@uauth/js': ^2.4.0
       '@vitejs/plugin-react': ^3.0.0
+      '@web3-react/types': 8.0.10-beta.0
       assets: workspace:*
       axios: ^0.26.1
       buffer: ^6.0.3
+      chakra-ui-steps: 1.8.0
       classnames: ^2.3.1
       compression: ^1.7.4
       connect-wallet: workspace:*
@@ -54,8 +57,10 @@ importers:
       idb-keyval: ^6.2.0
       jotai: ^1.6.1
       jsdom: ^19.0.0
+      models: workspace:*
       observable-hooks: ^4.2.0
       pretty-bytes: ^6.0.0
+      qrcode.react: 3.0.2
       react: ^17.0.2
       react-dom: ^17.0.2
       react-hook-form: ^7.38.0
@@ -85,14 +90,17 @@ importers:
       '@chakra-ui/react': 1.8.7_vxoeverxkzoudysg7b3iovpddi
       '@emotion/react': 11.9.0_wchdyfjsjs7jbjx7r7guc3etfq
       '@emotion/styled': 11.8.1_qqzyodsgsghzz6vpxsrxbwelfm
+      '@metamask/detect-provider': 1.2.0
       '@remirror/extension-react-tables': 1.0.39_xywtxkw2c3vnc5rhjjskkgqbju
       '@remirror/pm': 1.0.20
       '@remirror/react': 1.0.39_xywtxkw2c3vnc5rhjjskkgqbju
       '@sentry/react': 7.7.0_react@17.0.2
       '@sentry/tracing': 7.7.0
       '@uauth/js': 2.4.0
+      '@web3-react/types': 8.0.10-beta.0_react@17.0.2
       assets: link:../../packages/assets
       axios: 0.26.1
+      chakra-ui-steps: 1.8.0_uo45qoclqpkkmmb2nm2umxsyzi
       classnames: 2.3.1
       compression: 1.7.4
       connect-wallet: link:../../packages/connect-wallet
@@ -108,8 +116,10 @@ importers:
       i18next: 21.8.13
       idb-keyval: 6.2.0
       jotai: 1.6.2_sjmhckwy5qfij2tjskarhyqemu
+      models: link:../../packages/models
       observable-hooks: 4.2.0_sxn5efb2reqthsy7svtr42qyry
       pretty-bytes: 6.0.0
+      qrcode.react: 3.0.2_react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-hook-form: 7.38.0_react@17.0.2
@@ -333,6 +343,7 @@ importers:
       qrcode.react: ^3.0.2
       react: ^17.0.2
       react-dom: ^17.0.2
+      react-i18next: 11.18.0
       react-query: ^3.34.16
       scripts: workspace:*
       shared: workspace:*
@@ -346,6 +357,7 @@ importers:
       boring-avatars: 1.5.8
       hooks: link:../hooks
       qrcode.react: 3.0.2_react@17.0.2
+      react-i18next: 11.18.0_sfoxds7t5ydpegc3knd667wn6m
       shared: link:../shared
       ui: link:../ui
     devDependencies:
@@ -390,6 +402,7 @@ importers:
       react-query: ^3.34.16
       react-router-dom: ^6.3.0
       scripts: workspace:*
+      shared: workspace:*
       tsconfig: workspace:*
       typescript: 4.6.3
     dependencies:
@@ -402,6 +415,7 @@ importers:
       '@web3-react/metamask': 8.0.19-beta.0_react@17.0.2
       '@web3-react/walletconnect': 8.0.26-beta.0_kkaxlxfgv67e2hlo4mkvgtzeue
       html2canvas: 1.4.1
+      shared: link:../shared
     devDependencies:
       '@chakra-ui/react': 1.8.7_vxoeverxkzoudysg7b3iovpddi
       '@emotion/react': 11.9.0_wchdyfjsjs7jbjx7r7guc3etfq
@@ -515,6 +529,7 @@ importers:
       assets: workspace:*
       boring-avatars: 1.5.8
       chakra-ui-steps: ^1.8.0
+      classnames: ^2.3.1
       eslint: 8.13.0
       framer-motion: ^6
       hooks: workspace:*
@@ -532,6 +547,7 @@ importers:
       assets: link:../assets
       boring-avatars: 1.5.8
       chakra-ui-steps: 1.8.0_uo45qoclqpkkmmb2nm2umxsyzi
+      classnames: 2.3.1
       hooks: link:../hooks
       qrcode.react: 3.0.2_react@17.0.2
       shared: link:../shared
@@ -3611,6 +3627,17 @@ packages:
 
   /@codemirror/autocomplete/6.2.0:
     resolution: {integrity: sha512-yNCm2CEE4kE4L2Sf7WeyCej1Q3951ccaCWfomrlBkoERKCss+TzuEeqGe5VnAJTEybLy1yzf1BdMUY/988bfpg==}
+    dependencies:
+      '@codemirror/language': 6.2.1
+      '@codemirror/state': 6.1.1
+      '@codemirror/view': 6.3.0
+      '@lezer/common': 1.0.1
+    dev: false
+
+  /@codemirror/autocomplete/6.2.0_@codemirror+state@6.1.1:
+    resolution: {integrity: sha512-yNCm2CEE4kE4L2Sf7WeyCej1Q3951ccaCWfomrlBkoERKCss+TzuEeqGe5VnAJTEybLy1yzf1BdMUY/988bfpg==}
+    peerDependencies:
+      '@codemirror/state': ^6.0.0
     dependencies:
       '@codemirror/language': 6.2.1
       '@codemirror/state': 6.1.1
@@ -8990,7 +9017,7 @@ packages:
   /@uiw/codemirror-extensions-basic-setup/4.12.3:
     resolution: {integrity: sha512-Z6TXwX6IkNqXYdfMNo20lFN03tp8eLlUHlcuTCq/z5GpENbEt+l/bvnLj8RtHKZ0Ys75a/8rXamyZtHjJ8KgrA==}
     dependencies:
-      '@codemirror/autocomplete': 6.2.0
+      '@codemirror/autocomplete': 6.2.0_@codemirror+state@6.1.1
       '@codemirror/commands': 6.1.0
       '@codemirror/language': 6.2.1
       '@codemirror/lint': 6.0.0
@@ -14421,6 +14448,25 @@ packages:
       '@babel/runtime': 7.19.0
       html-parse-stringify: 3.0.1
       i18next: 21.8.13
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /react-i18next/11.18.0_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-coJujU20xJ5Wa5rHjTyB5LFKZb1yfXo2A+40RRSyAF0FlZRHyy+3C1Mr92x1JPfS7W7v2TWNn8mRhpDFGJwXVg==}
+    peerDependencies:
+      i18next: '>= 19.0.0'
+      react: '>= 16.8.0'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.19.0
+      html-parse-stringify: 3.0.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: false

@@ -1,21 +1,19 @@
-import type { ImageProps } from '@chakra-ui/image'
-import { useImage } from '@chakra-ui/image'
-import type {
+import {
+  useImage,
   ChakraComponent,
   SystemProps,
   SystemStyleObject,
   ThemingProps,
   HTMLChakraProps,
-} from '@chakra-ui/system'
-import {
+  ImageProps,
   chakra,
   forwardRef,
   omitThemingProps,
   StylesProvider,
   useMultiStyleConfig,
   useStyles,
-} from '@chakra-ui/system'
-import { cx, __DEV__ } from '@chakra-ui/utils'
+} from '@chakra-ui/react'
+import classNames from 'classnames'
 import * as React from 'react'
 
 interface AvatarOptions {
@@ -76,7 +74,7 @@ interface AvatarBadgeProps extends HTMLChakraProps<'div'> {}
  * AvatarBadge used to show extra badge to the top-right
  * or bottom-right corner of an avatar.
  */
-const AvatarBadge = forwardRef<AvatarBadgeProps, 'div'>((props, ref) => {
+export const AvatarBadge = forwardRef<AvatarBadgeProps, 'div'>((props, ref) => {
   const styles = useStyles()
 
   const badgeStyles: SystemStyleObject = {
@@ -93,15 +91,11 @@ const AvatarBadge = forwardRef<AvatarBadgeProps, 'div'>((props, ref) => {
     <chakra.div
       ref={ref}
       {...props}
-      className={cx('chakra-avatar__badge', props.className)}
+      className={classNames('chakra-avatar__badge', props.className)}
       __css={badgeStyles}
     />
   )
 })
-
-if (__DEV__) {
-  AvatarBadge.displayName = 'AvatarBadge'
-}
 
 function initials(name: string) {
   const [firstName, lastName] = name.split(' ')
@@ -282,7 +276,7 @@ export const RawAvatar = forwardRef<AvatarProps, 'span'>((props, ref) => {
     <chakra.span
       ref={ref}
       {...rest}
-      className={cx('chakra-avatar', props.className)}
+      className={classNames('chakra-avatar', props.className)}
       __css={avatarStyles}
     >
       <StylesProvider value={styles}>
@@ -305,16 +299,8 @@ export const RawAvatar = forwardRef<AvatarProps, 'span'>((props, ref) => {
   )
 })
 
-if (__DEV__) {
-  RawAvatar.displayName = 'Avatar'
-}
-
 interface AvatarImageProps
   extends ImageProps,
     Pick<AvatarProps, 'getInitials' | 'borderRadius' | 'icon' | 'name'> {
   iconLabel?: string
-}
-
-if (__DEV__) {
-  AvatarImage.displayName = 'AvatarImage'
 }

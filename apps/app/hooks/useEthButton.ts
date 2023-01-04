@@ -13,7 +13,7 @@ import {
 } from 'hooks'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { useTranslation } from 'react-i18next'
-import { Connector, Web3ReactStore } from '@web3-react/types'
+import type { Connector, Web3ReactStore } from '@web3-react/types'
 import { isRejectedMessage, isWechat } from '../utils'
 
 export interface useEthButtonProps {

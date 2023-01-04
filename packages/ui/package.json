@@ -12,6 +12,7 @@
         "assets": "workspace:*",
         "boring-avatars": "1.5.8",
         "chakra-ui-steps": "^1.8.0",
+        "classnames": "^2.3.1",
         "hooks": "workspace:*",
         "qrcode.react": "^3.0.2",
         "shared": "workspace:*"

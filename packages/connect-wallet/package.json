@@ -9,13 +9,14 @@
     "license": "MIT",
     "dependencies": {
         "@metamask/detect-provider": "^1.2.0",
+        "@uauth/js": "^2.4.0",
         "assets": "workspace:*",
         "boring-avatars": "1.5.8",
-        "shared": "workspace:*",
         "hooks": "workspace:*",
-        "ui": "workspace:*",
         "qrcode.react": "^3.0.2",
-        "@uauth/js": "^2.4.0"
+        "react-i18next": "11.18.0",
+        "shared": "workspace:*",
+        "ui": "workspace:*"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",

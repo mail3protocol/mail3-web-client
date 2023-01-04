@@ -16,6 +16,7 @@
         "@web3-react/core": "8.0.23-beta.0",
         "@web3-react/metamask": "8.0.19-beta.0",
         "@web3-react/walletconnect": "8.0.26-beta.0",
+        "shared": "workspace:*",
         "html2canvas": "1.4.1"
     },
     "devDependencies": {
