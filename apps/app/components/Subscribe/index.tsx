@@ -559,7 +559,7 @@ const SubscribingAir: React.FC = () => {
                   }
                 }}
               >
-                {t('Continue')}
+                {t('continue')}
               </Button>
             </Center>
           </>
