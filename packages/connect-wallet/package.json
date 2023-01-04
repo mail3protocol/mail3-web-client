@@ -9,11 +9,11 @@
     "license": "MIT",
     "dependencies": {
         "@metamask/detect-provider": "^1.2.0",
-        "assets": "*",
+        "assets": "workspace:*",
         "boring-avatars": "1.5.8",
-        "shared": "*",
-        "hooks": "*",
-        "ui": "*",
+        "shared": "workspace:*",
+        "hooks": "workspace:*",
+        "ui": "workspace:*",
         "qrcode.react": "^3.0.2",
         "@uauth/js": "^2.4.0"
     },
@@ -29,8 +29,8 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-query": "^3.34.16",
-        "scripts": "*",
-        "tsconfig": "*",
+        "scripts": "workspace:*",
+        "tsconfig": "workspace:*",
         "typescript": "4.6.3"
     }
 }

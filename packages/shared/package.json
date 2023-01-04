@@ -10,12 +10,12 @@
     "dependencies": {
         "axios": "^0.26.1",
         "dayjs": "^1.11.5",
-        "models": "*"
+        "models": "workspace:*"
     },
     "devDependencies": {
         "eslint": "8.13.0",
-        "scripts": "*",
-        "tsconfig": "*",
+        "scripts": "workspace:*",
+        "tsconfig": "workspace:*",
         "typescript": "4.6.3"
     }
 }

@@ -9,12 +9,12 @@
     "license": "MIT",
     "dependencies": {
         "@metamask/detect-provider": "^1.2.0",
-        "assets": "*",
+        "assets": "workspace:*",
         "boring-avatars": "1.5.8",
         "chakra-ui-steps": "^1.8.0",
-        "hooks": "*",
+        "hooks": "workspace:*",
         "qrcode.react": "^3.0.2",
-        "shared": "*"
+        "shared": "workspace:*"
     },
     "devDependencies": {
         "@chakra-ui/react": "^1.8.6",
@@ -28,8 +28,8 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-query": "^3.34.16",
-        "scripts": "*",
-        "tsconfig": "*",
+        "scripts": "workspace:*",
+        "tsconfig": "workspace:*",
         "typescript": "4.6.3"
     }
 }

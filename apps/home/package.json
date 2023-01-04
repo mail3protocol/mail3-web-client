@@ -10,15 +10,14 @@
         "test": "echo \"Test not installed\""
     },
     "engines": {
-        "node": "16",
-        "yarn": "1.22"
+        "node": "16"
     },
     "dependencies": {
         "@chakra-ui/react": "^1.8.6",
         "@emotion/react": "^11",
         "@emotion/styled": "^11",
         "@mail3/mail3-me": "0.1.5",
-        "assets": "*",
+        "assets": "workspace:*",
         "aws-sdk": "^2.1206.0",
         "axios": "^0.26.1",
         "dayjs": "^1.11.5",
@@ -34,8 +33,8 @@
         "react-dom": "^17.0.2",
         "react-query": "^3.34.16",
         "rxjs": "^7.5.5",
-        "shared": "*",
-        "ui": "*"
+        "shared": "workspace:*",
+        "ui": "workspace:*"
     },
     "devDependencies": {
         "@svgr/webpack": "6.2.1",
@@ -46,8 +45,8 @@
         "@types/sharp": "^0.30.5",
         "eslint": "8.13.0",
         "next-transpile-modules": "^9.0.0",
-        "scripts": "*",
-        "tsconfig": "*",
+        "scripts": "workspace:*",
+        "tsconfig": "workspace:*",
         "typescript": "4.6.3",
         "url-loader": "^4.1.1"
     }
