@@ -10,4 +10,6 @@ export enum Query {
   GetSubscribeStatus = 'get_subscribe_status',
   SetSubscribeStatus = 'set_subscribe_status',
   SubscribeProfileInit = 'subscribe profile init',
+  SubscriptionArticleInit = 'subscription article init',
+  SubscriptionDetail = 'subscription article detai',
 }
