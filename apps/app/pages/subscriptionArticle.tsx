@@ -126,6 +126,7 @@ export const SubscriptionArticle = () => {
         uuid={data.uuid}
         priAddress={data.priAddress}
         articleId={articleId}
+        detail={detail}
       />
     </>
   )
