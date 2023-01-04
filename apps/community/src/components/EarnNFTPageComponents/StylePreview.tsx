@@ -12,6 +12,7 @@ import { Grid } from '@chakra-ui/layout'
 import { lazy, Suspense, useMemo } from 'react'
 import { copyText, verifyEmail } from 'shared'
 import { useLoginInfo } from 'hooks'
+import { RewardType } from 'models'
 import { subscribeButtonTemplateCode } from './SubscribeButtonTemplateCode'
 import { useToast } from '../../hooks/useToast'
 import { APP_URL } from '../../constants/env/url'
@@ -21,10 +22,12 @@ const CodeEditor = lazy(() => import('../CodeEditor'))
 
 export interface StylePreviewProps {
   isDisabledCopy?: boolean
+  rewardType: RewardType
 }
 
 export const StylePreview: React.FC<StylePreviewProps> = ({
   isDisabledCopy,
+  rewardType,
 }) => {
   const { t } = useTranslation(['earn_nft', 'common'])
   const loginInfo = useLoginInfo()
@@ -39,8 +42,11 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
   }, [userInfo?.address])
 
   const code = useMemo(
-    () => subscribeButtonTemplateCode(loginInfo?.uuid || '', address),
-    [loginInfo?.uuid]
+    () =>
+      subscribeButtonTemplateCode(loginInfo?.uuid || '', address, {
+        type: rewardType,
+      }),
+    [loginInfo?.uuid, rewardType]
   )
   const toast = useToast()
 
@@ -79,7 +85,11 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
           </Box>
           <Center w="full" h="calc(100% - 53px)">
             <a
-              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=click_subscribe_button&utm_campaign=${address}`}
+              href={`${APP_URL}/subscribe/${loginInfo?.uuid}?utm_medium=${
+                rewardType === RewardType.AIR
+                  ? 'click_subscribe_default_button'
+                  : 'click_subscribe_button'
+              }&utm_campaign=${address}&reward_type=${rewardType}`}
               target="_blank"
               rel="noreferrer"
               style={
@@ -87,7 +97,7 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
               }
             >
               <img
-                src={`${APP_URL}/images/subscribe-btn.png`}
+                src={`${APP_URL}/images/subscribe-btn-${rewardType}.png`}
                 alt="subscribe"
                 style={{ width: '178px', height: 'auto', margin: 'auto' }}
               />

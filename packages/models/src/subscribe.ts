@@ -5,3 +5,8 @@ export interface CommunitySubscriptionResp {
   campaign_id: string
   state: 'active' | 'inactive'
 }
+
+export enum RewardType {
+  NFT = 'nft',
+  AIR = 'air',
+}

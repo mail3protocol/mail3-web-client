@@ -27,13 +27,16 @@ import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from 'ui'
 import { atomWithStorage } from 'jotai/utils'
-import { atom, useAtom } from 'jotai'
+import { atom, useAtom, useAtomValue } from 'jotai'
 import { ConnectWalletSelector } from 'connect-wallet/src/ConnectModalWithMultichain'
 import styled from '@emotion/styled'
+import { RewardType } from 'models'
 import { Query } from '../../api/query'
 import WelcomePng from '../../assets/subscribe/welcome.png'
 import SubscribePng from '../../assets/subscribe/subscribe.png'
 import GuideMp4 from '../../assets/subscribe/guide-claim.mp4'
+import AirAllowPng from '../../assets/subscribe/allow-air.png'
+import HappyPng from '../../assets/subscribe/happy.png'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
@@ -41,10 +44,14 @@ import { useNotification } from '../../hooks/useNotification'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 import { IS_MOBILE } from '../../constants'
 import confettiAni from './confetti'
+import { rewardTypeAtom } from '../../pages/subscribe'
 
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
+const useTrackContinueAir = () =>
+  useTrackClick(TrackEvent.ClickSubscribeAirVisit)
 
 const useTrackOk = () => useTrackClick(TrackEvent.ClickSubscribeOk)
+const useTrackAirOk = () => useTrackClick(TrackEvent.ClickSubscribeAirOk)
 
 const ScanAnimate = styled(Center)`
   overflow: hidden;
@@ -86,10 +93,24 @@ const ScanAnimate = styled(Center)`
   }
 `
 
+const NewHeading = styled(Heading)`
+  background: linear-gradient(
+    90.02deg,
+    #ffb1b1 0.01%,
+    #ffcd4b 50.26%,
+    #916bff 99.99%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+`
+
 const atomWaitPermission = atom(true)
 
 const ConnectWallet = () => {
   const Comp = IS_MOBILE ? VStack : HStack
+  const rewardType = useAtomValue(rewardTypeAtom)
   return (
     <ConnectWalletApiContextProvider>
       <Center mt="20px">
@@ -100,10 +121,12 @@ const ConnectWallet = () => {
           flexDirection="column"
         >
           <Comp spacing="48px">
-            <ScanAnimate w="191px">
-              <Image src={WelcomePng} w="191px" />
-              <Box className="light" />
-            </ScanAnimate>
+            {rewardType !== RewardType.AIR ? (
+              <ScanAnimate w="191px">
+                <Image src={WelcomePng} w="191px" />
+                <Box className="light" />
+              </ScanAnimate>
+            ) : null}
             <Box>
               <ConnectWalletSelector />
             </Box>
@@ -144,23 +167,52 @@ const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
   state,
 }) => {
   const [t] = useTranslation('subscribe')
+  const rewardType = useAtomValue(rewardTypeAtom)
   const trackContinue = useTrackContinue()
+  const trackContinueAir = useTrackContinueAir()
+
   return (
     <Center h="calc(100vh - 180px)">
       <Center
         padding="32px"
         flexDirection="column"
-        border="1px solid #efefef"
         borderRadius="24px"
+        boxShadow="0px 0px 8px rgba(78, 81, 244, 0.2)"
       >
-        <Heading mb="24px" fontSize={['14px', '20px', '20px']} fontWeight={700}>
-          {t('thank-you')}
-        </Heading>
-        <Text mb="24px" fontSize={['12px']}>
+        <Center
+          mb="24px"
+          fontSize={{ base: '22px', md: '24px' }}
+          lineHeight="36px"
+          fontWeight={900}
+        >
+          🎉
+          <NewHeading
+            fontSize={{ base: '18px', md: '24px' }}
+            lineHeight="36px"
+            fontWeight={900}
+          >
+            {t('thank-you')}
+          </NewHeading>
+        </Center>
+
+        <Text
+          mb="24px"
+          fontWeight="600"
+          fontSize={{ base: '14px', md: '16px' }}
+          lineHeight="24px"
+        >
           {t('visit')}
         </Text>
+
+        <Image src={HappyPng} />
+
         <Link to={RoutePath.Inbox}>
           <Button
+            background="#4E51F4"
+            _hover={{
+              bg: '#4E51E0',
+            }}
+            mt="24px"
             w={['138px', '168px', '168px']}
             h={['40px']}
             fontSize={['14px']}
@@ -171,13 +223,19 @@ const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
               const already = IS_MOBILE
                 ? SubscribeAction.Mobile
                 : SubscribeAction.Already
-              trackContinue({
-                [TrackKey.SubscribeBtnStatus]:
-                  state === 'resubscribed' ? repeat : already,
-              })
+              const status = state === 'resubscribed' ? repeat : already
+              if (rewardType === RewardType.AIR) {
+                trackContinueAir({
+                  [TrackKey.SubscribeBtnAirStatus]: status,
+                })
+              } else {
+                trackContinue({
+                  [TrackKey.SubscribeBtnStatus]: status,
+                })
+              }
             }}
           >
-            {t('continue')}
+            {t('visit-button')}
           </Button>
         </Link>
       </Center>
@@ -255,7 +313,7 @@ const SubscribeStatus: React.FC<{
               })
             }}
           >
-            {t('continue')}
+            {t('open-inbox')}
           </Button>
         </Link>
       </>
@@ -288,7 +346,7 @@ const SubscribeStatus: React.FC<{
             })
           }}
         >
-          {t('continue')}
+          {t('open-inbox')}
         </Button>
       </Link>
     </>
@@ -416,6 +474,131 @@ const Subscribing: React.FC = () => {
   )
 }
 
+const SubscribingAir: React.FC = () => {
+  const [t] = useTranslation('subscribe')
+  const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
+  const {
+    isBrowserSupport,
+    permission,
+    requestPermission,
+    isBrowserSupportChecking,
+  } = useNotification(false)
+
+  const [isRequesting, setIsRequesting] = useState(false)
+  const trackOK = useTrackAirOk()
+  const trackContinueAir = useTrackContinueAir()
+  const [isDeclined, setIsDeclined] = useState(false)
+
+  if (isBrowserSupportChecking) {
+    return null
+  }
+
+  return (
+    <Center h="calc(100vh - 180px)" textAlign="center">
+      <Center
+        padding="32px"
+        flexDirection="column"
+        w="438px"
+        border="2px solid #F2F2F2"
+        boxShadow="0px 0px 8px rgba(78, 81, 244, 0.2)"
+        borderRadius="24px"
+      >
+        <Center
+          mb="24px"
+          fontSize={{ base: '22px', md: '24px' }}
+          lineHeight="36px"
+          fontWeight={900}
+        >
+          🎉
+          <NewHeading
+            fontSize={{ base: '18px', md: '24px' }}
+            lineHeight="36px"
+            fontWeight={900}
+          >
+            {t('thank-you')}
+          </NewHeading>
+        </Center>
+
+        {(isWaitPermission && isBrowserSupport && permission === 'default') ||
+        isRequesting ? (
+          <>
+            <Text
+              fontWeight="600"
+              fontSize={{ base: '14px', md: '16px' }}
+              lineHeight="24px"
+            >
+              <Trans
+                components={{
+                  b: <Box as="span" color="#4E51F4" p="0 2px" />,
+                }}
+                ns="subscribe"
+                i18nKey="allow-notification"
+                t={t}
+              />
+            </Text>
+            <Center>
+              <Image src={AirAllowPng} />
+            </Center>
+            <Center mt="16px">
+              <Button
+                w="175px"
+                isLoading={isRequesting}
+                onClick={async () => {
+                  setIsRequesting(true)
+                  trackOK()
+                  try {
+                    const ps = await requestPermission()
+                    if (ps === 'denied') {
+                      setIsDeclined(true)
+                    }
+                  } catch (error) {
+                    //
+                  } finally {
+                    setIsRequesting(false)
+                    setIsWaitPermission(false)
+                  }
+                }}
+              >
+                {t('continue')}
+              </Button>
+            </Center>
+          </>
+        ) : (
+          <>
+            <Text
+              fontWeight="600"
+              fontSize={{ base: '14px', md: '16px' }}
+              lineHeight="24px"
+            >
+              {t('visit')}
+            </Text>
+            <Center mt="16px">
+              <Link to={RoutePath.Inbox}>
+                <Button
+                  w="168px"
+                  onClick={() => {
+                    const status = IS_MOBILE
+                      ? SubscribeAction.Mobile
+                      : SubscribeAction.Already
+
+                    trackContinueAir({
+                      [TrackKey.SubscribeBtnAirStatus]: isDeclined
+                        ? SubscribeAction.Denial
+                        : status,
+                    })
+                  }}
+                >
+                  {t('visit-button')}
+                </Button>
+              </Link>
+            </Center>
+          </>
+        )}
+      </Center>
+    </Center>
+  )
+}
+
 export const Subscribe: React.FC = () => {
   const [t] = useTranslation('subscribe')
   useAuth()
@@ -423,6 +606,8 @@ export const Subscribe: React.FC = () => {
   const account = useAccount()
   const api = useAPI()
   const { id } = useParams()
+  const rewardType = useAtomValue(rewardTypeAtom)
+
   const [localSubscribeStatus, setLocalSubscribeStatus] = useAtom(
     localSubscribeStatusAtom
   )
@@ -502,10 +687,11 @@ export const Subscribe: React.FC = () => {
     return (
       <Box>
         <Center fontWeight="700" fontSize="28px" lineHeight="42px" m="30px 0">
-          {t('connect')}
+          {rewardType !== RewardType.AIR ? t('connect') : t('connect-air')}
         </Center>
 
-        <StepsWrap initialStep={0} />
+        {rewardType !== RewardType.AIR ? <StepsWrap initialStep={0} /> : null}
+
         <ConnectWallet />
       </Box>
     )
@@ -541,6 +727,7 @@ export const Subscribe: React.FC = () => {
     putSubscribeError?.response?.data.message
   // TODO: or already subscribed
   if (subscribeResult && !error) {
+    if (rewardType === RewardType.AIR) return <SubscribingAir />
     return <Subscribing />
   }
 
