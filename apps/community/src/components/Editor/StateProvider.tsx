@@ -8,6 +8,9 @@ import {
   BulletListExtension,
   StrikeExtension,
   LinkExtension,
+  MarkdownExtension,
+  CodeExtension,
+  CodeBlockExtension,
 } from 'remirror/extensions'
 import { Box, BoxProps } from '@chakra-ui/react'
 import { useCallback } from 'react'
@@ -16,6 +19,8 @@ import {
   uploadHandlerFromHomeApi,
 } from './Extensions/CustomizedImageExtension'
 import { useHomeAPI } from '../../hooks/useHomeAPI'
+import { CustomizedHeadingExtension } from './Extensions/CustomizedHeadingExtension'
+import { CustomizedBlockquoteExtension } from './Extensions/CustomizedBlockquoteExtension'
 
 export interface StateProviderProps extends BoxProps {
   content?: string
@@ -39,6 +44,11 @@ export const StateProvider: React.FC<StateProviderProps> = ({
       new OrderedListExtension(),
       new BulletListExtension(),
       new StrikeExtension(),
+      new CustomizedHeadingExtension(),
+      new MarkdownExtension(),
+      new CodeExtension(),
+      new CodeBlockExtension(),
+      new CustomizedBlockquoteExtension(),
       new PlaceholderExtension({ placeholder }),
       new LinkExtension(),
       new CustomizedImageExtension({

@@ -24,11 +24,10 @@ export const Header: React.FC<
       {...props}
     >
       <Flex align="center" userSelect="none">
-        <Logo />
+        <Logo isHiddenText />
         <Box
           as="span"
           ml="8px"
-          color="primary.900"
           fontWeight="bold"
           fontSize="18px"
           {...logoNameProps}

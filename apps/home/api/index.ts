@@ -1,5 +1,5 @@
 import axios, { Axios, AxiosResponse } from 'axios'
-import { HomeCommunity } from 'models'
+import { HomeCommunity, RewardType } from 'models'
 import { useMemo } from 'react'
 import { SERVER_URL } from '../constants/env'
 
@@ -29,6 +29,7 @@ export interface UserSettingResponse {
   description: string
   items_link: string
   mmb_state: 'enabled' | 'disabled'
+  reward_type: RewardType
 }
 
 class API {

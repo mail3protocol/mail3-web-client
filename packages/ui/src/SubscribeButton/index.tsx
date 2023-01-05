@@ -14,6 +14,7 @@ export const SubscribeButton: React.FC<
     iframeHeight: string
     utmSource: string
     utmCampaign?: string
+    rewardType?: string
     earnIconStyle: EarnIconStyle
   }
 > = ({
@@ -23,6 +24,7 @@ export const SubscribeButton: React.FC<
   utmSource,
   utmCampaign = '',
   earnIconStyle,
+  rewardType,
   ...buttonProps
 }) => {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -30,12 +32,17 @@ export const SubscribeButton: React.FC<
   const iframeSrc = useMemo(
     () => `${host}/subscribe/button?uuid=${uuid}
     &redirect=${encodeURIComponent(
-      `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_campaign=${utmCampaign}&utm_medium=click_subscribe_button`
+      `${host}/subscribe/${uuid}?utm_source=${utmSource}&utm_campaign=${utmCampaign}&utm_medium=${
+        rewardType === 'air'
+          ? 'click_subscribe_default_button'
+          : 'click_subscribe_button'
+      }&reward_type=${rewardType}`
     )}
     &buttonStyle=${encodeURIComponent(JSON.stringify(buttonProps))}
     &earnIconStyle=${encodeURIComponent(JSON.stringify(earnIconStyle))}
+    &rewardType=${rewardType}
     `,
-    [host, uuid, utmSource, buttonProps, earnIconStyle]
+    [host, uuid, utmSource, buttonProps, earnIconStyle, rewardType]
   )
 
   const ButtonRemote = (

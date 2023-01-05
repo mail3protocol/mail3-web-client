@@ -1,8 +1,5 @@
-import {
-  SubscriptionPlatform,
-  SubscriptionRewardType,
-  SubscriptionState,
-} from './SubscriptionResponse'
+import { RewardType } from 'models'
+import { SubscriptionPlatform, SubscriptionState } from './SubscriptionResponse'
 
 export interface UpdateSubscriptionResponse {
   uuid: string
@@ -10,7 +7,7 @@ export interface UpdateSubscriptionResponse {
 
 export interface SubscriptionRequest {
   campaign_url?: string
-  reward_type?: SubscriptionRewardType
+  reward_type?: RewardType
   platform?: SubscriptionPlatform
   credential_id?: string
   key?: string
