@@ -24,17 +24,22 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   desc,
 }) => (
   <Center
-    p="48px 32px"
-    w="305px"
+    p={{ base: '10px 25px', md: '48px 32px' }}
+    w={{ base: 'full', md: '305px' }}
     flexDirection="column"
     justifyContent="flex-start"
-    border="1px solid rgba(0, 0, 0, 0.1)"
+    border={{ base: 'none', md: '1px solid rgba(0, 0, 0, 0.1)' }}
     borderTop="none"
   >
     <AvatarArea w="100%">
       <LinkOverlay href="#">
         <Center flexDirection="column" justifyContent="flex-start">
-          <Avatar address={priAddress} borderRadius="50%" w="100px" h="100px" />
+          <Avatar
+            address={priAddress}
+            borderRadius="50%"
+            w={{ base: '80px', md: '100px' }}
+            h={{ base: '80px', md: '100px' }}
+          />
           <Text
             className="nickname"
             fontWeight="700"

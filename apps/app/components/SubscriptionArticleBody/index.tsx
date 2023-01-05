@@ -4,6 +4,7 @@ import {
   Flex,
   HStack,
   Image,
+  Link,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -23,7 +24,7 @@ import { Subscription } from 'models'
 import SvgCopy from 'assets/subscription/copy.svg'
 import SvgTelegram from 'assets/subscription/telegram.svg'
 import SvgTwitter from 'assets/subscription/twitter.svg'
-import { EchoIframe } from 'ui'
+import { Avatar, EchoIframe } from 'ui'
 import { APP_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -139,21 +140,69 @@ export const SubscriptionArticleBody: React.FC<
 
   const buttonList = [ButtonType.Telegram, ButtonType.Copy, ButtonType.Twitter]
 
+  const EchoBody = (
+    <Box
+      mt={{ base: '50px', md: '80px' }}
+      mb="10px"
+      p={{ base: '0 20px', md: '0' }}
+    >
+      <Text fontWeight="800" fontSize={{ base: '20px', md: '32px' }}>
+        Comments
+      </Text>
+      <EchoIframe
+        targetUri={`${APP_URL}/${RoutePath.Subscription}/${articleId}`}
+        mailAddress={mailAddress}
+      />
+    </Box>
+  )
+
   return (
     <PageContainer>
-      <Flex>
+      <Flex direction={{ base: 'column-reverse', md: 'row' }}>
+        {isMobile ? EchoBody : null}
         <UserInfo
           priAddress={priAddress}
           nickname={nickname}
           mailAddress={mailAddress}
           desc={settings?.description}
         />
-        <Box minH="500px" p="48px 32px" w="71.33%">
-          <Text fontWeight="700" fontSize="32px" lineHeight="1.3">
+        <Box
+          minH="500px"
+          p={{ base: '32px 20px', md: '48px 32px' }}
+          w={{ base: 'full', md: '71.33%' }}
+        >
+          <Text
+            fontWeight="700"
+            fontSize={{ base: '24px', md: '32px' }}
+            lineHeight="1.3"
+          >
             {detail?.subject}
           </Text>
 
-          <Flex m="23px 0">
+          {isMobile ? (
+            <Link
+              display="flex"
+              href={`${APP_URL}/${address}`}
+              target="_blank"
+              alignItems="center"
+              onClick={() => {
+                // trackAvatar()
+              }}
+              mt="30px"
+            >
+              <Avatar w="42px" h="42px" address={address} borderRadius="50%" />
+              <Box ml="4px">
+                <Box fontWeight={700} fontSize="14px">
+                  {nickname}
+                </Box>
+                <Box fontWeight={400} fontSize="12px" color="#979797">
+                  {mailAddress}
+                </Box>
+              </Box>
+            </Link>
+          ) : null}
+
+          <Flex m="23px 0" align="center">
             <Box
               fontWeight={500}
               fontSize="14px"
@@ -201,7 +250,7 @@ export const SubscriptionArticleBody: React.FC<
             <Box
               background="#EBEBEB"
               borderRadius="12px"
-              p="16px"
+              p="15px"
               overflow="hidden"
             >
               <Text
@@ -216,12 +265,12 @@ export const SubscriptionArticleBody: React.FC<
             </Box>
           ) : null}
 
-          <Box pt={{ base: '16px', md: '30px' }}>
+          <Box pt={{ base: '10px', md: '30px' }}>
             <RenderHTML
               html={detail?.content}
               shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
             />
-            <Center mt="65px">
+            <Center mt={{ base: '40px', md: '65px' }}>
               <HStack spacing="50px">
                 {buttonList.map((type: ButtonType) => {
                   const { Icon, label, onClick } = buttonConfig[type]
@@ -254,14 +303,8 @@ export const SubscriptionArticleBody: React.FC<
                 })}
               </HStack>
             </Center>
-            <Text mt="80px" mb="10px" fontWeight="800" fontSize="32px">
-              Comments
-            </Text>
-            <EchoIframe
-              targetUri={`${APP_URL}/${RoutePath.Subscription}/${articleId}`}
-              mailAddress={mailAddress}
-            />
           </Box>
+          {!isMobile ? EchoBody : null}
         </Box>
       </Flex>
     </PageContainer>
