@@ -16,7 +16,7 @@ export default defineConfig(() =>
   // const env = loadEnv(c.mode, process.cwd(), '')
   ({
     ssr: {
-      noExternal: ['styled-components', '@emotion/*']
+      // noExternal: ['styled-components', '@emotion/*']
     },
     server: {
       https: false,
