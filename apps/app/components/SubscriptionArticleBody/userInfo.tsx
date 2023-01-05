@@ -29,6 +29,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     flexDirection="column"
     justifyContent="flex-start"
     border="1px solid rgba(0, 0, 0, 0.1)"
+    borderTop="none"
   >
     <AvatarArea w="100%">
       <LinkOverlay href="#">

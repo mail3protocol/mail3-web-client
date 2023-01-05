@@ -37,6 +37,9 @@ const ErrPage = styled(Center)`
     font-size: 14px;
   }
 `
+const NavArea = styled(Box)`
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+`
 
 const Navbar = () => (
   <Flex
@@ -107,7 +110,7 @@ export const SubscriptionArticle = () => {
     )
   }
 
-  if (isLoading || !data?.uuid || !data?.priAddress) {
+  if (isLoading || !data?.uuid || !data?.priAddress || !detail) {
     return (
       <ErrPage>
         <Spinner />
@@ -117,9 +120,11 @@ export const SubscriptionArticle = () => {
 
   return (
     <>
-      <PageContainer>
-        <Navbar />
-      </PageContainer>
+      <NavArea>
+        <PageContainer>
+          <Navbar />
+        </PageContainer>
+      </NavArea>
       <SubscriptionArticleBody
         mailAddress={`${address}@${MAIL_SERVER_URL}`}
         address={address}

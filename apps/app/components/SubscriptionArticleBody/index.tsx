@@ -44,7 +44,7 @@ interface SubscriptionArticleBodyProps {
 
 const PageContainer = styled(Box)`
   max-width: ${CONTAINER_MAX_WIDTH}px;
-  margin: 20px auto;
+  margin: 0px auto;
   min-height: 800px;
   background-color: #ffffff;
 
@@ -65,6 +65,7 @@ export const SubscriptionArticleBody: React.FC<
   const toast = useToast()
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
+
   const shareUrl: string = useMemo(
     () => `${APP_URL}/p/${articleId}`,
     [articleId]
@@ -135,8 +136,8 @@ export const SubscriptionArticleBody: React.FC<
       onClick: () => {},
     },
   }
+
   const buttonList = [ButtonType.Telegram, ButtonType.Copy, ButtonType.Twitter]
-  console.log(userInfo, settings, nickname)
 
   return (
     <PageContainer>
@@ -149,11 +150,17 @@ export const SubscriptionArticleBody: React.FC<
         />
         <Box minH="500px" p="48px 32px" w="71.33%">
           <Text fontWeight="700" fontSize="32px" lineHeight="1.3">
-            The More Important the Work, the More Important the Rest
+            {detail?.subject}
           </Text>
 
           <Flex m="23px 0">
-            <Box fontWeight={500} fontSize="12px" color="#6F6F6F" mt="4px">
+            <Box
+              fontWeight={500}
+              fontSize="14px"
+              color="#6F6F6F"
+              mt="4px"
+              lineHeight="18px"
+            >
               {SubFormatDate(detail.created_at)}
             </Box>
             <Spacer />
@@ -171,7 +178,7 @@ export const SubscriptionArticleBody: React.FC<
                   >
                     <PopoverTrigger>
                       <Box as="button" p="5px" onClick={onClick}>
-                        <Image src={Icon} w="21px" h="21px" />
+                        <Image src={Icon} w="22px" h="22px" />
                       </Box>
                     </PopoverTrigger>
                     <PopoverContent width="auto">
@@ -190,31 +197,66 @@ export const SubscriptionArticleBody: React.FC<
             </HStack>
           </Flex>
 
-          <Box
-            background="#EBEBEB"
-            borderRadius="12px"
-            p="16px"
-            overflow="hidden"
-          >
-            <Text
-              fontWeight="500"
-              fontSize="16px"
-              lineHeight="24px"
-              color="#333333"
-              noOfLines={2}
+          {detail?.summary ? (
+            <Box
+              background="#EBEBEB"
+              borderRadius="12px"
+              p="16px"
+              overflow="hidden"
             >
-              Just click The “Delivering to...” button under their name. If you
-              change the destination, all existing and future email will be
-              moved automatically.all existing and future email will be moved
-              automatically.
-            </Text>
-          </Box>
+              <Text
+                fontWeight="500"
+                fontSize="16px"
+                lineHeight="24px"
+                color="#333333"
+                noOfLines={2}
+              >
+                {detail?.summary}
+              </Text>
+            </Box>
+          ) : null}
 
           <Box pt={{ base: '16px', md: '30px' }}>
             <RenderHTML
               html={detail?.content}
               shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
             />
+            <Center mt="65px">
+              <HStack spacing="50px">
+                {buttonList.map((type: ButtonType) => {
+                  const { Icon, label, onClick } = buttonConfig[type]
+
+                  return (
+                    <Popover
+                      arrowSize={8}
+                      key={type}
+                      trigger="hover"
+                      placement="top-start"
+                      size="md"
+                    >
+                      <PopoverTrigger>
+                        <Box as="button" p="5px" onClick={onClick}>
+                          <Image src={Icon} w="28px" h="28px" />
+                        </Box>
+                      </PopoverTrigger>
+                      <PopoverContent width="auto">
+                        <PopoverArrow />
+                        <PopoverBody
+                          whiteSpace="nowrap"
+                          fontSize="14px"
+                          justifyContent="center"
+                        >
+                          {label}
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  )
+                })}
+              </HStack>
+            </Center>
+            <Text mt="80px" mb="10px" fontWeight="800" fontSize="32px">
+              Comments
+            </Text>
             <EchoIframe
               targetUri={`${APP_URL}/${RoutePath.Subscription}/${articleId}`}
               mailAddress={mailAddress}
