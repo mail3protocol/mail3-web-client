@@ -307,6 +307,7 @@ export const EarnNft: React.FC = () => {
   }, [accessToken])
 
   const isDisabledSubmit = useMemo(() => {
+    if (rewardType === RewardType.AIR) return false
     if (platform === SubscriptionPlatform.Galaxy)
       return (
         !!campaignUrlErrorMessage ||
@@ -327,6 +328,7 @@ export const EarnNft: React.FC = () => {
     credentialIdErrorMessage,
     accessTokenErrorMessage,
     platform,
+    rewardType,
   ])
 
   return (
@@ -517,6 +519,38 @@ export const EarnNft: React.FC = () => {
                 </FormHelperText>
                 <FormErrorMessage>{campaignUrlErrorMessage}</FormErrorMessage>
               </FormControl>
+              {platform === SubscriptionPlatform.Galaxy ? (
+                <>
+                  <FormControl isInvalid={credentialIdErrorMessage !== ''}>
+                    <FormLabel>{t('credential_id')}</FormLabel>
+                    <Input
+                      isDisabled={isDisabled}
+                      value={credentialId}
+                      onChange={({ target: { value } }) =>
+                        setCredentialId(value)
+                      }
+                      placeholder={t('credential_id_placeholder')}
+                    />
+                    <FormErrorMessage>
+                      {credentialIdErrorMessage}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={accessTokenErrorMessage !== ''}>
+                    <FormLabel>{t('access_token')}</FormLabel>
+                    <Input
+                      isDisabled={isDisabled}
+                      value={accessToken}
+                      onChange={({ target: { value } }) =>
+                        setAccessToken(value)
+                      }
+                      placeholder={t('access_token_placeholder')}
+                    />
+                    <FormErrorMessage>
+                      {accessTokenErrorMessage}
+                    </FormErrorMessage>
+                  </FormControl>
+                </>
+              ) : null}
             </>
           ) : (
             <Text
@@ -529,30 +563,6 @@ export const EarnNft: React.FC = () => {
               {t('air_p')}
             </Text>
           )}
-          {platform === SubscriptionPlatform.Galaxy ? (
-            <>
-              <FormControl isInvalid={credentialIdErrorMessage !== ''}>
-                <FormLabel>{t('credential_id')}</FormLabel>
-                <Input
-                  isDisabled={isDisabled}
-                  value={credentialId}
-                  onChange={({ target: { value } }) => setCredentialId(value)}
-                  placeholder={t('credential_id_placeholder')}
-                />
-                <FormErrorMessage>{credentialIdErrorMessage}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={accessTokenErrorMessage !== ''}>
-                <FormLabel>{t('access_token')}</FormLabel>
-                <Input
-                  isDisabled={isDisabled}
-                  value={accessToken}
-                  onChange={({ target: { value } }) => setAccessToken(value)}
-                  placeholder={t('access_token_placeholder')}
-                />
-                <FormErrorMessage>{accessTokenErrorMessage}</FormErrorMessage>
-              </FormControl>
-            </>
-          ) : null}
         </VStack>
         {state === SubscriptionState.Active ? (
           <Button
