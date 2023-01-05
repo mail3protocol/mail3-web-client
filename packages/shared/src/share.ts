@@ -15,3 +15,14 @@ export const shareToTwitter = (config: {
     'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
   )
 }
+
+export const shareToTelegram = (config: { text: string; url: string }) => {
+  const url = `https://t.me/share/url?text=${encodeURIComponent(
+    config.text
+  )}&url=${encodeURIComponent(config.url)}`
+
+  window.open(
+    url,
+    'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
+  )
+}

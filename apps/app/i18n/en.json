@@ -373,5 +373,10 @@
         "copy": "Copy Subscription Page URL",
         "twitter": "Share on Twitter",
         "404": "This page could not be found."
+    },
+    "subscription-article": {
+        "telegram": "Share on Telegram",
+        "copy": "Copy",
+        "twitter": "Share on Twitter"
     }
 }

@@ -19,7 +19,14 @@ import { useMemo } from 'react'
 import { useToast } from 'hooks'
 import { useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
-import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
+import {
+  copyText,
+  isEthAddress,
+  isPrimitiveEthAddress,
+  shareToTelegram,
+  shareToTwitter,
+  truncateMiddle,
+} from 'shared'
 import { Subscription } from 'models'
 import SvgCopy from 'assets/subscription/copy.svg'
 import SvgTelegram from 'assets/subscription/telegram.svg'
@@ -46,11 +53,8 @@ interface SubscriptionArticleBodyProps {
 const PageContainer = styled(Box)`
   max-width: ${CONTAINER_MAX_WIDTH}px;
   margin: 0px auto;
-  min-height: 800px;
+  min-height: 500px;
   background-color: #ffffff;
-
-  @media (max-width: 600px) {
-  }
 `
 
 enum ButtonType {
@@ -62,7 +66,7 @@ enum ButtonType {
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
 > = ({ mailAddress, address, priAddress, articleId, detail }) => {
-  const [t] = useTranslation(['subscribe-profile', 'common'])
+  const [t] = useTranslation(['subscription-article', 'common'])
   const toast = useToast()
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -70,6 +74,11 @@ export const SubscriptionArticleBody: React.FC<
   const shareUrl: string = useMemo(
     () => `${APP_URL}/p/${articleId}`,
     [articleId]
+  )
+
+  const shareText: string = useMemo(
+    () => `${detail.subject} ${shareUrl} via @mail3dao`,
+    [detail]
   )
 
   const { data: userInfo } = useQuery(
@@ -123,18 +132,31 @@ export const SubscriptionArticleBody: React.FC<
   > = {
     [ButtonType.Telegram]: {
       Icon: SvgTelegram,
-      label: t('share'),
-      onClick: () => {},
+      label: t('telegram'),
+      onClick: () => {
+        shareToTelegram({
+          text: shareText,
+          url: shareUrl,
+        })
+      },
     },
     [ButtonType.Copy]: {
       Icon: SvgCopy,
       label: t('copy'),
-      onClick: () => {},
+      onClick: async () => {
+        await copyText(shareUrl)
+        toast(t('navbar.copied', { ns: 'common' }))
+      },
     },
     [ButtonType.Twitter]: {
       Icon: SvgTwitter,
       label: t('twitter'),
-      onClick: () => {},
+      onClick: () => {
+        shareToTwitter({
+          text: shareText,
+          url: shareUrl,
+        })
+      },
     },
   }
 
@@ -268,7 +290,7 @@ export const SubscriptionArticleBody: React.FC<
           <Box pt={{ base: '10px', md: '30px' }}>
             <RenderHTML
               html={detail?.content}
-              shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
+              shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
             />
             <Center mt={{ base: '40px', md: '65px' }}>
               <HStack spacing="50px">
