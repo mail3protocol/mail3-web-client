@@ -26,6 +26,10 @@ export const CONTACT_US_URL =
 export const GITHUB_URL =
   process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/mail3protocol'
 
+export const MEDIA_URL =
+  process.env.NEXT_PUBLIC_MEDIA_URL ||
+  'https://best3.notion.site/best3/Mail3-Brand-Materials-ec06d02bd2ad4ffc8a5b471be9acb2e6'
+
 export const MAIL3_ME_BUTTON_GITHUB_URL =
   process.env.NEXT_PUBLIC_GITHUB_MAIL3_ME_BUTTON_URL ||
   'https://github.com/mail3protocol/mail3-me-button'
