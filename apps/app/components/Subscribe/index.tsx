@@ -572,10 +572,15 @@ const SubscribingAir: React.FC = () => {
             >
               {t('visit')}
             </Text>
+            <Image src={HappyPng} m="20px 0" />
             <Center mt="16px">
               <Link to={RoutePath.Inbox}>
                 <Button
                   w="168px"
+                  background="#4E51F4"
+                  _hover={{
+                    bg: '#4E51E0',
+                  }}
                   onClick={() => {
                     const status = IS_MOBILE
                       ? SubscribeAction.Mobile
