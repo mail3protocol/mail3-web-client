@@ -49,7 +49,7 @@ const Navbar = () => (
 )
 
 export const SubscribeProfile = () => {
-  useDocumentTitle('Mail3: Subsribe Page')
+  useDocumentTitle('Subscribe Page')
   const [t] = useTranslation('subscribe-profile')
   const { id: address } = useParams() as { id: string }
   const api = useAPI()

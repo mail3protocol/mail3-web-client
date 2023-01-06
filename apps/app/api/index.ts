@@ -2,7 +2,7 @@
 import axios, { Axios, AxiosResponse } from 'axios'
 import { SubmitMessage } from 'models/src/submitMessage'
 import { UploadMessage } from 'models/src/uploadMessage'
-import { CommunitySubscriptionResp } from 'models/src/subscribe'
+import { CommunitySubscriptionResp, RewardType } from 'models/src/subscribe'
 import { GetMessage } from 'models/src/getMessage'
 import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
@@ -62,6 +62,7 @@ export interface UserSettingResponse {
   description: string
   items_link: string
   mmb_state: 'enabled' | 'disabled'
+  reward_type: RewardType
 }
 
 export type AddressListResponse = Array<AddressResponse>

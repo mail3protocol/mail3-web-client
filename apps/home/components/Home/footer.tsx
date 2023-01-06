@@ -17,11 +17,13 @@ import { ReactComponent as TwitterIconSvg } from '../../assets/svg/socialMedia/t
 import { ReactComponent as DiscordIconSvg } from '../../assets/svg/socialMedia/discord.svg'
 import { ReactComponent as MirrorIconSvg } from '../../assets/svg/socialMedia/mirror.svg'
 import { ReactComponent as GithubSvg } from '../../assets/svg/socialMedia/github.svg'
+import { ReactComponent as MediaSvg } from '../../assets/svg/socialMedia/media.svg'
 import { ReactComponent as SvgToTop } from '../../assets/svg/back-to-top.svg'
 import {
   APP_URL,
   DISCORD_URL,
   GITHUB_URL,
+  MEDIA_URL,
   MIRROR_URL,
   SUBSCRIBE_MAIL3_UUID,
   TWITTER_URL,
@@ -152,7 +154,11 @@ export const Footer = () => {
               <Heading fontSize="18px" lineHeight="23px">
                 Developers
               </Heading>
-              <Stack mt={{ base: '6px', md: '24px' }}>
+              <Stack
+                mt={{ base: '6px', md: '24px' }}
+                spacing={{ base: '36px', md: '20px' }}
+                direction={{ base: 'row', md: 'column' }}
+              >
                 <Link
                   href={GITHUB_URL}
                   target="_blank"
@@ -162,6 +168,17 @@ export const Footer = () => {
                   <Icon as={GithubSvg} w="20px" h="auto" mr="10px" />
                   <Box as="span" display={{ base: 'none', md: 'inline' }}>
                     Github
+                  </Box>
+                </Link>
+                <Link
+                  href={MEDIA_URL}
+                  target="_blank"
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Icon as={MediaSvg} w="20px" h="auto" mr="10px" />
+                  <Box as="span" display={{ base: 'none', md: 'inline' }}>
+                    Media Kit
                   </Box>
                 </Link>
               </Stack>

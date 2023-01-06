@@ -225,8 +225,8 @@
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
-                "signature": "Signature Setup",
-                "avatar": "Set Your Avatar"
+                "signature": "Signature",
+                "avatar": "Avatar"
             }
         },
         "address": {
@@ -349,19 +349,23 @@
             "two": "Claim NFT"
         },
         "connect": "One step away from earning NFT",
+        "connect-air": "Connect your wallet to complete your subscription",
         "subscribed": "🎉 You're subscribed!",
-        "continue": "Open Inbox",
+        "open-inbox": "Open Inbox",
+        "continue": "Continue",
         "Get-the-Claim-Link": "Get the Claim Link",
         "ok": "OK",
         "visit": "Visit mail³ to receive our latest news",
+        "visit-button": "Visit mail³",
         "already": "You have subscribed",
-        "thank-you": "🎉 Thank you for subscribing",
+        "thank-you": "Thank you for subscribing",
         "nft": "You have earned an NFT!",
         "claim-p1": "To claim the NFT, please click <b>\"Allow\"</b> button in Pop-up",
         "claim-p2": "",
         "request-permission": "Claim Link will be sent to your inbox, <b>in case you miss the message, </b>please allow the desktop notification authorization for mail³.",
         "declined": "Open your Mail3 inbox and claim now!",
-        "success": "Open your Mail3 inbox and claim now!"
+        "success": "Open your Mail3 inbox and claim now!",
+        "allow-notification": "Click <b>Continue</b> and <b>Allow</b> the notification for our latest news."
     },
     "subscription": {
         "unsubscribe": "Do you want to unsubscribe?",

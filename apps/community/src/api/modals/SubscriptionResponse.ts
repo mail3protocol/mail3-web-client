@@ -10,9 +10,7 @@ UpdateCommunitySubscriptionReq {
 
 */
 
-export enum SubscriptionRewardType {
-  NFT = 'nft',
-}
+import { RewardType } from 'models'
 
 export enum SubscriptionPlatform {
   Galaxy = 'galaxy',
@@ -29,6 +27,6 @@ export interface SubscriptionResponse {
   credential_id: string
   key: string
   platform: SubscriptionPlatform
-  reward_type: SubscriptionRewardType
+  reward_type: RewardType
   state: SubscriptionState
 }

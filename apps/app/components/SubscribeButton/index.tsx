@@ -4,6 +4,7 @@ import { useAccount } from 'hooks'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import { EarnIconStyle } from 'ui/src/SubscribeButton'
+import { RewardType } from 'models'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { ReactComponent as SvgEarn } from '../../assets/subscribe/earn.svg'
@@ -31,6 +32,7 @@ export const SubscribeButton = () => {
   const [searchParams] = useSearchParams()
 
   const uuid = searchParams.get('uuid')
+  const rewardType = searchParams.get('rewardType')
   const urlRedirect = searchParams.get('redirect')
   const urlButtonStyle = searchParams.get('buttonStyle')
   const urlEarnIconStyle = searchParams.get('earnIconStyle')
@@ -129,7 +131,9 @@ export const SubscribeButton = () => {
       >
         {data?.state === SubscribeState.Active ? 'Subscribed' : 'Subscribe'}
       </Button>
-      {!isLoading && data?.state !== SubscribeState.Active ? (
+      {!isLoading &&
+      data?.state !== SubscribeState.Active &&
+      rewardType !== RewardType.AIR ? (
         <Box
           position="absolute"
           left={earnIconStyle.left}

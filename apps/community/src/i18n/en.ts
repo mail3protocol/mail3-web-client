@@ -70,7 +70,7 @@ export default {
   },
   components: {
     header: {
-      logo_name: 'Community',
+      logo_name: 'Subscription',
     },
     sidebar: {
       message: 'Message',
@@ -128,7 +128,7 @@ export default {
   },
   hooks: {
     register_dialog: {
-      title: 'Apply for your Community',
+      title: 'Apply for your Web3 Subscription',
       description: `Please click the "mail<sup>3</sup> me" button below to submit your application. It may take some time for your application to receive a response.`,
       no_white_list_description:
         'If you would like to apply for access to "mail<sup>3</sup> Community". <br/><br/>Please visit mail<sup>3</sup> official website to claim your Mail3 first.',
@@ -177,6 +177,9 @@ export default {
     title: 'Subscribe To Earn',
     to_earn: 'To Earn',
     nft: 'NFT',
+    air: 'No Rewards',
+    air_p: `Choosing “No Rewards” means you don't have to offer any rewards to
+    subscribers.`,
     distribution_platform: 'Distribution Platform',
     platforms: {
       galaxy: 'Galxe',
@@ -200,7 +203,7 @@ export default {
       title: 'Subscription dialog style preview',
       description: '<p>Click “Get the Code” button to copy the code.</p>',
       preview_subtitle: 'style preview',
-      customize_the_button: 'Customize the button',
+      customize_the_button: 'Code',
       get_the_code: 'Get the code',
     },
     earn_nft: '🎁 Earn NFT',
@@ -224,6 +227,9 @@ export default {
                  <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
+             </li>
+             <li>
+              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
              </li>
            </ul>
            <h3>How to get the Credential ID?</h3>
@@ -269,6 +275,9 @@ export default {
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
              </li>
+             <li>
+              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
+             </li>
            </ul>
     `,
     enable_confirm: {
@@ -298,7 +307,7 @@ export default {
   },
   login_home_page: {
     say_hi: 'Hello! Friends',
-    title: 'Welcome to\nMail3 Community!',
+    title: 'Welcome to\nMail3 Subscription!',
     join_community: 'Join community',
     join_discord: 'Join Discord',
     follow_twitter: 'Follow Twitter',
