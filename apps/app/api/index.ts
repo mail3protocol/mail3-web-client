@@ -155,7 +155,11 @@ export class API {
     this.axios = axios.create({
       baseURL: SERVER_URL,
       headers: {
-        Authorization: `Bearer ${this.jwt}`,
+        ...(this.jwt
+          ? {
+              Authorization: `Bearer ${this.jwt}`,
+            }
+          : {}),
       },
     })
     this.axios.interceptors.response.use(
