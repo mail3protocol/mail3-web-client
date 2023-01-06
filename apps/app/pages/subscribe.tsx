@@ -25,12 +25,23 @@ const Navbar = () => (
   </Flex>
 )
 
-export const SimpleSubscribePage: React.FC<SubscribeProps> = (props) => (
-  <>
-    <Subscribe {...props} />
-    <AuthModal />
-  </>
-)
+export const SimpleSubscribePage: React.FC<SubscribeProps> = ({
+  rewardType,
+  ...rest
+}) => {
+  const updateRewardType = useUpdateAtom(rewardTypeAtom)
+  useEffect(() => {
+    if (rewardType === RewardType.AIR || rewardType === RewardType.NFT)
+      updateRewardType(rewardType)
+  }, [])
+
+  return (
+    <>
+      <Subscribe {...rest} />
+      <AuthModal />
+    </>
+  )
+}
 
 export const SubscribePage = () => {
   const [searchParams] = useSearchParams()

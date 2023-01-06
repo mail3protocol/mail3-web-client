@@ -11,6 +11,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
+import { RewardType } from 'models'
 import { Avatar, Button } from 'ui'
 import { SimpleSubscribePage } from '../../pages/subscribe'
 
@@ -93,7 +94,11 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         <ModalContent maxW="80vw" h="80vh">
           <ModalCloseButton />
           <ModalBody>
-            <SimpleSubscribePage isDialog uuid={uuid} />
+            <SimpleSubscribePage
+              isDialog
+              uuid={uuid}
+              rewardType={RewardType.AIR}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

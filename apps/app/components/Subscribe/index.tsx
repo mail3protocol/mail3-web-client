@@ -46,6 +46,12 @@ import { IS_MOBILE } from '../../constants'
 import confettiAni from './confetti'
 import { rewardTypeAtom } from '../../pages/subscribe'
 
+export interface SubscribeProps {
+  rewardType?: RewardType
+  isDialog?: boolean
+  uuid?: string
+}
+
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
 const useTrackContinueAir = () =>
   useTrackClick(TrackEvent.ClickSubscribeAirVisit)
@@ -474,11 +480,6 @@ const Subscribing: React.FC = () => {
   )
 }
 
-export interface SubscribeProps {
-  isDialog?: boolean
-  uuid?: string
-}
-
 const SubscribingAir: React.FC = () => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
@@ -722,7 +723,7 @@ export const Subscribe: React.FC<SubscribeProps> = ({ uuid }) => {
   // ) {
   //   return <Subscribing />
   // }
-
+  console.log('subscribeStatus', subscribeStatus)
   if (
     subscribeStatus?.state === 'active' ||
     subscribeResult?.state === 'resubscribed'
