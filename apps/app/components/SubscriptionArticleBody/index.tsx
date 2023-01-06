@@ -65,7 +65,7 @@ enum ButtonType {
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({ mailAddress, address, priAddress, articleId, detail }) => {
+> = ({ mailAddress, address, priAddress, articleId, detail, uuid }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   const toast = useToast()
   const api = useAPI()
@@ -183,6 +183,7 @@ export const SubscriptionArticleBody: React.FC<
       <Flex direction={{ base: 'column-reverse', md: 'row' }}>
         {isMobile ? EchoBody : null}
         <UserInfo
+          uuid={uuid}
           priAddress={priAddress}
           nickname={nickname}
           mailAddress={mailAddress}

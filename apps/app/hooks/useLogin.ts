@@ -113,6 +113,7 @@ export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.WhiteList,
   RoutePath.Testing,
   RoutePath.Subscribe,
+  RoutePath.SubscriptionArticle,
 ])
 
 export const useCurrentWalletStore = () => {

@@ -4,7 +4,7 @@ import { Logo, PageContainer } from 'ui'
 import { Link } from 'react-router-dom'
 import { NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-import { Subscribe } from '../components/Subscribe'
+import { Subscribe, SubscribeProps } from '../components/Subscribe'
 import { AuthModal } from '../components/Auth'
 import { RoutePath } from '../route/path'
 
@@ -20,13 +20,19 @@ const Navbar = () => (
   </Flex>
 )
 
+export const SimpleSubscribePage: React.FC<SubscribeProps> = (props) => (
+  <>
+    <Subscribe {...props} />
+    <AuthModal />
+  </>
+)
+
 export const SubscribePage = () => {
   useDocumentTitle('Subscribe')
   return (
     <PageContainer>
       <Navbar />
-      <Subscribe />
-      <AuthModal />
+      <SimpleSubscribePage />
     </PageContainer>
   )
 }

@@ -416,13 +416,19 @@ const Subscribing: React.FC = () => {
   )
 }
 
-export const Subscribe: React.FC = () => {
+export interface SubscribeProps {
+  isDialog?: boolean
+  uuid?: string
+}
+
+export const Subscribe: React.FC<SubscribeProps> = ({ uuid }) => {
   const [t] = useTranslation('subscribe')
   useAuth()
   const isAuth = useIsAuthenticated()
   const account = useAccount()
   const api = useAPI()
-  const { id } = useParams()
+  const { id: urlId } = useParams()
+  const id = uuid || urlId
   const [localSubscribeStatus, setLocalSubscribeStatus] = useAtom(
     localSubscribeStatusAtom
   )
