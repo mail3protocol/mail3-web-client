@@ -9,12 +9,13 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useAccount, useDialog, useToast } from 'hooks'
 import { RewardType } from 'models'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Avatar, Button } from 'ui'
@@ -96,7 +97,8 @@ const SubscribeButton: React.FC<{
   isAuth: boolean
   rewardType?: RewardType
   uuid: string
-}> = ({ isAuth, rewardType, uuid }) => {
+  setIsHidden: Dispatch<SetStateAction<boolean>>
+}> = ({ isAuth, rewardType, uuid, setIsHidden }) => {
   const [t] = useTranslation('subscription')
   const api = useAPI()
   const toast = useToast()
@@ -105,6 +107,7 @@ const SubscribeButton: React.FC<{
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isFollow, setIsFollow] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const { isLoading: isLoadingStatus, refetch } = useQuery(
     [Query.GetSubscribeStatus, account, uuid],
@@ -128,7 +131,9 @@ const SubscribeButton: React.FC<{
     },
     {
       onSuccess(data) {
-        setIsFollow(data.state === 'active')
+        const isFollowed = data.state === 'active'
+        setIsFollow(isFollowed)
+        if (isMobile && isFollowed) setIsHidden(true)
       },
       enabled: !!uuid && isAuth,
       refetchOnMount: false,
@@ -219,51 +224,64 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   uuid,
   rewardType,
   isAuth,
-}) => (
-  <Center
-    p={{ base: '10px 25px', md: '48px 32px' }}
-    w={{ base: 'full', md: '305px' }}
-    flexDirection="column"
-    justifyContent="flex-start"
-    border={{ base: 'none', md: '1px solid rgba(0, 0, 0, 0.1)' }}
-    borderTop="none"
-  >
-    <AvatarArea w="100%">
-      <LinkOverlay href="#">
-        <Center flexDirection="column" justifyContent="flex-start">
-          <Avatar
-            address={priAddress}
-            borderRadius="50%"
-            w={{ base: '80px', md: '100px' }}
-            h={{ base: '80px', md: '100px' }}
-          />
-          <Text
-            className="nickname"
-            fontWeight="700"
-            fontSize="18px"
-            lineHeight="24px"
-            mt="8px"
-          >
-            {nickname}
-          </Text>
-        </Center>
-      </LinkOverlay>
-    </AvatarArea>
+}) => {
+  const [isHidden, setIsHidden] = useState(false)
 
-    <Text fontWeight="500" fontSize="14px" lineHeight="16px" mt="14px">
-      {mailAddress}
-    </Text>
+  if (isHidden) {
+    return null
+  }
 
-    <Text
-      fontWeight="400"
-      fontSize="12px"
-      lineHeight="18px"
-      color="rgba(0, 0, 0, 0.7)"
-      mt="32px"
+  return (
+    <Center
+      p={{ base: '10px 25px', md: '48px 32px' }}
+      w={{ base: 'full', md: '305px' }}
+      flexDirection="column"
+      justifyContent="flex-start"
+      border={{ base: 'none', md: '1px solid rgba(0, 0, 0, 0.1)' }}
+      borderTop="none"
     >
-      {desc}
-    </Text>
+      <AvatarArea w="100%">
+        <LinkOverlay href="#">
+          <Center flexDirection="column" justifyContent="flex-start">
+            <Avatar
+              address={priAddress}
+              borderRadius="50%"
+              w={{ base: '80px', md: '100px' }}
+              h={{ base: '80px', md: '100px' }}
+            />
+            <Text
+              className="nickname"
+              fontWeight="700"
+              fontSize="18px"
+              lineHeight="24px"
+              mt="8px"
+            >
+              {nickname}
+            </Text>
+          </Center>
+        </LinkOverlay>
+      </AvatarArea>
 
-    <SubscribeButton rewardType={rewardType} isAuth={isAuth} uuid={uuid} />
-  </Center>
-)
+      <Text fontWeight="500" fontSize="14px" lineHeight="16px" mt="14px">
+        {mailAddress}
+      </Text>
+
+      <Text
+        fontWeight="400"
+        fontSize="12px"
+        lineHeight="18px"
+        color="rgba(0, 0, 0, 0.7)"
+        mt="32px"
+      >
+        {desc}
+      </Text>
+
+      <SubscribeButton
+        rewardType={rewardType}
+        isAuth={isAuth}
+        uuid={uuid}
+        setIsHidden={setIsHidden}
+      />
+    </Center>
+  )
+}
