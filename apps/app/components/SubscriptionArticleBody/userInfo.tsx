@@ -48,23 +48,46 @@ const SubscribeButtonView: React.FC<{
 }> = ({ rewardType, isFollow, onClick, isLoading }) => {
   if (isFollow) {
     return (
-      <Button isLoading={isLoading} onClick={onClick}>
+      <Button
+        isLoading={isLoading}
+        onClick={onClick}
+        variant="outline"
+        w="150px"
+      >
         Subscribed
       </Button>
     )
   }
 
-  if (rewardType === RewardType.AIR) {
+  if (rewardType === RewardType.AIR || isLoading) {
     return (
-      <Button isLoading={isLoading} onClick={onClick}>
+      <Button isLoading={isLoading} onClick={onClick} w="150px">
         Subscribe
       </Button>
     )
   }
 
   return (
-    <Button isLoading={isLoading} onClick={onClick}>
-      Subscribe / nft
+    <Button
+      isLoading={isLoading}
+      onClick={onClick}
+      w="230px"
+      overflow="hidden"
+      justifyContent="flex-start"
+      pl="24px"
+    >
+      Subscribe
+      <Center
+        bg="#4E52F5"
+        transform="skew(-10deg)"
+        position="absolute"
+        top="0"
+        right="0"
+        w="105px"
+        h="100%"
+      >
+        <Box transform="skew(10deg)">Earn NFT</Box>
+      </Center>
     </Button>
   )
 }
@@ -72,18 +95,18 @@ const SubscribeButtonView: React.FC<{
 const SubscribeButton: React.FC<{
   isAuth: boolean
   rewardType?: RewardType
-  onOpen: () => void
   uuid: string
-}> = ({ isAuth, rewardType, onOpen, uuid }) => {
+}> = ({ isAuth, rewardType, uuid }) => {
   const [t] = useTranslation('subscription')
   const api = useAPI()
   const toast = useToast()
   const dialog = useDialog()
+  const account = useAccount()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [isFollow, setIsFollow] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const account = useAccount()
 
-  const { isLoading: isLoadingStatus } = useQuery(
+  const { isLoading: isLoadingStatus, refetch } = useQuery(
     [Query.GetSubscribeStatus, account, uuid],
     async () => {
       try {
@@ -121,7 +144,6 @@ const SubscribeButton: React.FC<{
   const onSubscribe = async () => {
     if (isLoading) return
     setIsLoading(true)
-    console.log('isFollow', isFollow)
     if (isFollow) {
       dialog({
         type: 'text',
@@ -141,7 +163,6 @@ const SubscribeButton: React.FC<{
         },
         onCancel: async () => {
           await api.SubscriptionCommunityUserUnFollowing(uuid)
-
           setIsFollow(false)
           setIsLoading(false)
           toast(t('Unsubscribe successfully'), { status: 'success' })
@@ -161,14 +182,32 @@ const SubscribeButton: React.FC<{
   }
 
   return (
-    <Box mt="24px">
-      <SubscribeButtonView
-        onClick={isAuth ? onSubscribe : onOpen}
-        rewardType={rewardType}
-        isFollow={isFollow}
-        isLoading={isLoading}
-      />
-    </Box>
+    <>
+      <Box mt="24px">
+        <SubscribeButtonView
+          onClick={isAuth ? onSubscribe : onOpen}
+          rewardType={rewardType}
+          isFollow={isFollow}
+          isLoading={isLoading}
+        />
+      </Box>
+      <Modal
+        onClose={() => {
+          refetch()
+          onClose()
+        }}
+        isOpen={isOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxW="80vw" h="80vh">
+          <ModalCloseButton />
+          <ModalBody>
+            <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 
@@ -180,70 +219,51 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   uuid,
   rewardType,
   isAuth,
-}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+}) => (
+  <Center
+    p={{ base: '10px 25px', md: '48px 32px' }}
+    w={{ base: 'full', md: '305px' }}
+    flexDirection="column"
+    justifyContent="flex-start"
+    border={{ base: 'none', md: '1px solid rgba(0, 0, 0, 0.1)' }}
+    borderTop="none"
+  >
+    <AvatarArea w="100%">
+      <LinkOverlay href="#">
+        <Center flexDirection="column" justifyContent="flex-start">
+          <Avatar
+            address={priAddress}
+            borderRadius="50%"
+            w={{ base: '80px', md: '100px' }}
+            h={{ base: '80px', md: '100px' }}
+          />
+          <Text
+            className="nickname"
+            fontWeight="700"
+            fontSize="18px"
+            lineHeight="24px"
+            mt="8px"
+          >
+            {nickname}
+          </Text>
+        </Center>
+      </LinkOverlay>
+    </AvatarArea>
 
-  return (
-    <Center
-      p={{ base: '10px 25px', md: '48px 32px' }}
-      w={{ base: 'full', md: '305px' }}
-      flexDirection="column"
-      justifyContent="flex-start"
-      border={{ base: 'none', md: '1px solid rgba(0, 0, 0, 0.1)' }}
-      borderTop="none"
+    <Text fontWeight="500" fontSize="14px" lineHeight="16px" mt="14px">
+      {mailAddress}
+    </Text>
+
+    <Text
+      fontWeight="400"
+      fontSize="12px"
+      lineHeight="18px"
+      color="rgba(0, 0, 0, 0.7)"
+      mt="32px"
     >
-      <AvatarArea w="100%">
-        <LinkOverlay href="#">
-          <Center flexDirection="column" justifyContent="flex-start">
-            <Avatar
-              address={priAddress}
-              borderRadius="50%"
-              w={{ base: '80px', md: '100px' }}
-              h={{ base: '80px', md: '100px' }}
-            />
-            <Text
-              className="nickname"
-              fontWeight="700"
-              fontSize="18px"
-              lineHeight="24px"
-              mt="8px"
-            >
-              {nickname}
-            </Text>
-          </Center>
-        </LinkOverlay>
-      </AvatarArea>
+      {desc}
+    </Text>
 
-      <Text fontWeight="500" fontSize="14px" lineHeight="16px" mt="14px">
-        {mailAddress}
-      </Text>
-
-      <Text
-        fontWeight="400"
-        fontSize="12px"
-        lineHeight="18px"
-        color="rgba(0, 0, 0, 0.7)"
-        mt="32px"
-      >
-        {desc}
-      </Text>
-
-      <SubscribeButton
-        onOpen={onOpen}
-        rewardType={RewardType.AIR}
-        isAuth={isAuth}
-        uuid={uuid}
-      />
-
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
-        <ModalOverlay />
-        <ModalContent maxW="80vw" h="80vh">
-          <ModalCloseButton />
-          <ModalBody>
-            <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </Center>
-  )
-}
+    <SubscribeButton rewardType={rewardType} isAuth={isAuth} uuid={uuid} />
+  </Center>
+)
