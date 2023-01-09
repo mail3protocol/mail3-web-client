@@ -169,9 +169,10 @@ const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
   )
 }
 
-const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
-  state,
-}) => {
+const AlreadySubscribed: React.FC<{
+  state: 'active' | 'resubscribed'
+  isDialog?: boolean
+}> = ({ state, isDialog }) => {
   const [t] = useTranslation('subscribe')
   const rewardType = useAtomValue(rewardTypeAtom)
   const trackContinue = useTrackContinue()
@@ -212,38 +213,40 @@ const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
 
         <Image src={HappyPng} />
 
-        <Link to={RoutePath.Inbox}>
-          <Button
-            background="#4E51F4"
-            _hover={{
-              bg: '#4E51E0',
-            }}
-            mt="24px"
-            w={['138px', '168px', '168px']}
-            h={['40px']}
-            fontSize={['14px']}
-            onClick={() => {
-              const repeat = IS_MOBILE
-                ? SubscribeAction.MobileRepeat
-                : SubscribeAction.Repeat
-              const already = IS_MOBILE
-                ? SubscribeAction.Mobile
-                : SubscribeAction.Already
-              const status = state === 'resubscribed' ? repeat : already
-              if (rewardType === RewardType.AIR) {
-                trackContinueAir({
-                  [TrackKey.SubscribeBtnAirStatus]: status,
-                })
-              } else {
-                trackContinue({
-                  [TrackKey.SubscribeBtnStatus]: status,
-                })
-              }
-            }}
-          >
-            {t('visit-button')}
-          </Button>
-        </Link>
+        {!isDialog ? (
+          <Link to={RoutePath.Inbox}>
+            <Button
+              background="#4E51F4"
+              _hover={{
+                bg: '#4E51E0',
+              }}
+              mt="24px"
+              w={['138px', '168px', '168px']}
+              h={['40px']}
+              fontSize={['14px']}
+              onClick={() => {
+                const repeat = IS_MOBILE
+                  ? SubscribeAction.MobileRepeat
+                  : SubscribeAction.Repeat
+                const already = IS_MOBILE
+                  ? SubscribeAction.Mobile
+                  : SubscribeAction.Already
+                const status = state === 'resubscribed' ? repeat : already
+                if (rewardType === RewardType.AIR) {
+                  trackContinueAir({
+                    [TrackKey.SubscribeBtnAirStatus]: status,
+                  })
+                } else {
+                  trackContinue({
+                    [TrackKey.SubscribeBtnStatus]: status,
+                  })
+                }
+              }}
+            >
+              {t('visit-button')}
+            </Button>
+          </Link>
+        ) : null}
       </Center>
     </Center>
   )
@@ -272,7 +275,8 @@ const SubscribeStatus: React.FC<{
   permission: 'default' | 'denied' | 'granted' | 'prompt'
   isBrowserSupport?: boolean
   isDeclined: boolean
-}> = ({ permission, isBrowserSupport, isDeclined }) => {
+  isDialog?: boolean
+}> = ({ permission, isBrowserSupport, isDeclined, isDialog }) => {
   const [t] = useTranslation('subscribe')
 
   const trackContinue = useTrackContinue()
@@ -310,18 +314,20 @@ const SubscribeStatus: React.FC<{
         >
           {t('declined')}
         </Text>
-        <Link to={RoutePath.Inbox}>
-          <Button
-            w="168px"
-            onClick={() => {
-              trackContinue({
-                [TrackKey.SubscribeBtnStatus]: SubscribeAction.Denial,
-              })
-            }}
-          >
-            {t('open-inbox')}
-          </Button>
-        </Link>
+        {!isDialog ? (
+          <Link to={RoutePath.Inbox}>
+            <Button
+              w="168px"
+              onClick={() => {
+                trackContinue({
+                  [TrackKey.SubscribeBtnStatus]: SubscribeAction.Denial,
+                })
+              }}
+            >
+              {t('open-inbox')}
+            </Button>
+          </Link>
+        ) : null}
       </>
     )
   }
@@ -341,25 +347,27 @@ const SubscribeStatus: React.FC<{
       >
         {t('success')}
       </Text>
-      <Link to={RoutePath.Inbox}>
-        <Button
-          w="168px"
-          onClick={() => {
-            trackContinue({
-              [TrackKey.SubscribeBtnStatus]: IS_MOBILE
-                ? SubscribeAction.Mobile
-                : SubscribeAction.Already,
-            })
-          }}
-        >
-          {t('open-inbox')}
-        </Button>
-      </Link>
+      {!isDialog ? (
+        <Link to={RoutePath.Inbox}>
+          <Button
+            w="168px"
+            onClick={() => {
+              trackContinue({
+                [TrackKey.SubscribeBtnStatus]: IS_MOBILE
+                  ? SubscribeAction.Mobile
+                  : SubscribeAction.Already,
+              })
+            }}
+          >
+            {t('open-inbox')}
+          </Button>
+        </Link>
+      ) : null}
     </>
   )
 }
 
-const Subscribing: React.FC = () => {
+const Subscribing: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
   const {
@@ -472,6 +480,7 @@ const Subscribing: React.FC = () => {
               isBrowserSupport={isBrowserSupport}
               isDeclined={isDeclined}
               permission={permission}
+              isDialog={isDialog}
             />
           </>
         )}
@@ -480,7 +489,7 @@ const Subscribing: React.FC = () => {
   )
 }
 
-const SubscribingAir: React.FC = () => {
+const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
   const {
@@ -579,30 +588,32 @@ const SubscribingAir: React.FC = () => {
               {t('visit')}
             </Text>
             <Image src={HappyPng} m="20px 0" />
-            <Center mt="16px">
-              <Link to={RoutePath.Inbox}>
-                <Button
-                  w="168px"
-                  background="#4E51F4"
-                  _hover={{
-                    bg: '#4E51E0',
-                  }}
-                  onClick={() => {
-                    const status = IS_MOBILE
-                      ? SubscribeAction.Mobile
-                      : SubscribeAction.Already
+            {!isDialog ? (
+              <Center mt="16px">
+                <Link to={RoutePath.Inbox}>
+                  <Button
+                    w="168px"
+                    background="#4E51F4"
+                    _hover={{
+                      bg: '#4E51E0',
+                    }}
+                    onClick={() => {
+                      const status = IS_MOBILE
+                        ? SubscribeAction.Mobile
+                        : SubscribeAction.Already
 
-                    trackContinueAir({
-                      [TrackKey.SubscribeBtnAirStatus]: isDeclined
-                        ? SubscribeAction.Denial
-                        : status,
-                    })
-                  }}
-                >
-                  {t('visit-button')}
-                </Button>
-              </Link>
-            </Center>
+                      trackContinueAir({
+                        [TrackKey.SubscribeBtnAirStatus]: isDeclined
+                          ? SubscribeAction.Denial
+                          : status,
+                      })
+                    }}
+                  >
+                    {t('visit-button')}
+                  </Button>
+                </Link>
+              </Center>
+            ) : null}
           </>
         )}
       </Center>
@@ -610,7 +621,7 @@ const SubscribingAir: React.FC = () => {
   )
 }
 
-export const Subscribe: React.FC<SubscribeProps> = ({ uuid }) => {
+export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
   const [t] = useTranslation('subscribe')
   useAuth()
   const isAuth = useIsAuthenticated()
@@ -723,12 +734,14 @@ export const Subscribe: React.FC<SubscribeProps> = ({ uuid }) => {
   // ) {
   //   return <Subscribing />
   // }
-  console.log('subscribeStatus', subscribeStatus)
+
   if (
     subscribeStatus?.state === 'active' ||
     subscribeResult?.state === 'resubscribed'
   ) {
-    return <AlreadySubscribed state={subscribeResult?.state} />
+    return (
+      <AlreadySubscribed state={subscribeResult?.state} isDialog={isDialog} />
+    )
   }
 
   const error =
@@ -738,8 +751,9 @@ export const Subscribe: React.FC<SubscribeProps> = ({ uuid }) => {
     putSubscribeError?.response?.data.message
   // TODO: or already subscribed
   if (subscribeResult && !error) {
-    if (rewardType === RewardType.AIR) return <SubscribingAir />
-    return <Subscribing />
+    if (rewardType === RewardType.AIR)
+      return <SubscribingAir isDialog={isDialog} />
+    return <Subscribing isDialog={isDialog} />
   }
 
   return (
