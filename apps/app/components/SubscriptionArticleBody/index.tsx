@@ -38,6 +38,7 @@ import { UserInfo } from './userInfo'
 import { SubFormatDate } from '../../utils'
 import { RenderHTML } from '../Preview/parser'
 import { RoutePath } from '../../route/path'
+import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -67,9 +68,11 @@ export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
 > = ({ mailAddress, address, priAddress, articleId, detail, uuid }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
+  useAuth()
   const toast = useToast()
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const isAuth = useIsAuthenticated()
 
   const shareUrl: string = useMemo(
     () => `${APP_URL}/p/${articleId}`,
@@ -188,6 +191,8 @@ export const SubscriptionArticleBody: React.FC<
           nickname={nickname}
           mailAddress={mailAddress}
           desc={settings?.description}
+          isAuth={isAuth}
+          rewardType={settings?.reward_type}
         />
         <Box
           minH="500px"

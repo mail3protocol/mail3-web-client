@@ -7,6 +7,7 @@ import { isPrimitiveEthAddress, isSupportedAddress } from 'shared'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
 import { Subscription } from 'models'
+import { ConfirmDialog } from 'hooks'
 import { MAIL_SERVER_URL, NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
@@ -133,6 +134,7 @@ export const SubscriptionArticle = () => {
         articleId={articleId}
         detail={detail}
       />
+      <ConfirmDialog />
     </>
   )
 }
