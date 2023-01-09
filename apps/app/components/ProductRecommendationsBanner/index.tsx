@@ -13,11 +13,11 @@ import React from 'react'
 import { useAtom } from 'jotai'
 import { TrackEvent, useTrackClick } from 'hooks'
 
-import ChristmasBanner from '../../assets/event_banners/christmas.png'
-import ChristmasBannerMobile from '../../assets/event_banners/christmas-mobile.png'
+import BannerPc from '../../assets/event_banners/pc.png'
+import BannerMobile from '../../assets/event_banners/mobile.png'
 
 const isClosedBannerAtom = atomWithStorage<boolean>(
-  'is_close_product_recommendations_banner_atom',
+  'is_close_product_recommendations_banner_atom_20230109',
   false,
   {
     removeItem(key) {
@@ -79,7 +79,7 @@ export const ProductRecommendationsBanner: React.FC = () => {
           w="full"
         >
           <Image
-            src={isMobileSizeImage ? ChristmasBannerMobile : ChristmasBanner}
+            src={isMobileSizeImage ? BannerMobile : BannerPc}
             alt="desktop_banner"
             pointerEvents="none"
           />
@@ -88,12 +88,7 @@ export const ProductRecommendationsBanner: React.FC = () => {
           <Link
             flex={1}
             target="_blank"
-            href="https://app.quest3.xyz/quest/719686609371394514"
-          />
-          <Link
-            flex={1}
-            target="_blank"
-            href="https://app.quest3.xyz/quest/720633455038279906"
+            href="https://app.quest3.xyz/quest/723686727757476120"
           />
         </Flex>
       </Box>
