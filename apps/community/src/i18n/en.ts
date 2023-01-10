@@ -57,6 +57,8 @@ export default {
     loading: 'Loading……',
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
+    copy_successfully: 'Copy successfully',
+    copy_message_link: 'Copy message link',
     send_time_limit: 'You can send 1 message a day. Please try it later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
