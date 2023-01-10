@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Center, Flex, Spinner } from '@chakra-ui/react'
+import { Box, Center, Flex, Spinner, Text } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
@@ -40,6 +40,10 @@ const ErrPage = styled(Center)`
 `
 const NavArea = styled(Box)`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 9;
 `
 
 const Navbar = () => (
@@ -49,7 +53,12 @@ const Navbar = () => (
     justifyContent={['flex-start', 'center', 'center']}
   >
     <Link to={RoutePath.Home}>
-      <Logo textProps={{ color: '#231815' }} />
+      <Center>
+        <Logo textProps={{ color: '#231815' }} isHiddenText />
+        <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="8px">
+          Subscription
+        </Text>
+      </Center>
     </Link>
   </Flex>
 )

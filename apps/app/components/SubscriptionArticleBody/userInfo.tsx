@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Avatar, Button } from 'ui'
 import { Query } from '../../api/query'
+import { APP_URL, NAVBAR_HEIGHT } from '../../constants'
 import { useAPI } from '../../hooks/useAPI'
 import { SimpleSubscribePage } from '../../pages/subscribe'
 
@@ -30,6 +31,7 @@ interface UserInfoProps {
   mailAddress: string
   desc?: string
   isAuth: boolean
+  address: string
   rewardType?: RewardType
 }
 
@@ -223,6 +225,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   desc,
   uuid,
   rewardType,
+  address,
   isAuth,
 }) => {
   const [isHidden, setIsHidden] = useState(false)
@@ -232,56 +235,61 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   }
 
   return (
-    <Center
-      p={{ base: '10px 25px', md: '48px 32px' }}
-      w={{ base: 'full', md: '305px' }}
-      flexDirection="column"
-      justifyContent="flex-start"
+    <Box
       border={{ base: 'none', md: '1px solid rgba(0, 0, 0, 0.1)' }}
       borderTop="none"
+      w={{ base: 'full', md: '305px' }}
     >
-      <AvatarArea w="100%">
-        <LinkOverlay href="#">
-          <Center flexDirection="column" justifyContent="flex-start">
-            <Avatar
-              address={priAddress}
-              borderRadius="50%"
-              w={{ base: '80px', md: '100px' }}
-              h={{ base: '80px', md: '100px' }}
-            />
-            <Text
-              className="nickname"
-              fontWeight="700"
-              fontSize="18px"
-              lineHeight="24px"
-              mt="8px"
-            >
-              {nickname}
-            </Text>
-          </Center>
-        </LinkOverlay>
-      </AvatarArea>
-
-      <Text fontWeight="500" fontSize="14px" lineHeight="16px" mt="14px">
-        {mailAddress}
-      </Text>
-
-      <Text
-        fontWeight="400"
-        fontSize="12px"
-        lineHeight="18px"
-        color="rgba(0, 0, 0, 0.7)"
-        mt="32px"
+      <Center
+        p={{ base: '10px 25px', md: '48px 32px' }}
+        flexDirection="column"
+        justifyContent="flex-start"
+        position={{ md: 'sticky' }}
+        top={{ md: `${NAVBAR_HEIGHT}px` }}
       >
-        {desc}
-      </Text>
+        <AvatarArea w="100%">
+          <LinkOverlay href={`/${address}`} target="_blank">
+            <Center flexDirection="column" justifyContent="flex-start">
+              <Avatar
+                address={priAddress}
+                borderRadius="50%"
+                w={{ base: '80px', md: '100px' }}
+                h={{ base: '80px', md: '100px' }}
+              />
+              <Text
+                className="nickname"
+                fontWeight="700"
+                fontSize="18px"
+                lineHeight="24px"
+                mt="8px"
+              >
+                {nickname}
+              </Text>
+            </Center>
+          </LinkOverlay>
+        </AvatarArea>
 
-      <SubscribeButton
-        rewardType={rewardType}
-        isAuth={isAuth}
-        uuid={uuid}
-        setIsHidden={setIsHidden}
-      />
-    </Center>
+        <Text fontWeight="500" fontSize="14px" lineHeight="16px" mt="14px">
+          {mailAddress}
+        </Text>
+
+        <Text
+          fontWeight="400"
+          fontSize="12px"
+          lineHeight="18px"
+          color="rgba(0, 0, 0, 0.7)"
+          mt="32px"
+        >
+          {desc}
+        </Text>
+
+        <SubscribeButton
+          rewardType={rewardType}
+          isAuth={isAuth}
+          uuid={uuid}
+          setIsHidden={setIsHidden}
+        />
+      </Center>
+    </Box>
   )
 }

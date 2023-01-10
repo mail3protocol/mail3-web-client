@@ -187,6 +187,7 @@ export const SubscriptionArticleBody: React.FC<
         {isMobile ? EchoBody : null}
         <UserInfo
           uuid={uuid}
+          address={address}
           priAddress={priAddress}
           nickname={nickname}
           mailAddress={mailAddress}
