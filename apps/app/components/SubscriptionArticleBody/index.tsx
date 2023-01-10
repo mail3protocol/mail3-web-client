@@ -15,7 +15,7 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useToast } from 'hooks'
 import { useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
@@ -111,6 +111,13 @@ export const SubscriptionArticleBody: React.FC<
       refetchOnWindowFocus: false,
     }
   )
+
+  useEffect(() => {
+    if (detail?.content) {
+      // report pv
+      api.postStatsEvents({ uuid: articleId })
+    }
+  }, [detail?.content])
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {

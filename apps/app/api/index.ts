@@ -9,7 +9,7 @@ import { noop } from 'hooks'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdentifier'
 import { HomeCommunity, Subscription } from 'models'
-import { SERVER_URL } from '../constants/env'
+import { SERVER_PV_AUTH_TOKEN, SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
 type mailAddress = `${string}@${string}`
@@ -542,5 +542,19 @@ export class API {
     return this.axios.get<{ nickname: string; avatar: string }>(
       `/user_info/${address}`
     )
+  }
+
+  public async postStatsEvents({
+    type = 'read_community_message',
+    uuid,
+  }: {
+    type?: string
+    uuid: string
+  }) {
+    return this.axios.post<void>(`/stats/events`, {
+      event_type: type,
+      uuid,
+      auth_token: SERVER_PV_AUTH_TOKEN,
+    })
   }
 }

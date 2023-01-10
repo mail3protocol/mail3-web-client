@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Avatar, Button } from 'ui'
 import { Query } from '../../api/query'
-import { APP_URL, NAVBAR_HEIGHT } from '../../constants'
+import { NAVBAR_HEIGHT } from '../../constants'
 import { useAPI } from '../../hooks/useAPI'
 import { SimpleSubscribePage } from '../../pages/subscribe'
 
