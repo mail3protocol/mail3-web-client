@@ -55,7 +55,7 @@ self.addEventListener(notificationclick, (e) => {
 
   const openUrl = `${APP_URL}${
     event.notification.data.notification_type === 'community_message'
-      ? RoutePath.Subscription
+      ? RoutePath.SubscriptionArticle
       : RoutePath.Message
   }/${event.notification.data.message_id}`
 
