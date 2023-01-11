@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   ButtonProps,
   Heading,
@@ -17,10 +18,12 @@ import { useHelpers } from '@remirror/react'
 import { useTrackClick, TrackEvent } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleIcon } from '@chakra-ui/icons'
+import { copyText } from 'shared'
 import { useAPI } from '../../hooks/useAPI'
 import { useToast } from '../../hooks/useToast'
 import { RoutePath } from '../../route/path'
 import { CloseButton } from '../ConfirmDialog'
+import { APP_URL } from '../../constants/env/url'
 
 export interface SendButtonProps extends ButtonProps {
   subject: string
@@ -36,7 +39,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
   isDisabled: isPropsDisabled,
   ...props
 }) => {
-  const { t } = useTranslation('new_message')
+  const { t } = useTranslation(['new_message', 'common'])
   const api = useAPI()
   const { getHTML } = useHelpers()
   const [isLoading, setIsLoading] = useState(false)
@@ -44,17 +47,22 @@ export const SendButton: React.FC<SendButtonProps> = ({
   const navi = useNavigate()
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [isSent, setIsSent] = useState(false)
+  const [articleId, setArticleId] = useState('')
 
   const trackClickCommunitySendConfirm = useTrackClick(
     TrackEvent.CommunityClickCommunitySendConfirm
   )
+
+  const articleUrl = useMemo(() => `${APP_URL}/p/${articleId}`, [articleId])
 
   const onSendMessage = async () => {
     if (isLoading) return
     trackClickCommunitySendConfirm()
     setIsLoading(true)
     try {
-      await api.sendMessage(subject, getHTML(), abstract)
+      // const data = await api.sendMessage(subject, getHTML(), abstract)
+      const uuid = '123-123-123-123'
+      setArticleId(uuid)
       setIsSent(true)
       onSend?.()
     } catch (err: any) {
@@ -77,10 +85,29 @@ export const SendButton: React.FC<SendButtonProps> = ({
   const dialogEl = useMemo(() => {
     if (isSent) {
       return (
-        <Heading as="h3" fontSize="18px" display="flex" alignItems="center">
-          <CheckCircleIcon w="16px" h="16px" mr="4px" my="auto" />
-          {t('send_succeed')}
-        </Heading>
+        <>
+          <Heading as="h3" fontSize="18px" display="flex" alignItems="center">
+            <CheckCircleIcon w="16px" h="16px" mr="4px" my="auto" />
+            {t('send_succeed')}
+          </Heading>
+          <Box mt="24px" fontWeight="500" fontSize="16px" lineHeight="22px">
+            Share your message
+          </Box>
+          <Box
+            mt="8px"
+            fontWeight="500"
+            fontSize="16px"
+            lineHeight="20px"
+            background="#F2F2F2"
+            borderRadius="8px"
+            p="6px"
+          >
+            URL:{' '}
+            <Box as="span" color="primary.900">
+              {articleUrl}
+            </Box>
+          </Box>
+        </>
       )
     }
     if (isLoading) {
@@ -105,7 +132,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
         colorScheme="blackButton"
         w="138px"
         onClick={onOpen}
-        isDisabled={isDisabled}
+        // isDisabled={isDisabled}
         isLoading={isLoading}
         {...props}
       >
@@ -120,7 +147,11 @@ export const SendButton: React.FC<SendButtonProps> = ({
       >
         <ModalOverlay />
         <ModalContent borderRadius="20px" w="450px" maxW="450px">
-          {!isSent && !isLoading ? <CloseButton onClick={onClose} /> : null}
+          <CloseButton
+            onClick={() => {
+              navi(RoutePath.Dashboard)
+            }}
+          />
           <ModalBody py="24px" px="20px">
             {dialogEl}
           </ModalBody>
@@ -131,9 +162,13 @@ export const SendButton: React.FC<SendButtonProps> = ({
                 variant="solid-rounded"
                 colorScheme="blackButton"
                 mb="16px"
-                onClick={() => {
+                onClick={async () => {
                   if (isSent) {
-                    navi(RoutePath.Dashboard)
+                    await copyText(articleUrl)
+                    toast(t('copy_successfully', { ns: 'common' }), {
+                      status: 'success',
+                      alertProps: { colorScheme: 'green' },
+                    })
                     return
                   }
                   onSendMessage()
@@ -145,7 +180,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
                   pointerEvents: isLoading ? 'none' : undefined,
                 }}
               >
-                {isSent ? t('ok') : t('successfully_sent.confirm')}
+                {isSent ? t('copy') : t('successfully_sent.confirm')}
               </Button>
             </HStack>
           </ModalFooter>

@@ -160,6 +160,7 @@ export default {
       confirm: 'Confirm',
     },
     ok: 'OK',
+    copy: 'Copy',
     abstract_holder:
       'The abstract will be displayed on your subscribe page to help subscribers quickly understand the content, if not filled in, it will not be displayed.',
   },
