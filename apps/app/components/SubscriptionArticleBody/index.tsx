@@ -25,6 +25,7 @@ import {
   isPrimitiveEthAddress,
   shareToTelegram,
   shareToTwitter,
+  truncateMailAddress,
   truncateMiddle,
 } from 'shared'
 import { Subscription } from 'models'
@@ -225,14 +226,15 @@ export const SubscriptionArticleBody: React.FC<
                 // trackAvatar()
               }}
               mt="30px"
+              w="100%"
             >
               <Avatar w="42px" h="42px" address={address} borderRadius="50%" />
-              <Box ml="4px">
+              <Box ml="4px" wordBreak="break-all">
                 <Box fontWeight={700} fontSize="14px">
                   {nickname}
                 </Box>
                 <Box fontWeight={400} fontSize="12px" color="#979797">
-                  {mailAddress}
+                  {truncateMailAddress(mailAddress)}
                 </Box>
               </Box>
             </Link>

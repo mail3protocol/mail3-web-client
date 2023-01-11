@@ -269,7 +269,13 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           </LinkOverlay>
         </AvatarArea>
 
-        <Text fontWeight="500" fontSize="14px" lineHeight="16px" mt="14px">
+        <Text
+          fontWeight="500"
+          fontSize="14px"
+          lineHeight="16px"
+          mt="14px"
+          w="100%"
+        >
           {mailAddress}
         </Text>
 
@@ -279,6 +285,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           lineHeight="18px"
           color="rgba(0, 0, 0, 0.7)"
           mt="32px"
+          w="100%"
         >
           {desc}
         </Text>
