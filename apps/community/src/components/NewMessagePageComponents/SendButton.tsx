@@ -60,9 +60,8 @@ export const SendButton: React.FC<SendButtonProps> = ({
     trackClickCommunitySendConfirm()
     setIsLoading(true)
     try {
-      // const data = await api.sendMessage(subject, getHTML(), abstract)
-      const uuid = '123-123-123-123'
-      setArticleId(uuid)
+      const data = await api.sendMessage(subject, getHTML(), abstract)
+      setArticleId(data.data.uuid)
       setIsSent(true)
       onSend?.()
     } catch (err: any) {
@@ -91,7 +90,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
             {t('send_succeed')}
           </Heading>
           <Box mt="24px" fontWeight="500" fontSize="16px" lineHeight="22px">
-            Share your message
+            {t('share_message')}
           </Box>
           <Box
             mt="8px"
@@ -132,7 +131,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
         colorScheme="blackButton"
         w="138px"
         onClick={onOpen}
-        // isDisabled={isDisabled}
+        isDisabled={isDisabled}
         isLoading={isLoading}
         {...props}
       >

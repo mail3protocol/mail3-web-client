@@ -161,6 +161,7 @@ export default {
     },
     ok: 'OK',
     copy: 'Copy',
+    share_message: 'Share your message',
     abstract_holder:
       'The abstract will be displayed on your subscribe page to help subscribers quickly understand the content, if not filled in, it will not be displayed.',
   },
