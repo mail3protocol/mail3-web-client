@@ -275,6 +275,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           lineHeight="16px"
           mt="14px"
           w="100%"
+          textAlign="center"
         >
           {mailAddress}
         </Text>
