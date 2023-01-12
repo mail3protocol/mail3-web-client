@@ -179,7 +179,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
                   pointerEvents: isLoading ? 'none' : undefined,
                 }}
               >
-                {isSent ? t('copy') : t('successfully_sent.confirm')}
+                {isSent ? t('copy_url') : t('successfully_sent.confirm')}
               </Button>
             </HStack>
           </ModalFooter>

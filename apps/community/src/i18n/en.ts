@@ -64,6 +64,7 @@ export default {
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
     copy: 'Copy',
+    copy_url: 'Copy URL',
     need_open_earn_nft_dialog: {
       title: '👉Notice',
       description: 'Please enable "subscribe-to-earn" feature',

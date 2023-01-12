@@ -171,7 +171,7 @@ export const SubscriptionArticleBody: React.FC<
     },
   }
 
-  const buttonList = [ButtonType.Telegram, ButtonType.Copy, ButtonType.Twitter]
+  const buttonList = [ButtonType.Twitter, ButtonType.Telegram, ButtonType.Copy]
 
   const EchoBody = (
     <Box
