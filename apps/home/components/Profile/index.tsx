@@ -382,23 +382,18 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
                     host={APP_URL}
                     utmSource={location.host}
                     utmCampaign={address}
-                    iframeHeight="46px"
-                    w="150px"
-                    h="28px"
                     variant="unstyled"
-                    border="1px solid #000000"
+                    iframeHeight="30px"
+                    w="150px"
+                    h="30px"
                     fontSize="14px"
-                    bg="#fff"
-                    color="#000"
                     borderRadius="100px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
                     rewardType={userInfo?.settings.reward_type}
+                    pl="5px"
+                    color="#fff"
+                    bg="#000"
                     earnIconStyle={{
-                      type: 'blue',
-                      left: '62px',
-                      top: '-18px',
+                      w: '70px',
                     }}
                   />
                 </Box>

@@ -1,11 +1,5 @@
-import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
+import { Box, BoxProps, Button, ButtonProps, Center } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
-
-export interface EarnIconStyle {
-  type: string
-  top: string
-  left: string
-}
 
 export const SubscribeButton: React.FC<
   ButtonProps & {
@@ -15,7 +9,7 @@ export const SubscribeButton: React.FC<
     utmSource: string
     utmCampaign?: string
     rewardType?: string
-    earnIconStyle: EarnIconStyle
+    earnIconStyle: BoxProps
   }
 > = ({
   uuid,
@@ -65,7 +59,13 @@ export const SubscribeButton: React.FC<
 
   const ButtonLocal = (
     <Center>
-      <Button {...buttonProps} isLoading={!isLoaded}>
+      <Button
+        {...buttonProps}
+        isLoading={!isLoaded}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
         Subscribe
       </Button>
     </Center>

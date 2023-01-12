@@ -1,28 +1,15 @@
 import React, { useMemo } from 'react'
-import { Box, Button, ButtonProps, Center } from '@chakra-ui/react'
+import { Box, BoxProps, Button, ButtonProps, Center } from '@chakra-ui/react'
 import { useAccount } from 'hooks'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
-import { EarnIconStyle } from 'ui/src/SubscribeButton'
 import { RewardType } from 'models'
 import { useAPI } from '../../hooks/useAPI'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
-import { ReactComponent as SvgEarn } from '../../assets/subscribe/earn.svg'
-import { ReactComponent as SvgEarnWhite } from '../../assets/subscribe/earnWhite.svg'
 
 enum SubscribeState {
   Active,
   Inactive,
-}
-
-enum EarnIconType {
-  Blue = 'blue',
-  White = 'white',
-}
-
-const earnIcons = {
-  [EarnIconType.Blue]: <SvgEarn />,
-  [EarnIconType.White]: <SvgEarnWhite />,
 }
 
 export const SubscribeButton = () => {
@@ -45,6 +32,7 @@ export const SubscribeButton = () => {
   const allowAttr = [
     'w',
     'h',
+    'pl',
     'width',
     'height',
     'variant',
@@ -72,13 +60,11 @@ export const SubscribeButton = () => {
       )
   }, [urlButtonStyle])
 
-  const earnIconStyle: EarnIconStyle = useMemo(
+  const earnIconStyle: BoxProps = useMemo(
     () =>
       urlEarnIconStyle ? JSON.parse(decodeURIComponent(urlEarnIconStyle)) : {},
     [urlEarnIconStyle]
   )
-
-  const iconType = earnIconStyle.type ?? EarnIconType.Blue
 
   const account = useAccount()
   const api = useAPI()
@@ -104,46 +90,59 @@ export const SubscribeButton = () => {
     }
   )
 
-  return (
-    <Center
-      position="absolute"
-      top={`${Math.abs(parseInt(earnIconStyle.top, 10))}px`}
-      left="0px"
-    >
+  const onClick = () => {
+    if (redirect) window.open(redirect)
+  }
+
+  if (data?.state === SubscribeState.Active) {
+    return (
+      <Button variant="unstyled" w="150px" {...buttonStyle} pl="0">
+        Subscribed
+      </Button>
+    )
+  }
+
+  if (rewardType === RewardType.AIR || isLoading) {
+    return (
       <Button
+        isLoading={isLoading}
+        onClick={onClick}
         w="150px"
-        h="28px"
-        variant="unstyled"
-        border="1px solid #000000"
-        fontSize="14px"
-        bg="#fff"
-        color="#000"
-        borderRadius="100px"
+        {...buttonStyle}
+        pl="0"
         display="flex"
         alignItems="center"
         justifyContent="center"
-        {...buttonStyle}
-        onClick={() => {
-          if (data?.state === SubscribeState.Active) return
-          if (redirect) window.open(redirect)
-        }}
-        isLoading={isLoading}
       >
-        {data?.state === SubscribeState.Active ? 'Subscribed' : 'Subscribe'}
+        Subscribe
       </Button>
-      {!isLoading &&
-      data?.state !== SubscribeState.Active &&
-      rewardType !== RewardType.AIR ? (
-        <Box
-          position="absolute"
-          left={earnIconStyle.left}
-          top={earnIconStyle.top}
-          zIndex={9}
-          pointerEvents="none"
-        >
-          {earnIcons[iconType as EarnIconType]}
-        </Box>
-      ) : null}
-    </Center>
+    )
+  }
+
+  return (
+    <Button
+      onClick={onClick}
+      w="230px"
+      overflow="hidden"
+      display="flex"
+      justifyContent="flex-start"
+      pl="24px"
+      {...buttonStyle}
+    >
+      Subscribe
+      <Center
+        bg="#4E51F4"
+        color="#fff"
+        transform="skew(-10deg)"
+        position="absolute"
+        top="0"
+        right="0"
+        w="105px"
+        h="100%"
+        {...earnIconStyle}
+      >
+        <Box transform="skew(10deg)">Earn NFT</Box>
+      </Center>
+    </Button>
   )
 }
