@@ -37,7 +37,7 @@ import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
-import { ClusterCommunityResp } from 'models'
+import { ClusterCommunityResp, RewardType } from 'models'
 import {
   copyText,
   isEthAddress,
@@ -397,23 +397,17 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             host={APP_URL}
             utmSource={location.host}
             utmCampaign={`s/${address}`}
-            iframeHeight="46px"
-            w="150px"
-            h="28px"
-            variant="unstyled"
-            border="1px solid #000000"
-            fontSize="14px"
+            iframeHeight="34px"
+            w={settings?.reward_type === RewardType.NFT ? '230px' : '150px'}
+            minW="150px"
+            h="34px"
+            fontSize="16px"
+            borderRadius="100px"
             bg="#000"
             color="#fff"
-            borderRadius="100px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
             rewardType={settings?.reward_type}
             earnIconStyle={{
-              type: 'blue',
-              left: '62px',
-              top: '-18px',
+              w: '105px',
             }}
           />
         </Box>

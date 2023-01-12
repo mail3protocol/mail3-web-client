@@ -99,7 +99,7 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
               <img
                 src={`${APP_URL}/images/subscribe-btn-${rewardType}.png`}
                 alt="subscribe"
-                style={{ width: '178px', height: 'auto', margin: 'auto' }}
+                style={{ width: '230px', height: 'auto', margin: 'auto' }}
               />
             </a>
           </Center>

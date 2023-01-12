@@ -1,4 +1,4 @@
-import { Box, BoxProps, Button, ButtonProps, Center } from '@chakra-ui/react'
+import { Box, BoxProps, Button, ButtonProps } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
 
 export const SubscribeButton: React.FC<
@@ -57,24 +57,21 @@ export const SubscribeButton: React.FC<
     </Box>
   )
 
-  const ButtonLocal = (
-    <Center>
-      <Button
-        {...buttonProps}
-        isLoading={!isLoaded}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        Subscribe
-      </Button>
-    </Center>
-  )
-
   return (
     <Box h={buttonProps.h} w={buttonProps.w} position="relative">
       {ButtonRemote}
-      {!isLoaded ? ButtonLocal : null}
+      {!isLoaded ? (
+        <Button
+          {...buttonProps}
+          variant="unstyled"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          pl="0"
+          isLoading
+          _hover={{ _disabled: { bg: buttonProps.bg } }}
+        />
+      ) : null}
     </Box>
   )
 }

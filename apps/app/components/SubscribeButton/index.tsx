@@ -31,6 +31,7 @@ export const SubscribeButton = () => {
 
   const allowAttr = [
     'w',
+    'minW',
     'h',
     'pl',
     'width',
@@ -96,15 +97,24 @@ export const SubscribeButton = () => {
 
   if (data?.state === SubscribeState.Active) {
     return (
-      <Button variant="unstyled" w="150px" {...buttonStyle} pl="0">
-        Subscribed
-      </Button>
+      <Center>
+        <Button
+          variant="unstyled"
+          {...buttonStyle}
+          pl="0"
+          w={buttonStyle.minW || buttonStyle.w || '150px'}
+          m="0 auto"
+        >
+          Subscribed
+        </Button>
+      </Center>
     )
   }
 
   if (rewardType === RewardType.AIR || isLoading) {
     return (
       <Button
+        variant="unstyled"
         isLoading={isLoading}
         onClick={onClick}
         w="150px"
@@ -122,6 +132,7 @@ export const SubscribeButton = () => {
   return (
     <Button
       onClick={onClick}
+      variant="unstyled"
       w="230px"
       overflow="hidden"
       display="flex"
