@@ -9,11 +9,11 @@ import {
   PopoverTrigger,
 } from '@chakra-ui/react'
 import { ViewIcon } from '@chakra-ui/icons'
-import { ReactComponent as SvgCopy } from 'assets/profile/copy.svg'
 import dayjs, { Dayjs } from 'dayjs'
 import { ReactNode } from 'react'
 import { copyText } from 'shared'
 import { useTranslation } from 'react-i18next'
+import { ReactComponent as SvgCopy } from '../../assets/copy.svg'
 import { APP_URL } from '../../constants/env/url'
 import { useToast } from '../../hooks/useToast'
 
@@ -75,6 +75,12 @@ export const SentRecordItem: React.FC<{
               <Box
                 as="button"
                 p="5px"
+                _hover={{
+                  color: 'primary.900',
+                }}
+                _active={{
+                  color: '#A1A2F4',
+                }}
                 onClick={async () => {
                   await copyText(`${APP_URL}/p/${uuid}`)
                   toast(t('copy_successfully'), {
