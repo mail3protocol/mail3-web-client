@@ -200,14 +200,14 @@ const SubscribeButton: React.FC<{
       </Box>
       <Modal
         onClose={() => {
-          refetch()
+          if (isAuth) refetch()
           onClose()
         }}
         isOpen={isOpen}
         isCentered
       >
         <ModalOverlay />
-        <ModalContent maxW="80vw" h="80vh">
+        <ModalContent maxW={{ base: '100%', md: '80vw' }} h="80vh">
           <ModalCloseButton />
           <ModalBody>
             <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />
