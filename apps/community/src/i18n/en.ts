@@ -64,7 +64,6 @@ export default {
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
     copy: 'Copy',
-    copy_url: 'Copy URL',
     need_open_earn_nft_dialog: {
       title: '👉Notice',
       description: 'Please enable "subscribe-to-earn" feature',
@@ -162,6 +161,7 @@ export default {
     },
     ok: 'OK',
     copy: 'Copy',
+    copy_url: 'Copy URL',
     share_message: 'Share your message',
     abstract_holder:
       'The abstract will be displayed on your subscribe page to help subscribers quickly understand the content, if not filled in, it will not be displayed.',
