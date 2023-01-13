@@ -213,40 +213,38 @@ const AlreadySubscribed: React.FC<{
 
         <Image src={HappyPng} />
 
-        {!isDialog ? (
-          <Link to={RoutePath.Inbox}>
-            <Button
-              background="#4E51F4"
-              _hover={{
-                bg: '#4E51E0',
-              }}
-              mt="24px"
-              w={['138px', '168px', '168px']}
-              h={['40px']}
-              fontSize={['14px']}
-              onClick={() => {
-                const repeat = IS_MOBILE
-                  ? SubscribeAction.MobileRepeat
-                  : SubscribeAction.Repeat
-                const already = IS_MOBILE
-                  ? SubscribeAction.Mobile
-                  : SubscribeAction.Already
-                const status = state === 'resubscribed' ? repeat : already
-                if (rewardType === RewardType.AIR) {
-                  trackContinueAir({
-                    [TrackKey.SubscribeBtnAirStatus]: status,
-                  })
-                } else {
-                  trackContinue({
-                    [TrackKey.SubscribeBtnStatus]: status,
-                  })
-                }
-              }}
-            >
-              {t('visit-button')}
-            </Button>
-          </Link>
-        ) : null}
+        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
+          <Button
+            background="#4E51F4"
+            _hover={{
+              bg: '#4E51E0',
+            }}
+            mt="24px"
+            w={['138px', '168px', '168px']}
+            h={['40px']}
+            fontSize={['14px']}
+            onClick={() => {
+              const repeat = IS_MOBILE
+                ? SubscribeAction.MobileRepeat
+                : SubscribeAction.Repeat
+              const already = IS_MOBILE
+                ? SubscribeAction.Mobile
+                : SubscribeAction.Already
+              const status = state === 'resubscribed' ? repeat : already
+              if (rewardType === RewardType.AIR) {
+                trackContinueAir({
+                  [TrackKey.SubscribeBtnAirStatus]: status,
+                })
+              } else {
+                trackContinue({
+                  [TrackKey.SubscribeBtnStatus]: status,
+                })
+              }
+            }}
+          >
+            {t('visit-button')}
+          </Button>
+        </Link>
       </Center>
     </Center>
   )
@@ -296,7 +294,9 @@ const SubscribeStatus: React.FC<{
             t={t}
           />
         </Desc>
-        <Button w="168px">{t('ok')}</Button>
+        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
+          <Button w="168px">{t('ok')}</Button>
+        </Link>
       </>
     )
   }
@@ -314,20 +314,19 @@ const SubscribeStatus: React.FC<{
         >
           {t('declined')}
         </Text>
-        {!isDialog ? (
-          <Link to={RoutePath.Inbox}>
-            <Button
-              w="168px"
-              onClick={() => {
-                trackContinue({
-                  [TrackKey.SubscribeBtnStatus]: SubscribeAction.Denial,
-                })
-              }}
-            >
-              {t('open-inbox')}
-            </Button>
-          </Link>
-        ) : null}
+
+        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
+          <Button
+            w="168px"
+            onClick={() => {
+              trackContinue({
+                [TrackKey.SubscribeBtnStatus]: SubscribeAction.Denial,
+              })
+            }}
+          >
+            {t('open-inbox')}
+          </Button>
+        </Link>
       </>
     )
   }
@@ -347,22 +346,21 @@ const SubscribeStatus: React.FC<{
       >
         {t('success')}
       </Text>
-      {!isDialog ? (
-        <Link to={RoutePath.Inbox}>
-          <Button
-            w="168px"
-            onClick={() => {
-              trackContinue({
-                [TrackKey.SubscribeBtnStatus]: IS_MOBILE
-                  ? SubscribeAction.Mobile
-                  : SubscribeAction.Already,
-              })
-            }}
-          >
-            {t('open-inbox')}
-          </Button>
-        </Link>
-      ) : null}
+
+      <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
+        <Button
+          w="168px"
+          onClick={() => {
+            trackContinue({
+              [TrackKey.SubscribeBtnStatus]: IS_MOBILE
+                ? SubscribeAction.Mobile
+                : SubscribeAction.Already,
+            })
+          }}
+        >
+          {t('open-inbox')}
+        </Button>
+      </Link>
     </>
   )
 }
@@ -588,32 +586,34 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
               {t('visit')}
             </Text>
             <Image src={HappyPng} m="20px 0" />
-            {!isDialog ? (
-              <Center mt="16px">
-                <Link to={RoutePath.Inbox}>
-                  <Button
-                    w="168px"
-                    background="#4E51F4"
-                    _hover={{
-                      bg: '#4E51E0',
-                    }}
-                    onClick={() => {
-                      const status = IS_MOBILE
-                        ? SubscribeAction.Mobile
-                        : SubscribeAction.Already
 
-                      trackContinueAir({
-                        [TrackKey.SubscribeBtnAirStatus]: isDeclined
-                          ? SubscribeAction.Denial
-                          : status,
-                      })
-                    }}
-                  >
-                    {t('visit-button')}
-                  </Button>
-                </Link>
-              </Center>
-            ) : null}
+            <Center mt="16px">
+              <Link
+                to={RoutePath.Inbox}
+                target={!isDialog ? '_self' : '_blank'}
+              >
+                <Button
+                  w="168px"
+                  background="#4E51F4"
+                  _hover={{
+                    bg: '#4E51E0',
+                  }}
+                  onClick={() => {
+                    const status = IS_MOBILE
+                      ? SubscribeAction.Mobile
+                      : SubscribeAction.Already
+
+                    trackContinueAir({
+                      [TrackKey.SubscribeBtnAirStatus]: isDeclined
+                        ? SubscribeAction.Denial
+                        : status,
+                    })
+                  }}
+                >
+                  {t('visit-button')}
+                </Button>
+              </Link>
+            </Center>
           </>
         )}
       </Center>
