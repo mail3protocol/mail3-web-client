@@ -1,14 +1,18 @@
 export const shareToTwitter = (config: {
   text: string
   url: string
+  via?: string
   hashtags?: Array<string>
 }) => {
   const hashtagString = config.hashtags
     ? `&hashtags=${config.hashtags.join(',')}`
     : ''
+
+  const viaString = config.via ? `&via=${config.via}` : ''
+
   const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     config.text
-  )}&url=${encodeURIComponent(config.url)}${hashtagString}`
+  )}&url=${encodeURIComponent(config.url)}${hashtagString}${viaString}`
 
   window.open(
     url,

@@ -159,7 +159,8 @@ export const SubscriptionArticleBody: React.FC<
       label: t('twitter'),
       onClick: () => {
         shareToTwitter({
-          text: `${detail.subject.slice(0, 100)} via @mail3dao`,
+          text: `${detail.subject.slice(0, 100)}`,
+          via: 'mail3dao',
           url: shareUrl,
         })
       },
