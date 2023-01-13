@@ -80,11 +80,6 @@ export const SubscriptionArticleBody: React.FC<
     [articleId]
   )
 
-  const shareText: string = useMemo(
-    () => `${detail.subject} ${shareUrl} via @mail3dao`,
-    [detail]
-  )
-
   const { data: userInfo } = useQuery(
     ['userInfo', priAddress],
     async () => {
@@ -146,7 +141,7 @@ export const SubscriptionArticleBody: React.FC<
       label: t('telegram'),
       onClick: () => {
         shareToTelegram({
-          text: shareText,
+          text: `${detail.subject.slice(0, 100)}`,
           url: shareUrl,
         })
       },
@@ -164,7 +159,7 @@ export const SubscriptionArticleBody: React.FC<
       label: t('twitter'),
       onClick: () => {
         shareToTwitter({
-          text: shareText,
+          text: `${detail.subject.slice(0, 100)} via @mail3dao`,
           url: shareUrl,
         })
       },
