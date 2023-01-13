@@ -97,7 +97,8 @@ export function useRemember() {
             const [, pathname] = router.pathname.split('/')
             if (
               `/${pathname}` !== RoutePath.Subscribe &&
-              `/${pathname}` !== RoutePath.SubscriptionArticle
+              `/${pathname}` !== RoutePath.SubscriptionArticle &&
+              RoutePath.Home !== `/`
             ) {
               navi(RoutePath.Home)
             }

@@ -95,11 +95,11 @@ const SubscribeButtonView: React.FC<{
   )
 }
 
-const SubscribeButton: React.FC<{
+export const SubscribeButton: React.FC<{
   isAuth: boolean
   rewardType?: RewardType
   uuid: string
-  setIsHidden: Dispatch<SetStateAction<boolean>>
+  setIsHidden?: Dispatch<SetStateAction<boolean>>
 }> = ({ isAuth, rewardType, uuid, setIsHidden }) => {
   const [t] = useTranslation('subscription')
   const api = useAPI()
@@ -135,7 +135,7 @@ const SubscribeButton: React.FC<{
       onSuccess(data) {
         const isFollowed = data.state === 'active'
         setIsFollow(isFollowed)
-        if (isMobile && isFollowed) setIsHidden(true)
+        if (isMobile && isFollowed && setIsHidden) setIsHidden(true)
       },
       enabled: !!uuid && isAuth,
       refetchOnMount: false,

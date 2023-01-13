@@ -29,7 +29,7 @@ import {
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Avatar, SubscribeButton, SubscribeCard } from 'ui'
+import { Avatar, SubscribeCard } from 'ui'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
@@ -37,7 +37,7 @@ import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
-import { ClusterCommunityResp, RewardType } from 'models'
+import { ClusterCommunityResp } from 'models'
 import {
   copyText,
   isEthAddress,
@@ -53,6 +53,9 @@ import PngCluster3 from '../../assets/subscribeProfile/cluster3.png'
 
 import { CommunityCard } from './card'
 import { useAPI } from '../../hooks/useAPI'
+
+import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
+import { SubscribeButton } from '../SubscriptionArticleBody/userInfo'
 
 const CONTAINER_MAX_WIDTH = 1220
 
@@ -128,7 +131,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   priAddress,
 }) => {
   const [t] = useTranslation(['subscribe-profile', 'common'])
-
+  useAuth(true)
+  const isAuth = useIsAuthenticated()
   const toast = useToast()
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -394,21 +398,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
         >
           <SubscribeButton
             uuid={uuid}
-            host={APP_URL}
-            utmSource={location.host}
-            utmCampaign={`s/${address}`}
-            iframeHeight="34px"
-            w={settings?.reward_type === RewardType.NFT ? '230px' : '150px'}
-            minW="150px"
-            h="34px"
-            fontSize="16px"
-            borderRadius="100px"
-            bg="#000"
-            color="#fff"
             rewardType={settings?.reward_type}
-            earnIconStyle={{
-              w: '105px',
-            }}
+            isAuth={isAuth}
           />
         </Box>
         <Text fontWeight="700" fontSize="18px" lineHeight="20px">

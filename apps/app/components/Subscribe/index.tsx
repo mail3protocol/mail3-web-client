@@ -623,7 +623,7 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
 
 export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
   const [t] = useTranslation('subscribe')
-  useAuth()
+  useAuth(true)
   const isAuth = useIsAuthenticated()
   const account = useAccount()
   const api = useAPI()
