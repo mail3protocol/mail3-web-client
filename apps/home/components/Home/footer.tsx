@@ -207,7 +207,7 @@ export const Footer = () => {
       <Center px={{ base: 0, md: '33px' }}>
         <Flex
           justifyContent={{ base: 'center', md: 'flex-end' }}
-          p={{ base: '60px', md: '0 0px 60px 0px' }}
+          p={{ base: '60px 20px', md: '0 0px 60px 0px' }}
           w="full"
           maxW={`${CONTAINER_MAX_WIDTH}px`}
           justify="space-between"
@@ -239,6 +239,7 @@ export const Footer = () => {
             color="#FFF"
             borderRadius="20px"
             earnIconStyle={{
+              right: '-7px',
               w: '135px',
               bg: '#fff',
               color: '#4E51F4',

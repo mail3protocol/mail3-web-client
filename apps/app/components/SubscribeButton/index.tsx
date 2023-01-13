@@ -34,6 +34,7 @@ export const SubscribeButton = () => {
     'minW',
     'h',
     'pl',
+    'right',
     'width',
     'height',
     'variant',

@@ -165,6 +165,7 @@ export const Dao = () => {
                 color="#FFF"
                 borderRadius="20px"
                 earnIconStyle={{
+                  right: '-7px',
                   w: '135px',
                   bg: '#fff',
                   color: '#4E51F4',
