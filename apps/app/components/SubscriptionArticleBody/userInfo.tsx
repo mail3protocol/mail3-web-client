@@ -15,7 +15,7 @@ import {
 import styled from '@emotion/styled'
 import { useAccount, useDialog, useToast } from 'hooks'
 import { RewardType } from 'models'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Avatar, Button } from 'ui'
@@ -144,10 +144,6 @@ export const SubscribeButton: React.FC<{
     }
   )
 
-  useEffect(() => {
-    setIsLoading(isLoadingStatus)
-  }, [isLoadingStatus])
-
   const onSubscribe = async () => {
     if (isLoading) return
     setIsLoading(true)
@@ -195,7 +191,7 @@ export const SubscribeButton: React.FC<{
           onClick={isAuth ? onSubscribe : onOpen}
           rewardType={rewardType}
           isFollow={isFollow}
-          isLoading={isLoading}
+          isLoading={isLoadingStatus || isLoading}
         />
       </Box>
       <Modal
