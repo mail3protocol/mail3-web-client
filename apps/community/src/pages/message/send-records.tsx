@@ -97,6 +97,7 @@ export const SendRecords: React.FC = () => {
                   {page.messages?.map((message) => (
                     <Box key={message.uuid} h="48px" w="full">
                       <SentRecordItem
+                        uuid={message.uuid}
                         time={dayjs.unix(Number(message.created_at))}
                         subject={message.subject}
                         viewCount={message.read_count}

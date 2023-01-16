@@ -135,3 +135,7 @@ export const AVATAR_TYPE =
 
 envStorage.setCurrentAvatar(AVATAR_TYPE as DefaultAvatarType)
 envStorage.setServerUrl(SERVER_URL)
+
+export const SERVER_PV_AUTH_TOKEN =
+  import.meta.env.NEXT_PUBLIC_SERVER_PV_AUTH_TOKEN ||
+  'e32387b223d004e18b099de125260af7' // test

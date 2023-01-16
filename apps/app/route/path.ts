@@ -22,4 +22,5 @@ export enum RoutePath {
   SubscribeButton = '/subscribe/button',
   Subscription = '/subscription',
   Testing = '/testing',
+  SubscriptionArticle = '/p',
 }

@@ -160,6 +160,7 @@ export const Dashboard: React.FC = () => {
       (messageList?.messages || []).map((item) => (
         <ListItem h="52px" key={item.uuid}>
           <SentRecordItem
+            uuid={item.uuid}
             time={dayjs.unix(Number(item.created_at))}
             subject={item.subject}
             viewCount={item.read_count}

@@ -23,6 +23,7 @@ export namespace Subscription {
     writer_uuid: string
     content: string
     created_at: string
+    summary: string
   }
 
   export interface MessagesReq {

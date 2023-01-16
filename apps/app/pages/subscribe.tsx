@@ -7,9 +7,11 @@ import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-import { Subscribe } from '../components/Subscribe'
+import { Subscribe, SubscribeProps } from '../components/Subscribe'
 import { AuthModal } from '../components/Auth'
 import { RoutePath } from '../route/path'
+
+export const rewardTypeAtom = atom<RewardType>(RewardType.NFT)
 
 const Navbar = () => (
   <Flex
@@ -23,7 +25,23 @@ const Navbar = () => (
   </Flex>
 )
 
-export const rewardTypeAtom = atom<RewardType>(RewardType.NFT)
+export const SimpleSubscribePage: React.FC<SubscribeProps> = ({
+  rewardType,
+  ...rest
+}) => {
+  const updateRewardType = useUpdateAtom(rewardTypeAtom)
+  useEffect(() => {
+    if (rewardType === RewardType.AIR || rewardType === RewardType.NFT)
+      updateRewardType(rewardType)
+  }, [])
+
+  return (
+    <>
+      <Subscribe {...rest} />
+      <AuthModal />
+    </>
+  )
+}
 
 export const SubscribePage = () => {
   const [searchParams] = useSearchParams()
@@ -42,8 +60,7 @@ export const SubscribePage = () => {
   return (
     <PageContainer>
       <Navbar />
-      <Subscribe />
-      <AuthModal />
+      <SimpleSubscribePage />
     </PageContainer>
   )
 }

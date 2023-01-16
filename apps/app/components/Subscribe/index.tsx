@@ -46,6 +46,12 @@ import { IS_MOBILE } from '../../constants'
 import confettiAni from './confetti'
 import { rewardTypeAtom } from '../../pages/subscribe'
 
+export interface SubscribeProps {
+  rewardType?: RewardType
+  isDialog?: boolean
+  uuid?: string
+}
+
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
 const useTrackContinueAir = () =>
   useTrackClick(TrackEvent.ClickSubscribeAirVisit)
@@ -163,9 +169,10 @@ const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
   )
 }
 
-const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
-  state,
-}) => {
+const AlreadySubscribed: React.FC<{
+  state: 'active' | 'resubscribed'
+  isDialog?: boolean
+}> = ({ state, isDialog }) => {
   const [t] = useTranslation('subscribe')
   const rewardType = useAtomValue(rewardTypeAtom)
   const trackContinue = useTrackContinue()
@@ -206,7 +213,7 @@ const AlreadySubscribed: React.FC<{ state: 'active' | 'resubscribed' }> = ({
 
         <Image src={HappyPng} />
 
-        <Link to={RoutePath.Inbox}>
+        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
           <Button
             background="#4E51F4"
             _hover={{
@@ -266,7 +273,8 @@ const SubscribeStatus: React.FC<{
   permission: 'default' | 'denied' | 'granted' | 'prompt'
   isBrowserSupport?: boolean
   isDeclined: boolean
-}> = ({ permission, isBrowserSupport, isDeclined }) => {
+  isDialog?: boolean
+}> = ({ permission, isBrowserSupport, isDeclined, isDialog }) => {
   const [t] = useTranslation('subscribe')
 
   const trackContinue = useTrackContinue()
@@ -286,7 +294,9 @@ const SubscribeStatus: React.FC<{
             t={t}
           />
         </Desc>
-        <Button w="168px">{t('ok')}</Button>
+        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
+          <Button w="168px">{t('ok')}</Button>
+        </Link>
       </>
     )
   }
@@ -304,7 +314,8 @@ const SubscribeStatus: React.FC<{
         >
           {t('declined')}
         </Text>
-        <Link to={RoutePath.Inbox}>
+
+        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
           <Button
             w="168px"
             onClick={() => {
@@ -335,7 +346,8 @@ const SubscribeStatus: React.FC<{
       >
         {t('success')}
       </Text>
-      <Link to={RoutePath.Inbox}>
+
+      <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
         <Button
           w="168px"
           onClick={() => {
@@ -353,7 +365,7 @@ const SubscribeStatus: React.FC<{
   )
 }
 
-const Subscribing: React.FC = () => {
+const Subscribing: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
   const {
@@ -466,6 +478,7 @@ const Subscribing: React.FC = () => {
               isBrowserSupport={isBrowserSupport}
               isDeclined={isDeclined}
               permission={permission}
+              isDialog={isDialog}
             />
           </>
         )}
@@ -474,7 +487,7 @@ const Subscribing: React.FC = () => {
   )
 }
 
-const SubscribingAir: React.FC = () => {
+const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
   const {
@@ -573,8 +586,12 @@ const SubscribingAir: React.FC = () => {
               {t('visit')}
             </Text>
             <Image src={HappyPng} m="20px 0" />
+
             <Center mt="16px">
-              <Link to={RoutePath.Inbox}>
+              <Link
+                to={RoutePath.Inbox}
+                target={!isDialog ? '_self' : '_blank'}
+              >
                 <Button
                   w="168px"
                   background="#4E51F4"
@@ -604,15 +621,15 @@ const SubscribingAir: React.FC = () => {
   )
 }
 
-export const Subscribe: React.FC = () => {
+export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
   const [t] = useTranslation('subscribe')
-  useAuth()
+  useAuth(true)
   const isAuth = useIsAuthenticated()
   const account = useAccount()
   const api = useAPI()
-  const { id } = useParams()
+  const { id: urlId } = useParams()
+  const id = uuid || urlId
   const rewardType = useAtomValue(rewardTypeAtom)
-
   const [localSubscribeStatus, setLocalSubscribeStatus] = useAtom(
     localSubscribeStatusAtom
   )
@@ -722,7 +739,9 @@ export const Subscribe: React.FC = () => {
     subscribeStatus?.state === 'active' ||
     subscribeResult?.state === 'resubscribed'
   ) {
-    return <AlreadySubscribed state={subscribeResult?.state} />
+    return (
+      <AlreadySubscribed state={subscribeResult?.state} isDialog={isDialog} />
+    )
   }
 
   const error =
@@ -732,8 +751,9 @@ export const Subscribe: React.FC = () => {
     putSubscribeError?.response?.data.message
   // TODO: or already subscribed
   if (subscribeResult && !error) {
-    if (rewardType === RewardType.AIR) return <SubscribingAir />
-    return <Subscribing />
+    if (rewardType === RewardType.AIR)
+      return <SubscribingAir isDialog={isDialog} />
+    return <Subscribing isDialog={isDialog} />
   }
 
   return (
