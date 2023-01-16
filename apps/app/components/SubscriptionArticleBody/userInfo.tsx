@@ -203,7 +203,12 @@ export const SubscribeButton: React.FC<{
         isCentered
       >
         <ModalOverlay />
-        <ModalContent maxW={{ base: '100%', md: '80vw' }} h="80vh">
+        <ModalContent
+          maxW={{ base: '100%', md: '800px' }}
+          h="85vh"
+          overflow="hidden"
+          overflowY="scroll"
+        >
           <ModalCloseButton />
           <ModalBody>
             <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />

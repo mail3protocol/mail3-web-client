@@ -52,7 +52,7 @@ const Navbar = () => (
     alignItems="center"
     justifyContent={['flex-start', 'center', 'center']}
   >
-    <Link to={RoutePath.Home}>
+    <Link to={RoutePath.Subscription}>
       <Center>
         <Logo textProps={{ color: '#231815' }} isHiddenText />
         <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="8px">
