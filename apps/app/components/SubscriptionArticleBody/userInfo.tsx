@@ -208,6 +208,12 @@ export const SubscribeButton: React.FC<{
           h="85vh"
           overflow="hidden"
           overflowY="scroll"
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '0 !important',
+              height: '0 !important',
+            },
+          }}
         >
           <ModalCloseButton />
           <ModalBody>
