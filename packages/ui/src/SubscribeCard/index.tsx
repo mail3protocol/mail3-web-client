@@ -27,9 +27,6 @@ const Container = styled(Box)`
   top: -9999px;
   left: -9999px;
   position: absolute;
-  background-image: url(${PngBg});
-  background-repeat: no-repeat;
-  background-size: 100% auto;
 
   &.is-picture {
     top: 0;
@@ -81,6 +78,15 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
         overflow="hidden"
         rounded="24px"
       >
+        <Image
+          w="100%"
+          h="100%"
+          src={PngBg}
+          position="absolute"
+          zIndex="-1"
+          top="0"
+          left="0"
+        />
         <Center w="100%" h="100px" position="absolute" top="0" left="0">
           <Image
             src={bannerUrl}
@@ -112,7 +118,12 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
         </Box>
 
         <Box className="qrCode">
-          <QrCode value={qrUrl} size={66} />
+          <QrCode
+            value={qrUrl}
+            size={66}
+            bgColor="transparent"
+            fgColor="#ffffff"
+          />
         </Box>
       </Container>
     )

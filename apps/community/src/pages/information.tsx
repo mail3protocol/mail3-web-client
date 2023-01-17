@@ -537,7 +537,7 @@ export const Information: React.FC = () => {
                           {
                             width: 335,
                             height: 535,
-                            scale: 2,
+                            scale: window.devicePixelRatio,
                           }
                         )
                         trackClickInformationQRcodeDownload({
