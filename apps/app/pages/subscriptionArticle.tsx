@@ -7,7 +7,7 @@ import { isPrimitiveEthAddress, isSupportedAddress } from 'shared'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
 import { Subscription } from 'models'
-import { ConfirmDialog } from 'hooks'
+import { ConfirmDialog, useDynamicSticky } from 'hooks'
 import { MAIL_SERVER_URL, NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
@@ -39,9 +39,10 @@ const ErrPage = styled(Center)`
   }
 `
 const NavArea = styled(Box)`
+  width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  position: sticky;
+  position: absolute;
   top: 0;
   z-index: 9;
 `
@@ -68,6 +69,7 @@ export const SubscriptionArticle = () => {
   const [t] = useTranslation('subscribe-profile')
   const { id: articleId } = useParams() as { id: string }
   const api = useAPI()
+  const { top, position } = useDynamicSticky({ navbarHeight: NAVBAR_HEIGHT })
 
   const { data: detail } = useQuery<Subscription.MessageDetailResp>(
     [Query.SubscriptionDetail, articleId],
@@ -130,7 +132,7 @@ export const SubscriptionArticle = () => {
 
   return (
     <>
-      <NavArea>
+      <NavArea style={{ top, position }}>
         <PageContainer>
           <Navbar />
         </PageContainer>
