@@ -186,7 +186,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           downloadScreenshot(cardRef.current, 'share.png', {
             width: 335,
             height: 535,
-            scale: 1,
+            scale: 2,
           })
         } catch (error) {
           toast('Download screenshot Error!')

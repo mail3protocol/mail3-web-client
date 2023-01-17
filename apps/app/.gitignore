@@ -43,3 +43,9 @@ yarn-error.log*
 /dist
 
 stats.html
+
+.next
+
+.turbo
+
+.build

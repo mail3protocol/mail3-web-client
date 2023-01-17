@@ -120,6 +120,7 @@ export const SubscribeButton: React.FC<{
           state: 'active',
         }
       } catch (error: any) {
+        // console.log(error.response)
         if (
           error?.response?.status === 404 &&
           error?.response?.data?.reason === 'COMMUNITY_USER_FOLLOWING_NOT_FOUND'

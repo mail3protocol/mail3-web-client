@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Center, Flex, Spinner, Text } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { isPrimitiveEthAddress, isSupportedAddress } from 'shared'
 import styled from '@emotion/styled'
@@ -63,10 +63,21 @@ const Navbar = () => (
   </Flex>
 )
 
-export const SubscriptionArticle = () => {
+export interface SubscriptionArticleProps {
+  errorCode?: number
+  detail: Subscription.MessageDetailResp
+  priAddress: string
+  articleId: string
+  uuid: string
+  url?: string
+}
+
+export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
+  props
+) => {
   useDocumentTitle('Subscription Page')
   const [t] = useTranslation('subscribe-profile')
-  const { id: articleId } = useParams() as { id: string }
+  const { articleId } = props
   const api = useAPI()
 
   const { data: detail } = useQuery<Subscription.MessageDetailResp>(
@@ -80,6 +91,7 @@ export const SubscriptionArticle = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       enabled: !!articleId,
+      initialData: props.detail,
     }
   )
 
@@ -100,12 +112,16 @@ export const SubscriptionArticle = () => {
             .then((res) => (res.status === 200 ? res.data.eth_address : ''))
 
       return {
-        uuid,
         priAddress,
+        uuid,
       }
     },
     {
       enabled: isSupportedAddress(address),
+      initialData: {
+        priAddress: props.priAddress,
+        uuid: props.uuid,
+      },
     }
   )
 

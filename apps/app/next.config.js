@@ -18,6 +18,16 @@ module.exports = withTM({
   },
   async rewrites() {
     return [
+      // Do not rewrite p routes
+      {
+        source: '/p/:any*',
+        destination: '/p/:any*',
+      },
+      // Do not rewrite API routes
+      {
+        source: '/api/:any*',
+        destination: '/api/:any*',
+      },
       // Rewrite everything else to use `pages/index`
       {
         source: '/:path*',
