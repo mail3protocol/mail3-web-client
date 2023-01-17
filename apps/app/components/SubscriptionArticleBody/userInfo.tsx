@@ -22,7 +22,7 @@ import { Avatar, Button } from 'ui'
 import { Query } from '../../api/query'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { useAPI } from '../../hooks/useAPI'
-import { SimpleSubscribePage } from '../../pages/subscribe'
+import { SimpleSubscribePage } from '../../csr_pages/subscribe'
 
 interface UserInfoProps {
   uuid: string

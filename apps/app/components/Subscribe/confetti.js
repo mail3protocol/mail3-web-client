@@ -99,16 +99,6 @@ function createPoisson() {
   return spline.sort();
 }
 
-// Create the overarching container
-var container = document.createElement('div');
-container.style.position = 'fixed';
-container.style.top = '0';
-container.style.left = '0';
-container.style.width = '100%';
-container.style.height = '0';
-container.style.overflow = 'visible';
-container.style.zIndex = '9999';
-
 // Confetto constructor
 function Confetto(theme) {
   this.frame = 0;
@@ -171,6 +161,16 @@ function Confetto(theme) {
 }
 
 function confettiAni() {
+  // Create the overarching container
+  var container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.top = '0';
+  container.style.left = '0';
+  container.style.width = '100%';
+  container.style.height = '0';
+  container.style.overflow = 'visible';
+  container.style.zIndex = '9999';
+
   if (!frame) {
     // Append the container
     document.body.appendChild(container);
@@ -204,7 +204,7 @@ function confettiAni() {
     });
     // Cleanup
     return {
-      cleanup:() => {
+      cleanup: () => {
         setTimeout(() => {
           document.body.removeChild(container);
           frame = undefined;

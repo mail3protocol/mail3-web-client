@@ -1,8 +1,8 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Layout } from '../components/Layout'
-import { SubscribeProfile } from '../pages/subscribeProfile'
-import { SubscriptionArticle } from '../pages/subscriptionArticle'
+import { SubscribeProfile } from '../csr_pages/subscribeProfile'
+import { SubscriptionArticle } from '../csr_pages/subscriptionArticle'
 import { RoutePath } from './path'
 import { routes } from './routes'
 

@@ -42,9 +42,9 @@ import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { RoutePath } from '../../route/path'
 import { useNotification } from '../../hooks/useNotification'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
-import { IS_MOBILE } from '../../constants'
+import { IS_MOBILE } from '../../constants/utils'
 import confettiAni from './confetti'
-import { rewardTypeAtom } from '../../pages/subscribe'
+import { rewardTypeAtom } from '../../csr_pages/subscribe'
 
 export interface SubscribeProps {
   rewardType?: RewardType
@@ -115,7 +115,7 @@ const NewHeading = styled(Heading)`
 const atomWaitPermission = atom(true)
 
 const ConnectWallet = () => {
-  const Comp = IS_MOBILE ? VStack : HStack
+  const Comp = IS_MOBILE() ? VStack : HStack
   const rewardType = useAtomValue(rewardTypeAtom)
   return (
     <ConnectWalletApiContextProvider>
@@ -224,10 +224,10 @@ const AlreadySubscribed: React.FC<{
             h={['40px']}
             fontSize={['14px']}
             onClick={() => {
-              const repeat = IS_MOBILE
+              const repeat = IS_MOBILE()
                 ? SubscribeAction.MobileRepeat
                 : SubscribeAction.Repeat
-              const already = IS_MOBILE
+              const already = IS_MOBILE()
                 ? SubscribeAction.Mobile
                 : SubscribeAction.Already
               const status = state === 'resubscribed' ? repeat : already
@@ -352,7 +352,7 @@ const SubscribeStatus: React.FC<{
           w="168px"
           onClick={() => {
             trackContinue({
-              [TrackKey.SubscribeBtnStatus]: IS_MOBILE
+              [TrackKey.SubscribeBtnStatus]: IS_MOBILE()
                 ? SubscribeAction.Mobile
                 : SubscribeAction.Already,
             })
@@ -599,7 +599,7 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
                     bg: '#4E51E0',
                   }}
                   onClick={() => {
-                    const status = IS_MOBILE
+                    const status = IS_MOBILE()
                       ? SubscribeAction.Mobile
                       : SubscribeAction.Already
 

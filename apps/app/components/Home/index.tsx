@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import landingBg from 'assets/svg/landing-bg.svg?url'
+import landingBg from 'assets/svg/landing-bg.png'
 import styled from '@emotion/styled'
 import {
   Flex,
