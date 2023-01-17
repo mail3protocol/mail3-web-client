@@ -40,6 +40,7 @@ import { SubFormatDate } from '../../utils'
 import { RenderHTML } from '../Preview/parser'
 import { RoutePath } from '../../route/path'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
+import { NAVBAR_HEIGHT } from '../../constants'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -57,6 +58,7 @@ const PageContainer = styled(Box)`
   margin: 0px auto;
   min-height: 500px;
   background-color: #ffffff;
+  padding-top: ${NAVBAR_HEIGHT}px;
 `
 
 enum ButtonType {
