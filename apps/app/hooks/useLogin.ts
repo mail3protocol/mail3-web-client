@@ -113,6 +113,7 @@ export const allowWithoutAuthPaths = new Set<string>([
   RoutePath.WhiteList,
   RoutePath.Testing,
   RoutePath.Subscribe,
+  RoutePath.SubscriptionArticle,
 ])
 
 export const useCurrentWalletStore = () => {
@@ -378,7 +379,7 @@ export const useWalletChange = () => {
   }, [])
 }
 
-export const useAuth = () => {
+export const useAuth = (allowWithoutAuth = false) => {
   const isAuth = useIsAuthenticated()
   const account = useAccount()
   const openAuthModal = useOpenAuthModal()
@@ -398,7 +399,11 @@ export const useAuth = () => {
 
   useEffect(() => {
     const [, pathname] = location.pathname.split('/')
-    if (!isAuth && !allowWithoutAuthPaths.has(`/${pathname}`)) {
+    if (
+      !allowWithoutAuth &&
+      !isAuth &&
+      !allowWithoutAuthPaths.has(`/${pathname}`)
+    ) {
       navi(RoutePath.Home, {
         replace: true,
       })

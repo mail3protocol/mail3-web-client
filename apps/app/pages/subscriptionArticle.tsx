@@ -1,18 +1,20 @@
 import React from 'react'
-import { Box, Center, Flex, Spinner } from '@chakra-ui/react'
+import { Box, Center, Flex, Spinner, Text } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { isPrimitiveEthAddress, isSupportedAddress } from 'shared'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
-import { ConfirmDialog } from 'hooks'
+import { Subscription } from 'models'
+import { ConfirmDialog, useDynamicSticky } from 'hooks'
 import { MAIL_SERVER_URL, NAVBAR_HEIGHT } from '../constants'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-import { SubscribeProfileBody } from '../components/SubscribeProfileBody'
+
 import { RoutePath } from '../route/path'
 import { useAPI } from '../hooks/useAPI'
 import { Query } from '../api/query'
+import { SubscriptionArticleBody } from '../components/SubscriptionArticleBody'
 
 const ErrPage = styled(Center)`
   height: 100vh;
@@ -36,6 +38,14 @@ const ErrPage = styled(Center)`
     font-size: 14px;
   }
 `
+const NavArea = styled(Box)`
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  z-index: 9;
+`
 
 const Navbar = () => (
   <Flex
@@ -43,22 +53,42 @@ const Navbar = () => (
     alignItems="center"
     justifyContent={['flex-start', 'center', 'center']}
   >
-    <Link to={RoutePath.Home}>
-      <Logo textProps={{ color: '#231815' }} />
+    <Link to={RoutePath.Subscription}>
+      <Center>
+        <Logo textProps={{ color: '#231815' }} isHiddenText />
+        <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="8px">
+          Subscription
+        </Text>
+      </Center>
     </Link>
   </Flex>
 )
 
-export const SubscribeProfile = () => {
-  useDocumentTitle('Subscribe Page')
+export const SubscriptionArticle = () => {
+  useDocumentTitle('Subscription Page')
   const [t] = useTranslation('subscribe-profile')
-  const { id: address } = useParams() as { id: string }
+  const { id: articleId } = useParams() as { id: string }
   const api = useAPI()
+  const { top, position } = useDynamicSticky({ navbarHeight: NAVBAR_HEIGHT })
 
-  const isAllow = isSupportedAddress(address)
+  const { data: detail } = useQuery<Subscription.MessageDetailResp>(
+    [Query.SubscriptionDetail, articleId],
+    async () => {
+      const messageDetail = await api.SubscriptionMessageDetail(articleId)
+      return messageDetail.data
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      enabled: !!articleId,
+    }
+  )
+
+  const address = detail?.writer_name || ''
 
   const { isLoading, data, error } = useQuery(
-    [Query.SubscribeProfileInit],
+    [Query.SubscriptionArticleInit],
     async () => {
       const uuid =
         (await api
@@ -77,11 +107,11 @@ export const SubscribeProfile = () => {
       }
     },
     {
-      enabled: isAllow,
+      enabled: isSupportedAddress(address),
     }
   )
 
-  if (!isAllow || error) {
+  if (!articleId || error) {
     return (
       <ErrPage>
         <Center>
@@ -92,7 +122,7 @@ export const SubscribeProfile = () => {
     )
   }
 
-  if (isLoading || !data?.uuid || !data?.priAddress) {
+  if (isLoading || !data?.uuid || !data?.priAddress || !detail) {
     return (
       <ErrPage>
         <Spinner />
@@ -102,14 +132,18 @@ export const SubscribeProfile = () => {
 
   return (
     <>
-      <PageContainer>
-        <Navbar />
-      </PageContainer>
-      <SubscribeProfileBody
+      <NavArea style={{ top, position }}>
+        <PageContainer>
+          <Navbar />
+        </PageContainer>
+      </NavArea>
+      <SubscriptionArticleBody
         mailAddress={`${address}@${MAIL_SERVER_URL}`}
         address={address}
         uuid={data.uuid}
         priAddress={data.priAddress}
+        articleId={articleId}
+        detail={detail}
       />
       <ConfirmDialog />
     </>

@@ -14,6 +14,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { isSupportedAddress } from 'shared'
 import { SERVER_URL } from '../constants'
 import {
   isConnectingUDAtom,
@@ -95,7 +96,11 @@ export function useRemember() {
               trackWhiteListConnect({ [TrackKey.WhiteListEntry]: true })
             }
             const [, pathname] = router.pathname.split('/')
-            if (`/${pathname}` !== RoutePath.Subscribe) {
+            if (
+              `/${pathname}` !== RoutePath.Subscribe &&
+              `/${pathname}` !== RoutePath.SubscriptionArticle &&
+              !isSupportedAddress(pathname)
+            ) {
               navi(RoutePath.Home)
             }
           }
@@ -110,8 +115,10 @@ export function useRemember() {
           closeAuthModal()
           const [, pathname] = router.pathname.split('/')
           if (
-            router.pathname !== RoutePath.WhiteList &&
-            `/${pathname}` !== RoutePath.Subscribe
+            `/${pathname}` !== RoutePath.WhiteList &&
+            `/${pathname}` !== RoutePath.Subscribe &&
+            `/${pathname}` !== RoutePath.SubscriptionArticle &&
+            !isSupportedAddress(pathname)
           ) {
             navi(RoutePath.Setup)
           }

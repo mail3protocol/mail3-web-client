@@ -103,7 +103,7 @@ export class API {
   }
 
   sendMessage(subject: string, content: string, abstract: string) {
-    return this.axios.post(`/community/message`, {
+    return this.axios.post<{ uuid: string }>(`/community/message`, {
       subject,
       content,
       summary: abstract,

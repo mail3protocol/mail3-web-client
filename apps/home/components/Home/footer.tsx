@@ -207,7 +207,7 @@ export const Footer = () => {
       <Center px={{ base: 0, md: '33px' }}>
         <Flex
           justifyContent={{ base: 'center', md: 'flex-end' }}
-          p={{ base: '60px', md: '0 0px 60px 0px' }}
+          p={{ base: '60px 20px', md: '0 0px 60px 0px' }}
           w="full"
           maxW={`${CONTAINER_MAX_WIDTH}px`}
           justify="space-between"
@@ -230,21 +230,19 @@ export const Footer = () => {
             host={APP_URL}
             utmSource="https://mail3.me"
             utmCampaign="mail3.eth"
-            iframeHeight="90px"
-            w="224px"
+            iframeHeight="56px"
+            w="292px"
+            minW="200px"
             h="56px"
-            border="1px solid #4E4E4E"
             fontSize="24px"
             bg="#4E51F4"
             color="#FFF"
             borderRadius="20px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
             earnIconStyle={{
-              type: 'white',
-              left: '100px',
-              top: '-32px',
+              right: '-7px',
+              w: '135px',
+              bg: '#fff',
+              color: '#4E51F4',
             }}
           />
         </Flex>
