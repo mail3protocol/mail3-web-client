@@ -11,18 +11,43 @@ import {
   Text,
   useBreakpointValue,
   useDisclosure,
+  Spinner,
 } from '@chakra-ui/react'
+import dynamic from 'next/dynamic'
 import styled from '@emotion/styled'
 import { useAccount, useDialog, useToast } from 'hooks'
 import { RewardType } from 'models'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import {
+  ComponentType,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Avatar, Button } from 'ui'
 import { Query } from '../../api/query'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { useAPI } from '../../hooks/useAPI'
-import { SimpleSubscribePage } from '../../csr_pages/subscribe'
+import type { SubscribeProps } from '../Subscribe'
+
+const DynamicSimpleSubscribePage: ComponentType<SubscribeProps> = dynamic(
+  // ts-ignore
+  () =>
+    import('../../csr_pages/subscribe').then(
+      (mod) => mod.SimpleSubscribePage
+    ) as any,
+  {
+    ssr: false,
+    suspense: false,
+    loading: () => (
+      <Center w="100%" h="100%">
+        <Spinner />
+      </Center>
+    ),
+  }
+)
 
 interface UserInfoProps {
   uuid: string
@@ -211,7 +236,11 @@ export const SubscribeButton: React.FC<{
         <ModalContent maxW={{ base: '100%', md: '80vw' }} h="80vh">
           <ModalCloseButton />
           <ModalBody>
-            <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />
+            <DynamicSimpleSubscribePage
+              isDialog
+              uuid={uuid}
+              rewardType={rewardType}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

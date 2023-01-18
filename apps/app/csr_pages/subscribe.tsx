@@ -25,10 +25,10 @@ const Navbar = () => (
   </Flex>
 )
 
-export const SimpleSubscribePage: React.FC<SubscribeProps> = ({
+export const SimpleSubscribePage = ({
   rewardType,
   ...rest
-}) => {
+}: SubscribeProps) => {
   const updateRewardType = useUpdateAtom(rewardTypeAtom)
   useEffect(() => {
     if (rewardType === RewardType.AIR || rewardType === RewardType.NFT)
