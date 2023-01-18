@@ -21,5 +21,7 @@ export const isTrust = () => {
   return !!w?.ethereum?.isTrust
 }
 
-export const isMobile = () =>
-  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+export const isMobile = () => {
+  if (typeof window === 'undefined') return false
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+}

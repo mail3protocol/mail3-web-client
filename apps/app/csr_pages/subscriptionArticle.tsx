@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Center, Flex, Spinner, Text } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
-import { Link } from 'react-router-dom'
+import NextLink from 'next/link'
 import { useQuery } from 'react-query'
 import { isPrimitiveEthAddress, isSupportedAddress } from 'shared'
 import styled from '@emotion/styled'
@@ -52,14 +52,16 @@ const Navbar = () => (
     alignItems="center"
     justifyContent={['flex-start', 'center', 'center']}
   >
-    <Link to={RoutePath.Home}>
-      <Center>
-        <Logo textProps={{ color: '#231815' }} isHiddenText />
-        <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="8px">
-          Subscription
-        </Text>
-      </Center>
-    </Link>
+    <NextLink href={RoutePath.Home} passHref>
+      <a>
+        <Center>
+          <Logo textProps={{ color: '#231815' }} isHiddenText />
+          <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="8px">
+            Subscription
+          </Text>
+        </Center>
+      </a>
+    </NextLink>
   </Flex>
 )
 

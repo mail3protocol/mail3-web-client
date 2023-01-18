@@ -22,7 +22,7 @@
             "dependsOn": [
                 "^build",
                 "$NEXT_PUBLIC_ALCHEMY_KEY",
-                "$NEXT_PUBLIC_SERVER_URL"
+                "$NEXT_PUBLIC_**"
             ],
             "outputs": [
                 "dist/**"

@@ -41,7 +41,7 @@ import { Mascot } from './Mascot'
 import { getSigStatus, userPropertiesAtom } from '../../hooks/useLogin'
 import { removeMailSuffix } from '../../utils'
 import { RouterLink } from '../RouterLink'
-import { IS_IPHONE } from '../../constants'
+import { IS_IPHONE } from '../../constants/utils'
 import { CardSignature } from '../CardSignature'
 
 const Container = styled(Center)`
@@ -232,7 +232,7 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.text')}</Text>
             {isLoading ? (
               <Spinner />
-            ) : IS_IPHONE ? (
+            ) : IS_IPHONE() ? (
               <Switch
                 colorScheme="deepBlue"
                 isChecked={isTextEnable}
@@ -273,7 +273,7 @@ export const SettingSignature: React.FC = () => {
             <Text fontWeight={600}>{t('signature.card')}</Text>
             {isLoading ? (
               <Spinner />
-            ) : IS_IPHONE ? (
+            ) : IS_IPHONE() ? (
               <Switch
                 colorScheme="deepBlue"
                 isChecked={isCardEnable}
