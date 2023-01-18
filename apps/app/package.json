@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "scripts": {
         "dev": "next dev",
-        "build": "node ../../packages/scripts/robots-txt.js && next build",
+        "build": "node ../../packages/scripts/robots-txt.js && vite build -c vite.sw.config.ts && next build",
         "start": "next start",
         "lint": "eslint .",
         "report": "REPORT=true vite build",

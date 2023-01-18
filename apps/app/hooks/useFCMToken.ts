@@ -31,10 +31,10 @@ export async function getCurrentToken() {
 const firebaseUtilsAtom = atom<FirebaseUtils | null>(null)
 export function useFirebaseUtils() {
   const [firebaseUtils, setFirebaseUtils] = useAtom(firebaseUtilsAtom)
-  const initializeFirebaseUtils = useCallback(() => {
+  const initializeFirebaseUtils = useCallback(async () => {
     if (!firebaseUtils) {
-      const init = new FirebaseUtils()
-      setFirebaseUtils(init)
+      const init = await FirebaseUtils.create()
+      setFirebaseUtils(init!)
       return init
     }
     return firebaseUtils
@@ -60,7 +60,9 @@ export function useDeleteFCMToken() {
         .catch(console.error)
     }
     await initializeFirebaseUtils()
-      .deleteFirebaseMessagingToken()
+      .then((init) => {
+        init.deleteFirebaseMessagingToken()
+      })
       .catch(console.error)
   }, [api, initializeFirebaseUtils])
 }
@@ -69,7 +71,9 @@ export function useGetFCMToken() {
   const api = useAPI()
   const { initializeFirebaseUtils } = useFirebaseUtils()
   return useCallback(async () => {
-    const token = await initializeFirebaseUtils().getFirebaseMessagingToken()
+    const token = await initializeFirebaseUtils().then((init) =>
+      init.getFirebaseMessagingToken()
+    )
     const currentServerNotificationState = await api
       .getRegistrationTokenState(token)
       .then((res) => res.data.state)
