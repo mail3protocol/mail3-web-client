@@ -78,6 +78,11 @@ export const SubscriptionArticle = () => {
       return messageDetail.data
     },
     {
+      onSuccess(data) {
+        if (data.subject) {
+          document.title = `${data.subject}`
+        }
+      },
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
