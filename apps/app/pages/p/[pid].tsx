@@ -51,12 +51,21 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       }
     }
 
+    const userInfo = await Promise.all([
+      api.getSubscribeUserInfo(priAddress),
+      api.getUserSetting(priAddress),
+    ]).then((res) => ({
+      ...res[0].data,
+      ...res[1].data,
+    }))
+
     return {
       props: {
         priAddress,
         detail: messageDetail.data,
         articleId: pid,
         uuid,
+        userInfo,
       },
       revalidate: 60 * 60 * 24, // 24 hours
     }
