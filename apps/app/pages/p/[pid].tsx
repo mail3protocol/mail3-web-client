@@ -98,7 +98,7 @@ export default function SubscriptionArticlePage(
   const description = props.detail.summary
   const title = props.detail.subject
   const articleUrl = `${APP_URL}/p/${props.uuid}`
-  const image = `${APP_URL}/preview2.png`
+  const image = `${APP_URL}/images/preview-article.png`
 
   return (
     <>
