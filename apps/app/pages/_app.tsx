@@ -30,4 +30,7 @@ function App({ Component, pageProps }: AppProps) {
     </>
   )
 }
+
+App.getInitialProps = async () => ({})
+
 export default App
