@@ -11,6 +11,7 @@ import {
 import { App } from '../../csr_pages/app'
 import { RoutePath } from '../../route/path'
 import { APP_URL } from '../../constants'
+import { SafeHydrate } from '..'
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const pid = params?.pid
@@ -100,7 +101,7 @@ export default function SubscriptionArticlePage(
   const image = `${APP_URL}/preview2.png`
 
   return (
-    <App>
+    <>
       <Head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -135,11 +136,15 @@ export default function SubscriptionArticlePage(
         />
         <link rel="apple-touch-icon" href="/icons/icon-144x144.png" />
       </Head>
-      <StaticRouter
-        location={`${RoutePath.SubscriptionArticle}/${props.articleId}`}
-      >
-        <SubscriptionArticle {...props} />
-      </StaticRouter>
-    </App>
+      <SafeHydrate>
+        <App>
+          <StaticRouter
+            location={`${RoutePath.SubscriptionArticle}/${props.articleId}`}
+          >
+            <SubscriptionArticle {...props} />
+          </StaticRouter>
+        </App>
+      </SafeHydrate>
+    </>
   )
 }

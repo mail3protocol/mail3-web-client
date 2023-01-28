@@ -24,13 +24,9 @@ function App({ Component, pageProps }: AppProps) {
         `}
         </Script>
       ) : null}
-      <div suppressHydrationWarning>
-        {typeof window === 'undefined' ? null : <Component {...pageProps} />}
-      </div>
+      <Component {...pageProps} />
     </>
   )
 }
-
-App.getInitialProps = async () => ({})
 
 export default App

@@ -2,9 +2,15 @@ import Head from 'next/head'
 import { App } from '../csr_pages/app'
 import { Routers } from '../route'
 
+export const SafeHydrate: React.FC = ({ children }) => (
+  <div suppressHydrationWarning>
+    {typeof window === 'undefined' ? null : children}
+  </div>
+)
+
 export default function Index() {
   return (
-    <App>
+    <>
       <Head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -59,7 +65,11 @@ export default function Index() {
         />
         <link rel="apple-touch-icon" href="/icons/icon-144x144.png" />
       </Head>
-      <Routers />
-    </App>
+      <SafeHydrate>
+        <App>
+          <Routers />
+        </App>
+      </SafeHydrate>
+    </>
   )
 }
