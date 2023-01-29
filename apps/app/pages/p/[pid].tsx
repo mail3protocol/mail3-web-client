@@ -70,7 +70,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         uuid,
         userInfo,
       },
-      revalidate: 60 * 60 * 24, // 24 hours
+      revalidate: 60 * 60, // 1 hours
     }
   } catch (error) {
     return {
