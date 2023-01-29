@@ -124,7 +124,7 @@ export default function SubscriptionArticlePage(
         <meta name="twitter:creator" content="@mail3dao" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image:src" content={image} />
+        <meta name="twitter:image" content={image} />
 
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
