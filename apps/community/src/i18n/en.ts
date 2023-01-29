@@ -114,6 +114,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
+      co_authors: 'Co-authors',
       information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
