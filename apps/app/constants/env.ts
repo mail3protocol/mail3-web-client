@@ -113,4 +113,4 @@ envStorage.setServerUrl(SERVER_URL)
 
 export const SERVER_PV_AUTH_TOKEN =
   process.env.NEXT_PUBLIC_SERVER_PV_AUTH_TOKEN ||
-  'e32387b223d004e18b099de125260af7' // test
+  'ba7ced3304d5ee3f65279e5a7a9daef5' // prod

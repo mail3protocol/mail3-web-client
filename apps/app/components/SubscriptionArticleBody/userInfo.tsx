@@ -17,13 +17,7 @@ import dynamic from 'next/dynamic'
 import styled from '@emotion/styled'
 import { useAccount, useDialog, useToast } from 'hooks'
 import { RewardType } from 'models'
-import {
-  ComponentType,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react'
+import { ComponentType, Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Avatar, Button } from 'ui'
@@ -170,10 +164,6 @@ export const SubscribeButton: React.FC<{
     }
   )
 
-  useEffect(() => {
-    setIsLoading(isLoadingStatus)
-  }, [isLoadingStatus])
-
   const onSubscribe = async () => {
     if (isLoading) return
     setIsLoading(true)
@@ -221,7 +211,7 @@ export const SubscribeButton: React.FC<{
           onClick={isAuth ? onSubscribe : onOpen}
           rewardType={rewardType}
           isFollow={isFollow}
-          isLoading={isLoading}
+          isLoading={isLoadingStatus || isLoading}
         />
       </Box>
       <Modal
@@ -233,7 +223,18 @@ export const SubscribeButton: React.FC<{
         isCentered
       >
         <ModalOverlay />
-        <ModalContent maxW={{ base: '100%', md: '80vw' }} h="80vh">
+        <ModalContent
+          maxW={{ base: '100%', md: '800px' }}
+          h="85vh"
+          overflow="hidden"
+          overflowY="scroll"
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '0 !important',
+              height: '0 !important',
+            },
+          }}
+        >
           <ModalCloseButton />
           <ModalBody>
             <DynamicSimpleSubscribePage
