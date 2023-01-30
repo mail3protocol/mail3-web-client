@@ -80,7 +80,7 @@ export const SubscriptionArticleBody: React.FC<
   useEffect(() => {
     if (detail?.content) {
       // report pv
-      api.postStatsEvents({ uuid: articleId })
+      api.postStatsEvents({ uuid: articleId }).catch(Boolean)
     }
   }, [detail?.content])
 
@@ -166,6 +166,7 @@ export const SubscriptionArticleBody: React.FC<
           mailAddress={mailAddress}
           desc={userInfo.description}
           isAuth={isAuth}
+          avatar={userInfo.avatar}
           rewardType={userInfo.reward_type}
         />
         <Box
@@ -229,8 +230,14 @@ export const SubscriptionArticleBody: React.FC<
                     size="md"
                   >
                     <PopoverTrigger>
-                      <Box as="button" p="5px" onClick={onClick}>
-                        <Image src={Icon} w="22px" h="22px" />
+                      <Box
+                        as="button"
+                        p="5px"
+                        onClick={onClick}
+                        role="presentation"
+                        aria-label={label}
+                      >
+                        <Image src={Icon} w="22px" h="22px" alt={label} />
                       </Box>
                     </PopoverTrigger>
                     <PopoverContent width="auto">
@@ -287,8 +294,14 @@ export const SubscriptionArticleBody: React.FC<
                       size="md"
                     >
                       <PopoverTrigger>
-                        <Box as="button" p="5px" onClick={onClick}>
-                          <Image src={Icon} w="28px" h="28px" />
+                        <Box
+                          as="button"
+                          p="5px"
+                          onClick={onClick}
+                          role="presentation"
+                          aria-label={label}
+                        >
+                          <Image src={Icon} w="28px" h="28px" alt={label} />
                         </Box>
                       </PopoverTrigger>
                       <PopoverContent width="auto">

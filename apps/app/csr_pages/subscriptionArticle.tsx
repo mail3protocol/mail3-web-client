@@ -6,7 +6,6 @@ import styled from '@emotion/styled'
 import { Subscription } from 'models'
 import { ConfirmDialog, useDynamicSticky } from 'hooks'
 import { NAVBAR_HEIGHT } from '../constants'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { RoutePath } from '../route/path'
 import { SubscriptionArticleBody } from '../components/SubscriptionArticleBody'
 import { UserSettingResponse } from '../api'
@@ -52,8 +51,6 @@ export interface SubscriptionArticleProps {
 export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
   props
 ) => {
-  useDocumentTitle('Subscription Page')
-
   const { top, position } = useDynamicSticky({ navbarHeight: NAVBAR_HEIGHT })
   const { articleId, detail, uuid, priAddress, userInfo } = props
 

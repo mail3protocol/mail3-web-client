@@ -354,7 +354,13 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                   size="md"
                 >
                   <PopoverTrigger>
-                    <Box as="button" p="10px" onClick={onClick}>
+                    <Box
+                      as="button"
+                      p="10px"
+                      onClick={onClick}
+                      role="option"
+                      aria-label={label}
+                    >
                       <Icon />
                     </Box>
                   </PopoverTrigger>
