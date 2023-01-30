@@ -24,6 +24,7 @@ interface UserInfoProps {
   desc?: string
   address: string
   rewardType?: RewardType
+  avatar?: string
 }
 
 const AvatarArea = styled(LinkBox)`
@@ -42,6 +43,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   uuid,
   rewardType,
   address,
+  avatar,
 }) => {
   const [isHidden, setIsHidden] = useState(false)
 
@@ -66,8 +68,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           <LinkOverlay href={`/${address}`} target="_blank">
             <Center flexDirection="column" justifyContent="flex-start">
               <Avatar
+                src={avatar}
                 address={priAddress}
                 borderRadius="50%"
+                name={nickname}
                 w={{ base: '80px', md: '100px' }}
                 h={{ base: '80px', md: '100px' }}
               />
