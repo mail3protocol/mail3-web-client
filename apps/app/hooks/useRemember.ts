@@ -1,16 +1,13 @@
 import { useTranslation } from 'react-i18next'
+import { TrackEvent, TrackKey, useToast, useTrackClick } from 'hooks'
 import {
-  buildSignMessage,
-  SignupResponseCode,
-  TrackEvent,
-  TrackKey,
   useAccount,
   useProvider,
-  useSignup,
-  useToast,
-  useTrackClick,
   zilpay,
-} from 'hooks'
+  buildSignMessage,
+  SignupResponseCode,
+  useSignup,
+} from 'connect-wallet'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'

@@ -1,15 +1,9 @@
 import {
-  ConnectorName,
   DesiredWallet,
-  metaMask,
-  metaMaskStore,
   TrackEvent,
   TrackKey,
-  useAccount,
   useDialog,
   useDidMount,
-  useLastConectorName,
-  useSetLastConnector,
   useSetLoginInfo,
   useTrackClick,
 } from 'hooks'
@@ -23,6 +17,14 @@ import {
   isRejectedMessage,
 } from 'shared/src/wallet'
 import { isWechat } from 'shared/src/env'
+import {
+  useLastConectorName,
+  useSetLastConnector,
+  useAccount,
+  metaMask,
+  metaMaskStore,
+  ConnectorName,
+} from './connectors'
 import { ConnectButton, generateIcon } from './ConnectButton'
 
 export const MetamaskButton: React.FC<{

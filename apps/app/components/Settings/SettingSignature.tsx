@@ -19,12 +19,12 @@ import React, { useCallback, useState } from 'react'
 import { Button } from 'ui'
 import {
   GlobalDimensions,
-  useAccount,
   useDialog,
   useTrackClick,
   TrackEvent,
   useToast,
 } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import { useObservableCallback, useSubscription } from 'observable-hooks'

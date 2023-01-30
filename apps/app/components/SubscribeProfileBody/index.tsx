@@ -27,9 +27,10 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, ComponentType } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Avatar, SubscribeCard } from 'ui'
+import dynamic from 'next/dynamic'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
@@ -54,8 +55,18 @@ import PngCluster3 from '../../assets/subscribeProfile/cluster3.png'
 import { CommunityCard } from './card'
 import { useAPI } from '../../hooks/useAPI'
 
-import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
-import { SubscribeButton } from '../SubscriptionArticleBody/userInfo'
+import { useAuth } from '../../hooks/useLogin'
+
+import type { SubscribeButtonProps } from '../SubscriptionArticleBody/subscribeButton'
+
+const LazyloadSubscribeButton: ComponentType<SubscribeButtonProps> = dynamic(
+  () => import('../SubscriptionArticleBody/subscribeButton') as any,
+  {
+    ssr: false,
+    suspense: false,
+    loading: () => null,
+  }
+)
 
 const CONTAINER_MAX_WIDTH = 1220
 
@@ -132,7 +143,6 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 }) => {
   const [t] = useTranslation(['subscribe-profile', 'common'])
   useAuth(true)
-  const isAuth = useIsAuthenticated()
   const toast = useToast()
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -396,10 +406,9 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           bottom={{ base: '0px', md: 'auto' }}
           transform={{ base: 'translateX(50%)', md: 'none' }}
         >
-          <SubscribeButton
+          <LazyloadSubscribeButton
             uuid={uuid}
             rewardType={settings?.reward_type}
-            isAuth={isAuth}
           />
         </Box>
         <Text fontWeight="700" fontSize="18px" lineHeight="20px">

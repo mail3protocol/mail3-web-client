@@ -1,13 +1,10 @@
 import { useState } from 'react'
 import {
-  ConnectorName,
   DesiredWallet,
   TrackEvent,
   TrackKey,
-  useAccount,
   useDialog,
   useDidMount,
-  useSetLastConnector,
   useSetLoginInfo,
   useTrackClick,
 } from 'hooks'
@@ -16,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { Connector, Web3ReactStore } from '@web3-react/types'
 import { isWechat } from 'shared/src/env'
 import { isRejectedMessage } from 'shared/src/wallet'
+import { useSetLastConnector, useAccount, ConnectorName } from './connectors'
 
 export interface useEthButtonProps {
   onClose?: () => void

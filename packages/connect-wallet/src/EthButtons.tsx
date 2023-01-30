@@ -1,16 +1,10 @@
 import React, { useState } from 'react'
 import {
-  ConnectorName,
   DesiredWallet,
-  metaMask,
-  metaMaskStore,
   TrackEvent,
   TrackKey,
-  useAccount,
   useDialog,
   useDidMount,
-  useLastConectorName,
-  useSetLastConnector,
   useSetLoginInfo,
   useTrackClick,
 } from 'hooks'
@@ -35,6 +29,14 @@ import {
   isImTokenReject,
   isRejectedMessage,
 } from 'shared/src/wallet'
+import {
+  useLastConectorName,
+  useSetLastConnector,
+  useAccount,
+  metaMask,
+  metaMaskStore,
+  ConnectorName,
+} from './connectors'
 import { WalletConnectButton } from './WalletConnectButton'
 import { ConnectButton, generateIcon } from './ConnectButton'
 import { CoinbaseButton } from './CoinbaseButton'

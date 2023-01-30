@@ -1,13 +1,8 @@
 import React, { useMemo, useRef } from 'react'
 import { Button, PageContainer, ProfileCard } from 'ui'
 import { useTranslation } from 'react-i18next'
-import {
-  TrackEvent,
-  useAccount,
-  useScreenshot,
-  useToast,
-  useTrackClick,
-} from 'hooks'
+import { TrackEvent, useScreenshot, useToast, useTrackClick } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import {
   Box,
   Center,

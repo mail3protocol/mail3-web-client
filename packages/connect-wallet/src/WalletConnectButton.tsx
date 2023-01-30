@@ -1,20 +1,22 @@
 import {
-  ConnectorName,
   DesiredWallet,
   TrackEvent,
   TrackKey,
-  useAccount,
   useDialog,
-  useLastConectorName,
-  useSetLastConnector,
   useSetLoginInfo,
   useTrackClick,
-  walletConnect,
-  walletConnectStore,
 } from 'hooks'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import WalletConnectPng from 'assets/wallets/walletconnect.png'
+import {
+  walletConnect,
+  walletConnectStore,
+  useLastConectorName,
+  useSetLastConnector,
+  useAccount,
+  ConnectorName,
+} from './connectors'
 import { ConnectButton, generateIcon } from './ConnectButton'
 
 export const WalletConnectButton: React.FC<{

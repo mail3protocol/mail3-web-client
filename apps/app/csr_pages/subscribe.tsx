@@ -10,6 +10,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { Subscribe, SubscribeProps } from '../components/Subscribe'
 import { AuthModal } from '../components/Auth'
 import { RoutePath } from '../route/path'
+import { useAuth } from '../hooks/useLogin'
 
 export const rewardTypeAtom = atom<RewardType>(RewardType.NFT)
 
@@ -30,6 +31,7 @@ export const SimpleSubscribePage = ({
   ...rest
 }: SubscribeProps) => {
   const updateRewardType = useUpdateAtom(rewardTypeAtom)
+  useAuth()
   useEffect(() => {
     if (rewardType === RewardType.AIR || rewardType === RewardType.NFT)
       updateRewardType(rewardType)

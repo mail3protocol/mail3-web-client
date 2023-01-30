@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
-import { useAccount } from 'hooks'
+import { useLoginAccount } from 'hooks'
 import { truncateMiddle } from 'shared'
 import { MAIL_SERVER_URL } from '../constants'
 
 export const useEmailAddress = () => {
-  const account = useAccount()
+  const account = useLoginAccount()
 
   return useMemo(
     () =>

@@ -14,14 +14,14 @@ import {
 } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
 import { Button } from 'ui'
+import { useToast } from 'hooks'
 import {
   useConnector,
   useEagerConnect,
   useProvider,
-  useSignMessage,
-  useToast,
   zilpay,
-} from 'hooks'
+  useSignMessage,
+} from 'connect-wallet'
 import { useTranslation } from 'react-i18next'
 import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
 import MobileIpfsGuidePng from '../../assets/ipfs-guide/mobile.png'

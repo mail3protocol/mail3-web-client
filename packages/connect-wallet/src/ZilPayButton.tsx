@@ -1,17 +1,19 @@
 import {
-  ConnectorName,
   DesiredWallet,
   TrackEvent,
   TrackKey,
   useDialog,
-  useLastConectorName,
-  useSetLastConnector,
   useTrackClick,
-  zilpay,
 } from 'hooks'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ZilpayPng from 'assets/wallets/zilpay.png'
+import {
+  zilpay,
+  useLastConectorName,
+  useSetLastConnector,
+  ConnectorName,
+} from './connectors'
 
 import { ConnectButton, generateIcon } from './ConnectButton'
 import { useConnectWalletApi } from './ConnectWalletApiContext'

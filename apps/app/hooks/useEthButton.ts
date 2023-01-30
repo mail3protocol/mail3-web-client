@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import {
-  ConnectorName,
   DesiredWallet,
   TrackEvent,
   TrackKey,
-  useAccount,
   useDialog,
   useDidMount,
-  useSetLastConnector,
   useSetLoginInfo,
   useTrackClick,
 } from 'hooks'
+import { useSetLastConnector, useAccount, ConnectorName } from 'connect-wallet'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { useTranslation } from 'react-i18next'
 import { Connector, Web3ReactStore } from '@web3-react/types'

@@ -8,11 +8,10 @@ import {
 } from 'jotai/utils'
 import { atom, useAtom } from 'jotai'
 import { useMemo } from 'react'
-import { useDidMount } from '../useDidMount'
+import { useDidMount, useLoginAccount } from 'hooks'
 import { metaMask, metaMaskhooks } from './MetaMask'
 import { walletConnect, walletConnectHooks } from './WalletConnect'
 import { coinbase, coinbaseHooks } from './Coinbase'
-import { useLoginAccount } from '../useLoginInfo'
 import { zilpay } from './zilpay'
 
 export const SupportedConnectors = getSelectedConnector(

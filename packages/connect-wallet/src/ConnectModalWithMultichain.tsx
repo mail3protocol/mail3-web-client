@@ -21,13 +21,7 @@ import {
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
 import React, { ReactNode, useMemo, useState } from 'react'
-import {
-  ConnectorName,
-  noop,
-  useCloseOnChangePathname,
-  useDidMount,
-  zilpay,
-} from 'hooks'
+import { noop, useCloseOnChangePathname, useDidMount } from 'hooks'
 import PhantomPng from 'assets/wallets/phantom.png'
 import BloctoPng from 'assets/wallets/blocto.png'
 import SolflarePng from 'assets/wallets/solflare.png'
@@ -44,6 +38,7 @@ import SolIconPath from 'assets/chain-icons/sol.png'
 import TronIconPath from 'assets/chain-icons/tron.png'
 import OtherIconPath from 'assets/chain-icons/other.png'
 import { isMobile as shareIsMobile } from 'shared/src/env'
+import { zilpay, ConnectorName } from './connectors'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'

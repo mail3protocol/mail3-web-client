@@ -10,7 +10,8 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import dayjs from 'dayjs'
-import { TrackEvent, useAccount, useTrackClick } from 'hooks'
+import { TrackEvent, useTrackClick } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import { useTranslation, Trans } from 'react-i18next'
 import React, { useMemo } from 'react'
 import styled from '@emotion/styled'

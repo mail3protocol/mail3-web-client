@@ -18,13 +18,8 @@ import {
 import styled from '@emotion/styled'
 import { ReactComponent as DownTriangleSvg } from 'assets/svg/triangle-down.svg'
 import { useTranslation } from 'react-i18next'
-import {
-  Mail3MenuItem,
-  TrackEvent,
-  TrackKey,
-  useAccount,
-  useTrackClick,
-} from 'hooks'
+import { Mail3MenuItem, TrackEvent, TrackKey, useTrackClick } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import { DiscordIcon, Logo as UiLogo, MirrorIcon, TwitterIcon } from 'ui'
 import { useQuery } from 'react-query'
 import { atom, useAtomValue } from 'jotai'

@@ -2,7 +2,7 @@ import axios, { Axios, AxiosResponse } from 'axios'
 import { useMemo } from 'react'
 import { useAccount } from './connectors'
 
-export class API {
+class API {
   private address: string
 
   private axios: Axios

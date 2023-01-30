@@ -1,18 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
-import {
-  coinbase,
-  coinbaseStore,
-  ConfirmDialog,
-  ConnectorName,
-  useAccount,
-  useConnectWalletDialog,
-  useDidMount,
-  useEagerConnect,
-} from 'hooks'
+import { ConfirmDialog, useDidMount } from 'hooks'
 import { ButtonProps } from '@chakra-ui/react'
 import { isCoinbaseWallet } from 'shared/src/env'
 import { Button } from 'ui/src/Button'
+import {
+  coinbase,
+  coinbaseStore,
+  ConnectorName,
+  useAccount,
+  useConnectWalletDialog,
+  useEagerConnect,
+} from './connectors'
 import {
   ConnectModalWithMultichain,
   ConnectWalletSelector,
@@ -125,3 +124,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
 export { ConnectWalletApiContext } from './ConnectWalletApiContext'
 export { AuthModal } from './AuthModal'
 export { ConnectModalWithMultichain, ConnectWalletSelector }
+export * from './connectors'
+export * from './useSignMessage'
+export * from './useSignup'

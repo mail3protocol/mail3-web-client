@@ -36,13 +36,8 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'react-i18next'
 import React, { useMemo, useState } from 'react'
 import { Button } from 'ui'
-import {
-  useAccount,
-  useDialog,
-  useToast,
-  useTrackClick,
-  TrackEvent,
-} from 'hooks'
+import { useDialog, useToast, useTrackClick, TrackEvent } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import { useLocation } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import {

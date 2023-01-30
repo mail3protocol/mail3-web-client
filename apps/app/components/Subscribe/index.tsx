@@ -14,13 +14,8 @@ import {
   Flex,
 } from '@chakra-ui/react'
 import { Step, Steps, useSteps } from 'chakra-ui-steps'
-import {
-  SubscribeAction,
-  TrackEvent,
-  TrackKey,
-  useAccount,
-  useTrackClick,
-} from 'hooks'
+import { SubscribeAction, TrackEvent, TrackKey, useTrackClick } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'

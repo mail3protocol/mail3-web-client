@@ -1,22 +1,11 @@
 import {
-  coinbase,
-  coinbaseStore,
-  ConnectorName,
   DesiredWallet,
-  metaMask,
-  metaMaskStore,
   TrackEvent,
   TrackKey,
-  useAccount,
-  useConnectedEthAccount,
-  useDialog,
-  useDidMount,
-  useLastConectorName,
-  useSetLastConnector,
   useSetLoginInfo,
   useTrackClick,
-  walletConnect,
-  walletConnectStore,
+  useDialog,
+  useDidMount,
 } from 'hooks'
 import {
   Modal,
@@ -43,6 +32,19 @@ import {
   isRejectedMessage,
 } from 'shared/src/wallet'
 import { isWechat, isMobile } from 'shared/src/env'
+import {
+  useAccount,
+  useConnectedEthAccount,
+  walletConnect,
+  walletConnectStore,
+  metaMask,
+  metaMaskStore,
+  useLastConectorName,
+  useSetLastConnector,
+  coinbase,
+  coinbaseStore,
+  ConnectorName,
+} from './connectors'
 import { ConnectButton, generateIcon } from './ConnectButton'
 import { useConnectWalletApi } from './ConnectWalletApiContext'
 

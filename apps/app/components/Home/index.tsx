@@ -12,7 +12,8 @@ import {
   ButtonProps,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useTrackClick, TrackEvent } from 'hooks'
+import { useTrackClick, TrackEvent } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import { Button } from 'ui'
 import { truncateMiddle } from 'shared'
 import {

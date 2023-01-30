@@ -58,7 +58,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         articleId: pid,
         uuid,
       },
-      revalidate: 60 * 60 * 24, // 24 hours
+      revalidate: 60 * 60 * 1, // 1 hours
     }
   } catch (error) {
     return {

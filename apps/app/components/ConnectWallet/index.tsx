@@ -1,19 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import React, { useEffect, useState, useMemo } from 'react'
-import {
-  coinbase,
-  coinbaseStore,
-  ConnectorName,
-  useAccount,
-  useConnectWalletDialog,
-  useDidMount,
-  useEagerConnect,
-} from 'hooks'
+import { useDidMount } from 'hooks'
 import { Button } from 'ui/src/Button'
 import {
   ConnectWallet as ConnectWalletButton,
   ConnectWalletProps,
   ConnectWalletApiContext,
+  coinbase,
+  coinbaseStore,
+  ConnectorName,
+  useAccount,
+  useConnectWalletDialog,
+  useEagerConnect,
 } from 'connect-wallet'
 import { isCoinbaseWallet } from '../../utils'
 import { useEthButton } from '../../hooks/useEthButton'

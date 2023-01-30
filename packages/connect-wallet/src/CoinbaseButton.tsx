@@ -1,15 +1,9 @@
 import {
-  ConnectorName,
   DesiredWallet,
-  coinbase,
-  coinbaseStore,
   TrackEvent,
   TrackKey,
-  useAccount,
   useDialog,
   useDidMount,
-  useLastConectorName,
-  useSetLastConnector,
   useSetLoginInfo,
   useTrackClick,
 } from 'hooks'
@@ -19,6 +13,14 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import CoinbasePng from 'assets/wallets/coinbase.png'
 import { isWechat } from 'shared/src/env'
 import { generateMetamaskDeepLink, isRejectedMessage } from 'shared/src/wallet'
+import {
+  useLastConectorName,
+  useSetLastConnector,
+  useAccount,
+  coinbase,
+  coinbaseStore,
+  ConnectorName,
+} from './connectors'
 import { ConnectButton, generateIcon } from './ConnectButton'
 
 export const CoinbaseButton: React.FC<{

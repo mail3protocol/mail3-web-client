@@ -1,24 +1,26 @@
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useMemo } from 'react'
 import {
-  useAccount,
-  useConnector,
-  useConnectWalletDialog,
-  useLastConectorName,
   GlobalDimensions,
   SignatureStatus,
   useDidMount,
-  useAccountIsActivating,
-  zilpay,
   useLoginAccount,
   // useConnectedAccount,
   useSetLoginInfo,
   useLoginInfo,
+} from 'hooks'
+import {
+  useAccount,
+  useConnector,
+  useConnectWalletDialog,
+  useLastConectorName,
+  useAccountIsActivating,
+  zilpay,
   ConnectorName,
   metaMaskStore,
   walletConnectStore,
   useSetLastConnector,
-} from 'hooks'
+} from 'connect-wallet'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Box, BoxProps, Button, ButtonProps, Center } from '@chakra-ui/react'
-import { useAccount } from 'hooks'
+import { useAccount } from 'connect-wallet'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import { RewardType } from 'models'

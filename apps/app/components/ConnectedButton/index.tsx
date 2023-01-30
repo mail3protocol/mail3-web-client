@@ -17,10 +17,10 @@ import {
   PersonnalCenter,
   TrackEvent,
   TrackKey,
-  useConnectWalletDialog,
   useToast,
   useTrackClick,
 } from 'hooks'
+import { useConnectWalletDialog } from 'connect-wallet'
 import { truncateMailAddress } from 'shared'
 import { useEmailAddress } from '../../hooks/useEmailAddress'
 import { ButtonList, ButtonListItemProps } from '../ButtonList'
