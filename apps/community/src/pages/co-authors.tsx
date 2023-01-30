@@ -35,9 +35,12 @@ import { Button as ButtonUI } from 'ui'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { isSupportedAddress } from 'shared'
+import { useQuery } from 'react-query'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useAPI } from '../hooks/useAPI'
+import { QueryKey } from '../api/QueryKey'
 
 export const BindButton: React.FC = () => {
   const { t } = useTranslation(['co_authors', 'common'])
@@ -106,6 +109,21 @@ export const CoAuthors: React.FC = () => {
   useDocumentTitle('Co-authors')
   const { t } = useTranslation(['co_authors', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
+  const api = useAPI()
+
+  const { data, isLoading, refetch } = useQuery(
+    [QueryKey.GetCollaborators],
+    async () => api.getCollaborators().then((r) => r.data),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchInterval: false,
+      cacheTime: 0,
+      onSuccess(res) {
+        console.log(res)
+      },
+    }
+  )
 
   return (
     <Container as={Grid} gridTemplateColumns="3fr 1fr" gap="20px">

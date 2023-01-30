@@ -15,6 +15,7 @@ import {
 } from './modals/UpdateSubscriptionResponse'
 import { SubscriptionResponse } from './modals/SubscriptionResponse'
 import { PagingRequest } from './modals/base'
+import { CommunityCollaboratorsResp } from './modals/co-authors'
 
 export class API {
   private readonly axios: AxiosInstance
@@ -108,5 +109,11 @@ export class API {
       content,
       summary: abstract,
     })
+  }
+
+  getCollaborators() {
+    return this.axios.get<CommunityCollaboratorsResp>(
+      `/community/collaborators`
+    )
   }
 }
