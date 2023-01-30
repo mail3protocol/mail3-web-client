@@ -561,5 +561,28 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
         },
       },
     },
+    Table: {
+      baseStyle: {
+        table: {
+          fontSize: '12px',
+          fontVariantNumeric: 'inherit',
+        },
+        thead: {
+          bg: '#F2F2F2',
+        },
+        th: {
+          fontWeight: 500,
+          textTransform: 'initial',
+        },
+        caption: {
+          marginTop: 0,
+          padding: '10px',
+          fontWeight: '500',
+          fontSize: '12px',
+          lineHeight: '20px',
+          color: '#AEAEAE',
+        },
+      },
+    },
   },
 })
