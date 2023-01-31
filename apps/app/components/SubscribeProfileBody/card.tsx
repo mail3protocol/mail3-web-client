@@ -1,6 +1,5 @@
 import { Box, Flex, LinkBox, LinkOverlay, Spacer, Text } from '@chakra-ui/react'
 import dayjs from 'dayjs'
-import { APP_URL } from '../../constants'
 
 const dateStringFormat = `h:mm a · D MMM`
 
@@ -23,7 +22,7 @@ export const CommunityCard: React.FC<{
       mb={{ base: '13px', md: 0 }}
       h="172px"
     >
-      <LinkOverlay href={`${APP_URL}/p/${uuid}`} target="_blank">
+      <LinkOverlay href={`${location.origin}/p/${uuid}`} target="_blank">
         <Flex
           fontWeight="400"
           fontSize="12px"

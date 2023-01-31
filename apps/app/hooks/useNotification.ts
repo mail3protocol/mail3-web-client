@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
 import { defer, from, fromEvent, switchMap } from 'rxjs'
 import { useQuery } from 'react-query'
-import { isSupported } from 'firebase/messaging'
-import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/env'
+import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/utils'
 import {
   getIsEnabledNotification,
   getNotificationPermission,
@@ -122,8 +121,12 @@ export function useNotification(shouldReload = true) {
   const { data: isBrowserSupport, isLoading: isBrowserSupportChecking } =
     useQuery(
       ['isSupportedFCM'],
-      async () =>
-        (await isSupported()) && IS_CHROME && !IS_MOBILE && !IS_FIREFOX,
+      async () => {
+        const { isSupported } = await import('firebase/messaging')
+        return (
+          (await isSupported()) && IS_CHROME() && !IS_MOBILE() && !IS_FIREFOX()
+        )
+      },
       {
         refetchOnMount: false,
         refetchOnWindowFocus: false,

@@ -19,10 +19,7 @@ import {
   removeDuplicationAttachments,
 } from '../../../utils/editor'
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
-import {
-  DRIFT_BOTTLE_ADDRESS,
-  PRODUCT_RECOMMENDATIONS_ADDRESS,
-} from '../../../constants'
+import { PRODUCT_RECOMMENDATIONS_ADDRESS } from '../../../constants'
 import { useSending } from '../../../hooks/useSending'
 import { AddressNonceErrorReason } from '../../../api/ErrorCode'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
@@ -71,7 +68,6 @@ export function useSubmitMessage() {
   const { attachments } = useAttachment()
   const { isEnableCardSignature } = useCardSignature()
   const trackReplyDriftbottleMail = useTrackClick(TrackEvent.ReplyDriftbottle)
-  const trackSendDriftbottleMail = useTrackClick(TrackEvent.SendDriftbottleMail)
   const trackSentProductSuggestion = useTrackClick(
     TrackEvent.SentProductSuggestion
   )
@@ -87,11 +83,6 @@ export function useSubmitMessage() {
     {
       match: ({ subject: s }) => s.startsWith('Re: [🌊drift bottle]'),
       track: () => trackReplyDriftbottleMail(),
-    },
-    {
-      match: ({ to }) =>
-        !!to?.some((address) => address === DRIFT_BOTTLE_ADDRESS),
-      track: () => trackSendDriftbottleMail(),
     },
   ]
 

@@ -11,18 +11,37 @@ import {
   Text,
   useBreakpointValue,
   useDisclosure,
+  Spinner,
 } from '@chakra-ui/react'
+import dynamic from 'next/dynamic'
 import styled from '@emotion/styled'
 import { useAccount, useDialog, useToast } from 'hooks'
 import { RewardType } from 'models'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { ComponentType, Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Avatar, Button } from 'ui'
 import { Query } from '../../api/query'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { useAPI } from '../../hooks/useAPI'
-import { SimpleSubscribePage } from '../../pages/subscribe'
+import type { SubscribeProps } from '../Subscribe'
+
+const DynamicSimpleSubscribePage: ComponentType<SubscribeProps> = dynamic(
+  // ts-ignore
+  () =>
+    import('../../csr_pages/subscribe').then(
+      (mod) => mod.SimpleSubscribePage
+    ) as any,
+  {
+    ssr: false,
+    suspense: false,
+    loading: () => (
+      <Center w="100%" h="100%">
+        <Spinner />
+      </Center>
+    ),
+  }
+)
 
 interface UserInfoProps {
   uuid: string
@@ -33,6 +52,7 @@ interface UserInfoProps {
   isAuth: boolean
   address: string
   rewardType?: RewardType
+  avatar?: string
 }
 
 const AvatarArea = styled(LinkBox)`
@@ -120,6 +140,7 @@ export const SubscribeButton: React.FC<{
           state: 'active',
         }
       } catch (error: any) {
+        // console.log(error.response)
         if (
           error?.response?.status === 404 &&
           error?.response?.data?.reason === 'COMMUNITY_USER_FOLLOWING_NOT_FOUND'
@@ -217,7 +238,11 @@ export const SubscribeButton: React.FC<{
         >
           <ModalCloseButton />
           <ModalBody>
-            <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />
+            <DynamicSimpleSubscribePage
+              isDialog
+              uuid={uuid}
+              rewardType={rewardType}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -234,6 +259,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   rewardType,
   address,
   isAuth,
+  avatar,
 }) => {
   const [isHidden, setIsHidden] = useState(false)
 
@@ -258,8 +284,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           <LinkOverlay href={`/${address}`} target="_blank">
             <Center flexDirection="column" justifyContent="flex-start">
               <Avatar
+                src={avatar}
                 address={priAddress}
                 borderRadius="50%"
+                name={nickname}
                 w={{ base: '80px', md: '100px' }}
                 h={{ base: '80px', md: '100px' }}
               />

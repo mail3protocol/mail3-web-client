@@ -1,6 +1,5 @@
 import React from 'react'
 import { Center, Flex, Heading, Text, Image } from '@chakra-ui/react'
-import landingBg from 'assets/svg/landing-bg.svg?url'
 import { useTranslation } from 'react-i18next'
 import { Button, LogoAnimation } from 'ui'
 import { useConnectWalletDialog } from 'hooks'
@@ -10,7 +9,6 @@ import { NAVBAR_GUTTER, NAVBAR_HEIGHT } from '../../constants'
 
 const Container = styled(Center)`
   min-height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);
-  background-image: url(${landingBg});
   background-repeat: no-repeat;
   background-position: 50%;
   background-size: 80%;

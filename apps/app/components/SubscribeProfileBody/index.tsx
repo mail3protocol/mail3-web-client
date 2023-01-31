@@ -186,7 +186,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           downloadScreenshot(cardRef.current, 'share.png', {
             width: 335,
             height: 535,
-            scale: 1,
+            scale: 2,
           })
         } catch (error) {
           toast('Download screenshot Error!')
@@ -354,7 +354,13 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                   size="md"
                 >
                   <PopoverTrigger>
-                    <Box as="button" p="10px" onClick={onClick}>
+                    <Box
+                      as="button"
+                      p="10px"
+                      onClick={onClick}
+                      role="option"
+                      aria-label={label}
+                    >
                       <Icon />
                     </Box>
                   </PopoverTrigger>
