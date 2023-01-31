@@ -28,6 +28,7 @@ import {
   ModalFooter,
   Input,
   Spinner,
+  Box,
 } from '@chakra-ui/react'
 
 import { Button as ButtonUI } from 'ui'
@@ -134,7 +135,10 @@ export const UnbindLink: React.FC<{
   )
 }
 
-export const BindButton: React.FC<{ refetch: () => void }> = ({ refetch }) => {
+export const BindButton: React.FC<{
+  refetch: () => void
+  disabled: boolean
+}> = ({ refetch, disabled }) => {
   const { t } = useTranslation(['co_authors', 'common'])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isLoading, setIsLoading] = useState(false)
@@ -190,6 +194,7 @@ export const BindButton: React.FC<{ refetch: () => void }> = ({ refetch }) => {
         h="26px"
         mt="8px"
         onClick={onOpen}
+        disabled={disabled}
       >
         {t('bind_title')}
       </Button>
@@ -262,13 +267,10 @@ export const CoAuthors: React.FC = () => {
       ),
     [userProps, data]
   )
+  const bindList = data?.collaborators.filter((i) => !i.is_administrator) || []
 
-  const isEmpty =
-    data?.collaborators.filter((i) => !i.is_administrator).length === 0
-
-  const EmptyCaption = isEmpty ? (
-    <TableCaption>{t('empty')}</TableCaption>
-  ) : null
+  const EmptyCaption =
+    bindList.length === 0 ? <TableCaption>{t('empty')}</TableCaption> : null
 
   return (
     <Container as={Grid} gridTemplateColumns="3fr 1fr" gap="20px">
@@ -293,57 +295,76 @@ export const CoAuthors: React.FC = () => {
           <TabPanels>
             <TabPanel p="32px 0">
               <Text fontWeight={500}>{t('management_text')}</Text>
-              <BindButton refetch={() => refetch()} />
+              {isAdmin ? (
+                <BindButton
+                  refetch={() => refetch()}
+                  disabled={bindList.length >= 3}
+                />
+              ) : null}
+              <Box mt="32px">
+                {bindList.length >= 3 ? (
+                  <Text
+                    mt="20px"
+                    color="red"
+                    fontWeight="400"
+                    fontSize="12px"
+                    lineHeight="16px"
+                  >
+                    {t('unbind_limit')}
+                  </Text>
+                ) : null}
 
-              <TableContainer
-                mt="32px"
-                borderRadius="8px 8px 0px 0px"
-                overflow="hidden"
-                border="1px solid #F2F2F2"
-              >
-                <Table variant="unstyled">
-                  {isLoading ? (
-                    <TableCaption>
-                      <Spinner />
-                    </TableCaption>
-                  ) : (
-                    EmptyCaption
-                  )}
-                  <Thead>
-                    <Tr>
-                      <Th>{t('wallet_address')}</Th>
-                      <Th>{t('state')}</Th>
-                      <Th>{t('operate')}</Th>
-                    </Tr>
-                  </Thead>
+                <TableContainer
+                  mt="8px"
+                  borderRadius="8px 8px 0px 0px"
+                  overflow="hidden"
+                  border="1px solid #F2F2F2"
+                >
+                  <Table variant="unstyled">
+                    {isLoading ? (
+                      <TableCaption>
+                        <Spinner />
+                      </TableCaption>
+                    ) : (
+                      EmptyCaption
+                    )}
+                    <Thead>
+                      <Tr>
+                        <Th>{t('wallet_address')}</Th>
+                        <Th>{t('state')}</Th>
+                        <Th>{t('operate')}</Th>
+                      </Tr>
+                    </Thead>
 
-                  <Tbody>
-                    {data?.collaborators.map((item) => {
-                      const { address, is_administrator: isAdminRemote } = item
-                      if (isAdmin && isAdminRemote) {
-                        return null
-                      }
+                    <Tbody>
+                      {data?.collaborators.map((item) => {
+                        const { address, is_administrator: isAdminRemote } =
+                          item
+                        if (isAdmin && isAdminRemote) {
+                          return null
+                        }
 
-                      return (
-                        <Tr key={address}>
-                          <Td>
-                            {address}
-                            {isAdminRemote ? '!admin' : ''}
-                          </Td>
-                          <Td>{t('bound')}</Td>
-                          <Td>
-                            <UnbindLink
-                              refetch={refetch}
-                              isAdmin={isAdmin}
-                              coAddr={address}
-                            />
-                          </Td>
-                        </Tr>
-                      )
-                    })}
-                  </Tbody>
-                </Table>
-              </TableContainer>
+                        return (
+                          <Tr key={address}>
+                            <Td>
+                              {address}
+                              {isAdminRemote ? '!admin' : ''}
+                            </Td>
+                            <Td>{t('bound')}</Td>
+                            <Td>
+                              <UnbindLink
+                                refetch={refetch}
+                                isAdmin={isAdmin}
+                                coAddr={address}
+                              />
+                            </Td>
+                          </Tr>
+                        )
+                      })}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Box>
             </TabPanel>
           </TabPanels>
         </Tabs>
