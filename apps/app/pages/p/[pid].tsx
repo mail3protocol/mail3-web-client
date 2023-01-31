@@ -2,6 +2,7 @@ import ErrorPage from 'next/error'
 import { isPrimitiveEthAddress } from 'shared'
 import { StaticRouter } from 'react-router-dom/server'
 import { GetStaticPropsContext } from 'next'
+import { parse } from 'node-html-parser'
 import Head from 'next/head'
 import { API } from '../../api'
 import {
@@ -98,7 +99,21 @@ export default function SubscriptionArticlePage(
   const description = props.detail.summary
   const title = props.detail.subject
   const articleUrl = `${APP_URL}/p/${props.uuid}`
-  const image = `${APP_URL}/images/preview-article.png`
+
+  let previewImage = `${APP_URL}/images/preview-article.png`
+
+  if (typeof window === 'undefined') {
+    const root = parse(props.detail.content)
+    const imgs = root.querySelectorAll('img')
+    imgs.some((img) => {
+      const src = img.getAttribute('src')
+      if (src && /\.(jpg|png|gif|webp)$/i.test(src)) {
+        previewImage = src
+        return true
+      }
+      return false
+    })
+  }
 
   return (
     <>
@@ -118,13 +133,13 @@ export default function SubscriptionArticlePage(
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={articleUrl} />
-        <meta property="og:image" content={image} />
+        <meta property="og:image" content={previewImage} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@mail3dao" />
         <meta name="twitter:creator" content="@mail3dao" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={image} />
+        <meta name="twitter:image" content={previewImage} />
 
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
