@@ -389,6 +389,7 @@ export default {
     bind_pleaceholder: 'Please enter wallet address',
     bind_bound: 'This wallet address has been bound',
     bind_not_legitimate: 'The wallet address is not legitimate',
+    bind_successfully: 'Bind successfully',
     help_text: `<h3>What is Co-authors?</h3>
     <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to bind 5 wallet addresses as Co-authors, and the Co-authors can directly connect to the Subscription Backend and operate group sending.</p>
     `,

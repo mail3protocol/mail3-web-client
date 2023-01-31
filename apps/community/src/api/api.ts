@@ -116,4 +116,16 @@ export class API {
       `/community/collaborators`
     )
   }
+
+  bindCollaborators(address: string) {
+    return this.axios.post(`/community/collaborators/bind`, {
+      address,
+    })
+  }
+
+  unbindCollaborators(address: string) {
+    return this.axios.post(`/community/collaborators/unbind`, {
+      address,
+    })
+  }
 }
