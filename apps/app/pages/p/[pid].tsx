@@ -81,7 +81,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         userInfo,
         ipfsInfo,
       },
-      revalidate: 60 * 60, // 1 hours
+      revalidate: 60 * 5, // 5 minutes
     }
   } catch (error) {
     return {
