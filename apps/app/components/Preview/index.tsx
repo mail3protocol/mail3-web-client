@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { Avatar, Button } from 'ui'
+import { Avatar, Button, IpfsInfoTable } from 'ui'
 import {
   AvatarGroup,
   Box,
@@ -56,7 +56,6 @@ import {
 import { RenderHTML } from './parser'
 import { Query } from '../../api/query'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import { IpfsInfoTable } from '../IpfsInfoTable'
 import type { MeesageDetailState } from '../Mailbox'
 import { pinUpMsgAtom } from '../Inbox'
 import { useExperienceUserGuard } from '../../hooks/useExperienceUserGuard'

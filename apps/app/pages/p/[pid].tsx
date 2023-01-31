@@ -3,6 +3,7 @@ import { isPrimitiveEthAddress } from 'shared'
 import { StaticRouter } from 'react-router-dom/server'
 import { GetStaticPropsContext } from 'next'
 import Head from 'next/head'
+import { MessageOnChainIdentifierResponse } from 'models'
 import { API } from '../../api'
 import {
   SubscriptionArticle,
@@ -35,16 +36,16 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     }
 
     const address = messageDetail?.data?.writer_name || ''
-    const priAddress = isPrimitiveEthAddress(address)
-      ? address
-      : await api
-          .getPrimitiveAddress(address)
-          .then((r) => (r.status === 200 ? r.data.eth_address : ''))
-
-    const uuid =
-      (await api
+    const [priAddress, uuid] = await Promise.all([
+      isPrimitiveEthAddress(address)
+        ? address
+        : api
+            .getPrimitiveAddress(address)
+            .then((r) => (r.status === 200 ? r.data.eth_address : '')),
+      api
         .checkIsProject(address)
-        .then((r) => (r.status === 200 ? r.data.uuid : ''))) || ''
+        .then((r) => (r.status === 200 ? r.data.uuid : '')),
+    ])
 
     if (!priAddress || !uuid) {
       return {
@@ -52,6 +53,15 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
           errorCode: messageDetail.status,
         },
       }
+    }
+
+    let ipfsInfo: MessageOnChainIdentifierResponse | null = null
+
+    try {
+      const { data } = await api.getSubscribePageIpfsInfo(pid)
+      ipfsInfo = data
+    } catch (error) {
+      //
     }
 
     const userInfo = await Promise.all([
@@ -69,6 +79,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         articleId: pid,
         uuid,
         userInfo,
+        ipfsInfo,
       },
       revalidate: 60 * 60, // 1 hours
     }

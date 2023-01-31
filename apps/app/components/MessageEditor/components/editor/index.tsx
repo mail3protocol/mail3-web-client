@@ -22,6 +22,7 @@ import {
   useRemirror,
   useRemirrorContext,
 } from '@remirror/react'
+import { IpfsModal } from 'ui'
 import { useNavigate } from 'react-router-dom'
 import { Stack, Button, Flex, Grid, useDisclosure } from '@chakra-ui/react'
 import styled from '@emotion/styled'
@@ -33,7 +34,6 @@ import { Attach } from '../attach'
 import { SelectCardSignature } from '../selectCardSignature'
 import { useSubmitMessage } from '../../hooks/useSubmitMessage'
 import { useSaveMessage } from '../../hooks/useSaveMessage'
-import { IpfsModal } from '../../../IpfsModal'
 import { Query } from '../../../../api/query'
 import { useAPI } from '../../../../hooks/useAPI'
 import { useSubject } from '../../hooks/useSubject'
@@ -190,6 +190,7 @@ const Footer = () => {
     <>
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
+          api={api}
           isOpen={isOpenIpfsModal}
           onClose={onCloseIpfsModal}
           isForceConnectWallet={!isUploadedIpfsKey}

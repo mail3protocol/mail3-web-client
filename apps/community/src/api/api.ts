@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
+import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -108,5 +109,17 @@ export class API {
       content,
       summary: abstract,
     })
+  }
+
+  public updateMessageEncryptionKey(messageEncryptionKey: string) {
+    return this.axios.put('/account/settings/message_encryption_keys', {
+      message_encryption_key: messageEncryptionKey,
+    })
+  }
+
+  public getMessageEncryptionKeyState() {
+    return this.axios.get<GetMessageEncryptionKeyResponse>(
+      '/account/settings/message_encryption_key_states'
+    )
   }
 }

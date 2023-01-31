@@ -23,11 +23,10 @@ import {
   zilpay,
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
-import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
-import MobileIpfsGuidePng from '../../assets/ipfs-guide/mobile.png'
-import { useAPI } from '../../hooks/useAPI'
-import { digestMessage } from '../../utils'
-import GIFLoading from '../../assets/mailbox/loading.gif'
+import { digestMessage } from 'shared'
+import DesktopIpfsGuidePng from 'assets/ipfs-guide/desktop.png'
+import MobileIpfsGuidePng from 'assets/ipfs-guide/mobile.png'
+import GIFLoading from 'assets/mailbox/loading.gif'
 
 const stringToBeSigned = `Generate MESSAGE ENCRYPTION key for me and I authorize current dApp to access my MESSAGE ENCRYPTION key. (This operation won’t affect your digital assets.)
 
@@ -82,13 +81,23 @@ const SigningDialog: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   )
 }
 
+interface Api {
+  updateMessageEncryptionKey: (key: string) => Promise<any>
+}
+
 export const IpfsModal: React.FC<{
   isOpen: boolean
   onClose: () => void
+  api: Api
   onAfterSignature?: (signatureStr: string) => void
   isForceConnectWallet?: boolean
-}> = ({ isOpen, onClose, onAfterSignature, isForceConnectWallet = true }) => {
-  const api = useAPI()
+}> = ({
+  isOpen,
+  onClose,
+  onAfterSignature,
+  api,
+  isForceConnectWallet = true,
+}) => {
   const { t } = useTranslation('ipfs_modal')
   const provider = useProvider()
   const signMessage = useSignMessage()

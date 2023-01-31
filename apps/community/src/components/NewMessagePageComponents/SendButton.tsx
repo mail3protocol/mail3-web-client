@@ -12,6 +12,8 @@ import {
   Spinner,
   useDisclosure,
 } from '@chakra-ui/react'
+import { useQuery } from 'react-query'
+import { IpfsModal } from 'ui'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHelpers } from '@remirror/react'
@@ -124,6 +126,19 @@ export const SendButton: React.FC<SendButtonProps> = ({
     )
   }, [isSent, isLoading, t])
 
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
+
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery(['get_message_encryption_key_state'], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  )
+
   return (
     <>
       <Button
@@ -137,6 +152,18 @@ export const SendButton: React.FC<SendButtonProps> = ({
       >
         {t('send')}
       </Button>
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          api={api}
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async () => {
+            onCloseIpfsModal()
+            await onSendMessage()
+          }}
+        />
+      ) : null}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -170,7 +197,11 @@ export const SendButton: React.FC<SendButtonProps> = ({
                     })
                     return
                   }
-                  onSendMessage()
+                  if (isUploadedIpfsKey) {
+                    onSendMessage()
+                  } else {
+                    onOpenIpfsModal()
+                  }
                 }}
                 fontWeight="500"
                 px="32px"
