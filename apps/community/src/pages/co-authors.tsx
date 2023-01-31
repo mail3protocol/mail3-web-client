@@ -33,14 +33,16 @@ import {
 
 import { Button as ButtonUI } from 'ui'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { isSupportedAddress } from 'shared'
 import { useQuery } from 'react-query'
+import { useAtomValue } from 'jotai'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useAPI } from '../hooks/useAPI'
 import { QueryKey } from '../api/QueryKey'
+import { userPropertiesAtom } from '../hooks/useLogin'
 
 export const BindButton: React.FC = () => {
   const { t } = useTranslation(['co_authors', 'common'])
@@ -110,6 +112,7 @@ export const CoAuthors: React.FC = () => {
   const { t } = useTranslation(['co_authors', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()
+  const userProps = useAtomValue(userPropertiesAtom)
 
   const { data, isLoading, refetch } = useQuery(
     [QueryKey.GetCollaborators],
@@ -123,6 +126,14 @@ export const CoAuthors: React.FC = () => {
         console.log(res)
       },
     }
+  )
+
+  const isAdmin = useMemo(
+    () =>
+      data?.collaborators.some(
+        (item) => item.is_administrator && item.address === userProps.address
+      ),
+    [userProps, data]
   )
 
   return (
@@ -157,7 +168,10 @@ export const CoAuthors: React.FC = () => {
                 border="1px solid #F2F2F2"
               >
                 <Table variant="unstyled">
-                  <TableCaption>{t('empty')}</TableCaption>
+                  {data?.collaborators.filter((i) => !i.is_administrator)
+                    .length === 0 ? (
+                    <TableCaption>{t('empty')}</TableCaption>
+                  ) : null}
                   <Thead>
                     <Tr>
                       <Th>{t('wallet_address')}</Th>
@@ -167,21 +181,32 @@ export const CoAuthors: React.FC = () => {
                   </Thead>
 
                   <Tbody>
-                    {/* <Tr>
-                      <Td>inches</Td>
-                      <Td>millimetres (mm)</Td>
-                      <Td>25.4</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>inches</Td>
-                      <Td>millimetres (mm)</Td>
-                      <Td>25.4</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>inches</Td>
-                      <Td>millimetres (mm)</Td>
-                      <Td>25.4</Td>
-                    </Tr> */}
+                    {data?.collaborators.map((item) => {
+                      const { address, is_administrator: isAdminRemote } = item
+                      if (isAdmin && isAdminRemote) {
+                        return null
+                      }
+
+                      return (
+                        <>
+                          <Td>
+                            {address}
+                            {isAdminRemote ? '!admin' : ''}
+                          </Td>
+                          <Td>Bound</Td>
+                          <Td>
+                            <Button
+                              variant="link"
+                              color="primary.900"
+                              fontSize="12px"
+                              disabled={!isAdmin}
+                            >
+                              Unbind
+                            </Button>
+                          </Td>
+                        </>
+                      )
+                    })}
                   </Tbody>
                 </Table>
               </TableContainer>
