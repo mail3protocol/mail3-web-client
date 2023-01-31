@@ -384,6 +384,7 @@ export default {
     cancel: 'Cancel',
     bind: 'Bind',
     unbind: 'Unbind',
+    bound: 'Bound',
     bind_title: 'Bind the co-authors',
     bind_limit: 'You can bind up to 3 wallet addresses',
     bind_pleaceholder: 'Please enter wallet address',

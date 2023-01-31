@@ -242,7 +242,7 @@ export const CoAuthors: React.FC = () => {
   const { t } = useTranslation(['co_authors', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()
-  const userProps = useAtomValue(userPropertiesAtom)
+  const userProps = useAtomValue(userPropertiesAtom) ?? {}
 
   const { data, isLoading, refetch } = useQuery(
     [QueryKey.GetCollaborators],
@@ -258,7 +258,7 @@ export const CoAuthors: React.FC = () => {
   const isAdmin = useMemo(
     () =>
       data?.collaborators.some(
-        (item) => item.is_administrator && item.address === userProps.address
+        (item) => item.is_administrator && item.address === userProps?.address
       ),
     [userProps, data]
   )
