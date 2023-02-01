@@ -32,8 +32,8 @@ import {
 } from '@chakra-ui/react'
 
 import { Button as ButtonUI } from 'ui'
-import { useTranslation } from 'react-i18next'
-import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import { useEffect, useMemo, useState } from 'react'
 import { isSupportedAddress } from 'shared'
 import { useQuery } from 'react-query'
 import { useAtomValue } from 'jotai'
@@ -46,6 +46,7 @@ import { QueryKey } from '../api/QueryKey'
 import { userPropertiesAtom } from '../hooks/useLogin'
 import { useToast } from '../hooks/useToast'
 import { CloseButton } from '../components/ConfirmDialog'
+import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
 
 export const UnbindLink: React.FC<{
   refetch: () => void
@@ -247,6 +248,7 @@ export const CoAuthors: React.FC = () => {
   const { t } = useTranslation(['co_authors', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()
+  const onUpdateTipsPanel = useUpdateTipsPanel()
   const userProps = useAtomValue(userPropertiesAtom) ?? {}
 
   const { data, isLoading, refetch } = useQuery(
@@ -259,6 +261,19 @@ export const CoAuthors: React.FC = () => {
       cacheTime: 0,
     }
   )
+
+  useEffect(() => {
+    onUpdateTipsPanel(
+      <Trans
+        i18nKey="help_text"
+        t={t}
+        components={{
+          h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
+          p: <Text fontSize="14px" fontWeight="400" color="#737373;" />,
+        }}
+      />
+    )
+  }, [])
 
   const isAdmin = useMemo(
     () =>
