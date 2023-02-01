@@ -43,6 +43,7 @@ export interface SubscriptionArticleProps {
   detail: Subscription.MessageDetailResp
   priAddress: string
   articleId: string
+  previewImage: string
   uuid: string
   url?: string
   userInfo: { nickname: string; avatar: string } & UserSettingResponse

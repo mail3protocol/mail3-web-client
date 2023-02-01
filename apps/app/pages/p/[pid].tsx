@@ -63,6 +63,24 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       ...res[1].data,
     }))
 
+    let previewImage = `${APP_URL}/images/preview-article.png`
+    try {
+      const root = parse(messageDetail.data.content)
+      const imgs = root.querySelectorAll('img')
+      if (imgs) {
+        for (let i = 0; i < imgs.length; i++) {
+          const img = imgs[i]
+          const src = img.getAttribute('src')
+          if (src && /\.(jpg|png|gif|webp)$/i.test(src)) {
+            previewImage = src
+            break
+          }
+        }
+      }
+    } catch (error) {
+      //
+    }
+
     return {
       props: {
         priAddress,
@@ -70,6 +88,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         articleId: pid,
         uuid,
         userInfo,
+        previewImage,
       },
       revalidate: 60 * 60, // 1 hours
     }
@@ -100,21 +119,6 @@ export default function SubscriptionArticlePage(
   const title = props.detail.subject
   const articleUrl = `${APP_URL}/p/${props.uuid}`
 
-  let previewImage = `${APP_URL}/images/preview-article.png`
-
-  if (typeof window === 'undefined') {
-    const root = parse(props.detail.content)
-    const imgs = root.querySelectorAll('img')
-    imgs.some((img) => {
-      const src = img.getAttribute('src')
-      if (src && /\.(jpg|png|gif|webp)$/i.test(src)) {
-        previewImage = src
-        return true
-      }
-      return false
-    })
-  }
-
   return (
     <>
       <Head>
@@ -133,13 +137,13 @@ export default function SubscriptionArticlePage(
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={articleUrl} />
-        <meta property="og:image" content={previewImage} />
+        <meta property="og:image" content={props.previewImage} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@mail3dao" />
         <meta name="twitter:creator" content="@mail3dao" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={previewImage} />
+        <meta name="twitter:image" content={props.previewImage} />
 
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
