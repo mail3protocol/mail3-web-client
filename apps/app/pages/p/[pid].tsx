@@ -14,6 +14,28 @@ import { RoutePath } from '../../route/path'
 import { APP_URL } from '../../constants'
 import { SafeHydrate } from '..'
 
+const getPreviewImage = (content: string) => {
+  let previewImage = `${APP_URL}/images/preview-article.png`
+  try {
+    const root = parse(content)
+    const imgs = root.querySelectorAll('img')
+    if (imgs) {
+      for (let i = 0; i < imgs.length; i++) {
+        const img = imgs[i]
+        const src = img.getAttribute('src')
+        if (src && /\.(jpg|png|gif|webp)$/i.test(src)) {
+          previewImage = src
+          break
+        }
+      }
+    }
+  } catch (error) {
+    //
+  }
+
+  return previewImage
+}
+
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const pid = params?.pid
   if (typeof pid !== 'string') {
@@ -63,23 +85,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       ...res[1].data,
     }))
 
-    let previewImage = `${APP_URL}/images/preview-article.png`
-    try {
-      const root = parse(messageDetail.data.content)
-      const imgs = root.querySelectorAll('img')
-      if (imgs) {
-        for (let i = 0; i < imgs.length; i++) {
-          const img = imgs[i]
-          const src = img.getAttribute('src')
-          if (src && /\.(jpg|png|gif|webp)$/i.test(src)) {
-            previewImage = src
-            break
-          }
-        }
-      }
-    } catch (error) {
-      //
-    }
+    const previewImage = getPreviewImage(messageDetail.data.content)
 
     return {
       props: {
