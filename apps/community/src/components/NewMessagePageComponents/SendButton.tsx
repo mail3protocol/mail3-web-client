@@ -26,6 +26,7 @@ import { useToast } from '../../hooks/useToast'
 import { RoutePath } from '../../route/path'
 import { CloseButton } from '../ConfirmDialog'
 import { APP_URL } from '../../constants/env/url'
+import { QueryKey } from '../../api/QueryKey'
 
 export interface SendButtonProps extends ButtonProps {
   subject: string
@@ -135,7 +136,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
   const {
     data: isUploadedIpfsKey,
     isLoading: isLoadingIsUploadedIpfsKeyState,
-  } = useQuery(['get_message_encryption_key_state'], () =>
+  } = useQuery([QueryKey.GetMessageEncryptionKeyState], () =>
     api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
   )
 

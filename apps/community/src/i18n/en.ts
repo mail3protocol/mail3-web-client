@@ -376,7 +376,7 @@ export default {
   ipfs_modal: {
     title: 'Enable IPFS Storage',
     content:
-      'Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically',
+      'Generate an encryption key to encrypt your content, \n and store the encrypted emails on IPFS automatically',
     generate_key: 'Generate key',
     signing_modal: {
       title: 'Please check your \nwallet Content',

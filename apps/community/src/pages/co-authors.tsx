@@ -31,7 +31,7 @@ import {
   Box,
 } from '@chakra-ui/react'
 
-import { Button as ButtonUI } from 'ui'
+import { Button as ButtonUI, IpfsModal } from 'ui'
 import { Trans, useTranslation } from 'react-i18next'
 import { useEffect, useMemo, useState } from 'react'
 import { isSupportedAddress } from 'shared'
@@ -142,10 +142,32 @@ export const BindButton: React.FC<{
 }> = ({ refetch, disabled }) => {
   const { t } = useTranslation(['co_authors', 'common'])
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
+
   const [isLoading, setIsLoading] = useState(false)
   const [address, setAddress] = useState('')
   const api = useAPI()
   const toast = useToast()
+
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery([QueryKey.GetMessageEncryptionKeyState], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  )
+
+  const onBind = () => {
+    if (!isUploadedIpfsKey) {
+      onOpenIpfsModal()
+    } else {
+      onOpen()
+    }
+  }
 
   const onSubmit = async () => {
     if (address) {
@@ -194,11 +216,25 @@ export const BindButton: React.FC<{
         w="175px"
         h="26px"
         mt="8px"
-        onClick={onOpen}
+        onClick={onBind}
         disabled={disabled}
       >
         {t('bind_title')}
       </Button>
+
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          api={api}
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async () => {
+            onCloseIpfsModal()
+            onOpen()
+          }}
+        />
+      ) : null}
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent mt="30vh">
@@ -268,7 +304,7 @@ export const CoAuthors: React.FC = () => {
         i18nKey="help_text"
         t={t}
         components={{
-          h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
+          h3: <Heading as="h3" fontSize="16px" mt="32px" mb="12px" />,
           p: <Text fontSize="14px" fontWeight="400" color="#737373;" />,
         }}
       />
