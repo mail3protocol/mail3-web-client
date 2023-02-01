@@ -157,8 +157,17 @@ export const BindButton: React.FC<{
   const {
     data: isUploadedIpfsKey,
     isLoading: isLoadingIsUploadedIpfsKeyState,
-  } = useQuery([QueryKey.GetMessageEncryptionKeyState], () =>
-    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  } = useQuery(
+    [QueryKey.GetMessageEncryptionKeyState],
+    () =>
+      api
+        .getMessageEncryptionKeyState()
+        .then((res) => res.data.state === 'set'),
+    {
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
   )
 
   const onBind = () => {

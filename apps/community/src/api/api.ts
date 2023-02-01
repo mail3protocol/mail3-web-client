@@ -138,7 +138,7 @@ export class API {
 
   public getMessageEncryptionKeyState() {
     return this.axios.get<GetMessageEncryptionKeyResponse>(
-      '/account/settings/message_encryption_key_states'
+      '/community/message_encryption_key_states'
     )
   }
 }
