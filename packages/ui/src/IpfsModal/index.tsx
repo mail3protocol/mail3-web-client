@@ -27,6 +27,7 @@ import { digestMessage } from 'shared'
 import DesktopIpfsGuidePng from 'assets/ipfs-guide/desktop.png'
 import MobileIpfsGuidePng from 'assets/ipfs-guide/mobile.png'
 import GIFLoading from 'assets/mailbox/loading.gif'
+import { unifyImage } from '../utils'
 
 const stringToBeSigned = `Generate MESSAGE ENCRYPTION key for me and I authorize current dApp to access my MESSAGE ENCRYPTION key. (This operation won’t affect your digital assets.)
 
@@ -73,7 +74,12 @@ const SigningDialog: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             {t('signing_modal.content')}
           </Text>
           <Center>
-            <Image src={GIFLoading} alt="loading_gif" h="278px" w="auto" />
+            <Image
+              src={unifyImage(GIFLoading)}
+              alt="loading_gif"
+              h="278px"
+              w="auto"
+            />
           </Center>
         </ModalBody>
       </ModalContent>
