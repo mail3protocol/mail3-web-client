@@ -29,6 +29,7 @@ import {
   Input,
   Spinner,
   Box,
+  Icon,
 } from '@chakra-ui/react'
 
 import { Button as ButtonUI, IpfsModal } from 'ui'
@@ -38,6 +39,7 @@ import { isSupportedAddress } from 'shared'
 import { useQuery } from 'react-query'
 import { useAtomValue } from 'jotai'
 import axios from 'axios'
+import { ReactComponent as AdminIconSvg } from 'assets/svg/admin.svg'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -407,8 +409,17 @@ export const CoAuthors: React.FC = () => {
                         return (
                           <Tr key={address}>
                             <Td>
-                              {address}
-                              {isAdminRemote ? '!admin' : ''}
+                              <Flex justifyItems="center" alignItems="center">
+                                <Box>{address}</Box>
+                                {isAdminRemote ? (
+                                  <Icon
+                                    as={AdminIconSvg}
+                                    w="16px"
+                                    h="16px"
+                                    ml="6px"
+                                  />
+                                ) : null}
+                              </Flex>
                             </Td>
                             <Td>{t('bound')}</Td>
                             <Td>
