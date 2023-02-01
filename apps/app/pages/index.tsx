@@ -1,6 +1,12 @@
 import Head from 'next/head'
+import ErrorPage from 'next/error'
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
+import { isSupportedAddress, isPrimitiveEthAddress } from 'shared'
 import { App } from '../csr_pages/app'
 import { Routers } from '../route'
+import { API } from '../api'
+import { SubscribeProfileDataProps } from '../components/SubscribeProfileBody'
+import { SubscribeProfile } from '../csr_pages/subscribeProfile'
 
 export const SafeHydrate: React.FC = ({ children }) => (
   <div suppressHydrationWarning>
@@ -8,7 +14,90 @@ export const SafeHydrate: React.FC = ({ children }) => (
   </div>
 )
 
-export default function Index() {
+export const getServerSideProps = async ({
+  query,
+  res,
+}: GetServerSidePropsContext): Promise<
+  GetServerSidePropsResult<IndexProps>
+> => {
+  const { path } = query
+  if (!path) {
+    return {
+      props: {
+        statusCode: 200,
+      },
+    }
+  }
+  const address = typeof path === 'string' ? path : path[0]
+  if (isSupportedAddress(address)) {
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=60, stale-while-revalidate=299'
+    )
+    const api = new API()
+    try {
+      const [priAddress, uuid] = await Promise.all([
+        isPrimitiveEthAddress(address)
+          ? address
+          : api
+              .getPrimitiveAddress(address)
+              .then((r) => (r.status === 200 ? r.data.eth_address : '')),
+        api
+          .checkIsProject(address)
+          .then((r) => (r.status === 200 ? r.data.uuid : '')),
+      ])
+      if (!priAddress || !uuid) {
+        return {
+          props: {
+            statusCode: 404,
+          },
+        }
+      }
+      const [{ data: userInfo }, { data: userSettings }] = await Promise.all([
+        api.getSubscribeUserInfo(priAddress),
+        api.getUserSetting(priAddress),
+      ])
+
+      return {
+        props: {
+          statusCode: 205,
+          data: {
+            userInfo,
+            userSettings,
+            priAddress,
+            uuid,
+            address,
+          },
+        },
+      }
+    } catch (error) {
+      return {
+        props: {
+          statusCode: 404,
+        },
+      }
+    }
+  }
+  return {
+    props: {
+      statusCode: 200,
+    },
+  }
+}
+
+export interface IndexProps {
+  statusCode: 200 | 404 | 205
+  data?: SubscribeProfileDataProps
+}
+
+export default function Index(props: IndexProps) {
+  const { statusCode, data } = props
+  if (statusCode === 404) {
+    return <ErrorPage statusCode={statusCode} />
+  }
+  if (statusCode === 205) {
+    return <SubscribeProfile {...data!} />
+  }
   return (
     <>
       <Head>
