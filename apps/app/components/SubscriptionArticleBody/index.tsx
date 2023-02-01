@@ -43,7 +43,8 @@ import { SubscriptionArticleProps } from '../../csr_pages/subscriptionArticle'
 
 const CONTAINER_MAX_WIDTH = 1064
 
-interface SubscriptionArticleBodyProps extends SubscriptionArticleProps {
+interface SubscriptionArticleBodyProps
+  extends Omit<SubscriptionArticleProps, 'previewImage'> {
   address: string
 }
 
