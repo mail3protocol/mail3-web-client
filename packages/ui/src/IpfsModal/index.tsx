@@ -24,9 +24,14 @@ import {
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { digestMessage } from 'shared'
-import DesktopIpfsGuidePng from 'assets/ipfs-guide/desktop.png'
-import MobileIpfsGuidePng from 'assets/ipfs-guide/mobile.png'
-import GIFLoading from 'assets/mailbox/loading.gif'
+import _DesktopIpfsGuidePng from 'assets/ipfs-guide/desktop.png'
+import _MobileIpfsGuidePng from 'assets/ipfs-guide/mobile.png'
+import _GIFLoading from 'assets/mailbox/loading.gif'
+import { unifyImage } from '../utils'
+
+const DesktopIpfsGuidePng = unifyImage(_DesktopIpfsGuidePng)
+const MobileIpfsGuidePng = unifyImage(_MobileIpfsGuidePng)
+const GIFLoading = unifyImage(_GIFLoading)
 
 const stringToBeSigned = `Generate MESSAGE ENCRYPTION key for me and I authorize current dApp to access my MESSAGE ENCRYPTION key. (This operation won’t affect your digital assets.)
 
