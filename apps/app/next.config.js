@@ -30,8 +30,17 @@ module.exports = withTM({
       },
       // Rewrite everything else to use `pages/index`
       {
-        source: '/:path*',
+        source:
+          '/(messages|settings|setup|message/unread/developers/subscribe/subscription)(.*)',
         destination: '/',
+      },
+      {
+        source: '/',
+        destination: '/',
+      },
+      {
+        source: '/:any*',
+        destination: '/:any*',
       },
     ]
   },
