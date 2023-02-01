@@ -351,7 +351,7 @@ export const CoAuthors: React.FC = () => {
         </Flex>
         <Tabs w="full" variant="normal" mt="38px">
           <TabList>
-            <Tab>{t('tabs.management')}</Tab>
+            <Tab pl="0">{t('tabs.management')}</Tab>
           </TabList>
 
           <TabPanels>
