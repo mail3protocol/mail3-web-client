@@ -365,6 +365,27 @@ export default {
     pixels: 'Images must be at least <span>2440X400</span> pixels',
     exceed: 'Images should not exceed <span>5M</span>',
   },
+  ipfs: {
+    ipfs_link: 'IPFS LINK',
+    eth_address: 'SENDER ETHEREUM ADDRESS',
+    zil_address: 'SENDER ZILLIQA ADDRESS',
+    address: 'SENDER ADDRESS',
+    content_digest: 'CONTENT DIGEST',
+    pending: 'PENDING',
+  },
+  ipfs_modal: {
+    title: 'Enable IPFS Storage',
+    content:
+      'Generate an encryption key to encrypt your outgoing email, \n and store the encrypted emails on IPFS automatically',
+    generate_key: 'Generate key',
+    signing_modal: {
+      title: 'Please check your \nwallet Content',
+      content:
+        'You need to approve the message signing request on your wallet software including Walletconnect in your mobile devices.',
+    },
+    need_to_open_wallet:
+      'Need to open wallet. If already connected, please try again. ',
+  },
   send_message: {
     title: 'History',
     new_message: 'New Message',

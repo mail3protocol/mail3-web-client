@@ -30,7 +30,7 @@ import {
 import SvgCopy from 'assets/subscription/copy.svg'
 import SvgTelegram from 'assets/subscription/telegram.svg'
 import SvgTwitter from 'assets/subscription/twitter.svg'
-import { Avatar, EchoIframe } from 'ui'
+import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -63,7 +63,7 @@ enum ButtonType {
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({ address, priAddress, articleId, detail, uuid, userInfo }) => {
+> = ({ address, priAddress, articleId, detail, uuid, userInfo, ipfsInfo }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
   const toast = useToast()
@@ -280,6 +280,13 @@ export const SubscriptionArticleBody: React.FC<
               html={detail?.content}
               shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
             />
+            {ipfsInfo ? (
+              <IpfsInfoTable
+                ethAddress={ipfsInfo?.owner_identifier}
+                ipfs={ipfsInfo?.url}
+                contentDigest={ipfsInfo?.content_digest}
+              />
+            ) : null}
             <Center mt={{ base: '40px', md: '65px' }}>
               <HStack spacing="50px">
                 {buttonList.map((type: ButtonType) => {

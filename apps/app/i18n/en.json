@@ -321,7 +321,7 @@
         "generate_key": "Generate key",
         "signing_modal": {
             "title": "Please check your \nwallet Content",
-            "content": "You need to approve the message signing request on your wallet software including Walletconnect in your mobile devices."
+            "content": "You need to approve the message signing request on your wallet software including WalletConnect in your mobile devices."
         },
         "need_to_open_wallet": "Need to open wallet. If already connected, please try again. "
     },
