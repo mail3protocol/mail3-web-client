@@ -229,12 +229,9 @@ export const BrandWall: React.FC = () => {
                 >
                   <Image
                     {...brand}
-                    style={{
-                      // width: `${brand.width / IMAGE_MAGNIFICATION}px`,
-                      maxWidth: '100%',
-                      maxHeight: '100%',
-                      objectFit: 'contain',
-                    }}
+                    maxW="100%"
+                    maxH="100%"
+                    objectFit="contain"
                   />
                 </Center>
               ))}
