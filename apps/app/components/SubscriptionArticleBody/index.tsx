@@ -2,34 +2,19 @@ import {
   Box,
   Center,
   Flex,
-  HStack,
-  Image,
   Link,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
   Spacer,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useEffect, useMemo } from 'react'
-import { useToast } from 'hooks'
-import { useTranslation } from 'react-i18next'
 import {
-  copyText,
   isEthAddress,
   isPrimitiveEthAddress,
-  shareToTelegram,
-  shareToTwitter,
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
-import SvgCopy from 'assets/subscription/copy.svg'
-import SvgTelegram from 'assets/subscription/telegram.svg'
-import SvgTwitter from 'assets/subscription/twitter.svg'
 import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
@@ -40,6 +25,7 @@ import { RoutePath } from '../../route/path'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { SubscriptionArticleProps } from '../../csr_pages/subscriptionArticle'
+import { ShareButtonGroup } from '../ShareButtonGroup'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -56,18 +42,11 @@ const PageContainer = styled(Box)`
   padding-top: ${NAVBAR_HEIGHT}px;
 `
 
-enum ButtonType {
-  Copy,
-  Telegram,
-  Twitter,
-}
-
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
 > = ({ address, priAddress, articleId, detail, uuid, userInfo, ipfsInfo }) => {
-  const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
-  const toast = useToast()
+
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
   const isAuth = useIsAuthenticated()
@@ -97,47 +76,6 @@ export const SubscriptionArticleBody: React.FC<
     }
     return ''
   }, [userInfo])
-
-  const buttonConfig: Record<
-    ButtonType,
-    {
-      Icon: any
-      label: string
-      onClick: () => void
-    }
-  > = {
-    [ButtonType.Telegram]: {
-      Icon: SvgTelegram,
-      label: t('telegram'),
-      onClick: () => {
-        shareToTelegram({
-          text: `${detail.subject.slice(0, 100)}`,
-          url: shareUrl,
-        })
-      },
-    },
-    [ButtonType.Copy]: {
-      Icon: SvgCopy,
-      label: t('copy'),
-      onClick: async () => {
-        await copyText(shareUrl)
-        toast(t('navbar.copied', { ns: 'common' }))
-      },
-    },
-    [ButtonType.Twitter]: {
-      Icon: SvgTwitter,
-      label: t('twitter'),
-      onClick: () => {
-        shareToTwitter({
-          text: `${detail.subject.slice(0, 100)}`,
-          via: 'mail3dao',
-          url: shareUrl,
-        })
-      },
-    },
-  }
-
-  const buttonList = [ButtonType.Twitter, ButtonType.Telegram, ButtonType.Copy]
 
   const EchoBody = (
     <Box
@@ -218,43 +156,12 @@ export const SubscriptionArticleBody: React.FC<
               {SubFormatDate(detail.created_at)}
             </Box>
             <Spacer />
-            <HStack spacing="5px">
-              {buttonList.map((type: ButtonType) => {
-                const { Icon, label, onClick } = buttonConfig[type]
-
-                return (
-                  <Popover
-                    arrowSize={8}
-                    key={type}
-                    trigger="hover"
-                    placement="top-start"
-                    size="md"
-                  >
-                    <PopoverTrigger>
-                      <Box
-                        as="button"
-                        p="5px"
-                        onClick={onClick}
-                        role="presentation"
-                        aria-label={label}
-                      >
-                        <Image src={Icon} w="22px" h="22px" alt={label} />
-                      </Box>
-                    </PopoverTrigger>
-                    <PopoverContent width="auto">
-                      <PopoverArrow />
-                      <PopoverBody
-                        whiteSpace="nowrap"
-                        fontSize="14px"
-                        justifyContent="center"
-                      >
-                        {label}
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                )
-              })}
-            </HStack>
+            <ShareButtonGroup
+              spacing="5px"
+              shareUrl={shareUrl}
+              text={detail.subject}
+              iconW="22px"
+            />
           </Flex>
 
           {detail?.summary ? (
@@ -289,43 +196,12 @@ export const SubscriptionArticleBody: React.FC<
               />
             ) : null}
             <Center mt={{ base: '40px', md: '65px' }}>
-              <HStack spacing="50px">
-                {buttonList.map((type: ButtonType) => {
-                  const { Icon, label, onClick } = buttonConfig[type]
-
-                  return (
-                    <Popover
-                      arrowSize={8}
-                      key={type}
-                      trigger="hover"
-                      placement="top-start"
-                      size="md"
-                    >
-                      <PopoverTrigger>
-                        <Box
-                          as="button"
-                          p="5px"
-                          onClick={onClick}
-                          role="presentation"
-                          aria-label={label}
-                        >
-                          <Image src={Icon} w="28px" h="28px" alt={label} />
-                        </Box>
-                      </PopoverTrigger>
-                      <PopoverContent width="auto">
-                        <PopoverArrow />
-                        <PopoverBody
-                          whiteSpace="nowrap"
-                          fontSize="14px"
-                          justifyContent="center"
-                        >
-                          {label}
-                        </PopoverBody>
-                      </PopoverContent>
-                    </Popover>
-                  )
-                })}
-              </HStack>
+              <ShareButtonGroup
+                spacing="50px"
+                shareUrl={shareUrl}
+                text={detail.subject}
+                iconW="28px"
+              />
             </Center>
           </Box>
           {!isMobile ? EchoBody : null}

@@ -304,7 +304,7 @@
     },
     "inbox-nav": {
         "inbox": "Inbox",
-        "subscription": "Subscription",
+        "subscriptions": "Subscriptions",
         "developers": "Developers"
     },
     "ipfs": {

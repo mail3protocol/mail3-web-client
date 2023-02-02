@@ -50,7 +50,7 @@ const Navbar = () => (
 )
 
 export const SubscribeProfile = () => {
-  useDocumentTitle('Subscribe Page')
+  useDocumentTitle('Subscription Page')
   const [t] = useTranslation('subscribe-profile')
   const { id: address } = useParams() as { id: string }
   const api = useAPI()

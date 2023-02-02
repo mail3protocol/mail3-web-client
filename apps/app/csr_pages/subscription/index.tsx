@@ -1,7 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import React from 'react'
-import { GoToWriteMailButton } from '../../components/GoToWriteMailButton'
 import { NewPageContainer } from '../../components/Inbox'
 import { InboxNav } from '../../components/Inbox/Nav'
 import { SubWrap } from '../../components/Subscription'
@@ -27,7 +26,6 @@ export const SubPage = () => {
       <NewPageContainer>
         <FlexNav justify="space-between" ml="20px">
           <InboxNav initialScrollX={0} />
-          <GoToWriteMailButton className="write-button" />
         </FlexNav>
         <SubWrap />
       </NewPageContainer>
