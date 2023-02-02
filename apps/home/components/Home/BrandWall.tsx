@@ -228,9 +228,9 @@ export const BrandWall: React.FC = () => {
                   py="14px"
                 >
                   <Image
-                    {...brand}
-                    maxW="100%"
-                    maxH="100%"
+                    src={brand.src}
+                    w="full"
+                    h="full"
                     objectFit="contain"
                   />
                 </Center>
