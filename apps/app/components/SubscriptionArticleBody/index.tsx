@@ -176,7 +176,6 @@ export const SubscriptionArticleBody: React.FC<
                 fontSize="16px"
                 lineHeight="24px"
                 color="#333333"
-                noOfLines={2}
               >
                 {detail?.summary}
               </Text>
