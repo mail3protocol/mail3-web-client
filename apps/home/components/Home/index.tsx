@@ -7,6 +7,7 @@ import { Footer } from './footer'
 import { ScrollAnimation } from './scrollAnimation'
 import { RollingSubtitles } from './rollingSubtitles'
 import { Developers } from './developers'
+import { BrandWall } from './BrandWall'
 
 export const Home: React.FC = () => (
   <Flex direction="column" position="relative" bg="#F3F3F3">
@@ -15,6 +16,7 @@ export const Home: React.FC = () => (
     <RollingSubtitles />
     <Dao />
     <Developers />
+    <BrandWall />
     <WhitelistGuide />
     <Footer />
   </Flex>
