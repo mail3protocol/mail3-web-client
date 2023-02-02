@@ -18,6 +18,8 @@ import { SendButton } from '../../components/NewMessagePageComponents/SendButton
 import { MAIL_CONTENT_IMAGE_QUOTA_KB } from '../../constants/env/config'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
+const ABSTRACT_MAX_LENGTH = 156
+
 export const NewMessage = () => {
   useDocumentTitle('New Message')
   const { t } = useTranslation('new_message')
@@ -130,7 +132,7 @@ export const NewMessage = () => {
               resize="none"
               h="120px"
               value={abstract}
-              maxLength={100}
+              maxLength={ABSTRACT_MAX_LENGTH}
               fontSize="14px"
               fontWeight="500"
               lineHeight="20px"
@@ -146,7 +148,7 @@ export const NewMessage = () => {
               zIndex={99}
               textDecorationLine="underline"
             >
-              {abstract.length} / 100
+              {abstract.length} / {ABSTRACT_MAX_LENGTH}
             </Box>
           </FormControl>
         ) : null}
