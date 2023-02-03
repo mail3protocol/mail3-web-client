@@ -49,11 +49,12 @@ import { userPropertiesAtom } from '../hooks/useLogin'
 import { useToast } from '../hooks/useToast'
 import { CloseButton } from '../components/ConfirmDialog'
 import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
+import { ErrorCode } from '../api/ErrorCode'
 
 export const UnbindLink: React.FC<{
-  refetch: () => void
+  refetch?: () => void
   isAdmin?: boolean
-  coAddr: string
+  coAddr?: string
 }> = ({ refetch, isAdmin, coAddr }) => {
   const { t } = useTranslation(['co_authors', 'common'])
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -78,7 +79,7 @@ export const UnbindLink: React.FC<{
         if (axios.isAxiosError(error)) {
           if (
             error?.response?.status === 400 &&
-            error?.response?.data.reason === 'ADDRESS_INVALID'
+            error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
           )
             toast(t('bind_not_legitimate'), {
               status: 'error',
@@ -99,7 +100,7 @@ export const UnbindLink: React.FC<{
         disabled={!isAdmin}
         onClick={onOpen}
       >
-        {t('Unbind')}
+        {t('unbind')}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -181,41 +182,40 @@ export const BindButton: React.FC<{
   }
 
   const onSubmit = async () => {
-    if (address) {
-      setIsLoading(true)
-      try {
-        await api.bindCollaborators(address)
-        toast(t('bind_successfully'), {
-          status: 'success',
-          alertProps: { colorScheme: 'green' },
-        })
-        onClose()
-        setAddress('')
-        if (refetch) refetch()
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (
-            error?.response?.status === 400 &&
-            error?.response?.data.reason ===
-              'COMMUNITY_COLLABORATORS_ADDRESS_INVALID'
-          )
-            toast(t('bind_bound'), {
-              status: 'error',
-              alertProps: { colorScheme: 'red' },
-            })
+    if (!address) return
+    setIsLoading(true)
+    try {
+      await api.bindCollaborators(address)
+      toast(t('bind_successfully'), {
+        status: 'success',
+        alertProps: { colorScheme: 'green' },
+      })
+      onClose()
+      setAddress('')
+      if (refetch) refetch()
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          error?.response?.status === 400 &&
+          error?.response?.data.reason ===
+            ErrorCode.COMMUNITY_COLLABORATORS_ADDRESS_INVALID
+        )
+          toast(t('bind_bound'), {
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
 
-          if (
-            error?.response?.status === 400 &&
-            error?.response?.data.reason === 'ADDRESS_INVALID'
-          )
-            toast(t('bind_not_legitimate'), {
-              status: 'error',
-              alertProps: { colorScheme: 'red' },
-            })
-        }
+        if (
+          error?.response?.status === 400 &&
+          error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
+        )
+          toast(t('bind_not_legitimate'), {
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
       }
-      setIsLoading(false)
     }
+    setIsLoading(false)
   }
 
   return (
@@ -329,6 +329,8 @@ export const CoAuthors: React.FC = () => {
       ),
     [userProps, data]
   )
+
+  const admin = data?.collaborators.filter((i) => i.is_administrator).pop()
   const bindList = data?.collaborators.filter((i) => !i.is_administrator) || []
 
   const EmptyCaption =
@@ -399,39 +401,42 @@ export const CoAuthors: React.FC = () => {
                     </Thead>
 
                     <Tbody>
-                      {data?.collaborators.map((item) => {
-                        const { address, is_administrator: isAdminRemote } =
-                          item
-                        if (isAdmin && isAdminRemote) {
-                          return null
-                        }
-
-                        return (
-                          <Tr key={address}>
-                            <Td>
-                              <Flex justifyItems="center" alignItems="center">
-                                <Box>{address}</Box>
-                                {isAdminRemote ? (
-                                  <Icon
-                                    as={AdminIconSvg}
-                                    w="16px"
-                                    h="16px"
-                                    ml="6px"
-                                  />
-                                ) : null}
-                              </Flex>
-                            </Td>
-                            <Td>{t('bound')}</Td>
-                            <Td>
-                              <UnbindLink
-                                refetch={refetch}
-                                isAdmin={isAdmin}
-                                coAddr={address}
+                      {!isAdmin && admin ? (
+                        <Tr>
+                          <Td>
+                            <Flex justifyItems="center" alignItems="center">
+                              <Box>{admin.address}</Box>
+                              <Icon
+                                as={AdminIconSvg}
+                                w="16px"
+                                h="16px"
+                                ml="6px"
                               />
-                            </Td>
-                          </Tr>
-                        )
-                      })}
+                            </Flex>
+                          </Td>
+                          <Td>{t('bound')}</Td>
+                          <Td>
+                            <UnbindLink isAdmin={false} />
+                          </Td>
+                        </Tr>
+                      ) : null}
+                      {bindList.map(({ address }) => (
+                        <Tr key={address}>
+                          <Td>
+                            <Flex justifyItems="center" alignItems="center">
+                              <Box>{address}</Box>
+                            </Flex>
+                          </Td>
+                          <Td>{t('bound')}</Td>
+                          <Td>
+                            <UnbindLink
+                              refetch={refetch}
+                              isAdmin={isAdmin}
+                              coAddr={address}
+                            />
+                          </Td>
+                        </Tr>
+                      ))}
                     </Tbody>
                   </Table>
                 </TableContainer>
