@@ -54,7 +54,7 @@ interface InfiniteMailboxProps<
   onChooseModeChange?: (bool: boolean) => void
   onClickBody?: BoxListProps['onClickBody']
   onGetChooseMap?: (chooseMap: Record<string, boolean>) => void
-  getHref: (id: string) => LinkProps['to']
+  getHref: (id: string, msg: MessageItem) => LinkProps['to']
   mailboxType?: Mailboxes
 }
 
