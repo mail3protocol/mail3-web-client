@@ -1,12 +1,7 @@
 import Head from 'next/head'
+import { SafeHydrate } from '../components/SafeHydrate'
 import { App } from '../csr_pages/app'
 import { Routers } from '../route'
-
-export const SafeHydrate: React.FC = ({ children }) => (
-  <div suppressHydrationWarning>
-    {typeof window === 'undefined' ? null : children}
-  </div>
-)
 
 export default function Index() {
   return (

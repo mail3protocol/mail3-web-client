@@ -13,7 +13,7 @@ import {
 import { App } from '../../csr_pages/app'
 import { RoutePath } from '../../route/path'
 import { APP_URL } from '../../constants'
-import { SafeHydrate } from '..'
+import { SafeHydrate } from '../../components/SafeHydrate'
 
 const getPreviewImage = (content: string) => {
   let previewImage = `${APP_URL}/images/preview-article.png`

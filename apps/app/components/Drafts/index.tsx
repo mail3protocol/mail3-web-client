@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react'
+import { createSearchParams } from 'react-router-dom'
 import { useDialog, useToast } from 'hooks'
 import { useAPI } from '../../hooks/useAPI'
 import { RoutePath } from '../../route/path'
@@ -14,6 +15,10 @@ import { Loading } from '../Loading'
 import { ThisBottomStatus } from '../MailboxStatus'
 import { BulkActionType, MailboxMenu } from '../MailboxMenu'
 import { GotoInbox } from '../GotoInbox'
+import { AddressListResponse } from '../../api'
+
+const formatAddressList = (al: AddressListResponse | null): string[] =>
+  al?.map((c) => c.address) || []
 
 export const DraftsComponent: React.FC = () => {
   const [t] = useTranslation('mailboxes')
@@ -123,9 +128,15 @@ export const DraftsComponent: React.FC = () => {
             onClickBody={() => {
               // report point
             }}
-            getHref={(id) => ({
+            getHref={(id, msg) => ({
               pathname: RoutePath.NewMessage,
-              search: `id=${id}`,
+              search: createSearchParams({
+                id,
+                cc: formatAddressList(msg.cc),
+                bcc: formatAddressList(msg.bcc),
+                to: formatAddressList(msg.to),
+                subject: msg.subject,
+              }).toString(),
             })}
             mailboxType={Mailboxes.Drafts}
           />
