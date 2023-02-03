@@ -62,7 +62,7 @@ export const getStaticProps = async ({
             address,
           },
         },
-        revalidate: 60 * 60 * 1, // 1 hour
+        revalidate: 60 * 60 * 24 * 7, // 7 days
       }
     } catch (error) {
       return {
