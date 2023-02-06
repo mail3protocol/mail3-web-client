@@ -3,6 +3,12 @@ export default {
     no_mail3: 'No Mail3? ',
     register: 'Claim it now! ',
     connect_wallet: 'Connect Wallet',
+    status_field: 'Status: ',
+    status_value: {
+      disabled: 'Disabled',
+      enabled: 'Enabled',
+      loading: 'Loading',
+    },
     connect: {
       notice: 'Notice',
       unknown_error: 'Unknown error',
@@ -368,5 +374,35 @@ export default {
   send_message: {
     title: 'History',
     new_message: 'New Message',
+  },
+  premium: {
+    title: 'Premium',
+    // language=html
+    help: `<h3>What is <strong>Premium</strong>?</h3>
+        <ul>
+          <li>You can get yourself creative revenue by enabling the Premium</li>
+          <li>With Premium enabled, you can publish content that can only be viewed by Premium members</li>
+          <li>Any visitor interested in your Premium content will need to purchase and hold your sub-domain to gain access to it</li>
+        </ul>
+        <h3>How <strong>Premium</strong> works?</h3>
+        <ul>
+          <li>You need to hold your own <bit>.bit</bit> domain name first and apply for opening your sub-domain sale business in <superdid>SuperDID</superdid></li>
+          <li>Usually, the general content you publish is public and free, while with Premium enabled, you can choose to publish Premium content according to your needs</li>
+          <li>Your visitors can become your Premium members by purchasing and holding your sub-domain, and Premium members have the right to read all your Premium content</li>
+        </ul>
+        <h3>How can I get my <strong>earnings</strong>?</h3>
+        <ul>
+            <li>Mail3 or Subscribe (Mail3) will not participate in your share of the proceeds.</li>
+            <li>Premium's sub-domain sales business is supported by <superdid>SuperDID</superdid>, your sales revenue, how to withdraw your revenue and specific rules can be found at <superdid>SuperDID</superdid></li>
+        </ul>
+    `,
+    contact_us:
+      'Please read the help file on the right or <contact>contact our commercial representative</contact> if you have any questions.',
+    domain_field: 'Your <bit>.bit</bit> domain',
+    confirm: 'Confirm',
+    status: 'Status',
+    set_up_sales_strategy: 'Set up your sub-domain sales strategy',
+    set_up_sales_strategy_tips:
+      'This service is provided by SuperDID\nyou need to jump to SuperDID for setting',
   },
 }

@@ -1,4 +1,4 @@
-import { cssVar, extendTheme } from '@chakra-ui/react'
+import { ButtonProps, cssVar, extendTheme } from '@chakra-ui/react'
 import { theme as DefaultTheme } from './index'
 
 const font =
@@ -252,24 +252,39 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
           color: 'white',
           _active: { bg: `${colorScheme}.700` },
         }),
-        'outline-rounded': ({ colorScheme }: { colorScheme: string }) => ({
-          lineHeight: '1.2',
-          borderRadius: '999px',
-          fontWeight: '600',
-          transitionProperty: 'common',
-          transitionDuration: 'normal',
-          _focus: { boxShadow: 'none', outline: 'none' },
-          _disabled: { opacity: 0.4, cursor: 'not-allowed', boxShadow: 'none' },
-          _hover: { _disabled: { bg: 'initial' }, bg: `${colorScheme}.100` },
-          h: 10,
-          minW: 10,
-          fontSize: 'md',
-          border: '1px solid',
-          px: '38px',
-          borderColor: `${colorScheme}.200`,
-          color: 'inherit',
-          _active: { bg: `${colorScheme}.200` },
-        }),
+        'outline-rounded': ({ colorScheme }: { colorScheme: string }) => {
+          const exceptionalColorSchemeCases: { [key: string]: ButtonProps } = {
+            primaryButton: {
+              borderColor: `primary.900`,
+              color: `primary.900`,
+              _active: { bg: `${colorScheme}.400`, color: 'white' },
+              _hover: { bg: `primary.100` },
+            },
+          }
+          return {
+            lineHeight: '1.2',
+            borderRadius: '999px',
+            fontWeight: '600',
+            transitionProperty: 'common',
+            transitionDuration: 'normal',
+            _focus: { boxShadow: 'none', outline: 'none' },
+            _disabled: {
+              opacity: 0.4,
+              cursor: 'not-allowed',
+              boxShadow: 'none',
+            },
+            _hover: { _disabled: { bg: 'initial' }, bg: `${colorScheme}.100` },
+            h: 10,
+            minW: 10,
+            fontSize: 'md',
+            border: '1px solid',
+            px: '38px',
+            borderColor: `${colorScheme}.200`,
+            color: 'inherit',
+            _active: { bg: `${colorScheme}.200` },
+            ...exceptionalColorSchemeCases[colorScheme],
+          }
+        },
         wallet: ({
           disabled,
           isDisabled,
