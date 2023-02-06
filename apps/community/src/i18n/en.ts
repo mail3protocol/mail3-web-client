@@ -80,6 +80,7 @@ export default {
       home: 'Home',
       send_records: 'History',
       earn_nft: 'Earn NFT',
+      premium: 'Premium',
     },
     tips_panel: {
       title: 'Help',

@@ -6,6 +6,7 @@ import { NewMessage } from '../pages/message/new'
 import { SendRecords } from '../pages/message/send-records'
 import { EarnNft } from '../pages/subscribe/earn-nft'
 import { Information } from '../pages/information'
+import { Premium } from '../pages/subscribe/premium'
 import { NotFoundPage } from '../pages/_404'
 
 interface ExpandedRouterProps extends RouteProps {
@@ -44,6 +45,11 @@ export const routes: ExpandedRouterProps[] = [
     path: RoutePath.Information,
     key: 'information',
     element: <Information />,
+  },
+  {
+    path: RoutePath.Premium,
+    key: 'premium',
+    element: <Premium />,
   },
   {
     path: '*',
