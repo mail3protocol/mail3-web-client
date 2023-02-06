@@ -469,7 +469,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             </Box>
           ) : null}
         </Box>
-        <Tabs position="relative" mt="30px" p={{ base: '0px', md: '0px 58px' }}>
+        <Tabs position="relative" mt="30px" p={{ base: '0px', md: '0px 30px' }}>
           <TabList
             className="tablist"
             w={{ base: '100%', md: 'auto' }}
@@ -503,7 +503,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       _before: {
                         content: '""',
                         position: 'absolute',
-                        w: '50px',
+                        w: '100%',
                         h: '4px',
                         bottom: '-1px',
                         bg: '#000',
@@ -511,7 +511,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       },
                     }}
                     position="relative"
-                    p={{ base: '5px', md: 'auto' }}
+                    p={{ base: '5px', md: '0 0 8px 0' }}
                   >
                     <HStack>
                       <Box
@@ -572,7 +572,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                     }
                   >
                     <SimpleGrid
-                      columns={{ base: 1, md: 3 }}
+                      columns={{ base: 1, md: 4 }}
                       spacing={{ base: '0', md: '20px' }}
                     >
                       {communityList.map((item) => {
