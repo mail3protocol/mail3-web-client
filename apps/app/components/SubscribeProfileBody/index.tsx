@@ -354,15 +354,16 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             position="relative"
           >
             <Box
-              top={{ base: '10px', md: 'auto' }}
+              top={{ base: '15px', md: 'auto' }}
               bottom={{ base: 'auto', md: '10px' }}
-              right={{ base: '10px', md: '50px' }}
+              right={{ base: '20px', md: '50px' }}
               position="absolute"
               bgColor="rgba(0, 0, 0, 0.4)"
               backdropFilter="blur(5px)"
               borderRadius="100px"
+              p={{ base: '0', md: '0 5px' }}
             >
-              <HStack>
+              <HStack spacing="15px">
                 {buttonList.map((type: ButtonType) => {
                   const { Icon: IconSvg, label } = buttonConfig[type]
                   const onClick = actionMap[type]
@@ -376,7 +377,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       <PopoverTrigger>
                         <Box
                           as="button"
-                          p="10px"
+                          p="5px"
                           lineHeight={0}
                           onClick={onClick}
                           role="option"
@@ -409,7 +410,10 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
       </AspectRatio>
 
       <PageContainer>
-        <Box p={{ base: '48px 20px', md: '16px 30px 0' }} position="relative">
+        <Box
+          p={{ base: '8px 20px 30px', md: '16px 30px 0' }}
+          position="relative"
+        >
           <Flex alignItems="center">
             <Box
               w={{ base: '60px', md: '80px' }}
@@ -426,7 +430,12 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                 h="100%"
               />
             </Box>
-            <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="16px">
+            <Text
+              fontWeight="700"
+              fontSize={{ base: '14px', md: '18px' }}
+              lineHeight="20px"
+              ml="16px"
+            >
               {nickname}
             </Text>
           </Flex>
@@ -478,11 +487,12 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             justifyContent="flex-start"
             border="none"
             position="relative"
-            px={{ base: '10px', md: 0 }}
+            px={{ base: '20px', md: 0 }}
           >
             <Box
               w="100%"
               bottom="0"
+              left="0"
               position="absolute"
               zIndex="1"
               bg="#F3F3F3"
@@ -511,16 +521,13 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       },
                     }}
                     position="relative"
-                    p={{ base: '5px', md: '0 0 8px 0' }}
+                    p={{ base: '0 0 3px 0', md: '0 0 8px 0' }}
                   >
                     <HStack>
                       <Box
                         whiteSpace="nowrap"
                         fontSize={{ base: '14px', md: '18px' }}
-                        marginInlineStart={{
-                          base: '5px !important',
-                          md: '0px !important',
-                        }}
+                        marginInlineStart="0px !important"
                       >
                         {name}
                       </Box>
@@ -533,7 +540,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
           <Flex
             justifyContent="center"
-            p={{ base: '20px', md: '20px 0px' }}
+            p={{ base: '12px', md: '20px 0px' }}
             minH="200px"
           >
             <TabPanels>

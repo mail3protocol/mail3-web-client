@@ -20,7 +20,7 @@ export const CommunityCard: React.FC<{
       borderRadius="16px"
       p="16px"
       mb={{ base: '13px', md: 0 }}
-      h="192px"
+      h={{ base: '178px', md: '192px' }}
     >
       <LinkOverlay href={`${location.origin}/p/${uuid}`} target="_blank">
         <Flex
@@ -37,7 +37,7 @@ export const CommunityCard: React.FC<{
         {content ? (
           <Box>
             <Text
-              noOfLines={3}
+              noOfLines={{ base: 2, md: 3 }}
               fontWeight="700"
               fontSize="18px"
               lineHeight="24px"
@@ -49,7 +49,7 @@ export const CommunityCard: React.FC<{
               fontWeight="400"
               fontSize="12px"
               lineHeight="18px"
-              mt="6px"
+              mt={{ base: '16px', md: '6px' }}
             >
               {content}
             </Text>
