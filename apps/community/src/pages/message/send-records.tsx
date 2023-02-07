@@ -7,6 +7,8 @@ import {
   Box,
   VStack,
   Spinner,
+  Center,
+  Icon,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
@@ -20,6 +22,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { DEFAULT_LIST_ITEM_COUNT } from '../../constants/env/config'
 import { useLoadNextPageRef } from '../../hooks/useLoadNextPageRef'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { ReactComponent as DownloadSvg } from '../../assets/DownloadIcon.svg'
 
 export const SendRecords: React.FC = () => {
   useDocumentTitle('Send Records')
@@ -75,15 +78,39 @@ export const SendRecords: React.FC = () => {
       gridTemplateRows="132px auto"
       gap="20px"
     >
-      <Flex direction="column" p="16px" {...cardStyleProps}>
-        <Heading as="h3" fontSize="16px">
-          {t('new_message')}
-        </Heading>
-        <NewMessageLinkButton
-          isLoading={listQuery.isLoading}
-          lastMessageSentTime={lastMessageSentTime}
-        />
-      </Flex>
+      <Grid w="full" gridTemplateColumns="3fr 1fr" gap="20px">
+        <Flex direction="column" p="16px" {...cardStyleProps}>
+          <Heading as="h3" fontSize="16px">
+            {t('new_message')}
+          </Heading>
+          <NewMessageLinkButton
+            isLoading={listQuery.isLoading}
+            lastMessageSentTime={lastMessageSentTime}
+          />
+        </Flex>
+        <Flex
+          direction="column"
+          p="16px"
+          color="primaryTitleColor"
+          {...cardStyleProps}
+        >
+          <Heading as="h3" fontSize="16px">
+            {t('switch_from_mirror')}
+          </Heading>
+          <Center
+            as="button"
+            w="full"
+            mt="20px"
+            flex={1}
+            borderColor="primaryTextColor"
+            borderWidth="2px"
+            borderStyle="dashed"
+            rounded="14px"
+          >
+            <Icon as={DownloadSvg} w="24px" h="24px" />
+          </Center>
+        </Flex>
+      </Grid>
       <Box {...cardStyleProps} p="32px">
         <Heading as="h2" fontSize="18px" fontWeight="700">
           {t('title')}
@@ -101,6 +128,7 @@ export const SendRecords: React.FC = () => {
                         time={dayjs.unix(Number(message.created_at))}
                         subject={message.subject}
                         viewCount={message.read_count}
+                        messageType={message.message_type}
                       />
                     </Box>
                   ))}

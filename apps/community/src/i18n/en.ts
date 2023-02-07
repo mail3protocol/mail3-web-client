@@ -184,6 +184,7 @@ export default {
     view_all_send_records: 'All history',
     download_failed: 'Download failed, reason: {{message}}',
     download_no_data: 'No data, unable to download.',
+    switch_from_mirror: 'Switch from mirror',
   },
   earn_nft: {
     title: 'Subscribe To Earn',
@@ -374,6 +375,7 @@ export default {
   send_message: {
     title: 'History',
     new_message: 'New Message',
+    switch_from_mirror: 'Switch from mirror',
   },
   premium: {
     title: 'Premium',

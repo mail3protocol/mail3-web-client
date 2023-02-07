@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Grid,
+  Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -16,13 +17,24 @@ import { useTranslation } from 'react-i18next'
 import { ReactComponent as SvgCopy } from '../../assets/copy.svg'
 import { APP_URL } from '../../constants/env/url'
 import { useToast } from '../../hooks/useToast'
+import { MessageType } from '../../api/modals/MessageListResponse'
+import { ReactComponent as PremiumIconSvg } from '../../assets/Premium/diamond.svg'
 
-export const SentRecordItem: React.FC<{
+export interface SentRecordItemProps {
   uuid: string
   time: string | Dayjs
   subject: ReactNode
   viewCount: number
-}> = ({ uuid, time, subject, viewCount }) => {
+  messageType: MessageType
+}
+
+export const SentRecordItem: React.FC<SentRecordItemProps> = ({
+  uuid,
+  time,
+  subject,
+  viewCount,
+  messageType,
+}) => {
   const toast = useToast()
   const { t } = useTranslation('common')
 
@@ -49,6 +61,15 @@ export const SentRecordItem: React.FC<{
         fontWeight="600"
       >
         {subject}
+        {messageType === MessageType.Premium ? (
+          <Icon
+            as={PremiumIconSvg}
+            w="20px"
+            h="20px"
+            verticalAlign="middle"
+            ml="8px"
+          />
+        ) : null}
       </Box>
       <Center
         fontSize="12px"
