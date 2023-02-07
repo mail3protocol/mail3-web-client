@@ -376,7 +376,8 @@
         "share": "Share Subscription Card",
         "copy": "Copy Subscription Page URL",
         "twitter": "Share on Twitter",
-        "404": "This page could not be found."
+        "404": "This page could not be found.",
+        "premium-member": "Premium member"
     },
     "subscription-article": {
         "telegram": "Share on Telegram",

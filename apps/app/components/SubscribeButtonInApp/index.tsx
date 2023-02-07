@@ -36,7 +36,7 @@ const SubscribeButtonView: React.FC<{
         isLoading={isLoading}
         onClick={onClick}
         variant="outline"
-        w={{ base: '104px', md: '157px' }}
+        w={{ base: '104px', md: '158px' }}
         h={{ base: '22px', md: '34px' }}
         leftIcon={<Icon as={SubSvg} mr="-2px" w="16px" h="16px" />}
         fontSize={{ base: '12px', md: '14px' }}
@@ -53,7 +53,7 @@ const SubscribeButtonView: React.FC<{
       <Button
         isLoading={isLoading}
         onClick={onClick}
-        w={{ base: '104px', md: '157px' }}
+        w={{ base: '104px', md: '158px' }}
         h={{ base: '22px', md: '34px' }}
         leftIcon={<Icon as={SubWhiteSvg} mr="-2px" w="16px" h="16px" />}
         fontSize={{ base: '12px', md: '14px' }}
@@ -186,7 +186,7 @@ export const SubscribeButtonInApp: React.FC<{
 
   return (
     <>
-      <Box mt="24px">
+      <Box>
         <SubscribeButtonView
           onClick={isAuth ? onSubscribe : onOpen}
           rewardType={rewardType}

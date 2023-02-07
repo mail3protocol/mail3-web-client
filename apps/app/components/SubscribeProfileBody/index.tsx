@@ -35,6 +35,7 @@ import { Avatar, SubscribeCard } from 'ui'
 import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
 import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
 import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
+import { ReactComponent as SvgPremium } from 'assets/subscribe-page/premium.svg'
 import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
@@ -411,7 +412,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
       <PageContainer>
         <Box
-          p={{ base: '8px 20px 30px', md: '16px 30px 0' }}
+          p={{ base: '8px 20px 40px', md: '24px 30px 0' }}
           position="relative"
         >
           <Flex alignItems="center">
@@ -434,24 +435,49 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
               fontWeight="700"
               fontSize={{ base: '14px', md: '18px' }}
               lineHeight="20px"
-              ml="16px"
+              ml={{ base: '8px', md: '16px' }}
             >
               {nickname}
             </Text>
           </Flex>
-          <Box
+          <Center
+            flexDirection={{ base: 'row', md: 'column' }}
             position="absolute"
-            top={{ base: 'auto', md: '26px' }}
-            right={{ base: '50%', md: '54px' }}
+            top={{ base: 'auto', md: '64px' }}
+            right={{ base: 'auto', md: '54px' }}
+            left={{ base: '20px', md: 'auto' }}
             bottom={{ base: '0px', md: 'auto' }}
-            transform={{ base: 'translateX(50%)', md: 'none' }}
+            transform={{ base: 'none', md: 'translateY(-50%)' }}
+            alignItems={{ base: 'center', md: 'flex-end' }}
           >
             <SubscribeButtonInApp
               uuid={uuid}
               rewardType={settings?.reward_type}
               isAuth={isAuth}
             />
-          </Box>
+
+            <Center
+              mt={{ base: 0, md: '18px' }}
+              ml={{ base: '16px', md: 0 }}
+              w={{ base: '142px', md: '158px' }}
+              h={{ base: '22px', md: '34px' }}
+              background="#FFFFFF"
+              border="1px solid #FFA800"
+              borderRadius="30px"
+            >
+              <SvgPremium />
+              <Box
+                ml="2px"
+                fontStyle="italic"
+                fontWeight="500"
+                fontSize="12px"
+                lineHeight="18px"
+                color="#FFA800"
+              >
+                {t('premium-member')}
+              </Box>
+            </Center>
+          </Center>
 
           {settings?.description ? (
             <Box mt="16px" w={{ base: '100%', md: '560px' }}>
@@ -461,19 +487,21 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                 </Text>
               </Collapse>
               {settings?.description.length > 85 ? (
-                <RawButton
-                  size="xs"
-                  onClick={() => {
-                    if (isOpen) {
-                      onClose()
-                    } else {
-                      onOpen()
-                    }
-                  }}
-                  variant="link"
-                >
-                  Show {isOpen ? 'Less' : 'More'}
-                </RawButton>
+                <Flex justifyContent={{ base: 'flex-end', md: 'flex-start' }}>
+                  <RawButton
+                    size="xs"
+                    onClick={() => {
+                      if (isOpen) {
+                        onClose()
+                      } else {
+                        onOpen()
+                      }
+                    }}
+                    variant="link"
+                  >
+                    Show {isOpen ? 'Less' : 'More'}
+                  </RawButton>
+                </Flex>
               ) : null}
             </Box>
           ) : null}

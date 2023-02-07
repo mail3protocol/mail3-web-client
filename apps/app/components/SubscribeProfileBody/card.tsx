@@ -1,5 +1,6 @@
 import { Box, Flex, LinkBox, LinkOverlay, Spacer, Text } from '@chakra-ui/react'
 import dayjs from 'dayjs'
+import { ReactComponent as SvgTag } from 'assets/subscribe-page/premium-tag.svg'
 
 const dateStringFormat = `h:mm a · D MMM`
 
@@ -23,6 +24,9 @@ export const CommunityCard: React.FC<{
       h={{ base: '178px', md: '192px' }}
     >
       <LinkOverlay href={`${location.origin}/p/${uuid}`} target="_blank">
+        <Box position="absolute" right="0" bottom="0">
+          <SvgTag />
+        </Box>
         <Flex
           fontWeight="400"
           fontSize="12px"
