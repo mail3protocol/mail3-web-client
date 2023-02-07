@@ -101,7 +101,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   } catch (error) {
     return {
       props: {
-        errorCode: 404,
+        errorCode: 500,
       },
     }
   }
