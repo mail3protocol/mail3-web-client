@@ -6,7 +6,7 @@ import {
   UserSettingRequest,
   UserSettingResponse,
 } from './modals/UserInfoResponse'
-import { MessageListResponse } from './modals/MessageListResponse'
+import { MessageListResponse, MessageType } from './modals/MessageListResponse'
 import { StatisticsResponse } from './modals/StatisticsResponse'
 import { SubscribersResponse } from './modals/SubscribersResponse'
 import {
@@ -102,11 +102,19 @@ export class API {
     )
   }
 
-  sendMessage(subject: string, content: string, abstract: string) {
+  sendMessage(
+    subject: string,
+    content: string,
+    summary: string,
+    options?: {
+      messageType: MessageType
+    }
+  ) {
     return this.axios.post<{ uuid: string }>(`/community/message`, {
       subject,
       content,
-      summary: abstract,
+      summary,
+      message_type: options?.messageType || MessageType.Normal,
     })
   }
 }

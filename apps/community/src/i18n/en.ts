@@ -159,6 +159,9 @@ export default {
       'The total image size of this message cannot exceed {{size}}',
     send_confirm: 'Please confirm you want to send this message',
     send_description: 'Do you want to send this message to subscriber?',
+    send_premium_message_confirm_title: '👌OK!',
+    send_premium_message_confirm_text:
+      'Do you want to publish this Premium Content to subscriber?',
     confirm: 'Confirm',
     unsubscribe: 'Unsubscribe',
     successfully_sent: {
@@ -172,6 +175,13 @@ export default {
     share_message: 'Share your message',
     abstract_holder:
       'The abstract will be displayed on your subscribe page to help subscribers quickly understand the content, if not filled in, it will not be displayed.',
+    premium_switch_help_text:
+      'You are editing Premium Content, only your Premium Members can access.',
+    premium: 'Premium',
+    general: 'General',
+    did_not_enable_premium: "You don't have Premium enabled",
+    what_is_the_premium: `<h4>What is Premium？</h4>
+        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [subscribe]-[Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
   },
   dashboard: {
     message: 'Message',
