@@ -115,8 +115,7 @@ export default function SubscribeProfilePage(props: Props) {
   const userInfo = data?.userInfo
   const userSettings = data?.userSettings
   const address = data?.address || ''
-  const previewImage =
-    userSettings?.banner_url || 'https://mail3.me/preview2.png'
+  const previewImage = userSettings?.banner_url || '/profile-preview.png'
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {
