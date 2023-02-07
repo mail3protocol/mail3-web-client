@@ -1,4 +1,4 @@
-import { IS_MOBILE } from '../constants'
+import { IS_MOBILE } from '../constants/utils'
 import { isImToken } from './env'
 
 const generateCurrentURL = () =>
@@ -16,7 +16,7 @@ export const generateCoinbaseWalletDeepLink = () =>
   `https://go.cb-w.com/dapp?cb_url=https://${generateCurrentURL()}`
 
 export const generateImtokenDeepLink = () =>
-  !IS_MOBILE
+  !IS_MOBILE()
     ? `https://token.im/download`
     : `imtokenv2://navigate/DappView?url=https://${generateCurrentURL()}`
 

@@ -9,7 +9,6 @@ import {
   Stack,
   Text,
   VStack,
-  Icon,
   Button as RawButton,
   Box,
   Spacer,
@@ -60,7 +59,7 @@ import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import unhappySetupMascot from '../../assets/unhappy-setup-mascot.png'
-import { ReactComponent as RefreshSvg } from '../../assets/refresh.svg'
+import RefreshSvg from '../../assets/refresh.svg'
 import { ReactComponent as ArrawSvg } from '../../assets/setup/arrow.svg'
 import { ReactComponent as DefaultSvg } from '../../assets/settings/0x.svg'
 import UDIcon from '../../assets/settings/ud-icon.png'
@@ -428,7 +427,7 @@ export const SettingAddress: React.FC = () => {
     <RawButton
       variant="link"
       colorScheme="deepBlue"
-      leftIcon={<Icon as={RefreshSvg} w="14px" h="14px" />}
+      leftIcon={<Image src={RefreshSvg} w="14px" h="14px" />}
       onClick={() => {
         onRefreshDomains(type)
       }}

@@ -56,6 +56,8 @@ import { useAPI } from '../../hooks/useAPI'
 
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { SubscribeButton } from '../SubscriptionArticleBody/userInfo'
+import { UserSettingResponse } from '../../api'
+import { MAIL_SERVER_URL } from '../../constants'
 
 const CONTAINER_MAX_WIDTH = 1220
 
@@ -86,11 +88,16 @@ const tabsConfig: Record<
   },
 }
 
-interface SubscribeProfileBodyProps {
-  mailAddress: string
-  address: string
+export interface SubscribeProfileDataProps {
+  userInfo: { nickname: string; avatar: string }
+  userSettings: UserSettingResponse
   uuid: string
   priAddress: string
+  address: string
+}
+
+interface SubscribeProfileBodyProps extends SubscribeProfileDataProps {
+  // mailAddress: string
 }
 
 const PageContainer = styled(Box)`
@@ -125,11 +132,13 @@ export const getCommunityNfts = (uuid: string) =>
   )
 
 export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
-  mailAddress,
-  address,
   uuid,
   priAddress,
+  userInfo,
+  userSettings,
+  address,
 }) => {
+  const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const [t] = useTranslation(['subscribe-profile', 'common'])
   useAuth(true)
   const isAuth = useIsAuthenticated()
@@ -186,7 +195,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           downloadScreenshot(cardRef.current, 'share.png', {
             width: 335,
             height: 535,
-            scale: 1,
+            scale: 2,
           })
         } catch (error) {
           toast('Download screenshot Error!')
@@ -198,7 +207,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     [mailAddress, address]
   )
 
-  const { data: userInfo } = useQuery(
+  const { data: info } = useQuery(
     ['userInfo', priAddress],
     async () => {
       const ret = await api.getSubscribeUserInfo(priAddress)
@@ -209,6 +218,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      initialData: userInfo,
     }
   )
 
@@ -223,6 +233,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      initialData: userSettings,
     }
   )
 
@@ -276,8 +287,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   )
 
   const nickname = useMemo(() => {
-    if (userInfo?.nickname) {
-      return userInfo.nickname
+    if (info?.nickname) {
+      return info.nickname
     }
     if (isPrimitiveEthAddress(address)) {
       return truncateMiddle(address, 6, 4, '_')
@@ -286,7 +297,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
       return address.includes('.') ? address.split('.')[0] : address
     }
     return ''
-  }, [userInfo])
+  }, [info])
 
   const tabList = useMemo(() => {
     if (items && items?.poapList.length > 0) {
@@ -354,7 +365,13 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                   size="md"
                 >
                   <PopoverTrigger>
-                    <Box as="button" p="10px" onClick={onClick}>
+                    <Box
+                      as="button"
+                      p="10px"
+                      onClick={onClick}
+                      role="option"
+                      aria-label={label}
+                    >
                       <Icon />
                     </Box>
                   </PopoverTrigger>
@@ -387,7 +404,12 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           borderRadius="50%"
           overflow="hidden"
         >
-          <Avatar address={priAddress} w="100%" h="100%" />
+          <Avatar
+            src={userInfo.avatar}
+            address={priAddress}
+            w="100%"
+            h="100%"
+          />
         </Box>
         <Box
           position="absolute"

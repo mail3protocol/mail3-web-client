@@ -42,7 +42,7 @@ import {
   isImTokenReject,
   isRejectedMessage,
 } from 'shared/src/wallet'
-import { isWechat, IS_MOBILE } from 'shared/src/env'
+import { isWechat, isMobile } from 'shared/src/env'
 import { ConnectButton, generateIcon } from './ConnectButton'
 import { useConnectWalletApi } from './ConnectWalletApiContext'
 
@@ -284,7 +284,7 @@ export const UnstopableButton: React.FC<{
       if (isRedirectFromUD) {
         await uauth.loginCallback()
       } else {
-        if (IS_MOBILE) {
+        if (isMobile()) {
           await uauth.login()
           return
         }

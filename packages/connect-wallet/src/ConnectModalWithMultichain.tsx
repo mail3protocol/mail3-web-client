@@ -43,11 +43,13 @@ import FlowIconPath from 'assets/chain-icons/flow.png'
 import SolIconPath from 'assets/chain-icons/sol.png'
 import TronIconPath from 'assets/chain-icons/tron.png'
 import OtherIconPath from 'assets/chain-icons/other.png'
-import { IS_MOBILE } from 'shared/src/env'
+import { isMobile as shareIsMobile } from 'shared/src/env'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'
 import { useEthButtons } from './EthButtons'
+
+const IS_MOBILE = shareIsMobile()
 
 interface ChainItem {
   name: string

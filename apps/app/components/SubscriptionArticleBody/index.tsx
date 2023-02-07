@@ -17,7 +17,6 @@ import {
 import styled from '@emotion/styled'
 import { useEffect, useMemo } from 'react'
 import { useToast } from 'hooks'
-import { useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
 import {
   copyText,
@@ -28,12 +27,11 @@ import {
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
-import { Subscription } from 'models'
 import SvgCopy from 'assets/subscription/copy.svg'
 import SvgTelegram from 'assets/subscription/telegram.svg'
 import SvgTwitter from 'assets/subscription/twitter.svg'
 import { Avatar, EchoIframe } from 'ui'
-import { APP_URL } from '../../constants/env'
+import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
 import { SubFormatDate } from '../../utils'
@@ -41,16 +39,13 @@ import { RenderHTML } from '../Preview/parser'
 import { RoutePath } from '../../route/path'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { NAVBAR_HEIGHT } from '../../constants'
+import { SubscriptionArticleProps } from '../../csr_pages/subscriptionArticle'
 
 const CONTAINER_MAX_WIDTH = 1064
 
-interface SubscriptionArticleBodyProps {
-  mailAddress: string
+interface SubscriptionArticleBodyProps
+  extends Omit<SubscriptionArticleProps, 'previewImage'> {
   address: string
-  uuid: string
-  priAddress: string
-  articleId: string
-  detail: Subscription.MessageDetailResp
 }
 
 const PageContainer = styled(Box)`
@@ -69,7 +64,7 @@ enum ButtonType {
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({ mailAddress, address, priAddress, articleId, detail, uuid }) => {
+> = ({ address, priAddress, articleId, detail, uuid, userInfo }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
   const toast = useToast()
@@ -81,39 +76,12 @@ export const SubscriptionArticleBody: React.FC<
     () => `${APP_URL}/p/${articleId}`,
     [articleId]
   )
-
-  const { data: userInfo } = useQuery(
-    ['userInfo', priAddress],
-    async () => {
-      const ret = await api.getSubscribeUserInfo(priAddress)
-      return ret.data
-    },
-    {
-      refetchIntervalInBackground: false,
-      refetchOnMount: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  )
-
-  const { data: settings } = useQuery(
-    ['userSetting', priAddress],
-    async () => {
-      const res = await api.getUserSetting(priAddress)
-      return res.data
-    },
-    {
-      refetchIntervalInBackground: false,
-      refetchOnMount: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  )
+  const mailAddress = `${address}@${MAIL_SERVER_URL}`
 
   useEffect(() => {
     if (detail?.content) {
       // report pv
-      api.postStatsEvents({ uuid: articleId })
+      api.postStatsEvents({ uuid: articleId }).catch(Boolean)
     }
   }, [detail?.content])
 
@@ -197,9 +165,10 @@ export const SubscriptionArticleBody: React.FC<
           priAddress={priAddress}
           nickname={nickname}
           mailAddress={mailAddress}
-          desc={settings?.description}
+          desc={userInfo.description}
           isAuth={isAuth}
-          rewardType={settings?.reward_type}
+          avatar={userInfo.avatar}
+          rewardType={userInfo.reward_type}
         />
         <Box
           minH="500px"
@@ -262,8 +231,14 @@ export const SubscriptionArticleBody: React.FC<
                     size="md"
                   >
                     <PopoverTrigger>
-                      <Box as="button" p="5px" onClick={onClick}>
-                        <Image src={Icon} w="22px" h="22px" />
+                      <Box
+                        as="button"
+                        p="5px"
+                        onClick={onClick}
+                        role="presentation"
+                        aria-label={label}
+                      >
+                        <Image src={Icon} w="22px" h="22px" alt={label} />
                       </Box>
                     </PopoverTrigger>
                     <PopoverContent width="auto">
@@ -320,8 +295,14 @@ export const SubscriptionArticleBody: React.FC<
                       size="md"
                     >
                       <PopoverTrigger>
-                        <Box as="button" p="5px" onClick={onClick}>
-                          <Image src={Icon} w="28px" h="28px" />
+                        <Box
+                          as="button"
+                          p="5px"
+                          onClick={onClick}
+                          role="presentation"
+                          aria-label={label}
+                        >
+                          <Image src={Icon} w="28px" h="28px" alt={label} />
                         </Box>
                       </PopoverTrigger>
                       <PopoverContent width="auto">
