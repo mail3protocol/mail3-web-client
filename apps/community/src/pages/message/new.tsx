@@ -17,6 +17,7 @@ import {
 import { Trans, useTranslation } from 'react-i18next'
 import React, { useRef, useState } from 'react'
 import { useDialog } from 'hooks'
+import { useQuery } from 'react-query'
 import { Container } from '../../components/Container'
 import { Content, Menus, StateProvider } from '../../components/Editor'
 import { SubjectInput } from '../../components/NewMessagePageComponents/SubjectInput'
@@ -28,6 +29,9 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ReactComponent as PremiumIconSvg } from '../../assets/Premium/diamond.svg'
 import { MessageType } from '../../api/modals/MessageListResponse'
 import { PREMIUM_DOCS_URL } from '../../constants/env/url'
+import { QueryKey } from '../../api/QueryKey'
+import { useAPI } from '../../hooks/useAPI'
+import { UserPremiumSettingState } from '../../api/modals/UserPremiumSetting'
 
 export const NewMessage = () => {
   useDocumentTitle('New Message')
@@ -44,7 +48,11 @@ export const NewMessage = () => {
     MessageType.Normal
   )
   const colorPremium100 = useToken('colors', 'premium.100')
-  const isConfiguredPremium = false // TODO: get the premium config status
+  const api = useAPI()
+  const { data } = useQuery([QueryKey.GetUserPremiumSettings], async () =>
+    api.getUserPremiumSettings().then((res) => res.data)
+  )
+  const isConfiguredPremium = data?.state === UserPremiumSettingState.Enabled
   const dialog = useDialog()
 
   const uploadImageGuard = (file: File) => {

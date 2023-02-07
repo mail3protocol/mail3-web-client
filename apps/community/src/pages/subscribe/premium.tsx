@@ -14,17 +14,88 @@ import {
   UnorderedList,
   OrderedList,
   ListItem,
+  useToken,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useQuery } from 'react-query'
+import { ReactNode } from 'react'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
-import { SubscriptionState } from '../../api/modals/SubscriptionResponse'
 import { ReactComponent as QuestionSvg } from '../../assets/Question.svg'
+import { StatusLamp } from '../../components/StatusLamp'
+import { useAPI } from '../../hooks/useAPI'
+import { UserPremiumSettingState } from '../../api/modals/UserPremiumSetting'
+import { QueryKey } from '../../api/QueryKey'
+
+enum StepStatus {
+  Active = 'active',
+  Pending = 'pending',
+  Done = 'done',
+  Failed = 'failed',
+}
+
+export const Step: React.FC<{
+  serialNumber: number
+  status?: StepStatus
+  children: ReactNode
+}> = ({ serialNumber, status = StepStatus.Pending, children }) => {
+  const serialActiveColor = useToken('colors', 'primary.900')
+  const primaryTextColor = useToken('colors', 'primaryTextColor')
+  const enabledColor = useToken('colors', 'enabledColor')
+  const warnColor = useToken('colors', 'warnColor')
+  return (
+    <Flex
+      fontWeight={500}
+      fontSize="12px"
+      lineHeight="16px"
+      align="center"
+      w="full"
+      color="inputPlaceholder"
+      style={{
+        color: (
+          {
+            [StepStatus.Active]: primaryTextColor,
+            [StepStatus.Done]: enabledColor,
+            [StepStatus.Failed]: warnColor,
+          } as { [key in StepStatus]?: string }
+        )[status],
+      }}
+    >
+      <Box
+        color="secondaryTextColor"
+        w="20px"
+        h="20px"
+        border="1px solid"
+        borderColor="currentColor"
+        mr="4px"
+        lineHeight="18px"
+        textAlign="center"
+        rounded="20px"
+        style={{
+          color: [
+            StepStatus.Active,
+            StepStatus.Failed,
+            StepStatus.Done,
+          ].includes(status)
+            ? serialActiveColor
+            : '',
+        }}
+      >
+        {serialNumber}
+      </Box>
+      {children}
+    </Flex>
+  )
+}
 
 export const Premium: React.FC = () => {
   const { t } = useTranslation(['premium', 'common'])
-  const isLoading = false
-  const state = SubscriptionState.Inactive
+  const api = useAPI()
+
+  const { data, isLoading } = useQuery(
+    [QueryKey.GetUserPremiumSettings],
+    async () => api.getUserPremiumSettings().then((res) => res.data)
+  )
 
   const transComponents = {
     h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
@@ -50,62 +121,51 @@ export const Premium: React.FC = () => {
             <Heading as="h4" fontSize="18px" lineHeight="20px">
               {t('title')}
             </Heading>
-            <Flex
-              ml="auto"
-              color="secondaryTitleColor"
-              fontSize="16px"
-              fontWeight="500"
-              align="center"
-            >
-              {t('status_field', { ns: 'common' })}
-              <Box
-                w="8px"
-                h="8px"
-                bg={
-                  state === SubscriptionState.Inactive
-                    ? 'statusColorDisabled'
-                    : 'statusColorEnabled'
-                }
-                rounded="full"
-                ml="8px"
-                mr="4px"
-                style={{ opacity: isLoading ? 0 : 1 }}
-              />
-              <Box color="primaryTextColor" w="72px">
-                {!isLoading
-                  ? t(
-                      state === SubscriptionState.Inactive
-                        ? 'status_value.disabled'
-                        : 'status_value.enabled',
-                      { ns: 'common' }
-                    )
-                  : t('status_value.loading', { ns: 'common' })}
-              </Box>
-            </Flex>
+            <StatusLamp
+              isLoading={isLoading}
+              isEnabled={data?.state === UserPremiumSettingState.Enabled}
+            />
           </Flex>
           <Text fontSize="16px" fontWeight={500} lineHeight="26px">
             <Trans t={t} i18nKey="contact_us" components={transComponents} />
           </Text>
-          <FormControl>
-            <FormLabel>
-              <Trans
-                t={t}
-                i18nKey="domain_field"
-                components={transComponents}
+          <Flex direction="column">
+            <FormControl>
+              <FormLabel>
+                <Trans
+                  t={t}
+                  i18nKey="domain_field"
+                  components={transComponents}
+                />
+              </FormLabel>
+              <Flex>
+                <Input w="338px" />
+                <Button
+                  variant="link"
+                  ml="24px"
+                  fontSize="14px"
+                  colorScheme="primaryButton"
+                >
+                  {t('confirm')}
+                </Button>
+              </Flex>
+            </FormControl>
+            <VStack mt="18px" spacing="10px">
+              <Step serialNumber={1} status={StepStatus.Active}>
+                {t('waiting_enable_subdomain')}
+              </Step>
+              <Box
+                w="full"
+                h="24px"
+                transform="translateX(10px)"
+                borderLeft="1px solid"
+                borderColor="uneditable"
               />
-            </FormLabel>
-            <Flex>
-              <Input w="338px" />
-              <Button
-                variant="link"
-                ml="24px"
-                fontSize="14px"
-                colorScheme="primaryButton"
-              >
-                {t('confirm')}
-              </Button>
-            </Flex>
-          </FormControl>
+              <Step serialNumber={2} status={StepStatus.Pending}>
+                {t('waiting_enable_subdomain_price')}
+              </Step>
+            </VStack>
+          </Flex>
           <Flex color="primary.900">
             <Button
               variant="outline-rounded"
@@ -124,6 +184,20 @@ export const Premium: React.FC = () => {
               </Button>
             </Tooltip>
           </Flex>
+          {data?.state === UserPremiumSettingState.Disabled ? (
+            <Button variant="solid-rounded" colorScheme="red" type="submit">
+              {t('disable')}
+            </Button>
+          ) : (
+            <Button
+              variant="solid-rounded"
+              colorScheme="primaryButton"
+              type="submit"
+              isDisabled
+            >
+              {t('enable')}
+            </Button>
+          )}
         </VStack>
       </Box>
       <TipsPanel>

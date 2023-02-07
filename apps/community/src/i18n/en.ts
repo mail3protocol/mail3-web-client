@@ -416,5 +416,15 @@ export default {
     set_up_sales_strategy: 'Set up your sub-domain sales strategy',
     set_up_sales_strategy_tips:
       'This service is provided by SuperDID\nyou need to jump to SuperDID for setting',
+    waiting_enable_subdomain:
+      'This domain name does not have sub-domain service, please change a domain name or reconfirm',
+    enabled_subdomain:
+      'This domain name has been opened for sub-domain service',
+    waiting_enable_subdomain_price: 'Verify that subdomain prices are set...',
+    failed_enable_subdomain_price:
+      "Haven't finished setting the sub-domain price, please click the button below to go to Settings and back Click here to retry",
+    enabled_subdomain_price: 'Already completed sub-domain price setting',
+    enable: 'Enable',
+    disable: 'Disable',
   },
 }

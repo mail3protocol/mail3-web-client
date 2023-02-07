@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -15,6 +15,11 @@ import {
 } from './modals/UpdateSubscriptionResponse'
 import { SubscriptionResponse } from './modals/SubscriptionResponse'
 import { PagingRequest } from './modals/base'
+import {
+  UserPremiumSettingRequest,
+  UserPremiumSettingResponse,
+  UserPremiumSettingState,
+} from './modals/UserPremiumSetting'
 
 export class API {
   private readonly axios: AxiosInstance
@@ -116,5 +121,27 @@ export class API {
       summary,
       message_type: options?.messageType || MessageType.Normal,
     })
+  }
+
+  updateUserPremiumSettings(
+    dotBitAccount: string,
+    options?: {
+      state: UserPremiumSettingState
+    }
+  ) {
+    return this.axios.put<
+      UserPremiumSettingResponse,
+      AxiosResponse<UserPremiumSettingResponse>,
+      UserPremiumSettingRequest
+    >(`/community/premium_setting`, {
+      dot_bit_account: dotBitAccount,
+      state: options?.state,
+    })
+  }
+
+  getUserPremiumSettings() {
+    return this.axios.get<UserPremiumSettingResponse>(
+      `/community/premium_setting`
+    )
   }
 }

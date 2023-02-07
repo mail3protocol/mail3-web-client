@@ -105,6 +105,8 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     loadingOverlayBackground: 'rgba(255, 255, 255, 0.4)',
     statusColorEnabled: '#14FF00',
     statusColorDisabled: '#FF0000',
+    enabledColor: '#61C100',
+    warnColor: '#FF5B00',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
