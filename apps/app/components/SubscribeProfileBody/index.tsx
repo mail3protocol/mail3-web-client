@@ -56,9 +56,9 @@ import { CommunityCard } from './card'
 import { useAPI } from '../../hooks/useAPI'
 
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
-import { SubscribeButton } from '../SubscriptionArticleBody/userInfo'
 import { UserSettingResponse } from '../../api'
 import { MAIL_SERVER_URL } from '../../constants'
+import { SubscribeButtonInApp } from '../SubscribeButtonInApp'
 
 const CONTAINER_MAX_WIDTH = 1280
 
@@ -446,7 +446,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             bottom={{ base: '0px', md: 'auto' }}
             transform={{ base: 'translateX(50%)', md: 'none' }}
           >
-            <SubscribeButton
+            <SubscribeButtonInApp
               uuid={uuid}
               rewardType={settings?.reward_type}
               isAuth={isAuth}

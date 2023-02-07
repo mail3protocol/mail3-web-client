@@ -1,28 +1,11 @@
-import {
-  Box,
-  Center,
-  LinkBox,
-  LinkOverlay,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalOverlay,
-  Text,
-  useBreakpointValue,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Box, Center, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useAccount, useDialog, useToast } from 'hooks'
 import { RewardType } from 'models'
-import { Dispatch, SetStateAction, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useQuery } from 'react-query'
-import { Avatar, Button } from 'ui'
-import { Query } from '../../api/query'
+import { useState } from 'react'
+
+import { Avatar } from 'ui'
 import { NAVBAR_HEIGHT } from '../../constants'
-import { useAPI } from '../../hooks/useAPI'
-import { SimpleSubscribePage } from '../../csr_pages/subscribe'
+import { SubscribeButtonInApp } from '../SubscribeButtonInApp'
 
 interface UserInfoProps {
   uuid: string
@@ -43,189 +26,6 @@ const AvatarArea = styled(LinkBox)`
     }
   }
 `
-
-const SubscribeButtonView: React.FC<{
-  rewardType?: RewardType
-  isFollow?: boolean
-  onClick?: () => void
-  isLoading: boolean
-}> = ({ rewardType, isFollow, onClick, isLoading }) => {
-  if (isFollow) {
-    return (
-      <Button
-        isLoading={isLoading}
-        onClick={onClick}
-        variant="outline"
-        w="150px"
-      >
-        Subscribed
-      </Button>
-    )
-  }
-
-  if (rewardType === RewardType.AIR || isLoading) {
-    return (
-      <Button isLoading={isLoading} onClick={onClick} w="150px">
-        Subscribe
-      </Button>
-    )
-  }
-
-  return (
-    <Button
-      isLoading={isLoading}
-      onClick={onClick}
-      w="230px"
-      overflow="hidden"
-      justifyContent="flex-start"
-      pl="24px"
-    >
-      Subscribe
-      <Center
-        bg="#4E52F5"
-        transform="skew(-10deg)"
-        position="absolute"
-        top="0"
-        right="0"
-        w="105px"
-        h="100%"
-      >
-        <Box transform="skew(10deg)">Earn NFT</Box>
-      </Center>
-    </Button>
-  )
-}
-
-export const SubscribeButton: React.FC<{
-  isAuth: boolean
-  rewardType?: RewardType
-  uuid: string
-  setIsHidden?: Dispatch<SetStateAction<boolean>>
-}> = ({ isAuth, rewardType, uuid, setIsHidden }) => {
-  const [t] = useTranslation('subscription')
-  const api = useAPI()
-  const toast = useToast()
-  const dialog = useDialog()
-  const account = useAccount()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [isFollow, setIsFollow] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const isMobile = useBreakpointValue({ base: true, md: false })
-
-  const { isLoading: isLoadingStatus, refetch } = useQuery(
-    [Query.GetSubscribeStatus, account, uuid],
-    async () => {
-      try {
-        await api.getSubscribeStatus(uuid)
-        return {
-          state: 'active',
-        }
-      } catch (error: any) {
-        // console.log(error.response)
-        if (
-          error?.response?.status === 404 &&
-          error?.response?.data?.reason === 'COMMUNITY_USER_FOLLOWING_NOT_FOUND'
-        ) {
-          return {
-            state: 'inactive',
-          }
-        }
-        throw error
-      }
-    },
-    {
-      onSuccess(data) {
-        const isFollowed = data.state === 'active'
-        setIsFollow(isFollowed)
-        if (isMobile && isFollowed && setIsHidden) setIsHidden(true)
-      },
-      enabled: !!uuid && isAuth,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  )
-
-  const onSubscribe = async () => {
-    if (isLoading) return
-    setIsLoading(true)
-    if (isFollow) {
-      dialog({
-        type: 'text',
-        description: t('unsubscribe'),
-        showCloseButton: true,
-        modalBodyProps: {
-          mt: '0',
-        },
-        modalCloseButtonProps: {
-          zIndex: 9,
-        },
-        modalFooterProps: {
-          pt: 0,
-        },
-        onConfirm: () => {
-          setIsLoading(false)
-        },
-        onCancel: async () => {
-          await api.SubscriptionCommunityUserUnFollowing(uuid)
-          setIsFollow(false)
-          setIsLoading(false)
-          toast(t('Unsubscribe successfully'), { status: 'success' })
-        },
-        onClose: () => {
-          setIsLoading(false)
-        },
-        okText: 'No',
-        cancelText: 'Yes',
-      })
-    } else {
-      await api.SubscriptionCommunityUserFollowing(uuid)
-      setIsFollow(true)
-      toast(t('Subscribe successfully'), { status: 'success' })
-      setIsLoading(false)
-    }
-  }
-
-  return (
-    <>
-      <Box mt="24px">
-        <SubscribeButtonView
-          onClick={isAuth ? onSubscribe : onOpen}
-          rewardType={rewardType}
-          isFollow={isFollow}
-          isLoading={isLoadingStatus || isLoading}
-        />
-      </Box>
-      <Modal
-        onClose={() => {
-          if (isAuth) refetch()
-          onClose()
-        }}
-        isOpen={isOpen}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent
-          maxW={{ base: '100%', md: '800px' }}
-          h="85vh"
-          overflow="hidden"
-          overflowY="scroll"
-          css={{
-            '&::-webkit-scrollbar': {
-              width: '0 !important',
-              height: '0 !important',
-            },
-          }}
-        >
-          <ModalCloseButton />
-          <ModalBody>
-            <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
-  )
-}
 
 export const UserInfo: React.FC<UserInfoProps> = ({
   priAddress,
@@ -303,7 +103,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           {desc}
         </Text>
 
-        <SubscribeButton
+        <SubscribeButtonInApp
           rewardType={rewardType}
           isAuth={isAuth}
           uuid={uuid}
