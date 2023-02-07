@@ -382,6 +382,13 @@
     "subscription-article": {
         "telegram": "Share on Telegram",
         "copy": "Copy",
-        "twitter": "Share on Twitter"
+        "twitter": "Share on Twitter",
+        "premium-only": "Premium-only",
+        "cover-access": "Only the author's Premium Members can access",
+        "cover-buy-text": "Buy a sub-domain to upgrade to <br><b>{{name}}</b>'s Premium <br>and read all Premium content",
+        "buy": "Buy",
+        "cover-already": "Already a Premium member of <b>{{name}}</b>?",
+        "switch-wallet": "Switch wallet",
+        "from-year":"From ${{num}}/year"
     }
 }

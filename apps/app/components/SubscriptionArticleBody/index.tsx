@@ -2,19 +2,23 @@ import {
   Box,
   Center,
   Flex,
+  Icon,
   Link,
+  Button as RawButton,
   Spacer,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useEffect, useMemo } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import {
   isEthAddress,
   isPrimitiveEthAddress,
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
+import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { Avatar, EchoIframe } from 'ui'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
@@ -42,9 +46,21 @@ const PageContainer = styled(Box)`
   padding-top: ${NAVBAR_HEIGHT}px;
 `
 
+const CoverContainer = styled(Center)`
+  width: 100%;
+  margin-top: 24px;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  background: linear-gradient(180deg, #ffffff 0%, #eef0ff 100%);
+  border: 1px solid #9093f9;
+  border-radius: 16px;
+`
+
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
 > = ({ address, priAddress, articleId, detail, uuid, userInfo }) => {
+  const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
 
   const api = useAPI()
@@ -95,7 +111,7 @@ export const SubscriptionArticleBody: React.FC<
 
   return (
     <PageContainer>
-      <Flex direction={{ base: 'column-reverse', md: 'row' }}>
+      <Flex direction={{ base: 'column-reverse', md: 'row-reverse' }}>
         {isMobile ? EchoBody : null}
         <UserInfo
           uuid={uuid}
@@ -121,6 +137,26 @@ export const SubscriptionArticleBody: React.FC<
             {detail?.subject}
           </Text>
 
+          <Center
+            mt={{ base: '8px', md: '13px' }}
+            w="112px"
+            h={{ base: '18px', md: '24px' }}
+            background="#FFF6D6"
+            borderRadius="20px"
+          >
+            <Icon as={SvgDiamond} w="12px" h="12px" />
+            <Box
+              ml="2px"
+              fontStyle="italic"
+              fontWeight="600"
+              fontSize="12px"
+              lineHeight="14px"
+              color="#FFA800"
+            >
+              {t('premium-only')}
+            </Box>
+          </Center>
+
           {isMobile ? (
             <Link
               display="flex"
@@ -130,7 +166,7 @@ export const SubscriptionArticleBody: React.FC<
               onClick={() => {
                 // trackAvatar()
               }}
-              mt="30px"
+              mt="24px"
               w="100%"
             >
               <Avatar w="42px" h="42px" address={address} borderRadius="50%" />
@@ -145,7 +181,7 @@ export const SubscriptionArticleBody: React.FC<
             </Link>
           ) : null}
 
-          <Flex m="23px 0" align="center">
+          <Flex m="13px 0" align="center">
             <Box
               fontWeight={500}
               fontSize="14px"
@@ -153,7 +189,7 @@ export const SubscriptionArticleBody: React.FC<
               mt="4px"
               lineHeight="18px"
             >
-              {SubFormatDate(detail.created_at)}
+              {SubFormatDate(detail.created_at, 'YYYY / MMM D / h:mm a')}
             </Box>
             <Spacer />
             <ShareButtonGroup
@@ -172,15 +208,117 @@ export const SubscriptionArticleBody: React.FC<
               overflow="hidden"
             >
               <Text
-                fontWeight="500"
-                fontSize="16px"
-                lineHeight="24px"
+                fontWeight={{ base: '400', md: '500' }}
+                fontSize={{ base: '12px', md: '16px' }}
+                lineHeight={{ base: '18px', md: '24px' }}
                 color="#333333"
               >
                 {detail?.summary}
               </Text>
             </Box>
           ) : null}
+
+          <CoverContainer
+            h={{ base: '400px', md: '450px' }}
+            p={{ base: '20px', md: '32px' }}
+          >
+            <Center
+              w={{ base: '100%', md: '70%' }}
+              p={{ base: '8px 10px', md: '8px 24px' }}
+              background="rgba(144, 147, 249, 0.2)"
+              borderRadius="24px"
+              fontWeight="400"
+              fontSize="14px"
+              lineHeight="20px"
+              color="#4E52F5"
+              textAlign="center"
+            >
+              {t('cover-access')}
+            </Center>
+
+            <Center
+              mt={{ base: '14px', md: '40px' }}
+              flexDirection="column"
+              p={{ base: '32px 24px', md: '32px' }}
+              width={{ base: 'full', md: '369px' }}
+              height="208px"
+              background="rgba(255, 255, 255, 0.7)"
+              border="1px solid #CCCDFF"
+              borderRadius="24px"
+            >
+              <Text
+                fontWeight="400"
+                fontSize="14px"
+                lineHeight="20px"
+                color="#333333"
+                textAlign="center"
+              >
+                <Trans
+                  components={{
+                    b: <Box as="span" color="#4E51F4" fontWeight={700} />,
+                  }}
+                  values={{ name: 'nickname' }}
+                  i18nKey="cover-buy-text"
+                  t={t}
+                />
+              </Text>
+              <Center
+                mt="8px"
+                color="#FF6A00"
+                fontWeight="600"
+                fontSize="12px"
+                lineHeight="16px"
+              >
+                {t('from-year', { num: 8 })}
+              </Center>
+
+              <Center
+                as={RawButton}
+                variant="unstyled"
+                leftIcon={<Icon as={SvgDiamond} w="20px" h="20px" />}
+                mt="20px"
+                w="141px"
+                h="36px"
+                background="linear-gradient(84.31deg, #4E52F5 2.72%, #ACAEFF 53.3%, #4E52F5 98.41%)"
+                borderRadius="24px"
+                color="#fff"
+                fontSize="18px"
+                fontWeight="700"
+                lineHeight="20px"
+                _active={{
+                  opacity: 0.5,
+                }}
+              >
+                {t('buy')}
+              </Center>
+            </Center>
+
+            <Center
+              mt="24px"
+              fontWeight="400"
+              fontSize="12px"
+              lineHeight="18px"
+            >
+              <Trans
+                components={{
+                  b: <Box as="span" fontWeight={600} ml="2px" />,
+                }}
+                values={{ name: 'nickname' }}
+                i18nKey="cover-already"
+                t={t}
+              />
+            </Center>
+            <Link
+              mt="8px"
+              fontWeight="400"
+              fontSize="12px"
+              lineHeight="18px"
+              color="#4E52F5"
+              onClick={() => {}}
+            >
+              {t('switch-wallet')}
+            </Link>
+          </CoverContainer>
 
           <Box pt={{ base: '10px', md: '30px' }}>
             <RenderHTML
