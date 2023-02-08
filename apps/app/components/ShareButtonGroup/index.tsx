@@ -43,7 +43,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   const buttonConfig: Record<
     ButtonType,
     {
-      Icon: any
+      Icon: string
       label: string
       onClick: () => void
     }
