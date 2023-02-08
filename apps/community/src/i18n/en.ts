@@ -178,6 +178,17 @@ export default {
     view_all_send_records: 'All history',
     download_failed: 'Download failed, reason: {{message}}',
     download_no_data: 'No data, unable to download.',
+    switch_from_mirror: 'Switch from Mirror',
+    mirror: {
+      sub_title: 'Confirm to import posts from mirror.xyz',
+      desc: 'After importing, the posts will appear in the history and on your subscription page, and no push notifications will be sent to your subscribers.',
+      import: 'Import',
+      importing: 'Importing...',
+      toast: 'Please come back to refresh the page later.',
+      not_allow:
+        'Only the administrator account has permission to perform this operation.',
+      not_found: 'Mirror account not found',
+    },
   },
   earn_nft: {
     title: 'Subscribe To Earn',

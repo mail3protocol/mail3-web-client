@@ -12,16 +12,21 @@ import {
   ListItem,
   Icon,
   Spinner,
+  useDisclosure,
+  useToast as useChakraToast,
+  HStack,
 } from '@chakra-ui/react'
 import { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
-import { Avatar } from 'ui'
+import { useDialog } from 'hooks'
+import { Avatar, IpfsModal } from 'ui'
+import axios from 'axios'
 import { Container } from '../components/Container'
-import { ReactComponent as DownloadSvg } from '../assets/download.svg'
-import { NewMessageLinkButton } from '../components/NewMessageLinkButton'
+import { ReactComponent as DownloadSvg } from '../assets/DownloadIcon.svg'
+import { ReactComponent as SyncSvg } from '../assets/SyncIcon.svg'
 import { SentRecordItem } from '../components/SentRecordItem'
 import { RoutePath } from '../route/path'
 import { useAPI } from '../hooks/useAPI'
@@ -31,6 +36,9 @@ import { useToast } from '../hooks/useToast'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { formatUserName } from '../utils/string'
+import { useOpenNewMessagePage } from '../hooks/useOpenNewMessagePage'
+import { ReactComponent as OutlineAddIconSvg } from '../assets/OutlineAddIcon.svg'
+import { useCheckAdminStatus, useIsAdmin } from '../hooks/useAdmin'
 
 interface BaseInfo {
   key: string
@@ -93,6 +101,16 @@ export const Dashboard: React.FC = () => {
     [QueryKey.GetMessageListForDashboard],
     async () => api.getMessageList({ count: 10 }).then((r) => r.data)
   )
+  const openNewMessagePage = useOpenNewMessagePage({
+    isLoading: isLoadingMessageList,
+    lastMessageSentTime: messageList?.messages?.[0]?.created_at
+      ? dayjs.unix(Number(messageList.messages[0].created_at))
+      : undefined,
+  })
+
+  const { isLoading: isCheckAdminStatusLoading } = useCheckAdminStatus()
+
+  const dialog = useDialog()
   const baseInfos: BaseInfo[] = [
     {
       key: 'message',
@@ -145,6 +163,101 @@ export const Dashboard: React.FC = () => {
     }
   }, [userInfo?.next_refresh_time])
 
+  const rawToast = useChakraToast()
+  const toast = useToast()
+
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
+
+  const isAdmin = useIsAdmin()
+
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery([QueryKey.GetMessageEncryptionKeyState], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  )
+
+  const switchMirrorOnProgress = () => {
+    rawToast.closeAll()
+    rawToast({
+      duration: 3000,
+      position: 'top',
+      render() {
+        return (
+          <HStack
+            spacing="12px"
+            padding="12px 16px"
+            borderRadius="20px"
+            bg="white"
+            boxShadow="0px 0px 10px 4px rgb(25 25 100 / 10%)"
+          >
+            <Box>
+              <SyncSvg style={{ position: 'relative', top: '-10px' }} />
+            </Box>
+            <Flex direction="column">
+              <Text fontWeight="bold" fontSize="16px">
+                {t('mirror.importing')}
+              </Text>
+              <Text fontSize="14px">{t('mirror.toast')}</Text>
+            </Flex>
+          </HStack>
+        )
+      },
+    })
+  }
+
+  const switchMirror = async () => {
+    try {
+      await api.switchFromMirror()
+      switchMirrorOnProgress()
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          error?.response?.data?.reason === 'COMMUNITY_POST_SYNC_EVENT_OCCUPIED'
+        ) {
+          switchMirrorOnProgress()
+        } else if (error?.response?.status === 404) {
+          toast(t('mirror.not_found'))
+        } else {
+          toast(error?.response?.data?.message || error?.message)
+        }
+      }
+    }
+  }
+
+  const switchMirrorOnClick = () => {
+    if (isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading) {
+      return
+    }
+    if (isAdmin) {
+      toast(t('mirror.not_allow'))
+      return
+    }
+    dialog({
+      title: t('switch_from_mirror'),
+      description: (
+        <>
+          <Text fontWeight={600}>{t('mirror.sub_title')}</Text>
+          <Text color="#4E51F4" mt="24px" fontWeight={400} fontSize="15px">
+            {t('mirror.desc')}
+          </Text>
+        </>
+      ),
+      okText: t('mirror.import'),
+      async onConfirm() {
+        if (!isUploadedIpfsKey) {
+          onOpenIpfsModal()
+        } else {
+          await switchMirror()
+        }
+      },
+    })
+  }
+
   const listEl =
     !messageList?.messages || messageList?.messages.length <= 0 ? (
       <ListItem
@@ -176,6 +289,18 @@ export const Dashboard: React.FC = () => {
       gridTemplateColumns="3fr 1fr"
       gridTemplateRows="132px 1fr"
     >
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async (_, key) => {
+            await api.updateMessageEncryptionKey(key)
+            onCloseIpfsModal()
+            await switchMirror()
+          }}
+        />
+      ) : null}
       <Grid
         bg="cardBackground"
         shadow="card"
@@ -214,25 +339,49 @@ export const Dashboard: React.FC = () => {
           </Flex>
         ))}
       </Grid>
-      <Flex
-        direction="column"
-        bg="cardBackground"
-        shadow="card"
-        rounded="card"
-        p="16px"
-      >
-        <Heading as="h3" fontSize="16px">
-          {t('send_message')}
-        </Heading>
-        <NewMessageLinkButton
-          isLoading={isLoadingMessageList}
-          lastMessageSentTime={
-            messageList?.messages?.[0]?.created_at
-              ? dayjs.unix(Number(messageList.messages[0].created_at))
-              : undefined
-          }
-        />
-      </Flex>
+      <Grid w="full" h="full" rowGap="20px">
+        <Flex
+          as={RouterLink}
+          bg="cardBackground"
+          shadow="card"
+          rounded="card"
+          align="center"
+          justify="space-between"
+          color="primary.900"
+          pl="40px"
+          to={RoutePath.NewMessage}
+          target="_blank"
+          onClick={openNewMessagePage.onClick}
+        >
+          <Heading as="h3" fontSize="16px">
+            {t('send_message')}
+          </Heading>
+          {openNewMessagePage.isLoading ? (
+            <Spinner w="24px" h="24px" mx="18px" />
+          ) : (
+            <Icon as={OutlineAddIconSvg} w="24px" h="24px" mx="18px" />
+          )}
+        </Flex>
+        <Flex
+          as="button"
+          bg="cardBackground"
+          shadow="card"
+          rounded="card"
+          pl="40px"
+          align="center"
+          justify="space-between"
+          onClick={switchMirrorOnClick}
+        >
+          <Heading as="h3" fontSize="16px">
+            {t('switch_from_mirror')}
+          </Heading>
+          {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
+            <Spinner w="24px" h="24px" mx="18px" />
+          ) : (
+            <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
+          )}
+        </Flex>
+      </Grid>
       <Box
         bg="cardBackground"
         shadow="card"
