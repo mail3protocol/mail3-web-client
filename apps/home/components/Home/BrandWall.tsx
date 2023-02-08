@@ -207,7 +207,7 @@ export const BrandWall: React.FC = () => {
           >
             <Flex
               w="auto"
-              animation={`${rollingKeyframes} 60s infinite linear`}
+              animation={`${rollingKeyframes} 120s infinite linear`}
               css={{
                 animationDirection:
                   brandItemIndex % 2 === 0 ? undefined : 'reverse',
