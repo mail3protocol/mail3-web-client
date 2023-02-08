@@ -152,6 +152,7 @@ export const NewMessagePage = () => {
   useDocumentTitle(title)
 
   const messageInfoFromRouteState = locationState?.messageInfo
+  console.log(messageInfoFromRouteState)
   const queryMessageInfoAndContentData = useQuery(
     [Query.GetMessageInfoAndContent, queryMessageAndContentKeyId],
     async () => {
