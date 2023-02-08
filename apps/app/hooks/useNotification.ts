@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { defer, from, fromEvent, switchMap } from 'rxjs'
 import { useQuery } from 'react-query'
 import { useAtom } from 'jotai'
+import { useToast } from 'hooks'
 import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/utils'
 import {
   getIsEnabledNotification,
@@ -24,6 +25,7 @@ export function useNotification(shouldReload = true) {
   ] = useState(false)
   const onDeleteFCMToken = useDeleteFCMToken()
   const getFCMToken = useGetFCMToken()
+  const toast = useToast()
 
   const onLoadMessagingToken = useCallback(
     async (state: 'enabled' | 'disabled') => {
@@ -41,6 +43,7 @@ export function useNotification(shouldReload = true) {
       if (isSwitchingWebPushNotificationState) return
       setIsSwitchingWebPushNotificationState(true)
       try {
+        await onLoadMessagingToken(state)
         await api.switchUserWebPushNotification(
           state === 'enabled' ? 'active' : 'stale'
         )
@@ -48,8 +51,11 @@ export function useNotification(shouldReload = true) {
           ...info,
           notification_state: state,
         }))
-        await onLoadMessagingToken(state)
       } catch (err) {
+        const message = (err as any)?.message as any
+        toast(message, {
+          status: 'error',
+        })
         console.error(err)
       } finally {
         setIsSwitchingWebPushNotificationState(false)
@@ -113,20 +119,19 @@ export function useNotification(shouldReload = true) {
     return null
   }
 
+  async function onCheckNotificationStatus() {
+    if (permission === 'granted' && webPushNotificationState === 'enabled') {
+      await onSwitchWebPushNotificationState('enabled')
+    }
+  }
+
   useEffect(() => {
+    onCheckNotificationStatus()
     const navigatorPermissionsSubscriber = onSubscribeNavigatorPermissions()
     return () => {
       navigatorPermissionsSubscriber?.unsubscribe()
     }
   }, [])
-
-  const requestPermission = useCallback(async () => {
-    if (!window?.Notification?.requestPermission) return 'default'
-    // eslint-disable-next-line compat/compat
-    const newPermission = await window.Notification.requestPermission()
-    await onChangePermission(newPermission)
-    return newPermission
-  }, [setPermission])
 
   const { data: isBrowserSupport, isLoading: isBrowserSupportChecking } =
     useQuery(
@@ -144,12 +149,21 @@ export function useNotification(shouldReload = true) {
       }
     )
 
+  const openNotification = useCallback(async () => {
+    // eslint-disable-next-line compat/compat
+    const newPermission = await window.Notification.requestPermission()
+    if (newPermission !== 'granted') return newPermission
+    if (permission === newPermission) {
+      await onChangePermission(newPermission)
+    }
+    return newPermission
+  }, [permission, onChangePermission])
+
   return {
-    requestPermission,
-    onChangePermission,
     permission,
     webPushNotificationState,
     isBrowserSupport,
     isBrowserSupportChecking,
+    openNotification,
   }
 }
