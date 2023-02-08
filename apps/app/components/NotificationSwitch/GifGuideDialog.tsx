@@ -17,7 +17,7 @@ import NotificationMacEdgeGuideGif from '../../assets/notification/gif_guides/ma
 import NotificationMacChromeGuideGif from '../../assets/notification/gif_guides/mac_chrome.gif'
 import { ReactComponent as NotFoundSvg } from '../../assets/not_found_message.svg'
 import LoadingPng from '../../assets/mailbox/loading.gif'
-import { IS_CHROME, IS_EDGE, IS_WIN } from '../../constants'
+import { IS_CHROME, IS_EDGE, IS_WIN } from '../../constants/utils'
 
 export const GifGuideDialog: React.FC<{
   isOpen: boolean
@@ -25,9 +25,9 @@ export const GifGuideDialog: React.FC<{
 }> = ({ isOpen, onClose }) => {
   const { t } = useTranslation('common')
   const gifImage: string = useMemo(() => {
-    if (IS_EDGE && !IS_WIN) return NotificationMacEdgeGuideGif
-    if (IS_CHROME && !IS_WIN) return NotificationMacChromeGuideGif
-    if (IS_EDGE && IS_WIN) return NotificationMacEdgeGuideGif
+    if (IS_EDGE() && !IS_WIN()) return NotificationMacEdgeGuideGif
+    if (IS_CHROME() && !IS_WIN()) return NotificationMacChromeGuideGif
+    if (IS_EDGE() && IS_WIN()) return NotificationMacEdgeGuideGif
     return NotificationMacChromeGuideGif
   }, [])
   const [isLoadImageIsFailed, setIsLoadImageIsFailed] = useState(false)

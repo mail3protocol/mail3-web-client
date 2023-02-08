@@ -49,6 +49,16 @@ const shadowRootStyle = `
   a {
     color: #4d51f3;
   }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  img {
+    border-style: none;
+  }
+
 `
 
 export const RenderHTML: React.FC<htmlParserProps> = ({

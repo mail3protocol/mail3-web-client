@@ -17,7 +17,6 @@ import styled from '@emotion/styled'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Button } from 'ui'
 import classNames from 'classnames'
-import landingBg from 'assets/svg/landing-bg.svg?url'
 import { truncateMiddle } from 'shared'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { Mascot } from './Mascot'
@@ -38,7 +37,6 @@ import { ConnectWallet } from '../ConnectWallet'
 
 const Container = styled(Flex)`
   height: calc(100vh - ${NAVBAR_GUTTER + NAVBAR_HEIGHT}px);
-  background-image: url(${landingBg});
   position: relative;
   flex-direction: column;
   align-items: center;

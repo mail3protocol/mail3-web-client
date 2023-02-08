@@ -22,7 +22,7 @@ import { Avatar, Button } from 'ui'
 import { Query } from '../../api/query'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { useAPI } from '../../hooks/useAPI'
-import { SimpleSubscribePage } from '../../pages/subscribe'
+import { SimpleSubscribePage } from '../../csr_pages/subscribe'
 
 interface UserInfoProps {
   uuid: string
@@ -33,6 +33,7 @@ interface UserInfoProps {
   isAuth: boolean
   address: string
   rewardType?: RewardType
+  avatar?: string
 }
 
 const AvatarArea = styled(LinkBox)`
@@ -120,6 +121,7 @@ export const SubscribeButton: React.FC<{
           state: 'active',
         }
       } catch (error: any) {
+        // console.log(error.response)
         if (
           error?.response?.status === 404 &&
           error?.response?.data?.reason === 'COMMUNITY_USER_FOLLOWING_NOT_FOUND'
@@ -234,6 +236,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   rewardType,
   address,
   isAuth,
+  avatar,
 }) => {
   const [isHidden, setIsHidden] = useState(false)
 
@@ -258,8 +261,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           <LinkOverlay href={`/${address}`} target="_blank">
             <Center flexDirection="column" justifyContent="flex-start">
               <Avatar
+                src={avatar}
                 address={priAddress}
                 borderRadius="50%"
+                name={nickname}
                 w={{ base: '80px', md: '100px' }}
                 h={{ base: '80px', md: '100px' }}
               />

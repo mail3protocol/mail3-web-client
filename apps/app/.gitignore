@@ -12,6 +12,8 @@
 /.next/
 /out/
 
+/public/firebase-messaging-sw.js
+
 # production
 /build
 
@@ -43,3 +45,11 @@ yarn-error.log*
 /dist
 
 stats.html
+
+.next
+
+.turbo
+
+.build
+
+.cache

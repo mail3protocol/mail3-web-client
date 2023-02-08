@@ -1,18 +1,18 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import {
   createStore,
   get as getDataByIndexedDb,
   keys as getIndexedDbKeys,
 } from 'idb-keyval'
+import { atom, useAtom } from 'jotai'
 import { useAPI } from './useAPI'
-import { firebaseUtils } from '../utils/firebase'
-
-export const FirebaseMessagingStore = createStore(
-  'firebase-messaging-database',
-  'firebase-messaging-store'
-)
+import { FirebaseUtils } from '../utils/firebase'
 
 export async function getCurrentToken() {
+  const FirebaseMessagingStore = createStore(
+    'firebase-messaging-database',
+    'firebase-messaging-store'
+  )
   const [currentTokenKey] = await getIndexedDbKeys(FirebaseMessagingStore)
   if (!currentTokenKey) return null
   return getDataByIndexedDb<{
@@ -28,8 +28,30 @@ export async function getCurrentToken() {
   }>(currentTokenKey, FirebaseMessagingStore)
 }
 
+const firebaseUtilsAtom = atom<FirebaseUtils | null>(null)
+export function useFirebaseUtils() {
+  const [firebaseUtils, setFirebaseUtils] = useAtom(firebaseUtilsAtom)
+  const initializeFirebaseUtils = useCallback(async () => {
+    if (!firebaseUtils) {
+      const init = await FirebaseUtils.create()
+      setFirebaseUtils(init!)
+      return init
+    }
+    return firebaseUtils
+  }, [firebaseUtils, setFirebaseUtils])
+  const getSafeFirebaseUtils = useCallback(
+    () => firebaseUtils || initializeFirebaseUtils(),
+    [firebaseUtils, initializeFirebaseUtils]
+  )
+  useEffect(() => {
+    initializeFirebaseUtils()
+  }, [])
+  return { firebaseUtils, initializeFirebaseUtils, getSafeFirebaseUtils }
+}
+
 export function useDeleteFCMToken() {
   const api = useAPI()
+  const { initializeFirebaseUtils } = useFirebaseUtils()
   return useCallback(async () => {
     const currentTokenItem = await getCurrentToken()
     if (currentTokenItem) {
@@ -37,14 +59,21 @@ export function useDeleteFCMToken() {
         .updateRegistrationToken(currentTokenItem.token, 'stale')
         .catch(console.error)
     }
-    await firebaseUtils.deleteFirebaseMessagingToken().catch(console.error)
-  }, [api])
+    await initializeFirebaseUtils()
+      .then((init) => {
+        init.deleteFirebaseMessagingToken()
+      })
+      .catch(console.error)
+  }, [api, initializeFirebaseUtils])
 }
 
 export function useGetFCMToken() {
   const api = useAPI()
+  const { initializeFirebaseUtils } = useFirebaseUtils()
   return useCallback(async () => {
-    const token = await firebaseUtils.getFirebaseMessagingToken()
+    const token = await initializeFirebaseUtils().then((init) =>
+      init.getFirebaseMessagingToken()
+    )
     const currentServerNotificationState = await api
       .getRegistrationTokenState(token)
       .then((res) => res.data.state)
@@ -54,5 +83,5 @@ export function useGetFCMToken() {
     }
     await api.updateRegistrationToken(token, 'active')
     return token
-  }, [api])
+  }, [api, initializeFirebaseUtils])
 }

@@ -44,7 +44,7 @@ export interface BoxListProps {
   setIsChooseMode?: React.Dispatch<React.SetStateAction<boolean>>
   chooseMap?: Record<string, boolean>
   hiddenMap?: Record<string, boolean>
-  getHref: (id: string) => LinkProps['to']
+  getHref: (id: string, msg: MessageItem) => LinkProps['to']
   mailboxType?: Mailboxes
 }
 
@@ -368,7 +368,7 @@ export const Mailbox: React.FC<BoxListProps> = ({
         return null
       }
 
-      const href = getHref ? getHref(id) : ''
+      const href = getHref ? getHref(id, item) : ''
 
       const state: MeesageDetailState = {
         date: item.date,

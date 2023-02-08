@@ -25,7 +25,7 @@ import {
   isImToken,
   isTrust,
   isWechat,
-  IS_MOBILE,
+  isMobile,
 } from 'shared/src/env'
 import {
   generateCoinbaseWalletDeepLink,
@@ -183,7 +183,7 @@ export function useEthButtons({ onClose }: EthButtonsProps) {
     />
   )
 
-  if (IS_MOBILE) {
+  if (isMobile()) {
     if (isEthEnvironment) {
       if (isImToken()) {
         return [renderImtoken()]

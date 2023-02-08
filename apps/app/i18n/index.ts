@@ -10,7 +10,7 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
-  cache: localStorage,
+  // cache: localStorage,
 })
 
 export default i18n

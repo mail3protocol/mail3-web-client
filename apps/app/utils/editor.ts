@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify'
 import { GetMessage } from 'models'
 import { generatePath } from 'react-router-dom'
 import { generateAttachmentContentId } from './string'
-import { Action } from '../pages/message/edit'
+import { Action } from '../csr_pages/message/edit'
 import { RoutePath } from '../route/path'
 
 export async function onRenderElementToImage(element: HTMLDivElement) {
