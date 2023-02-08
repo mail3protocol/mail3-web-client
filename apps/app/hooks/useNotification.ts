@@ -22,10 +22,19 @@ export function useNotification(shouldReload = true) {
     isSwitchingWebPushNotificationState,
     setIsSwitchingWebPushNotificationState,
   ] = useState(false)
-  const { data: userInfo } = useQuery([Query.GetUserInfo], async () =>
-    api.getUserInfo().then((r) => r.data)
+  const { data: userInfo } = useQuery(
+    [Query.GetUserInfo],
+    async () => api.getUserInfo().then((r) => r.data),
+    {
+      onSuccess(d) {
+        setUserInfo((u) => ({
+          ...u,
+          notification_state: d.web_push_notification_state,
+        }))
+      },
+    }
   )
-  const webPushNotificationState: 'enabled' | 'disabled' =
+  const webPushNotificationState =
     userInfo?.web_push_notification_state || 'disabled'
   const onDeleteFCMToken = useDeleteFCMToken()
   const getFCMToken = useGetFCMToken()
@@ -46,7 +55,6 @@ export function useNotification(shouldReload = true) {
       if (isSwitchingWebPushNotificationState) return
       setIsSwitchingWebPushNotificationState(true)
       try {
-        await onLoadMessagingToken(state)
         await api.switchUserWebPushNotification(
           state === 'enabled' ? 'active' : 'stale'
         )
@@ -54,6 +62,7 @@ export function useNotification(shouldReload = true) {
           ...info,
           notification_state: state,
         }))
+        await onLoadMessagingToken(state)
       } catch (err) {
         console.error(err)
       } finally {
