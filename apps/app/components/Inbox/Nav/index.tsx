@@ -7,7 +7,6 @@ import { useDidMount } from 'hooks'
 import { useAtomValue } from 'jotai'
 import { ReactComponent as InboxSvg } from '../../../assets/inbox.svg'
 import { ReactComponent as SubSvg } from '../../../assets/subscription.svg'
-import { ReactComponent as DevelopersSvg } from '../../../assets/developes.svg'
 import { RoutePath } from '../../../route/path'
 import { RouterLink } from '../../RouterLink'
 import { SubscribeUnreadCountAtom } from '../../Navbar'
@@ -15,7 +14,6 @@ import { SubscribeUnreadCountAtom } from '../../Navbar'
 export enum InboxNavType {
   Inbox = 'Inbox',
   Subscription = 'Subscription',
-  Developers = 'Developers',
 }
 
 interface NavItem {
@@ -73,20 +71,13 @@ export const InboxNav: React.FC<{
     {
       type: InboxNavType.Subscription,
       icon: <SubSvg />,
-      title: t('subscription'),
+      title: t('subscriptions'),
       to: RoutePath.Subscription,
-    },
-    {
-      type: InboxNavType.Developers,
-      icon: <DevelopersSvg />,
-      title: t('developers'),
-      to: RoutePath.Developers,
     },
   ]
   const numberMap = {
     [InboxNavType.Inbox]: 0,
     [InboxNavType.Subscription]: unreadCount,
-    [InboxNavType.Developers]: 0,
   }
   const containerRef = useRef<HTMLDivElement>(null)
   useDidMount(() => {

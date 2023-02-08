@@ -15,7 +15,6 @@ import { MessagePage } from '../csr_pages/message/[id]'
 import { TrashPage } from '../csr_pages/messages/trash'
 import { SpamPage } from '../csr_pages/messages/spam'
 import { SetupSignaturePage } from '../csr_pages/setup/signature'
-import { Developers } from '../csr_pages/developers'
 import { SubscribePage } from '../csr_pages/subscribe'
 import { SubPage } from '../csr_pages/subscription/index'
 import { SubPreviewPage } from '../csr_pages/subscription/preview'
@@ -98,11 +97,6 @@ export const routes: Mail3RouterProps[] = [
     path: RoutePath.NewMessage,
     key: 'new-message',
     element: <NewMessagePage />,
-  },
-  {
-    path: RoutePath.Developers,
-    key: 'developers',
-    element: <Developers />,
   },
   {
     path: RoutePath.Subscription,
