@@ -64,17 +64,11 @@ export function useNotification(shouldReload = true) {
     ]
   )
 
-  const { data: apiUserInfo } = useQuery(
+  const { data: apiUserInfo, refetch } = useQuery(
     [Query.GetUserInfo],
     async () => api.getUserInfo().then((r) => r.data),
     {
       onSuccess(d) {
-        if (
-          permission === 'granted' &&
-          d.web_push_notification_state === 'disabled'
-        ) {
-          onSwitchWebPushNotificationState('enabled')
-        }
         setUserInfo((u) => ({
           ...u,
           notification_state: d.web_push_notification_state,
@@ -96,6 +90,7 @@ export function useNotification(shouldReload = true) {
     await onSwitchWebPushNotificationState(
       newPermission === 'granted' ? 'enabled' : 'disabled'
     )
+    await refetch()
   }
 
   function onSubscribeNavigatorPermissions() {
