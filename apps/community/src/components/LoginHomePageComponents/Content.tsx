@@ -130,9 +130,9 @@ export const Content: React.FC = () => {
         <Heading
           as="h2"
           fontWeight="600"
-          fontSize={{ base: '36px', xxl: '46px', xxxl: '56px' }}
-          lineHeight={{ base: '56px', xxl: '74px', xxxl: '87px' }}
-          mb={{ base: '22px', xxl: '34px' }}
+          fontSize={{ base: '36px', '2xl': '46px', '3xl': '56px' }}
+          lineHeight={{ base: '56px', '2xl': '74px', '3xl': '87px' }}
+          mb={{ base: '22px', '2xl': '34px' }}
           transition="200ms"
         >
           {t('say_hi')}
@@ -140,10 +140,10 @@ export const Content: React.FC = () => {
         <Heading
           as="h1"
           whiteSpace="pre"
-          fontSize={{ base: '48px', xxl: '60px', xxxl: '74px' }}
-          lineHeight={{ base: '56px', xxl: '74px', xxxl: '87px' }}
+          fontSize={{ base: '48px', '2xl': '60px', '3xl': '74px' }}
+          lineHeight={{ base: '56px', '2xl': '74px', '3xl': '87px' }}
           fontWeight="900"
-          mb={{ base: '32px', xxl: '50px' }}
+          mb={{ base: '32px', '2xl': '50px' }}
           transition="200ms"
         >
           {t('title')}

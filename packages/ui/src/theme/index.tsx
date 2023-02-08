@@ -37,8 +37,8 @@ export const theme = extendTheme({
     md: '768px',
     lg: '992px',
     xl: '1200px',
-    xxl: '1400px',
-    xxxl: '1600px',
+    '2xl': '1400px',
+    '3xl': '1600px',
   },
   components: {
     Steps: StepsTheme,

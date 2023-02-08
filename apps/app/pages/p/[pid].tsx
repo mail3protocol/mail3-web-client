@@ -13,7 +13,7 @@ import {
 import { App } from '../../csr_pages/app'
 import { RoutePath } from '../../route/path'
 import { APP_URL } from '../../constants'
-import { SafeHydrate } from '..'
+import { SafeHydrate } from '../../components/SafeHydrate'
 
 const getPreviewImage = (content: string) => {
   let previewImage = `${APP_URL}/images/preview-article.png`
@@ -107,12 +107,12 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         ipfsInfo,
         previewImage,
       },
-      revalidate: 60 * 5, // 5 minutes
+      revalidate: 60 * 60 * 24 * 7, // 7 days
     }
   } catch (error) {
     return {
       props: {
-        errorCode: 404,
+        errorCode: 500,
       },
     }
   }
@@ -151,6 +151,7 @@ export default function SubscriptionArticlePage(
           content="web3 mail, decentralized mail, blockchain mail, privacy, end-to-end encryption"
         />
         <title>{title}</title>
+        <meta property="author" content={props?.userInfo?.nickname} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={articleUrl} />

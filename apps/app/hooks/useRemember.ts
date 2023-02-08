@@ -99,7 +99,8 @@ export function useRemember() {
             if (
               `/${pathname}` !== RoutePath.Subscribe &&
               `/${pathname}` !== RoutePath.SubscriptionArticle &&
-              !isSupportedAddress(pathname)
+              !isSupportedAddress(pathname) &&
+              pathname !== ':id'
             ) {
               navi(RoutePath.Home)
             }
