@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { defer, from, fromEvent, switchMap } from 'rxjs'
 import { useQuery } from 'react-query'
-import { useUpdateAtom } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/utils'
 import {
   getIsEnabledNotification,
@@ -14,7 +14,7 @@ import { Query } from '../api/query'
 
 export function useNotification(shouldReload = true) {
   const api = useAPI()
-  const setUserInfo = useUpdateAtom(userPropertiesAtom)
+  const [userInfo, setUserInfo] = useAtom(userPropertiesAtom)
   const [permission, setPermission] = useState<
     NotificationPermission | PermissionState
   >(getNotificationPermission())
@@ -22,20 +22,6 @@ export function useNotification(shouldReload = true) {
     isSwitchingWebPushNotificationState,
     setIsSwitchingWebPushNotificationState,
   ] = useState(false)
-  const { data: userInfo } = useQuery(
-    [Query.GetUserInfo],
-    async () => api.getUserInfo().then((r) => r.data),
-    {
-      onSuccess(d) {
-        setUserInfo((u) => ({
-          ...u,
-          notification_state: d.web_push_notification_state,
-        }))
-      },
-    }
-  )
-  const webPushNotificationState =
-    userInfo?.web_push_notification_state || 'disabled'
   const onDeleteFCMToken = useDeleteFCMToken()
   const getFCMToken = useGetFCMToken()
 
@@ -78,11 +64,28 @@ export function useNotification(shouldReload = true) {
     ]
   )
 
-  async function onCheckNotificationStatus() {
-    if (permission === 'granted' && webPushNotificationState === 'enabled') {
-      await onSwitchWebPushNotificationState('enabled')
+  const { data: apiUserInfo } = useQuery(
+    [Query.GetUserInfo],
+    async () => api.getUserInfo().then((r) => r.data),
+    {
+      onSuccess(d) {
+        if (
+          permission === 'granted' &&
+          d.web_push_notification_state === 'disabled'
+        ) {
+          onSwitchWebPushNotificationState('enabled')
+        }
+        setUserInfo((u) => ({
+          ...u,
+          notification_state: d.web_push_notification_state,
+        }))
+      },
     }
-  }
+  )
+  const webPushNotificationState =
+    apiUserInfo?.web_push_notification_state ||
+    userInfo?.notification_state ||
+    'disabled'
 
   async function onChangePermission(newPermission: NotificationPermission) {
     setPermission(newPermission)
@@ -116,7 +119,6 @@ export function useNotification(shouldReload = true) {
   }
 
   useEffect(() => {
-    onCheckNotificationStatus()
     const navigatorPermissionsSubscriber = onSubscribeNavigatorPermissions()
     return () => {
       navigatorPermissionsSubscriber?.unsubscribe()
