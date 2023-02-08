@@ -58,6 +58,10 @@ const LogoButton = styled(Button)`
   .triangle {
     margin-left: 3px;
   }
+
+  @media (max-width: 500px) {
+    width: 40px;
+  }
 `
 
 export const SubscribeUnreadCountAtom = atom(0)
