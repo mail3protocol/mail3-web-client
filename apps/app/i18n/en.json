@@ -389,6 +389,8 @@
         "buy": "Buy",
         "cover-already": "Already a Premium member of <b>{{name}}</b>?",
         "switch-wallet": "Switch wallet",
-        "from-year":"From ${{num}}/year"
+        "from-year":"From ${{num}}/year",
+        "notifications": "Enable desktop notifications for getting the latest content.",
+        "enable": "Enable"
     }
 }

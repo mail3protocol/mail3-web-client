@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Center, Flex, Text } from '@chakra-ui/react'
-import { Logo, PageContainer } from 'ui'
+import { Logo } from 'ui'
 import NextLink from 'next/link'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
@@ -13,6 +13,7 @@ import { SubscriptionArticleBody } from '../components/SubscriptionArticleBody'
 import { UserSettingResponse } from '../api'
 import { Query } from '../api/query'
 import { useAPI } from '../hooks/useAPI'
+import { NotificationBar } from '../components/NotificationBar'
 
 const NavArea = styled(Box)`
   width: 100%;
@@ -28,6 +29,7 @@ const Navbar = () => (
     h={`${NAVBAR_HEIGHT}px`}
     alignItems="center"
     justifyContent={['flex-start', 'center', 'center']}
+    p="0 20px"
   >
     <NextLink href={RoutePath.Subscription} passHref>
       <a>
@@ -100,9 +102,10 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
   return (
     <>
       <NavArea style={{ top, position }}>
-        <PageContainer>
+        <Box w="full">
           <Navbar />
-        </PageContainer>
+          <NotificationBar />
+        </Box>
       </NavArea>
       <SubscriptionArticleBody
         address={detail.writer_name}
