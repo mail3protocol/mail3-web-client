@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
+import { useState } from 'react'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { ReactComponent as QuestionSvg } from '../../assets/Question.svg'
@@ -32,10 +33,15 @@ import {
 export const Premium: React.FC = () => {
   const { t } = useTranslation(['premium', 'common'])
   const api = useAPI()
-
+  const [verifyDomainValue, setVerifyDomainValue] = useState('')
   const { data, isLoading } = useQuery(
     [QueryKey.GetUserPremiumSettings],
-    async () => api.getUserPremiumSettings().then((res) => res.data)
+    async () => api.getUserPremiumSettings().then((res) => res.data),
+    {
+      onSuccess(d) {
+        setVerifyDomainValue(d.dot_bit_account)
+      },
+    }
   )
 
   const transComponents = {
@@ -79,7 +85,11 @@ export const Premium: React.FC = () => {
                   components={transComponents}
                 />
               </FormLabel>
-              <PremiumDotBitSubdomainVerifyForm />
+              <PremiumDotBitSubdomainVerifyForm
+                value={verifyDomainValue}
+                onChange={setVerifyDomainValue}
+                isDisabled={isLoading}
+              />
             </FormControl>
             <VStack mt="18px" spacing="10px">
               <Step serialNumber={1} status={StepStatus.Active}>

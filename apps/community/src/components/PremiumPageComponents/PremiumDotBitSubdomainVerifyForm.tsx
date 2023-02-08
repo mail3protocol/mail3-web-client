@@ -6,7 +6,6 @@ import {
   InputGroup,
   InputRightElement,
 } from '@chakra-ui/react'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as CleanInputIconSvg } from '../../assets/CleanInputIcon.svg'
 import { useAPI } from '../../hooks/useAPI'
@@ -19,17 +18,19 @@ export interface PremiumDotBitSubdomainVerifyFormProps {
       | ErrorCode.DOT_BIT_ACCOUNT_NOT_SET_LOWEST_PRICE
       | null
   ) => void
+  value?: string
+  onChange?: (value: string) => void
+  isDisabled?: boolean
 }
 
 export const PremiumDotBitSubdomainVerifyForm: React.FC<
   PremiumDotBitSubdomainVerifyFormProps
-> = ({ onConfirm }) => {
+> = ({ onConfirm, value = '', onChange, isDisabled }) => {
   const { t } = useTranslation(['premium', 'common'])
-  const [inputValue, setInputValue] = useState('')
   const api = useAPI()
   const onVerifyDotBitState = async () => {
     const reason = await api
-      .updateUserPremiumSettings(inputValue)
+      .updateUserPremiumSettings(value)
       .then(() => null)
       .catch((err) => err?.response?.data?.reason)
     onConfirm?.(reason)
@@ -46,15 +47,16 @@ export const PremiumDotBitSubdomainVerifyForm: React.FC<
     >
       <InputGroup w="338px">
         <Input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          isDisabled={isDisabled}
         />
-        {inputValue ? (
+        {value ? (
           <InputRightElement>
             <Button
               variant="unstyled"
               display="inline-flex"
-              onClick={() => setInputValue('')}
+              onClick={() => onChange?.('')}
             >
               <Icon as={CleanInputIconSvg} w="20px" h="20px" my="auto" />
             </Button>
@@ -66,7 +68,7 @@ export const PremiumDotBitSubdomainVerifyForm: React.FC<
         ml="24px"
         fontSize="14px"
         colorScheme="primaryButton"
-        isDisabled={!inputValue}
+        isDisabled={!value || isDisabled}
       >
         {t('confirm')}
       </Button>
