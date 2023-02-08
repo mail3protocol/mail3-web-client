@@ -18,7 +18,7 @@ import { SendButton } from '../../components/NewMessagePageComponents/SendButton
 import { MAIL_CONTENT_IMAGE_QUOTA_KB } from '../../constants/env/config'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-const ABSTRACT_MAX_LENGTH = 156
+const ABSTRACT_MAX_LENGTH = 100
 
 export const NewMessage = () => {
   useDocumentTitle('New Message')
