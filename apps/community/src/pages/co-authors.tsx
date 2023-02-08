@@ -31,7 +31,6 @@ import {
   Box,
   Icon,
 } from '@chakra-ui/react'
-
 import { Button as ButtonUI, IpfsModal } from 'ui'
 import { Trans, useTranslation } from 'react-i18next'
 import { useEffect, useMemo, useState } from 'react'
@@ -235,11 +234,11 @@ export const BindButton: React.FC<{
 
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
-          api={api}
           isOpen={isOpenIpfsModal}
           onClose={onCloseIpfsModal}
           isForceConnectWallet={!isUploadedIpfsKey}
-          onAfterSignature={async () => {
+          onAfterSignature={async (_, key) => {
+            await api.updateMessageEncryptionKey(key)
             onCloseIpfsModal()
             onOpen()
           }}

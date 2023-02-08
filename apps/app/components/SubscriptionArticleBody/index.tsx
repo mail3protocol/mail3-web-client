@@ -27,7 +27,6 @@ import { NAVBAR_HEIGHT } from '../../constants'
 import { SubscriptionArticleProps } from '../../csr_pages/subscriptionArticle'
 import { ShareButtonGroup } from '../ShareButtonGroup'
 
-
 const CONTAINER_MAX_WIDTH = 1064
 
 interface SubscriptionArticleBodyProps

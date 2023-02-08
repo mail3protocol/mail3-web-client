@@ -4,7 +4,6 @@ import { StaticRouter } from 'react-router-dom/server'
 import { GetStaticPropsContext } from 'next'
 import { parse } from 'node-html-parser'
 import Head from 'next/head'
-import { MessageOnChainIdentifierResponse } from 'models'
 import { API } from '../../api'
 import {
   SubscriptionArticle,
@@ -78,14 +77,10 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       }
     }
 
-    let ipfsInfo: MessageOnChainIdentifierResponse | null = null
-
-    try {
-      const { data } = await api.getSubscribePageIpfsInfo(pid)
-      ipfsInfo = data
-    } catch (error) {
-      //
-    }
+    const ipfsInfo = await api
+      .getSubscribePageIpfsInfo(pid)
+      .then((res) => res.data)
+      .catch(() => null)
 
     const userInfo = await Promise.all([
       api.getSubscribeUserInfo(priAddress),

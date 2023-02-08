@@ -155,11 +155,11 @@ export const SendButton: React.FC<SendButtonProps> = ({
       </Button>
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
-          api={api}
           isOpen={isOpenIpfsModal}
           onClose={onCloseIpfsModal}
           isForceConnectWallet={!isUploadedIpfsKey}
-          onAfterSignature={async () => {
+          onAfterSignature={async (_, key) => {
+            await api.updateMessageEncryptionKey(key)
             onCloseIpfsModal()
             await onSendMessage()
           }}

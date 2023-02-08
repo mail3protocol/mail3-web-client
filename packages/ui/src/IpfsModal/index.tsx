@@ -86,23 +86,15 @@ const SigningDialog: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   )
 }
 
-interface Api {
-  updateMessageEncryptionKey: (key: string) => Promise<any>
-}
-
 export const IpfsModal: React.FC<{
   isOpen: boolean
   onClose: () => void
-  api: Api
-  onAfterSignature?: (signatureStr: string) => void
+  onAfterSignature?: (
+    signatureStr: string,
+    signedStringWithSha256: string
+  ) => void
   isForceConnectWallet?: boolean
-}> = ({
-  isOpen,
-  onClose,
-  onAfterSignature,
-  api,
-  isForceConnectWallet = true,
-}) => {
+}> = ({ isOpen, onClose, onAfterSignature, isForceConnectWallet = true }) => {
   const { t } = useTranslation('ipfs_modal')
   const provider = useProvider()
   const signMessage = useSignMessage()
@@ -128,8 +120,7 @@ export const IpfsModal: React.FC<{
       const signedStringWithSha256 = `0x${await digestMessage(signedString, {
         algorithm: 'SHA-256',
       })}`
-      await api.updateMessageEncryptionKey(signedStringWithSha256)
-      onAfterSignature?.(signedString)
+      onAfterSignature?.(signedString, signedStringWithSha256)
     } catch (e) {
       console.error(e)
     } finally {
