@@ -268,7 +268,13 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
             primaryButton: {
               borderColor: `primary.900`,
               color: `primary.900`,
-              _active: { bg: `${colorScheme}.400`, color: 'white' },
+              _active: {
+                bg: `${colorScheme}.400`,
+                color: 'white',
+                _disabled: {
+                  color: `primary.900`,
+                },
+              },
               _hover: { bg: `primary.100` },
             },
           }

@@ -39,10 +39,12 @@ export const Step: React.FC<{
       <Box
         color="secondaryTextColor"
         w="20px"
+        minW="20px"
         h="20px"
         border="1px solid"
         borderColor="currentColor"
         mr="4px"
+        mb="auto"
         lineHeight="18px"
         textAlign="center"
         rounded="20px"

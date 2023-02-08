@@ -422,7 +422,7 @@ export default {
       'This domain name has been opened for sub-domain service',
     waiting_enable_subdomain_price: 'Verify that subdomain prices are set...',
     failed_enable_subdomain_price:
-      "Haven't finished setting the sub-domain price, please click the button below to go to Settings and back Click here to retry",
+      "Haven't finished setting the sub-domain price, please click the button below to go to Settings and back <retry> Click here </retry> to retry",
     enabled_subdomain_price: 'Already completed sub-domain price setting',
     enable: 'Enable',
     disable: 'Disable',

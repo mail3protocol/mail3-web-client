@@ -24,25 +24,43 @@ import { StatusLamp } from '../../components/StatusLamp'
 import { useAPI } from '../../hooks/useAPI'
 import { UserPremiumSettingState } from '../../api/modals/UserPremiumSetting'
 import { QueryKey } from '../../api/QueryKey'
+import { PremiumDotBitSubdomainVerifyForm } from '../../components/PremiumPageComponents'
+import { PremiumSubdomainStep } from '../../components/PremiumPageComponents/PremiumSubdomainStep'
 import {
-  Step,
-  StepStatus,
-  PremiumDotBitSubdomainVerifyForm,
-} from '../../components/PremiumPageComponents'
+  SubDomainState,
+  useVerifyPremiumDotBitDomainState,
+} from '../../hooks/premium/useVerifyPremiumDotBitDomainState'
+import { ErrorCode } from '../../api/ErrorCode'
+import {
+  CONTACT_URL,
+  DAODID_URL,
+  DOT_BIT_URL,
+  SUPER_DID_URL,
+} from '../../constants/env/url'
 
 export const Premium: React.FC = () => {
   const { t } = useTranslation(['premium', 'common'])
   const api = useAPI()
   const [verifyDomainValue, setVerifyDomainValue] = useState('')
-  const { data, isLoading } = useQuery(
+  const [isSetVerifyDomainValue, setIsSetVerifyDomainValue] = useState(false)
+  const [isUpdatingPremiumSetting, setIsUpdatingPremiumSetting] =
+    useState(false)
+  const [subdomainState, setSubdomainState] = useState<
+    SubDomainState | undefined
+  >(undefined)
+  const { data, isLoading, refetch } = useQuery(
     [QueryKey.GetUserPremiumSettings],
     async () => api.getUserPremiumSettings().then((res) => res.data),
     {
       onSuccess(d) {
-        setVerifyDomainValue(d.dot_bit_account)
+        if (!isSetVerifyDomainValue) {
+          setIsSetVerifyDomainValue(true)
+          setVerifyDomainValue(d.dot_bit_account)
+        }
       },
     }
   )
+  const verifyDotBitDomainState = useVerifyPremiumDotBitDomainState()
 
   const transComponents = {
     h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
@@ -50,9 +68,25 @@ export const Premium: React.FC = () => {
     ol: <OrderedList />,
     li: <ListItem fontSize="14px" fontWeight="500" />,
     p: <Text fontSize="14px" fontWeight="500" />,
-    contact: <Link href="/" target="_blank" color="primary.900" />,
-    bit: <Link href="/" target="_blank" color="primary.900" />,
-    superdid: <Link href="/" target="_blank" color="primary.900" />,
+    contact: <Link href={CONTACT_URL} target="_blank" color="primary.900" />,
+    bit: <Link href={DOT_BIT_URL} target="_blank" color="primary.900" />,
+    superdid: <Link href={SUPER_DID_URL} target="_blank" color="primary.900" />,
+  }
+
+  const getDotBitDomainState = async (v?: string) => {
+    if (verifyDotBitDomainState.isLoading) return
+    const r = await verifyDotBitDomainState.onVerify(v || verifyDomainValue)
+    setSubdomainState(r)
+  }
+
+  const onUpdatePremiumSetting = async (state: UserPremiumSettingState) => {
+    if (isUpdatingPremiumSetting) return
+    setIsUpdatingPremiumSetting(true)
+    await api.updateUserPremiumSettings(verifyDomainValue, {
+      state,
+    })
+    await refetch()
+    setIsUpdatingPremiumSetting(false)
   }
 
   return (
@@ -88,45 +122,50 @@ export const Premium: React.FC = () => {
               <PremiumDotBitSubdomainVerifyForm
                 value={verifyDomainValue}
                 onChange={setVerifyDomainValue}
-                isDisabled={isLoading}
+                isDisabled={
+                  isLoading || data?.state === UserPremiumSettingState.Enabled
+                }
+                isLoading={verifyDotBitDomainState.isLoading}
+                onConfirm={() => getDotBitDomainState()}
               />
             </FormControl>
-            <VStack mt="18px" spacing="10px">
-              <Step serialNumber={1} status={StepStatus.Active}>
-                {t('waiting_enable_subdomain')}
-              </Step>
-              <Box
-                w="full"
-                h="24px"
-                transform="translateX(10px)"
-                borderLeft="1px solid"
-                borderColor="uneditable"
-              />
-              <Step serialNumber={2} status={StepStatus.Pending}>
-                {t('waiting_enable_subdomain_price')}
-              </Step>
-            </VStack>
+            <PremiumSubdomainStep
+              state={subdomainState}
+              reloadState={getDotBitDomainState}
+            />
           </Flex>
-          <Flex color="primary.900">
-            <Button
-              variant="outline-rounded"
-              colorScheme="primaryButton"
-              isDisabled
-            >
-              {t('set_up_sales_strategy')}
-            </Button>
-            <Tooltip
-              label={t('set_up_sales_strategy_tips')}
-              placement="top"
-              hasArrow
-            >
-              <Button variant="link" colorScheme="primaryButton" ml="4px">
-                <Icon as={QuestionSvg} w="20px" h="20px" my="auto" />
+          {subdomainState === ErrorCode.DOT_BIT_ACCOUNT_NOT_SET_LOWEST_PRICE ? (
+            <Flex color="primary.900">
+              <Button
+                as="a"
+                href={DAODID_URL}
+                target="_blank"
+                variant="outline-rounded"
+                colorScheme="primaryButton"
+              >
+                {t('set_up_sales_strategy')}
               </Button>
-            </Tooltip>
-          </Flex>
-          {data?.state === UserPremiumSettingState.Disabled ? (
-            <Button variant="solid-rounded" colorScheme="red" type="submit">
+              <Tooltip
+                label={t('set_up_sales_strategy_tips')}
+                placement="top"
+                hasArrow
+              >
+                <Button variant="link" colorScheme="primaryButton" ml="4px">
+                  <Icon as={QuestionSvg} w="20px" h="20px" my="auto" />
+                </Button>
+              </Tooltip>
+            </Flex>
+          ) : null}
+          {data?.state === UserPremiumSettingState.Enabled ? (
+            <Button
+              variant="solid-rounded"
+              colorScheme="red"
+              type="submit"
+              isLoading={isUpdatingPremiumSetting}
+              onClick={() =>
+                onUpdatePremiumSetting(UserPremiumSettingState.Disabled)
+              }
+            >
               {t('disable')}
             </Button>
           ) : (
@@ -134,7 +173,11 @@ export const Premium: React.FC = () => {
               variant="solid-rounded"
               colorScheme="primaryButton"
               type="submit"
-              isDisabled
+              isDisabled={subdomainState !== null}
+              isLoading={isUpdatingPremiumSetting}
+              onClick={() =>
+                onUpdatePremiumSetting(UserPremiumSettingState.Enabled)
+              }
             >
               {t('enable')}
             </Button>

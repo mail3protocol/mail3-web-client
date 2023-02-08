@@ -32,6 +32,15 @@ export const UD_CLIENT_ID =
 export const PREMIUM_DOCS_URL =
   import.meta.env.NEXT_PUBLIC_PREMIUM_DOCS_URL || ''
 
+export const DAODID_URL =
+  import.meta.env.NEXT_PUBLIC_DAODID_URL || 'https://daodid.id/manage/'
+
+export const CONTACT_URL = import.meta.env.NEXT_PUBLIC_CONTACT_URL || ''
+
+export const DOT_BIT_URL = import.meta.env.NEXT_PUBLIC_DOT_BIT_URL || ''
+
+export const SUPER_DID_URL = import.meta.env.NEXT_PUBLIC_SUPER_DID_URL || ''
+
 envStorage.setServerUrl(SERVER_URL)
 
 export const AVATAR_TYPE =
