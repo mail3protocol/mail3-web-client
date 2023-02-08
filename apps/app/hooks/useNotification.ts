@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useAtom } from 'jotai'
 import { defer, from, fromEvent, switchMap } from 'rxjs'
 import { useQuery } from 'react-query'
+import { useUpdateAtom } from 'jotai/utils'
 import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/utils'
 import {
   getIsEnabledNotification,
@@ -10,10 +10,11 @@ import {
 } from './useLogin'
 import { useAPI } from './useAPI'
 import { useDeleteFCMToken, useGetFCMToken } from './useFCMToken'
+import { Query } from '../api/query'
 
 export function useNotification(shouldReload = true) {
   const api = useAPI()
-  const [userInfo, setUserInfo] = useAtom(userPropertiesAtom)
+  const setUserInfo = useUpdateAtom(userPropertiesAtom)
   const [permission, setPermission] = useState<
     NotificationPermission | PermissionState
   >(getNotificationPermission())
@@ -21,8 +22,11 @@ export function useNotification(shouldReload = true) {
     isSwitchingWebPushNotificationState,
     setIsSwitchingWebPushNotificationState,
   ] = useState(false)
+  const { data: userInfo } = useQuery([Query.GetUserInfo], async () =>
+    api.getUserInfo().then((r) => r.data)
+  )
   const webPushNotificationState: 'enabled' | 'disabled' =
-    userInfo?.notification_state || 'disabled'
+    userInfo?.web_push_notification_state || 'disabled'
   const onDeleteFCMToken = useDeleteFCMToken()
   const getFCMToken = useGetFCMToken()
 

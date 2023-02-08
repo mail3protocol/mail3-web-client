@@ -12,4 +12,5 @@ export enum Query {
   SubscribeProfileInit = 'subscribe profile init',
   SubscriptionArticleInit = 'subscription article init',
   SubscriptionDetail = 'subscription article detai',
+  GetUserInfo = 'get_user_info',
 }
