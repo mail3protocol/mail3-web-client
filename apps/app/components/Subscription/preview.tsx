@@ -33,6 +33,7 @@ import { SubFormatDate } from '../../utils'
 import { APP_URL, HOME_URL } from '../../constants'
 import { RoutePath } from '../../route/path'
 import { userPropertiesAtom } from '../../hooks/useLogin'
+import { ShareButtonGroup } from '../ShareButtonGroup'
 
 const Container = styled(Box)`
   width: 64.43%;
@@ -301,7 +302,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         <Flex alignItems="center">
           <Link
             display="flex"
-            href={`${HOME_URL}/${detail?.writer_name}`}
+            href={`${APP_URL}/${detail?.writer_name}`}
             target="_blank"
             alignItems="center"
             onClick={() => {
@@ -319,7 +320,12 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             </Box>
           </Link>
           <Spacer />
-          <SubscribeLink uuid={detail.writer_uuid} />
+          <ShareButtonGroup
+            spacing="5px"
+            shareUrl={`${APP_URL}/p/${id}`}
+            text={detail.subject}
+            iconW="22px"
+          />
         </Flex>
         <Box fontWeight={500} fontSize="12px" color="#6F6F6F" mt="4px">
           {SubFormatDate(detail.created_at)}
@@ -386,9 +392,12 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         </Box>
       </Box>
       <Center className="mobile-button" w="100%" mt="20px">
-        <Link fontWeight="400" fontSize="12px" lineHeight="18px" display="flex">
-          <SubscribeLink uuid={detail.writer_uuid} />
-        </Link>
+        <ShareButtonGroup
+          spacing="20px"
+          shareUrl={`${APP_URL}/p/${id}`}
+          text={detail.subject}
+          iconW="22px"
+        />
       </Center>
     </Wrap>
   )

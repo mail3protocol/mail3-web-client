@@ -147,7 +147,7 @@ export default function SubscribeProfilePage(props: Props) {
           name="keywords"
           content="web3 mail, decentralized mail, blockchain mail, privacy, end-to-end encryption"
         />
-        <title>{nickname}</title>
+        <title>Mail3: Subscription Page</title>
         <meta property="og:title" content={nickname} />
         <meta property="og:description" content={userSettings?.description} />
         <meta property="og:image" content={previewImage} />

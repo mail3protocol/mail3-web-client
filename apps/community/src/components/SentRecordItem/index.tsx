@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Grid,
+  Link,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -26,9 +27,10 @@ export const SentRecordItem: React.FC<{
   const toast = useToast()
   const { t } = useTranslation('common')
 
+  const articleUrl = `${APP_URL}/p/${uuid}`
+
   return (
     <Grid
-      as="a"
       h="inherit"
       gridTemplateColumns="120px 1fr 120px"
       alignItems="center"
@@ -40,16 +42,19 @@ export const SentRecordItem: React.FC<{
       <Box fontSize="12px" color="secondaryTitleColor" fontWeight="500">
         {dayjs(time).format('YYYY-MM-DD')}
       </Box>
-      <Box
+      <Link
         fontSize="16px"
         overflow="hidden"
         noOfLines={1}
         textOverflow="ellipsis"
         display="block"
         fontWeight="600"
+        target="_blank"
+        href={articleUrl}
+        lineHeight="48px"
       >
         {subject}
-      </Box>
+      </Link>
       <Center
         fontSize="12px"
         textAlign="right"
@@ -80,7 +85,7 @@ export const SentRecordItem: React.FC<{
                   color: '#A1A2F4',
                 }}
                 onClick={async () => {
-                  await copyText(`${APP_URL}/p/${uuid}`)
+                  await copyText(articleUrl)
                   toast(t('copy_successfully'), {
                     status: 'success',
                     alertProps: { colorScheme: 'green' },
