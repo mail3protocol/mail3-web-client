@@ -3,12 +3,16 @@ import { Box, Center, Flex, Text } from '@chakra-ui/react'
 import { Logo, PageContainer } from 'ui'
 import NextLink from 'next/link'
 import styled from '@emotion/styled'
+import { useQuery } from 'react-query'
 import { Subscription, MessageOnChainIdentifierResponse } from 'models'
 import { ConfirmDialog, useDynamicSticky } from 'hooks'
+import axios from 'axios'
 import { NAVBAR_HEIGHT } from '../constants'
 import { RoutePath } from '../route/path'
 import { SubscriptionArticleBody } from '../components/SubscriptionArticleBody'
 import { UserSettingResponse } from '../api'
+import { Query } from '../api/query'
+import { useAPI } from '../hooks/useAPI'
 
 const NavArea = styled(Box)`
   width: 100%;
@@ -55,6 +59,44 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
 ) => {
   const { top, position } = useDynamicSticky({ navbarHeight: NAVBAR_HEIGHT })
   const { articleId, detail, uuid, priAddress, userInfo, ipfsInfo } = props
+  const api = useAPI()
+
+  const { data: info } = useQuery(
+    [Query.SubscriptionArticleInit, priAddress],
+    async () => {
+      const res = await Promise.all([
+        api.getSubscribeUserInfo(priAddress),
+        api.getUserSetting(priAddress),
+      ]).then((r) => ({
+        ...r[0].data,
+        ...r[1].data,
+      }))
+      return res
+    },
+    {
+      initialData: userInfo,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess(data) {
+        try {
+          const shouldRevalidate =
+            JSON.stringify(data) !== JSON.stringify(userInfo)
+          if (shouldRevalidate) {
+            axios
+              .post(`${location.origin}/api/revalidate/subscribe/page`, {
+                data: {
+                  id: articleId,
+                },
+              })
+              .catch(Boolean)
+          }
+        } catch (error) {
+          //
+        }
+      },
+    }
+  )
 
   return (
     <>
@@ -70,7 +112,7 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
         ipfsInfo={ipfsInfo}
         articleId={articleId}
         detail={detail}
-        userInfo={userInfo}
+        userInfo={info || userInfo}
       />
       <ConfirmDialog />
     </>

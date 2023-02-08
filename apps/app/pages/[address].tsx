@@ -46,10 +46,29 @@ export const getStaticProps = async ({
           },
         }
       }
-      const [{ data: userInfo }, { data: userSettings }] = await Promise.all([
+      const [
+        { data: userInfo, status: userInfoStatus },
+        { data: userSettings, status: userSettingsStatus },
+      ] = await Promise.all([
         api.getSubscribeUserInfo(priAddress),
         api.getUserSetting(priAddress),
       ])
+
+      if (userInfoStatus !== 200) {
+        return {
+          props: {
+            statusCode: userInfoStatus,
+          },
+        }
+      }
+
+      if (userSettingsStatus !== 200) {
+        return {
+          props: {
+            statusCode: userSettingsStatus,
+          },
+        }
+      }
 
       return {
         props: {
@@ -62,12 +81,12 @@ export const getStaticProps = async ({
             address,
           },
         },
-        revalidate: 60 * 60 * 1, // 1 hour
+        revalidate: 60 * 60 * 24 * 7, // 7 days
       }
     } catch (error) {
       return {
         props: {
-          statusCode: 404,
+          statusCode: 500,
         },
       }
     }
@@ -87,7 +106,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  statusCode: 200 | 404
+  statusCode: number
   data?: SubscribeProfileDataProps
 }
 
@@ -96,8 +115,7 @@ export default function SubscribeProfilePage(props: Props) {
   const userInfo = data?.userInfo
   const userSettings = data?.userSettings
   const address = data?.address || ''
-  const previewImage =
-    userSettings?.banner_url || 'https://mail3.me/preview2.png'
+  const previewImage = userSettings?.banner_url || '/profile-preview.png'
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {
@@ -112,7 +130,7 @@ export default function SubscribeProfilePage(props: Props) {
     return ''
   }, [userInfo])
 
-  if (statusCode === 404 || !data) {
+  if (statusCode !== 200 || !data) {
     return <ErrorPage statusCode={statusCode} />
   }
   return (
