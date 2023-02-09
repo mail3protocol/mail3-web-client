@@ -98,12 +98,13 @@ export function useNotification(shouldReload = true) {
 
   const openNotification = useCallback(async () => {
     // eslint-disable-next-line compat/compat
-    if (window.Notification.permission === 'default') {
+    const p = window.Notification.permission
+    if (p === 'default') {
       // eslint-disable-next-line compat/compat
-      await window.Notification.requestPermission()
-      return
+      return window.Notification.requestPermission()
     }
     await onSwitchWebPushNotificationState('enabled')
+    return p
   }, [onSwitchWebPushNotificationState])
 
   function onSubscribeNavigatorPermissions() {
