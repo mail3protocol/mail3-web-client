@@ -4,6 +4,7 @@ import { StaticRouter } from 'react-router-dom/server'
 import { GetStaticPropsContext } from 'next'
 import { parse } from 'node-html-parser'
 import Head from 'next/head'
+import axios from 'axios'
 import { API } from '../../api'
 import {
   SubscriptionArticle,
@@ -13,6 +14,7 @@ import { App } from '../../csr_pages/app'
 import { RoutePath } from '../../route/path'
 import { APP_URL } from '../../constants'
 import { SafeHydrate } from '../../components/SafeHydrate'
+import { getLogger, LoggerLevel } from '../../logger'
 
 const getPreviewImage = (content: string) => {
   let previewImage = `${APP_URL}/images/preview-article.png`
@@ -37,7 +39,9 @@ const getPreviewImage = (content: string) => {
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
+  const logger = getLogger(LoggerLevel.Page)
   const pid = params?.pid
+
   if (typeof pid !== 'string') {
     return {
       props: {
@@ -99,6 +103,14 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       revalidate: 60 * 60 * 24 * 7, // 7 days
     }
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      logger.error(error.toJSON())
+      return {
+        props: {
+          errorCode: error.response?.status || 500,
+        },
+      }
+    }
     return {
       props: {
         errorCode: 500,

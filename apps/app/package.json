@@ -69,6 +69,7 @@
         "file-loader": "^6.2.0",
         "jsdom": "^19.0.0",
         "next-transpile-modules": "^10.0.0",
+        "pino": "^8.9.0",
         "scripts": "*",
         "tsconfig": "*",
         "typescript": "4.6.3",

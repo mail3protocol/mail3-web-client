@@ -2,6 +2,7 @@ import ErrorPage from 'next/error'
 import { GetStaticPropsContext, GetStaticPropsResult } from 'next'
 import React, { useMemo } from 'react'
 import { StaticRouter } from 'react-router-dom/server'
+import axios from 'axios'
 import Head from 'next/head'
 import {
   isEthAddress,
@@ -14,11 +15,14 @@ import { SubscribeProfile } from '../csr_pages/subscribeProfile'
 import { App } from '../csr_pages/app'
 import { API } from '../api'
 import { SafeHydrate } from '../components/SafeHydrate'
+import { getLogger, LoggerLevel } from '../logger'
 
 export const getStaticProps = async ({
   params,
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const address = params?.address
+  const logger = getLogger(LoggerLevel.Profile)
+  const revalidate = 60 * 5 // 5 mins
   if (typeof address !== 'string') {
     return {
       props: {
@@ -29,21 +33,23 @@ export const getStaticProps = async ({
   if (isSupportedAddress(address)) {
     const api = new API()
     try {
-      const [priAddress, uuid] = await Promise.all([
-        isPrimitiveEthAddress(address)
-          ? address
-          : api
-              .getPrimitiveAddress(address)
-              .then((r) => (r.status === 200 ? r.data.eth_address : '')),
-        api
+      const priAddress = isPrimitiveEthAddress(address)
+        ? address
+        : await api
+            .getPrimitiveAddress(address)
+            .then((r) => (r.status === 200 ? r.data.eth_address : ''))
+
+      const uuid =
+        (await api
           .checkIsProject(address)
-          .then((r) => (r.status === 200 ? r.data.uuid : '')),
-      ])
+          .then((r) => (r.status === 200 ? r.data.uuid : ''))) || ''
+
       if (!priAddress || !uuid) {
         return {
           props: {
             statusCode: 404,
           },
+          revalidate,
         }
       }
       const [
@@ -59,6 +65,7 @@ export const getStaticProps = async ({
           props: {
             statusCode: userInfoStatus,
           },
+          revalidate,
         }
       }
 
@@ -67,6 +74,7 @@ export const getStaticProps = async ({
           props: {
             statusCode: userSettingsStatus,
           },
+          revalidate,
         }
       }
 
@@ -81,13 +89,24 @@ export const getStaticProps = async ({
             address,
           },
         },
-        revalidate: 60 * 5, // 5 mins
+        revalidate,
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        logger.error(error)
+        return {
+          props: {
+            statusCode: error.response?.status || 500,
+          },
+          revalidate,
+        }
+      }
+
       return {
         props: {
           statusCode: 500,
         },
+        revalidate,
       }
     }
   }
@@ -95,6 +114,7 @@ export const getStaticProps = async ({
     props: {
       statusCode: 404,
     },
+    notFound: true,
   }
 }
 
