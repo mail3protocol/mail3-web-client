@@ -70,6 +70,7 @@ export const getStaticProps = async ({
           props: {
             statusCode: userSettingsStatus,
           },
+          revalidate: 60 * 5, // 5 mins
         }
       }
 
@@ -93,6 +94,7 @@ export const getStaticProps = async ({
           props: {
             statusCode: error.response?.status || 500,
           },
+          revalidate: 60 * 5, // 5 mins
         }
       }
 
