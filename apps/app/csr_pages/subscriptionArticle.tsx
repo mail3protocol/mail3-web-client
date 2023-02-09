@@ -1,19 +1,20 @@
 import React from 'react'
-import { Box, Center, Flex, Text } from '@chakra-ui/react'
-import { Logo } from 'ui'
+import { Box, Center, Flex, Spacer } from '@chakra-ui/react'
+import { LogoSubscription } from 'ui'
 import NextLink from 'next/link'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { Subscription } from 'models'
 import { ConfirmDialog, useDynamicSticky } from 'hooks'
 import axios from 'axios'
-import { NAVBAR_HEIGHT } from '../constants'
+import { APP_URL, NAVBAR_HEIGHT } from '../constants'
 import { RoutePath } from '../route/path'
 import { SubscriptionArticleBody } from '../components/SubscriptionArticleBody'
 import { UserSettingResponse } from '../api'
 import { Query } from '../api/query'
 import { useAPI } from '../hooks/useAPI'
 import { NotificationBar } from '../components/NotificationBar'
+import { ShareButtonGroup } from '../components/ShareButtonGroup'
 
 const NavArea = styled(Box)`
   width: 100%;
@@ -24,7 +25,10 @@ const NavArea = styled(Box)`
   z-index: 9;
 `
 
-const Navbar = () => (
+const Navbar: React.FC<{ shareUrl: string; subject: string }> = ({
+  shareUrl,
+  subject,
+}) => (
   <Flex
     h={`${NAVBAR_HEIGHT}px`}
     alignItems="center"
@@ -34,13 +38,17 @@ const Navbar = () => (
     <NextLink href={RoutePath.Subscription} passHref>
       <a>
         <Center>
-          <Logo textProps={{ color: '#231815' }} isHiddenText />
-          <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="8px">
-            Subscription
-          </Text>
+          <LogoSubscription />
         </Center>
       </a>
     </NextLink>
+    <Spacer />
+    <ShareButtonGroup
+      spacing="10px"
+      shareUrl={shareUrl}
+      text={subject}
+      iconW="16px"
+    />
   </Flex>
 )
 
@@ -99,11 +107,13 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
     }
   )
 
+  const shareUrl = `${APP_URL}/p/${articleId}`
+
   return (
     <>
       <NavArea style={{ top, position }}>
         <Box w="full">
-          <Navbar />
+          <Navbar shareUrl={shareUrl} subject={detail.subject} />
           <NotificationBar />
         </Box>
       </NavArea>
@@ -113,6 +123,7 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
         priAddress={priAddress}
         articleId={articleId}
         detail={detail}
+        shareUrl={shareUrl}
         userInfo={info || userInfo}
       />
       <ConfirmDialog />

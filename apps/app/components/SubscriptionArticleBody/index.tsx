@@ -36,6 +36,7 @@ const CONTAINER_MAX_WIDTH = 1064
 interface SubscriptionArticleBodyProps
   extends Omit<SubscriptionArticleProps, 'previewImage'> {
   address: string
+  shareUrl: string
 }
 
 const PageContainer = styled(Box)`
@@ -59,7 +60,7 @@ const CoverContainer = styled(Center)`
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({ address, priAddress, articleId, detail, uuid, userInfo }) => {
+> = ({ address, priAddress, articleId, detail, uuid, userInfo, shareUrl }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
 
@@ -67,10 +68,6 @@ export const SubscriptionArticleBody: React.FC<
   const isMobile = useBreakpointValue({ base: true, md: false })
   const isAuth = useIsAuthenticated()
 
-  const shareUrl: string = useMemo(
-    () => `${APP_URL}/p/${articleId}`,
-    [articleId]
-  )
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
 
   useEffect(() => {
