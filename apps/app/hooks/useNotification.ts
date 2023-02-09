@@ -3,10 +3,27 @@ import { defer, from, fromEvent, switchMap } from 'rxjs'
 import { useQuery } from 'react-query'
 import { useAtom } from 'jotai'
 import { useToast } from 'hooks'
+import { atomWithStorage } from 'jotai/utils'
 import { IS_CHROME, IS_FIREFOX, IS_MOBILE } from '../constants/utils'
 import { getNotificationPermission, userPropertiesAtom } from './useLogin'
 import { useAPI } from './useAPI'
 import { useDeleteFCMToken, useGetFCMToken } from './useFCMToken'
+
+const isCheckedTokenStatusAtom = atomWithStorage(
+  'is_checked_notification_token_status',
+  false,
+  {
+    removeItem(key: string) {
+      return sessionStorage.removeItem(key)
+    },
+    getItem(key) {
+      return sessionStorage.getItem(key) === 'true'
+    },
+    setItem(key, value) {
+      return sessionStorage.setItem(key, value ? 'true' : 'false')
+    },
+  }
+)
 
 export function useNotification(shouldReload = true) {
   const { data: isBrowserSupport, isLoading: isCheckingBrowserSupport } =
@@ -37,6 +54,9 @@ export function useNotification(shouldReload = true) {
   const deleteFCMToken = useDeleteFCMToken()
   const getFCMToken = useGetFCMToken()
   const toast = useToast()
+  const [isCheckedTokenStatus, setIsCheckedTokenStatus] = useAtom(
+    isCheckedTokenStatusAtom
+  )
 
   const onSwitchWebPushNotificationState = useCallback(
     async (state: 'enabled' | 'disabled') => {
@@ -110,6 +130,8 @@ export function useNotification(shouldReload = true) {
   }
 
   async function checkTokenStatus() {
+    if (isCheckedTokenStatus) return
+    setIsCheckedTokenStatus(true)
     const { createStore, get, keys } = await import('idb-keyval')
     const store = createStore(
       'firebase-messaging-database',
