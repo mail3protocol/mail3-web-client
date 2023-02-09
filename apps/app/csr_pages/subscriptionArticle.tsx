@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Center, Flex, Spacer } from '@chakra-ui/react'
+import { Box, Flex, Spacer } from '@chakra-ui/react'
 import { LogoSubscription } from 'ui'
 import NextLink from 'next/link'
 import styled from '@emotion/styled'
@@ -37,18 +37,18 @@ const Navbar: React.FC<{ shareUrl: string; subject: string }> = ({
   >
     <NextLink href={RoutePath.Subscription} passHref>
       <a>
-        <Center>
-          <LogoSubscription />
-        </Center>
+        <LogoSubscription />
       </a>
     </NextLink>
     <Spacer />
-    <ShareButtonGroup
-      spacing="10px"
-      shareUrl={shareUrl}
-      text={subject}
-      iconW="16px"
-    />
+    <Box display={{ base: 'block', md: 'none' }}>
+      <ShareButtonGroup
+        spacing="10px"
+        shareUrl={shareUrl}
+        text={subject}
+        iconW="16px"
+      />
+    </Box>
   </Flex>
 )
 
