@@ -133,6 +133,7 @@ export function useNotification(shouldReload = true) {
   async function checkTokenStatus() {
     if (isCheckedTokenStatus) return
     setIsCheckedTokenStatus(true)
+    if (webPushNotificationState === 'disabled') return
     const { createStore, get, keys } = await import('idb-keyval')
     const store = createStore(
       'firebase-messaging-database',
