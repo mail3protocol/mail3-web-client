@@ -2,6 +2,7 @@ import ErrorPage from 'next/error'
 import { GetStaticPropsContext, GetStaticPropsResult } from 'next'
 import React, { useMemo } from 'react'
 import { StaticRouter } from 'react-router-dom/server'
+import axios from 'axios'
 import Head from 'next/head'
 import {
   isEthAddress,
@@ -14,11 +15,13 @@ import { SubscribeProfile } from '../csr_pages/subscribeProfile'
 import { App } from '../csr_pages/app'
 import { API } from '../api'
 import { SafeHydrate } from '../components/SafeHydrate'
+import { getLogger, LoggerLevel } from '../logger'
 
 export const getStaticProps = async ({
   params,
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const address = params?.address
+  const logger = getLogger(LoggerLevel.Profile)
   if (typeof address !== 'string') {
     return {
       props: {
@@ -84,6 +87,15 @@ export const getStaticProps = async ({
         revalidate: 60 * 5, // 5 mins
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        logger.error(error)
+        return {
+          props: {
+            statusCode: error.response?.status || 500,
+          },
+        }
+      }
+
       return {
         props: {
           statusCode: 500,
