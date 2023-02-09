@@ -3,7 +3,7 @@ import {
   Center,
   Circle,
   Flex,
-  Spacer,
+  Icon,
   Spinner,
   Text,
   useMediaQuery,
@@ -18,6 +18,7 @@ import { useInfiniteQuery } from 'react-query'
 import { TrackEvent, useDidMount, useTrackClick } from 'hooks'
 import { Avatar } from 'ui'
 import { truncateAddress } from 'shared'
+import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { useAPI } from '../../hooks/useAPI'
 import { SubPreviewIdAtom, SubPreviewIsOpenAtom } from './preview'
 import { SubWrapEmptyAtom, SubWrapIsloadingAtom } from './wrap'
@@ -113,14 +114,17 @@ export const SubListItem: FC<SubListItemProps> = ({
           fontSize="12px"
           fontWeight={400}
           color="#6F6F6F"
-          lineHeight="26px"
+          lineHeight="20px"
           whiteSpace="nowrap"
+          mt="10px"
         >
-          <Text noOfLines={1} w="120px">
+          <Text noOfLines={1} maxW="120px">
             {truncateAddress(writer)}
           </Text>
-          <Spacer />
-          <Box>{SubFormatDate(time)}</Box>
+          <Box ml="8px">{SubFormatDate(time)}</Box>
+          <Center ml="8px">
+            <Icon as={SvgDiamond} w="16px" h="16px" mt="2px" />
+          </Center>
         </Flex>
       </Box>
     </SubListItemWrap>
