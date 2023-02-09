@@ -158,50 +158,70 @@ export const SubscriptionArticleBody: React.FC<
           </Center>
 
           {isMobile ? (
-            <Link
-              display="flex"
-              href={`${APP_URL}/${address}`}
-              target="_blank"
-              alignItems="center"
-              onClick={() => {
-                // trackAvatar()
-              }}
-              mt="24px"
-              w="100%"
-            >
-              <Avatar w="42px" h="42px" address={address} borderRadius="50%" />
-              <Box ml="4px" wordBreak="break-all">
-                <Box fontWeight={700} fontSize="14px">
-                  {nickname}
+            <Flex mt="24px">
+              <Link
+                display="flex"
+                href={`${APP_URL}/${address}`}
+                target="_blank"
+                alignItems="center"
+                onClick={() => {
+                  // trackAvatar()
+                }}
+                w="100%"
+              >
+                <Avatar
+                  w="42px"
+                  h="42px"
+                  address={address}
+                  borderRadius="50%"
+                />
+                <Box ml="4px" wordBreak="break-all" maxW="180px">
+                  <Box fontWeight={700} fontSize="14px">
+                    {nickname}
+                  </Box>
+                  <Box fontWeight={400} fontSize="12px" color="#979797">
+                    {truncateMailAddress(mailAddress)}
+                  </Box>
                 </Box>
-                <Box fontWeight={400} fontSize="12px" color="#979797">
-                  {truncateMailAddress(mailAddress)}
-                </Box>
-              </Box>
-            </Link>
+              </Link>
+              <Spacer />
+              <Flex
+                fontWeight={500}
+                fontSize="12px"
+                color="#6F6F6F"
+                lineHeight="22px"
+                whiteSpace="nowrap"
+                alignItems="flex-end"
+              >
+                {SubFormatDate(detail.created_at, 'YYYY-MM-DD HH:mm')}
+              </Flex>
+            </Flex>
           ) : null}
 
-          <Flex m="13px 0" align="center">
-            <Box
-              fontWeight={500}
-              fontSize="14px"
-              color="#6F6F6F"
-              mt="4px"
-              lineHeight="18px"
-            >
-              {SubFormatDate(detail.created_at, 'YYYY / MMM D / h:mm a')}
-            </Box>
-            <Spacer />
-            <ShareButtonGroup
-              spacing="5px"
-              shareUrl={shareUrl}
-              text={detail.subject}
-              iconW="22px"
-            />
-          </Flex>
+          {!isMobile ? (
+            <Flex mt="13px" align="center">
+              <Box
+                fontWeight={500}
+                fontSize="14px"
+                color="#6F6F6F"
+                mt="4px"
+                lineHeight="18px"
+              >
+                {SubFormatDate(detail.created_at, 'YYYY / MMM D / h:mm a')}
+              </Box>
+              <Spacer />
+              <ShareButtonGroup
+                spacing="5px"
+                shareUrl={shareUrl}
+                text={detail.subject}
+                iconW="22px"
+              />
+            </Flex>
+          ) : null}
 
           {detail?.summary ? (
             <Box
+              mt="13px"
               background="#EBEBEB"
               borderRadius="12px"
               p="15px"
