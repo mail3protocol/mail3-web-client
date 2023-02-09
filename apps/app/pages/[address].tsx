@@ -106,6 +106,7 @@ export const getStaticProps = async ({
         props: {
           statusCode: 500,
         },
+        revalidate,
       }
     }
   }
@@ -113,6 +114,7 @@ export const getStaticProps = async ({
     props: {
       statusCode: 404,
     },
+    notFound: true,
   }
 }
 
