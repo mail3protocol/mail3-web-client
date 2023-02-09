@@ -41,6 +41,7 @@ const getPreviewImage = (content: string) => {
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const logger = getLogger(LoggerLevel.Page)
   const pid = params?.pid
+
   if (typeof pid !== 'string') {
     return {
       props: {

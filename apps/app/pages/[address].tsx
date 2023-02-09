@@ -22,6 +22,7 @@ export const getStaticProps = async ({
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const address = params?.address
   const logger = getLogger(LoggerLevel.Profile)
+  const revalidate = 60 * 5 // 5 mins
   if (typeof address !== 'string') {
     return {
       props: {
@@ -32,21 +33,23 @@ export const getStaticProps = async ({
   if (isSupportedAddress(address)) {
     const api = new API()
     try {
-      const [priAddress, uuid] = await Promise.all([
-        isPrimitiveEthAddress(address)
-          ? address
-          : api
-              .getPrimitiveAddress(address)
-              .then((r) => (r.status === 200 ? r.data.eth_address : '')),
-        api
+      const priAddress = isPrimitiveEthAddress(address)
+        ? address
+        : await api
+            .getPrimitiveAddress(address)
+            .then((r) => (r.status === 200 ? r.data.eth_address : ''))
+
+      const uuid =
+        (await api
           .checkIsProject(address)
-          .then((r) => (r.status === 200 ? r.data.uuid : '')),
-      ])
+          .then((r) => (r.status === 200 ? r.data.uuid : ''))) || ''
+
       if (!priAddress || !uuid) {
         return {
           props: {
             statusCode: 404,
           },
+          revalidate,
         }
       }
       const [
@@ -62,6 +65,7 @@ export const getStaticProps = async ({
           props: {
             statusCode: userInfoStatus,
           },
+          revalidate,
         }
       }
 
@@ -70,7 +74,7 @@ export const getStaticProps = async ({
           props: {
             statusCode: userSettingsStatus,
           },
-          revalidate: 60 * 5, // 5 mins
+          revalidate,
         }
       }
 
@@ -85,7 +89,7 @@ export const getStaticProps = async ({
             address,
           },
         },
-        revalidate: 60 * 5, // 5 mins
+        revalidate,
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -94,7 +98,7 @@ export const getStaticProps = async ({
           props: {
             statusCode: error.response?.status || 500,
           },
-          revalidate: 60 * 5, // 5 mins
+          revalidate,
         }
       }
 
