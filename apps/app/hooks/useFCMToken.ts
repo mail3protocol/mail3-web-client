@@ -5,8 +5,10 @@ import {
   keys as getIndexedDbKeys,
 } from 'idb-keyval'
 import { atom, useAtom } from 'jotai'
+import { AxiosError } from 'axios'
 import { useAPI } from './useAPI'
 import { FirebaseUtils } from '../utils/firebase'
+import { ErrorCode } from '../api/ErrorCode'
 
 export async function getCurrentToken() {
   const FirebaseMessagingStore = createStore(
@@ -70,7 +72,8 @@ export function useDeleteFCMToken() {
 export function useGetFCMToken() {
   const api = useAPI()
   const { initializeFirebaseUtils } = useFirebaseUtils()
-  return useCallback(async () => {
+
+  const getGCMToken = useCallback(async () => {
     const token = await initializeFirebaseUtils().then((init) =>
       init.getFirebaseMessagingToken()
     )
@@ -84,4 +87,19 @@ export function useGetFCMToken() {
     await api.updateRegistrationToken(token, 'active')
     return token
   }, [api, initializeFirebaseUtils])
+
+  return useCallback(async () => {
+    try {
+      return getGCMToken()
+    } catch (err) {
+      if (
+        (err as AxiosError)?.response?.data?.reason ===
+        ErrorCode.DUPLICATED_REGISTRATION_TOKEN
+      ) {
+        await (await initializeFirebaseUtils()).deleteFirebaseMessagingToken()
+        return getGCMToken()
+      }
+      throw err
+    }
+  }, [getGCMToken])
 }
