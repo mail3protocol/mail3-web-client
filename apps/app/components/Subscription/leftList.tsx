@@ -75,7 +75,14 @@ export const SubListItem: FC<SubListItemProps> = ({
   data,
   isChoose,
 }) => {
-  const { uuid, seen, subject, writer, created_at: time } = data
+  const {
+    uuid,
+    seen,
+    subject,
+    writer,
+    created_at: time,
+    message_type: type,
+  } = data
 
   return (
     <SubListItemWrap
@@ -122,9 +129,11 @@ export const SubListItem: FC<SubListItemProps> = ({
             {truncateAddress(writer)}
           </Text>
           <Box ml="8px">{SubFormatDate(time)}</Box>
-          <Center ml="8px">
-            <Icon as={SvgDiamond} w="16px" h="16px" mt="2px" />
-          </Center>
+          {type === Subscription.MeesageType.Premium ? (
+            <Center ml="8px">
+              <Icon as={SvgDiamond} w="16px" h="16px" mt="2px" />
+            </Center>
+          ) : null}
         </Flex>
       </Box>
     </SubListItemWrap>

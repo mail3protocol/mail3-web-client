@@ -18,7 +18,7 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
@@ -45,7 +45,7 @@ const Container = styled(Box)`
   position: relative;
 
   .info {
-    margin-top: 18px;
+    margin-top: 8px;
   }
 
   .mobile-button {
@@ -263,7 +263,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   if (_id) {
     id = _id
   }
-  const { data, isLoading } = useQuery<Subscription.MessageDetailResp>(
+  const { data: detail, isLoading } = useQuery<Subscription.MessageDetailResp>(
     ['subscriptionDetail', id],
     async () => {
       const messageDetail = await api.SubscriptionMessageDetail(id)
@@ -276,8 +276,6 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       enabled: !!id,
     }
   )
-
-  const detail = useMemo(() => data, [data])
 
   if (isLoading) {
     return (
@@ -298,6 +296,9 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       </Wrap>
     )
   }
+
+  const isPremium = detail?.message_type === Subscription.MeesageType.Premium
+  const isNeedPay = isPremium && !detail.content
 
   return (
     <Wrap isSingleMode={isSingleMode}>
@@ -368,23 +369,25 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           {detail?.subject || 'no subject'}
         </Text>
         <Flex align="center" className="info">
-          <Center
-            w="112px"
-            h={{ base: '18px', md: '24px' }}
-            background="#FFF6D6"
-            borderRadius="20px"
-          >
-            <Icon as={SvgDiamond} w="12px" h="12px" />
-            <Box
-              fontStyle="italic"
-              fontWeight="600"
-              fontSize="12px"
-              lineHeight="14px"
-              color="#FFA800"
+          {isPremium ? (
+            <Center
+              w="112px"
+              h={{ base: '18px', md: '24px' }}
+              background="#FFF6D6"
+              borderRadius="20px"
             >
-              {t('premium-only')}
-            </Box>
-          </Center>
+              <Icon as={SvgDiamond} w="12px" h="12px" />
+              <Box
+                fontStyle="italic"
+                fontWeight="600"
+                fontSize="12px"
+                lineHeight="14px"
+                color="#FFA800"
+              >
+                {t('premium-only')}
+              </Box>
+            </Center>
+          ) : null}
           <Spacer />
           <Box
             fontSize="12px"
@@ -416,21 +419,25 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             </Box>
           ) : null}
 
-          <BuyPremium />
+          {isNeedPay ? <BuyPremium /> : null}
 
-          <Box pt={{ base: '16px', md: '30px' }}>
-            <RenderHTML
-              html={detail?.content}
-              attachments={[]}
-              messageId=""
-              from={{ name: '', address: '' }}
-              shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
+          {detail?.content ? (
+            <Box pt={{ base: '16px', md: '30px' }}>
+              <RenderHTML
+                html={detail.content}
+                attachments={[]}
+                messageId=""
+                from={{ name: '', address: '' }}
+                shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
+              />
+            </Box>
+          ) : null}
+          <Box mt="20px">
+            <EchoIframe
+              targetUri={`${APP_URL}/${RoutePath.Subscription}/${id}`}
+              mailAddress={userProps?.defaultAddress}
             />
           </Box>
-          <EchoIframe
-            targetUri={`${APP_URL}/${RoutePath.Subscription}/${id}`}
-            mailAddress={userProps?.defaultAddress}
-          />
         </Box>
       </Box>
       <Center className="mobile-button" w="100%" mt="20px">
