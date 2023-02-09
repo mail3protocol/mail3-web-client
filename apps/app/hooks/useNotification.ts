@@ -131,7 +131,12 @@ export function useNotification(shouldReload = true) {
   }
 
   async function checkTokenStatus() {
-    if (isCheckedTokenStatus) return
+    if (
+      isCheckedTokenStatus ||
+      webPushNotificationState === 'disabled' ||
+      window.Notification.permission !== 'granted'
+    )
+      return
     setIsCheckedTokenStatus(true)
     if (webPushNotificationState === 'disabled') return
     const { createStore, get, keys } = await import('idb-keyval')
