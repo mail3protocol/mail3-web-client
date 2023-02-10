@@ -33,6 +33,8 @@ import { QueryKey } from '../../api/QueryKey'
 import { useAPI } from '../../hooks/useAPI'
 import { UserPremiumSettingState } from '../../api/modals/UserPremiumSetting'
 
+const ABSTRACT_MAX_LENGTH = 100
+
 export const NewMessage = () => {
   useDocumentTitle('New Message')
   const { t } = useTranslation('new_message')
@@ -227,7 +229,7 @@ export const NewMessage = () => {
               resize="none"
               h="120px"
               value={abstract}
-              maxLength={100}
+              maxLength={ABSTRACT_MAX_LENGTH}
               fontSize="14px"
               fontWeight="500"
               lineHeight="20px"
@@ -243,7 +245,7 @@ export const NewMessage = () => {
               zIndex={99}
               textDecorationLine="underline"
             >
-              {abstract.length} / 100
+              {abstract.length} / {ABSTRACT_MAX_LENGTH}
             </Box>
           </FormControl>
         ) : null}

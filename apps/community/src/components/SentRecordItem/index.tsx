@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Grid,
+  Link,
   Icon,
   Popover,
   PopoverArrow,
@@ -38,9 +39,10 @@ export const SentRecordItem: React.FC<SentRecordItemProps> = ({
   const toast = useToast()
   const { t } = useTranslation('common')
 
+  const articleUrl = `${APP_URL}/p/${uuid}`
+
   return (
     <Grid
-      as="a"
       h="inherit"
       gridTemplateColumns="120px 1fr 120px"
       alignItems="center"
@@ -52,13 +54,16 @@ export const SentRecordItem: React.FC<SentRecordItemProps> = ({
       <Box fontSize="12px" color="secondaryTitleColor" fontWeight="500">
         {dayjs(time).format('YYYY-MM-DD')}
       </Box>
-      <Box
+      <Link
         fontSize="16px"
         overflow="hidden"
         noOfLines={1}
         textOverflow="ellipsis"
         display="block"
         fontWeight="600"
+        target="_blank"
+        href={articleUrl}
+        lineHeight="48px"
       >
         {subject}
         {messageType === MessageType.Premium ? (
@@ -70,7 +75,7 @@ export const SentRecordItem: React.FC<SentRecordItemProps> = ({
             ml="8px"
           />
         ) : null}
-      </Box>
+      </Link>
       <Center
         fontSize="12px"
         textAlign="right"
@@ -101,7 +106,7 @@ export const SentRecordItem: React.FC<SentRecordItemProps> = ({
                   color: '#A1A2F4',
                 }}
                 onClick={async () => {
-                  await copyText(`${APP_URL}/p/${uuid}`)
+                  await copyText(articleUrl)
                   toast(t('copy_successfully'), {
                     status: 'success',
                     alertProps: { colorScheme: 'green' },

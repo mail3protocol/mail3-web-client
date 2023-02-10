@@ -2,6 +2,7 @@ import ErrorPage from 'next/error'
 import { GetStaticPropsContext, GetStaticPropsResult } from 'next'
 import React, { useMemo } from 'react'
 import { StaticRouter } from 'react-router-dom/server'
+import axios from 'axios'
 import Head from 'next/head'
 import {
   isEthAddress,
@@ -14,11 +15,14 @@ import { SubscribeProfile } from '../csr_pages/subscribeProfile'
 import { App } from '../csr_pages/app'
 import { API } from '../api'
 import { SafeHydrate } from '../components/SafeHydrate'
+import { getLogger, LoggerLevel } from '../logger'
 
 export const getStaticProps = async ({
   params,
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const address = params?.address
+  const logger = getLogger(LoggerLevel.Profile)
+  const revalidate = 60 * 5 // 5 mins
   if (typeof address !== 'string') {
     return {
       props: {
@@ -29,27 +33,50 @@ export const getStaticProps = async ({
   if (isSupportedAddress(address)) {
     const api = new API()
     try {
-      const [priAddress, uuid] = await Promise.all([
-        isPrimitiveEthAddress(address)
-          ? address
-          : api
-              .getPrimitiveAddress(address)
-              .then((r) => (r.status === 200 ? r.data.eth_address : '')),
-        api
+      const priAddress = isPrimitiveEthAddress(address)
+        ? address
+        : await api
+            .getPrimitiveAddress(address)
+            .then((r) => (r.status === 200 ? r.data.eth_address : ''))
+
+      const uuid =
+        (await api
           .checkIsProject(address)
-          .then((r) => (r.status === 200 ? r.data.uuid : '')),
-      ])
+          .then((r) => (r.status === 200 ? r.data.uuid : ''))) || ''
+
       if (!priAddress || !uuid) {
         return {
           props: {
             statusCode: 404,
           },
+          revalidate,
         }
       }
-      const [{ data: userInfo }, { data: userSettings }] = await Promise.all([
+      const [
+        { data: userInfo, status: userInfoStatus },
+        { data: userSettings, status: userSettingsStatus },
+      ] = await Promise.all([
         api.getSubscribeUserInfo(priAddress),
         api.getUserSetting(priAddress),
       ])
+
+      if (userInfoStatus !== 200) {
+        return {
+          props: {
+            statusCode: userInfoStatus,
+          },
+          revalidate,
+        }
+      }
+
+      if (userSettingsStatus !== 200) {
+        return {
+          props: {
+            statusCode: userSettingsStatus,
+          },
+          revalidate,
+        }
+      }
 
       return {
         props: {
@@ -62,13 +89,24 @@ export const getStaticProps = async ({
             address,
           },
         },
-        revalidate: 60 * 60 * 24 * 7, // 7 days
+        revalidate,
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        logger.error(error)
+        return {
+          props: {
+            statusCode: error.response?.status || 500,
+          },
+          revalidate,
+        }
+      }
+
       return {
         props: {
-          statusCode: 404,
+          statusCode: 500,
         },
+        revalidate,
       }
     }
   }
@@ -76,6 +114,7 @@ export const getStaticProps = async ({
     props: {
       statusCode: 404,
     },
+    notFound: true,
   }
 }
 
@@ -87,7 +126,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  statusCode: 200 | 404
+  statusCode: number
   data?: SubscribeProfileDataProps
 }
 
@@ -96,8 +135,7 @@ export default function SubscribeProfilePage(props: Props) {
   const userInfo = data?.userInfo
   const userSettings = data?.userSettings
   const address = data?.address || ''
-  const previewImage =
-    userSettings?.banner_url || 'https://mail3.me/preview2.png'
+  const previewImage = userSettings?.banner_url || '/profile-preview.png'
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {
@@ -112,7 +150,7 @@ export default function SubscribeProfilePage(props: Props) {
     return ''
   }, [userInfo])
 
-  if (statusCode === 404 || !data) {
+  if (statusCode !== 200 || !data) {
     return <ErrorPage statusCode={statusCode} />
   }
   return (
@@ -129,7 +167,7 @@ export default function SubscribeProfilePage(props: Props) {
           name="keywords"
           content="web3 mail, decentralized mail, blockchain mail, privacy, end-to-end encryption"
         />
-        <title>{nickname}</title>
+        <title>Mail3: Subscription Page</title>
         <meta property="og:title" content={nickname} />
         <meta property="og:description" content={userSettings?.description} />
         <meta property="og:image" content={previewImage} />
