@@ -291,6 +291,7 @@ export const Dashboard: React.FC = () => {
     >
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
+          isContent
           isOpen={isOpenIpfsModal}
           onClose={onCloseIpfsModal}
           isForceConnectWallet={!isUploadedIpfsKey}
