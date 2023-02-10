@@ -371,7 +371,7 @@ const Subscribing: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const {
     isBrowserSupport,
     permission,
-    requestPermission,
+    openNotification,
     isBrowserSupportChecking,
   } = useNotification(false)
   const [isDeclined, setIsDeclined] = useState(false)
@@ -452,7 +452,7 @@ const Subscribing: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
                   setIsRequesting(true)
                   trackOK()
                   try {
-                    const ps = await requestPermission()
+                    const ps = await openNotification()
                     if (ps === 'denied') {
                       setIsDeclined(true)
                     }
@@ -493,7 +493,7 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const {
     isBrowserSupport,
     permission,
-    requestPermission,
+    openNotification,
     isBrowserSupportChecking,
   } = useNotification(false)
 
@@ -560,7 +560,7 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
                   setIsRequesting(true)
                   trackOK()
                   try {
-                    const ps = await requestPermission()
+                    const ps = await openNotification()
                     if (ps === 'denied') {
                       setIsDeclined(true)
                     }
