@@ -9,6 +9,7 @@ import {
 import styled from '@emotion/styled'
 import { Trans, useTranslation } from 'react-i18next'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
+import { BuyPremiumDialog, useBuyPremium } from '../../hooks/useBuyPremium'
 
 const CoverContainer = styled(Center)`
   width: 100%;
@@ -23,6 +24,13 @@ const CoverContainer = styled(Center)`
 
 export const BuyPremium: React.FC = () => {
   const [t] = useTranslation(['subscription-article', 'common'])
+  const buyDialog = useBuyPremium()
+  const onBuy = () => {
+    buyDialog({
+      addr: '0x17efdccfc61a03ae6620f35e502215edde20c13d',
+      suffixName: 'dev',
+    })
+  }
 
   return (
     <CoverContainer
@@ -95,6 +103,7 @@ export const BuyPremium: React.FC = () => {
           _active={{
             opacity: 0.5,
           }}
+          onClick={onBuy}
         >
           {t('buy')}
         </Center>
@@ -120,6 +129,8 @@ export const BuyPremium: React.FC = () => {
       >
         {t('switch-wallet')}
       </Link>
+
+      <BuyPremiumDialog />
     </CoverContainer>
   )
 }

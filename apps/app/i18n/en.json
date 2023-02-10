@@ -391,6 +391,9 @@
         "switch-wallet": "Switch wallet",
         "from-year":"From ${{num}}/year",
         "notifications": "Enable desktop notifications for getting the latest content.",
-        "enable": "Enable"
+        "enable": "Enable",
+        "buy-title": "Start your Premium",
+        "powered-by": "Powered by daodid.id",
+        "wallet":"Complete your purchase with the connected wallet"
     }
 }
