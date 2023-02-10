@@ -62,6 +62,12 @@ export const UnbindLink: React.FC<{
   const api = useAPI()
   const toast = useToast()
 
+  const handleClose = () => {
+    onClose()
+    // clear old value
+    setAddress('')
+  }
+
   const onSubmit = async () => {
     if (address) {
       setIsLoading(true)
@@ -71,8 +77,7 @@ export const UnbindLink: React.FC<{
           status: 'success',
           alertProps: { colorScheme: 'green' },
         })
-        onClose()
-        setAddress('')
+        handleClose()
         if (refetch) refetch()
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -101,13 +106,13 @@ export const UnbindLink: React.FC<{
       >
         {t('unbind')}
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent mt="30vh">
           <ModalHeader fontWeight="700" fontSize="18px" lineHeight="22px">
             {t('unbind_input_title')}
           </ModalHeader>
-          <CloseButton top="16px" onClick={onClose} />
+          <CloseButton top="16px" onClick={handleClose} />
           <ModalBody p="8px 20px">
             <Input
               border="none"
@@ -172,6 +177,12 @@ export const BindButton: React.FC<{
     }
   )
 
+  const handleClose = () => {
+    onClose()
+    // clear old value
+    setAddress('')
+  }
+
   const onBind = () => {
     if (!isUploadedIpfsKey) {
       onOpenIpfsModal()
@@ -189,8 +200,7 @@ export const BindButton: React.FC<{
         status: 'success',
         alertProps: { colorScheme: 'green' },
       })
-      onClose()
-      setAddress('')
+      handleClose()
       if (refetch) refetch()
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -235,6 +245,7 @@ export const BindButton: React.FC<{
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
           isOpen={isOpenIpfsModal}
+          isContent
           onClose={onCloseIpfsModal}
           isForceConnectWallet={!isUploadedIpfsKey}
           onAfterSignature={async (_, key) => {
@@ -245,13 +256,13 @@ export const BindButton: React.FC<{
         />
       ) : null}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent mt="30vh">
           <ModalHeader fontWeight="700" fontSize="18px" lineHeight="22px">
             {t('bind_title')}
           </ModalHeader>
-          <CloseButton top="16px" onClick={onClose} />
+          <CloseButton top="16px" onClick={handleClose} />
           <ModalBody p="8px 20px">
             <Input
               border="none"
@@ -271,7 +282,7 @@ export const BindButton: React.FC<{
           </ModalBody>
 
           <ModalFooter>
-            <ButtonUI mr={3} onClick={onClose} variant="outline" w="138px">
+            <ButtonUI mr={3} onClick={handleClose} variant="outline" w="138px">
               {t('cancel')}
             </ButtonUI>
             <ButtonUI
