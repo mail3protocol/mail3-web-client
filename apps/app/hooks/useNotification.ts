@@ -63,11 +63,6 @@ export function useNotification(shouldReload = true) {
       if (isSwitchingWebPushNotificationState) return
       setIsSwitchingWebPushNotificationState(true)
       try {
-        if (state === 'disabled') {
-          await deleteFCMToken()
-        } else if (state === 'enabled') {
-          await getFCMToken()
-        }
         await api.switchUserWebPushNotification(
           state === 'enabled' ? 'active' : 'stale'
         )
@@ -75,6 +70,11 @@ export function useNotification(shouldReload = true) {
           ...info,
           notification_state: state,
         }))
+        if (state === 'disabled') {
+          await deleteFCMToken()
+        } else if (state === 'enabled') {
+          await getFCMToken()
+        }
         setIsSwitchingWebPushNotificationState(false)
       } catch (err) {
         setIsSwitchingWebPushNotificationState(false)
