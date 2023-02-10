@@ -9,7 +9,14 @@ import {
 import styled from '@emotion/styled'
 import { Trans, useTranslation } from 'react-i18next'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
+import { atom, useAtom } from 'jotai'
+import { ConnectModalWithMultichain } from 'connect-wallet'
+import { useAccount } from 'hooks'
+import { useEffect, useState } from 'react'
 import { BuyPremiumDialog, useBuyPremium } from '../../hooks/useBuyPremium'
+import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
+import { AuthModal } from '../Auth'
+import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 
 const CoverContainer = styled(Center)`
   width: 100%;
@@ -22,15 +29,36 @@ const CoverContainer = styled(Center)`
   border-radius: 16px;
 `
 
+const isOpenLoginAtom = atom(false)
+
 export const BuyPremium: React.FC = () => {
   const [t] = useTranslation(['subscription-article', 'common'])
+  useAuth()
+  const account = useAccount()
+  const isAuth = useIsAuthenticated()
+  const [isBuying, setIsBuying] = useState(false)
+  const [isOpenLogin, setIsOpenLogin] = useAtom(isOpenLoginAtom)
   const buyDialog = useBuyPremium()
+
   const onBuy = () => {
-    buyDialog({
-      addr: '0x17efdccfc61a03ae6620f35e502215edde20c13d',
-      suffixName: 'dev',
-    })
+    setIsBuying(true)
+
+    if (!isAuth) {
+      setIsOpenLogin(true)
+    }
   }
+
+  useEffect(() => {
+    if (isAuth && isBuying) {
+      buyDialog({
+        addr: account,
+        suffixName: 'horong007.bit',
+        onClose: () => {
+          setIsBuying(false)
+        },
+      })
+    }
+  }, [isAuth, isBuying])
 
   return (
     <CoverContainer
@@ -100,6 +128,7 @@ export const BuyPremium: React.FC = () => {
           fontSize="18px"
           fontWeight="700"
           lineHeight="20px"
+          isLoading={isBuying}
           _active={{
             opacity: 0.5,
           }}
@@ -125,12 +154,22 @@ export const BuyPremium: React.FC = () => {
         fontSize="12px"
         lineHeight="18px"
         color="#4E52F5"
-        onClick={() => {}}
+        onClick={() => {
+          setIsOpenLogin(true)
+        }}
       >
         {t('switch-wallet')}
       </Link>
 
       <BuyPremiumDialog />
+
+      <ConnectWalletApiContextProvider>
+        <ConnectModalWithMultichain
+          isOpen={isOpenLogin}
+          onClose={() => setIsOpenLogin(false)}
+        />
+      </ConnectWalletApiContextProvider>
+      <AuthModal />
     </CoverContainer>
   )
 }

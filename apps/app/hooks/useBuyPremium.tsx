@@ -54,12 +54,13 @@ export const useBuyPremium = () => {
   const setOnClose = useUpdateAtom(onCloseObjAtom)
 
   const callback = useCallback(
-    async ({ onCose, ...options }) => {
+    async ({ ...options }) => {
       setOptions(options)
       setIsOpen(true)
       setOnClose({
         fn: async () => {
           setIsOpen(false)
+          options?.onClose()
         },
       })
     },
@@ -184,7 +185,7 @@ export const BuyPremiumDialog: React.FC = () => {
 
   const { addr, suffixName } = options
 
-  const isOk = true
+  const isOk = false
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -192,9 +193,8 @@ export const BuyPremiumDialog: React.FC = () => {
       <ModalContent p="0" maxW={isOk ? '305px' : '548px'}>
         <ModalCloseButton />
         <ModalBody p="0">
-          {/* <BuyForm addr={addr} suffixName={suffixName} />
-           */}
-          <BuySuccess name="nickname" />
+          <BuyForm addr={addr} suffixName={suffixName} />
+          {/* <BuySuccess name="nickname" /> */}
         </ModalBody>
       </ModalContent>
     </Modal>
