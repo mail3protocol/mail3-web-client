@@ -118,13 +118,13 @@ export function useNotification(shouldReload = true) {
         .subscribe(async (event) => {
           const target = event.target as PermissionStatus
           const newPermission = target.state as NotificationPermission
+          setPermission(newPermission)
           if (newPermission === 'granted') {
             await onSwitchWebPushNotificationState('enabled')
             if (shouldReload) {
               location.reload()
             }
           }
-          setPermission(newPermission)
         })
     }
     return null
