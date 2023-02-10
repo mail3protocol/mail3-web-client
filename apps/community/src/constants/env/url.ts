@@ -35,11 +35,15 @@ export const PREMIUM_DOCS_URL =
 export const DAODID_URL =
   import.meta.env.NEXT_PUBLIC_DAODID_URL || 'https://daodid.id/manage/'
 
-export const CONTACT_URL = import.meta.env.NEXT_PUBLIC_CONTACT_URL || ''
+export const CONTACT_URL =
+  import.meta.env.NEXT_PUBLIC_CONTACT_URL ||
+  'https://spark-rainbow-63a.notion.site/DaoDID-help-documentation-2f2def85d5ef4584b1ad40d2b4ab43b0'
 
-export const DOT_BIT_URL = import.meta.env.NEXT_PUBLIC_DOT_BIT_URL || ''
+export const DOT_BIT_URL =
+  import.meta.env.NEXT_PUBLIC_DOT_BIT_URL || 'https://app.did.id/explorer'
 
-export const SUPER_DID_URL = import.meta.env.NEXT_PUBLIC_SUPER_DID_URL || ''
+export const SUPER_DID_URL =
+  import.meta.env.NEXT_PUBLIC_SUPER_DID_URL || 'https://daodid.id'
 
 envStorage.setServerUrl(SERVER_URL)
 

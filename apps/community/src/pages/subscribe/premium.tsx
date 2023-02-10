@@ -131,6 +131,7 @@ export const Premium: React.FC = () => {
             </FormControl>
             <PremiumSubdomainStep
               state={subdomainState}
+              isLoading={verifyDotBitDomainState.isLoading}
               reloadState={getDotBitDomainState}
             />
           </Flex>

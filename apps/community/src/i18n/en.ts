@@ -409,7 +409,7 @@ export default {
         </ul>
     `,
     contact_us:
-      'Please read the help file on the right or <contact>contact our commercial representative</contact> if you have any questions.',
+      'Please read the help file on the right or <contact> view this more detailed document </contact> if you have any questions.',
     domain_field: 'Your <bit>.bit</bit> domain',
     confirm: 'Confirm',
     status: 'Status',
@@ -420,7 +420,9 @@ export default {
       'This domain name does not have sub-domain service, please change a domain name or reconfirm',
     enabled_subdomain:
       'This domain name has been opened for sub-domain service',
-    waiting_enable_subdomain_price: 'Verify that subdomain prices are set...',
+    waiting_enable_subdomain_price: 'Verify that subdomain prices are set',
+    verifying_enable_subdomain_price:
+      'Verifying that subdomain prices are set...',
     failed_enable_subdomain_price:
       "Haven't finished setting the sub-domain price, please click the button below to go to Settings and back <retry> Click here </retry> to retry",
     enabled_subdomain_price: 'Already completed sub-domain price setting',

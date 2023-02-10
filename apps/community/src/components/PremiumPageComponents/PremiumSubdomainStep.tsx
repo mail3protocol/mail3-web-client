@@ -9,20 +9,25 @@ import { SubDomainState } from '../../hooks/premium/useVerifyPremiumDotBitDomain
 export const PremiumSubdomainStep: React.FC<{
   state?: SubDomainState
   reloadState?: () => void
-}> = ({ state, reloadState }) => {
+  isLoading?: boolean
+  domain?: string
+}> = ({ state, reloadState, isLoading }) => {
   const { t } = useTranslation('premium')
   const stepStatus = useMemo(() => {
     if (state === ErrorCode.DOT_BIT_ACCOUNT_NOT_OPENED) {
       return [StepStatus.Failed, StepStatus.Pending]
     }
     if (state === ErrorCode.DOT_BIT_ACCOUNT_NOT_SET_LOWEST_PRICE) {
-      return [StepStatus.Done, StepStatus.Failed]
+      return [
+        StepStatus.Done,
+        isLoading ? StepStatus.Loading : StepStatus.Failed,
+      ]
     }
     if (state === null) {
       return [StepStatus.Done, StepStatus.Done]
     }
     return [StepStatus.Pending, StepStatus.Pending]
-  }, [state])
+  }, [state, isLoading])
 
   return (
     <VStack mt="18px" spacing="10px" maxW="660px">
@@ -59,6 +64,13 @@ export const PremiumSubdomainStep: React.FC<{
               />
             ),
             [StepStatus.Done]: t('enabled_subdomain_price'),
+            [StepStatus.Loading]: (
+              <>
+                {t('verifying_enable_subdomain_price')}
+                <br />
+                <br />
+              </>
+            ),
           } as { [key in StepStatus]?: ReactNode }
         )[stepStatus[1]] || t('waiting_enable_subdomain_price')}
       </Step>
