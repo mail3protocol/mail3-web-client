@@ -104,6 +104,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         </Text>
 
         <SubscribeButtonInApp
+          mt="24px"
           rewardType={rewardType}
           isAuth={isAuth}
           uuid={uuid}

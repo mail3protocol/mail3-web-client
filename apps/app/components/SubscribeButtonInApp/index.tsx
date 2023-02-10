@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   Center,
   Icon,
   Modal,
@@ -94,12 +95,14 @@ const SubscribeButtonView: React.FC<{
   )
 }
 
-export const SubscribeButtonInApp: React.FC<{
-  isAuth: boolean
-  rewardType?: RewardType
-  uuid: string
-  setIsHidden?: Dispatch<SetStateAction<boolean>>
-}> = ({ isAuth, rewardType, uuid, setIsHidden }) => {
+export const SubscribeButtonInApp: React.FC<
+  {
+    isAuth: boolean
+    rewardType?: RewardType
+    uuid: string
+    setIsHidden?: Dispatch<SetStateAction<boolean>>
+  } & BoxProps
+> = ({ isAuth, rewardType, uuid, setIsHidden, ...props }) => {
   const [t] = useTranslation('subscription')
   const api = useAPI()
   const toast = useToast()
@@ -186,7 +189,7 @@ export const SubscribeButtonInApp: React.FC<{
 
   return (
     <>
-      <Box>
+      <Box {...props}>
         <SubscribeButtonView
           onClick={isAuth ? onSubscribe : onOpen}
           rewardType={rewardType}

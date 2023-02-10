@@ -19,6 +19,7 @@ import {
 } from 'shared'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { Avatar, EchoIframe } from 'ui'
+import { Subscription } from 'models'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -95,6 +96,9 @@ export const SubscriptionArticleBody: React.FC<
     </Box>
   )
 
+  const isPremium = detail?.message_type === Subscription.MeesageType.Premium
+  const isNeedPay = isPremium && !detail.content
+
   return (
     <PageContainer>
       <Flex direction={{ base: 'column-reverse', md: 'row-reverse' }}>
@@ -123,25 +127,27 @@ export const SubscriptionArticleBody: React.FC<
             {detail?.subject}
           </Text>
 
-          <Center
-            mt={{ base: '8px', md: '13px' }}
-            w="112px"
-            h={{ base: '18px', md: '24px' }}
-            background="#FFF6D6"
-            borderRadius="20px"
-          >
-            <Icon as={SvgDiamond} w="12px" h="12px" />
-            <Box
-              ml="2px"
-              fontStyle="italic"
-              fontWeight="600"
-              fontSize="12px"
-              lineHeight="14px"
-              color="#FFA800"
+          {isPremium ? (
+            <Center
+              mt={{ base: '8px', md: '13px' }}
+              w="112px"
+              h={{ base: '18px', md: '24px' }}
+              background="#FFF6D6"
+              borderRadius="20px"
             >
-              {t('premium-only')}
-            </Box>
-          </Center>
+              <Icon as={SvgDiamond} w="12px" h="12px" />
+              <Box
+                ml="2px"
+                fontStyle="italic"
+                fontWeight="600"
+                fontSize="12px"
+                lineHeight="14px"
+                color="#FFA800"
+              >
+                {t('premium-only')}
+              </Box>
+            </Center>
+          ) : null}
 
           {isMobile ? (
             <Flex mt="24px">
@@ -224,22 +230,24 @@ export const SubscriptionArticleBody: React.FC<
             </Box>
           ) : null}
 
-          <BuyPremium />
+          {isNeedPay ? <BuyPremium /> : null}
 
-          <Box pt={{ base: '10px', md: '30px' }}>
-            <RenderHTML
-              html={detail?.content}
-              shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
-            />
-            <Center mt={{ base: '40px', md: '65px' }}>
-              <ShareButtonGroup
-                spacing="50px"
-                shareUrl={shareUrl}
-                text={detail.subject}
-                iconW="28px"
+          {detail?.content ? (
+            <Box pt={{ base: '10px', md: '30px' }}>
+              <RenderHTML
+                html={detail?.content}
+                shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
               />
-            </Center>
-          </Box>
+            </Box>
+          ) : null}
+          <Center mt={{ base: '40px', md: '65px' }}>
+            <ShareButtonGroup
+              spacing="50px"
+              shareUrl={shareUrl}
+              text={detail.subject}
+              iconW="28px"
+            />
+          </Center>
           {!isMobile ? EchoBody : null}
         </Box>
       </Flex>
