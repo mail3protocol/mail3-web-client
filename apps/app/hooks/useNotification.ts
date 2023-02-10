@@ -132,13 +132,11 @@ export function useNotification(shouldReload = true) {
 
   async function checkTokenStatus() {
     if (
-      isCheckedTokenStatus ||
       webPushNotificationState === 'disabled' ||
       window.Notification.permission !== 'granted'
-    )
+    ) {
       return
-    setIsCheckedTokenStatus(true)
-    if (webPushNotificationState === 'disabled') return
+    }
     const { createStore, get, keys } = await import('idb-keyval')
     const store = createStore(
       'firebase-messaging-database',
@@ -153,6 +151,8 @@ export function useNotification(shouldReload = true) {
       await onSwitchWebPushNotificationState('enabled')
       return
     }
+    if (isCheckedTokenStatus) return
+    setIsCheckedTokenStatus(true)
     const currentTokenState = await api
       .getRegistrationTokenState(token)
       .then((res) => res.data.state)
