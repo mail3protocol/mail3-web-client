@@ -380,6 +380,7 @@
         "premium-member": "Premium member"
     },
     "subscription-article": {
+        "continue": "Continue",
         "telegram": "Share on Telegram",
         "copy": "Copy",
         "twitter": "Share on Twitter",
@@ -394,6 +395,7 @@
         "enable": "Enable",
         "buy-title": "Start your Premium",
         "powered-by": "Powered by daodid.id",
-        "wallet":"Complete your purchase with the connected wallet"
+        "wallet":"Complete your purchase with the connected wallet",
+        "buy-ok":"You’re now a Premium Member of \n <b>{{name}}</b>"
     }
 }

@@ -8,14 +8,17 @@ import {
   ModalContent,
   ModalOverlay,
   Spinner,
+  Text,
 } from '@chakra-ui/react'
 import { noop, PromiseObj } from 'hooks'
 import { atom, useAtomValue } from 'jotai'
 import { selectAtom, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useState } from 'react'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
-import { useTranslation } from 'react-i18next'
+import { ReactComponent as SvgDiamondOk } from 'assets/subscribe-page/diamond-success.svg'
+import { Trans, useTranslation } from 'react-i18next'
 import { truncateAddress } from 'shared'
+import { Button } from 'ui'
 
 const fnSelector = (a: PromiseObj) => a.fn
 
@@ -92,11 +95,52 @@ const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
   )
 }
 
+export const BuySuccess: React.FC<{ name: string }> = ({ name }) => {
+  const [t] = useTranslation(['subscription-article'])
+
+  return (
+    <Center flexDirection="column" p="32px">
+      <Icon as={SvgDiamondOk} w="48px" h="48px" />
+      <Text
+        mt="10px"
+        fontWeight="500"
+        fontSize="14px"
+        lineHeight="20px"
+        color="#000"
+        textAlign="center"
+      >
+        <Trans
+          components={{
+            b: (
+              <Box as="span" color="#4E51F4" fontSize="16px" fontWeight={700} />
+            ),
+          }}
+          values={{ name }}
+          i18nKey="buy-ok"
+          t={t}
+        />
+      </Text>
+
+      <Text
+        mt="16px"
+        fontWeight="300"
+        fontSize="12px"
+        lineHeight="16px"
+        textAlign="center"
+      >
+        {t('notifications')}
+      </Text>
+
+      <Button mt="16px">{t('continue')}</Button>
+    </Center>
+  )
+}
+
 export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
   addr,
   suffixName,
 }) => {
-  const [t] = useTranslation(['subscription-article', 'common'])
+  const [t] = useTranslation(['subscription-article'])
 
   return (
     <Center flexDirection="column" p="32px 0">
@@ -140,13 +184,17 @@ export const BuyPremiumDialog: React.FC = () => {
 
   const { addr, suffixName } = options
 
+  const isOk = true
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent p="0" maxW="548px">
+      <ModalContent p="0" maxW={isOk ? '305px' : '548px'}>
         <ModalCloseButton />
         <ModalBody p="0">
-          <BuyForm addr={addr} suffixName={suffixName} />
+          {/* <BuyForm addr={addr} suffixName={suffixName} />
+           */}
+          <BuySuccess name="nickname" />
         </ModalBody>
       </ModalContent>
     </Modal>
