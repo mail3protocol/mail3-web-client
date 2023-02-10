@@ -155,6 +155,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
       </Button>
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
+          isContent
           isOpen={isOpenIpfsModal}
           onClose={onCloseIpfsModal}
           isForceConnectWallet={!isUploadedIpfsKey}

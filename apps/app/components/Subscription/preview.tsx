@@ -22,7 +22,7 @@ import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Avatar, EchoIframe } from 'ui'
+import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { truncateAddress } from 'shared'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
@@ -274,6 +274,21 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     }
   )
 
+  const { data: ipfsInfo } = useQuery(
+    ['ipfsInfo', id],
+    async () => {
+      const ipfs = await api.getSubscribePageIpfsInfo(id)
+      return ipfs.data
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      enabled: !!id,
+      retry: false,
+    }
+  )
+
   const detail = useMemo(() => data, [data])
 
   if (isLoading) {
@@ -385,6 +400,15 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             from={{ name: '', address: '' }}
             shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
           />
+          {ipfsInfo ? (
+            <Box mb="24px">
+              <IpfsInfoTable
+                ethAddress={ipfsInfo?.owner_identifier}
+                ipfs={ipfsInfo?.url}
+                contentDigest={ipfsInfo?.content_digest}
+              />
+            </Box>
+          ) : null}
           <EchoIframe
             targetUri={`${APP_URL}/${RoutePath.Subscription}/${id}`}
             mailAddress={userProps?.defaultAddress}

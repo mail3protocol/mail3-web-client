@@ -245,6 +245,7 @@ export const BindButton: React.FC<{
       {!isLoadingIsUploadedIpfsKeyState ? (
         <IpfsModal
           isOpen={isOpenIpfsModal}
+          isContent
           onClose={onCloseIpfsModal}
           isForceConnectWallet={!isUploadedIpfsKey}
           onAfterSignature={async (_, key) => {
