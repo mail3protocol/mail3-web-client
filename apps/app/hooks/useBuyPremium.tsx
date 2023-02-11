@@ -19,16 +19,22 @@ import { ReactComponent as SvgDiamondOk } from 'assets/subscribe-page/diamond-su
 import { Trans, useTranslation } from 'react-i18next'
 import { truncateAddress } from 'shared'
 import { Button } from 'ui'
+import { useQuery } from 'react-query'
+import { Query } from '../api/query'
+import { useAPI } from './useAPI'
 
 const fnSelector = (a: PromiseObj) => a.fn
 
 export interface BuyPremiumDialogOptions {
   addr?: string
   suffixName?: string
+  uuid?: string
+  nickname?: string
 }
 
 const openAtom = atom(false)
 const loadingAtom = atom(false)
+const isBuySuccessAtom = atom(false)
 const onCloseObjAtom = atom<PromiseObj>({ fn: noop })
 const optionsAtom = atom<BuyPremiumDialogOptions>({})
 const onCloseAtom = selectAtom(onCloseObjAtom, fnSelector)
@@ -38,12 +44,14 @@ export const useBuyPremiumModel = () => {
   const options = useAtomValue(optionsAtom)
   const isLoading = useAtomValue(loadingAtom)
   const onClose = useAtomValue(onCloseAtom)
+  const isBuySuccess = useAtomValue(isBuySuccessAtom)
 
   return {
     isOpen,
     options,
     isLoading,
     onClose,
+    isBuySuccess,
   }
 }
 
@@ -54,13 +62,13 @@ export const useBuyPremium = () => {
   const setOnClose = useUpdateAtom(onCloseObjAtom)
 
   const callback = useCallback(
-    async ({ ...options }) => {
+    async ({ onClose, ...options }) => {
       setOptions(options)
       setIsOpen(true)
       setOnClose({
         fn: async () => {
           setIsOpen(false)
-          options?.onClose()
+          onClose?.()
         },
       })
     },
@@ -96,8 +104,14 @@ const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
   )
 }
 
-export const BuySuccess: React.FC<{ name: string }> = ({ name }) => {
+export const BuySuccess: React.FC = () => {
   const [t] = useTranslation(['subscription-article'])
+  const { options } = useBuyPremiumModel()
+  // notifications
+  // check
+  // no await notifications
+  // refresh web
+  // yes, continue refresh web
 
   return (
     <Center flexDirection="column" p="32px">
@@ -116,7 +130,7 @@ export const BuySuccess: React.FC<{ name: string }> = ({ name }) => {
               <Box as="span" color="#4E51F4" fontSize="16px" fontWeight={700} />
             ),
           }}
-          values={{ name }}
+          values={{ name: options?.nickname }}
           i18nKey="buy-ok"
           t={t}
         />
@@ -142,6 +156,37 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
   suffixName,
 }) => {
   const [t] = useTranslation(['subscription-article'])
+  const api = useAPI()
+  const { options } = useBuyPremiumModel()
+  const setIsBuySuccess = useUpdateAtom(isBuySuccessAtom)
+  // interval buy ok
+  useQuery(
+    [Query.GetCheckPremiumMember],
+    async () => {
+      try {
+        await api.checkPremiumMember(options?.uuid ?? '')
+        return true
+      } catch (error) {
+        return false
+      }
+    },
+    {
+      enabled: !!options?.uuid,
+      retry: 0,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchInterval: 3000,
+      onSuccess(d) {
+        if (d) {
+          setIsBuySuccess(true)
+          // set buy ok
+        } else {
+          setIsBuySuccess(true)
+        }
+      },
+    }
+  )
 
   return (
     <Center flexDirection="column" p="32px 0">
@@ -181,20 +226,28 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
 }
 
 export const BuyPremiumDialog: React.FC = () => {
-  const { options, isOpen, onClose } = useBuyPremiumModel()
+  const { options, isOpen, onClose, isBuySuccess } = useBuyPremiumModel()
 
   const { addr, suffixName } = options
 
-  const isOk = false
+  const handleClose = () => {
+    if (isBuySuccess) {
+      // refetch
+    }
+    onClose()
+  }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay />
-      <ModalContent p="0" maxW={isOk ? '305px' : '548px'}>
+      <ModalContent p="0" maxW={isBuySuccess ? '305px' : '548px'}>
         <ModalCloseButton />
         <ModalBody p="0">
-          <BuyForm addr={addr} suffixName={suffixName} />
-          {/* <BuySuccess name="nickname" /> */}
+          {isBuySuccess ? (
+            <BuySuccess />
+          ) : (
+            <BuyForm addr={addr} suffixName={suffixName} />
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>

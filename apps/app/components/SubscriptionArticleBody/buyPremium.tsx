@@ -12,11 +12,14 @@ import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { atom, useAtom } from 'jotai'
 import { ConnectModalWithMultichain } from 'connect-wallet'
 import { useAccount } from 'hooks'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useQuery } from 'react-query'
 import { BuyPremiumDialog, useBuyPremium } from '../../hooks/useBuyPremium'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { AuthModal } from '../Auth'
 import { ConnectWalletApiContextProvider } from '../ConnectWallet'
+import { Query } from '../../api/query'
+import { useAPI } from '../../hooks/useAPI'
 
 const CoverContainer = styled(Center)`
   width: 100%;
@@ -30,35 +33,73 @@ const CoverContainer = styled(Center)`
 `
 
 const isOpenLoginAtom = atom(false)
+const isBuyingAtom = atom(false)
 
-export const BuyPremium: React.FC = () => {
+interface BuyPremiumProps {
+  uuid: string
+  nickname: string
+  refetchArticle: () => void
+}
+
+export const BuyPremium: React.FC<BuyPremiumProps> = ({
+  uuid,
+  nickname,
+  refetchArticle,
+}) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
   const account = useAccount()
   const isAuth = useIsAuthenticated()
-  const [isBuying, setIsBuying] = useState(false)
+  const [isBuying, setIsBuying] = useAtom(isBuyingAtom)
   const [isOpenLogin, setIsOpenLogin] = useAtom(isOpenLoginAtom)
   const buyDialog = useBuyPremium()
+  const api = useAPI()
+
+  const { data: isPremiumMember, isLoading: isChecking } = useQuery(
+    [Query.GetCheckPremiumMember],
+    async () => {
+      try {
+        await api.checkPremiumMember(uuid)
+        return true
+      } catch (error) {
+        return false
+      }
+    },
+    {
+      retry: 0,
+      enabled: isAuth,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess(d) {
+        if (d) {
+          refetchArticle()
+        }
+      },
+    }
+  )
+  // get min price
 
   const onBuy = () => {
     setIsBuying(true)
-
     if (!isAuth) {
       setIsOpenLogin(true)
     }
   }
 
   useEffect(() => {
-    if (isAuth && isBuying) {
+    if (isAuth && isBuying && !isChecking && !isPremiumMember) {
       buyDialog({
         addr: account,
         suffixName: 'horong007.bit',
+        nickname,
+        uuid,
         onClose: () => {
           setIsBuying(false)
         },
       })
     }
-  }, [isAuth, isBuying])
+  }, [isAuth, isBuying, isChecking, isPremiumMember])
 
   return (
     <CoverContainer
@@ -100,7 +141,7 @@ export const BuyPremium: React.FC = () => {
             components={{
               b: <Box as="span" color="#4E51F4" fontWeight={700} />,
             }}
-            values={{ name: 'nickname' }}
+            values={{ name: nickname }}
             i18nKey="cover-buy-text"
             t={t}
           />
@@ -128,7 +169,6 @@ export const BuyPremium: React.FC = () => {
           fontSize="18px"
           fontWeight="700"
           lineHeight="20px"
-          isLoading={isBuying}
           _active={{
             opacity: 0.5,
           }}
@@ -143,7 +183,7 @@ export const BuyPremium: React.FC = () => {
           components={{
             b: <Box as="span" fontWeight={600} ml="2px" />,
           }}
-          values={{ name: 'nickname' }}
+          values={{ name: nickname }}
           i18nKey="cover-already"
           t={t}
         />
@@ -166,7 +206,9 @@ export const BuyPremium: React.FC = () => {
       <ConnectWalletApiContextProvider>
         <ConnectModalWithMultichain
           isOpen={isOpenLogin}
-          onClose={() => setIsOpenLogin(false)}
+          onClose={() => {
+            setIsOpenLogin(false)
+          }}
         />
       </ConnectWalletApiContextProvider>
       <AuthModal />

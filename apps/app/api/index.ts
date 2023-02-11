@@ -518,6 +518,10 @@ export class API {
     )
   }
 
+  public async checkPremiumMember(uuid: string) {
+    return this.axios.get<void>(`/subscription/premium_members/${uuid}`)
+  }
+
   public async checkIsProject(address: string) {
     return this.axios.get(`/community/users/${address}`)
   }

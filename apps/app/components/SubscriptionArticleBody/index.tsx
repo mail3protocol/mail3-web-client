@@ -5,6 +5,7 @@ import {
   Icon,
   Link,
   Spacer,
+  Spinner,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
@@ -20,6 +21,7 @@ import {
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { Avatar, EchoIframe } from 'ui'
 import { Subscription } from 'models'
+import { useQuery } from 'react-query'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -31,6 +33,7 @@ import { NAVBAR_HEIGHT } from '../../constants'
 import { SubscriptionArticleProps } from '../../csr_pages/subscriptionArticle'
 import { ShareButtonGroup } from '../ShareButtonGroup'
 import { BuyPremium } from './buyPremium'
+import { Query } from '../../api/query'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -58,6 +61,27 @@ export const SubscriptionArticleBody: React.FC<
   const isMobile = useBreakpointValue({ base: true, md: false })
   const isAuth = useIsAuthenticated()
 
+  const isPremium = detail.message_type === Subscription.MeesageType.Premium
+
+  const {
+    isLoading,
+    data: detailCSR,
+    refetch,
+  } = useQuery(
+    [Query.SubscriptionDetail],
+    async () => {
+      const { data } = await api.SubscriptionMessageDetail(articleId)
+      return data
+    },
+    {
+      enabled: isPremium && isAuth,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
+
+  const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
 
   useEffect(() => {
@@ -95,9 +119,6 @@ export const SubscriptionArticleBody: React.FC<
       />
     </Box>
   )
-
-  const isPremium = detail?.message_type === Subscription.MeesageType.Premium
-  const isNeedPay = isPremium && !detail.content
 
   return (
     <PageContainer>
@@ -230,7 +251,19 @@ export const SubscriptionArticleBody: React.FC<
             </Box>
           ) : null}
 
-          {isNeedPay ? <BuyPremium /> : null}
+          {isNeedPay ? (
+            <BuyPremium
+              uuid={uuid}
+              nickname={nickname}
+              refetchArticle={refetch}
+            />
+          ) : null}
+
+          {isLoading ? (
+            <Center minH="400px">
+              <Spinner />
+            </Center>
+          ) : null}
 
           {detail?.content ? (
             <Box pt={{ base: '10px', md: '30px' }}>
