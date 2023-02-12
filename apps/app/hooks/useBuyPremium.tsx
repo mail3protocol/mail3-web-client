@@ -1,6 +1,11 @@
 import {
   Box,
   Center,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerOverlay,
   Icon,
   Modal,
   ModalBody,
@@ -9,6 +14,7 @@ import {
   ModalOverlay,
   Skeleton,
   Text,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { noop, PromiseObj } from 'hooks'
 import { atom, useAtomValue } from 'jotai'
@@ -83,13 +89,22 @@ export const useBuyPremium = () => {
 const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
   const iframeSrc = `https://dev.daodid.id/frame/?bit=${suffixName}&theme=light`
   const [loading, setLoading] = useState(true)
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const onload = () => {
     setLoading(false)
   }
 
   return (
-    <Center mt="8px" position="relative">
+    <Center
+      mt="8px"
+      position="relative"
+      transform={
+        isMobile
+          ? `scale(${Math.min(1, (window.innerWidth / 504) * 0.95)})`
+          : 'none'
+      }
+    >
       {loading ? (
         <Skeleton position="absolute" top="0" left="0" w="full" h="full" />
       ) : null}
@@ -108,6 +123,7 @@ export const BuySuccess: React.FC = () => {
   const [t] = useTranslation(['subscription-article'])
   const { options } = useBuyPremiumModel()
   const { permission, openNotification } = useNotification(false)
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const reload = () => {
     window.location.reload()
@@ -147,7 +163,7 @@ export const BuySuccess: React.FC = () => {
         />
       </Text>
 
-      {permission !== 'granted' ? (
+      {permission !== 'granted' && !isMobile ? (
         <Text
           mt="16px"
           fontWeight="300"
@@ -221,6 +237,15 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
       >
         {t('powered-by')}
       </Center>
+      <Center
+        mt="8px"
+        fontWeight="500"
+        fontSize="16px"
+        lineHeight="20px"
+        color="#333"
+      >
+        {t('sub-domain')}
+      </Center>
 
       <BuyIframe suffixName={suffixName} />
       <Center mt="24px" fontWeight="400" fontSize="12px" color="#FF6B00">
@@ -246,6 +271,8 @@ export const BuyPremiumDialog: React.FC = () => {
 
   const { addr, suffixName } = options
 
+  const isMobile = useBreakpointValue({ base: true, md: false })
+
   const reload = () => {
     window.location.reload()
   }
@@ -255,6 +282,24 @@ export const BuyPremiumDialog: React.FC = () => {
       reload()
     }
     onClose()
+  }
+
+  if (isMobile) {
+    return (
+      <Drawer placement="bottom" onClose={handleClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerBody>
+            {isBuySuccess ? (
+              <BuySuccess />
+            ) : (
+              <BuyForm addr={addr} suffixName={suffixName} />
+            )}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    )
   }
 
   return (
