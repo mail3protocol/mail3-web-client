@@ -7,7 +7,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  Spinner,
+  Skeleton,
   Text,
 } from '@chakra-ui/react'
 import { noop, PromiseObj } from 'hooks'
@@ -30,6 +30,7 @@ export interface BuyPremiumDialogOptions {
   suffixName?: string
   uuid?: string
   nickname?: string
+  onClose?: () => void
 }
 
 const openAtom = atom(false)
@@ -62,7 +63,7 @@ export const useBuyPremium = () => {
   const setOnClose = useUpdateAtom(onCloseObjAtom)
 
   const callback = useCallback(
-    async ({ onClose, ...options }) => {
+    async ({ onClose, ...options }: BuyPremiumDialogOptions) => {
       setOptions(options)
       setIsOpen(true)
       setOnClose({
@@ -88,6 +89,9 @@ const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
 
   return (
     <Center mt="8px" position="relative">
+      {loading ? (
+        <Skeleton position="absolute" top="0" left="0" w="full" h="full" />
+      ) : null}
       <iframe
         src={iframeSrc}
         onLoad={onload}
@@ -95,11 +99,6 @@ const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
         width="504"
         height="190"
       />
-      {loading ? (
-        <Center position="absolute" top="0" left="0" w="full" h="full">
-          <Spinner />
-        </Center>
-      ) : null}
     </Center>
   )
 }
@@ -159,19 +158,20 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
   const api = useAPI()
   const { options } = useBuyPremiumModel()
   const setIsBuySuccess = useUpdateAtom(isBuySuccessAtom)
+  const uuid = options?.uuid ?? ''
   // interval buy ok
   useQuery(
     [Query.GetCheckPremiumMember],
     async () => {
       try {
-        await api.checkPremiumMember(options?.uuid ?? '')
+        await api.checkPremiumMember(uuid)
         return true
       } catch (error) {
         return false
       }
     },
     {
-      enabled: !!options?.uuid,
+      enabled: !!uuid,
       retry: 0,
       refetchOnMount: true,
       refetchOnReconnect: false,
@@ -179,10 +179,12 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
       refetchInterval: 3000,
       onSuccess(d) {
         if (d) {
-          setIsBuySuccess(true)
           // set buy ok
-        } else {
           setIsBuySuccess(true)
+          // subscribe and refresh button
+          api.SubscriptionCommunityUserFollowing(uuid).catch()
+        } else {
+          // setIsBuySuccess(true)
         }
       },
     }
