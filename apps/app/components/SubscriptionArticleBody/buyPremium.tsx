@@ -14,6 +14,7 @@ import { ConnectModalWithMultichain } from 'connect-wallet'
 import { useAccount } from 'hooks'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
+import axios from 'axios'
 import { BuyPremiumDialog, useBuyPremium } from '../../hooks/useBuyPremium'
 import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { AuthModal } from '../Auth'
@@ -35,6 +36,15 @@ const CoverContainer = styled(Center)`
 const isOpenLoginAtom = atom(false)
 const isBuyingAtom = atom(false)
 
+const getLowestPrice = (sAccount: string) =>
+  axios.get<{
+    err_no: number
+    data: {
+      sAccount: string
+      fLowestPrice: number
+    }
+  }>(`https://daodid.id/api//public/lowprice?sAccount=${sAccount}`)
+
 interface BuyPremiumProps {
   uuid: string
   nickname: string
@@ -54,6 +64,26 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
   const [isOpenLogin, setIsOpenLogin] = useAtom(isOpenLoginAtom)
   const buyDialog = useBuyPremium()
   const api = useAPI()
+
+  const bitAccount = 'horong007.bit'
+
+  const { data: lowestPrice } = useQuery(
+    ['getLowestPrice'],
+    async () => {
+      try {
+        const { data } = await getLowestPrice(bitAccount)
+        return data.data.fLowestPrice
+      } catch (error) {
+        return 0
+      }
+    },
+    {
+      retry: 0,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const { data: isPremiumMember, isLoading: isChecking } = useQuery(
     [Query.GetCheckPremiumMember],
@@ -91,7 +121,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
     if (isAuth && isBuying && !isChecking && !isPremiumMember) {
       buyDialog({
         addr: account,
-        bitAccount: 'horong007.bit',
+        bitAccount,
         nickname,
         uuid,
         onClose: () => {
@@ -153,7 +183,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
           fontSize="12px"
           lineHeight="16px"
         >
-          {t('from-year', { num: 8 })}
+          {t('from-year', { num: lowestPrice })}
         </Center>
 
         <Center
