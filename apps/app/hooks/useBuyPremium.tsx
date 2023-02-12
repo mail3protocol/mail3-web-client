@@ -13,7 +13,7 @@ import {
 import { noop, PromiseObj } from 'hooks'
 import { atom, useAtomValue } from 'jotai'
 import { selectAtom, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { ReactComponent as SvgDiamondOk } from 'assets/subscribe-page/diamond-success.svg'
 import { Trans, useTranslation } from 'react-i18next'
@@ -22,6 +22,7 @@ import { Button } from 'ui'
 import { useQuery } from 'react-query'
 import { Query } from '../api/query'
 import { useAPI } from './useAPI'
+import { useNotification } from './useNotification'
 
 const fnSelector = (a: PromiseObj) => a.fn
 
@@ -106,11 +107,22 @@ const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
 export const BuySuccess: React.FC = () => {
   const [t] = useTranslation(['subscription-article'])
   const { options } = useBuyPremiumModel()
-  // notifications
-  // check
-  // no await notifications
-  // refresh web
-  // yes, continue refresh web
+  const { permission, openNotification } = useNotification(false)
+
+  const reload = () => {
+    window.location.reload()
+  }
+
+  useEffect(() => {
+    if (permission !== 'default') {
+      return
+    }
+    const callNotification = async () => {
+      await openNotification()
+      reload()
+    }
+    callNotification()
+  }, [permission])
 
   return (
     <Center flexDirection="column" p="32px">
@@ -135,17 +147,21 @@ export const BuySuccess: React.FC = () => {
         />
       </Text>
 
-      <Text
-        mt="16px"
-        fontWeight="300"
-        fontSize="12px"
-        lineHeight="16px"
-        textAlign="center"
-      >
-        {t('notifications')}
-      </Text>
+      {permission !== 'granted' ? (
+        <Text
+          mt="16px"
+          fontWeight="300"
+          fontSize="12px"
+          lineHeight="16px"
+          textAlign="center"
+        >
+          {t('notifications')}
+        </Text>
+      ) : null}
 
-      <Button mt="16px">{t('continue')}</Button>
+      <Button mt="16px" onClick={reload}>
+        {t('continue')}
+      </Button>
     </Center>
   )
 }
@@ -179,9 +195,7 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
       refetchInterval: 3000,
       onSuccess(d) {
         if (d) {
-          // set buy ok
           setIsBuySuccess(true)
-          // subscribe and refresh button
           api.SubscriptionCommunityUserFollowing(uuid).catch()
         } else {
           // setIsBuySuccess(true)
@@ -232,9 +246,13 @@ export const BuyPremiumDialog: React.FC = () => {
 
   const { addr, suffixName } = options
 
+  const reload = () => {
+    window.location.reload()
+  }
+
   const handleClose = () => {
     if (isBuySuccess) {
-      // refetch
+      reload()
     }
     onClose()
   }
