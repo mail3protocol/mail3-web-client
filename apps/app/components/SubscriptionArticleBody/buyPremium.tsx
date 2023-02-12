@@ -91,7 +91,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
     if (isAuth && isBuying && !isChecking && !isPremiumMember) {
       buyDialog({
         addr: account,
-        suffixName: 'horong007.bit',
+        bitAccount: 'horong007.bit',
         nickname,
         uuid,
         onClose: () => {

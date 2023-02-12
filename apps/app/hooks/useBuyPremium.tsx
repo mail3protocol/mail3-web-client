@@ -13,6 +13,7 @@ import {
   ModalContent,
   ModalOverlay,
   Skeleton,
+  Spinner,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
@@ -26,6 +27,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { truncateAddress } from 'shared'
 import { Button } from 'ui'
 import { useQuery } from 'react-query'
+import axios from 'axios'
 import { Query } from '../api/query'
 import { useAPI } from './useAPI'
 import { useNotification } from './useNotification'
@@ -34,7 +36,7 @@ const fnSelector = (a: PromiseObj) => a.fn
 
 export interface BuyPremiumDialogOptions {
   addr?: string
-  suffixName?: string
+  bitAccount?: string
   uuid?: string
   nickname?: string
   onClose?: () => void
@@ -46,6 +48,22 @@ const isBuySuccessAtom = atom(false)
 const onCloseObjAtom = atom<PromiseObj>({ fn: noop })
 const optionsAtom = atom<BuyPremiumDialogOptions>({})
 const onCloseAtom = selectAtom(onCloseObjAtom, fnSelector)
+
+interface GetAuthingLevelRes {
+  err_no: number
+  err_msg: string
+  data: {
+    sAddress: string
+    sAccount: string
+    authing: number
+    role: 'no_auth' | 'waiting_room' | 'subscriber' | 'owner'
+  }
+}
+
+const getAuthingLevel = (sAccount: string, sAddress: string) =>
+  axios.get<GetAuthingLevelRes>(
+    `https://daodid.id/api/authing/check?sAccount=${sAccount}&sAddress=${sAddress}`
+  )
 
 export const useBuyPremiumModel = () => {
   const isOpen = useAtomValue(openAtom)
@@ -86,8 +104,11 @@ export const useBuyPremium = () => {
   return callback
 }
 
-const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
-  const iframeSrc = `https://dev.daodid.id/frame/?bit=${suffixName}&theme=light`
+const BuyIframe: React.FC<{ bitAccount: string; isPaying: boolean }> = ({
+  bitAccount,
+  isPaying,
+}) => {
+  const iframeSrc = `https://dev.daodid.id/frame/?bit=${bitAccount}&theme=light`
   const [loading, setLoading] = useState(true)
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -106,7 +127,14 @@ const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
       }
     >
       {loading ? (
-        <Skeleton position="absolute" top="0" left="0" w="full" h="full" />
+        <Skeleton
+          position="absolute"
+          top="0"
+          left="0"
+          w="full"
+          h="full"
+          zIndex={1}
+        />
       ) : null}
       <iframe
         src={iframeSrc}
@@ -114,7 +142,21 @@ const BuyIframe: React.FC<{ suffixName?: string }> = ({ suffixName }) => {
         title="daodid"
         width="504"
         height="190"
+        style={{ position: 'relative', zIndex: 2 }}
       />
+      {isPaying ? (
+        <Center
+          position="absolute"
+          top="0"
+          left="0"
+          w="full"
+          h="full"
+          zIndex={3}
+          backdropFilter="blur(3px)"
+        >
+          <Spinner />
+        </Center>
+      ) : null}
     </Center>
   )
 }
@@ -182,15 +224,16 @@ export const BuySuccess: React.FC = () => {
   )
 }
 
-export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
-  addr,
-  suffixName,
-}) => {
+export const BuyForm: React.FC = () => {
   const [t] = useTranslation(['subscription-article'])
   const api = useAPI()
+  const [isPaying, setIsPaying] = useState(false)
   const { options } = useBuyPremiumModel()
   const setIsBuySuccess = useUpdateAtom(isBuySuccessAtom)
+  const bitAccount = options?.bitAccount ?? ''
   const uuid = options?.uuid ?? ''
+  const addr = options?.addr ?? ''
+
   // interval buy ok
   useQuery(
     [Query.GetCheckPremiumMember],
@@ -203,7 +246,7 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
       }
     },
     {
-      enabled: !!uuid,
+      enabled: isPaying,
       retry: 0,
       refetchOnMount: true,
       refetchOnReconnect: false,
@@ -215,6 +258,36 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
           api.SubscriptionCommunityUserFollowing(uuid).catch()
         } else {
           // setIsBuySuccess(true)
+        }
+      },
+    }
+  )
+
+  useQuery(
+    ['getAuthingLevel'],
+    async () => {
+      try {
+        const { data } = await getAuthingLevel(bitAccount, addr)
+        return {
+          state: data.data.role,
+        }
+      } catch (error) {
+        return {
+          state: 'error',
+        }
+      }
+    },
+    {
+      enabled: !!bitAccount && !!addr,
+      retry: 0,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchInterval: 3000,
+      onSuccess(d) {
+        if (d.state === 'waiting_room') {
+          // set await chain loading
+          setIsPaying(true)
         }
       },
     }
@@ -246,8 +319,7 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
       >
         {t('sub-domain')}
       </Center>
-
-      <BuyIframe suffixName={suffixName} />
+      <BuyIframe bitAccount={bitAccount} isPaying={isPaying} />
       <Center mt="24px" fontWeight="400" fontSize="12px" color="#FF6B00">
         {t('wallet')}
       </Center>
@@ -267,10 +339,7 @@ export const BuyForm: React.FC<{ addr?: string; suffixName?: string }> = ({
 }
 
 export const BuyPremiumDialog: React.FC = () => {
-  const { options, isOpen, onClose, isBuySuccess } = useBuyPremiumModel()
-
-  const { addr, suffixName } = options
-
+  const { isOpen, onClose, isBuySuccess } = useBuyPremiumModel()
   const isMobile = useBreakpointValue({ base: true, md: false })
 
   const reload = () => {
@@ -290,13 +359,7 @@ export const BuyPremiumDialog: React.FC = () => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerBody>
-            {isBuySuccess ? (
-              <BuySuccess />
-            ) : (
-              <BuyForm addr={addr} suffixName={suffixName} />
-            )}
-          </DrawerBody>
+          <DrawerBody>{isBuySuccess ? <BuySuccess /> : <BuyForm />}</DrawerBody>
         </DrawerContent>
       </Drawer>
     )
@@ -308,11 +371,7 @@ export const BuyPremiumDialog: React.FC = () => {
       <ModalContent p="0" maxW={isBuySuccess ? '305px' : '548px'}>
         <ModalCloseButton />
         <ModalBody p="0">
-          {isBuySuccess ? (
-            <BuySuccess />
-          ) : (
-            <BuyForm addr={addr} suffixName={suffixName} />
-          )}
+          {isBuySuccess ? <BuySuccess /> : <BuyForm />}
         </ModalBody>
       </ModalContent>
     </Modal>
