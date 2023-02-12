@@ -32,9 +32,9 @@ export const NotificationSwitch: React.FC = () => {
   } = useDisclosure()
   const {
     permission,
-    onChangePermission,
     webPushNotificationState,
     isBrowserSupport,
+    openNotification,
   } = useNotification(false)
   const isEnabledNotification =
     permission === 'granted' && webPushNotificationState === 'enabled'
@@ -144,26 +144,12 @@ export const NotificationSwitch: React.FC = () => {
                   onConfirm={async () => {
                     onClosePopover()
                     trackClickNotificationToastOk()
-                    if (
-                      permission === 'granted' &&
-                      webPushNotificationState === 'disabled'
-                    ) {
-                      await onChangePermission('granted')
-                    } else {
-                      try {
-                        const newPermission =
-                          await window.Notification.requestPermission()
-
-                        if (newPermission === 'granted') {
-                          // play animation
-                          confettiAni()?.autoCleanup(4000, () => {
-                            window.location.reload()
-                          })
-                        }
-                        await onChangePermission(newPermission)
-                      } catch (error) {
-                        //
-                      }
+                    const newPermission = await openNotification()
+                    if (newPermission === 'granted') {
+                      // play animation
+                      confettiAni()?.autoCleanup(4000, () => {
+                        window.location.reload()
+                      })
                     }
                   }}
                 />

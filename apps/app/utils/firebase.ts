@@ -17,6 +17,8 @@ export class FirebaseUtils {
 
   readonly messaging?: Messaging
 
+  static self?: FirebaseUtils // Singleton
+
   constructor(app: FirebaseApp, messaging: Messaging) {
     this.app = app
     this.messaging = messaging
@@ -24,12 +26,13 @@ export class FirebaseUtils {
 
   // eslint-disable-next-line consistent-return
   public static async create() {
+    if (FirebaseUtils.self) return FirebaseUtils.self as FirebaseUtils
     const { initializeApp } = await import('firebase/app')
     const { getMessaging } = await import('firebase/messaging')
     const app = initializeApp(FIREBASE_CONFIG)
     const messaging = getMessaging(app)
-
-    return new FirebaseUtils(app, messaging)
+    FirebaseUtils.self = new FirebaseUtils(app, messaging)
+    return FirebaseUtils.self
   }
 
   async getFirebaseMessagingToken() {
