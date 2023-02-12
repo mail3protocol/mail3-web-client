@@ -1,13 +1,76 @@
-import { Box, Button, Center, Circle, CloseButton } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Center,
+  Circle,
+  CloseButton,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as SvgBell } from 'assets/subscribe-page/bell.svg'
+import { useQuery } from 'react-query'
+import { useAccount } from 'hooks'
+import { useNotification } from '../../hooks/useNotification'
+import { GifGuideDialog } from '../NotificationSwitch/GifGuideDialog'
+import { Query } from '../../api/query'
+import { useAPI } from '../../hooks/useAPI'
+import { useIsAuthenticated } from '../../hooks/useLogin'
 
-export const NotificationBarIsOpen = atom(true)
+const NotificationBarIsOpenAtom = atom(false)
 
-export const NotificationBar: React.FC = () => {
-  const [isOpen, setIsOpen] = useAtom(NotificationBarIsOpen)
+export const NotificationBar: React.FC<{ uuid: string }> = ({ uuid }) => {
   const [t] = useTranslation('subscription-article')
+  const api = useAPI()
+  const account = useAccount()
+  const isAuth = useIsAuthenticated()
+  const [isOpen, setIsOpen] = useAtom(NotificationBarIsOpenAtom)
+
+  const {
+    isOpen: isOpenGifGuideDialog,
+    onOpen: onOpenGifGuideDialog,
+    onClose: onCloseGifGuideDialog,
+  } = useDisclosure()
+  const { permission, openNotification } = useNotification(false)
+
+  useQuery(
+    [Query.GetSubscribeStatus, account, uuid],
+    async () => {
+      try {
+        await api.getSubscribeStatus(uuid)
+        return {
+          state: 'active',
+        }
+      } catch (error: any) {
+        if (
+          error?.response?.status === 404 &&
+          error?.response?.data?.reason === 'COMMUNITY_USER_FOLLOWING_NOT_FOUND'
+        ) {
+          return {
+            state: 'inactive',
+          }
+        }
+        throw error
+      }
+    },
+    {
+      onSuccess({ state }) {
+        if (state === 'active' && permission !== 'granted') setIsOpen(true)
+      },
+      enabled: !!uuid && isAuth,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
+
+  const onEnable = async () => {
+    if (permission === 'denied') {
+      onOpenGifGuideDialog()
+      return
+    }
+    if ((await openNotification()) === 'granted') setIsOpen(false)
+  }
 
   return (
     <Box display={{ base: 'none', md: 'block' }}>
@@ -36,6 +99,7 @@ export const NotificationBar: React.FC = () => {
                 bgColor: 'transparent',
                 opacity: 0.8,
               }}
+              onClick={onEnable}
             >
               {t('enable')}
             </Button>
@@ -55,6 +119,10 @@ export const NotificationBar: React.FC = () => {
           </Center>
         </Center>
       ) : null}
+      <GifGuideDialog
+        isOpen={isOpenGifGuideDialog}
+        onClose={onCloseGifGuideDialog}
+      />
     </Box>
   )
 }

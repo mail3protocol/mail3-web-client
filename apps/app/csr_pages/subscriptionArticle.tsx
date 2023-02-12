@@ -114,7 +114,7 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
       <NavArea style={{ top, position }}>
         <Box w="full">
           <Navbar shareUrl={shareUrl} subject={detail.subject} />
-          <NotificationBar />
+          <NotificationBar uuid={uuid} />
         </Box>
       </NavArea>
       <SubscriptionArticleBody
