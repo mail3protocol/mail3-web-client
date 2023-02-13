@@ -301,7 +301,7 @@ export const BindButton: React.FC<{
 }
 
 export const CoAuthors: React.FC = () => {
-  useDocumentTitle('Co-authors')
+  useDocumentTitle('Members')
   const { t } = useTranslation(['co_authors', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()

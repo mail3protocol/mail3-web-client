@@ -48,7 +48,7 @@ export const routes: ExpandedRouterProps[] = [
   },
   {
     path: RoutePath.CoAuthors,
-    key: 'co-authors',
+    key: 'members',
     element: <CoAuthors />,
   },
   {
