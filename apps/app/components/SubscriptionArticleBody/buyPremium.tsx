@@ -49,12 +49,14 @@ interface BuyPremiumProps {
   uuid: string
   nickname: string
   refetchArticle: () => void
+  bitAccount: string
 }
 
 export const BuyPremium: React.FC<BuyPremiumProps> = ({
   uuid,
   nickname,
   refetchArticle,
+  bitAccount,
 }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
@@ -64,8 +66,6 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
   const [isOpenLogin, setIsOpenLogin] = useAtom(isOpenLoginAtom)
   const buyDialog = useBuyPremium()
   const api = useAPI()
-
-  const bitAccount = 'horong007.bit'
 
   const { data: lowestPrice } = useQuery(
     ['getLowestPrice'],
@@ -108,7 +108,6 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
       },
     }
   )
-  // get min price
 
   const onBuy = () => {
     setIsBuying(true)

@@ -253,6 +253,7 @@ export const SubscriptionArticleBody: React.FC<
 
           {isNeedPay ? (
             <BuyPremium
+              bitAccount={detail.writer_name}
               uuid={uuid}
               nickname={nickname}
               refetchArticle={refetch}

@@ -60,6 +60,7 @@ import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { UserSettingResponse } from '../../api'
 import { MAIL_SERVER_URL } from '../../constants'
 import { SubscribeButtonInApp } from '../SubscribeButtonInApp'
+import { Query } from '../../api/query'
 
 const CONTAINER_MAX_WIDTH = 1280
 
@@ -234,6 +235,25 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       initialData: userSettings,
+    }
+  )
+
+  const { data: isPremiumMember } = useQuery(
+    [Query.GetCheckPremiumMember, priAddress],
+    async () => {
+      try {
+        await api.checkPremiumMember(uuid)
+        return true
+      } catch (error) {
+        return false
+      }
+    },
+    {
+      retry: 0,
+      enabled: isAuth,
+      refetchOnMount: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
 
@@ -456,27 +476,29 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
               isAuth={isAuth}
             />
 
-            <Center
-              mt={{ base: 0, md: '18px' }}
-              ml={{ base: '16px', md: 0 }}
-              w={{ base: '142px', md: '158px' }}
-              h={{ base: '22px', md: '34px' }}
-              background="#FFFFFF"
-              border="1px solid #FFA800"
-              borderRadius="30px"
-            >
-              <SvgPremium />
-              <Box
-                ml="2px"
-                fontStyle="italic"
-                fontWeight="500"
-                fontSize="12px"
-                lineHeight="18px"
-                color="#FFA800"
+            {isPremiumMember ? (
+              <Center
+                mt={{ base: 0, md: '18px' }}
+                ml={{ base: '16px', md: 0 }}
+                w={{ base: '142px', md: '158px' }}
+                h={{ base: '22px', md: '34px' }}
+                background="#FFFFFF"
+                border="1px solid #FFA800"
+                borderRadius="30px"
               >
-                {t('premium-member')}
-              </Box>
-            </Center>
+                <SvgPremium />
+                <Box
+                  ml="2px"
+                  fontStyle="italic"
+                  fontWeight="500"
+                  fontSize="12px"
+                  lineHeight="18px"
+                  color="#FFA800"
+                >
+                  {t('premium-member')}
+                </Box>
+              </Center>
+            ) : null}
           </Center>
 
           {settings?.description ? (
@@ -616,9 +638,11 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                           subject,
                           summary,
                           created_at: date,
+                          message_type: type,
                         } = item
                         return (
                           <CommunityCard
+                            type={type}
                             key={id}
                             uuid={id}
                             title={subject}
