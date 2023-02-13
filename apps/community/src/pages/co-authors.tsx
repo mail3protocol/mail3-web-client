@@ -64,7 +64,6 @@ export const UnbindLink: React.FC<{
 
   const handleClose = () => {
     onClose()
-    // clear old value
     setAddress('')
   }
 
@@ -179,7 +178,6 @@ export const BindButton: React.FC<{
 
   const handleClose = () => {
     onClose()
-    // clear old value
     setAddress('')
   }
 
@@ -392,7 +390,8 @@ export const CoAuthors: React.FC = () => {
                   mt="8px"
                   borderRadius="8px 8px 0px 0px"
                   overflow="hidden"
-                  border="1px solid #F2F2F2"
+                  border="1px solid"
+                  borderColor="lineColor"
                 >
                   <Table variant="unstyled">
                     {isLoading ? (
