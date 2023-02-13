@@ -405,7 +405,6 @@ export const CoAuthors: React.FC = () => {
                     <Thead>
                       <Tr>
                         <Th>{t('wallet_address')}</Th>
-                        <Th>{t('state')}</Th>
                         <Th>{t('operate')}</Th>
                       </Tr>
                     </Thead>
@@ -424,7 +423,6 @@ export const CoAuthors: React.FC = () => {
                               />
                             </Flex>
                           </Td>
-                          <Td>{t('bound')}</Td>
                           <Td>
                             <UnbindLink isAdmin={false} />
                           </Td>
@@ -437,7 +435,6 @@ export const CoAuthors: React.FC = () => {
                               <Box>{address}</Box>
                             </Flex>
                           </Td>
-                          <Td>{t('bound')}</Td>
                           <Td>
                             <UnbindLink
                               refetch={refetch}
