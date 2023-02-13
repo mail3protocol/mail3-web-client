@@ -444,7 +444,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
               bitAccount={detail.writer_name}
               uuid={detail.writer_uuid}
               nickname={nickname}
-              refetchArticle={refetch}
+              refetch={refetch}
             />
           ) : null}
 

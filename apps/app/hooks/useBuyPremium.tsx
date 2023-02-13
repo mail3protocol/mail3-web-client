@@ -40,6 +40,7 @@ export interface BuyPremiumDialogOptions {
   uuid?: string
   nickname?: string
   onClose?: () => void
+  refetch?: () => void
 }
 
 const openAtom = atom(false)
@@ -65,7 +66,13 @@ const getAuthingLevel = (sAccount: string, sAddress: string) =>
     `https://daodid.id/api/authing/check?sAccount=${sAccount}&sAddress=${sAddress}`
   )
 
-export const useBuyPremiumModel = () => {
+export const useBuyPremiumModel = (): {
+  isOpen: boolean
+  options: BuyPremiumDialogOptions
+  isLoading: boolean
+  onClose: () => void
+  isBuySuccess: boolean
+} => {
   const isOpen = useAtomValue(openAtom)
   const options = useAtomValue(optionsAtom)
   const isLoading = useAtomValue(loadingAtom)
@@ -163,12 +170,13 @@ const BuyIframe: React.FC<{ bitAccount: string; isPaying: boolean }> = ({
 
 export const BuySuccess: React.FC = () => {
   const [t] = useTranslation(['subscription-article'])
-  const { options } = useBuyPremiumModel()
+  const { options, onClose } = useBuyPremiumModel()
   const { permission, openNotification } = useNotification(false)
   const isMobile = useBreakpointValue({ base: true, md: false })
 
   const reload = () => {
-    window.location.reload()
+    options?.refetch?.()
+    onClose?.()
   }
 
   useEffect(() => {
@@ -267,7 +275,6 @@ export const BuyForm: React.FC = () => {
         const { data } = await getAuthingLevel(bitAccount, addr)
         return {
           state: data.data.role,
-          // state: 'waiting_room',
         }
       } catch (error) {
         return {
@@ -338,11 +345,11 @@ export const BuyForm: React.FC = () => {
 }
 
 export const BuyPremiumDialog: React.FC = () => {
-  const { isOpen, onClose, isBuySuccess } = useBuyPremiumModel()
+  const { isOpen, onClose, isBuySuccess, options } = useBuyPremiumModel()
   const isMobile = useBreakpointValue({ base: true, md: false })
 
   const reload = () => {
-    window.location.reload()
+    options?.refetch?.()
   }
 
   const handleClose = () => {

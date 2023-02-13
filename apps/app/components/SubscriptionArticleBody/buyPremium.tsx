@@ -48,14 +48,14 @@ const getLowestPrice = (sAccount: string) =>
 interface BuyPremiumProps {
   uuid: string
   nickname: string
-  refetchArticle: () => void
+  refetch?: () => void
   bitAccount: string
 }
 
 export const BuyPremium: React.FC<BuyPremiumProps> = ({
   uuid,
   nickname,
-  refetchArticle,
+  refetch,
   bitAccount,
 }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
@@ -97,15 +97,10 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
     },
     {
       retry: 0,
-      enabled: isAuth,
+      enabled: isAuth && isBuying,
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      onSuccess(d) {
-        if (d) {
-          refetchArticle()
-        }
-      },
     }
   )
 
@@ -123,6 +118,9 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
         bitAccount,
         nickname,
         uuid,
+        refetch: () => {
+          refetch?.()
+        },
         onClose: () => {
           setIsBuying(false)
         },

@@ -63,11 +63,7 @@ export const SubscriptionArticleBody: React.FC<
 
   const isPremium = detail.message_type === Subscription.MeesageType.Premium
 
-  const {
-    isLoading,
-    data: detailCSR,
-    refetch,
-  } = useQuery(
+  const { isLoading, data: detailCSR } = useQuery(
     [Query.SubscriptionDetail],
     async () => {
       const { data } = await api.SubscriptionMessageDetail(articleId)
@@ -257,7 +253,9 @@ export const SubscriptionArticleBody: React.FC<
               bitAccount={detail.writer_name}
               uuid={uuid}
               nickname={nickname}
-              refetchArticle={refetch}
+              refetch={() => {
+                window.location.reload()
+              }}
             />
           ) : null}
 
