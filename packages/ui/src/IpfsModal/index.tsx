@@ -23,11 +23,17 @@ import {
   zilpay,
 } from 'hooks'
 import { useTranslation } from 'react-i18next'
-import DesktopIpfsGuidePng from '../../assets/ipfs-guide/desktop.png'
-import MobileIpfsGuidePng from '../../assets/ipfs-guide/mobile.png'
-import { useAPI } from '../../hooks/useAPI'
-import { digestMessage } from '../../utils'
-import GIFLoading from '../../assets/mailbox/loading.gif'
+import { digestMessage } from 'shared'
+import _DesktopIpfsGuidePng from 'assets/ipfs-guide/desktop.png'
+import _DesktopContentIpfsGuidePng from 'assets/ipfs-guide/desktop-content.png'
+import _MobileIpfsGuidePng from 'assets/ipfs-guide/mobile.png'
+import _GIFLoading from 'assets/mailbox/loading.gif'
+import { unifyImage } from '../utils'
+
+const DesktopIpfsGuidePng = unifyImage(_DesktopIpfsGuidePng)
+const MobileIpfsGuidePng = unifyImage(_MobileIpfsGuidePng)
+const DesktopContentIpfsGuidePng = unifyImage(_DesktopContentIpfsGuidePng)
+const GIFLoading = unifyImage(_GIFLoading)
 
 const stringToBeSigned = `Generate MESSAGE ENCRYPTION key for me and I authorize current dApp to access my MESSAGE ENCRYPTION key. (This operation won’t affect your digital assets.)
 
@@ -85,10 +91,19 @@ const SigningDialog: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 export const IpfsModal: React.FC<{
   isOpen: boolean
   onClose: () => void
-  onAfterSignature?: (signatureStr: string) => void
+  onAfterSignature?: (
+    signatureStr: string,
+    signedStringWithSha256: string
+  ) => void
   isForceConnectWallet?: boolean
-}> = ({ isOpen, onClose, onAfterSignature, isForceConnectWallet = true }) => {
-  const api = useAPI()
+  isContent?: boolean
+}> = ({
+  isOpen,
+  onClose,
+  onAfterSignature,
+  isContent = false,
+  isForceConnectWallet = true,
+}) => {
   const { t } = useTranslation('ipfs_modal')
   const provider = useProvider()
   const signMessage = useSignMessage()
@@ -114,8 +129,7 @@ export const IpfsModal: React.FC<{
       const signedStringWithSha256 = `0x${await digestMessage(signedString, {
         algorithm: 'SHA-256',
       })}`
-      await api.updateMessageEncryptionKey(signedStringWithSha256)
-      onAfterSignature?.(signedString)
+      onAfterSignature?.(signedString, signedStringWithSha256)
     } catch (e) {
       console.error(e)
     } finally {
@@ -168,7 +182,9 @@ export const IpfsModal: React.FC<{
               mt="16px"
             >
               <Image
-                src={DesktopIpfsGuidePng}
+                src={
+                  isContent ? DesktopContentIpfsGuidePng : DesktopIpfsGuidePng
+                }
                 display={{ base: 'none', md: 'block' }}
               />
               <Image

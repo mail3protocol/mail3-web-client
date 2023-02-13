@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
+import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -15,6 +16,7 @@ import {
 } from './modals/UpdateSubscriptionResponse'
 import { SubscriptionResponse } from './modals/SubscriptionResponse'
 import { PagingRequest } from './modals/base'
+import { CommunityCollaboratorsResp } from './modals/co-authors'
 
 export class API {
   private readonly axios: AxiosInstance
@@ -108,5 +110,35 @@ export class API {
       content,
       summary: abstract,
     })
+  }
+
+  getCollaborators() {
+    return this.axios.get<CommunityCollaboratorsResp>(
+      `/community/collaborators`
+    )
+  }
+
+  bindCollaborators(address: string) {
+    return this.axios.post(`/community/collaborators/bind`, {
+      address,
+    })
+  }
+
+  unbindCollaborators(address: string) {
+    return this.axios.post(`/community/collaborators/unbind`, {
+      address,
+    })
+  }
+
+  public updateMessageEncryptionKey(messageEncryptionKey: string) {
+    return this.axios.put('/account/settings/message_encryption_keys', {
+      message_encryption_key: messageEncryptionKey,
+    })
+  }
+
+  public getMessageEncryptionKeyState() {
+    return this.axios.get<GetMessageEncryptionKeyResponse>(
+      '/community/message_encryption_key_states'
+    )
   }
 }
