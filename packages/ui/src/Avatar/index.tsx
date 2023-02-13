@@ -104,7 +104,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     if (src) {
       setAvatars((prev) => ({
         ...prev,
-        [address]: src,
+        [address]: src === DEFAULT_AVATAR_SRC ? defaultAvatar : src,
       }))
     }
   }, [src])

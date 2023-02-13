@@ -23,6 +23,7 @@ import {
 } from 'hooks'
 import { Avatar, AvatarProps } from 'ui'
 import { useTranslation } from 'react-i18next'
+import { ReactComponent as CoAuthosSvg } from 'assets/svg/co-authors.svg'
 import { ReactComponent as InformationSvg } from 'assets/svg/information.svg'
 import { ReactComponent as DisconnectSvg } from 'assets/svg/disconnect.svg'
 import { ReactComponent as ChangeWalletSvg } from 'assets/svg/change_wallet.svg'
@@ -68,6 +69,21 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
       >
         <Icon w="20px" h="20px" as={InformationSvg} mr="8px" />
         {t('connect_wallet_button.information')}
+      </Button>
+      <Button
+        as={Link}
+        to={RoutePath.CoAuthors}
+        variant="unstyled"
+        onClick={() => {
+          trackClickCommunityPersonalCenterItem({
+            [TrackKey.CommunityClickCommunityPersonalcenterItem]:
+              CommunityClickCommunityPersonalcenterItem.Information,
+          })
+        }}
+        {...props}
+      >
+        <Icon w="20px" h="20px" as={CoAuthosSvg} mr="8px" />
+        {t('connect_wallet_button.co_authors')}
       </Button>
       <Button
         variant="unstyled"

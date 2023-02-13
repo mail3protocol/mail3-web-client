@@ -6,4 +6,6 @@ export enum QueryKey {
   GetSubscription = 'GetSubscription',
   GetSubscriptionState = 'GetSubscriptionState',
   GetUserInfo = 'GetUserInfo',
+  GetCollaborators = 'GetCollaborators',
+  GetMessageEncryptionKeyState = 'GetMessageEncryptionKeyState',
 }

@@ -114,6 +114,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
+      co_authors: 'Members',
       information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
@@ -364,8 +365,61 @@ export default {
     pixels: 'Images must be at least <span>2440X400</span> pixels',
     exceed: 'Images should not exceed <span>5M</span>',
   },
+  ipfs: {
+    ipfs_link: 'IPFS LINK',
+    eth_address: 'SENDER ETHEREUM ADDRESS',
+    zil_address: 'SENDER ZILLIQA ADDRESS',
+    address: 'SENDER ADDRESS',
+    content_digest: 'CONTENT DIGEST',
+    pending: 'PENDING',
+  },
+  ipfs_modal: {
+    title: 'Enable IPFS Storage',
+    content:
+      'Generate an encryption key to encrypt your content, \n and store the encrypted content on IPFS automatically',
+    generate_key: 'Generate key',
+    signing_modal: {
+      title: 'Please check your \nwallet Content',
+      content:
+        'You need to approve the message signing request on your wallet software including Walletconnect in your mobile devices.',
+    },
+    need_to_open_wallet:
+      'Need to open wallet. If already connected, please try again. ',
+  },
   send_message: {
     title: 'History',
     new_message: 'New Message',
+  },
+  co_authors: {
+    confirm: 'Confirm',
+    title: 'Members',
+    tabs: {
+      management: 'Members Management',
+    },
+    management_text:
+      'Inviting authorized members, they can: connect to this backend, set up Subscription and publish posts.',
+    wallet_address: 'Wallet Address',
+    state: 'State',
+    operate: 'Operate',
+    empty: 'No members have been invited yet',
+    cancel: 'Cancel',
+    bind: 'Invite',
+    unbind: 'Remove',
+    bound: 'Bound',
+    bind_title: 'Invite members',
+    bind_limit: 'You can invite up to 3 members',
+    bind_placeholder: 'Please enter wallet address',
+    bind_bound: 'This wallet address has been invited',
+    bind_not_legitimate: 'Please check the wallet address',
+    bind_successfully: 'Invite successfully',
+    help_text: `<h3>What is Members?</h3>
+    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as members, and the members can directly connect to the Subscription Backend and publish posts.</p>
+    `,
+    unbind_limit:
+      'You have already invited 3 members, if you want to continue to add, please remove the old member first.',
+    unbind_input_title: 'Remove this member',
+    unbind_input_text:
+      'You are about to remove the above wallet address, after removing this address will not be able to connect to this backend for any operation.',
+    unbind_successfully: 'Remove successfully',
   },
 }

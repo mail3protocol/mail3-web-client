@@ -15,7 +15,7 @@ import {
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
-import { Avatar, EchoIframe } from 'ui'
+import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -44,7 +44,7 @@ const PageContainer = styled(Box)`
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({ address, priAddress, articleId, detail, uuid, userInfo }) => {
+> = ({ address, priAddress, articleId, detail, uuid, userInfo, ipfsInfo }) => {
   useAuth()
 
   const api = useAPI()
@@ -187,6 +187,13 @@ export const SubscriptionArticleBody: React.FC<
               html={detail?.content}
               shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
             />
+            {ipfsInfo ? (
+              <IpfsInfoTable
+                ethAddress={ipfsInfo?.owner_identifier}
+                ipfs={ipfsInfo?.url}
+                contentDigest={ipfsInfo?.content_digest}
+              />
+            ) : null}
             <Center mt={{ base: '40px', md: '65px' }}>
               <ShareButtonGroup
                 spacing="50px"
