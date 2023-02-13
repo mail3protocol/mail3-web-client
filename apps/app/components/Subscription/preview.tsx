@@ -18,13 +18,18 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Avatar, EchoIframe } from 'ui'
-import { truncateAddress } from 'shared'
+import {
+  isEthAddress,
+  isPrimitiveEthAddress,
+  truncateAddress,
+  truncateMiddle,
+} from 'shared'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
@@ -263,7 +268,11 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   if (_id) {
     id = _id
   }
-  const { data: detail, isLoading } = useQuery<Subscription.MessageDetailResp>(
+  const {
+    data: detail,
+    isLoading,
+    refetch,
+  } = useQuery<Subscription.MessageDetailResp>(
     ['subscriptionDetail', id],
     async () => {
       const messageDetail = await api.SubscriptionMessageDetail(id)
@@ -276,6 +285,17 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       enabled: !!id,
     }
   )
+
+  const nickname = useMemo(() => {
+    const name = detail?.writer_name ?? ''
+    if (isPrimitiveEthAddress(name)) {
+      return truncateMiddle(name, 6, 4, '_')
+    }
+    if (isEthAddress(name)) {
+      return name.includes('.') ? name.split('.')[0] : name
+    }
+    return name
+  }, [detail?.writer_name])
 
   if (isLoading) {
     return (
@@ -419,7 +439,14 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             </Box>
           ) : null}
 
-          {isNeedPay ? <BuyPremium /> : null}
+          {isNeedPay ? (
+            <BuyPremium
+              bitAccount={detail.writer_name}
+              uuid={detail.writer_uuid}
+              nickname={nickname}
+              refetchArticle={refetch}
+            />
+          ) : null}
 
           {detail?.content ? (
             <Box pt={{ base: '16px', md: '30px' }}>
