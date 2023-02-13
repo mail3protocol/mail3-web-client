@@ -161,6 +161,15 @@ const BuyIframe: React.FC<{ bitAccount: string; isPaying: boolean }> = ({
           zIndex={3}
           backdropFilter="blur(3px)"
         >
+          <Box
+            fontWeight="400"
+            fontSize="14px"
+            lineHeight="16px"
+            color="#333"
+            mr="5px"
+          >
+            May take 1-3 minutes
+          </Box>
           <Spinner />
         </Center>
       ) : null}
@@ -275,6 +284,7 @@ export const BuyForm: React.FC = () => {
         const { data } = await getAuthingLevel(bitAccount, addr)
         return {
           state: data.data.role,
+          // state: 'waiting_room',
         }
       } catch (error) {
         return {
