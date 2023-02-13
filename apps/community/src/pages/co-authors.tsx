@@ -58,40 +58,37 @@ export const UnbindLink: React.FC<{
   const { t } = useTranslation(['co_authors', 'common'])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isLoading, setIsLoading] = useState(false)
-  const [address, setAddress] = useState('')
   const api = useAPI()
   const toast = useToast()
 
   const handleClose = () => {
     onClose()
-    setAddress('')
   }
 
   const onSubmit = async () => {
-    if (address) {
-      setIsLoading(true)
-      try {
-        await api.unbindCollaborators(address)
-        toast(t('unbind_successfully'), {
-          status: 'success',
-          alertProps: { colorScheme: 'green' },
-        })
-        handleClose()
-        if (refetch) refetch()
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (
-            error?.response?.status === 400 &&
-            error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
-          )
-            toast(t('bind_not_legitimate'), {
-              status: 'error',
-              alertProps: { colorScheme: 'red' },
-            })
-        }
+    if (!coAddr) return
+    setIsLoading(true)
+    try {
+      await api.unbindCollaborators(coAddr)
+      toast(t('unbind_successfully'), {
+        status: 'success',
+        alertProps: { colorScheme: 'green' },
+      })
+      handleClose()
+      if (refetch) refetch()
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          error?.response?.status === 400 &&
+          error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
+        )
+          toast(t('bind_not_legitimate'), {
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
       }
-      setIsLoading(false)
     }
+    setIsLoading(false)
   }
 
   return (
@@ -115,9 +112,9 @@ export const UnbindLink: React.FC<{
           <ModalBody p="8px 20px">
             <Input
               border="none"
-              value={address}
+              value={coAddr}
               placeholder={t('bind_placeholder')}
-              onChange={({ target: { value } }) => setAddress(value)}
+              disabled
             />
             <Text fontWeight="500" fontSize="14px" lineHeight="20px" mt="8px">
               {t('unbind_input_text')}
@@ -129,7 +126,7 @@ export const UnbindLink: React.FC<{
               borderRadius="40px"
               colorScheme="red"
               w="138px"
-              disabled={address !== coAddr || isLoading}
+              disabled={isLoading}
               onClick={onSubmit}
               isLoading={isLoading}
             >
