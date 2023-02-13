@@ -227,16 +227,15 @@ export const BuySuccess: React.FC = () => {
 export const BuyForm: React.FC = () => {
   const [t] = useTranslation(['subscription-article'])
   const api = useAPI()
-  const [isPaying, setIsPaying] = useState(false)
+  const [isWaitingRoom, setIsWaitingRoom] = useState(false)
   const { options } = useBuyPremiumModel()
-  const [isBuySuccess, setIsBuySuccess] = useAtom(isBuySuccessAtom)
+  const [, setIsBuySuccess] = useAtom(isBuySuccessAtom)
   const bitAccount = options?.bitAccount ?? ''
   const uuid = options?.uuid ?? ''
   const addr = options?.addr ?? ''
 
-  // interval buy ok
   useQuery(
-    [Query.GetCheckPremiumMember, 'interval buy'],
+    [Query.GetCheckPremiumMember, 'interval buy', uuid],
     async () => {
       try {
         await api.checkPremiumMember(uuid)
@@ -246,7 +245,7 @@ export const BuyForm: React.FC = () => {
       }
     },
     {
-      enabled: isPaying,
+      enabled: isWaitingRoom,
       retry: 0,
       refetchOnMount: true,
       refetchOnReconnect: false,
@@ -256,20 +255,19 @@ export const BuyForm: React.FC = () => {
         if (d) {
           setIsBuySuccess(true)
           api.SubscriptionCommunityUserFollowing(uuid).catch()
-        } else {
-          // setIsBuySuccess(true)
         }
       },
     }
   )
 
   useQuery(
-    ['getAuthingLevel'],
+    ['getAuthingLevel', bitAccount, addr],
     async () => {
       try {
         const { data } = await getAuthingLevel(bitAccount, addr)
         return {
           state: data.data.role,
+          // state: 'waiting_room',
         }
       } catch (error) {
         return {
@@ -278,16 +276,17 @@ export const BuyForm: React.FC = () => {
       }
     },
     {
-      enabled: !!bitAccount && !!addr && !isBuySuccess,
+      enabled: !!bitAccount && !!addr,
       retry: 0,
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      refetchInterval: 3000,
+      refetchInterval(d) {
+        return d?.state === 'waiting_room' ? false : 3000
+      },
       onSuccess(d) {
         if (d.state === 'waiting_room') {
-          // set await chain loading
-          setIsPaying(true)
+          setIsWaitingRoom(true)
         }
       },
     }
@@ -319,7 +318,7 @@ export const BuyForm: React.FC = () => {
       >
         {t('sub-domain')}
       </Center>
-      <BuyIframe bitAccount={bitAccount} isPaying={isPaying} />
+      <BuyIframe bitAccount={bitAccount} isPaying={isWaitingRoom} />
       <Center mt="24px" fontWeight="400" fontSize="12px" color="#FF6B00">
         {t('wallet')}
       </Center>
