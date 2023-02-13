@@ -18,7 +18,7 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { noop, PromiseObj } from 'hooks'
-import { atom, useAtomValue } from 'jotai'
+import { atom, useAtom, useAtomValue } from 'jotai'
 import { selectAtom, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
@@ -229,14 +229,14 @@ export const BuyForm: React.FC = () => {
   const api = useAPI()
   const [isPaying, setIsPaying] = useState(false)
   const { options } = useBuyPremiumModel()
-  const setIsBuySuccess = useUpdateAtom(isBuySuccessAtom)
+  const [isBuySuccess, setIsBuySuccess] = useAtom(isBuySuccessAtom)
   const bitAccount = options?.bitAccount ?? ''
   const uuid = options?.uuid ?? ''
   const addr = options?.addr ?? ''
 
   // interval buy ok
   useQuery(
-    [Query.GetCheckPremiumMember],
+    [Query.GetCheckPremiumMember, 'interval buy'],
     async () => {
       try {
         await api.checkPremiumMember(uuid)
@@ -278,7 +278,7 @@ export const BuyForm: React.FC = () => {
       }
     },
     {
-      enabled: !!bitAccount && !!addr,
+      enabled: !!bitAccount && !!addr && !isBuySuccess,
       retry: 0,
       refetchOnMount: true,
       refetchOnReconnect: false,

@@ -83,13 +83,14 @@ export const SubscriptionArticleBody: React.FC<
 
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
+  const realContent = detail.content || detailCSR?.content
 
   useEffect(() => {
-    if (detail?.content) {
+    if (realContent) {
       // report pv
       api.postStatsEvents({ uuid: articleId }).catch(Boolean)
     }
-  }, [detail?.content])
+  }, [realContent])
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {
@@ -266,10 +267,10 @@ export const SubscriptionArticleBody: React.FC<
             </Center>
           ) : null}
 
-          {detail?.content ? (
+          {realContent ? (
             <Box pt={{ base: '10px', md: '30px' }}>
               <RenderHTML
-                html={detail?.content}
+                html={realContent}
                 shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
               />
             </Box>

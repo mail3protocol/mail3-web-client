@@ -86,7 +86,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
   )
 
   const { data: isPremiumMember, isLoading: isChecking } = useQuery(
-    [Query.GetCheckPremiumMember],
+    [Query.GetCheckPremiumMember, 'init one time'],
     async () => {
       try {
         await api.checkPremiumMember(uuid)
@@ -98,7 +98,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
     {
       retry: 0,
       enabled: isAuth,
-      refetchOnMount: true,
+      refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
