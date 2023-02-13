@@ -231,8 +231,9 @@ export const BindButton: React.FC<{
         w="175px"
         h="26px"
         mt="8px"
+        isLoading={isLoadingIsUploadedIpfsKeyState}
         onClick={onBind}
-        disabled={disabled}
+        disabled={disabled || isLoadingIsUploadedIpfsKeyState}
       >
         {t('bind_title')}
       </Button>
