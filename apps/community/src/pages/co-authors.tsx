@@ -117,7 +117,7 @@ export const UnbindLink: React.FC<{
             <Input
               border="none"
               value={address}
-              placeholder={t('bind_pleaceholder')}
+              placeholder={t('bind_placeholder')}
               onChange={({ target: { value } }) => setAddress(value)}
             />
             <Text fontWeight="500" fontSize="14px" lineHeight="20px" mt="8px">
@@ -267,7 +267,7 @@ export const BindButton: React.FC<{
             <Input
               border="none"
               value={address}
-              placeholder={t('bind_pleaceholder')}
+              placeholder={t('bind_placeholder')}
               onChange={({ target: { value } }) => setAddress(value)}
             />
             <Text

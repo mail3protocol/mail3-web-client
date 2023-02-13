@@ -114,7 +114,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
-      co_authors: 'Co-authors',
+      co_authors: 'Members',
       information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
@@ -392,34 +392,34 @@ export default {
   },
   co_authors: {
     confirm: 'Confirm',
-    title: 'Co-authors',
+    title: 'Members',
     tabs: {
-      management: 'Authors Management',
+      management: 'Members Management',
     },
     management_text:
-      'Binding authorized wallet accounts, they can: connect to this backend, set up subscriptions and send group messages.',
+      'Inviting authorized members, they can: connect to this backend, set up Subscription and publish posts.',
     wallet_address: 'Wallet Address',
     state: 'State',
     operate: 'Operate',
-    empty: 'No co-authors have been bound yet',
+    empty: 'No members have been invited yet',
     cancel: 'Cancel',
-    bind: 'Bind',
-    unbind: 'Unbind',
+    bind: 'Invite',
+    unbind: 'Remove',
     bound: 'Bound',
-    bind_title: 'Bind the co-authors',
-    bind_limit: 'You can bind up to 3 wallet addresses',
-    bind_pleaceholder: 'Please enter wallet address',
-    bind_bound: 'This wallet address has been bound',
-    bind_not_legitimate: 'The wallet address is not legitimate',
-    bind_successfully: 'Bind successfully',
-    help_text: `<h3>What is Co-authors?</h3>
-    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to bind 5 wallet addresses as Co-authors, and the Co-authors can directly connect to the Subscription Backend and operate group sending.</p>
+    bind_title: 'Invite members',
+    bind_limit: 'You can invite up to 3 members',
+    bind_placeholder: 'Please enter wallet address',
+    bind_bound: 'This wallet address has been invited',
+    bind_not_legitimate: 'Please check the wallet address',
+    bind_successfully: 'Invite successfully',
+    help_text: `<h3>What is Members?</h3>
+    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as members, and the members can directly connect to the Subscription Backend and publish posts.</p>
     `,
     unbind_limit:
-      'You have already bound 3 co-authors, if you want to continue to add, please unbind the old co-author account first.',
-    unbind_input_title: 'Unbind this wallet address',
+      'You have already invited 3 members, if you want to continue to add, please remove the old member first.',
+    unbind_input_title: 'Remove this member',
     unbind_input_text:
-      'You are about to unbind the above wallet address, after unbinding this address will not be able to connect to this backend for any operation.',
-    unbind_successfully: 'Unbind successfully',
+      'You are about to remove the above wallet address, after removing this address will not be able to connect to this backend for any operation.',
+    unbind_successfully: 'Remove successfully',
   },
 }
