@@ -1,18 +1,20 @@
 import React from 'react'
-import { Box, Center, Flex, Text } from '@chakra-ui/react'
-import { Logo, PageContainer } from 'ui'
+import { Box, Flex, Spacer } from '@chakra-ui/react'
+import { LogoSubscription } from 'ui'
 import NextLink from 'next/link'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { Subscription } from 'models'
 import { ConfirmDialog, useDynamicSticky } from 'hooks'
 import axios from 'axios'
-import { NAVBAR_HEIGHT } from '../constants'
+import { APP_URL, NAVBAR_HEIGHT } from '../constants'
 import { RoutePath } from '../route/path'
 import { SubscriptionArticleBody } from '../components/SubscriptionArticleBody'
 import { UserSettingResponse } from '../api'
 import { Query } from '../api/query'
 import { useAPI } from '../hooks/useAPI'
+import { NotificationBar } from '../components/NotificationBar'
+import { ShareButtonGroup } from '../components/ShareButtonGroup'
 
 const NavArea = styled(Box)`
   width: 100%;
@@ -23,22 +25,30 @@ const NavArea = styled(Box)`
   z-index: 9;
 `
 
-const Navbar = () => (
+const Navbar: React.FC<{ shareUrl: string; subject: string }> = ({
+  shareUrl,
+  subject,
+}) => (
   <Flex
     h={`${NAVBAR_HEIGHT}px`}
     alignItems="center"
     justifyContent={['flex-start', 'center', 'center']}
+    p="0 20px"
   >
     <NextLink href={RoutePath.Subscription} passHref>
       <a>
-        <Center>
-          <Logo textProps={{ color: '#231815' }} isHiddenText />
-          <Text fontWeight="700" fontSize="18px" lineHeight="20px" ml="8px">
-            Subscription
-          </Text>
-        </Center>
+        <LogoSubscription />
       </a>
     </NextLink>
+    <Spacer />
+    <Box display={{ base: 'block', md: 'none' }}>
+      <ShareButtonGroup
+        spacing="10px"
+        shareUrl={shareUrl}
+        text={subject}
+        iconW="16px"
+      />
+    </Box>
   </Flex>
 )
 
@@ -97,12 +107,15 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
     }
   )
 
+  const shareUrl = `${APP_URL}/p/${articleId}`
+
   return (
     <>
       <NavArea style={{ top, position }}>
-        <PageContainer>
-          <Navbar />
-        </PageContainer>
+        <Box w="full">
+          <Navbar shareUrl={shareUrl} subject={detail.subject} />
+          <NotificationBar uuid={uuid} />
+        </Box>
       </NavArea>
       <SubscriptionArticleBody
         address={detail.writer_name}
@@ -110,6 +123,7 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
         priAddress={priAddress}
         articleId={articleId}
         detail={detail}
+        shareUrl={shareUrl}
         userInfo={info || userInfo}
       />
       <ConfirmDialog />

@@ -13,4 +13,5 @@ export enum Query {
   SubscriptionArticleInit = 'subscription article init',
   SubscriptionDetail = 'subscription article detai',
   GetUserInfo = 'get_user_info',
+  GetCheckPremiumMember = 'check_premium_member',
 }
