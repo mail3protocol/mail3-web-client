@@ -233,7 +233,7 @@ export const Dashboard: React.FC = () => {
     if (isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading) {
       return
     }
-    if (isAdmin) {
+    if (!isAdmin) {
       toast(t('mirror.not_allow'))
       return
     }
