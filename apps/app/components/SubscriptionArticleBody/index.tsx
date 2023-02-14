@@ -18,8 +18,8 @@ import {
   truncateMailAddress,
   truncateMiddle,
 } from 'shared'
+import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
-import { Avatar, EchoIframe } from 'ui'
 import { Subscription } from 'models'
 import { useQuery } from 'react-query'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
@@ -53,7 +53,16 @@ const PageContainer = styled(Box)`
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({ address, priAddress, articleId, detail, uuid, userInfo, shareUrl }) => {
+> = ({
+  address,
+  priAddress,
+  articleId,
+  detail,
+  uuid,
+  userInfo,
+  ipfsInfo,
+  shareUrl,
+}) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
 
@@ -271,6 +280,13 @@ export const SubscriptionArticleBody: React.FC<
                 html={realContent}
                 shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
               />
+              {ipfsInfo ? (
+                <IpfsInfoTable
+                  ethAddress={ipfsInfo?.owner_identifier}
+                  ipfs={ipfsInfo?.url}
+                  contentDigest={ipfsInfo?.content_digest}
+                />
+              ) : null}
             </Box>
           ) : null}
           <Center mt={{ base: '40px', md: '65px' }}>

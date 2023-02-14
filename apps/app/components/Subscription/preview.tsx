@@ -23,7 +23,7 @@ import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Avatar, EchoIframe } from 'ui'
+import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import {
   isEthAddress,
   isPrimitiveEthAddress,
@@ -286,6 +286,21 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     }
   )
 
+  const { data: ipfsInfo } = useQuery(
+    ['ipfsInfo', id],
+    async () => {
+      const ipfs = await api.getSubscribePageIpfsInfo(id)
+      return ipfs.data
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      enabled: !!id,
+      retry: false,
+    }
+  )
+
   const nickname = useMemo(() => {
     const name = detail?.writer_name ?? ''
     if (isPrimitiveEthAddress(name)) {
@@ -457,6 +472,15 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
                 from={{ name: '', address: '' }}
                 shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
               />
+              {ipfsInfo ? (
+                <Box mb="24px">
+                  <IpfsInfoTable
+                    ethAddress={ipfsInfo?.owner_identifier}
+                    ipfs={ipfsInfo?.url}
+                    contentDigest={ipfsInfo?.content_digest}
+                  />
+                </Box>
+              ) : null}
             </Box>
           ) : null}
           <Box mt="20px">

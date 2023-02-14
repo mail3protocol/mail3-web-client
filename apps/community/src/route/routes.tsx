@@ -8,6 +8,7 @@ import { EarnNft } from '../pages/subscribe/earn-nft'
 import { Information } from '../pages/information'
 import { Premium } from '../pages/subscribe/premium'
 import { NotFoundPage } from '../pages/_404'
+import { CoAuthors } from '../pages/co-authors'
 
 interface ExpandedRouterProps extends RouteProps {
   key: string
@@ -50,6 +51,11 @@ export const routes: ExpandedRouterProps[] = [
     path: RoutePath.Premium,
     key: 'premium',
     element: <Premium />,
+  },
+  {
+    path: RoutePath.CoAuthors,
+    key: 'members',
+    element: <CoAuthors />,
   },
   {
     path: '*',

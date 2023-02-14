@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -20,6 +21,7 @@ import {
   UserPremiumSettingResponse,
   UserPremiumSettingState,
 } from './modals/UserPremiumSetting'
+import { CommunityCollaboratorsResp } from './modals/co-authors'
 
 export class API {
   private readonly axios: AxiosInstance
@@ -142,6 +144,36 @@ export class API {
   getUserPremiumSettings() {
     return this.axios.get<UserPremiumSettingResponse>(
       `/community/premium_setting`
+    )
+  }
+
+  getCollaborators() {
+    return this.axios.get<CommunityCollaboratorsResp>(
+      `/community/collaborators`
+    )
+  }
+
+  bindCollaborators(address: string) {
+    return this.axios.post(`/community/collaborators/bind`, {
+      address,
+    })
+  }
+
+  unbindCollaborators(address: string) {
+    return this.axios.post(`/community/collaborators/unbind`, {
+      address,
+    })
+  }
+
+  public updateMessageEncryptionKey(messageEncryptionKey: string) {
+    return this.axios.put('/account/settings/message_encryption_keys', {
+      message_encryption_key: messageEncryptionKey,
+    })
+  }
+
+  public getMessageEncryptionKeyState() {
+    return this.axios.get<GetMessageEncryptionKeyResponse>(
+      '/community/message_encryption_key_states'
     )
   }
 }

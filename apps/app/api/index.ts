@@ -469,6 +469,12 @@ export class API {
     )
   }
 
+  public getSubscribePageIpfsInfo(messageId: string) {
+    return this.axios.get<MessageOnChainIdentifierResponse>(
+      `/public/community/message_on_chain_identifiers/${messageId}`
+    )
+  }
+
   public async getSubscribeStatus(
     userId: string
   ): Promise<AxiosResponse<CommunitySubscriptionResp>> {

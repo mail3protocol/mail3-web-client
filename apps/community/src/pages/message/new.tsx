@@ -33,7 +33,7 @@ import { QueryKey } from '../../api/QueryKey'
 import { useAPI } from '../../hooks/useAPI'
 import { UserPremiumSettingState } from '../../api/modals/UserPremiumSetting'
 
-const ABSTRACT_MAX_LENGTH = 100
+const ABSTRACT_MAX_LENGTH = 156
 
 export const NewMessage = () => {
   useDocumentTitle('New Message')

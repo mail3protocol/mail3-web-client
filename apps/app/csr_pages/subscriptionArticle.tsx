@@ -3,8 +3,8 @@ import { Box, Flex, Spacer } from '@chakra-ui/react'
 import { LogoSubscription } from 'ui'
 import NextLink from 'next/link'
 import styled from '@emotion/styled'
+import { Subscription, MessageOnChainIdentifierResponse } from 'models'
 import { useQuery } from 'react-query'
-import { Subscription } from 'models'
 import { ConfirmDialog, useDynamicSticky } from 'hooks'
 import axios from 'axios'
 import { APP_URL, NAVBAR_HEIGHT } from '../constants'
@@ -60,6 +60,7 @@ export interface SubscriptionArticleProps {
   previewImage: string
   uuid: string
   url?: string
+  ipfsInfo: MessageOnChainIdentifierResponse | null
   userInfo: { nickname: string; avatar: string } & UserSettingResponse
 }
 
@@ -67,7 +68,7 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
   props
 ) => {
   const { top, position } = useDynamicSticky({ navbarHeight: NAVBAR_HEIGHT })
-  const { articleId, detail, uuid, priAddress, userInfo } = props
+  const { articleId, detail, uuid, priAddress, userInfo, ipfsInfo } = props
   const api = useAPI()
 
   const { data: info } = useQuery(
@@ -121,6 +122,7 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
         address={detail.writer_name}
         uuid={uuid}
         priAddress={priAddress}
+        ipfsInfo={ipfsInfo}
         articleId={articleId}
         detail={detail}
         shareUrl={shareUrl}

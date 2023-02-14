@@ -12,6 +12,8 @@ import {
   Spinner,
   useDisclosure,
 } from '@chakra-ui/react'
+import { useQuery } from 'react-query'
+import { IpfsModal } from 'ui'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHelpers } from '@remirror/react'
@@ -25,6 +27,7 @@ import { RoutePath } from '../../route/path'
 import { CloseButton } from '../ConfirmDialog'
 import { APP_URL } from '../../constants/env/url'
 import { MessageType } from '../../api/modals/MessageListResponse'
+import { QueryKey } from '../../api/QueryKey'
 
 export interface SendButtonProps extends ButtonProps {
   subject: string
@@ -141,6 +144,19 @@ export const SendButton: React.FC<SendButtonProps> = ({
     )
   }, [isSent, isLoading, t, messageType])
 
+  const {
+    isOpen: isOpenIpfsModal,
+    onOpen: onOpenIpfsModal,
+    onClose: onCloseIpfsModal,
+  } = useDisclosure()
+
+  const {
+    data: isUploadedIpfsKey,
+    isLoading: isLoadingIsUploadedIpfsKeyState,
+  } = useQuery([QueryKey.GetMessageEncryptionKeyState], () =>
+    api.getMessageEncryptionKeyState().then((res) => res.data.state === 'set')
+  )
+
   return (
     <>
       <Button
@@ -154,6 +170,19 @@ export const SendButton: React.FC<SendButtonProps> = ({
       >
         {t('send')}
       </Button>
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isContent
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async (_, key) => {
+            await api.updateMessageEncryptionKey(key)
+            onCloseIpfsModal()
+            await onSendMessage()
+          }}
+        />
+      ) : null}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -187,7 +216,11 @@ export const SendButton: React.FC<SendButtonProps> = ({
                     })
                     return
                   }
-                  onSendMessage()
+                  if (isUploadedIpfsKey) {
+                    onSendMessage()
+                  } else {
+                    onOpenIpfsModal()
+                  }
                 }}
                 fontWeight="500"
                 px="32px"
