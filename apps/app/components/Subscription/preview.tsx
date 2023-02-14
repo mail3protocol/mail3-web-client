@@ -456,7 +456,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
 
           {isNeedPay ? (
             <BuyPremium
-              bitAccount={detail.writer_name}
+              bitAccount={detail.dot_bit_account}
               uuid={detail.writer_uuid}
               nickname={nickname}
               refetch={refetch}

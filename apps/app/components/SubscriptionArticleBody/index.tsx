@@ -256,7 +256,7 @@ export const SubscriptionArticleBody: React.FC<
 
           {isNeedPay ? (
             <BuyPremium
-              bitAccount={detail.writer_name}
+              bitAccount={detail.dot_bit_account}
               uuid={uuid}
               nickname={nickname}
               refetch={() => {

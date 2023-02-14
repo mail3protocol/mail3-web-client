@@ -30,6 +30,7 @@ export namespace Subscription {
     created_at: string
     summary: string
     message_type: MeesageType
+    dot_bit_account: string
   }
 
   export interface MessagesReq {
