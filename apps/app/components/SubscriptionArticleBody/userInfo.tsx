@@ -47,7 +47,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   return (
     <Box
       border={{ base: 'none', md: '1px solid rgba(0, 0, 0, 0.1)' }}
-      borderTop="none"
+      borderTop={{ md: 'none' }}
       w={{ base: 'full', md: '305px' }}
     >
       <Center

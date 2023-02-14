@@ -96,8 +96,8 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     informationAvatarBackground: 'linear-gradient(#FFB800, #4E51F4)',
     connectWalletButtonBackground: '#FFF',
     connectedWalletButton: {
-      background: '#000',
-      color: '#fff',
+      background: '#F3F3F3',
+      color: '#333',
     },
     informationQrCodeBackground: '#FFF',
     previewDatetimeColor: '#6f6f6f',

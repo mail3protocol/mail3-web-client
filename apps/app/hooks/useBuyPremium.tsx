@@ -373,7 +373,7 @@ export const BuyPremiumDialog: React.FC = () => {
     return (
       <Drawer placement="bottom" onClose={handleClose} isOpen={isOpen}>
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent borderRadius="32px 32px 0px 0px">
           <DrawerCloseButton />
           <DrawerBody>{isBuySuccess ? <BuySuccess /> : <BuyForm />}</DrawerBody>
         </DrawerContent>
@@ -384,7 +384,7 @@ export const BuyPremiumDialog: React.FC = () => {
   return (
     <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay />
-      <ModalContent p="0" maxW={isBuySuccess ? '305px' : '548px'}>
+      <ModalContent p="0" maxW={isBuySuccess ? '305px' : '548px'} borderRadius="32px">
         <ModalCloseButton />
         <ModalBody p="0">
           {isBuySuccess ? <BuySuccess /> : <BuyForm />}

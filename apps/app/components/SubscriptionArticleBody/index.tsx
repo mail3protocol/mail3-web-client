@@ -116,9 +116,6 @@ export const SubscriptionArticleBody: React.FC<
       mb="10px"
       p={{ base: '0 20px', md: '0' }}
     >
-      <Text fontWeight="800" fontSize={{ base: '20px', md: '32px' }}>
-        Comments
-      </Text>
       <EchoIframe
         targetUri={`${APP_URL}/${RoutePath.Subscription}/${articleId}`}
         mailAddress={mailAddress}
@@ -157,7 +154,7 @@ export const SubscriptionArticleBody: React.FC<
           {isPremium ? (
             <Center
               mt={{ base: '8px', md: '13px' }}
-              w="112px"
+              w="118px"
               h={{ base: '18px', md: '24px' }}
               background="#FFF6D6"
               borderRadius="20px"
@@ -289,7 +286,7 @@ export const SubscriptionArticleBody: React.FC<
               ) : null}
             </Box>
           ) : null}
-          <Center mt={{ base: '40px', md: '65px' }}>
+          <Center mt={{ base: '50px', md: '50px' }}>
             <ShareButtonGroup
               spacing="50px"
               shareUrl={shareUrl}

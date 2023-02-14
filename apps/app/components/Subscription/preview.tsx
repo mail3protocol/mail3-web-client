@@ -406,7 +406,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         <Flex align="center" className="info">
           {isPremium ? (
             <Center
-              w="112px"
+              w="118px"
               h={{ base: '18px', md: '24px' }}
               background="#FFF6D6"
               borderRadius="20px"
