@@ -50,7 +50,11 @@ export const StateProvider: React.FC<StateProviderProps> = ({
       new CodeBlockExtension(),
       new CustomizedBlockquoteExtension(),
       new PlaceholderExtension({ placeholder }),
-      new LinkExtension(),
+      new LinkExtension({
+        extraAttributes: {
+          target: '_blank',
+        },
+      }),
       new CustomizedImageExtension({
         enableResizing: true,
         uploadHandler: (files) => uploadHandlerFromHomeApi(files, homeApi),
