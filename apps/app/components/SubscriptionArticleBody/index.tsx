@@ -110,7 +110,7 @@ export const SubscriptionArticleBody: React.FC<
     return ''
   }, [userInfo])
 
-  const EchoBody = (
+  const EchoBody = !isNeedPay ? (
     <Box
       mt={{ base: '50px', md: '80px' }}
       mb="10px"
@@ -121,7 +121,7 @@ export const SubscriptionArticleBody: React.FC<
         mailAddress={mailAddress}
       />
     </Box>
-  )
+  ) : null
 
   return (
     <PageContainer>

@@ -481,14 +481,14 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
                   />
                 </Box>
               ) : null}
+              <Box mt="20px">
+                <EchoIframe
+                  targetUri={`${APP_URL}/${RoutePath.Subscription}/${id}`}
+                  mailAddress={userProps?.defaultAddress}
+                />
+              </Box>
             </Box>
           ) : null}
-          <Box mt="20px">
-            <EchoIframe
-              targetUri={`${APP_URL}/${RoutePath.Subscription}/${id}`}
-              mailAddress={userProps?.defaultAddress}
-            />
-          </Box>
         </Box>
       </Box>
       <Center className="mobile-button" w="100%" mt="20px">
