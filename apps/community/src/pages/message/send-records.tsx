@@ -7,7 +7,6 @@ import {
   Box,
   VStack,
   Spinner,
-  Center,
   Icon,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +14,10 @@ import { useInfiniteQuery } from 'react-query'
 import { Fragment, useMemo } from 'react'
 import dayjs from 'dayjs'
 import { Container } from '../../components/Container'
-import { NewMessageLinkButton } from '../../components/NewMessageLinkButton'
+import {
+  NewMessageLinkButton,
+  PureStyledNewMessageButton,
+} from '../../components/NewMessageLinkButton'
 import { SentRecordItem } from '../../components/SentRecordItem'
 import { QueryKey } from '../../api/QueryKey'
 import { useAPI } from '../../hooks/useAPI'
@@ -97,18 +99,9 @@ export const SendRecords: React.FC = () => {
           <Heading as="h3" fontSize="16px">
             {t('switch_from_mirror')}
           </Heading>
-          <Center
-            as="button"
-            w="full"
-            mt="20px"
-            flex={1}
-            borderColor="primaryTextColor"
-            borderWidth="2px"
-            borderStyle="dashed"
-            rounded="14px"
-          >
+          <PureStyledNewMessageButton>
             <Icon as={DownloadSvg} w="24px" h="24px" />
-          </Center>
+          </PureStyledNewMessageButton>
         </Flex>
       </Grid>
       <Box {...cardStyleProps} p="32px">
