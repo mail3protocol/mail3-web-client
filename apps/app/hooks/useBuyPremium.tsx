@@ -127,6 +127,7 @@ const BuyIframe: React.FC<{ bitAccount: string; isPaying: boolean }> = ({
     <Center
       mt="8px"
       position="relative"
+      overflow="hidden"
       transform={
         isMobile
           ? `scale(${Math.min(1, (window.innerWidth / 504) * 0.95)})`
@@ -148,7 +149,7 @@ const BuyIframe: React.FC<{ bitAccount: string; isPaying: boolean }> = ({
         onLoad={onload}
         title="daodid"
         width="504"
-        height="190"
+        height="192"
         style={{ position: 'relative', zIndex: 2 }}
       />
       {isPaying ? (
@@ -222,7 +223,7 @@ export const BuySuccess: React.FC = () => {
         />
       </Text>
 
-      {permission !== 'granted' && !isMobile ? (
+      {permission !== 'granted' || isMobile ? (
         <Text
           mt="16px"
           fontWeight="300"
@@ -258,6 +259,7 @@ export const BuyForm: React.FC = () => {
         await api.checkPremiumMember(uuid)
         return true
       } catch (error) {
+        // return true
         return false
       }
     },
