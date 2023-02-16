@@ -1,22 +1,26 @@
-import { Grid, Box } from '@chakra-ui/layout'
+import { Box, Grid } from '@chakra-ui/layout'
 import {
-  Flex,
-  Heading,
-  VStack,
-  Text,
-  Link,
-  FormControl,
-  FormLabel,
   Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
   Icon,
+  Link,
+  ListItem,
+  OrderedList,
+  Text,
   Tooltip,
   UnorderedList,
-  OrderedList,
-  ListItem,
+  VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { useState } from 'react'
+import { AliasMailType } from 'models'
+import { isBitDomain, removeMailSuffix } from 'shared'
+import { useDialog } from 'hooks'
 import { Container } from '../../components/Container'
 import { TipsPanel } from '../../components/TipsPanel'
 import { ReactComponent as QuestionSvg } from '../../assets/Question.svg'
@@ -35,8 +39,10 @@ import {
   CONTACT_URL,
   DAODID_URL,
   DOT_BIT_URL,
+  SELL_HELP_DOCUMENT_URL,
   SUPER_DID_URL,
 } from '../../constants/env/url'
+import { useToast } from '../../hooks/useToast'
 
 export const Premium: React.FC = () => {
   const { t } = useTranslation(['premium', 'common'])
@@ -48,14 +54,30 @@ export const Premium: React.FC = () => {
   const [subdomainState, setSubdomainState] = useState<
     SubDomainState | undefined
   >(undefined)
+  const [verifyDomainErrorMessage, setVerifyDomainErrorMessage] = useState('')
+  const toast = useToast()
+  const confirm = useDialog()
   const { data, isLoading, refetch } = useQuery(
     [QueryKey.GetUserPremiumSettings],
     async () => api.getUserPremiumSettings().then((res) => res.data),
     {
-      onSuccess(d) {
+      async onSuccess(d) {
         if (!isSetVerifyDomainValue) {
           setIsSetVerifyDomainValue(true)
-          setVerifyDomainValue(d.dot_bit_account)
+          if (d.dot_bit_account) {
+            setVerifyDomainValue(d.dot_bit_account)
+            return
+          }
+          const dotBitItem = await api
+            .getAliases()
+            .then((res) =>
+              res.data.aliases.find(
+                (alias) => alias.email_type === AliasMailType.Bit
+              )
+            )
+          if (dotBitItem) {
+            setVerifyDomainValue(removeMailSuffix(dotBitItem.address))
+          }
         }
       },
     }
@@ -71,22 +93,79 @@ export const Premium: React.FC = () => {
     contact: <Link href={CONTACT_URL} target="_blank" color="primary.900" />,
     bit: <Link href={DOT_BIT_URL} target="_blank" color="primary.900" />,
     superdid: <Link href={SUPER_DID_URL} target="_blank" color="primary.900" />,
+    detail: (
+      <Link href={SELL_HELP_DOCUMENT_URL} target="_blank" color="primary" />
+    ),
   }
 
-  const getDotBitDomainState = async (v?: string) => {
+  const getDotBitDomainState = async () => {
     if (verifyDotBitDomainState.isLoading) return
-    const r = await verifyDotBitDomainState.onVerify(v || verifyDomainValue)
+    if (!isBitDomain(verifyDomainValue)) {
+      setVerifyDomainErrorMessage(t('is_not_dot_bit_address'))
+      return
+    }
+    const r = await verifyDotBitDomainState.onVerify(verifyDomainValue)
+    if (r === ErrorCode.NOT_OWNED_THE_DOT_BIT_ACCOUNT) {
+      setVerifyDomainErrorMessage(t('is_not_owner'))
+      return
+    }
     setSubdomainState(r)
   }
 
-  const onUpdatePremiumSetting = async (state: UserPremiumSettingState) => {
-    if (isUpdatingPremiumSetting) return
-    setIsUpdatingPremiumSetting(true)
-    await api.updateUserPremiumSettings(verifyDomainValue, {
-      state,
-    })
-    await refetch()
-    setIsUpdatingPremiumSetting(false)
+  const onUpdatePremiumSetting = (state: UserPremiumSettingState) => {
+    if (!isBitDomain(verifyDomainValue)) {
+      setVerifyDomainErrorMessage(t('is_not_dot_bit_address'))
+      return
+    }
+    async function action() {
+      if (isUpdatingPremiumSetting) return
+      setIsUpdatingPremiumSetting(true)
+      try {
+        await api.updateUserPremiumSettings(verifyDomainValue, {
+          state,
+        })
+        await refetch()
+      } catch (err: any) {
+        toast(
+          err?.response?.data?.message ||
+            err?.message ||
+            t('unknown_error', { ns: 'common' })
+        )
+      } finally {
+        setIsUpdatingPremiumSetting(false)
+      }
+    }
+    if (state === UserPremiumSettingState.Enabled) {
+      confirm({
+        title: t('enable_confirm_dialog.title'),
+        description: (
+          <Trans
+            t={t}
+            i18nKey="enable_confirm_dialog.description"
+            components={transComponents}
+          />
+        ),
+        onConfirm: action,
+        okText: t('confirm'),
+      })
+    }
+    if (state === UserPremiumSettingState.Disabled) {
+      confirm({
+        title: t('disable_confirm_dialog.title'),
+        description: (
+          <Trans
+            t={t}
+            i18nKey="disable_confirm_dialog.description"
+            components={transComponents}
+          />
+        ),
+        onConfirm: action,
+        okText: t('confirm'),
+        okButtonProps: {
+          colorScheme: 'red',
+        },
+      })
+    }
   }
 
   return (
@@ -111,7 +190,7 @@ export const Premium: React.FC = () => {
             <Trans t={t} i18nKey="contact_us" components={transComponents} />
           </Text>
           <Flex direction="column">
-            <FormControl>
+            <FormControl isInvalid={!!verifyDomainErrorMessage}>
               <FormLabel>
                 <Trans
                   t={t}
@@ -121,13 +200,18 @@ export const Premium: React.FC = () => {
               </FormLabel>
               <PremiumDotBitSubdomainVerifyForm
                 value={verifyDomainValue}
-                onChange={setVerifyDomainValue}
+                onChange={(v) => {
+                  setVerifyDomainErrorMessage('')
+                  setVerifyDomainValue(v)
+                  setSubdomainState(undefined)
+                }}
                 isDisabled={
                   isLoading || data?.state === UserPremiumSettingState.Enabled
                 }
                 isLoading={verifyDotBitDomainState.isLoading}
                 onConfirm={() => getDotBitDomainState()}
               />
+              <FormErrorMessage>{verifyDomainErrorMessage}</FormErrorMessage>
             </FormControl>
             <PremiumSubdomainStep
               state={subdomainState}
@@ -174,7 +258,11 @@ export const Premium: React.FC = () => {
               variant="solid-rounded"
               colorScheme="primaryButton"
               type="submit"
-              isDisabled={subdomainState !== null}
+              isDisabled={
+                subdomainState !== null ||
+                !!verifyDomainErrorMessage ||
+                !verifyDomainValue
+              }
               isLoading={isUpdatingPremiumSetting}
               onClick={() =>
                 onUpdatePremiumSetting(UserPremiumSettingState.Enabled)

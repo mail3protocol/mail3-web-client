@@ -1,5 +1,12 @@
 import { FunctionComponent, ReactNode, useMemo } from 'react'
-import { Center, Flex, Icon, Spinner, useToken } from '@chakra-ui/react'
+import {
+  Center,
+  Flex,
+  FlexProps,
+  Icon,
+  Spinner,
+  useToken,
+} from '@chakra-ui/react'
 import { Box } from '@chakra-ui/layout'
 import { ReactComponent as WarningIcon } from '../../assets/WarningIcon.svg'
 import { ReactComponent as SucceedIcon } from '../../assets/SucceedIcon.svg'
@@ -12,11 +19,13 @@ export enum StepStatus {
   Loading = 'loading',
 }
 
-export const Step: React.FC<{
-  serialNumber: number
-  status?: StepStatus
-  children: ReactNode
-}> = ({ serialNumber, status = StepStatus.Pending, children }) => {
+export const Step: React.FC<
+  {
+    serialNumber: number
+    status?: StepStatus
+    children: ReactNode
+  } & FlexProps
+> = ({ serialNumber, status = StepStatus.Pending, children, ...props }) => {
   const serialActiveColor = useToken('colors', 'primary.900')
   const primaryTextColor = useToken('colors', 'primaryTextColor')
   const enabledColor = useToken('colors', 'enabledColor')
@@ -91,9 +100,10 @@ export const Step: React.FC<{
           } as { [key in StepStatus]?: string }
         )[status],
       }}
+      {...props}
     >
       {icon}
-      <Flex align="center" minH="20px" lineHeight="20px">
+      <Flex align="center" minH="20px" lineHeight="20px" mb="auto">
         {children}
       </Flex>
     </Flex>

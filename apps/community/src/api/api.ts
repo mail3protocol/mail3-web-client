@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
+import { GetAliasResponse } from 'models'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -175,5 +176,9 @@ export class API {
     return this.axios.get<GetMessageEncryptionKeyResponse>(
       '/community/message_encryption_key_states'
     )
+  }
+
+  public async getAliases() {
+    return this.axios.get<GetAliasResponse>(`/account/aliases`)
   }
 }

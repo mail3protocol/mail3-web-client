@@ -33,17 +33,21 @@ export const PREMIUM_DOCS_URL =
   import.meta.env.NEXT_PUBLIC_PREMIUM_DOCS_URL || ''
 
 export const DAODID_URL =
-  import.meta.env.NEXT_PUBLIC_DAODID_URL || 'https://daodid.id/manage/'
+  import.meta.env.NEXT_PUBLIC_DAODID_URL || 'https://daodid.id'
 
 export const CONTACT_URL =
   import.meta.env.NEXT_PUBLIC_CONTACT_URL ||
   'https://spark-rainbow-63a.notion.site/DaoDID-help-documentation-2f2def85d5ef4584b1ad40d2b4ab43b0'
 
 export const DOT_BIT_URL =
-  import.meta.env.NEXT_PUBLIC_DOT_BIT_URL || 'https://app.did.id/explorer'
+  import.meta.env.NEXT_PUBLIC_DOT_BIT_URL || 'https://www.did.id'
 
 export const SUPER_DID_URL =
   import.meta.env.NEXT_PUBLIC_SUPER_DID_URL || 'https://daodid.id'
+
+export const SELL_HELP_DOCUMENT_URL =
+  import.meta.env.NEXT_PUBLIC_SELL_HELP_DOCUMENT_URL ||
+  'https://spark-rainbow-63a.notion.site/DaoDID-help-documentation-2f2def85d5ef4584b1ad40d2b4ab43b0'
 
 envStorage.setServerUrl(SERVER_URL)
 

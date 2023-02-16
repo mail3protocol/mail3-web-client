@@ -439,6 +439,10 @@ export default {
     set_up_sales_strategy_tips:
       'This service is provided by SuperDID\nyou need to jump to SuperDID for setting',
     waiting_enable_subdomain:
+      'Verify that the domain name is open for sub-domain services',
+    verifying_enable_subdomain:
+      'Verifying that the domain name is open for sub-domain services...',
+    failed_enable_subdomain:
       'This domain name does not have sub-domain service, please change a domain name or reconfirm',
     enabled_subdomain:
       'This domain name has been opened for sub-domain service',
@@ -450,6 +454,25 @@ export default {
     enabled_subdomain_price: 'Already completed sub-domain price setting',
     enable: 'Enable',
     disable: 'Disable',
+    is_not_dot_bit_address: 'This is not an .bit domain',
+    is_not_owner: "Sorry, you aren't the owner of this domain",
+    enable_confirm_dialog: {
+      title:
+        'Please confirm the following \ninformation carefully before enabling',
+      description: `<ol>
+    <li>You will not be able to modify the information configured directly after it is enabled, please ensure that the information configured is accurate. <br/></li>
+    <li>The income from the sale of sub-domains belongs to the creator, Subscription does not participate in any form of share, If you have any questions you can view this <detail>detailed document</detail>.</li>
+  </ol>`,
+    },
+    disable_confirm_dialog: {
+      title: 'Please confirm this operation!',
+      description: `<p>Disabling the service will affect:</p>
+<ol>
+  <li>The sale of subdomains on Mail3 will be temporarily suspended</li>
+  <li>You will not be able to publish new Premium content</li>
+  <li>Your Premium Members will still be able to view published Premium Content</li>
+</ol>`,
+    },
   },
   co_authors: {
     confirm: 'Confirm',

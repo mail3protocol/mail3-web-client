@@ -26,15 +26,23 @@ export const PremiumSubdomainStep: React.FC<{
     if (state === null) {
       return [StepStatus.Done, StepStatus.Done]
     }
-    return [StepStatus.Pending, StepStatus.Pending]
+    return [
+      isLoading ? StepStatus.Loading : StepStatus.Pending,
+      isLoading ? StepStatus.Loading : StepStatus.Pending,
+    ]
   }, [state, isLoading])
 
   return (
     <VStack mt="18px" spacing="10px" maxW="660px">
       <Step serialNumber={1} status={stepStatus[0]}>
-        {stepStatus[0] === StepStatus.Done
-          ? t('enabled_subdomain')
-          : t('waiting_enable_subdomain')}
+        {(
+          {
+            [StepStatus.Done]: t('enabled_subdomain'),
+            [StepStatus.Pending]: t('waiting_enable_subdomain'),
+            [StepStatus.Failed]: t('failed_enable_subdomain'),
+            [StepStatus.Loading]: t('verifying_enable_subdomain'),
+          } as { [key in StepStatus]?: ReactNode }
+        )[stepStatus[0]] || t('waiting_enable_subdomain')}
       </Step>
       <Box
         w="full"
@@ -43,7 +51,7 @@ export const PremiumSubdomainStep: React.FC<{
         borderLeft="1px solid"
         borderColor="uneditable"
       />
-      <Step serialNumber={2} status={stepStatus[1]}>
+      <Step serialNumber={2} status={stepStatus[1]} h="40px">
         {(
           {
             [StepStatus.Failed]: (
@@ -56,7 +64,7 @@ export const PremiumSubdomainStep: React.FC<{
                       onClick={() => reloadState?.()}
                       display="contents"
                       fontWeight={700}
-                      color="statusColorDisabled"
+                      color="primary.900"
                       textDecoration="underline"
                     />
                   ),
@@ -64,13 +72,7 @@ export const PremiumSubdomainStep: React.FC<{
               />
             ),
             [StepStatus.Done]: t('enabled_subdomain_price'),
-            [StepStatus.Loading]: (
-              <>
-                {t('verifying_enable_subdomain_price')}
-                <br />
-                <br />
-              </>
-            ),
+            [StepStatus.Loading]: t('verifying_enable_subdomain_price'),
           } as { [key in StepStatus]?: ReactNode }
         )[stepStatus[1]] || t('waiting_enable_subdomain_price')}
       </Step>
