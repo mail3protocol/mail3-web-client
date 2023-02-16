@@ -30,7 +30,8 @@ export const UD_CLIENT_ID =
   '3d424113-5e87-4c17-a629-2632db580d64'
 
 export const PREMIUM_DOCS_URL =
-  import.meta.env.NEXT_PUBLIC_PREMIUM_DOCS_URL || ''
+  import.meta.env.NEXT_PUBLIC_PREMIUM_DOCS_URL ||
+  'https://spark-rainbow-63a.notion.site/DaoDID-help-documentation-2f2def85d5ef4584b1ad40d2b4ab43b0'
 
 export const DAODID_URL =
   import.meta.env.NEXT_PUBLIC_DAODID_URL || 'https://daodid.id'
