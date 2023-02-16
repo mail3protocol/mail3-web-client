@@ -50,6 +50,7 @@ export const NewMessage = () => {
     MessageType.Normal
   )
   const colorPremium100 = useToken('colors', 'premium.100')
+  const colorPremium500 = useToken('colors', 'premium.500')
   const api = useAPI()
   const { data } = useQuery([QueryKey.GetUserPremiumSettings], async () =>
     api.getUserPremiumSettings().then((res) => res.data)
@@ -145,17 +146,29 @@ export const NewMessage = () => {
           px="36px"
           fontSize="16px"
           fontWeight={500}
-          color="premium.500"
+          color="primaryTextColor"
           _selection={{
             bg: 'premium.500',
           }}
           style={{
             backgroundColor:
               messageType === MessageType.Premium ? colorPremium100 : undefined,
+            color:
+              messageType === MessageType.Premium ? colorPremium500 : undefined,
           }}
         >
-          <Icon as={PremiumIconSvg} w="24ppx" h="24px" mr="10px" />
-          {t('premium_switch_help_text')}
+          <Icon
+            as={PremiumIconSvg}
+            w="24ppx"
+            h="24px"
+            mr="10px"
+            style={{
+              opacity: messageType === MessageType.Premium ? 1 : 0.2,
+            }}
+          />
+          {messageType === MessageType.Premium
+            ? t('premium_switch_help_text')
+            : t('general_help_text')}
           <Flex ml="auto">
             <RadioGroup onChange={onChangeMessageType} value={messageType}>
               <HStack spacing="24px">

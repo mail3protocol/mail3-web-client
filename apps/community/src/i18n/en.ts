@@ -178,6 +178,8 @@ export default {
       'The abstract will be displayed on your subscribe page to help subscribers quickly understand the content, if not filled in, it will not be displayed.',
     premium_switch_help_text:
       'You are editing Premium Content, only your Premium Members can access.',
+    general_help_text:
+      'You are editing General Content, anyone can view for free.',
     premium: 'Premium',
     general: 'General',
     did_not_enable_premium: "You don't have Premium enabled",
