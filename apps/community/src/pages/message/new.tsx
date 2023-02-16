@@ -46,14 +46,28 @@ export const NewMessage = () => {
   const fileMapRef = useRef<Map<string, File>>(new Map())
   const fileCacheMapRef = useRef<Map<string, string>>(new Map())
   const [count, setCount] = useState(0)
+  const [isPuttedMessageType, setIsPuttedMessageType] = useState(false)
   const [messageType, setMessageType] = useState<MessageType>(
     MessageType.Normal
   )
   const colorPremium100 = useToken('colors', 'premium.100')
   const colorPremium500 = useToken('colors', 'premium.500')
   const api = useAPI()
-  const { data } = useQuery([QueryKey.GetUserPremiumSettings], async () =>
-    api.getUserPremiumSettings().then((res) => res.data)
+  const { data } = useQuery(
+    [QueryKey.GetUserPremiumSettings],
+    async () => api.getUserPremiumSettings().then((res) => res.data),
+    {
+      onSuccess(d) {
+        if (!isPuttedMessageType) {
+          setIsPuttedMessageType(true)
+          setMessageType(
+            d.state === UserPremiumSettingState.Enabled
+              ? MessageType.Premium
+              : MessageType.Normal
+          )
+        }
+      },
+    }
   )
   const isConfiguredPremium = data?.state === UserPremiumSettingState.Enabled
   const dialog = useDialog()
