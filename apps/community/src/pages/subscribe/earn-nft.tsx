@@ -406,7 +406,10 @@ export const EarnNft: React.FC = () => {
                   }
                 >
                   <HStack spacing="8px">
-                    <Radio value={SubscriptionPlatform.Galaxy}>
+                    <Radio
+                      variant="outline"
+                      value={SubscriptionPlatform.Galaxy}
+                    >
                       {t('platforms.galaxy')}
                     </Radio>
                     {IS_DISABLED_QUEST3 ? (
@@ -421,13 +424,20 @@ export const EarnNft: React.FC = () => {
                             e.preventDefault()
                           }}
                         >
-                          <Radio value={SubscriptionPlatform.Quest3} isDisabled>
+                          <Radio
+                            variant="outline"
+                            value={SubscriptionPlatform.Quest3}
+                            isDisabled
+                          >
                             {t('platforms.quest3')}
                           </Radio>
                         </Box>
                       </Tooltip>
                     ) : (
-                      <Radio value={SubscriptionPlatform.Quest3}>
+                      <Radio
+                        variant="outline"
+                        value={SubscriptionPlatform.Quest3}
+                      >
                         {t('platforms.quest3')}
                       </Radio>
                     )}
