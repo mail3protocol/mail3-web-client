@@ -19,6 +19,7 @@ import { useQuery } from 'react-query'
 import { Button } from 'ui'
 import { ReactComponent as SubWhiteSvg } from 'assets/subscribe-page/subscribe-white.svg'
 import { ReactComponent as SubSvg } from 'assets/subscribe-page/subscribe.svg'
+import { atom, useAtom } from 'jotai'
 import { Query } from '../../api/query'
 import { useAPI } from '../../hooks/useAPI'
 import { SimpleSubscribePage } from '../../csr_pages/subscribe'
@@ -95,6 +96,8 @@ const SubscribeButtonView: React.FC<{
   )
 }
 
+export const subscribeButtonIsFollowAtom = atom(false)
+
 export const SubscribeButtonInApp: React.FC<
   {
     isAuth: boolean
@@ -109,7 +112,7 @@ export const SubscribeButtonInApp: React.FC<
   const dialog = useDialog()
   const account = useAccount()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [isFollow, setIsFollow] = useState(false)
+  const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
   const [isLoading, setIsLoading] = useState(false)
   const isMobile = useBreakpointValue({ base: true, md: false })
 

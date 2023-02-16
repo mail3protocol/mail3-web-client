@@ -22,6 +22,7 @@ import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { Subscription } from 'models'
 import { useQuery } from 'react-query'
+import { useAtom, useAtomValue } from 'jotai'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -32,8 +33,9 @@ import { useAuth, useIsAuthenticated } from '../../hooks/useLogin'
 import { NAVBAR_HEIGHT } from '../../constants'
 import { SubscriptionArticleProps } from '../../csr_pages/subscriptionArticle'
 import { ShareButtonGroup } from '../ShareButtonGroup'
-import { BuyPremium } from './buyPremium'
+import { BuyPremium, isBuyingAtom } from './buyPremium'
 import { Query } from '../../api/query'
+import { subscribeButtonIsFollowAtom } from '../SubscribeButtonInApp'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -69,6 +71,8 @@ export const SubscriptionArticleBody: React.FC<
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
   const isAuth = useIsAuthenticated()
+  const isBuying = useAtomValue(isBuyingAtom)
+  const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
 
   const isPremium = detail.message_type === Subscription.MeesageType.Premium
 
@@ -94,6 +98,13 @@ export const SubscriptionArticleBody: React.FC<
     if (realContent) {
       // report pv
       api.postStatsEvents({ uuid: articleId }).catch(Boolean)
+
+      if (isBuying && !isFollow) {
+        api
+          .SubscriptionCommunityUserFollowing(uuid)
+          .then(() => setIsFollow(true))
+          .catch(Boolean)
+      }
     }
   }, [realContent])
 

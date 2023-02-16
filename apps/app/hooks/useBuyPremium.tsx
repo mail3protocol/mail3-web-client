@@ -386,7 +386,11 @@ export const BuyPremiumDialog: React.FC = () => {
   return (
     <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay />
-      <ModalContent p="0" maxW={isBuySuccess ? '305px' : '548px'} borderRadius="32px">
+      <ModalContent
+        p="0"
+        maxW={isBuySuccess ? '305px' : '548px'}
+        borderRadius="32px"
+      >
         <ModalCloseButton />
         <ModalBody p="0">
           {isBuySuccess ? <BuySuccess /> : <BuyForm />}

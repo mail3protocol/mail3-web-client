@@ -34,7 +34,7 @@ const CoverContainer = styled(Center)`
 `
 
 const isOpenLoginAtom = atom(false)
-const isBuyingAtom = atom(false)
+export const isBuyingAtom = atom(false)
 
 const getLowestPrice = (sAccount: string) =>
   axios.get<{
