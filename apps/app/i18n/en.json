@@ -385,18 +385,19 @@
         "copy": "Copy",
         "twitter": "Share on Twitter",
         "premium-only": "Premium-only",
-        "cover-access": "Only the author's Premium Members can access",
-        "cover-buy-text": "Buy a sub-domain to upgrade to <br><b>{{name}}</b>'s Premium <br>and read all Premium content",
-        "buy": "Buy",
+        "cover-access": "This content is for paid subscribers",
+        "cover-buy-text": "Subscribe to exclusive access of Premium content of <b>{{name}}</b>",
+        "buy": "Upgrade to paid",
         "cover-already": "Already a Premium member of <b>{{name}}</b>?",
         "switch-wallet": "Switch wallet",
-        "from-year":"From ${{num}}/year",
+        "from-year":"Start at US$ {{num}}/year (US${{num2}}/month)",
         "notifications": "Enable desktop notifications for getting the latest content.",
         "enable": "Enable",
         "buy-title": "Start your Premium",
         "powered-by": "Powered by daodid.id",
         "wallet":"Complete your purchase with the connected wallet",
         "buy-ok":"You’re now a Premium Member of \n <b>{{name}}</b>",
-        "sub-domain":"Enter and find the sub-domain you like"
+        "sub-domain":"Enter and find the sub-domain you like",
+        "free_now": "Free Now"
     }
 }
