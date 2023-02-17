@@ -2,9 +2,7 @@ import { useDialog } from 'hooks'
 import { useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
-import { Logo } from 'ui'
-import { UploadMessage } from 'models'
-import { APP_URL } from '../constants/env/url'
+import { APP_URL, APPLY_FOR_REGISTER_URL } from '../constants/env/url'
 import { ErrorCode } from '../api/ErrorCode'
 
 export function useRegisterDialog() {
@@ -28,21 +26,12 @@ export function useRegisterDialog() {
             as="a"
             colorScheme="blackButton"
             variant="solid-rounded"
-            href={`${APP_URL}/message/edit?utm_source=${
-              window.location.hostname
-            }&utm_medium=click_mail_me_button&to=mail3.eth@mail3.me&subject=${t(
-              'register_dialog.register_mail_default_subject'
-            )}&template=${UploadMessage.TemplateType.ApplyCommunityWhitelist}`}
+            href={APPLY_FOR_REGISTER_URL}
             target="_blank"
             fontWeight="600"
             fontSize="14px"
           >
-            <Logo
-              iconProps={{ w: '24px', h: '24px', mr: '6px' }}
-              isHiddenText
-            />
-            Mail<sup>3 </sup>
-            <span> me</span>
+            {t('register_dialog.apply')}
           </Button>
         </Flex>
       </>

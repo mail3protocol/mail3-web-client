@@ -29,6 +29,10 @@ export const UD_CLIENT_ID =
   import.meta.env.NEXT_PUBLIC_UD_CLIENT_ID ||
   '3d424113-5e87-4c17-a629-2632db580d64'
 
+export const APPLY_FOR_REGISTER_URL =
+  import.meta.env.NEXT_PUBLIC_APPLY_FOR_REGISTER_URL ||
+  'https://docs.google.com/forms/d/e/1FAIpQLSe3w4gEloIgbxR5VxVUZ121lZERg-IqvyY0SUutIlA6f7oOmA/viewform'
+
 envStorage.setServerUrl(SERVER_URL)
 
 export const AVATAR_TYPE =

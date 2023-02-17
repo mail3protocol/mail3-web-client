@@ -74,7 +74,7 @@ export const LinkButton: React.FC = () => {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <CloseButton />
+          <CloseButton onClick={onClose} />
           <ModalBody>
             <Heading fontSize="18px">
               {t('editor_menus.link_button.add_link')}
