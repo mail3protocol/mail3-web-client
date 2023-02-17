@@ -390,7 +390,7 @@
         "buy": "Upgrade to paid",
         "cover-already": "Already a Premium member of <b>{{name}}</b>?",
         "switch-wallet": "Switch wallet",
-        "from-year":"Start at US$ {{num}}/year (US${{num2}}/month)",
+        "from-year":"Start at US${{num}}/year (US${{num2}}/month)",
         "notifications": "Enable desktop notifications for getting the latest content.",
         "enable": "Enable",
         "buy-title": "Start your Premium",
