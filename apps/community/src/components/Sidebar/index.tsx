@@ -7,12 +7,14 @@ import { RoutePath } from '../../route/path'
 import { ReactComponent as HomeSvg } from '../../assets/SidebarMenuIcons/home.svg'
 import { ReactComponent as MessageSvg } from '../../assets/SidebarMenuIcons/message.svg'
 import { ReactComponent as SubscribeSvg } from '../../assets/SidebarMenuIcons/subscribe.svg'
+import { useIsAdmin } from '../../hooks/useAdmin'
 
 export const SIDEBAR_WIDTH = 256
 
 export const Sidebar: React.FC = () => {
   const { isHiddenHeader } = useLayoutStatus()
   const { t } = useTranslation('components')
+  const isAdmin = useIsAdmin()
   const menus: SidebarMenusProps['menus'] = [
     {
       label: (
@@ -54,11 +56,15 @@ export const Sidebar: React.FC = () => {
           to: RoutePath.EarnNft,
           key: 'earn_nft',
         },
-        {
-          label: t('sidebar.premium'),
-          to: RoutePath.Premium,
-          key: 'premium',
-        },
+        ...(isAdmin
+          ? [
+              {
+                label: t('sidebar.premium'),
+                to: RoutePath.Premium,
+                key: 'premium',
+              },
+            ]
+          : []),
       ],
     },
   ]
