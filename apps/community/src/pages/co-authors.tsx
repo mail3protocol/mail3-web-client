@@ -336,7 +336,7 @@ export const CoAuthors: React.FC = () => {
     [userProps, data]
   )
 
-  const admin = data?.collaborators.filter((i) => i.is_administrator).pop()
+  const admin = data?.collaborators.find((i) => i.is_administrator)
   const bindList = data?.collaborators.filter((i) => !i.is_administrator) || []
 
   const EmptyCaption =

@@ -166,6 +166,10 @@ export class API {
     })
   }
 
+  public switchFromMirror() {
+    return this.axios.post(`/community/mirror_post_sync_events`)
+  }
+
   public updateMessageEncryptionKey(messageEncryptionKey: string) {
     return this.axios.put('/account/settings/message_encryption_keys', {
       message_encryption_key: messageEncryptionKey,
