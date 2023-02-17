@@ -188,7 +188,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
                 num: lowestPriceYear,
                 num2: lowestPriceMon,
               })
-            : t('free_now')}
+            : t('free-now')}
         </Center>
 
         <Center
