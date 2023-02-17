@@ -50,6 +50,10 @@ export const SELL_HELP_DOCUMENT_URL =
   import.meta.env.NEXT_PUBLIC_SELL_HELP_DOCUMENT_URL ||
   'https://spark-rainbow-63a.notion.site/DaoDID-help-documentation-2f2def85d5ef4584b1ad40d2b4ab43b0'
 
+export const APPLY_FOR_REGISTER_URL =
+  import.meta.env.NEXT_PUBLIC_APPLY_FOR_REGISTER_URL ||
+  'https://docs.google.com/forms/d/e/1FAIpQLSe3w4gEloIgbxR5VxVUZ121lZERg-IqvyY0SUutIlA6f7oOmA/viewform'
+
 envStorage.setServerUrl(SERVER_URL)
 
 export const AVATAR_TYPE =

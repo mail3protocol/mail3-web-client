@@ -189,14 +189,15 @@ export const SendButton: React.FC<SendButtonProps> = ({
         isCentered
         closeOnEsc={!isSent && !isLoading}
         closeOnOverlayClick={!isSent && !isLoading}
+        onCloseComplete={() => {
+          if (isSent) {
+            navi(RoutePath.Dashboard)
+          }
+        }}
       >
         <ModalOverlay />
         <ModalContent borderRadius="20px" w="450px" maxW="450px">
-          <CloseButton
-            onClick={() => {
-              navi(RoutePath.Dashboard)
-            }}
-          />
+          <CloseButton onClick={onClose} />
           <ModalBody py="24px" px="20px">
             {dialogEl}
           </ModalBody>
