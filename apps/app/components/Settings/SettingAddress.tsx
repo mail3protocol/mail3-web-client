@@ -55,6 +55,7 @@ import {
   isUdDomain,
 } from 'shared'
 import { useAtom } from 'jotai'
+import { Alias, AliasMailType } from 'models'
 import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
@@ -77,7 +78,6 @@ import {
   UD_DOMAIN,
 } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
-import { Alias, AliasMailType } from '../../api'
 import { RouterLink } from '../RouterLink'
 
 enum TabItemType {

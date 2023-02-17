@@ -2,17 +2,24 @@ import { Flex, Icon } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLayoutStatus } from '../../hooks/useLayoutStatus'
 import { HEADER_HEIGHT } from '../Header'
-import { SidebarMenus, SidebarMenusProps } from '../SidebarMenus/SidebarMenus'
+import {
+  MenuItem,
+  SidebarMenus,
+  SidebarMenusProps,
+} from '../SidebarMenus/SidebarMenus'
 import { RoutePath } from '../../route/path'
 import { ReactComponent as HomeSvg } from '../../assets/SidebarMenuIcons/home.svg'
 import { ReactComponent as MessageSvg } from '../../assets/SidebarMenuIcons/message.svg'
 import { ReactComponent as SubscribeSvg } from '../../assets/SidebarMenuIcons/subscribe.svg'
+import { useOpenPremiumPage } from '../../hooks/useOpenPremiumPage'
 
 export const SIDEBAR_WIDTH = 256
 
 export const Sidebar: React.FC = () => {
   const { isHiddenHeader } = useLayoutStatus()
   const { t } = useTranslation('components')
+  const { onClick: openPremiumPage, isLoading: isLoadingOpenPremiumPage } =
+    useOpenPremiumPage()
   const menus: SidebarMenusProps['menus'] = [
     {
       label: (
@@ -54,11 +61,18 @@ export const Sidebar: React.FC = () => {
           to: RoutePath.EarnNft,
           key: 'earn_nft',
         },
-        {
-          label: t('sidebar.premium'),
-          to: RoutePath.Premium,
-          key: 'premium',
-        },
+        ...(!isLoadingOpenPremiumPage
+          ? [
+              {
+                label: t('sidebar.premium'),
+                to: RoutePath.Premium,
+                key: 'premium',
+                onClick(e) {
+                  openPremiumPage(e)
+                },
+              } as MenuItem,
+            ]
+          : []),
       ],
     },
   ]
