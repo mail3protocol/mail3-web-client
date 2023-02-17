@@ -20,8 +20,7 @@ import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
 import { Avatar } from 'ui'
 import { Container } from '../components/Container'
-import { ReactComponent as DownloadSvg } from '../assets/download.svg'
-import { NewMessageLinkButton } from '../components/NewMessageLinkButton'
+import { ReactComponent as DownloadSvg } from '../assets/DownloadIcon.svg'
 import { SentRecordItem } from '../components/SentRecordItem'
 import { RoutePath } from '../route/path'
 import { useAPI } from '../hooks/useAPI'
@@ -31,6 +30,8 @@ import { useToast } from '../hooks/useToast'
 import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { formatUserName } from '../utils/string'
+import { useOpenNewMessagePage } from '../hooks/useOpenNewMessagePage'
+import { ReactComponent as OutlineAddIconSvg } from '../assets/OutlineAddIcon.svg'
 
 interface BaseInfo {
   key: string
@@ -93,6 +94,12 @@ export const Dashboard: React.FC = () => {
     [QueryKey.GetMessageListForDashboard],
     async () => api.getMessageList({ count: 10 }).then((r) => r.data)
   )
+  const openNewMessagePage = useOpenNewMessagePage({
+    isLoading: isLoadingMessageList,
+    lastMessageSentTime: messageList?.messages?.[0]?.created_at
+      ? dayjs.unix(Number(messageList.messages[0].created_at))
+      : undefined,
+  })
   const baseInfos: BaseInfo[] = [
     {
       key: 'message',
@@ -164,6 +171,7 @@ export const Dashboard: React.FC = () => {
             time={dayjs.unix(Number(item.created_at))}
             subject={item.subject}
             viewCount={item.read_count}
+            messageType={item.message_type}
           />
         </ListItem>
       ))
@@ -214,25 +222,61 @@ export const Dashboard: React.FC = () => {
           </Flex>
         ))}
       </Grid>
-      <Flex
-        direction="column"
-        bg="cardBackground"
-        shadow="card"
-        rounded="card"
-        p="16px"
+      <Grid
+        w="full"
+        h="full"
+        rowGap="20px"
+        css={{
+          '.button': {
+            width: '100%',
+            height: '100%',
+          },
+          '.button:hover': {
+            textDecoration: 'underline',
+          },
+          '.button:active': {
+            opacity: 0.6,
+            textDecoration: 'underline',
+          },
+        }}
       >
-        <Heading as="h3" fontSize="16px">
-          {t('send_message')}
-        </Heading>
-        <NewMessageLinkButton
-          isLoading={isLoadingMessageList}
-          lastMessageSentTime={
-            messageList?.messages?.[0]?.created_at
-              ? dayjs.unix(Number(messageList.messages[0].created_at))
-              : undefined
-          }
-        />
-      </Flex>
+        <Box bg="cardBackground" shadow="card" rounded="card">
+          <Flex
+            as={RouterLink}
+            align="center"
+            justify="space-between"
+            color="primary.900"
+            pl="40px"
+            to={RoutePath.NewMessage}
+            target="_blank"
+            onClick={openNewMessagePage.onClick}
+            className="button"
+          >
+            <Heading as="h3" fontSize="16px">
+              {t('send_message')}
+            </Heading>
+            {openNewMessagePage.isLoading ? (
+              <Spinner w="24px" h="24px" mx="18px" />
+            ) : (
+              <Icon as={OutlineAddIconSvg} w="24px" h="24px" mx="18px" />
+            )}
+          </Flex>
+        </Box>
+        <Box bg="cardBackground" shadow="card" rounded="card">
+          <Flex
+            as="button"
+            pl="40px"
+            align="center"
+            justify="space-between"
+            className="button"
+          >
+            <Heading as="h3" fontSize="16px" whiteSpace="nowrap">
+              {t('switch_from_mirror')}
+            </Heading>
+            <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
+          </Flex>
+        </Box>
+      </Grid>
       <Box
         bg="cardBackground"
         shadow="card"

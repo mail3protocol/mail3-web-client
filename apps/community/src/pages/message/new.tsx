@@ -4,19 +4,34 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Heading,
   HStack,
+  Icon,
+  Radio,
+  RadioGroup,
   Textarea,
+  useToken,
+  Text,
+  Link,
 } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import React, { useRef, useState } from 'react'
+import { useDialog } from 'hooks'
+import { useQuery } from 'react-query'
 import { Container } from '../../components/Container'
-import { Content, StateProvider, Menus } from '../../components/Editor'
+import { Content, Menus, StateProvider } from '../../components/Editor'
 import { SubjectInput } from '../../components/NewMessagePageComponents/SubjectInput'
 import { PreviewButton } from '../../components/NewMessagePageComponents/PreviewButton'
 import { PreviewSimulator } from '../../components/NewMessagePageComponents/PreviewSimulator'
 import { SendButton } from '../../components/NewMessagePageComponents/SendButton'
 import { MAIL_CONTENT_IMAGE_QUOTA_KB } from '../../constants/env/config'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { ReactComponent as PremiumIconSvg } from '../../assets/Premium/diamond.svg'
+import { MessageType } from '../../api/modals/MessageListResponse'
+import { PREMIUM_DOCS_URL } from '../../constants/env/url'
+import { QueryKey } from '../../api/QueryKey'
+import { useAPI } from '../../hooks/useAPI'
+import { UserPremiumSettingState } from '../../api/modals/UserPremiumSetting'
 
 const ABSTRACT_MAX_LENGTH = 156
 
@@ -31,6 +46,31 @@ export const NewMessage = () => {
   const fileMapRef = useRef<Map<string, File>>(new Map())
   const fileCacheMapRef = useRef<Map<string, string>>(new Map())
   const [count, setCount] = useState(0)
+  const [isPuttedMessageType, setIsPuttedMessageType] = useState(false)
+  const [messageType, setMessageType] = useState<MessageType>(
+    MessageType.Normal
+  )
+  const colorPremium100 = useToken('colors', 'premium.100')
+  const colorPremium500 = useToken('colors', 'premium.500')
+  const api = useAPI()
+  const { data } = useQuery(
+    [QueryKey.GetUserPremiumSettings],
+    async () => api.getUserPremiumSettings().then((res) => res.data),
+    {
+      onSuccess(d) {
+        if (!isPuttedMessageType) {
+          setIsPuttedMessageType(true)
+          setMessageType(
+            d.state === UserPremiumSettingState.Enabled
+              ? MessageType.Premium
+              : MessageType.Normal
+          )
+        }
+      },
+    }
+  )
+  const isConfiguredPremium = data?.state === UserPremiumSettingState.Enabled
+  const dialog = useDialog()
 
   const uploadImageGuard = (file: File) => {
     const currentSize = Array.from(
@@ -65,6 +105,42 @@ export const NewMessage = () => {
       file.name + file.size + file.size + file.lastModified
     )
 
+  const onChangeMessageType = (type: MessageType) => {
+    if (!isConfiguredPremium && type === MessageType.Premium) {
+      dialog({
+        title: t('did_not_enable_premium'),
+        description: (
+          <Trans
+            t={t}
+            i18nKey="what_is_the_premium"
+            components={{
+              h4: (
+                <Heading
+                  as="h4"
+                  fontWeight={600}
+                  fontSize="16px"
+                  lineHeight="22px"
+                />
+              ),
+              p: <Text fontWeight={500} fontSize="16px" lineHeight="22px" />,
+              a: (
+                <Link
+                  href={PREMIUM_DOCS_URL}
+                  target="_blank"
+                  textDecoration="underline"
+                  color="primary.900"
+                />
+              ),
+            }}
+          />
+        ),
+        okText: t('ok'),
+      })
+      return
+    }
+    setMessageType(type as MessageType)
+  }
+
   return (
     <Container as={Flex} flexDirection="column">
       <StateProvider
@@ -75,8 +151,55 @@ export const NewMessage = () => {
         onChangeTextLengthCallback={setCount}
       >
         <Flex
-          rounded="12px"
-          bgColor="cardBackground"
+          h="56px"
+          align="center"
+          bg="cardBackground"
+          shadow="card"
+          rounded="card"
+          py="16px"
+          px="36px"
+          fontSize="16px"
+          fontWeight={500}
+          color="primaryTextColor"
+          _selection={{
+            bg: 'premium.500',
+          }}
+          style={{
+            backgroundColor:
+              messageType === MessageType.Premium ? colorPremium100 : undefined,
+            color:
+              messageType === MessageType.Premium ? colorPremium500 : undefined,
+          }}
+        >
+          <Icon
+            as={PremiumIconSvg}
+            w="24ppx"
+            h="24px"
+            mr="10px"
+            style={{
+              opacity: messageType === MessageType.Premium ? 1 : 0.2,
+            }}
+          />
+          {messageType === MessageType.Premium
+            ? t('premium_switch_help_text')
+            : t('general_help_text')}
+          <Flex ml="auto">
+            <RadioGroup onChange={onChangeMessageType} value={messageType}>
+              <HStack spacing="24px">
+                <Radio colorScheme="primary" value={MessageType.Premium}>
+                  {t('premium')}
+                </Radio>
+                <Radio colorScheme="primary" value={MessageType.Normal}>
+                  {t('general')}
+                </Radio>
+              </HStack>
+            </RadioGroup>
+          </Flex>
+        </Flex>
+        <Flex
+          bg="cardBackground"
+          shadow="card"
+          rounded="card"
           px="24px"
           py="32px"
           mt="20px"
@@ -123,8 +246,9 @@ export const NewMessage = () => {
           <FormControl
             p="32px 24px"
             h="217px"
-            background="#FFFFFF"
-            borderRadius="20px"
+            bg="cardBackground"
+            shadow="card"
+            rounded="card"
             mt="20px"
           >
             <FormLabel>Abstract</FormLabel>
@@ -154,12 +278,12 @@ export const NewMessage = () => {
         ) : null}
 
         <HStack
-          p="16px 16px 16px 0px"
+          p="16px"
           justify="flex-end"
           mt="20px"
-          bgColor="#FFFFFF"
-          boxShadow="0px 0px 8px rgba(0, 0, 0, 0.25)"
-          borderRadius="20px"
+          bg="cardBackground"
+          shadow="card"
+          rounded="card"
         >
           <PreviewButton
             isPreview={isPreview}
@@ -174,6 +298,7 @@ export const NewMessage = () => {
             abstract={abstract}
             subject={subjectText}
             isDisabled={count === 0}
+            messageType={messageType}
             h="40px"
           />
         </HStack>

@@ -22,5 +22,7 @@ export const formatDateString = (date: string | number | Date) => {
   return targetDayjs.format('DD-MM-YYYY / h:mm a')
 }
 
-export const SubFormatDate = (date: string | number | Date) =>
-  dayjs(Number(date) * 1000).format('MMM D　h:mm a')
+export const SubFormatDate = (
+  date: string | number | Date,
+  formatString: string = 'MMM D  h:mm a'
+) => dayjs(Number(date) * 1000).format(formatString)

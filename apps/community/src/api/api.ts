@@ -1,5 +1,6 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
+import { GetAliasResponse } from 'models'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -7,7 +8,7 @@ import {
   UserSettingRequest,
   UserSettingResponse,
 } from './modals/UserInfoResponse'
-import { MessageListResponse } from './modals/MessageListResponse'
+import { MessageListResponse, MessageType } from './modals/MessageListResponse'
 import { StatisticsResponse } from './modals/StatisticsResponse'
 import { SubscribersResponse } from './modals/SubscribersResponse'
 import {
@@ -16,6 +17,11 @@ import {
 } from './modals/UpdateSubscriptionResponse'
 import { SubscriptionResponse } from './modals/SubscriptionResponse'
 import { PagingRequest } from './modals/base'
+import {
+  UserPremiumSettingRequest,
+  UserPremiumSettingResponse,
+  UserPremiumSettingState,
+} from './modals/UserPremiumSetting'
 import { CommunityCollaboratorsResp } from './modals/co-authors'
 
 export class API {
@@ -104,12 +110,42 @@ export class API {
     )
   }
 
-  sendMessage(subject: string, content: string, abstract: string) {
+  sendMessage(
+    subject: string,
+    content: string,
+    summary: string,
+    options?: {
+      messageType: MessageType
+    }
+  ) {
     return this.axios.post<{ uuid: string }>(`/community/message`, {
       subject,
       content,
-      summary: abstract,
+      summary,
+      message_type: options?.messageType || MessageType.Normal,
     })
+  }
+
+  updateUserPremiumSettings(
+    dotBitAccount: string,
+    options?: {
+      state: UserPremiumSettingState
+    }
+  ) {
+    return this.axios.put<
+      UserPremiumSettingResponse,
+      AxiosResponse<UserPremiumSettingResponse>,
+      UserPremiumSettingRequest
+    >(`/community/premium_setting`, {
+      dot_bit_account: dotBitAccount,
+      state: options?.state,
+    })
+  }
+
+  getUserPremiumSettings() {
+    return this.axios.get<UserPremiumSettingResponse>(
+      `/community/premium_setting`
+    )
   }
 
   getCollaborators() {
@@ -140,5 +176,9 @@ export class API {
     return this.axios.get<GetMessageEncryptionKeyResponse>(
       '/community/message_encryption_key_states'
     )
+  }
+
+  public async getAliases() {
+    return this.axios.get<GetAliasResponse>(`/account/aliases`)
   }
 }

@@ -1,9 +1,12 @@
 import MockAdapter from 'axios-mock-adapter'
+import { AxiosRequestConfig } from 'axios'
 import type { API } from './api'
 import {
   DEFAULT_DOWNLOAD_LIST_ITEM_COUNT,
   DEFAULT_LIST_ITEM_COUNT,
 } from '../constants/env/config'
+import { UserPremiumSettingState } from './modals/UserPremiumSetting'
+import { ErrorCode } from './ErrorCode'
 
 export function activateMockApi(api: API) {
   const mock = new MockAdapter(api.axiosInstance, {
@@ -95,4 +98,53 @@ export function activateMockApi(api: API) {
       subscribers: subscriberSlice[0],
       next_cursor: `1`,
     })
+
+  const premiumSetting = {
+    dot_bit_account: '',
+    state: UserPremiumSettingState.Disabled,
+  }
+  const premiumSettingKey = 'mock_api:/community/premium_setting'
+
+  mock.onGet(`/community/premium_setting`).reply(() => {
+    let item = localStorage.getItem(premiumSettingKey)
+    if (!item) {
+      item = JSON.stringify(premiumSetting)
+      localStorage.setItem(premiumSettingKey, item)
+    }
+    return [200, JSON.parse(item)]
+  })
+
+  mock
+    .onPut(`/community/premium_setting`, {
+      dot_bit_account: '123',
+    })
+    .reply(400, {
+      reason: ErrorCode.DOT_BIT_ACCOUNT_NOT_OPENED,
+    })
+
+  mock
+    .onPut(`/community/premium_setting`, {
+      dot_bit_account: '1234',
+    })
+    .reply(400, {
+      reason: ErrorCode.DOT_BIT_ACCOUNT_NOT_SET_LOWEST_PRICE,
+    })
+
+  function replyUpdatePremiumSetting(config: AxiosRequestConfig) {
+    let item = localStorage.getItem(premiumSettingKey)
+    if (!item) {
+      item = JSON.stringify(premiumSetting)
+      localStorage.setItem(premiumSettingKey, item)
+    }
+    const body = JSON.parse(config.data)
+    const setting: typeof premiumSetting = JSON.parse(item)
+    setting.dot_bit_account = body.dot_bit_account
+    if (body.state) {
+      setting.state = body.state
+    }
+    localStorage.setItem(premiumSettingKey, JSON.stringify(setting))
+    return [200, setting]
+  }
+
+  mock.onPut(`/community/premium_setting`).reply(replyUpdatePremiumSetting)
 }
