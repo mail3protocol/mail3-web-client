@@ -119,6 +119,7 @@ export const SendRecords: React.FC = () => {
           direction="column"
           p="16px"
           color="primaryTitleColor"
+          cursor="pointer"
           onClick={switchMirrorOnClick}
           {...cardStyleProps}
         >
