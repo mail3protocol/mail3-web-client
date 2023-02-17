@@ -51,6 +51,7 @@ export const StateProvider: React.FC<StateProviderProps> = ({
       new CustomizedBlockquoteExtension(),
       new PlaceholderExtension({ placeholder }),
       new LinkExtension({
+        defaultTarget: '_blank',
         extraAttributes: {
           target: '_blank',
         },
