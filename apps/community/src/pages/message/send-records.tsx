@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
 import { Fragment, useMemo } from 'react'
 import dayjs from 'dayjs'
+import { IpfsModal } from 'ui'
 import { Container } from '../../components/Container'
 import {
   NewMessageLinkButton,
@@ -25,6 +26,7 @@ import { DEFAULT_LIST_ITEM_COUNT } from '../../constants/env/config'
 import { useLoadNextPageRef } from '../../hooks/useLoadNextPageRef'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ReactComponent as DownloadSvg } from '../../assets/DownloadIcon.svg'
+import { useSwitchMirror } from '../../hooks/useSwitchMirror'
 
 export const SendRecords: React.FC = () => {
   useDocumentTitle('Send Records')
@@ -73,6 +75,16 @@ export const SendRecords: React.FC = () => {
     </Flex>
   )
 
+  const {
+    switchMirrorOnClick,
+    isOpenIpfsModal,
+    onCloseIpfsModal,
+    isUploadedIpfsKey,
+    isLoadingIsUploadedIpfsKeyState,
+    switchMirror,
+    isCheckAdminStatusLoading,
+  } = useSwitchMirror()
+
   return (
     <Container
       as={Grid}
@@ -80,6 +92,19 @@ export const SendRecords: React.FC = () => {
       gridTemplateRows="132px auto"
       gap="20px"
     >
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isContent
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async (_, key) => {
+            await api.updateMessageEncryptionKey(key)
+            onCloseIpfsModal()
+            await switchMirror()
+          }}
+        />
+      ) : null}
       <Grid w="full" gridTemplateColumns="3fr 1fr" gap="20px">
         <Flex direction="column" p="16px" {...cardStyleProps}>
           <Heading as="h3" fontSize="16px">
@@ -94,13 +119,18 @@ export const SendRecords: React.FC = () => {
           direction="column"
           p="16px"
           color="primaryTitleColor"
+          onClick={switchMirrorOnClick}
           {...cardStyleProps}
         >
           <Heading as="h3" fontSize="16px">
             {t('switch_from_mirror')}
           </Heading>
           <PureStyledNewMessageButton>
-            <Icon as={DownloadSvg} w="24px" h="24px" />
+            {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
+              <Spinner w="24px" h="24px" mx="18px" />
+            ) : (
+              <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
+            )}
           </PureStyledNewMessageButton>
         </Flex>
       </Grid>
