@@ -398,6 +398,6 @@
         "wallet":"Complete your purchase with the connected wallet",
         "buy-ok":"You’re now a Premium Member of \n <b>{{name}}</b>",
         "sub-domain":"Enter and find the sub-domain you like",
-        "free_now": "Free Now"
+        "free-now": "Free Now"
     }
 }
