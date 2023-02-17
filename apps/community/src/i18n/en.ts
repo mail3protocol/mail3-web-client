@@ -456,7 +456,7 @@ export default {
     enabled_subdomain_price: 'Already completed sub-domain price setting',
     enable: 'Enable',
     disable: 'Disable',
-    is_not_dot_bit_address: 'This is not an .bit domain',
+    is_not_dot_bit_address: 'This is not a .bit domain',
     is_not_owner: "Sorry, you aren't the owner of this domain",
     enable_confirm_dialog: {
       title:
