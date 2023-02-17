@@ -1,18 +1,13 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { TrackEvent, useDialog, useTrackClick } from 'hooks'
-import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { Dayjs } from 'dayjs'
 import { isNextDay } from 'shared/src/isNextDay'
 import { MouseEventHandler } from 'react'
 import { useToast } from './useToast'
-import { useAPI } from './useAPI'
-import {
-  SubscriptionResponse,
-  SubscriptionState,
-} from '../api/modals/SubscriptionResponse'
-import { QueryKey } from '../api/QueryKey'
+import { SubscriptionState } from '../api/modals/SubscriptionResponse'
 import { RoutePath } from '../route/path'
+import { useSubscriptionState } from './useSubscriptionState'
 
 export interface UseNewMessagePageProps {
   lastMessageSentTime?: Dayjs
@@ -28,11 +23,7 @@ export function useOpenNewMessagePage<T extends HTMLElement>({
   const trackClickNewMessage = useTrackClick(
     TrackEvent.CommunityClickNewMessage
   )
-  const api = useAPI()
-  const { data, isLoading: isLoadingSubscriptionState } =
-    useQuery<SubscriptionResponse>([QueryKey.GetSubscriptionState], async () =>
-      api.getSubscription().then((r) => r.data)
-    )
+  const { data, isLoading: isLoadingSubscriptionState } = useSubscriptionState()
   const dialog = useDialog()
   const navi = useNavigate()
   const currentIsLoading = isLoading || isLoadingSubscriptionState

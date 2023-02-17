@@ -128,3 +128,14 @@ export async function digestMessage(
   const hashArray = Array.from(new Uint8Array(hashBuffer))
   return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
 }
+
+export function removeMailSuffix(emailAddress: string) {
+  if (!verifyEmail(emailAddress)) return emailAddress
+  let i = emailAddress.length - 1
+  for (; i >= 0; i--) {
+    if (emailAddress[i] === '@') {
+      break
+    }
+  }
+  return emailAddress.substring(0, i)
+}

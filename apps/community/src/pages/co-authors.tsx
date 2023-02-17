@@ -58,41 +58,37 @@ export const UnbindLink: React.FC<{
   const { t } = useTranslation(['co_authors', 'common'])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isLoading, setIsLoading] = useState(false)
-  const [address, setAddress] = useState('')
   const api = useAPI()
   const toast = useToast()
 
   const handleClose = () => {
     onClose()
-    // clear old value
-    setAddress('')
   }
 
   const onSubmit = async () => {
-    if (address) {
-      setIsLoading(true)
-      try {
-        await api.unbindCollaborators(address)
-        toast(t('unbind_successfully'), {
-          status: 'success',
-          alertProps: { colorScheme: 'green' },
-        })
-        handleClose()
-        if (refetch) refetch()
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (
-            error?.response?.status === 400 &&
-            error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
-          )
-            toast(t('bind_not_legitimate'), {
-              status: 'error',
-              alertProps: { colorScheme: 'red' },
-            })
-        }
+    if (!coAddr) return
+    setIsLoading(true)
+    try {
+      await api.unbindCollaborators(coAddr)
+      toast(t('unbind_successfully'), {
+        status: 'success',
+        alertProps: { colorScheme: 'green' },
+      })
+      handleClose()
+      if (refetch) refetch()
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          error?.response?.status === 400 &&
+          error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
+        )
+          toast(t('bind_not_legitimate'), {
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
       }
-      setIsLoading(false)
     }
+    setIsLoading(false)
   }
 
   return (
@@ -116,9 +112,9 @@ export const UnbindLink: React.FC<{
           <ModalBody p="8px 20px">
             <Input
               border="none"
-              value={address}
-              placeholder={t('bind_pleaceholder')}
-              onChange={({ target: { value } }) => setAddress(value)}
+              value={coAddr}
+              placeholder={t('bind_placeholder')}
+              disabled
             />
             <Text fontWeight="500" fontSize="14px" lineHeight="20px" mt="8px">
               {t('unbind_input_text')}
@@ -130,7 +126,7 @@ export const UnbindLink: React.FC<{
               borderRadius="40px"
               colorScheme="red"
               w="138px"
-              disabled={address !== coAddr || isLoading}
+              disabled={isLoading}
               onClick={onSubmit}
               isLoading={isLoading}
             >
@@ -179,7 +175,6 @@ export const BindButton: React.FC<{
 
   const handleClose = () => {
     onClose()
-    // clear old value
     setAddress('')
   }
 
@@ -236,8 +231,9 @@ export const BindButton: React.FC<{
         w="175px"
         h="26px"
         mt="8px"
+        isLoading={isLoadingIsUploadedIpfsKeyState}
         onClick={onBind}
-        disabled={disabled}
+        disabled={disabled || isLoadingIsUploadedIpfsKeyState}
       >
         {t('bind_title')}
       </Button>
@@ -267,7 +263,7 @@ export const BindButton: React.FC<{
             <Input
               border="none"
               value={address}
-              placeholder={t('bind_pleaceholder')}
+              placeholder={t('bind_placeholder')}
               onChange={({ target: { value } }) => setAddress(value)}
             />
             <Text
@@ -301,7 +297,7 @@ export const BindButton: React.FC<{
 }
 
 export const CoAuthors: React.FC = () => {
-  useDocumentTitle('Co-authors')
+  useDocumentTitle('Members')
   const { t } = useTranslation(['co_authors', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()
@@ -392,7 +388,8 @@ export const CoAuthors: React.FC = () => {
                   mt="8px"
                   borderRadius="8px 8px 0px 0px"
                   overflow="hidden"
-                  border="1px solid #F2F2F2"
+                  border="1px solid"
+                  borderColor="lineColor"
                 >
                   <Table variant="unstyled">
                     {isLoading ? (
@@ -405,7 +402,6 @@ export const CoAuthors: React.FC = () => {
                     <Thead>
                       <Tr>
                         <Th>{t('wallet_address')}</Th>
-                        <Th>{t('state')}</Th>
                         <Th>{t('operate')}</Th>
                       </Tr>
                     </Thead>
@@ -424,7 +420,6 @@ export const CoAuthors: React.FC = () => {
                               />
                             </Flex>
                           </Td>
-                          <Td>{t('bound')}</Td>
                           <Td>
                             <UnbindLink isAdmin={false} />
                           </Td>
@@ -437,7 +432,6 @@ export const CoAuthors: React.FC = () => {
                               <Box>{address}</Box>
                             </Flex>
                           </Td>
-                          <Td>{t('bound')}</Td>
                           <Td>
                             <UnbindLink
                               refetch={refetch}

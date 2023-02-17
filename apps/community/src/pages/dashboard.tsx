@@ -277,6 +277,7 @@ export const Dashboard: React.FC = () => {
             time={dayjs.unix(Number(item.created_at))}
             subject={item.subject}
             viewCount={item.read_count}
+            messageType={item.message_type}
           />
         </ListItem>
       ))
@@ -340,48 +341,65 @@ export const Dashboard: React.FC = () => {
           </Flex>
         ))}
       </Grid>
-      <Grid w="full" h="full" rowGap="20px">
-        <Flex
-          as={RouterLink}
-          bg="cardBackground"
-          shadow="card"
-          rounded="card"
-          align="center"
-          justify="space-between"
-          color="primary.900"
-          pl="40px"
-          to={RoutePath.NewMessage}
-          target="_blank"
-          onClick={openNewMessagePage.onClick}
-        >
-          <Heading as="h3" fontSize="16px">
-            {t('send_message')}
-          </Heading>
-          {openNewMessagePage.isLoading ? (
-            <Spinner w="24px" h="24px" mx="18px" />
-          ) : (
-            <Icon as={OutlineAddIconSvg} w="24px" h="24px" mx="18px" />
-          )}
-        </Flex>
-        <Flex
-          as="button"
-          bg="cardBackground"
-          shadow="card"
-          rounded="card"
-          pl="40px"
-          align="center"
-          justify="space-between"
-          onClick={switchMirrorOnClick}
-        >
-          <Heading as="h3" fontSize="16px">
-            {t('switch_from_mirror')}
-          </Heading>
-          {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
-            <Spinner w="24px" h="24px" mx="18px" />
-          ) : (
-            <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
-          )}
-        </Flex>
+      <Grid
+        w="full"
+        h="full"
+        rowGap="20px"
+        css={{
+          '.button': {
+            width: '100%',
+            height: '100%',
+          },
+          '.button:hover': {
+            textDecoration: 'underline',
+          },
+          '.button:active': {
+            opacity: 0.6,
+            textDecoration: 'underline',
+          },
+        }}
+      >
+        <Box bg="cardBackground" shadow="card" rounded="card">
+          <Flex
+            as={RouterLink}
+            align="center"
+            justify="space-between"
+            color="primary.900"
+            pl="40px"
+            to={RoutePath.NewMessage}
+            target="_blank"
+            onClick={openNewMessagePage.onClick}
+            className="button"
+          >
+            <Heading as="h3" fontSize="16px">
+              {t('send_message')}
+            </Heading>
+            {openNewMessagePage.isLoading ? (
+              <Spinner w="24px" h="24px" mx="18px" />
+            ) : (
+              <Icon as={OutlineAddIconSvg} w="24px" h="24px" mx="18px" />
+            )}
+          </Flex>
+        </Box>
+        <Box bg="cardBackground" shadow="card" rounded="card">
+          <Flex
+            as="button"
+            pl="40px"
+            align="center"
+            justify="space-between"
+            className="button"
+            onClick={switchMirrorOnClick}
+          >
+            <Heading as="h3" fontSize="16px" whiteSpace="nowrap">
+              {t('switch_from_mirror')}
+            </Heading>
+            {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
+              <Spinner w="24px" h="24px" mx="18px" />
+            ) : (
+              <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
+            )}
+          </Flex>
+        </Box>
       </Grid>
       <Box
         bg="cardBackground"

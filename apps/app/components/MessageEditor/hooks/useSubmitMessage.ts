@@ -21,7 +21,7 @@ import {
 import { CARD_SIGNATURE_ID } from '../components/selectCardSignature'
 import { PRODUCT_RECOMMENDATIONS_ADDRESS } from '../../../constants'
 import { useSending } from '../../../hooks/useSending'
-import { AddressNonceErrorReason } from '../../../api/ErrorCode'
+import { ErrorCode } from '../../../api/ErrorCode'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
 
 export const ID_NAME = 'id'
@@ -151,10 +151,7 @@ export function useSubmitMessage() {
       onReset()
       navi(RoutePath.Inbox)
     } catch (err: any) {
-      if (
-        err.response.data.reason ===
-        AddressNonceErrorReason.INVALID_ATTACHMENT_FILE_NAME
-      ) {
+      if (err.response.data.reason === ErrorCode.INVALID_ATTACHMENT_FILE_NAME) {
         toast(t('invalid_file_name'))
       } else {
         toast(err?.response?.data?.message || err?.message || 'unknown error')

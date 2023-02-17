@@ -1,4 +1,9 @@
-import { cssVar, extendTheme } from '@chakra-ui/react'
+import {
+  ButtonProps,
+  cssVar,
+  extendTheme,
+  tokenToCSSVar,
+} from '@chakra-ui/react'
 import { theme as DefaultTheme } from './index'
 
 const font =
@@ -55,6 +60,10 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
       discord: '#4E52F5',
       twitter: '#3888FF',
     },
+    premium: {
+      100: '#FFF8EB',
+      500: '#FFA800',
+    },
     containerBackground: '#F2F2F2',
     lineColor: '#F2F2F2',
     cardBackground: '#FFF',
@@ -87,8 +96,8 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     informationAvatarBackground: 'linear-gradient(#FFB800, #4E51F4)',
     connectWalletButtonBackground: '#FFF',
     connectedWalletButton: {
-      background: '#000',
-      color: '#fff',
+      background: '#F3F3F3',
+      color: '#333',
     },
     informationQrCodeBackground: '#FFF',
     previewDatetimeColor: '#6f6f6f',
@@ -96,6 +105,8 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
     loadingOverlayBackground: 'rgba(255, 255, 255, 0.4)',
     statusColorEnabled: '#14FF00',
     statusColorDisabled: '#FF0000',
+    enabledColor: '#61C100',
+    warnColor: '#FF5B00',
   },
   shadows: {
     sidebar: '4px 0px 20px rgba(0, 0, 0, 0.1)',
@@ -252,24 +263,45 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
           color: 'white',
           _active: { bg: `${colorScheme}.700` },
         }),
-        'outline-rounded': ({ colorScheme }: { colorScheme: string }) => ({
-          lineHeight: '1.2',
-          borderRadius: '999px',
-          fontWeight: '600',
-          transitionProperty: 'common',
-          transitionDuration: 'normal',
-          _focus: { boxShadow: 'none', outline: 'none' },
-          _disabled: { opacity: 0.4, cursor: 'not-allowed', boxShadow: 'none' },
-          _hover: { _disabled: { bg: 'initial' }, bg: `${colorScheme}.100` },
-          h: 10,
-          minW: 10,
-          fontSize: 'md',
-          border: '1px solid',
-          px: '38px',
-          borderColor: `${colorScheme}.200`,
-          color: 'inherit',
-          _active: { bg: `${colorScheme}.200` },
-        }),
+        'outline-rounded': ({ colorScheme }: { colorScheme: string }) => {
+          const exceptionalColorSchemeCases: { [key: string]: ButtonProps } = {
+            primaryButton: {
+              borderColor: `primary.900`,
+              color: `primary.900`,
+              _active: {
+                bg: `${colorScheme}.400`,
+                color: 'white',
+                _disabled: {
+                  color: `primary.900`,
+                },
+              },
+              _hover: { bg: `primary.100` },
+            },
+          }
+          return {
+            lineHeight: '1.2',
+            borderRadius: '999px',
+            fontWeight: '600',
+            transitionProperty: 'common',
+            transitionDuration: 'normal',
+            _focus: { boxShadow: 'none', outline: 'none' },
+            _disabled: {
+              opacity: 0.4,
+              cursor: 'not-allowed',
+              boxShadow: 'none',
+            },
+            _hover: { _disabled: { bg: 'initial' }, bg: `${colorScheme}.100` },
+            h: 10,
+            minW: 10,
+            fontSize: 'md',
+            border: '1px solid',
+            px: '38px',
+            borderColor: `${colorScheme}.200`,
+            color: 'inherit',
+            _active: { bg: `${colorScheme}.200` },
+            ...exceptionalColorSchemeCases[colorScheme],
+          }
+        },
         wallet: ({
           disabled,
           isDisabled,
@@ -347,44 +379,84 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
       },
     },
     Radio: {
-      baseStyle: {
-        container: {
-          w: '150px',
-          h: '38px',
-          lineHeight: '36px',
-        },
-        control: {
-          display: 'none',
-          opacity: 0,
-          h: 0,
-          w: 0,
-          border: 'none',
-        },
-        label: {
-          m: 0,
-          w: 'inherit',
-          h: 'inherit',
-          fontSize: '14px',
-          textAlign: 'center',
-          rounded: '8px',
-          border: '1px solid',
-          borderColor: 'currentColor',
-          fontWeight: 600,
-          letterSpacing: 0.1,
-          opacity: 0.8,
-          transaction: '200ms',
-          bg: 'checkboxOutlineBackground',
-          _checked: {
-            color: 'primary.900',
-            _disabled: {
-              color: 'primary.400',
+      baseStyle: (props: {
+        theme: any
+        variant: string
+        colorScheme: string
+      }) => {
+        const { theme, colorScheme, variant } = props
+        if (variant === 'outline') {
+          return {
+            container: {
+              w: '150px',
+              h: '38px',
+              lineHeight: '36px',
+            },
+            control: {
+              display: 'none',
+              opacity: 0,
+              h: 0,
+              w: 0,
+              border: 'none',
+            },
+            label: {
+              m: 0,
+              w: 'inherit',
+              h: 'inherit',
+              fontSize: '14px',
+              textAlign: 'center',
+              rounded: '8px',
+              border: '1px solid',
+              borderColor: 'currentColor',
+              fontWeight: 600,
+              letterSpacing: 0.1,
+              opacity: 0.8,
+              transaction: '200ms',
+              bg: 'checkboxOutlineBackground',
+              _checked: {
+                color: 'primary.900',
+                _disabled: {
+                  color: 'primary.400',
+                },
+              },
+              _disabled: {
+                opacity: 0.8,
+                color: 'uneditable',
+              },
+            },
+          }
+        }
+        const colorPrimary900 = tokenToCSSVar('colors', 'primary.900')(theme)
+        return {
+          control: {
+            bg: colorScheme === 'primary' ? 'white' : undefined,
+            border: '1px solid',
+            color: 'primaryTextColor',
+            borderColor: colorScheme === 'primary' ? 'currentColor' : undefined,
+            _checked: {
+              bg: colorScheme === 'primary' ? 'white' : undefined,
+              borderColor:
+                colorScheme === 'primary' ? colorPrimary900 : undefined,
+              _before: {
+                bg: colorScheme === 'primary' ? colorPrimary900 : undefined,
+                width: 'calc(100% - 4px)',
+                height: 'calc(100% - 4px)',
+              },
+              _hover: {
+                bg: colorScheme === 'primary' ? 'white' : undefined,
+                borderColor:
+                  colorScheme === 'primary' ? colorPrimary900 : undefined,
+              },
             },
           },
-          _disabled: {
-            opacity: 0.8,
-            color: 'uneditable',
+          label: {
+            color: 'black',
+            fontSize: '14px',
+            _checked: {
+              color: colorPrimary900,
+            },
           },
-        },
+        }
       },
     },
     Card: {

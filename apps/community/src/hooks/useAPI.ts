@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useAccount, useLoginInfo } from 'hooks'
 import { API } from '../api/api'
-import { activateMockApi } from '../api/api.mock'
 import { IS_MOCK_API } from '../constants/env/config'
 import { useLogout } from './useLogin'
 
@@ -14,14 +13,16 @@ export function useAPI(options?: { isActivateMock?: boolean }) {
     api.axiosInstance.interceptors.response.use(
       (r) => r,
       async (err) => {
-        if (err.response.status === 401) {
+        if (err?.response?.status === 401) {
           await logout()
         }
         throw err
       }
     )
     if (options?.isActivateMock || IS_MOCK_API) {
-      activateMockApi(api)
+      import('../api/api.mock').then(({ activateMockApi }) => {
+        activateMockApi(api)
+      })
     }
     return api
   }, [account, jwt, logout])

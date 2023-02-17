@@ -3,6 +3,12 @@ export default {
     no_mail3: 'No Mail3? ',
     register: 'Claim it now! ',
     connect_wallet: 'Connect Wallet',
+    status_field: 'Status: ',
+    status_value: {
+      disabled: 'Disabled',
+      enabled: 'Enabled',
+      loading: 'Loading',
+    },
     connect: {
       notice: 'Notice',
       unknown_error: 'Unknown error',
@@ -80,6 +86,7 @@ export default {
       home: 'Home',
       send_records: 'History',
       earn_nft: 'Earn NFT',
+      premium: 'Premium',
     },
     tips_panel: {
       title: 'Help',
@@ -114,7 +121,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
-      co_authors: 'Co-authors',
+      co_authors: 'Members',
       information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
@@ -132,11 +139,12 @@ export default {
   hooks: {
     register_dialog: {
       title: 'Apply for your Web3 Subscription',
-      description: `Please click the "mail<sup>3</sup> me" button below to submit your application. It may take some time for your application to receive a response.`,
+      description: `Please click the "Apply" button to submit your application. It may take some time for your application to receive a response.`,
       no_white_list_description:
         'If you would like to apply for access to "mail<sup>3</sup> Community". <br/><br/>Please visit mail<sup>3</sup> official website to claim your Mail3 first.',
       register_mail_default_subject: '[Apply for Mail3 Community whitelist]',
       continue: 'Continue',
+      apply: 'Apply',
     },
   },
   new_message: {
@@ -153,6 +161,9 @@ export default {
       'The total image size of this message cannot exceed {{size}}',
     send_confirm: 'Please confirm you want to send this message',
     send_description: 'Do you want to send this message to subscriber?',
+    send_premium_message_confirm_title: '👌OK!',
+    send_premium_message_confirm_text:
+      'Do you want to publish this Premium Content to subscriber?',
     confirm: 'Confirm',
     unsubscribe: 'Unsubscribe',
     successfully_sent: {
@@ -166,6 +177,15 @@ export default {
     share_message: 'Share your message',
     abstract_holder:
       'The abstract will be displayed on your subscribe page to help subscribers quickly understand the content, if not filled in, it will not be displayed.',
+    premium_switch_help_text:
+      'You are editing Premium Content, only your Premium Members can access.',
+    general_help_text:
+      'You are editing General Content, anyone can view for free.',
+    premium: 'Premium',
+    general: 'General',
+    did_not_enable_premium: "You don't have Premium enabled",
+    what_is_the_premium: `<h4>What is Premium？</h4>
+        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [subscribe]-[Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
   },
   dashboard: {
     message: 'Message',
@@ -400,37 +420,103 @@ export default {
   send_message: {
     title: 'History',
     new_message: 'New Message',
+    switch_from_mirror: 'Switch from mirror',
+  },
+  premium: {
+    title: 'Premium',
+    // language=html
+    help: `<h3>What is <strong>Premium</strong>?</h3>
+        <ul>
+          <li>You can get yourself creative revenue by enabling the Premium</li>
+          <li>With Premium enabled, you can publish content that can only be viewed by Premium members</li>
+          <li>Any visitor interested in your Premium content will need to purchase and hold your sub-domain to gain access to it</li>
+        </ul>
+        <h3>How <strong>Premium</strong> works?</h3>
+        <ul>
+          <li>You need to hold your own <bit>.bit</bit> domain name first and apply for opening your sub-domain sale business in <superdid>SuperDID</superdid></li>
+          <li>Usually, the general content you publish is public and free, while with Premium enabled, you can choose to publish Premium content according to your needs</li>
+          <li>Your visitors can become your Premium members by purchasing and holding your sub-domain, and Premium members have the right to read all your Premium content</li>
+        </ul>
+        <h3>How can I get my <strong>earnings</strong>?</h3>
+        <ul>
+            <li>Mail3 or Subscribe (Mail3) will not participate in your share of the proceeds.</li>
+            <li>Premium's sub-domain sales business is supported by <superdid>SuperDID</superdid>, your sales revenue, how to withdraw your revenue and specific rules can be found at <superdid>SuperDID</superdid></li>
+        </ul>
+    `,
+    contact_us:
+      'Please read the help file on the right or <contact> view this more detailed document </contact> if you have any questions.',
+    domain_field: 'Your <bit>.bit</bit> domain',
+    confirm: 'Confirm',
+    status: 'Status',
+    set_up_sales_strategy: 'Set up your sub-domain sales strategy',
+    set_up_sales_strategy_tips:
+      'This service is provided by SuperDID\nyou need to jump to SuperDID for setting',
+    waiting_enable_subdomain:
+      'Verify that the domain name is open for sub-domain services',
+    verifying_enable_subdomain:
+      'Verifying that the domain name is open for sub-domain services...',
+    failed_enable_subdomain:
+      'This domain name does not have sub-domain service, please change a domain name or reconfirm',
+    enabled_subdomain:
+      'This domain name has been opened for sub-domain service',
+    waiting_enable_subdomain_price: 'Verify that subdomain prices are set',
+    verifying_enable_subdomain_price:
+      'Verifying that subdomain prices are set...',
+    failed_enable_subdomain_price:
+      "Haven't finished setting the sub-domain price, please click the button below to go to Settings and back <retry> Click here </retry> to retry",
+    enabled_subdomain_price: 'Already completed sub-domain price setting',
+    enable: 'Enable',
+    disable: 'Disable',
+    is_not_dot_bit_address: 'This is not a .bit domain',
+    is_not_owner: "Sorry, you aren't the owner of this domain",
+    enable_confirm_dialog: {
+      title:
+        'Please confirm the following \ninformation carefully before enabling',
+      description: `<ol>
+    <li>You will not be able to modify the information configured directly after it is enabled, please ensure that the information configured is accurate. <br/></li>
+    <li>The income from the sale of sub-domains belongs to the creator, Subscription does not participate in any form of share, If you have any questions you can view this <detail>detailed document</detail>.</li>
+  </ol>`,
+    },
+    disable_confirm_dialog: {
+      title: 'Please confirm this operation!',
+      description: `<p>Disabling the service will affect:</p>
+<ol>
+  <li>The sale of subdomains on Mail3 will be temporarily suspended</li>
+  <li>You will not be able to publish new Premium content</li>
+  <li>Your Premium Members will still be able to view published Premium Content</li>
+</ol>`,
+    },
   },
   co_authors: {
     confirm: 'Confirm',
-    title: 'Co-authors',
+    title: 'Members',
     tabs: {
-      management: 'Authors Management',
+      management: 'Members Management',
     },
     management_text:
-      'Binding authorized wallet accounts, they can: connect to this backend, set up subscriptions and send group messages.',
+      'Inviting authorized members, they can: connect to this backend, set up Subscription and publish posts.',
     wallet_address: 'Wallet Address',
     state: 'State',
     operate: 'Operate',
-    empty: 'No co-authors have been bound yet',
+    empty: 'No members have been invited yet',
     cancel: 'Cancel',
-    bind: 'Bind',
-    unbind: 'Unbind',
+    bind: 'Invite',
+    unbind: 'Remove',
     bound: 'Bound',
-    bind_title: 'Bind the co-authors',
-    bind_limit: 'You can bind up to 3 wallet addresses',
-    bind_pleaceholder: 'Please enter wallet address',
-    bind_bound: 'This wallet address has been bound',
-    bind_not_legitimate: 'The wallet address is not legitimate',
-    bind_successfully: 'Bind successfully',
-    help_text: `<h3>What is Co-authors?</h3>
-    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to bind 5 wallet addresses as Co-authors, and the Co-authors can directly connect to the Subscription Backend and operate group sending.</p>
+    bind_title: 'Invite members',
+    bind_limit: 'You can invite up to 3 members',
+    bind_placeholder: 'Please enter wallet address',
+    bind_bound: 'This wallet address has been invited',
+    bind_not_legitimate: 'Please check the wallet address',
+    bind_successfully: 'Invite successfully',
+    help_text: `<h3>What is Members?</h3>
+    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as members, and the members can directly connect to the Subscription Backend and publish posts.</p>
     `,
     unbind_limit:
-      'You have already bound 3 co-authors, if you want to continue to add, please unbind the old co-author account first.',
-    unbind_input_title: 'Unbind this wallet address',
+      'You have already invited 3 members, if you want to continue to add, please remove the old member first.',
+    unbind_input_title: 'Remove this member',
     unbind_input_text:
-      'You are about to unbind the above wallet address, after unbinding this address will not be able to connect to this backend for any operation.',
-    unbind_successfully: 'Unbind successfully',
+      'You are about to remove the above wallet address, after removing this address will not be able to connect to this backend for any operation.',
+    unbind_successfully: 'Remove successfully',
   },
 }

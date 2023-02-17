@@ -46,7 +46,7 @@ import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
 import { truncateAddress } from 'shared'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import { Container } from '../components/Container'
-import { ReactComponent as DownloadSvg } from '../assets/download.svg'
+import { ReactComponent as DownloadSvg } from '../assets/DownloadIcon.svg'
 import BannerPng from '../assets/banner.png'
 import { QueryKey } from '../api/QueryKey'
 import { useAPI } from '../hooks/useAPI'
@@ -676,20 +676,6 @@ export const Information: React.FC = () => {
                       }
                       maxLength={100}
                     />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Mail Me Button</FormLabel>
-                    <Flex justifyContent="space-between" alignItems="center">
-                      <Box fontWeight="500" fontSize="12px" lineHeight="15px">
-                        {t('display_Mail_Me_Button')}
-                      </Box>
-                      <SwitchWrap
-                        isChecked={mmbState}
-                        onChange={({ target: { checked } }) =>
-                          setMmbState(checked)
-                        }
-                      />
-                    </Flex>
                   </FormControl>
                 </VStack>
               </Flex>

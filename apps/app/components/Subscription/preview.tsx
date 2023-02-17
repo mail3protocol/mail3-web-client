@@ -8,6 +8,7 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
+  Icon,
   Link,
   Spacer,
   Spinner,
@@ -23,7 +24,13 @@ import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
-import { truncateAddress } from 'shared'
+import {
+  isEthAddress,
+  isPrimitiveEthAddress,
+  truncateAddress,
+  truncateMiddle,
+} from 'shared'
+import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { RenderHTML } from '../Preview/parser'
 import { ReactComponent as SubscribeSvg } from '../../assets/subscription/subscribe.svg'
 import { ReactComponent as UnsubscribeSvg } from '../../assets/subscription/unsubscribe.svg'
@@ -34,6 +41,7 @@ import { APP_URL, HOME_URL } from '../../constants'
 import { RoutePath } from '../../route/path'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { ShareButtonGroup } from '../ShareButtonGroup'
+import { BuyPremium } from '../SubscriptionArticleBody/buyPremium'
 
 const Container = styled(Box)`
   width: 64.43%;
@@ -42,8 +50,7 @@ const Container = styled(Box)`
   position: relative;
 
   .info {
-    margin-top: 18px;
-    display: none;
+    margin-top: 8px;
   }
 
   .mobile-button {
@@ -81,7 +88,7 @@ const Container = styled(Box)`
       overflow: hidden;
       height: auto;
       background-color: #fff;
-      padding: 30px 30px 20px;
+      padding: 30px 20px 20px;
 
       .header {
         display: none;
@@ -252,6 +259,7 @@ export const SubscribeLink = ({ uuid }: { uuid: string }) => {
 export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   isSingleMode,
 }) => {
+  const [t] = useTranslation(['subscription-article'])
   const { id: _id } = useParams()
   const api = useAPI()
   const userProps = useAtomValue(userPropertiesAtom)
@@ -260,7 +268,11 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   if (_id) {
     id = _id
   }
-  const { data, isLoading } = useQuery<Subscription.MessageDetailResp>(
+  const {
+    data: detail,
+    isLoading,
+    refetch,
+  } = useQuery<Subscription.MessageDetailResp>(
     ['subscriptionDetail', id],
     async () => {
       const messageDetail = await api.SubscriptionMessageDetail(id)
@@ -289,7 +301,16 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     }
   )
 
-  const detail = useMemo(() => data, [data])
+  const nickname = useMemo(() => {
+    const name = detail?.writer_name ?? ''
+    if (isPrimitiveEthAddress(name)) {
+      return truncateMiddle(name, 6, 4, '_')
+    }
+    if (isEthAddress(name)) {
+      return name.includes('.') ? name.split('.')[0] : name
+    }
+    return name
+  }, [detail?.writer_name])
 
   if (isLoading) {
     return (
@@ -310,6 +331,9 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       </Wrap>
     )
   }
+
+  const isPremium = detail?.message_type === Subscription.MeesageType.Premium
+  const isNeedPay = isPremium && !detail.content
 
   return (
     <Wrap isSingleMode={isSingleMode}>
@@ -380,39 +404,91 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           {detail?.subject || 'no subject'}
         </Text>
         <Flex align="center" className="info">
-          <Divider orientation="horizontal" />
+          {isPremium ? (
+            <Center
+              w="118px"
+              h={{ base: '18px', md: '24px' }}
+              background="#FFF6D6"
+              borderRadius="20px"
+            >
+              <Icon as={SvgDiamond} w="12px" h="12px" />
+              <Box
+                fontStyle="italic"
+                fontWeight="600"
+                fontSize="12px"
+                lineHeight="14px"
+                color="#FFA800"
+              >
+                {t('premium-only')}
+              </Box>
+            </Center>
+          ) : null}
+          <Spacer />
           <Box
-            p="0px 50px"
             fontSize="12px"
-            lineHeight="26px"
+            lineHeight="18px"
             whiteSpace="nowrap"
-            color="#6F6F6F"
+            color="#818181"
+            display={{ base: 'block', md: 'none' }}
           >
             {SubFormatDate(detail.created_at)}
           </Box>
-          <Divider orientation="horizontal" />
         </Flex>
-        <Box pt={{ base: '16px', md: '30px' }}>
-          <RenderHTML
-            html={detail?.content}
-            attachments={[]}
-            messageId=""
-            from={{ name: '', address: '' }}
-            shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
-          />
-          {ipfsInfo ? (
-            <Box mb="24px">
-              <IpfsInfoTable
-                ethAddress={ipfsInfo?.owner_identifier}
-                ipfs={ipfsInfo?.url}
-                contentDigest={ipfsInfo?.content_digest}
-              />
+        <Box>
+          {detail?.summary ? (
+            <Box
+              mt="13px"
+              background="#EBEBEB"
+              borderRadius="12px"
+              p="15px"
+              overflow="hidden"
+            >
+              <Text
+                fontWeight={{ base: '400', md: '500' }}
+                fontSize={{ base: '12px', md: '16px' }}
+                lineHeight={{ base: '18px', md: '24px' }}
+                color="#333333"
+              >
+                {detail?.summary}
+              </Text>
             </Box>
           ) : null}
-          <EchoIframe
-            targetUri={`${APP_URL}/${RoutePath.Subscription}/${id}`}
-            mailAddress={userProps?.defaultAddress}
-          />
+
+          {isNeedPay ? (
+            <BuyPremium
+              bitAccount={detail.dot_bit_account}
+              uuid={detail.writer_uuid}
+              nickname={nickname}
+              refetch={refetch}
+            />
+          ) : null}
+
+          {detail?.content ? (
+            <Box pt={{ base: '16px', md: '30px' }}>
+              <RenderHTML
+                html={detail.content}
+                attachments={[]}
+                messageId=""
+                from={{ name: '', address: '' }}
+                shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
+              />
+              {ipfsInfo ? (
+                <Box mb="24px">
+                  <IpfsInfoTable
+                    ethAddress={ipfsInfo?.owner_identifier}
+                    ipfs={ipfsInfo?.url}
+                    contentDigest={ipfsInfo?.content_digest}
+                  />
+                </Box>
+              ) : null}
+              <Box mt="20px">
+                <EchoIframe
+                  targetUri={`${APP_URL}/${RoutePath.Subscription}/${id}`}
+                  mailAddress={userProps?.defaultAddress}
+                />
+              </Box>
+            </Box>
+          ) : null}
         </Box>
       </Box>
       <Center className="mobile-button" w="100%" mt="20px">
