@@ -5,7 +5,6 @@ import { ErrorCode } from '../../api/ErrorCode'
 export type SubDomainState =
   | ErrorCode.DOT_BIT_ACCOUNT_NOT_OPENED
   | ErrorCode.DOT_BIT_ACCOUNT_NOT_SET_LOWEST_PRICE
-  | ErrorCode.NOT_OWNED_THE_DOT_BIT_ACCOUNT
   | null
 
 export function useVerifyPremiumDotBitDomainState() {
@@ -16,8 +15,21 @@ export function useVerifyPremiumDotBitDomainState() {
     const reason = await api
       .updateUserPremiumSettings(value)
       .then(() => null)
-      .catch((err) => err?.response?.data?.reason)
-    setIsLoading(false)
+      .catch((err) => {
+        const r = err?.response?.data?.reason
+        if (
+          [
+            ErrorCode.DOT_BIT_ACCOUNT_NOT_OPENED,
+            ErrorCode.DOT_BIT_ACCOUNT_NOT_SET_LOWEST_PRICE,
+          ].includes(r)
+        ) {
+          return r
+        }
+        throw err
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
     return reason as SubDomainState
   }
   return {

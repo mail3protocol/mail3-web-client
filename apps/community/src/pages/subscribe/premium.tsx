@@ -104,12 +104,24 @@ export const Premium: React.FC = () => {
       setVerifyDomainErrorMessage(t('is_not_dot_bit_address'))
       return
     }
-    const r = await verifyDotBitDomainState.onVerify(verifyDomainValue)
-    if (r === ErrorCode.NOT_OWNED_THE_DOT_BIT_ACCOUNT) {
-      setVerifyDomainErrorMessage(t('is_not_owner'))
-      return
+    try {
+      const r = await verifyDotBitDomainState.onVerify(verifyDomainValue)
+      setSubdomainState(r)
+    } catch (err: any) {
+      const errorReason = err?.response?.data?.reason
+      const errorMessage =
+        (
+          {
+            [ErrorCode.INVALID_PREMIUM_SETTING_ACCOUNT]: t(
+              'is_not_dot_bit_address'
+            ),
+            [ErrorCode.NOT_OWNED_THE_DOT_BIT_ACCOUNT]: t('is_not_owner'),
+          } as { [key in ErrorCode]?: string }
+        )[errorReason as ErrorCode] ||
+        err?.message?.data?.message ||
+        t('unknown_error')
+      setVerifyDomainErrorMessage(errorMessage)
     }
-    setSubdomainState(r)
   }
 
   const onUpdatePremiumSetting = (state: UserPremiumSettingState) => {
