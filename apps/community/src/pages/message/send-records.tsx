@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
-import { Fragment, useMemo } from 'react'
+import { Fragment } from 'react'
 import dayjs from 'dayjs'
 import { IpfsModal } from 'ui'
 import { Container } from '../../components/Container'
@@ -59,13 +59,6 @@ export const SendRecords: React.FC = () => {
     }
   })
 
-  const lastMessageSentTime = useMemo(() => {
-    const createdAt = listQuery?.data?.pages[0].messages?.[0]?.created_at
-    if (!createdAt) return undefined
-    const createdAtNumber = Number(createdAt)
-    return createdAtNumber ? dayjs.unix(createdAtNumber) : undefined
-  }, [listQuery?.data?.pages[0].messages])
-
   const loadingEl = (
     <Flex align="center" color="secondaryTitleColor" h="48px">
       <Spinner w="16px" h="16px" />
@@ -110,10 +103,7 @@ export const SendRecords: React.FC = () => {
           <Heading as="h3" fontSize="16px">
             {t('new_message')}
           </Heading>
-          <NewMessageLinkButton
-            isLoading={listQuery.isLoading}
-            lastMessageSentTime={lastMessageSentTime}
-          />
+          <NewMessageLinkButton isLoading={listQuery.isLoading} />
         </Flex>
         <Flex
           direction="column"

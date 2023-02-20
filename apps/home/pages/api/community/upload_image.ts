@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import axios from 'axios'
 import NextCors from 'nextjs-cors'
 import LRU from 'lru-cache'
-import { isNextDay } from 'shared/src/isNextDay'
+import { CheckMessageQuotaResponse } from 'models'
 import {
   API_ALLOW_ORIGIN,
   COMMUNITY_IMAGE_UPLOAD_LIMIT,
@@ -74,15 +74,17 @@ async function uploadImage(req: NextApiRequest, res: NextApiResponse) {
       throw new FileError('The file is not supported')
     }
     const authorization = req.headers.authorization as string
-    const lastMessage = await axios
-      .get(`${SERVER_URL}/community/messages`, {
-        params: { count: 1 },
-        headers: {
-          Authorization: authorization,
-        },
-      })
-      .then((r) => r.data.messages?.[0])
-    if (lastMessage && !isNextDay(dayjs.unix(lastMessage.created_at))) {
+    const messageQuote = await axios
+      .get<CheckMessageQuotaResponse>(
+        `${SERVER_URL}/community/check_message_quota`,
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      )
+      .then((r) => r.data.quota)
+    if (messageQuote <= 0) {
       throw new ParamError(
         'Only one message can be sent within 1 day, please try again later.'
       )

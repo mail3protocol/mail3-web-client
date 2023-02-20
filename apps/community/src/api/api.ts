@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
-import { GetAliasResponse } from 'models'
+import { CheckMessageQuotaResponse, GetAliasResponse } from 'models'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -184,5 +184,11 @@ export class API {
 
   public async getAliases() {
     return this.axios.get<GetAliasResponse>(`/account/aliases`)
+  }
+
+  public async checkMessageQuota() {
+    return this.axios.get<CheckMessageQuotaResponse>(
+      `/community/check_message_quota`
+    )
   }
 }

@@ -1,23 +1,16 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { TrackEvent, useDialog, useTrackClick } from 'hooks'
 import { useNavigate } from 'react-router-dom'
-import { Dayjs } from 'dayjs'
-import { isNextDay } from 'shared/src/isNextDay'
 import { MouseEventHandler } from 'react'
+import { useQuery } from 'react-query'
 import { useToast } from './useToast'
 import { SubscriptionState } from '../api/modals/SubscriptionResponse'
 import { RoutePath } from '../route/path'
 import { useSubscriptionState } from './useSubscriptionState'
+import { QueryKey } from '../api/QueryKey'
+import { useAPI } from './useAPI'
 
-export interface UseNewMessagePageProps {
-  lastMessageSentTime?: Dayjs
-  isLoading?: boolean
-}
-
-export function useOpenNewMessagePage<T extends HTMLElement>({
-  lastMessageSentTime,
-  isLoading,
-}: UseNewMessagePageProps) {
+export function useOpenNewMessagePage<T extends HTMLElement>() {
   const { t } = useTranslation('common')
   const toast = useToast()
   const trackClickNewMessage = useTrackClick(
@@ -26,10 +19,15 @@ export function useOpenNewMessagePage<T extends HTMLElement>({
   const { data, isLoading: isLoadingSubscriptionState } = useSubscriptionState()
   const dialog = useDialog()
   const navi = useNavigate()
-  const currentIsLoading = isLoading || isLoadingSubscriptionState
+  const api = useAPI()
+  const { data: quota = 0, isLoading } = useQuery(
+    [QueryKey.CheckMessageQuote],
+    () => api.checkMessageQuota().then((res) => res.data.quota)
+  )
+
   const onClick: MouseEventHandler<T> = (e) => {
     trackClickNewMessage()
-    if (currentIsLoading) return
+    if (isLoading) return
     if (data?.state !== SubscriptionState.Active) {
       e.stopPropagation()
       e.preventDefault()
@@ -49,7 +47,7 @@ export function useOpenNewMessagePage<T extends HTMLElement>({
       })
       return
     }
-    if (lastMessageSentTime && !isNextDay(lastMessageSentTime)) {
+    if (quota <= 0) {
       e.stopPropagation()
       e.preventDefault()
       toast(t('send_time_limit'))
@@ -57,6 +55,6 @@ export function useOpenNewMessagePage<T extends HTMLElement>({
   }
   return {
     onClick,
-    isLoading: currentIsLoading,
+    isLoading: isLoading || isLoadingSubscriptionState,
   }
 }

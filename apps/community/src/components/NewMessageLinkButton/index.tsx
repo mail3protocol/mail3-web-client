@@ -2,10 +2,7 @@ import { Link as InsideLink } from 'react-router-dom'
 import { AddIcon } from '@chakra-ui/icons'
 import { ButtonProps, Center, LinkProps, Spinner } from '@chakra-ui/react'
 import { RoutePath } from '../../route/path'
-import {
-  useOpenNewMessagePage,
-  UseNewMessagePageProps,
-} from '../../hooks/useOpenNewMessagePage'
+import { useOpenNewMessagePage } from '../../hooks/useOpenNewMessagePage'
 
 export const PureStyledNewMessageButton: React.FC<
   ButtonProps & LinkProps & { to?: string }
@@ -52,19 +49,16 @@ export const PureStyledNewMessageButton: React.FC<
 )
 
 export const NewMessageLinkButton: React.FC<
-  Omit<ButtonProps & LinkProps, 'onClick' | 'children'> & UseNewMessagePageProps
-> = ({ lastMessageSentTime, isLoading = false, ...props }) => {
-  const { onClick, isLoading: currentIsLoading } = useOpenNewMessagePage({
-    lastMessageSentTime,
-    isLoading,
-  })
+  Omit<ButtonProps & LinkProps, 'onClick' | 'children'>
+> = ({ ...props }) => {
+  const { onClick, isLoading } = useOpenNewMessagePage()
 
   return (
     <PureStyledNewMessageButton
       as={InsideLink}
       to={RoutePath.NewMessage}
       target="_blank"
-      isLoading={currentIsLoading}
+      isLoading={isLoading}
       onClick={onClick}
       {...props}
     >
