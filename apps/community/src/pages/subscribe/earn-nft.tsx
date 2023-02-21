@@ -39,7 +39,6 @@ import {
 } from '../../api/modals/SubscriptionResponse'
 import { useToast } from '../../hooks/useToast'
 import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
-import { StylePreview } from '../../components/EarnNFTPageComponents/StylePreview'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
 import { IS_DISABLED_QUEST3 } from '../../constants/env/config'
@@ -81,7 +80,7 @@ export const EarnNft: React.FC = () => {
   const dialog = useDialog()
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const [campaignUrl, setCampaignUrl] = useState('')
-  const [rewardType, setRewardType] = useState(RewardType.NFT)
+  const [rewardType] = useState(RewardType.NFT)
   const [platform, setPlatform] = useState(SubscriptionPlatform.Galaxy)
   const [credentialId, setCredentialId] = useState('')
   const [accessToken, setAccessToken] = useState('')
@@ -103,7 +102,6 @@ export const EarnNft: React.FC = () => {
       cacheTime: 0,
       onSuccess(res) {
         setCampaignUrl(res.campaign_url)
-        setRewardType(res.reward_type)
         setPlatform(res.platform)
         setCredentialId(res.credential_id)
         setAccessToken(res.key)
@@ -379,17 +377,10 @@ export const EarnNft: React.FC = () => {
         <VStack spacing="24px" maxW="487px" mb="32px">
           <FormControl>
             <FormLabel>{t('to_earn')}</FormLabel>
-            <RadioGroup
-              isDisabled={isDisabled}
-              value={rewardType}
-              onChange={(val) => setRewardType(val as RewardType)}
-            >
+            <RadioGroup isDisabled={isDisabled} value={rewardType}>
               <HStack spacing="8px">
                 <Radio variant="outline" value={RewardType.NFT}>
                   {t('nft')}
-                </Radio>
-                <Radio variant="outline" value={RewardType.AIR}>
-                  {t('air')}
                 </Radio>
               </HStack>
             </RadioGroup>
@@ -571,12 +562,7 @@ export const EarnNft: React.FC = () => {
           </Button>
         )}
       </Box>
-      <TipsPanel gridRow="1 / 3" gridColumn="2 / 3" useSharedContent />
-      <StylePreview
-        isDisabledCopy={state === SubscriptionState.Inactive}
-        rewardType={rewardType}
-      />
-      <div />
+      <TipsPanel gridRow="1 / 2" gridColumn="2 / 3" useSharedContent />
     </Container>
   )
 }
