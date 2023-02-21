@@ -81,11 +81,9 @@ export default {
       logo_name: 'Subscription',
     },
     sidebar: {
-      message: 'Message',
-      subscribe: 'Subscribe',
       home: 'Home',
-      send_records: 'History',
-      earn_nft: 'Earn NFT',
+      published: 'Published',
+      nft_reward: 'NFT Reward',
       premium: 'Premium',
     },
     tips_panel: {

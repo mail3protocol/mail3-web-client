@@ -317,7 +317,7 @@ export const Dashboard: React.FC = () => {
           </Heading>
           <Link
             as={RouterLink}
-            to={RoutePath.SendRecords}
+            to={RoutePath.Published}
             color="primary.900"
             fontSize="12px"
             textDecoration="underline"
