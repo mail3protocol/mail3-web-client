@@ -10,4 +10,5 @@ export enum QueryKey {
   GetCollaborators = 'GetCollaborators',
   GetMessageEncryptionKeyState = 'GetMessageEncryptionKeyState',
   GetAlias = 'GetAlias',
+  CheckMessageQuote = 'CheckMessageQuote',
 }

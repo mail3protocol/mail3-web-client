@@ -95,12 +95,7 @@ export const Dashboard: React.FC = () => {
     [QueryKey.GetMessageListForDashboard],
     async () => api.getMessageList({ count: 10 }).then((r) => r.data)
   )
-  const openNewMessagePage = useOpenNewMessagePage({
-    isLoading: isLoadingMessageList,
-    lastMessageSentTime: messageList?.messages?.[0]?.created_at
-      ? dayjs.unix(Number(messageList.messages[0].created_at))
-      : undefined,
-  })
+  const openNewMessagePage = useOpenNewMessagePage()
 
   const baseInfos: BaseInfo[] = [
     {
