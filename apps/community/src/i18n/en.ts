@@ -394,6 +394,9 @@ export default {
  `,
     pixels: 'Images must be at least <span>2440X400</span> pixels',
     exceed: 'Images should not exceed <span>5M</span>',
+    avatar_format:
+      'Image format only: BMP, JPEG, JPG, GIF, PNG, Should not exceed 2MB.',
+    avatar_exceed: 'Images should not exceed <span>2M</span>',
   },
   ipfs: {
     ipfs_link: 'IPFS LINK',

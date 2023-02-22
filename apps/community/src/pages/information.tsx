@@ -4,16 +4,15 @@ import {
   Button,
   ButtonProps,
   Center,
+  CenterProps,
   Flex,
   FormControl,
-  FormLabel,
   Grid,
   Heading,
   HStack,
   Icon,
   Input,
   Link,
-  Switch,
   Tab,
   TabList,
   TabPanel,
@@ -23,9 +22,8 @@ import {
   Textarea,
   Tooltip,
   useStyleConfig,
-  VStack,
 } from '@chakra-ui/react'
-import { Avatar, SubscribeCard } from 'ui'
+import { Avatar, SubscribeCard, defaultAvatar } from 'ui'
 import {
   CommunityQRcodeStyle,
   TrackEvent,
@@ -62,6 +60,8 @@ import { useToast } from '../hooks/useToast'
 import { UserSettingResponse } from '../api/modals/UserInfoResponse'
 import { UploadImageType } from '../api/HomeAPI'
 
+const DESCRIPTION_MAX_LENGTH = 500
+
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }
 > = ({ ...props }) => {
@@ -86,12 +86,6 @@ const Title = styled(Box)`
   padding: 16px 0 8px;
 `
 
-const SwitchWrap = styled(Switch)`
-  .chakra-switch__track[data-checked] {
-    background: #4e51f4;
-  }
-`
-
 const verifyImageSize = (imgFile: File, width: number, height: number) =>
   new Promise((resolve) => {
     const img: HTMLImageElement = document.createElement('img')
@@ -108,6 +102,57 @@ const verifyImageSize = (imgFile: File, width: number, height: number) =>
     img.src = URL.createObjectURL(imgFile)
   })
 
+const ButtonGroup: React.FC<
+  CenterProps & {
+    hasRemove: boolean
+    isUploading: boolean
+    removeButtonColor?: string
+    onUpload: (files: FileList) => Promise<void>
+    onRemove: () => void
+  }
+> = ({
+  hasRemove,
+  isUploading,
+  onUpload,
+  onRemove,
+  removeButtonColor = '#fff',
+  ...props
+}) => {
+  const { t } = useTranslation(['user_information', 'common'])
+  return (
+    <Center {...props}>
+      <FileUpload accept=".jpg, .jpeg, .gif, .png, .bmp" onChange={onUpload}>
+        <Button
+          leftIcon={<AddIcon />}
+          variant="upload"
+          colorScheme="primaryButton"
+          loadingText="Uploading"
+          isLoading={isUploading}
+        >
+          {t('upload.button')}
+        </Button>
+      </FileUpload>
+
+      {hasRemove ? (
+        <Button
+          variant="ghost"
+          ml="5px"
+          color={removeButtonColor}
+          fontSize="12px"
+          fontWeight="600"
+          lineHeight="14px"
+          height="28px"
+          _active={{ bg: 'transparent' }}
+          _hover={{ bg: 'transparent' }}
+          onClick={onRemove}
+        >
+          {t('upload.remove')}
+        </Button>
+      ) : null}
+    </Center>
+  )
+}
+
 export const Information: React.FC = () => {
   useDocumentTitle('Information')
   const { t } = useTranslation(['user_information', 'common'])
@@ -121,12 +166,15 @@ export const Information: React.FC = () => {
 
   const [bannerUrl, setBannerUrl] = useState(BannerPng)
   const [bannerUrlOnline, setBannerUrlOnline] = useState(BannerPng)
+  const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [itemsLink, setItemsLink] = useState('')
   const [mmbState, setMmbState] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
   const [pubDisable, setPubDisable] = useState(true)
   const [isPublishing, setIsPublishing] = useState(false)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState(defaultAvatar)
 
   const remoteSettingRef = useRef<UserSettingResponse | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -165,6 +213,8 @@ export const Information: React.FC = () => {
         setDescription(d.description)
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
+        // setName(d.name)
+        // setAvatarUrl(d.avatar)
       },
     }
   )
@@ -175,7 +225,6 @@ export const Information: React.FC = () => {
 
   const { onCopy, isCopied } = useCopyWithStatus()
   const subscribePageUrl = `${APP_URL}/${userInfo?.address.split('@')[0] || ''}`
-
   const hasBanner = bannerUrl !== BannerPng
 
   const requestBody = useMemo<UserSettingResponse>(
@@ -184,8 +233,10 @@ export const Information: React.FC = () => {
       items_link: itemsLink,
       mmb_state: mmbState ? 'enabled' : 'disabled',
       description,
+      // name,
+      // avatarUrl
     }),
-    [hasBanner, bannerUrl, itemsLink, mmbState, description]
+    [hasBanner, bannerUrl, itemsLink, mmbState, description, name, avatarUrl]
   )
 
   useEffect(() => {
@@ -201,6 +252,20 @@ export const Information: React.FC = () => {
       setPubDisable(true)
     }
   }, [requestBody, remoteSettingRef?.current])
+
+  useEffect(() => {
+    if (name) {
+      return
+    }
+    const defalutName = truncateAddress(
+      userInfo?.name ||
+        userInfoData?.name ||
+        userInfo?.address.split('@')[0] ||
+        '',
+      '_'
+    )
+    setName(defalutName)
+  }, [userInfo, userInfoData, name])
 
   const onSubmit = async () => {
     try {
@@ -223,7 +288,46 @@ export const Information: React.FC = () => {
     setIsPublishing(false)
   }
 
-  const onUploadHandle = async (files: FileList) => {
+  const onUploadAvatarHandle = async (files: FileList) => {
+    const MAX_FILE_SIZE = 2
+
+    if (files.length) {
+      setIsUploadingAvatar(true)
+      try {
+        const file = files[0]
+        const fsMb = file.size / (1024 * 1024)
+        if (fsMb > MAX_FILE_SIZE) {
+          throw new Error('avatar_exceed')
+        }
+        const { data } = await homeApi.uploadAvatar(file)
+        setAvatarUrl(data.url)
+      } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+          toast(error.message, {
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
+        } else {
+          toast(
+            <Trans
+              t={t}
+              i18nKey={error.message}
+              components={{
+                span: <Box as="span" color="#FF6B00" />,
+              }}
+            />,
+            {
+              status: 'error',
+              alertProps: { colorScheme: 'red' },
+            }
+          )
+        }
+      }
+      setIsUploadingAvatar(false)
+    }
+  }
+
+  const onUploadBannerHandle = async (files: FileList) => {
     const MAX_FILE_SIZE = 5
 
     if (files.length) {
@@ -312,7 +416,6 @@ export const Information: React.FC = () => {
           <TabList>
             <Tab>{t('tabs.Profile')}</Tab>
             <Tab>{t('tabs.Items')}</Tab>
-            <Tab>{t('tabs.Basic_info')}</Tab>
           </TabList>
 
           <TabPanels>
@@ -356,6 +459,32 @@ export const Information: React.FC = () => {
                 </Box>
               </FormControl>
 
+              <FormControl>
+                <Title>
+                  <Trans
+                    t={t}
+                    i18nKey="address_field"
+                    components={{ sup: <sup /> }}
+                  />
+                </Title>
+                <Input
+                  placeholder={t('address_placeholder')}
+                  name="mail_address"
+                  isDisabled
+                  value={userInfo?.address || userInfoData?.address}
+                />
+              </FormControl>
+
+              <FormControl>
+                <Title>{t('name_field')}</Title>
+                <Input
+                  placeholder={t('name_placeholder')}
+                  name="name"
+                  value={name}
+                  onChange={({ target: { value } }) => setName(value)}
+                />
+              </FormControl>
+
               <Title>{t('avatar')}</Title>
               <HStack spacing="24px">
                 <Center
@@ -373,6 +502,7 @@ export const Information: React.FC = () => {
                   >
                     <Avatar
                       address={userInfo?.address.split('@')[0] || ''}
+                      src={avatarUrl}
                       w="80px"
                       h="80px"
                       borderRadius="50%"
@@ -380,32 +510,51 @@ export const Information: React.FC = () => {
                   </Center>
                 </Center>
                 <Box>
-                  <Box fontWeight="500" fontSize="14px" lineHeight="20px">
-                    {t('avatar_p')}
-                  </Box>
                   <Box
-                    mt="16px"
-                    fontWeight="400"
+                    fontWeight="500"
                     fontSize="12px"
                     lineHeight="16px"
+                    color="secondaryTitleColor"
+                    w="280px"
                   >
-                    <Trans
-                      t={t}
-                      i18nKey="avatar_setting"
-                      components={{
-                        a: (
-                          <Link
-                            color="primary.900"
-                            href={APP_URL}
-                            target="_blank"
-                          />
-                        ),
-                        span: <Box as="span" color="#FF6B00" />,
-                      }}
-                    />
+                    {t('avatar_format')}
                   </Box>
+
+                  <ButtonGroup
+                    mt="16px"
+                    justifyContent="flex-start"
+                    removeButtonColor="secondaryTextColor"
+                    onUpload={onUploadAvatarHandle}
+                    isUploading={isUploadingAvatar}
+                    hasRemove={avatarUrl !== defaultAvatar}
+                    onRemove={() => setAvatarUrl(defaultAvatar)}
+                  />
                 </Box>
               </HStack>
+
+              <FormControl>
+                <Title>{t('description')}</Title>
+                <Textarea
+                  h="188px"
+                  variant="black"
+                  placeholder={t('description_placeholder')}
+                  value={description}
+                  onChange={({ target: { value } }) => setDescription(value)}
+                  maxLength={DESCRIPTION_MAX_LENGTH}
+                />
+                <Box
+                  whiteSpace="nowrap"
+                  fontSize="12px"
+                  color="#92929D"
+                  position="absolute"
+                  bottom="8px"
+                  right="16px"
+                  zIndex={99}
+                >
+                  {description.length} / {DESCRIPTION_MAX_LENGTH}
+                </Box>
+              </FormControl>
+
               <Title>{t('banner_image')}</Title>
               <Center
                 w="610px"
@@ -446,39 +595,15 @@ export const Information: React.FC = () => {
                       }}
                     />
                   </Text>
-                  <Center mt="5px">
-                    <FileUpload
-                      accept=".jpg, .jpeg, .gif, .png, .bmp"
-                      onChange={onUploadHandle}
-                    >
-                      <Button
-                        leftIcon={<AddIcon />}
-                        variant="upload"
-                        colorScheme="primaryButton"
-                        loadingText="Uploading"
-                        isLoading={isUploading}
-                      >
-                        {t('upload.button')}
-                      </Button>
-                    </FileUpload>
-
-                    {hasBanner ? (
-                      <Button
-                        variant="ghost"
-                        ml="5px"
-                        color="#fff"
-                        fontSize="12px"
-                        fontWeight="600"
-                        lineHeight="14px"
-                        height="28px"
-                        _active={{ bg: 'transparent' }}
-                        _hover={{ bg: 'transparent' }}
-                        onClick={() => setBannerUrl(BannerPng)}
-                      >
-                        {t('upload.remove')}
-                      </Button>
-                    ) : null}
-                  </Center>
+                  <ButtonGroup
+                    mt="5px"
+                    isUploading={isUploading}
+                    hasRemove={hasBanner}
+                    onUpload={onUploadBannerHandle}
+                    onRemove={() => {
+                      setBannerUrl(BannerPng)
+                    }}
+                  />
                 </Center>
               </Center>
               <Text mt="8px" fontWeight="400" fontSize="14px" lineHeight="20px">
@@ -630,55 +755,6 @@ export const Information: React.FC = () => {
                   }}
                 />
               </Text>
-            </TabPanel>
-            <TabPanel>
-              <Flex w="full" h="full" direction="column">
-                <VStack as="form" spacing="24px" mt="32px" w="400px">
-                  <FormControl>
-                    <FormLabel>{t('name_field')}</FormLabel>
-                    <Input
-                      placeholder={t('name_placeholder')}
-                      name="name"
-                      isDisabled
-                      value={truncateAddress(
-                        userInfo?.name ||
-                          userInfoData?.name ||
-                          userInfo?.address.split('@')[0] ||
-                          '',
-                        '_'
-                      )}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>
-                      <Trans
-                        t={t}
-                        i18nKey="address_field"
-                        components={{ sup: <sup /> }}
-                      />
-                    </FormLabel>
-                    <Input
-                      placeholder={t('address_placeholder')}
-                      name="mail_address"
-                      isDisabled
-                      value={userInfo?.address || userInfoData?.address}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>{t('description')}</FormLabel>
-                    <Textarea
-                      variant="black"
-                      resize="none"
-                      placeholder={t('description_placeholder')}
-                      value={description}
-                      onChange={({ target: { value } }) =>
-                        setDescription(value)
-                      }
-                      maxLength={100}
-                    />
-                  </FormControl>
-                </VStack>
-              </Flex>
             </TabPanel>
           </TabPanels>
         </Tabs>

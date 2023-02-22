@@ -14,7 +14,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <InputGroup onClick={handleClick}>
+    <InputGroup onClick={handleClick} w="auto">
       <input
         type="file"
         multiple={multiple || false}
