@@ -65,7 +65,8 @@ export default {
     copy_succeed: 'Copy Succeed!',
     copy_successfully: 'Copy successfully',
     copy_message_link: 'Copy message link',
-    send_time_limit: 'You can send 1 message a day. Please try it later.',
+    send_time_limit:
+      'Only 10 posts can be made in 24 hours, please come back and try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
@@ -418,6 +419,8 @@ export default {
   send_message: {
     title: 'History',
     new_message: 'New Message',
+    send_rule:
+      'Only 10 posts can be published in 24 hours, only the first 3 posts will push desktop notifications to your subscribers.',
     switch_from_mirror: 'Switch from mirror',
   },
   premium: {

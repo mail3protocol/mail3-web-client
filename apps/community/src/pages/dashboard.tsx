@@ -85,7 +85,7 @@ export const DownloadButton = () => {
 }
 
 export const Dashboard: React.FC = () => {
-  const { t } = useTranslation(['dashboard', 'common'])
+  const { t } = useTranslation(['dashboard', 'common', 'send_message'])
   const api = useAPI()
   const { data: statisticsData } = useQuery(
     [QueryKey.GetStatistics],
@@ -273,6 +273,22 @@ export const Dashboard: React.FC = () => {
           >
             <Heading as="h3" fontSize="16px">
               {t('send_message')}
+              <Tooltip
+                label={t('send_rule', { ns: 'send_message' })}
+                hasArrow
+                placement="bottom"
+                maxW="390px"
+                w="390px"
+                fontSize="12px"
+              >
+                <InfoOutlineIcon
+                  color="primaryTextColor"
+                  w="14px"
+                  h="14px"
+                  mb="2px"
+                  ml="5px"
+                />
+              </Tooltip>
             </Heading>
             {openNewMessagePage.isLoading ? (
               <Spinner w="24px" h="24px" mx="18px" />
