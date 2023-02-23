@@ -430,7 +430,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
         </Box>
       </AspectRatio>
 
-      <PageContainer>
+      <PageContainer className="family-to-read">
         <Box
           p={{ base: '8px 20px 40px', md: '24px 30px 0' }}
           position="relative"

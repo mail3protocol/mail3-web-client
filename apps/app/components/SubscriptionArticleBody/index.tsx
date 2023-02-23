@@ -135,7 +135,7 @@ export const SubscriptionArticleBody: React.FC<
   ) : null
 
   return (
-    <PageContainer>
+    <PageContainer className="family-to-read">
       <Flex direction={{ base: 'column-reverse', md: 'row-reverse' }}>
         {isMobile ? EchoBody : null}
         <UserInfo
