@@ -60,7 +60,7 @@ import { useToast } from '../hooks/useToast'
 import { UserSettingResponse } from '../api/modals/UserInfoResponse'
 import { UploadImageType } from '../api/HomeAPI'
 
-const DESCRIPTION_MAX_LENGTH = 500
+const DESCRIPTION_MAX_LENGTH = 1000
 
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }

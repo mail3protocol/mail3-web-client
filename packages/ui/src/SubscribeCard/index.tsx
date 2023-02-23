@@ -113,9 +113,16 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
           {mailAddress}
         </Text>
 
-        <Box fontWeight="600" fontSize="14px" lineHeight="20px" mt="16px">
+        <Text
+          fontWeight="600"
+          fontSize="14px"
+          lineHeight="20px"
+          mt="16px"
+          whiteSpace="pre-line"
+          noOfLines={5}
+        >
           {desc}
-        </Box>
+        </Text>
 
         <Box className="qrCode">
           <QrCode
