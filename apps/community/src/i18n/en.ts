@@ -64,7 +64,7 @@ export default {
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
     copy_successfully: 'Copy successfully',
-    copy_message_link: 'Copy message link',
+    copy_message_link: 'Copy post link',
     send_time_limit:
       'Only 10 posts can be made in 24 hours, please come back and try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
@@ -151,7 +151,7 @@ export default {
     subject_limit: '{{count}} / {{limit}}',
     editor_placeholder: 'Start writing here...',
     preview: 'Preview',
-    send: 'Send',
+    send: 'Publish',
     sending: 'Sending...',
     edit: 'Edit',
     send_succeed: 'Message Sent',
@@ -187,20 +187,20 @@ export default {
         <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [subscribe]-[Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
   },
   dashboard: {
-    message: 'Message',
+    message: 'Posts',
     subscribers: 'Subscribers',
     new_subscribers: 'New Subscribers',
     statistics_time: 'Statistics time: Yesterday 00:00 - 24:00',
-    send_message: 'Send Message',
-    send_records: 'History',
-    send_records_tooltip: 'Show 10 sent messages recently',
-    view_all_send_records: 'All history',
+    send_message: 'New Post',
+    send_records: 'Published',
+    send_records_tooltip: 'Show 10 recent posts',
+    view_all_send_records: 'All published posts',
     download_failed: 'Download failed, reason: {{message}}',
     download_no_data: 'No data, unable to download.',
     switch_from_mirror: 'Switch from Mirror',
     mirror: {
       sub_title: 'Confirm to import posts from mirror.xyz',
-      desc: 'After importing, the posts will appear in the history and on your subscription page, and no push notifications will be sent to your subscribers.',
+      desc: 'After importing, the posts will appear in the published list and on your subscription page, and no push notifications will be sent to your subscribers.',
       import: 'Import',
       importing: 'Importing...',
       toast: 'Please come back to refresh the page later.',
@@ -383,11 +383,12 @@ export default {
     appear:
       'This will appear on the <span>Items</span> section of your Subscription Page.',
     appear_text: `
-    Please go to <a>Cluscer3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
+    Please go to <a>Cluster3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
     display_Mail_Me_Button: 'Display Mail Me Button on the Subscription Page',
     publish: 'Publish',
     description: 'Description',
-    description_placeholder: 'Description',
+    description_placeholder:
+      'Hey, welcome to my Web3 Subscription and check out my creative content.',
     // language=html
     help_qr_code: `<h3>Profile QR Code</h3>
         <p>Download profilepage card or QR code for promotion and sharing.</p>
@@ -420,8 +421,8 @@ export default {
       'Need to open wallet. If already connected, please try again. ',
   },
   send_message: {
-    title: 'History',
-    new_message: 'New Message',
+    title: 'Published',
+    new_message: 'New Post',
     send_rule:
       'Only 10 posts can be published in 24 hours, only the first 3 posts will push desktop notifications to your subscribers.',
     switch_from_mirror: 'Switch from mirror',
