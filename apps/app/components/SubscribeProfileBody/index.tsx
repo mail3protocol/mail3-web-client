@@ -504,11 +504,16 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           {settings?.description ? (
             <Box mt="16px" w={{ base: '100%', md: '560px' }}>
               <Collapse startingHeight={20} in={isOpen}>
-                <Text fontWeight="400" fontSize="12px" lineHeight="20px">
+                <Text
+                  fontWeight="400"
+                  fontSize="12px"
+                  lineHeight="20px"
+                  whiteSpace="pre-line"
+                >
                   {settings?.description}
                 </Text>
               </Collapse>
-              {settings?.description.length > 85 ? (
+              {settings?.description.length > 50 ? (
                 <Flex justifyContent={{ base: 'flex-end', md: 'flex-start' }}>
                   <RawButton
                     size="xs"

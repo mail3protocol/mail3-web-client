@@ -210,7 +210,7 @@ export const Information: React.FC = () => {
         remoteSettingRef.current = d
         setBannerUrl(d.banner_url || BannerPng)
         setBannerUrlOnline(d.banner_url || BannerPng)
-        setDescription(d.description)
+        setDescription(d.description || t('description_placeholder'))
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
         // setName(d.name)
