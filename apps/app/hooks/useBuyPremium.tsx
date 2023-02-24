@@ -61,7 +61,7 @@ interface GetAuthingLevelRes {
   }
 }
 
-const getAuthingLevel = (sAccount: string, sAddress: string) =>
+export const getAuthingLevel = (sAccount: string, sAddress: string) =>
   axios.get<GetAuthingLevelRes>(
     `https://daodid.id/api/authing/check?sAccount=${sAccount}&sAddress=${sAddress}`
   )
@@ -111,7 +111,7 @@ export const useBuyPremium = () => {
   return callback
 }
 
-const BuyIframe: React.FC<{ bitAccount: string; isPaying: boolean }> = ({
+const BuyIframe: React.FC<{ bitAccount: string; isPaying?: boolean }> = ({
   bitAccount,
   isPaying,
 }) => {
@@ -245,7 +245,6 @@ export const BuySuccess: React.FC = () => {
 export const BuyForm: React.FC = () => {
   const [t] = useTranslation(['subscription-article'])
   const api = useAPI()
-  const [isWaitingRoom, setIsWaitingRoom] = useState(false)
   const { options } = useBuyPremiumModel()
   const [, setIsBuySuccess] = useAtom(isBuySuccessAtom)
   const bitAccount = options?.bitAccount ?? ''
@@ -253,7 +252,7 @@ export const BuyForm: React.FC = () => {
   const addr = options?.addr ?? ''
 
   useQuery(
-    [Query.GetCheckPremiumMember, 'interval buy', uuid],
+    [Query.GetCheckPremiumMember, 'interval buy', bitAccount, uuid],
     async () => {
       try {
         await api.checkPremiumMember(uuid)
@@ -264,7 +263,7 @@ export const BuyForm: React.FC = () => {
       }
     },
     {
-      enabled: isWaitingRoom,
+      enabled: !!bitAccount && !!addr,
       retry: 0,
       refetchOnMount: true,
       refetchOnReconnect: false,
@@ -274,38 +273,6 @@ export const BuyForm: React.FC = () => {
         if (d) {
           setIsBuySuccess(true)
           api.SubscriptionCommunityUserFollowing(uuid).catch()
-        }
-      },
-    }
-  )
-
-  useQuery(
-    ['getAuthingLevel', bitAccount, addr],
-    async () => {
-      try {
-        const { data } = await getAuthingLevel(bitAccount, addr)
-        return {
-          state: data.data.role,
-          // state: 'waiting_room',
-        }
-      } catch (error) {
-        return {
-          state: 'error',
-        }
-      }
-    },
-    {
-      enabled: !!bitAccount && !!addr,
-      retry: 0,
-      refetchOnMount: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchInterval(d) {
-        return d?.state === 'waiting_room' ? false : 3000
-      },
-      onSuccess(d) {
-        if (d.state === 'waiting_room') {
-          setIsWaitingRoom(true)
         }
       },
     }
@@ -337,7 +304,7 @@ export const BuyForm: React.FC = () => {
       >
         {t('sub-domain')}
       </Center>
-      <BuyIframe bitAccount={bitAccount} isPaying={isWaitingRoom} />
+      <BuyIframe bitAccount={bitAccount} />
       <Center mt="24px" fontWeight="400" fontSize="12px" color="#FF6B00">
         {t('wallet')}
       </Center>
