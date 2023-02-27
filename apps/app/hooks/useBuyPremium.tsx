@@ -20,7 +20,7 @@ import {
 import { noop, PromiseObj } from 'hooks'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { selectAtom, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { ReactComponent as SvgDiamondOk } from 'assets/subscribe-page/diamond-success.svg'
 import { Trans, useTranslation } from 'react-i18next'
@@ -28,11 +28,17 @@ import { truncateAddress } from 'shared'
 import { Button } from 'ui'
 import { useQuery } from 'react-query'
 import axios from 'axios'
+import dynamic from 'next/dynamic'
 import { Query } from '../api/query'
 import { useAPI } from './useAPI'
 import { useNotification } from './useNotification'
 
 const fnSelector = (a: PromiseObj) => a.fn
+
+const Daodid = dynamic(() => import('../components/DaodidComponent'), {
+  ssr: false,
+  loading: () => <Skeleton w="full" h="full" />,
+})
 
 export interface BuyPremiumDialogOptions {
   addr?: string
@@ -115,14 +121,7 @@ const BuyIframe: React.FC<{ bitAccount: string; isPaying?: boolean }> = ({
   bitAccount,
   isPaying,
 }) => {
-  const iframeSrc = `https://dev.daodid.id/frame/?bit=${bitAccount}&theme=light`
-  const [loading, setLoading] = useState(true)
   const isMobile = useBreakpointValue({ base: true, md: false })
-
-  const onload = () => {
-    setLoading(false)
-  }
-
   return (
     <Center
       mt="8px"
@@ -134,24 +133,9 @@ const BuyIframe: React.FC<{ bitAccount: string; isPaying?: boolean }> = ({
           : 'none'
       }
     >
-      {loading ? (
-        <Skeleton
-          position="absolute"
-          top="0"
-          left="0"
-          w="full"
-          h="full"
-          zIndex={1}
-        />
-      ) : null}
-      <iframe
-        src={iframeSrc}
-        onLoad={onload}
-        title="daodid"
-        width="504"
-        height="192"
-        style={{ position: 'relative', zIndex: 2 }}
-      />
+      <Box w="440px" h="195px">
+        <Daodid bitAccount={bitAccount} />
+      </Box>
       {isPaying ? (
         <Center
           position="absolute"
