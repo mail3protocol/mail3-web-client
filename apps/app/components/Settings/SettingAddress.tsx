@@ -4,14 +4,10 @@ import {
   Flex,
   FormControl,
   HStack,
-  Link,
   Spinner,
-  Stack,
   Text,
-  VStack,
   Button as RawButton,
   Box,
-  Spacer,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -26,8 +22,8 @@ import {
   useCheckbox,
   UnorderedList,
   ListItem,
-  Image,
   Portal,
+  Icon as RawIcon,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
@@ -60,11 +56,11 @@ import { useAPI } from '../../hooks/useAPI'
 import { Query } from '../../api/query'
 import happySetupMascot from '../../assets/happy-setup-mascot.png'
 import unhappySetupMascot from '../../assets/unhappy-setup-mascot.png'
-import RefreshSvg from '../../assets/refresh.svg'
-import { ReactComponent as ArrawSvg } from '../../assets/setup/arrow.svg'
+
 import { ReactComponent as DefaultSvg } from '../../assets/settings/0x.svg'
-import UDIcon from '../../assets/settings/ud-icon.png'
+import { ReactComponent as UdSvg } from '../../assets/settings/ud.svg'
 import { ReactComponent as BitSvg } from '../../assets/settings/bit.svg'
+import { ReactComponent as SubBitSvg } from '../../assets/settings/premium.svg'
 import { ReactComponent as EnsSvg } from '../../assets/settings/ens.svg'
 import { ReactComponent as MoreSvg } from '../../assets/settings/more.svg'
 import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circle-cur.svg'
@@ -79,12 +75,25 @@ import {
 } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { RouterLink } from '../RouterLink'
+import { SwitchPanel } from './SwitchWrap'
+
+export enum AliasType {
+  ENS = 'ENS',
+  BIT = 'BIT',
+  SUB_BIT = 'SUB_BIT',
+  UD = 'UD',
+}
 
 enum TabItemType {
-  Default = 0,
-  Ens = 1,
-  Bit = 2,
+  Ens = 0,
+  Bit = 1,
+  SubBit = 2,
   More = 3,
+}
+
+enum MoreItemType {
+  Default = 1,
+  Ud = 2,
 }
 
 const tabsConfig: Record<
@@ -94,10 +103,6 @@ const tabsConfig: Record<
     name: string
   }
 > = {
-  [TabItemType.Default]: {
-    Icon: DefaultSvg,
-    name: 'Wallet Address',
-  },
   [TabItemType.Ens]: {
     Icon: EnsSvg,
     name: 'ENS Name',
@@ -105,6 +110,10 @@ const tabsConfig: Record<
   [TabItemType.Bit]: {
     Icon: BitSvg,
     name: '.bit Name',
+  },
+  [TabItemType.SubBit]: {
+    Icon: SubBitSvg,
+    name: 'Premium Name',
   },
   [TabItemType.More]: {
     Icon: MoreSvg,
@@ -161,7 +170,7 @@ const Container = styled(Center)`
   }
 `
 
-interface EmailSwitchProps {
+export interface EmailSwitchProps {
   emailAddress: string
   account: string
   isLoading?: boolean
@@ -204,7 +213,7 @@ const NewCheckbox = (props: any) => {
   )
 }
 
-const EmailSwitch: React.FC<EmailSwitchProps> = ({
+export const EmailSwitch: React.FC<EmailSwitchProps> = ({
   emailAddress,
   onChange,
   isLoading = false,
@@ -234,7 +243,7 @@ const EmailSwitch: React.FC<EmailSwitchProps> = ({
   </Flex>
 )
 
-const generateEmailAddress = (s = '') => {
+export const generateEmailAddress = (s = '') => {
   const [address, rest] = s.split('@')
   if (isPrimitiveEthAddress(address) || isZilpayAddress(address))
     return `${truncateMiddle(address, 6, 4)}@${
@@ -243,14 +252,6 @@ const generateEmailAddress = (s = '') => {
 
   return s
 }
-
-enum AliasType {
-  ENS = 'ENS',
-  BIT = 'BIT',
-  UD = 'UD',
-}
-
-const LIMIT_MAX_NUMBER = 5
 
 export const SettingAddress: React.FC = () => {
   const [t] = useTranslation('settings')
@@ -269,15 +270,7 @@ export const SettingAddress: React.FC = () => {
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
   const [activeAccount, setActiveAccount] = useState(account)
-  const [isRefreshingMap, setIsRefeshingMap] = useState({
-    [AliasType.BIT]: false,
-    [AliasType.ENS]: false,
-    [AliasType.UD]: false,
-  })
-  const [isOpenMoreMap, setIsOpenMoreMap] = useState({
-    [AliasType.BIT]: false,
-    [AliasType.ENS]: false,
-  })
+  const [activeMoreItem, setActiveMoreItem] = useState(MoreItemType.Default)
 
   const {
     data: aliasDate,
@@ -322,10 +315,6 @@ export const SettingAddress: React.FC = () => {
   )
 
   const onRefreshDomains = async (type: AliasType) => {
-    setIsRefeshingMap((s) => ({
-      ...s,
-      [type]: true,
-    }))
     try {
       if (type === AliasType.ENS) {
         trackClickENSRefresh()
@@ -345,11 +334,6 @@ export const SettingAddress: React.FC = () => {
       } else if (e.response.data.reason !== 'EMPTY_ENS_LIST') {
         toast(t('address.refresh_failed') + e.toString())
       }
-    } finally {
-      setIsRefeshingMap((s) => ({
-        ...s,
-        [type]: false,
-      }))
     }
   }
 
@@ -390,10 +374,13 @@ export const SettingAddress: React.FC = () => {
         primitive: Alias | null
         ens: Alias[]
         bit: Alias[]
+        subBit: Alias[]
         ud: Alias[]
       }>(
         (o, item) => {
           const [addr] = item.address.split('@')
+          if (item.email_type === AliasMailType.SubBit)
+            return { ...o, subBit: [...o.bit, item] }
           if (isBitDomain(addr)) return { ...o, bit: [...o.bit, item] }
           if (isEnsDomain(addr)) return { ...o, ens: [...o.ens, item] }
           if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr))
@@ -407,36 +394,11 @@ export const SettingAddress: React.FC = () => {
           primitive: null,
           ens: [],
           bit: [],
+          subBit: [],
           ud: [],
         }
       ),
     [aliasDate]
-  )
-
-  const { primitive: primitiveAlias } = aliases
-
-  const ensAliases = isOpenMoreMap[AliasType.ENS]
-    ? aliases.ens
-    : aliases.ens.slice(0, LIMIT_MAX_NUMBER)
-  const bitAliases = isOpenMoreMap[AliasType.BIT]
-    ? aliases.bit
-    : aliases.bit.slice(0, LIMIT_MAX_NUMBER)
-  const udAliases = aliases.ud
-
-  const getRefreshButton = (type: AliasType) => (
-    <RawButton
-      variant="link"
-      colorScheme="deepBlue"
-      leftIcon={<Image src={RefreshSvg} w="14px" h="14px" />}
-      onClick={() => {
-        onRefreshDomains(type)
-      }}
-      isLoading={isRefreshingMap[type]}
-      fontWeight="400"
-      fontSize="16px"
-    >
-      {t('address.refresh')}
-    </RawButton>
   )
 
   const onCopy = async () => {
@@ -472,7 +434,7 @@ export const SettingAddress: React.FC = () => {
   const tabItemTypes = [
     TabItemType.Ens,
     TabItemType.Bit,
-    TabItemType.Default,
+    TabItemType.SubBit,
     TabItemType.More,
   ]
 
@@ -484,10 +446,11 @@ export const SettingAddress: React.FC = () => {
     const indexMap: { [key in AliasMailType]?: number } = {
       [AliasMailType.Ens]: 0,
       [AliasMailType.Bit]: 1,
+      [AliasMailType.SubBit]: 2,
       [AliasMailType.UD]: 3,
     }
     const currentIndex = indexMap[defaultAlias?.email_type as AliasMailType]
-    return currentIndex === undefined ? 2 : currentIndex
+    return currentIndex === undefined ? 3 : currentIndex
   }, [userProps])
 
   const [tabIndex, setTabIndex] = React.useState(defaultTabIndex)
@@ -496,6 +459,27 @@ export const SettingAddress: React.FC = () => {
       setTabIndex(index)
     }
   }
+
+  const MoreItemTypes = [
+    {
+      type: MoreItemType.Ud,
+      onClick: () => {
+        setTabIndex(3)
+        setActiveMoreItem(MoreItemType.Ud)
+      },
+      label: t2('connect.ud'),
+      Icon: UdSvg,
+    },
+    {
+      type: MoreItemType.Default,
+      onClick: () => {
+        setActiveMoreItem(MoreItemType.Default)
+        setTabIndex(3)
+      },
+      label: t2('connect.wallet-address'),
+      Icon: DefaultSvg,
+    },
+  ]
 
   return (
     <Container pb={{ md: '100px', base: 0 }}>
@@ -657,16 +641,25 @@ export const SettingAddress: React.FC = () => {
                           <PopoverContent w="230px">
                             <PopoverArrow />
                             <PopoverBody>
-                              <RawButton
-                                variant="ghost"
-                                colorScheme="gray"
-                                size="sm"
-                                fontWeight={500}
-                                leftIcon={<Image w="20px" src={UDIcon} />}
-                                onClick={() => setTabIndex(3)}
-                              >
-                                {t2('connect.ud')}
-                              </RawButton>
+                              {MoreItemTypes.map((item, index) => {
+                                const { Icon: IconSrc, onClick, label } = item
+                                return (
+                                  <RawButton
+                                    // eslint-disable-next-line react/no-array-index-key
+                                    key={index}
+                                    variant="ghost"
+                                    // colorScheme="gray"
+                                    size="sm"
+                                    fontWeight={500}
+                                    leftIcon={
+                                      <RawIcon w="20px" h="20px" as={IconSrc} />
+                                    }
+                                    onClick={onClick}
+                                  >
+                                    {label}
+                                  </RawButton>
+                                )
+                              })}
                             </PopoverBody>
                           </PopoverContent>
                         </Portal>
@@ -709,266 +702,98 @@ export const SettingAddress: React.FC = () => {
             <Flex justifyContent="center" pt="8px" minH="200px">
               <TabPanels maxW="480px">
                 {tabItemTypes.map((type) => {
-                  if (type === TabItemType.More) {
-                    return (
-                      <TabPanel>
-                        {!isLoading ? (
-                          <Box className="switch-wrap">
-                            <Box p="16px 8px 16px 8px">
-                              {!udAliases.length ? NotFound : null}
+                  let Content = <Box />
 
-                              <VStack spacing="10px">
-                                {udAliases.map((a) => (
-                                  <EmailSwitch
-                                    uuid={a.uuid}
-                                    address={a.address}
-                                    emailAddress={generateEmailAddress(
-                                      a.address
-                                    )}
-                                    account={a.address}
-                                    onChange={onDefaultAccountChange(false)}
-                                    key={a.address}
-                                    isChecked={a.uuid === activeAccount}
-                                  />
-                                ))}
-                              </VStack>
-                            </Box>
-                            <Flex h="44px" bg="#fff" p="0 18px">
-                              {getRefreshButton(AliasType.UD)}
-                              <Spacer />
-                              <Center alignItems="center">
-                                <Text fontSize="14px" fontWeight={500}>
-                                  <Stack
-                                    direction="row"
-                                    spacing="16px"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                  >
-                                    <Box fontSize={['11px', '14px', '14px']}>
-                                      <Trans
-                                        ns="settings"
-                                        i18nKey="address.register-ud"
-                                        t={t}
-                                        components={{
-                                          a: (
-                                            <Link
-                                              isExternal
-                                              onClick={() =>
-                                                trackClickRegisterUD()
-                                              }
-                                              href={UD_DOMAIN}
-                                              color="#4E52F5"
-                                            />
-                                          ),
-                                        }}
-                                      />
-                                    </Box>
-                                  </Stack>
-                                </Text>
-                              </Center>
-                            </Flex>
-                          </Box>
-                        ) : null}
-                      </TabPanel>
-                    )
-                  }
-                  if (type === TabItemType.Default) {
-                    return (
-                      <TabPanel key={type}>
-                        {primitiveAlias ? (
+                  // eslint-disable-next-line default-case
+                  switch (type) {
+                    case TabItemType.Ens:
+                      Content = (
+                        <SwitchPanel
+                          isLoading={isLoading}
+                          list={aliases.ens}
+                          emptyNode={NotFound}
+                          activeAccount={activeAccount}
+                          onRefresh={async () =>
+                            onRefreshDomains(AliasType.ENS)
+                          }
+                          onChange={onDefaultAccountChange(false)}
+                          register={{
+                            i18nKey: 'address.register-ens',
+                            onClick: () => trackClickRegisterENS(),
+                            href: ENS_DOMAIN,
+                          }}
+                        />
+                      )
+                      break
+                    case TabItemType.Bit:
+                      Content = (
+                        <SwitchPanel
+                          isLoading={isLoading}
+                          list={aliases.bit}
+                          emptyNode={NotFound}
+                          activeAccount={activeAccount}
+                          onRefresh={async () =>
+                            onRefreshDomains(AliasType.BIT)
+                          }
+                          onChange={onDefaultAccountChange(false)}
+                          register={{
+                            i18nKey: 'address.register-bit',
+                            onClick: () => trackClickRegisterBIT(),
+                            href: BIT_DOMAIN,
+                          }}
+                        />
+                      )
+                      break
+                    case TabItemType.More:
+                      if (activeMoreItem === MoreItemType.Ud) {
+                        Content = (
+                          <SwitchPanel
+                            isLoading={isLoading}
+                            list={aliases.ud}
+                            emptyNode={NotFound}
+                            activeAccount={activeAccount}
+                            onRefresh={async () =>
+                              onRefreshDomains(AliasType.UD)
+                            }
+                            onChange={onDefaultAccountChange(false)}
+                            register={{
+                              i18nKey: 'address.register-ud',
+                              onClick: () => trackClickRegisterUD(),
+                              href: UD_DOMAIN,
+                            }}
+                          />
+                        )
+                      }
+                      if (
+                        aliases.primitive &&
+                        activeMoreItem === MoreItemType.Default
+                      ) {
+                        Content = (
                           <Box className="switch-wrap">
                             <Box p="16px 8px 16px 8px">
                               <EmailSwitch
-                                uuid={primitiveAlias.uuid ?? 'first_alias'}
+                                uuid={aliases.primitive.uuid ?? 'first_alias'}
                                 emailAddress={generateEmailAddress(
-                                  primitiveAlias.address ?? account
+                                  aliases.primitive.address ?? account
                                 )}
-                                account={primitiveAlias.address}
+                                account={aliases.primitive.address}
                                 onChange={onDefaultAccountChange(true)}
-                                key={primitiveAlias.address}
-                                address={primitiveAlias.address ?? account}
+                                key={aliases.primitive.address}
+                                address={aliases.primitive.address ?? account}
                                 isLoading={isLoading}
                                 isChecked={
-                                  primitiveAlias.uuid === activeAccount ||
+                                  aliases.primitive.uuid === activeAccount ||
                                   aliasDate?.aliases?.length === 1
                                 }
                               />
                             </Box>
                           </Box>
-                        ) : null}
-                      </TabPanel>
-                    )
+                        )
+                        break
+                      }
                   }
 
-                  if (type === TabItemType.Ens) {
-                    return (
-                      <TabPanel>
-                        {!isLoading ? (
-                          <Box className="switch-wrap">
-                            <Box p="16px 8px 16px 8px">
-                              {!ensAliases.length ? NotFound : null}
-
-                              <VStack spacing="10px">
-                                {ensAliases.map((a) => (
-                                  <EmailSwitch
-                                    uuid={a.uuid}
-                                    address={a.address}
-                                    emailAddress={generateEmailAddress(
-                                      a.address
-                                    )}
-                                    account={a.address}
-                                    onChange={onDefaultAccountChange(false)}
-                                    key={a.address}
-                                    isChecked={a.uuid === activeAccount}
-                                  />
-                                ))}
-                              </VStack>
-                              {aliases.ens.length > LIMIT_MAX_NUMBER &&
-                              !isOpenMoreMap[AliasType.ENS] ? (
-                                <Center
-                                  cursor="pointer"
-                                  pt="8px"
-                                  fontSize="12px"
-                                  lineHeight="18px"
-                                  onClick={() => {
-                                    setIsOpenMoreMap({
-                                      ...isOpenMoreMap,
-                                      [AliasType.ENS]: true,
-                                    })
-                                  }}
-                                >
-                                  <ArrawSvg />
-                                  <Box ml="2px">{` +${
-                                    aliases.ens.length - LIMIT_MAX_NUMBER
-                                  }`}</Box>
-                                </Center>
-                              ) : null}
-                            </Box>
-                            <Flex h="44px" bg="#fff" p="0 18px">
-                              {getRefreshButton(AliasType.ENS)}
-                              <Spacer />
-                              <Center alignItems="center">
-                                <Text fontSize="14px" fontWeight={500}>
-                                  <Stack
-                                    direction="row"
-                                    spacing="16px"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                  >
-                                    <Box>
-                                      <Trans
-                                        ns="settings"
-                                        i18nKey="address.register-ens"
-                                        t={t}
-                                        components={{
-                                          a: (
-                                            <Link
-                                              isExternal
-                                              onClick={() =>
-                                                trackClickRegisterENS()
-                                              }
-                                              href={ENS_DOMAIN}
-                                              color="#4E52F5"
-                                            />
-                                          ),
-                                        }}
-                                      />
-                                    </Box>
-                                  </Stack>
-                                </Text>
-                              </Center>
-                            </Flex>
-                          </Box>
-                        ) : null}
-                      </TabPanel>
-                    )
-                  }
-
-                  if (type === TabItemType.Bit) {
-                    return (
-                      <TabPanel>
-                        {!isLoading ? (
-                          <Box className="switch-wrap">
-                            <Box p="16px 8px 16px 8px">
-                              {!bitAliases.length ? NotFound : null}
-                              <VStack spacing="10px">
-                                {bitAliases.map((a) => (
-                                  <EmailSwitch
-                                    uuid={a.uuid}
-                                    address={a.address}
-                                    emailAddress={generateEmailAddress(
-                                      a.address
-                                    )}
-                                    account={a.address}
-                                    onChange={onDefaultAccountChange(false)}
-                                    key={a.address}
-                                    isChecked={a.uuid === activeAccount}
-                                  />
-                                ))}
-                              </VStack>
-                              {aliases.bit.length > LIMIT_MAX_NUMBER &&
-                              !isOpenMoreMap[AliasType.BIT] ? (
-                                <Center
-                                  cursor="pointer"
-                                  pt="8px"
-                                  fontSize="12px"
-                                  lineHeight="18px"
-                                  onClick={() => {
-                                    setIsOpenMoreMap({
-                                      ...isOpenMoreMap,
-                                      [AliasType.BIT]: true,
-                                    })
-                                  }}
-                                >
-                                  <ArrawSvg />
-                                  <Box ml="2px">{` +${
-                                    aliases.bit.length - LIMIT_MAX_NUMBER
-                                  }`}</Box>
-                                </Center>
-                              ) : null}
-                            </Box>
-
-                            <Flex h="44px" bg="#fff" p="0 18px">
-                              {getRefreshButton(AliasType.BIT)}
-                              <Spacer />
-                              <Center alignItems="center">
-                                <Text fontSize="14px" fontWeight={500}>
-                                  <Stack
-                                    direction="row"
-                                    spacing="16px"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                  >
-                                    <Box>
-                                      <Trans
-                                        ns="settings"
-                                        i18nKey="address.register-bit"
-                                        t={t}
-                                        components={{
-                                          a: (
-                                            <Link
-                                              isExternal
-                                              onClick={() =>
-                                                trackClickRegisterBIT()
-                                              }
-                                              href={BIT_DOMAIN}
-                                              color="#4E52F5"
-                                            />
-                                          ),
-                                        }}
-                                      />
-                                    </Box>
-                                  </Stack>
-                                </Text>
-                              </Center>
-                            </Flex>
-                          </Box>
-                        ) : null}
-                      </TabPanel>
-                    )
-                  }
-
-                  return <TabPanel key={type} />
+                  return <TabPanel key={type}>{Content}</TabPanel>
                 })}
               </TabPanels>
             </Flex>
