@@ -7,19 +7,26 @@ import {
   Box,
   VStack,
   Spinner,
+  Icon,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
-import { Fragment, useMemo } from 'react'
+import { Fragment } from 'react'
 import dayjs from 'dayjs'
+import { IpfsModal } from 'ui'
 import { Container } from '../../components/Container'
-import { NewMessageLinkButton } from '../../components/NewMessageLinkButton'
+import {
+  NewMessageLinkButton,
+  PureStyledNewMessageButton,
+} from '../../components/NewMessageLinkButton'
 import { SentRecordItem } from '../../components/SentRecordItem'
 import { QueryKey } from '../../api/QueryKey'
 import { useAPI } from '../../hooks/useAPI'
 import { DEFAULT_LIST_ITEM_COUNT } from '../../constants/env/config'
 import { useLoadNextPageRef } from '../../hooks/useLoadNextPageRef'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { ReactComponent as DownloadSvg } from '../../assets/DownloadIcon.svg'
+import { useSwitchMirror } from '../../hooks/useSwitchMirror'
 
 export const SendRecords: React.FC = () => {
   useDocumentTitle('Send Records')
@@ -52,13 +59,6 @@ export const SendRecords: React.FC = () => {
     }
   })
 
-  const lastMessageSentTime = useMemo(() => {
-    const createdAt = listQuery?.data?.pages[0].messages?.[0]?.created_at
-    if (!createdAt) return undefined
-    const createdAtNumber = Number(createdAt)
-    return createdAtNumber ? dayjs.unix(createdAtNumber) : undefined
-  }, [listQuery?.data?.pages[0].messages])
-
   const loadingEl = (
     <Flex align="center" color="secondaryTitleColor" h="48px">
       <Spinner w="16px" h="16px" />
@@ -68,6 +68,16 @@ export const SendRecords: React.FC = () => {
     </Flex>
   )
 
+  const {
+    switchMirrorOnClick,
+    isOpenIpfsModal,
+    onCloseIpfsModal,
+    isUploadedIpfsKey,
+    isLoadingIsUploadedIpfsKeyState,
+    switchMirror,
+    isCheckAdminStatusLoading,
+  } = useSwitchMirror()
+
   return (
     <Container
       as={Grid}
@@ -75,15 +85,46 @@ export const SendRecords: React.FC = () => {
       gridTemplateRows="132px auto"
       gap="20px"
     >
-      <Flex direction="column" p="16px" {...cardStyleProps}>
-        <Heading as="h3" fontSize="16px">
-          {t('new_message')}
-        </Heading>
-        <NewMessageLinkButton
-          isLoading={listQuery.isLoading}
-          lastMessageSentTime={lastMessageSentTime}
+      {!isLoadingIsUploadedIpfsKeyState ? (
+        <IpfsModal
+          isContent
+          isOpen={isOpenIpfsModal}
+          onClose={onCloseIpfsModal}
+          isForceConnectWallet={!isUploadedIpfsKey}
+          onAfterSignature={async (_, key) => {
+            await api.updateMessageEncryptionKey(key)
+            onCloseIpfsModal()
+            await switchMirror()
+          }}
         />
-      </Flex>
+      ) : null}
+      <Grid w="full" gridTemplateColumns="3fr 1fr" gap="20px">
+        <Flex direction="column" p="16px" {...cardStyleProps}>
+          <Heading as="h3" fontSize="16px">
+            {t('new_message')}
+          </Heading>
+          <NewMessageLinkButton isLoading={listQuery.isLoading} />
+        </Flex>
+        <Flex
+          direction="column"
+          p="16px"
+          color="primaryTitleColor"
+          cursor="pointer"
+          onClick={switchMirrorOnClick}
+          {...cardStyleProps}
+        >
+          <Heading as="h3" fontSize="16px">
+            {t('switch_from_mirror')}
+          </Heading>
+          <PureStyledNewMessageButton>
+            {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
+              <Spinner w="24px" h="24px" mx="18px" />
+            ) : (
+              <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
+            )}
+          </PureStyledNewMessageButton>
+        </Flex>
+      </Grid>
       <Box {...cardStyleProps} p="32px">
         <Heading as="h2" fontSize="18px" fontWeight="700">
           {t('title')}
@@ -101,6 +142,7 @@ export const SendRecords: React.FC = () => {
                         time={dayjs.unix(Number(message.created_at))}
                         subject={message.subject}
                         viewCount={message.read_count}
+                        messageType={message.message_type}
                       />
                     </Box>
                   ))}

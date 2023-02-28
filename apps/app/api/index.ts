@@ -8,34 +8,13 @@ import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdentifier'
-import { HomeCommunity, Subscription } from 'models'
+import { HomeCommunity, Subscription, GetAliasResponse } from 'models'
 import { SERVER_PV_AUTH_TOKEN, SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
-
-type mailAddress = `${string}@${string}`
 
 export interface LoginResponse {
   uuid: string
   jwt: string
-}
-
-export enum AliasMailType {
-  Ens = 'ens_mail',
-  Bit = 'dot_bit_mail',
-  Eth = 'eth_mail',
-  Zilliqa = 'zilliqa_mail',
-  UD = 'unstoppable_mail',
-}
-
-export interface Alias {
-  uuid: string
-  address: mailAddress
-  is_default: boolean
-  email_type: AliasMailType
-}
-
-export interface AliasResponse {
-  aliases: Alias[]
 }
 
 export enum MessageFlagType {
@@ -179,7 +158,7 @@ export class API {
     return this.account
   }
 
-  public async getAliases(): Promise<AxiosResponse<AliasResponse>> {
+  public async getAliases(): Promise<AxiosResponse<GetAliasResponse>> {
     return this.axios.get(`/account/aliases`)
   }
 
@@ -522,6 +501,10 @@ export class API {
     return this.axios.get<Subscription.MessageStatsResp>(
       `/subscription/message_stats`
     )
+  }
+
+  public async checkPremiumMember(uuid: string) {
+    return this.axios.get<void>(`/subscription/premium_members/${uuid}`)
   }
 
   public async checkIsProject(address: string) {

@@ -5,5 +5,6 @@ export enum RoutePath {
   SendRecords = '/message/send-records',
   EarnNft = '/subscribe/earn-nft',
   Information = '/information',
+  Premium = '/subscribe/premium',
   CoAuthors = '/members',
 }

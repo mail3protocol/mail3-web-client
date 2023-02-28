@@ -17,7 +17,7 @@ import { IpfsModal } from 'ui'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHelpers } from '@remirror/react'
-import { useTrackClick, TrackEvent } from 'hooks'
+import { TrackEvent, useTrackClick } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { copyText } from 'shared'
@@ -26,6 +26,7 @@ import { useToast } from '../../hooks/useToast'
 import { RoutePath } from '../../route/path'
 import { CloseButton } from '../ConfirmDialog'
 import { APP_URL } from '../../constants/env/url'
+import { MessageType } from '../../api/modals/MessageListResponse'
 import { QueryKey } from '../../api/QueryKey'
 
 export interface SendButtonProps extends ButtonProps {
@@ -33,6 +34,7 @@ export interface SendButtonProps extends ButtonProps {
   abstract: string
   isDisabled?: boolean
   onSend?: () => void
+  messageType: MessageType
 }
 
 export const SendButton: React.FC<SendButtonProps> = ({
@@ -40,6 +42,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
   onSend,
   abstract,
   isDisabled: isPropsDisabled,
+  messageType,
   ...props
 }) => {
   const { t } = useTranslation(['new_message', 'common'])
@@ -63,7 +66,9 @@ export const SendButton: React.FC<SendButtonProps> = ({
     trackClickCommunitySendConfirm()
     setIsLoading(true)
     try {
-      const data = await api.sendMessage(subject, getHTML(), abstract)
+      const data = await api.sendMessage(subject, getHTML(), abstract, {
+        messageType,
+      })
       setArticleId(data.data.uuid)
       setIsSent(true)
       onSend?.()
@@ -100,7 +105,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
             fontWeight="500"
             fontSize="16px"
             lineHeight="20px"
-            bg="containerBackground"
+            bg="inputBackground"
             rounded="8px"
             p="6px"
           >
@@ -120,12 +125,24 @@ export const SendButton: React.FC<SendButtonProps> = ({
         </Heading>
       )
     }
+    if (messageType === MessageType.Premium) {
+      return (
+        <>
+          <Heading as="h3" fontSize="18px">
+            {t('send_premium_message_confirm_title')}
+          </Heading>
+          <Box mt="24px" fontWeight="500" fontSize="16px" lineHeight="22px">
+            {t('send_premium_message_confirm_text')}
+          </Box>
+        </>
+      )
+    }
     return (
       <Heading as="h3" fontSize="18px">
         {t('send_description')}
       </Heading>
     )
-  }, [isSent, isLoading, t])
+  }, [isSent, isLoading, t, messageType])
 
   const {
     isOpen: isOpenIpfsModal,

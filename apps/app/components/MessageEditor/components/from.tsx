@@ -12,10 +12,10 @@ import React, { useEffect, useState } from 'react'
 import { Avatar } from 'ui'
 import { TrackEvent, useTrackClick } from 'hooks'
 import { useAtomValue } from 'jotai'
+import { Alias } from 'models'
 import { ReactComponent as ChangeFromAddressSvg } from '../../../assets/change-from-address.svg'
 import { removeMailSuffix } from '../../../utils'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
-import { Alias } from '../../../api'
 
 export interface FromProps {
   onChange?: (address: string) => void

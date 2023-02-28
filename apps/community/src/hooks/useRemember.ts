@@ -18,6 +18,7 @@ import { useRegisterDialog } from './useRegisterDialog'
 import { API } from '../api/api'
 import { SubscriptionState } from '../api/modals/SubscriptionResponse'
 import { ErrorCode } from '../api/ErrorCode'
+import { useSetAdmin, getAdminStatus } from './useAdmin'
 
 export const rememberLoadingAtom = atom(false)
 
@@ -35,6 +36,7 @@ export function useRemember() {
   const account = useAccount()
   const setTrackGlobal = useSetGlobalTrack()
   const setIsConnectingUD = useUpdateAtom(isConnectingUDAtom)
+  const setIsAdmin = useSetAdmin()
 
   const onSignZilpay = async (nonce: number) => {
     if (!zilpay.isConnected) {
@@ -88,6 +90,8 @@ export function useRemember() {
             const earnNftState = await api
               .getSubscription()
               .then((r) => r.data.state)
+            const isAdmin = await getAdminStatus(api)
+            setIsAdmin(isAdmin)
             await setTrackGlobal()
             if (earnNftState === SubscriptionState.Active) {
               navi(RoutePath.Dashboard)
@@ -98,7 +102,10 @@ export function useRemember() {
           break
         }
         case SignupResponseCode.Success: {
-          await login(message!, signature!, pubkey)
+          const { jwt } = await login(message!, signature!, pubkey)
+          const api = new API(account, jwt)
+          const isAdmin = await getAdminStatus(api)
+          setIsAdmin(isAdmin)
           await setTrackGlobal()
           navi(RoutePath.Dashboard)
           break

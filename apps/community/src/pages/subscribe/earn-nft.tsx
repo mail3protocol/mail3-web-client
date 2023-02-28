@@ -43,6 +43,7 @@ import { StylePreview } from '../../components/EarnNFTPageComponents/StylePrevie
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
 import { IS_DISABLED_QUEST3 } from '../../constants/env/config'
+import { StatusLamp } from '../../components/StatusLamp'
 
 function isValidGalxeCampaignUrl(value: string) {
   return /https:\/\/galxe.com\/[a-zA-Z0-9_]+\/campaign\/[a-zA-Z0-9]+$/.test(
@@ -370,37 +371,10 @@ export const EarnNft: React.FC = () => {
           <Heading as="h4" fontSize="18px" lineHeight="20px">
             {t('title')}
           </Heading>
-          <Flex
-            ml="auto"
-            color="secondaryTitleColor"
-            fontSize="16px"
-            fontWeight="500"
-            align="center"
-          >
-            {t('status_field')}
-            <Box
-              w="8px"
-              h="8px"
-              bg={
-                state === SubscriptionState.Inactive
-                  ? 'statusColorDisabled'
-                  : 'statusColorEnabled'
-              }
-              rounded="full"
-              ml="8px"
-              mr="4px"
-              style={{ opacity: isLoading ? 0 : 1 }}
-            />
-            <Box color="primaryTextColor" w="72px">
-              {!isLoading
-                ? t(
-                    state === SubscriptionState.Inactive
-                      ? 'status_value.disabled'
-                      : 'status_value.enabled'
-                  )
-                : t('status_value.loading')}
-            </Box>
-          </Flex>
+          <StatusLamp
+            isLoading={isLoading}
+            isEnabled={state === SubscriptionState.Active}
+          />
         </Flex>
         <VStack spacing="24px" maxW="487px" mb="32px">
           <FormControl>
@@ -432,7 +406,10 @@ export const EarnNft: React.FC = () => {
                   }
                 >
                   <HStack spacing="8px">
-                    <Radio value={SubscriptionPlatform.Galaxy}>
+                    <Radio
+                      variant="outline"
+                      value={SubscriptionPlatform.Galaxy}
+                    >
                       {t('platforms.galaxy')}
                     </Radio>
                     {IS_DISABLED_QUEST3 ? (
@@ -447,13 +424,20 @@ export const EarnNft: React.FC = () => {
                             e.preventDefault()
                           }}
                         >
-                          <Radio value={SubscriptionPlatform.Quest3} isDisabled>
+                          <Radio
+                            variant="outline"
+                            value={SubscriptionPlatform.Quest3}
+                            isDisabled
+                          >
                             {t('platforms.quest3')}
                           </Radio>
                         </Box>
                       </Tooltip>
                     ) : (
-                      <Radio value={SubscriptionPlatform.Quest3}>
+                      <Radio
+                        variant="outline"
+                        value={SubscriptionPlatform.Quest3}
+                      >
                         {t('platforms.quest3')}
                       </Radio>
                     )}

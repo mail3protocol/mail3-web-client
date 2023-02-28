@@ -1,15 +1,16 @@
 import { Box, Flex, Heading, VStack } from '@chakra-ui/react'
-import { ReactNode } from 'react'
+import { MouseEventHandler, ReactNode } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 
-interface MenuItem {
+export interface MenuItem {
   label: ReactNode
   currentPathname?: string
   to: string
   key: string
+  onClick?: MouseEventHandler<HTMLDivElement>
 }
 
-interface MenuSubItems {
+export interface MenuSubItems {
   label: ReactNode
   children: MenuItem[]
   key: string
@@ -23,6 +24,7 @@ export const SidebarMenuItem: React.FC<MenuItem> = ({
   label,
   currentPathname,
   to,
+  onClick,
 }) => {
   const { pathname } = useLocation()
   const isActive = (currentPathname || to) === pathname
@@ -44,6 +46,7 @@ export const SidebarMenuItem: React.FC<MenuItem> = ({
       _hover={{
         textDecoration: isActive ? undefined : 'underline',
       }}
+      onClick={onClick}
     >
       {label}
     </Flex>
