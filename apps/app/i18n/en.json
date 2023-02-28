@@ -393,7 +393,7 @@
         "from-year":"Start at US${{num}}/year (US${{num2}}/month)",
         "notifications": "To receive the latest content, enable desktop notifications.",
         "enable": "Enable",
-        "buy-title": "Start your premium membership.",
+        "buy-title": "Start your premium",
         "powered-by": "Powered by daodid.id",
         "wallet":"Finalize your purchase using your connected wallet.",
         "buy-ok":"You are now a Premium Member of \n <b>{{name}}</b>",
