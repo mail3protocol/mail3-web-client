@@ -200,14 +200,14 @@ export default {
     download_no_data: 'No data, unable to download.',
     switch_from_mirror: 'Switch from Mirror',
     mirror: {
-      sub_title: 'Confirm to import posts from mirror.xyz',
-      desc: 'After importing, the posts will appear in the history and on your subscription page, and no push notifications will be sent to your subscribers.',
+      sub_title: 'Please confirm that you want to import posts from mirror.xyz.',
+      desc: 'After importing, the posts will appear in the history and on your subscription page, and your subscribers will not receive push notifications.',
       import: 'Import',
       importing: 'Importing...',
-      toast: 'Please come back to refresh the page later.',
+      toast: 'Please refresh the page later to check.',
       not_allow:
         'Only the administrator account has permission to perform this operation.',
-      not_found: 'Mirror account not found',
+      not_found: 'Mirror account not found.',
     },
   },
   earn_nft: {
@@ -427,63 +427,64 @@ export default {
     // language=html
     help: `<h3>What is <strong>Premium</strong>?</h3>
         <ul>
-          <li>You can get yourself creative revenue by enabling the Premium</li>
-          <li>With Premium enabled, you can publish content that can only be viewed by Premium members</li>
-          <li>Any visitor interested in your Premium content will need to purchase and hold your sub-domain to gain access to it</li>
+          <li>Enabling Premium can help you generate creative revenue.</li>
+          <li>By enabling Premium, you can publish content that is only accessible to Premium members.</li>
+          <li>Any visitor interested in your Premium content will need to purchase and maintain a sub-domain to gain access to it.</li>
         </ul>
-        <h3>How <strong>Premium</strong> works?</h3>
+        <h3>How does <strong>Premium</strong> work?</h3>
         <ul>
-          <li>You need to hold your own <bit>.bit</bit> domain name first and apply for opening your sub-domain sale business in <superdid>SuperDID</superdid></li>
-          <li>Usually, the general content you publish is public and free, while with Premium enabled, you can choose to publish Premium content according to your needs</li>
-          <li>Your visitors can become your Premium members by purchasing and holding your sub-domain, and Premium members have the right to read all your Premium content</li>
+          <li>To open your sub-domain sale business in <superdid>SuperDID</superdid>, you must first hold your own <bit>.bit</bit> domain name.</li>
+          <li>Normally, the content you publish is public and free. However, with Premium enabled, you can choose to publish premium content according to your needs.</li>
+          <li>Your visitors can become Premium members by purchasing and holding your sub-domain. Premium members have the right to access all of your Premium content.</li>
         </ul>
-        <h3>How can I get my <strong>earnings</strong>?</h3>
+        <h3>How can I receive my <strong>earnings</strong>?</h3>
         <ul>
-            <li>Mail3 or Subscribe (Mail3) will not participate in your share of the proceeds.</li>
-            <li>Premium's sub-domain sales business is supported by <superdid>SuperDID</superdid>, your sales revenue, how to withdraw your revenue and specific rules can be found at <superdid>SuperDID</superdid></li>
+            <li>Mail3 or Subscribe (Mail3) will not participate in the share of proceeds.</li>
+            <li>Premium's sub-domain sales business is supported by <superdid>SuperDID</superdid>. Information regarding your sales revenue, how to withdraw it, and specific rules can be found on the <superdid>SuperDID</superdid> website.</li>
         </ul>
     `,
     contact_us:
-      'Please read the help file on the right or <contact> view this more detailed document </contact> if you have any questions.',
+      'If you have any questions, please read the help file on the right or <contact> view this more detailed document </contact>',
     domain_field: 'Your <bit>.bit</bit> domain',
     confirm: 'Confirm',
     status: 'Status',
     set_up_sales_strategy: 'Set up your sub-domain sales strategy',
     set_up_sales_strategy_tips:
-      'This service is provided by SuperDID\nyou need to jump to SuperDID for setting',
+      'This service is provided by SuperDID.\nYou need to navigate to SuperDID in order to adjust the settings.',
     waiting_enable_subdomain:
-      'Verify that the domain name is open for sub-domain services',
+      'Please Verify that the domain name is open for sub-domain services',
     verifying_enable_subdomain:
-      'Verifying that the domain name is open for sub-domain services...',
+      'Verifying that the domain name is available for sub-domain services...',
     failed_enable_subdomain:
-      'This domain name does not have sub-domain service, please change a domain name or reconfirm',
+      'This domain name does not have sub-domain service. Please either change the domain name or confirm that sub-domain service is not needed.',
     enabled_subdomain:
-      'This domain name has been opened for sub-domain service',
-    waiting_enable_subdomain_price: 'Verify that subdomain prices are set',
+      'This domain name is now available for sub-domain services.',
+    waiting_enable_subdomain_price: 'Please verify that the prices for sub-domains have been set.',
     verifying_enable_subdomain_price:
-      'Verifying that subdomain prices are set...',
+      'Verifying that sub-domain prices are set…',
     failed_enable_subdomain_price:
-      "Haven't finished setting the sub-domain price, please click the button below to go to Settings and back <retry> Click here </retry> to retry",
-    enabled_subdomain_price: 'Already completed sub-domain price setting',
+      'The sub-domain price has not been set yet. Please click the button below to go to Settings and try again. <retry> Click here </retry> to retry.',
+    enabled_subdomain_price: 'Sub-domain price setting has already been completed.',
     enable: 'Enable',
     disable: 'Disable',
     is_not_dot_bit_address: 'This is not a .bit domain',
-    is_not_owner: "Sorry, you aren't the owner of this domain",
+    is_not_owner: "Sorry, you are not the owner of this domain",
     enable_confirm_dialog: {
       title:
-        'Please confirm the following \ninformation carefully before enabling',
+        'Please carefully review the following \ninformation before enabling.',
       description: `<ol>
-    <li>You will not be able to modify the information configured directly after it is enabled, please ensure that the information configured is accurate. <br/></li>
-    <li>The income from the sale of sub-domains belongs to the creator, Subscription does not participate in any form of share, If you have any questions you can view this <detail>detailed document</detail>.</li>
+    <li>After enabling the configuration, you will not be able to modify it. Therefore, ensure that the information you configure is accurate.
+<br/></li>
+    <li>The income from the sale of sub-domains belongs to the creator. Subscriptions do not participate in any form of revenue sharing. If you have any questions, you can view this <detail>detailed document.</detail></li>
   </ol>`,
     },
     disable_confirm_dialog: {
       title: 'Please confirm this operation!',
-      description: `<p>Disabling the service will affect:</p>
+      description: `<p>Disabling the service will have an impact:</p>
 <ol>
-  <li>The sale of subdomains on Mail3 will be temporarily suspended</li>
-  <li>You will not be able to publish new Premium content</li>
-  <li>Your Premium Members will still be able to view published Premium Content</li>
+  <li>The sale of sub-domains on Mail3 will be temporarily suspended.</li>
+  <li>You will be unable to publish new premium content.</li>
+  <li>Premium members will still be able to view published premium content.</li>
 </ol>`,
     },
   },
