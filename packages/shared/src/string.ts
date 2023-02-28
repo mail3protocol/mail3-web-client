@@ -37,6 +37,27 @@ export const isUdDomain = (address: string) => {
   return false
 }
 
+export const isSupportShortBitAddr = (address: string) => {
+  const excludedDomains = ['eth', ...Array.from(supportedUdDomain)]
+  const topLevelDomain = 'bit'
+  const label = '[a-zA-Z0-9]+'
+  const subDomain = `${label}\\.${label}`
+  const excludedDomainString = excludedDomains.join('|')
+  const regexString = `^(?!.*\\.(${excludedDomainString})\\.${topLevelDomain}$|${label}\\.${excludedDomainString}\\.${topLevelDomain}$)${subDomain}\\.${topLevelDomain}$`
+  const regex = new RegExp(regexString)
+  return regex.test(address)
+}
+
+export const isSubBitDomain = (address: string) => {
+  const topLevelDomain = 'bit'
+  const label = '[a-zA-Z0-9]+'
+  const subDomain = `${label}\\.${label}`
+
+  const regexString = `^${subDomain}\\.${topLevelDomain}$`
+  const regex = new RegExp(regexString)
+  return regex.test(address)
+}
+
 export const isBitDomain = (address: string) =>
   /\.bit$/.test(address) && !address.includes(' ')
 
