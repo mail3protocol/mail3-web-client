@@ -66,18 +66,14 @@ export const SubscriptionArticleBody: React.FC<
 
   const isPremium = detail.message_type === Subscription.MessageType.Premium
 
-  const {
-    isLoading,
-    data: detailCSR,
-    refetch,
-  } = useQuery(
-    [Query.SubscriptionDetail],
+  const { isLoading, data: detailCSR } = useQuery(
+    [Query.SubscriptionDetail, isAuth],
     async () => {
       const { data } = await api.SubscriptionMessageDetail(articleId)
       return data
     },
     {
-      enabled: false,
+      enabled: true,
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
@@ -88,10 +84,6 @@ export const SubscriptionArticleBody: React.FC<
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const realContent = detail.content || detailCSR?.content
-
-  useEffect(() => {
-    refetch()
-  }, [isAuth])
 
   useEffect(() => {
     if (realContent) {
