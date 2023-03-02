@@ -119,7 +119,6 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
         </Box>
       </NavArea>
       <SubscriptionArticleBody
-        address={detail.writer_name}
         uuid={uuid}
         priAddress={priAddress}
         ipfsInfo={ipfsInfo}

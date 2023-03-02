@@ -15,11 +15,11 @@ import dayjs, { Dayjs } from 'dayjs'
 import { ReactNode } from 'react'
 import { copyText } from 'shared'
 import { useTranslation } from 'react-i18next'
+import { ReactComponent as PremiumIconSvg } from 'assets/subscribe-page/diamond.svg'
 import { ReactComponent as SvgCopy } from '../../assets/copy.svg'
 import { APP_URL } from '../../constants/env/url'
 import { useToast } from '../../hooks/useToast'
 import { MessageType } from '../../api/modals/MessageListResponse'
-import { ReactComponent as PremiumIconSvg } from '../../assets/Premium/diamond.svg'
 
 export interface SentRecordItemProps {
   uuid: string
