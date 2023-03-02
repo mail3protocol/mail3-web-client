@@ -346,7 +346,7 @@ export const SettingAddress: React.FC = () => {
         trackClickENSRefresh()
         await api.updateAliasEnsList()
       }
-      if (type === AliasType.BIT) {
+      if (type === AliasType.BIT || type === AliasType.SUB_BIT) {
         trackClickBITRefresh()
         await api.updateAliasBitList()
       }
