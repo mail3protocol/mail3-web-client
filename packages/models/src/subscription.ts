@@ -1,5 +1,5 @@
 export namespace Subscription {
-  export enum MeesageType {
+  export enum MessageType {
     Normal = 'normal',
     Premium = 'premium',
   }
@@ -9,7 +9,7 @@ export namespace Subscription {
     writer: string
     seen: boolean
     created_at: string
-    message_type: MeesageType
+    message_type: MessageType
   }
 
   export interface MessageStatsResp {
@@ -29,7 +29,7 @@ export namespace Subscription {
     content: string
     created_at: string
     summary: string
-    message_type: MeesageType
+    message_type: MessageType
     dot_bit_account: string
   }
 

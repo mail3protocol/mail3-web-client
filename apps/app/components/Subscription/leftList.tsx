@@ -129,7 +129,7 @@ export const SubListItem: FC<SubListItemProps> = ({
             {truncateAddress(writer)}
           </Text>
           <Box ml="8px">{SubFormatDate(time)}</Box>
-          {type === Subscription.MeesageType.Premium ? (
+          {type === Subscription.MessageType.Premium ? (
             <Center ml="8px">
               <Icon as={SvgDiamond} w="16px" h="16px" mt="2px" />
             </Center>
