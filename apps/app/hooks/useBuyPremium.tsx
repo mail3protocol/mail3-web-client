@@ -324,7 +324,12 @@ export const BuyPremiumDialog: React.FC = () => {
 
   if (isMobile) {
     return (
-      <Drawer placement="bottom" onClose={handleClose} isOpen={isOpen}>
+      <Drawer
+        placement="bottom"
+        onClose={handleClose}
+        isOpen={isOpen}
+        closeOnOverlayClick={false}
+      >
         <DrawerOverlay />
         <DrawerContent borderRadius="32px 32px 0px 0px">
           <DrawerCloseButton />
@@ -335,7 +340,12 @@ export const BuyPremiumDialog: React.FC = () => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      isCentered
+      closeOnOverlayClick={false}
+    >
       <ModalOverlay />
       <ModalContent
         p="0"
