@@ -24,12 +24,13 @@ import {
   ListItem,
   Portal,
   Icon as RawIcon,
+  Tooltip,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'react-i18next'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Button } from 'ui'
 import {
   useAccount,
@@ -65,6 +66,7 @@ import { ReactComponent as EnsSvg } from '../../assets/settings/ens.svg'
 import { ReactComponent as MoreSvg } from '../../assets/settings/more.svg'
 import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circle-cur.svg'
 import { ReactComponent as CircleSvg } from '../../assets/settings/tick-circle.svg'
+import { ReactComponent as SwitchSvg } from '../../assets/settings/switch.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import {
@@ -75,7 +77,7 @@ import {
 } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { RouterLink } from '../RouterLink'
-import { SwitchPanel } from './SwitchWrap'
+import { SubBitAlias, SwitchPanel } from './SwitchPanel'
 
 export enum AliasType {
   ENS = 'ENS',
@@ -179,6 +181,9 @@ export interface EmailSwitchProps {
   address: string
   // eslint-disable-next-line prettier/prettier
   onChange: (uuid: string, address: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
+  isAllowShort?: boolean
+  onSwitch?: () => void
+  isFullName?: boolean
 }
 
 const NewCheckbox = (props: any) => {
@@ -220,28 +225,49 @@ export const EmailSwitch: React.FC<EmailSwitchProps> = ({
   isChecked,
   address,
   uuid,
-}) => (
-  <Flex
-    justifyContent="space-between"
-    borderRadius="8px"
-    border={isChecked ? '1px solid #4E52F5' : '1px solid #e7e7e7'}
-    padding="10px 16px 10px 16px"
-    w="100%"
-    bg="#fff"
-  >
-    <Text fontSize="14px">{emailAddress}</Text>
-    {isLoading ? (
-      <Spinner />
-    ) : (
-      <NewCheckbox
-        colorScheme="deepBlue"
-        isReadOnly={isChecked}
-        isChecked={isChecked}
-        onChange={onChange(uuid, address)}
-      />
-    )}
-  </Flex>
-)
+  isAllowShort,
+  onSwitch,
+  isFullName,
+}) => {
+  const [t] = useTranslation('settings')
+
+  return (
+    <Flex
+      justifyContent="space-between"
+      borderRadius="8px"
+      border={isChecked ? '1px solid #4E52F5' : '1px solid #e7e7e7'}
+      padding="10px 16px 10px 16px"
+      w="100%"
+      bg="#fff"
+    >
+      <Text fontSize="14px">{emailAddress}</Text>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Center>
+          {isChecked && isAllowShort ? (
+            <Tooltip
+              label={t(`settings.${isFullName ? 'short' : 'full'}`)}
+              hasArrow
+              bg="white"
+              placement="top"
+            >
+              <Center as="button" mr="10px" onClick={onSwitch}>
+                <RawIcon w="20px" h="20px" as={SwitchSvg} />
+              </Center>
+            </Tooltip>
+          ) : null}
+          <NewCheckbox
+            colorScheme="deepBlue"
+            isReadOnly={isChecked}
+            isChecked={isChecked}
+            onChange={onChange(uuid, address)}
+          />
+        </Center>
+      )}
+    </Flex>
+  )
+}
 
 export const generateEmailAddress = (s = '') => {
   const [address, rest] = s.split('@')
@@ -380,7 +406,7 @@ export const SettingAddress: React.FC = () => {
         (o, item) => {
           const [addr] = item.address.split('@')
           if (item.email_type === AliasMailType.SubBit)
-            return { ...o, subBit: [...o.bit, item] }
+            return { ...o, subBit: [...o.subBit, item] }
           if (isBitDomain(addr)) return { ...o, bit: [...o.bit, item] }
           if (isEnsDomain(addr)) return { ...o, ens: [...o.ens, item] }
           if (isPrimitiveEthAddress(addr) || isZilpayAddress(addr))
@@ -401,6 +427,31 @@ export const SettingAddress: React.FC = () => {
     [aliasDate]
   )
 
+  const subBitList = useMemo(() => {
+    const grouped = aliases.subBit.reduce(
+      (acc: Record<string, { full: Alias; short: Alias }>, curr: Alias) => {
+        const key = curr.address.split('@')[0]
+        const unitKey = key.replace(/.bit$/, '')
+        const group = acc[unitKey] || { full: null, short: null }
+        if (curr.address.includes('.bit@')) {
+          group.full = curr
+        } else {
+          group.short = curr
+        }
+        acc[unitKey] = group
+        return acc
+      },
+      {}
+    )
+
+    const result = Object.values(grouped).map((group: SubBitAlias) => ({
+      full: group.full,
+      short: group.short,
+    }))
+
+    return result
+  }, [aliases.subBit])
+
   const onCopy = async () => {
     await copyText(userProps?.defaultAddress)
     toast(t('address.copied'), {
@@ -408,27 +459,30 @@ export const SettingAddress: React.FC = () => {
     })
   }
 
-  const NotFound = (
-    <Box
-      fontSize={{ base: '12px', md: '14px' }}
-      p="8px 16px"
-      textAlign="center"
-    >
+  const NotFound: React.FC<{ p4Key?: string }> = useCallback(
+    ({ p4Key = 'address.not-found-p4' }) => (
       <Box
-        fontSize={{ base: '14px', md: '16px' }}
-        fontWeight="600"
-        lineHeight="1"
+        fontSize={{ base: '12px', md: '14px' }}
+        p="8px 16px"
+        textAlign="center"
       >
-        <Trans ns="settings" i18nKey="address.not-found-p1" t={t} />
+        <Box
+          fontSize={{ base: '14px', md: '16px' }}
+          fontWeight="600"
+          lineHeight="1"
+        >
+          <Trans ns="settings" i18nKey="address.not-found-p1" t={t} />
+        </Box>
+        <Box lineHeight="2">
+          <Box>{t('address.not-found-p2')}</Box>
+          <UnorderedList textAlign="left" pl={{ base: '30px', md: '70px' }}>
+            <ListItem>{t('address.not-found-p3')}</ListItem>
+            <ListItem>{t(p4Key)}</ListItem>
+          </UnorderedList>
+        </Box>
       </Box>
-      <Box lineHeight="2">
-        <Box>{t('address.not-found-p2')}</Box>
-        <UnorderedList textAlign="left" pl={{ base: '30px', md: '70px' }}>
-          <ListItem>{t('address.not-found-p3')}</ListItem>
-          <ListItem>{t('address.not-found-p4')}</ListItem>
-        </UnorderedList>
-      </Box>
-    </Box>
+    ),
+    []
   )
 
   const tabItemTypes = [
@@ -648,7 +702,6 @@ export const SettingAddress: React.FC = () => {
                                     // eslint-disable-next-line react/no-array-index-key
                                     key={index}
                                     variant="ghost"
-                                    // colorScheme="gray"
                                     size="sm"
                                     fontWeight={500}
                                     leftIcon={
@@ -706,12 +759,28 @@ export const SettingAddress: React.FC = () => {
 
                   // eslint-disable-next-line default-case
                   switch (type) {
+                    case TabItemType.SubBit:
+                      Content = (
+                        <SwitchPanel
+                          isLoading={isLoading}
+                          list={subBitList}
+                          emptyNode={
+                            <NotFound p4Key="address.not-found-p4-premium" />
+                          }
+                          activeAccount={activeAccount}
+                          onRefresh={async () =>
+                            onRefreshDomains(AliasType.SUB_BIT)
+                          }
+                          onChange={onDefaultAccountChange(false)}
+                        />
+                      )
+                      break
                     case TabItemType.Ens:
                       Content = (
                         <SwitchPanel
                           isLoading={isLoading}
                           list={aliases.ens}
-                          emptyNode={NotFound}
+                          emptyNode={<NotFound />}
                           activeAccount={activeAccount}
                           onRefresh={async () =>
                             onRefreshDomains(AliasType.ENS)
@@ -730,7 +799,7 @@ export const SettingAddress: React.FC = () => {
                         <SwitchPanel
                           isLoading={isLoading}
                           list={aliases.bit}
-                          emptyNode={NotFound}
+                          emptyNode={<NotFound />}
                           activeAccount={activeAccount}
                           onRefresh={async () =>
                             onRefreshDomains(AliasType.BIT)
@@ -750,7 +819,7 @@ export const SettingAddress: React.FC = () => {
                           <SwitchPanel
                             isLoading={isLoading}
                             list={aliases.ud}
-                            emptyNode={NotFound}
+                            emptyNode={<NotFound />}
                             activeAccount={activeAccount}
                             onRefresh={async () =>
                               onRefreshDomains(AliasType.UD)

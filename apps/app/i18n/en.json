@@ -223,6 +223,8 @@
         },
         "settings": {
             "title": "Settings",
+            "full": "Switch to Full Name",
+            "short": "Switch to Short Name",
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
@@ -253,7 +255,8 @@
             "not-found-p1": "Oops!!<br><br/>Cannot associate to your domain name",
             "not-found-p2": "please try clicking on the option above ：",
             "not-found-p3": "Refresh",
-            "not-found-p4": "Register new domain name"
+            "not-found-p4": "Register new domain name",
+            "not-found-p4-premium": "Become a Premium Member of a author"
         },
         "signature": {
             "desc": "Your signature will be automatically inserted when you write a new email.",

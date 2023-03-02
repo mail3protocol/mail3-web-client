@@ -12,6 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Alias } from 'models'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import RefreshSvg from '../../assets/refresh.svg'
 import { ReactComponent as ArrawSvg } from '../../assets/setup/arrow.svg'
@@ -21,9 +22,14 @@ import {
   generateEmailAddress,
 } from './SettingAddress'
 
+export type SubBitAlias = {
+  full: Alias
+  short: Alias | null
+}
+
 interface SwitchPanelProps {
   isLoading: boolean
-  list: Alias[]
+  list: Alias[] | SubBitAlias[]
   onChange: EmailSwitchProps['onChange']
   activeAccount: string
   emptyNode: JSX.Element
@@ -37,6 +43,49 @@ interface SwitchPanelProps {
 
 const LIMIT_MAX_NUMBER = 5
 
+interface EmailSwitchSubBitProps {
+  activeAccount: string
+  data: SubBitAlias
+  onChange: EmailSwitchProps['onChange']
+}
+
+export const EmailSwitchSubBit: React.FC<EmailSwitchSubBitProps> = ({
+  onChange,
+  data,
+  activeAccount,
+}) => {
+  const [isFull, setIsFull] = useState(data.full.uuid === activeAccount)
+  const isAllowShort = !!data.short
+  const shortData = data.short ? data.short : data.full
+  const isChecked = [data.full.uuid, shortData.uuid].includes(activeAccount)
+
+  const item = isFull ? data.full : shortData
+
+  const onSwitch = () => {
+    const currentState = !isFull
+    setIsFull(currentState)
+    const currentData = currentState ? data.full : shortData
+    onChange(currentData.uuid, currentData.address)({} as any)
+  }
+
+  if (!item) return null
+
+  return (
+    <EmailSwitch
+      uuid={item.uuid}
+      address={item.address}
+      emailAddress={generateEmailAddress(item.address)}
+      account={item.address}
+      onChange={onChange}
+      key={item.address}
+      isChecked={isChecked}
+      isAllowShort={isAllowShort}
+      onSwitch={onSwitch}
+      isFullName={isFull}
+    />
+  )
+}
+
 export const SwitchPanel: React.FC<SwitchPanelProps> = ({
   isLoading,
   list,
@@ -47,8 +96,8 @@ export const SwitchPanel: React.FC<SwitchPanelProps> = ({
   register,
 }) => {
   const [t] = useTranslation('settings')
-  const renderList = list.slice(0, LIMIT_MAX_NUMBER)
   const { isOpen, onOpen } = useDisclosure()
+  const renderList = isOpen ? list : list.slice(0, LIMIT_MAX_NUMBER)
   const {
     isOpen: isRefreshing,
     onOpen: startRefreshing,
@@ -62,17 +111,30 @@ export const SwitchPanel: React.FC<SwitchPanelProps> = ({
         {!list.length ? emptyNode : null}
 
         <VStack spacing="10px">
-          {renderList.map((a) => (
-            <EmailSwitch
-              uuid={a.uuid}
-              address={a.address}
-              emailAddress={generateEmailAddress(a.address)}
-              account={a.address}
-              onChange={onChange}
-              key={a.address}
-              isChecked={a.uuid === activeAccount}
-            />
-          ))}
+          {renderList.map((a) => {
+            if ('full' in a) {
+              return (
+                <EmailSwitchSubBit
+                  key={a.full.address}
+                  data={a}
+                  onChange={onChange}
+                  activeAccount={activeAccount}
+                />
+              )
+            }
+
+            return (
+              <EmailSwitch
+                uuid={a.uuid}
+                address={a.address}
+                emailAddress={generateEmailAddress(a.address)}
+                account={a.address}
+                onChange={onChange}
+                key={a.address}
+                isChecked={a.uuid === activeAccount}
+              />
+            )
+          })}
         </VStack>
         {list.length > LIMIT_MAX_NUMBER && !isOpen ? (
           <Center
