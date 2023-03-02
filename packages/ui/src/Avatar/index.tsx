@@ -10,7 +10,6 @@ import {
 import { atom, useAtom } from 'jotai'
 import { useQuery } from 'react-query'
 import {
-  isEthAddress,
   isSupportedAddress,
   getMail3Avatar,
   getPrimitiveAddress,
@@ -77,7 +76,8 @@ export const Avatar: React.FC<AvatarProps> = ({
       return data
     },
     {
-      enabled: avatar == null && isEthAddress(address) && !src,
+      retry: 0,
+      enabled: avatar == null && !src,
       refetchIntervalInBackground: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
