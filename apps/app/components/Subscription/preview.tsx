@@ -332,7 +332,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
     )
   }
 
-  const isPremium = detail?.message_type === Subscription.MeesageType.Premium
+  const isPremium = detail?.message_type === Subscription.MessageType.Premium
   const isNeedPay = isPremium && !detail.content
 
   return (

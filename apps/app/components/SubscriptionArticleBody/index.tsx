@@ -74,16 +74,20 @@ export const SubscriptionArticleBody: React.FC<
   const isBuying = useAtomValue(isBuyingAtom)
   const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
 
-  const isPremium = detail.message_type === Subscription.MeesageType.Premium
+  const isPremium = detail.message_type === Subscription.MessageType.Premium
 
-  const { isLoading, data: detailCSR } = useQuery(
+  const {
+    isLoading,
+    data: detailCSR,
+    refetch,
+  } = useQuery(
     [Query.SubscriptionDetail],
     async () => {
       const { data } = await api.SubscriptionMessageDetail(articleId)
       return data
     },
     {
-      enabled: isPremium && isAuth,
+      enabled: false,
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
@@ -93,6 +97,10 @@ export const SubscriptionArticleBody: React.FC<
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const realContent = detail.content || detailCSR?.content
+
+  useEffect(() => {
+    refetch()
+  }, [isAuth])
 
   useEffect(() => {
     if (realContent) {
