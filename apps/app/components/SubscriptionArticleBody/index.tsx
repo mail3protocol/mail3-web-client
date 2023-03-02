@@ -41,7 +41,6 @@ const CONTAINER_MAX_WIDTH = 1064
 
 interface SubscriptionArticleBodyProps
   extends Omit<SubscriptionArticleProps, 'previewImage'> {
-  address: string
   shareUrl: string
 }
 
@@ -55,16 +54,7 @@ const PageContainer = styled(Box)`
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({
-  address,
-  priAddress,
-  articleId,
-  detail,
-  uuid,
-  userInfo,
-  ipfsInfo,
-  shareUrl,
-}) => {
+> = ({ priAddress, articleId, detail, uuid, userInfo, ipfsInfo, shareUrl }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
 
@@ -94,6 +84,7 @@ export const SubscriptionArticleBody: React.FC<
     }
   )
 
+  const address = detailCSR?.writer_name || detail.writer_name
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const realContent = detail.content || detailCSR?.content
