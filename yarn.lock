@@ -7515,6 +7515,13 @@ damerau-levenshtein@^1.0.7:
   resolved "https://registry.npmjs.org/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz"
   integrity sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==
 
+daodid-webcomponent@^1.0.0, daodid-webcomponent@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/daodid-webcomponent/-/daodid-webcomponent-1.1.1.tgz#82e8f68b90f0ec58ef1bab8486dd7ded5b6083b2"
+  integrity sha512-jm67xqNrnQYtjvtqf93n7cFXBHCjg4LnwnxcLONlMncpSvFXLG1lByhE31fitt96lXPe1UJUt3v4ZVIpe9x3gA==
+  dependencies:
+    daodid-webcomponent "^1.0.0"
+
 dash-get@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/dash-get/-/dash-get-1.0.2.tgz#4c9e9ad5ef04c4bf9d3c9a451f6f7997298dcc7c"

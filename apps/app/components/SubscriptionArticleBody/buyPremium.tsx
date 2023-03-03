@@ -196,7 +196,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
           variant="unstyled"
           leftIcon={<Icon as={SvgDiamond} w="20px" h="20px" />}
           mt="24px"
-          p="0 40px"
+          p={{ base: '0 15px', md: '0 40px' }}
           h="36px"
           background="linear-gradient(84.31deg, #4E52F5 2.72%, #ACAEFF 53.3%, #4E52F5 98.41%)"
           borderRadius="24px"

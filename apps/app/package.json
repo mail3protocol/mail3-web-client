@@ -30,6 +30,7 @@
         "axios": "^0.26.1",
         "classnames": "^2.3.1",
         "connect-wallet": "*",
+        "daodid-webcomponent": "^1.1.1",
         "dayjs": "^1.11.2",
         "dompurify": "^2.3.12",
         "events": "^3.3.0",

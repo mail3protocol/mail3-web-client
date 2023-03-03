@@ -41,7 +41,6 @@ const CONTAINER_MAX_WIDTH = 1064
 
 interface SubscriptionArticleBodyProps
   extends Omit<SubscriptionArticleProps, 'previewImage'> {
-  address: string
   shareUrl: string
 }
 
@@ -55,16 +54,7 @@ const PageContainer = styled(Box)`
 
 export const SubscriptionArticleBody: React.FC<
   SubscriptionArticleBodyProps
-> = ({
-  address,
-  priAddress,
-  articleId,
-  detail,
-  uuid,
-  userInfo,
-  ipfsInfo,
-  shareUrl,
-}) => {
+> = ({ priAddress, articleId, detail, uuid, userInfo, ipfsInfo, shareUrl }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   useAuth()
 
@@ -74,22 +64,23 @@ export const SubscriptionArticleBody: React.FC<
   const isBuying = useAtomValue(isBuyingAtom)
   const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
 
-  const isPremium = detail.message_type === Subscription.MeesageType.Premium
+  const isPremium = detail.message_type === Subscription.MessageType.Premium
 
   const { isLoading, data: detailCSR } = useQuery(
-    [Query.SubscriptionDetail],
+    [Query.SubscriptionDetail, isAuth],
     async () => {
       const { data } = await api.SubscriptionMessageDetail(articleId)
       return data
     },
     {
-      enabled: isPremium && isAuth,
+      enabled: true,
       refetchOnMount: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
     }
   )
 
+  const address = detailCSR?.writer_name || detail.writer_name
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const realContent = detail.content || detailCSR?.content
@@ -170,7 +161,7 @@ export const SubscriptionArticleBody: React.FC<
               background="#FFF6D6"
               borderRadius="20px"
             >
-              <Icon as={SvgDiamond} w="12px" h="12px" />
+              <Icon as={SvgDiamond} w="18px" h="18px" />
               <Box
                 ml="2px"
                 fontStyle="italic"
