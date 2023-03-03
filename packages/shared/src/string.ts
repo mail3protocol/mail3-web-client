@@ -74,7 +74,7 @@ export const isZilpayAddress = (address: string) =>
   address != null && address.startsWith('zil') && address.length === 42
 
 export const isSupportedAddress = (address: string) =>
-  isZilpayAddress(address) || isEthAddress(address)
+  isZilpayAddress(address) || isEthAddress(address) || address.includes('.')
 
 export const getSupportedAddress = (address: string) => {
   if (verifyEmail(address)) {
