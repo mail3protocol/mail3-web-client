@@ -14,7 +14,6 @@ import { TrackEvent, useTrackClick } from 'hooks'
 import { useAtomValue } from 'jotai'
 import { Alias } from 'models'
 import { ReactComponent as ChangeFromAddressSvg } from '../../../assets/change-from-address.svg'
-import { removeMailSuffix } from '../../../utils'
 import { userPropertiesAtom } from '../../../hooks/useLogin'
 
 export interface FromProps {
@@ -67,7 +66,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
         {emailAddress ? (
           <Flex align="center">
             <Avatar
-              address={removeMailSuffix(emailAddress)}
+              address={emailAddress}
               w="24px"
               h="24px"
               borderRadius="50%"
@@ -117,7 +116,7 @@ export const From: React.FC<FromProps> = ({ onChange }) => {
             onClick={() => setEmailAddress(alias.address)}
           >
             <Avatar
-              address={removeMailSuffix(alias.address)}
+              address={alias.address}
               w="24px"
               h="24px"
               borderRadius="50%"

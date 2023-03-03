@@ -76,6 +76,17 @@ export const isZilpayAddress = (address: string) =>
 export const isSupportedAddress = (address: string) =>
   isZilpayAddress(address) || isEthAddress(address)
 
+export const getSupportedAddress = (address: string) => {
+  if (verifyEmail(address)) {
+    const [addr, suffix] = address.split('@')
+    if (['mail3.me', 'imibao.net'].includes(suffix)) {
+      return addr
+    }
+    return ''
+  }
+  return address
+}
+
 export const truncateMailAddress = (
   mailAddress: string,
   takeLength = 6,

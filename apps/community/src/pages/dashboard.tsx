@@ -216,7 +216,7 @@ export const Dashboard: React.FC = () => {
           <Avatar
             w="48px"
             h="48px"
-            address={userInfo?.address.split('@')[0] || ''}
+            address={userInfo?.address || ''}
             borderRadius="50%"
           />
           <Text mt="4px" fontWeight="bold">

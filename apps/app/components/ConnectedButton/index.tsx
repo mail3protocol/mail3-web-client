@@ -30,7 +30,7 @@ import { ReactComponent as ProfileSvg } from '../../assets/profile.svg'
 import { ReactComponent as CopySvg } from '../../assets/copy.svg'
 import { ReactComponent as LogoutSvg } from '../../assets/logout.svg'
 import { ReactComponent as ChangeWalletSvg } from '../../assets/change-wallet.svg'
-import { copyText, removeMailSuffix } from '../../utils'
+import { copyText } from '../../utils'
 import { useLogout, userPropertiesAtom } from '../../hooks/useLogin'
 import { HOME_URL, MAIL_SERVER_URL } from '../../constants'
 
@@ -161,9 +161,7 @@ export const ConnectedButton: React.FC<{ address: string }> = ({ address }) => {
                 <Avatar
                   w="32px"
                   h="32px"
-                  address={removeMailSuffix(
-                    userProps?.defaultAddress || address
-                  )}
+                  address={userProps?.defaultAddress || address}
                   borderRadius="50%"
                 />
               </Box>

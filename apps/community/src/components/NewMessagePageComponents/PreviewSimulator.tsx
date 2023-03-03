@@ -26,12 +26,7 @@ export const PreviewSimulator: React.FC<PreviewSimulatorProps> = ({
   return (
     <Flex flex={1} direction="column" px="50px">
       <Flex align="center">
-        <Avatar
-          w="32px"
-          h="32px"
-          address={address.split('@')[0]}
-          borderRadius="50%"
-        />
+        <Avatar w="32px" h="32px" address={address} borderRadius="50%" />
         <Box fontSize="14px" lineHeight="26px" fontWeight="600" ml="6px">
           {formatUserName(userInfo?.name)}
         </Box>

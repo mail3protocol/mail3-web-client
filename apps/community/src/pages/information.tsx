@@ -13,7 +13,6 @@ import {
   Icon,
   Input,
   Link,
-  Switch,
   Tab,
   TabList,
   TabPanel,
@@ -84,12 +83,6 @@ const Title = styled(Box)`
   font-size: 14px;
   line-height: 20px;
   padding: 16px 0 8px;
-`
-
-const SwitchWrap = styled(Switch)`
-  .chakra-switch__track[data-checked] {
-    background: #4e51f4;
-  }
 `
 
 const verifyImageSize = (imgFile: File, width: number, height: number) =>
@@ -372,7 +365,7 @@ export const Information: React.FC = () => {
                     boxShadow="0px 0px 8px rgba(0, 0, 0, 0.16)"
                   >
                     <Avatar
-                      address={userInfo?.address.split('@')[0] || ''}
+                      address={userInfo?.address || ''}
                       w="80px"
                       h="80px"
                       borderRadius="50%"
