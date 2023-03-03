@@ -161,7 +161,7 @@ export const SubscriptionArticleBody: React.FC<
               background="#FFF6D6"
               borderRadius="20px"
             >
-              <Icon as={SvgDiamond} w="12px" h="12px" />
+              <Icon as={SvgDiamond} w="18px" h="18px" />
               <Box
                 ml="2px"
                 fontStyle="italic"
