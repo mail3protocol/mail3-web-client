@@ -23,7 +23,7 @@ import {
   Tooltip,
   useStyleConfig,
 } from '@chakra-ui/react'
-import { Avatar, SubscribeCard, defaultAvatar } from 'ui'
+import { Avatar, SubscribeCard } from 'ui'
 import {
   CommunityQRcodeStyle,
   TrackEvent,
@@ -43,6 +43,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
 import { truncateAddress } from 'shared'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
+import { useUpdateAtom } from 'jotai/utils'
+import { avatarsAtom, DEFAULT_AVATAR_SRC } from 'ui/src/Avatar'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/DownloadIcon.svg'
 import BannerPng from '../assets/banner.png'
@@ -174,7 +176,8 @@ export const Information: React.FC = () => {
   const [pubDisable, setPubDisable] = useState(true)
   const [isPublishing, setIsPublishing] = useState(false)
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
-  const [avatarUrl, setAvatarUrl] = useState(defaultAvatar)
+  const [avatarUrl, setAvatarUrl] = useState(DEFAULT_AVATAR_SRC)
+  const setAvatars = useUpdateAtom(avatarsAtom)
 
   const remoteSettingRef = useRef<UserSettingResponse | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -214,7 +217,7 @@ export const Information: React.FC = () => {
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
         // setName(d.name)
-        // setAvatarUrl(d.avatar)
+        setAvatarUrl(d.avatar)
       },
     }
   )
@@ -222,9 +225,9 @@ export const Information: React.FC = () => {
   const trackClickInformationQRcodeDownload = useTrackClick(
     TrackEvent.CommunityClickInformationQRcodeDownload
   )
-
+  const alias = userInfo?.address.split('@')[0] || ''
   const { onCopy, isCopied } = useCopyWithStatus()
-  const subscribePageUrl = `${APP_URL}/${userInfo?.address.split('@')[0] || ''}`
+  const subscribePageUrl = `${APP_URL}/${alias}`
   const hasBanner = bannerUrl !== BannerPng
 
   const requestBody = useMemo<UserSettingResponse>(
@@ -234,7 +237,7 @@ export const Information: React.FC = () => {
       mmb_state: mmbState ? 'enabled' : 'disabled',
       description,
       // name,
-      // avatarUrl
+      avatar: avatarUrl,
     }),
     [hasBanner, bannerUrl, itemsLink, mmbState, description, name, avatarUrl]
   )
@@ -258,10 +261,7 @@ export const Information: React.FC = () => {
       return
     }
     const defalutName = truncateAddress(
-      userInfo?.name ||
-        userInfoData?.name ||
-        userInfo?.address.split('@')[0] ||
-        '',
+      userInfo?.name || userInfoData?.name || alias || '',
       '_'
     )
     setName(defalutName)
@@ -273,6 +273,10 @@ export const Information: React.FC = () => {
       await api.updateUserSetting(requestBody)
       remoteSettingRef.current = requestBody
       setBannerUrlOnline(bannerUrl)
+      setAvatars((prev) => ({
+        ...prev,
+        [alias]: avatarUrl,
+      }))
       toast('Publish Successfully', {
         status: 'success',
         alertProps: { colorScheme: 'green' },
@@ -481,6 +485,7 @@ export const Information: React.FC = () => {
                   placeholder={t('name_placeholder')}
                   name="name"
                   value={name}
+                  disabled
                   onChange={({ target: { value } }) => setName(value)}
                 />
               </FormControl>
@@ -501,7 +506,7 @@ export const Information: React.FC = () => {
                     boxShadow="0px 0px 8px rgba(0, 0, 0, 0.16)"
                   >
                     <Avatar
-                      address={userInfo?.address.split('@')[0] || ''}
+                      address=""
                       src={avatarUrl}
                       w="80px"
                       h="80px"
@@ -526,8 +531,8 @@ export const Information: React.FC = () => {
                     removeButtonColor="secondaryTextColor"
                     onUpload={onUploadAvatarHandle}
                     isUploading={isUploadingAvatar}
-                    hasRemove={avatarUrl !== defaultAvatar}
-                    onRemove={() => setAvatarUrl(defaultAvatar)}
+                    hasRemove={avatarUrl !== DEFAULT_AVATAR_SRC}
+                    onRemove={() => setAvatarUrl(DEFAULT_AVATAR_SRC)}
                   />
                 </Box>
               </HStack>
