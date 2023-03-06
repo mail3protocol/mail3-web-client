@@ -216,7 +216,7 @@ export const Information: React.FC = () => {
         setDescription(d.description || t('description_placeholder'))
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
-        // setName(d.name)
+        setName(d.nickname)
         setAvatarUrl(d.avatar)
       },
     }
@@ -236,7 +236,7 @@ export const Information: React.FC = () => {
       items_link: itemsLink,
       mmb_state: mmbState ? 'enabled' : 'disabled',
       description,
-      // name,
+      nickname: name,
       avatar: avatarUrl,
     }),
     [hasBanner, bannerUrl, itemsLink, mmbState, description, name, avatarUrl]
@@ -485,7 +485,6 @@ export const Information: React.FC = () => {
                   placeholder={t('name_placeholder')}
                   name="name"
                   value={name}
-                  disabled
                   onChange={({ target: { value } }) => setName(value)}
                 />
               </FormControl>
@@ -645,13 +644,7 @@ export const Information: React.FC = () => {
                             }
                             bannerUrl={bannerUrlOnline}
                             desc={description}
-                            nickname={truncateAddress(
-                              userInfo?.name ||
-                                userInfoData?.name ||
-                                userInfo?.address.split('@')[0] ||
-                                '',
-                              '_'
-                            )}
+                            nickname={name}
                             qrUrl={subscribePageUrl}
                           />
                         </Box>
@@ -771,13 +764,7 @@ export const Information: React.FC = () => {
         bannerUrl={bannerUrlOnline}
         desc={description}
         ref={cardRef}
-        nickname={truncateAddress(
-          userInfo?.name ||
-            userInfoData?.name ||
-            userInfo?.address.split('@')[0] ||
-            '',
-          '_'
-        )}
+        nickname={name}
         qrUrl={subscribePageUrl}
       />
     </Container>
