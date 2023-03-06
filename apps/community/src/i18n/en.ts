@@ -351,7 +351,7 @@ export default {
   },
   user_information: {
     name_field: 'Publication name',
-    name_placeholder: 'Mail3.eth',
+    name_placeholder: 'Publication name',
     address_field: 'Mail<sup>3</sup> Address',
     address_placeholder: 'robert@mail.com',
     profile_page_field: 'Profile Page',
