@@ -637,7 +637,7 @@ export const PreviewComponent: React.FC = () => {
                 <Avatar
                   w={{ base: '32px', md: '48px' }}
                   h={{ base: '32px', md: '48px' }}
-                  address={removeMailSuffix(address)}
+                  address={address}
                   borderRadius="50%"
                 />
               </Box>
@@ -664,7 +664,7 @@ export const PreviewComponent: React.FC = () => {
                 <Avatar
                   w="48px"
                   h="48px"
-                  address={removeMailSuffix(detail.from.address)}
+                  address={detail.from.address}
                   borderRadius="50%"
                   {...(isMail3Address(detail.from.address)
                     ? {

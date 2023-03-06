@@ -37,6 +37,27 @@ export const isUdDomain = (address: string) => {
   return false
 }
 
+export const isSupportShortBitAddr = (address: string) => {
+  const excludedDomains = ['eth', ...Array.from(supportedUdDomain)]
+  const topLevelDomain = 'bit'
+  const label = '[a-zA-Z0-9]+'
+  const subDomain = `${label}\\.${label}`
+  const excludedDomainString = excludedDomains.join('|')
+  const regexString = `^(?!.*\\.(${excludedDomainString})\\.${topLevelDomain}$|${label}\\.${excludedDomainString}\\.${topLevelDomain}$)${subDomain}\\.${topLevelDomain}$`
+  const regex = new RegExp(regexString)
+  return regex.test(address)
+}
+
+export const isSubBitDomain = (address: string) => {
+  const topLevelDomain = 'bit'
+  const label = '[a-zA-Z0-9]+'
+  const subDomain = `${label}\\.${label}`
+
+  const regexString = `^${subDomain}\\.${topLevelDomain}$`
+  const regex = new RegExp(regexString)
+  return regex.test(address)
+}
+
 export const isBitDomain = (address: string) =>
   /\.bit$/.test(address) && !address.includes(' ')
 
@@ -53,7 +74,18 @@ export const isZilpayAddress = (address: string) =>
   address != null && address.startsWith('zil') && address.length === 42
 
 export const isSupportedAddress = (address: string) =>
-  isZilpayAddress(address) || isEthAddress(address)
+  isZilpayAddress(address) || isEthAddress(address) || address.includes('.')
+
+export const getSupportedAddress = (address: string) => {
+  if (verifyEmail(address)) {
+    const [addr, suffix] = address.split('@')
+    if (['mail3.me', 'imibao.net'].includes(suffix)) {
+      return addr
+    }
+    return ''
+  }
+  return address
+}
 
 export const truncateMailAddress = (
   mailAddress: string,

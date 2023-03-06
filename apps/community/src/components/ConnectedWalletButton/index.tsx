@@ -146,7 +146,7 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
             <Box>
               <Avatar
                 borderRadius="50%"
-                address={userInfo?.address.split('@')[0]}
+                address={userInfo?.address}
                 {...avatarProps}
               />
             </Box>

@@ -16,7 +16,6 @@ import {
   isBitDomain,
   isUdDomain,
 } from 'shared'
-import { removeMailSuffix } from '../../../utils'
 import { MAIL_SERVER_URL } from '../../../constants'
 
 export interface ToInputProps {
@@ -104,7 +103,7 @@ export const ToInput: React.FC<ToInputProps> = ({
           gridTemplateColumns="16px calc(100% - 16px - 13px) 13px"
         >
           <Avatar
-            address={removeMailSuffix(address)}
+            address={address}
             w="16px"
             minW="16px"
             h="16px"

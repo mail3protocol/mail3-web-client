@@ -1,8 +1,10 @@
-import { extendTheme } from '@chakra-ui/react'
+import { cssVar, extendTheme } from '@chakra-ui/react'
 import StepsTheme from '../Steps/theme'
 
 const font =
   "'Poppins', Poppins-Regular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
+
+const $popperArrowBgVar = cssVar('popper-arrow-bg')
 
 export const theme = extendTheme({
   styles: {
@@ -42,6 +44,19 @@ export const theme = extendTheme({
   },
   components: {
     Steps: StepsTheme,
+    Tooltip: {
+      baseStyle: {
+        bg: 'tooltipBackground',
+        color: 'primaryTextColor',
+        px: '16px',
+        py: '12px',
+        rounded: '16px',
+        fontSize: '12px',
+        shadow: 'none',
+        filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))',
+        [$popperArrowBgVar.variable]: '#FFF',
+      },
+    },
     Button: {
       colorScheme: {
         empty: {
