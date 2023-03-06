@@ -418,7 +418,7 @@ export const Information: React.FC = () => {
             isLoading={isPublishing}
             isDisabled={pubDisable}
           >
-            {t('publish')}
+            {t('save')}
           </Button>
         </Flex>
         <Tabs w="full" variant="normal" mt="38px">
