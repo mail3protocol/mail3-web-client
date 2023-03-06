@@ -350,7 +350,7 @@ export default {
     follow_twitter: 'Follow Twitter',
   },
   user_information: {
-    name_field: 'Name',
+    name_field: 'Publication name',
     name_placeholder: 'Mail3.eth',
     address_field: 'Mail<sup>3</sup> Address',
     address_placeholder: 'robert@mail.com',

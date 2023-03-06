@@ -41,7 +41,7 @@ import { useQuery } from 'react-query'
 import { Trans, useTranslation } from 'react-i18next'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
-import { truncateAddress } from 'shared'
+import { isPrimitiveEthAddress, truncateAddress } from 'shared'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { avatarsAtom, DEFAULT_AVATAR_SRC } from 'ui/src/Avatar'
@@ -260,11 +260,16 @@ export const Information: React.FC = () => {
     if (name) {
       return
     }
-    const defalutName = truncateAddress(
-      userInfo?.name || userInfoData?.name || alias || '',
-      '_'
-    )
-    setName(defalutName)
+    let defaultName = userInfo?.name || userInfoData?.name
+    if (defaultName) {
+      return
+    }
+    if (isPrimitiveEthAddress(alias)) {
+      defaultName = truncateAddress(alias || '', '_')
+    } else {
+      defaultName = alias.includes('.') ? alias.split('.')[0] : alias
+    }
+    setName(defaultName)
   }, [userInfo, userInfoData, name])
 
   const onSubmit = async () => {
