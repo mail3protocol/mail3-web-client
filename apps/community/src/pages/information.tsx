@@ -535,7 +535,7 @@ export const Information: React.FC = () => {
                     removeButtonColor="secondaryTextColor"
                     onUpload={onUploadAvatarHandle}
                     isUploading={isUploadingAvatar}
-                    hasRemove={avatarUrl !== DEFAULT_AVATAR_SRC}
+                    hasRemove={!!avatarUrl && avatarUrl !== DEFAULT_AVATAR_SRC}
                     onRemove={() => setAvatarUrl(DEFAULT_AVATAR_SRC)}
                   />
                 </Box>
