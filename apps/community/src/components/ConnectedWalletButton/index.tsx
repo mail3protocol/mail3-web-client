@@ -151,7 +151,9 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
               />
             </Box>
           </PopoverAnchor>
-          <Text {...textProps}>{formatUserName(userInfo.name)}</Text>
+          <Text {...textProps}>
+            {userInfo.name || formatUserName(userInfo.address.split('@')[0])}
+          </Text>
         </Button>
       </PopoverTrigger>
       <PopoverContent w="204px" top="10px">

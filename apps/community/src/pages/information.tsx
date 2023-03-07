@@ -185,7 +185,7 @@ export const Information: React.FC = () => {
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const { downloadScreenshot } = useScreenshot()
 
-  const { data: userInfoData } = useQuery(
+  const { data: userInfoData, refetch } = useQuery(
     [QueryKey.GetUserInfo],
     async () => api.getUserInfo().then((r) => r.data),
     {
@@ -282,6 +282,7 @@ export const Information: React.FC = () => {
         ...prev,
         [alias]: avatarUrl,
       }))
+      refetch()
       toast('Publish Successfully', {
         status: 'success',
         alertProps: { colorScheme: 'green' },

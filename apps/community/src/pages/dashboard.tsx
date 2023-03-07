@@ -220,7 +220,7 @@ export const Dashboard: React.FC = () => {
             borderRadius="50%"
           />
           <Text mt="4px" fontWeight="bold">
-            {formatUserName(userInfo?.name)}
+            {userInfo?.name || formatUserName(userInfo?.address.split('@')[0])}
           </Text>
         </Center>
         {baseInfos.map((info) => (
