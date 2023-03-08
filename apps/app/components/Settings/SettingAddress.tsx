@@ -67,6 +67,7 @@ import { ReactComponent as MoreSvg } from '../../assets/settings/more.svg'
 import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circle-cur.svg'
 import { ReactComponent as CircleSvg } from '../../assets/settings/tick-circle.svg'
 import { ReactComponent as SwitchSvg } from '../../assets/settings/switch.svg'
+import { ReactComponent as ArrawDowmSvg } from '../../assets/settings/arrow-down.svg'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import {
@@ -77,7 +78,7 @@ import {
 } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { RouterLink } from '../RouterLink'
-import { SubBitAlias, SwitchPanel } from './SwitchPanel'
+import { SwitchPanel } from './SwitchPanel'
 
 export enum AliasType {
   ENS = 'ENS',
@@ -427,31 +428,6 @@ export const SettingAddress: React.FC = () => {
     [aliasDate]
   )
 
-  const subBitList = useMemo(() => {
-    const grouped = aliases.subBit.reduce(
-      (acc: Record<string, { full: Alias; short: Alias }>, curr: Alias) => {
-        const key = curr.address.split('@')[0]
-        const unitKey = key.replace(/.bit$/, '')
-        const group = acc[unitKey] || { full: null, short: null }
-        if (curr.address.includes('.bit@')) {
-          group.full = curr
-        } else {
-          group.short = curr
-        }
-        acc[unitKey] = group
-        return acc
-      },
-      {}
-    )
-
-    const result = Object.values(grouped).map((group: SubBitAlias) => ({
-      full: group.full,
-      short: group.short,
-    }))
-
-    return result
-  }, [aliases.subBit])
-
   const onCopy = async () => {
     await copyText(userProps?.defaultAddress)
     toast(t('address.copied'), {
@@ -689,6 +665,11 @@ export const SettingAddress: React.FC = () => {
                             >
                               {name}
                             </Box>
+                            <RawIcon
+                              as={ArrawDowmSvg}
+                              width="20px"
+                              height="20px"
+                            />
                           </HStack>
                         </PopoverTrigger>
                         <Portal>
@@ -763,7 +744,7 @@ export const SettingAddress: React.FC = () => {
                       Content = (
                         <SwitchPanel
                           isLoading={isLoading}
-                          list={subBitList}
+                          list={aliases.subBit}
                           emptyNode={
                             <NotFound p4Key="address.not-found-p4-premium" />
                           }
