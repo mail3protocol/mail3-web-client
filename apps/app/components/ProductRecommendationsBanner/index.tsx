@@ -88,7 +88,7 @@ export const ProductRecommendationsBanner: React.FC = () => {
           <Link
             flex={1}
             target="_blank"
-            href="https://app.quest3.xyz/quest/734923585929109919"
+            href="https://app.quest3.xyz/quest/746962743637672385"
           />
         </Flex>
       </Box>
