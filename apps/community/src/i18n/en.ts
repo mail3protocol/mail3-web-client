@@ -184,7 +184,7 @@ export default {
     general: 'General',
     did_not_enable_premium: "You don't have Premium enabled",
     what_is_the_premium: `<h4>What is Premium？</h4>
-        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [subscribe]-[Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
+        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
   },
   dashboard: {
     message: 'Posts',
@@ -261,12 +261,8 @@ export default {
                <ol>
                  <li>Create a Campaign/Quest on the supported platform;</li>
                  <li>Follow the guide to complete the configuration below;</li>
-                 <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
-             </li>
-             <li>
-              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
              </li>
            </ul>
            <h3>How to get the Credential ID?</h3>
@@ -308,12 +304,8 @@ export default {
                <ol>
                  <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
                  <li>Follow the guide to complete the configuration below;</li>
-                 <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
-             </li>
-             <li>
-              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
              </li>
            </ul>
     `,
@@ -392,7 +384,7 @@ export default {
       'Hey, welcome to my Web3 Subscription and check out my creative content.',
     // language=html
     help_qr_code: `<h3>Profile QR Code</h3>
-        <p>Download profilepage card or QR code for promotion and sharing.</p>
+        <p>Download profile page card or QR code for promotion and sharing.</p>
  `,
     pixels: 'Images must be at least <span>2440X400</span> pixels',
     exceed: 'Images should not exceed <span>5M</span>',
