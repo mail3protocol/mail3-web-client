@@ -79,10 +79,12 @@ export function useNotification(shouldReload = true) {
       } catch (err) {
         setIsSwitchingWebPushNotificationState(false)
         console.error(err)
-        const message = (err as any)?.message as any
-        toast(message, {
-          status: 'error',
-        })
+        const message = (err as any)?.message as string
+        if (!message.includes('Registration failed')) {
+          toast(message, {
+            status: 'error',
+          })
+        }
         throw err
       }
     },
