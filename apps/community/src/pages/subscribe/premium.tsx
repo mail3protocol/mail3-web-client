@@ -92,7 +92,7 @@ export const Premium: React.FC = () => {
     p: <Text fontSize="14px" fontWeight="500" />,
     contact: <Link href={CONTACT_URL} target="_blank" color="primary.900" />,
     bit: <Link href={DOT_BIT_URL} target="_blank" color="primary.900" />,
-    superdid: <Link href={SUPER_DID_URL} target="_blank" color="primary.900" />,
+    daodid: <Link href={SUPER_DID_URL} target="_blank" color="primary.900" />,
     detail: (
       <Link href={SELL_HELP_DOCUMENT_URL} target="_blank" color="primary" />
     ),

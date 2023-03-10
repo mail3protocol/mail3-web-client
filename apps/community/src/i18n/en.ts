@@ -431,14 +431,14 @@ export default {
         </ul>
         <h3>How does <strong>Premium</strong> work?</h3>
         <ul>
-          <li>To open your sub-domain sale business in <superdid>SuperDID</superdid>, you must first hold your own <bit>.bit</bit> domain name.</li>
+          <li>To open your sub-domain sale business in <daodid>DAODID</daodid>, you must first hold your own <bit>.bit</bit> domain name.</li>
           <li>Normally, the content you publish is public and free. However, with Premium enabled, you can choose to publish premium content according to your needs.</li>
           <li>Your visitors can become Premium members by purchasing and holding your sub-domain. Premium members have the right to access all of your Premium content.</li>
         </ul>
         <h3>How can I receive my <strong>earnings</strong>?</h3>
         <ul>
             <li>Mail3 or Subscribe (Mail3) will not participate in the share of proceeds.</li>
-            <li>Premium's sub-domain sales business is supported by <superdid>SuperDID</superdid>. Information regarding your sales revenue, how to withdraw it, and specific rules can be found on the <superdid>SuperDID</superdid> website.</li>
+            <li>Premium's sub-domain sales business is supported by <daodid>DAODID</daodid>. Information regarding your sales revenue, how to withdraw it, and specific rules can be found on the <daodid>DAODID</daodid> website.</li>
         </ul>
     `,
     contact_us:
@@ -448,7 +448,7 @@ export default {
     status: 'Status',
     set_up_sales_strategy: 'Set up your sub-domain sales strategy',
     set_up_sales_strategy_tips:
-      'This service is provided by SuperDID.\nYou need to navigate to SuperDID in order to adjust the settings.',
+      'This service is provided by DaoDID.\nYou need to navigate to DaoDID in order to adjust the settings.',
     waiting_enable_subdomain:
       'Please Verify that the domain name is open for sub-domain services',
     verifying_enable_subdomain:
