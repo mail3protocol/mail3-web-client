@@ -171,3 +171,31 @@ export function removeMailSuffix(emailAddress: string) {
   }
   return emailAddress.substring(0, i)
 }
+
+export function isVerifyOverflow({
+  str,
+  fontSize,
+  width,
+  height,
+  lineHeight,
+}: {
+  str: string
+  fontSize: string
+  width: string
+  height: string
+  lineHeight: string
+}) {
+  const div = document.createElement('div')
+  div.classList.add('family-to-read')
+  div.style.position = 'absolute'
+  div.style.top = '-9999'
+  div.style.width = width
+  div.style.fontSize = fontSize
+  div.style.lineHeight = lineHeight
+  div.style.whiteSpace = 'pre-line'
+  div.innerHTML = str
+  document.body.appendChild(div)
+  const isOverflow = div.offsetHeight > parseInt(height, 10)
+  document.body.removeChild(div)
+  return isOverflow
+}

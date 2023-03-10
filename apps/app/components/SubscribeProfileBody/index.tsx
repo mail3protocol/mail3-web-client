@@ -45,6 +45,7 @@ import {
   copyText,
   isEthAddress,
   isPrimitiveEthAddress,
+  isVerifyOverflow,
   shareToTwitter,
   truncateMiddle,
 } from 'shared'
@@ -151,6 +152,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   const [isDid, setIsDid] = useState(false)
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
+  const descRef = useRef<HTMLDivElement>(null)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -340,6 +342,18 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     [data]
   )
 
+  const isShowMore = useMemo(() => {
+    if (!settings?.description) return false
+
+    return isVerifyOverflow({
+      str: settings.description,
+      fontSize: '12px',
+      height: '20',
+      width: `${descRef.current?.offsetWidth || 560}px`,
+      lineHeight: '20px',
+    })
+  }, [settings?.description, descRef])
+
   useDidMount(() => {
     setIsDid(true)
   })
@@ -502,7 +516,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           </Center>
 
           {settings?.description ? (
-            <Box mt="16px" w={{ base: '100%', md: '560px' }}>
+            <Box ref={descRef} mt="16px" w={{ base: '100%', md: '560px' }}>
               <Collapse startingHeight={20} in={isOpen}>
                 <Text
                   fontWeight="400"
@@ -513,7 +527,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                   {settings?.description}
                 </Text>
               </Collapse>
-              {settings?.description.length > 50 ? (
+              {isShowMore ? (
                 <Flex justifyContent={{ base: 'flex-end', md: 'flex-start' }}>
                   <RawButton
                     size="xs"
