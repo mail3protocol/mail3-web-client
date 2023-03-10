@@ -274,6 +274,12 @@ export const Information: React.FC = () => {
 
   const onSubmit = async () => {
     try {
+      if (!/^[0-9a-zA-Z_]{1,16}$/.test(name)) {
+        toast('Invalid publication name', {
+          status: 'warning',
+        })
+        return
+      }
       setIsPublishing(true)
       await api.updateUserSetting(requestBody)
       remoteSettingRef.current = requestBody
@@ -488,6 +494,7 @@ export const Information: React.FC = () => {
               <FormControl>
                 <Title>{t('name_field')}</Title>
                 <Input
+                  maxLength={16}
                   placeholder={t('name_placeholder')}
                   name="name"
                   value={name}
