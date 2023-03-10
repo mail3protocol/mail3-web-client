@@ -213,7 +213,7 @@ export const Information: React.FC = () => {
         remoteSettingRef.current = d
         setBannerUrl(d.banner_url || BannerPng)
         setBannerUrlOnline(d.banner_url || BannerPng)
-        setDescription(d.description || t('description_placeholder'))
+        setDescription(d.description)
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
         setName(d.nickname)
@@ -656,7 +656,7 @@ export const Information: React.FC = () => {
                               `${account}@${MAIL_SERVER_URL}`
                             }
                             bannerUrl={bannerUrlOnline}
-                            desc={description}
+                            desc={description || t('description_placeholder')}
                             nickname={name}
                             qrUrl={subscribePageUrl}
                           />
@@ -775,7 +775,7 @@ export const Information: React.FC = () => {
         // isDev
         mailAddress={userInfo?.address || `${account}@${MAIL_SERVER_URL}`}
         bannerUrl={bannerUrlOnline}
-        desc={description}
+        desc={description || t('description_placeholder')}
         ref={cardRef}
         nickname={name}
         qrUrl={subscribePageUrl}

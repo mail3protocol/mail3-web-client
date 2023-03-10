@@ -342,17 +342,25 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     [data]
   )
 
-  const isShowMore = useMemo(() => {
-    if (!settings?.description) return false
+  const desc = useMemo(
+    () =>
+      settings?.description
+        ? settings?.description
+        : t('description_placeholder'),
+    [settings?.description]
+  )
 
-    return isVerifyOverflow({
-      str: settings.description,
-      fontSize: '12px',
-      height: '20',
-      width: `${descRef.current?.offsetWidth || 560}px`,
-      lineHeight: '20px',
-    })
-  }, [settings?.description, descRef])
+  const isShowMore = useMemo(
+    () =>
+      isVerifyOverflow({
+        str: desc,
+        fontSize: '12px',
+        height: '20',
+        width: `${descRef.current?.offsetWidth || 560}px`,
+        lineHeight: '20px',
+      }),
+    [desc, descRef.current]
+  )
 
   useDidMount(() => {
     setIsDid(true)
@@ -515,7 +523,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             ) : null}
           </Center>
 
-          {settings?.description ? (
+          {desc ? (
             <Box ref={descRef} mt="16px" w={{ base: '100%', md: '560px' }}>
               <Collapse startingHeight={20} in={isOpen}>
                 <Text
@@ -524,7 +532,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                   lineHeight="20px"
                   whiteSpace="pre-line"
                 >
-                  {settings?.description}
+                  {desc}
                 </Text>
               </Collapse>
               {isShowMore ? (
@@ -762,7 +770,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           bannerUrl={bgImage}
           qrUrl={`${APP_URL}/${address}`}
           mailAddress={mailAddress}
-          desc={settings?.description}
+          desc={desc}
           ref={cardRef}
           nickname={nickname}
         />

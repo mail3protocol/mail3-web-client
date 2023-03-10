@@ -381,7 +381,8 @@
         "copy": "Copy Subscription Page URL",
         "twitter": "Share on Twitter",
         "404": "This page could not be found.",
-        "premium-member": "Premium member"
+        "premium-member": "Premium member",
+        "description_placeholder": "Hey, welcome to my Web3 Subscription and check out my creative content."
     },
     "subscription-article": {
         "continue": "Continue",
