@@ -274,7 +274,7 @@ export const Information: React.FC = () => {
 
   const onSubmit = async () => {
     try {
-      if (/^.{1,16}$/u.test(name)) {
+      if (!/^.{1,16}$/u.test(name)) {
         toast('Invalid publication name', {
           status: 'warning',
         })

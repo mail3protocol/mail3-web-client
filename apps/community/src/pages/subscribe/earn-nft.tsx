@@ -19,7 +19,6 @@ import {
   RadioGroup,
   Spinner,
   Text,
-  Tooltip,
   UnorderedList,
   VStack,
 } from '@chakra-ui/react'
@@ -41,7 +40,6 @@ import { useToast } from '../../hooks/useToast'
 import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
-import { IS_DISABLED_QUEST3 } from '../../constants/env/config'
 import { StatusLamp } from '../../components/StatusLamp'
 
 function isValidGalxeCampaignUrl(value: string) {
@@ -394,34 +392,12 @@ export const EarnNft: React.FC = () => {
                 }
               >
                 <HStack spacing="8px">
+                  <Radio variant="outline" value={SubscriptionPlatform.Quest3}>
+                    {t('platforms.quest3')}
+                  </Radio>
                   <Radio variant="outline" value={SubscriptionPlatform.Galaxy}>
                     {t('platforms.galaxy')}
                   </Radio>
-                  {IS_DISABLED_QUEST3 ? (
-                    <Tooltip label={t('coming_soon')} hasArrow placement="top">
-                      <Box
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          e.preventDefault()
-                        }}
-                      >
-                        <Radio
-                          variant="outline"
-                          value={SubscriptionPlatform.Quest3}
-                          isDisabled
-                        >
-                          {t('platforms.quest3')}
-                        </Radio>
-                      </Box>
-                    </Tooltip>
-                  ) : (
-                    <Radio
-                      variant="outline"
-                      value={SubscriptionPlatform.Quest3}
-                    >
-                      {t('platforms.quest3')}
-                    </Radio>
-                  )}
                 </HStack>
               </RadioGroup>
             </FormControl>
