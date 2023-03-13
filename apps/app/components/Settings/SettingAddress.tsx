@@ -846,7 +846,7 @@ export const SettingAddress: React.FC = () => {
                       ) {
                         Content = (
                           <Box className="switch-wrap">
-                            <Box p="16px 8px 16px 8px">
+                            <Box p="16px 8px">
                               <EmailSwitch
                                 uuid={aliases.primitive.uuid ?? 'first_alias'}
                                 emailAddress={generateEmailAddress(
