@@ -73,7 +73,7 @@ interface Quest3State {
 }
 
 export const EarnNft: React.FC = () => {
-  useDocumentTitle('Subscribe To Earn NFT')
+  useDocumentTitle('NFT Reward')
   const { t } = useTranslation(['earn_nft', 'common'])
   const api = useAPI()
   const toast = useToast()
@@ -265,8 +265,8 @@ export const EarnNft: React.FC = () => {
           h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
           ul: <UnorderedList />,
           ol: <OrderedList />,
-          li: <ListItem fontSize="14px" fontWeight="400" />,
-          p: <Text fontSize="14px" fontWeight="400" />,
+          li: <ListItem fontSize="14px" fontWeight="500" />,
+          p: <Text fontSize="14px" fontWeight="500" />,
         }}
       />
     )
