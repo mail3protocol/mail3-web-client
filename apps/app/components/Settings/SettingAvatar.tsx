@@ -17,7 +17,7 @@ import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { useToast } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { useAtom } from 'jotai'
-import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
+import { isPrimitiveEthAddress, truncateMiddle } from 'shared'
 import { useQuery } from 'react-query'
 import { avatarsAtom, DEFAULT_AVATAR_SRC, defaultAvatar } from 'ui/src/Avatar'
 import axios from 'axios'
@@ -155,7 +155,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
       let defaultNickname = 'nickname'
       if (isPrimitiveEthAddress(address)) {
         defaultNickname = truncateMiddle(address, 6, 4, '_')
-      } else if (isEthAddress(address)) {
+      } else {
         defaultNickname = address.includes('.')
           ? address.split('.')[0]
           : address

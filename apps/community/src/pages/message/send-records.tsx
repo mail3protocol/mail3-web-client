@@ -8,12 +8,14 @@ import {
   VStack,
   Spinner,
   Icon,
+  Tooltip,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
 import { Fragment } from 'react'
 import dayjs from 'dayjs'
 import { IpfsModal } from 'ui'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Container } from '../../components/Container'
 import {
   NewMessageLinkButton,
@@ -102,6 +104,22 @@ export const SendRecords: React.FC = () => {
         <Flex direction="column" p="16px" {...cardStyleProps}>
           <Heading as="h3" fontSize="16px">
             {t('new_message')}
+            <Tooltip
+              label={t('send_rule')}
+              hasArrow
+              placement="bottom"
+              maxW="390px"
+              w="390px"
+              fontSize="12px"
+            >
+              <InfoOutlineIcon
+                color="primaryTextColor"
+                w="14px"
+                h="14px"
+                mb="2px"
+                ml="5px"
+              />
+            </Tooltip>
           </Heading>
           <NewMessageLinkButton isLoading={listQuery.isLoading} />
         </Flex>

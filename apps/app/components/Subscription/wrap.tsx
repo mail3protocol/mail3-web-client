@@ -34,7 +34,7 @@ export const SubWrap: FC = () => {
   const isLoading = useAtomValue(SubWrapIsloadingAtom)
 
   return (
-    <Container>
+    <Container className="family-to-read">
       {isLoading ? (
         <Flex h="100%">
           <Loading />

@@ -39,7 +39,6 @@ import {
 } from '../../api/modals/SubscriptionResponse'
 import { useToast } from '../../hooks/useToast'
 import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
-import { StylePreview } from '../../components/EarnNFTPageComponents/StylePreview'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
 import { IS_DISABLED_QUEST3 } from '../../constants/env/config'
@@ -81,7 +80,7 @@ export const EarnNft: React.FC = () => {
   const dialog = useDialog()
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const [campaignUrl, setCampaignUrl] = useState('')
-  const [rewardType, setRewardType] = useState(RewardType.NFT)
+  const [rewardType, setRewardType] = useState(RewardType.AIR)
   const [platform, setPlatform] = useState(SubscriptionPlatform.Galaxy)
   const [credentialId, setCredentialId] = useState('')
   const [accessToken, setAccessToken] = useState('')
@@ -102,12 +101,16 @@ export const EarnNft: React.FC = () => {
       refetchInterval: false,
       cacheTime: 0,
       onSuccess(res) {
-        setCampaignUrl(res.campaign_url)
         setRewardType(res.reward_type)
+        setCampaignUrl(res.campaign_url)
         setPlatform(res.platform)
         setCredentialId(res.credential_id)
         setAccessToken(res.key)
-        setState(res.state)
+        setState(
+          res.reward_type === RewardType.AIR
+            ? SubscriptionState.Inactive
+            : SubscriptionState.Active
+        )
       },
     }
   )
@@ -120,12 +123,10 @@ export const EarnNft: React.FC = () => {
     try {
       const body = {
         campaign_url: campaignUrl,
-        reward_type: rewardType,
+        reward_type:
+          rewardType === RewardType.NFT ? RewardType.AIR : RewardType.NFT,
         platform,
-        state:
-          state === SubscriptionState.Active
-            ? SubscriptionState.Inactive
-            : SubscriptionState.Active,
+        state: SubscriptionState.Active,
         ...(platform === SubscriptionPlatform.Galaxy
           ? {
               credential_id: credentialId,
@@ -190,11 +191,6 @@ export const EarnNft: React.FC = () => {
   }
 
   const onSubmit = () => {
-    if (rewardType === RewardType.AIR) {
-      onUpdateSubscription()
-      return
-    }
-
     dialog({
       title:
         state === SubscriptionState.Inactive
@@ -308,7 +304,6 @@ export const EarnNft: React.FC = () => {
   }, [accessToken])
 
   const isDisabledSubmit = useMemo(() => {
-    if (rewardType === RewardType.AIR) return false
     if (platform === SubscriptionPlatform.Galaxy)
       return (
         !!campaignUrlErrorMessage ||
@@ -379,174 +374,141 @@ export const EarnNft: React.FC = () => {
         <VStack spacing="24px" maxW="487px" mb="32px">
           <FormControl>
             <FormLabel>{t('to_earn')}</FormLabel>
-            <RadioGroup
-              isDisabled={isDisabled}
-              value={rewardType}
-              onChange={(val) => setRewardType(val as RewardType)}
-            >
+            <RadioGroup isDisabled={isDisabled} value={RewardType.NFT}>
               <HStack spacing="8px">
                 <Radio variant="outline" value={RewardType.NFT}>
                   {t('nft')}
                 </Radio>
-                <Radio variant="outline" value={RewardType.AIR}>
-                  {t('air')}
-                </Radio>
               </HStack>
             </RadioGroup>
           </FormControl>
-          {rewardType === RewardType.NFT ? (
-            <>
-              <FormControl>
-                <FormLabel>{t('distribution_platform')}</FormLabel>
-                <RadioGroup
-                  isDisabled={isDisabled}
-                  value={platform}
-                  onChange={(val) =>
-                    onChangePlatformWithSyncState(val as SubscriptionPlatform)
-                  }
-                >
-                  <HStack spacing="8px">
+
+          <>
+            <FormControl>
+              <FormLabel>{t('distribution_platform')}</FormLabel>
+              <RadioGroup
+                isDisabled={isDisabled}
+                value={platform}
+                onChange={(val) =>
+                  onChangePlatformWithSyncState(val as SubscriptionPlatform)
+                }
+              >
+                <HStack spacing="8px">
+                  <Radio variant="outline" value={SubscriptionPlatform.Galaxy}>
+                    {t('platforms.galaxy')}
+                  </Radio>
+                  {IS_DISABLED_QUEST3 ? (
+                    <Tooltip label={t('coming_soon')} hasArrow placement="top">
+                      <Box
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          e.preventDefault()
+                        }}
+                      >
+                        <Radio
+                          variant="outline"
+                          value={SubscriptionPlatform.Quest3}
+                          isDisabled
+                        >
+                          {t('platforms.quest3')}
+                        </Radio>
+                      </Box>
+                    </Tooltip>
+                  ) : (
                     <Radio
                       variant="outline"
-                      value={SubscriptionPlatform.Galaxy}
+                      value={SubscriptionPlatform.Quest3}
                     >
-                      {t('platforms.galaxy')}
+                      {t('platforms.quest3')}
                     </Radio>
-                    {IS_DISABLED_QUEST3 ? (
-                      <Tooltip
-                        label={t('coming_soon')}
-                        hasArrow
-                        placement="top"
-                      >
-                        <Box
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            e.preventDefault()
-                          }}
-                        >
-                          <Radio
-                            variant="outline"
-                            value={SubscriptionPlatform.Quest3}
-                            isDisabled
-                          >
-                            {t('platforms.quest3')}
-                          </Radio>
-                        </Box>
-                      </Tooltip>
-                    ) : (
-                      <Radio
-                        variant="outline"
-                        value={SubscriptionPlatform.Quest3}
-                      >
-                        {t('platforms.quest3')}
-                      </Radio>
-                    )}
-                  </HStack>
-                </RadioGroup>
-              </FormControl>
-              <FormControl isInvalid={campaignUrlErrorMessage !== ''}>
-                <FormLabel>
+                  )}
+                </HStack>
+              </RadioGroup>
+            </FormControl>
+            <FormControl isInvalid={campaignUrlErrorMessage !== ''}>
+              <FormLabel>
+                {
                   {
-                    {
-                      [SubscriptionPlatform.Galaxy]: t('campaign_link_field'),
-                      [SubscriptionPlatform.Quest3]: t('quest_link_field'),
-                    }[platform]
-                  }
-                </FormLabel>
-                <Input
-                  placeholder={
-                    {
-                      [SubscriptionPlatform.Galaxy]: t(
-                        'campaign_link_placeholder'
+                    [SubscriptionPlatform.Galaxy]: t('campaign_link_field'),
+                    [SubscriptionPlatform.Quest3]: t('quest_link_field'),
+                  }[platform]
+                }
+              </FormLabel>
+              <Input
+                placeholder={
+                  {
+                    [SubscriptionPlatform.Galaxy]: t(
+                      'campaign_link_placeholder'
+                    ),
+                    [SubscriptionPlatform.Quest3]: t('quest_link_placeholder'),
+                  }[platform]
+                }
+                name="campaign_link"
+                isDisabled={isDisabled}
+                value={campaignUrl}
+                onChange={({ target: { value } }) => setCampaignUrl(value)}
+              />
+              <FormHelperText whiteSpace="nowrap">
+                {platform === SubscriptionPlatform.Galaxy ? (
+                  <Trans
+                    t={t}
+                    i18nKey="go_to_galaxy_description"
+                    components={{
+                      a: (
+                        <Link
+                          color="primary.900"
+                          href={GALXE_URL}
+                          target="_blank"
+                        />
                       ),
-                      [SubscriptionPlatform.Quest3]: t(
-                        'quest_link_placeholder'
+                    }}
+                  />
+                ) : null}
+                {platform === SubscriptionPlatform.Quest3 ? (
+                  <Trans
+                    t={t}
+                    i18nKey="go_to_quest3_description"
+                    components={{
+                      a: (
+                        <Link
+                          color="primary.900"
+                          href={QUEST3_URL}
+                          target="_blank"
+                        />
                       ),
-                    }[platform]
-                  }
-                  name="campaign_link"
-                  isDisabled={isDisabled}
-                  value={campaignUrl}
-                  onChange={({ target: { value } }) => setCampaignUrl(value)}
-                />
-                <FormHelperText whiteSpace="nowrap">
-                  {platform === SubscriptionPlatform.Galaxy ? (
-                    <Trans
-                      t={t}
-                      i18nKey="go_to_galaxy_description"
-                      components={{
-                        a: (
-                          <Link
-                            color="primary.900"
-                            href={GALXE_URL}
-                            target="_blank"
-                          />
-                        ),
-                      }}
-                    />
-                  ) : null}
-                  {platform === SubscriptionPlatform.Quest3 ? (
-                    <Trans
-                      t={t}
-                      i18nKey="go_to_quest3_description"
-                      components={{
-                        a: (
-                          <Link
-                            color="primary.900"
-                            href={QUEST3_URL}
-                            target="_blank"
-                          />
-                        ),
-                      }}
-                    />
-                  ) : null}
-                </FormHelperText>
-                <FormErrorMessage>{campaignUrlErrorMessage}</FormErrorMessage>
-              </FormControl>
-              {platform === SubscriptionPlatform.Galaxy ? (
-                <>
-                  <FormControl isInvalid={credentialIdErrorMessage !== ''}>
-                    <FormLabel>{t('credential_id')}</FormLabel>
-                    <Input
-                      isDisabled={isDisabled}
-                      value={credentialId}
-                      onChange={({ target: { value } }) =>
-                        setCredentialId(value)
-                      }
-                      placeholder={t('credential_id_placeholder')}
-                    />
-                    <FormErrorMessage>
-                      {credentialIdErrorMessage}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={accessTokenErrorMessage !== ''}>
-                    <FormLabel>{t('access_token')}</FormLabel>
-                    <Input
-                      isDisabled={isDisabled}
-                      value={accessToken}
-                      onChange={({ target: { value } }) =>
-                        setAccessToken(value)
-                      }
-                      placeholder={t('access_token_placeholder')}
-                    />
-                    <FormErrorMessage>
-                      {accessTokenErrorMessage}
-                    </FormErrorMessage>
-                  </FormControl>
-                </>
-              ) : null}
-            </>
-          ) : (
-            <Text
-              fontWeight="500"
-              fontSize="12px"
-              lineHeight="15px"
-              color="#FF6B00"
-              whiteSpace="nowrap"
-            >
-              {t('air_p')}
-            </Text>
-          )}
+                    }}
+                  />
+                ) : null}
+              </FormHelperText>
+              <FormErrorMessage>{campaignUrlErrorMessage}</FormErrorMessage>
+            </FormControl>
+            {platform === SubscriptionPlatform.Galaxy ? (
+              <>
+                <FormControl isInvalid={credentialIdErrorMessage !== ''}>
+                  <FormLabel>{t('credential_id')}</FormLabel>
+                  <Input
+                    isDisabled={isDisabled}
+                    value={credentialId}
+                    onChange={({ target: { value } }) => setCredentialId(value)}
+                    placeholder={t('credential_id_placeholder')}
+                  />
+                  <FormErrorMessage>
+                    {credentialIdErrorMessage}
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={accessTokenErrorMessage !== ''}>
+                  <FormLabel>{t('access_token')}</FormLabel>
+                  <Input
+                    isDisabled={isDisabled}
+                    value={accessToken}
+                    onChange={({ target: { value } }) => setAccessToken(value)}
+                    placeholder={t('access_token_placeholder')}
+                  />
+                  <FormErrorMessage>{accessTokenErrorMessage}</FormErrorMessage>
+                </FormControl>
+              </>
+            ) : null}
+          </>
         </VStack>
         {state === SubscriptionState.Active ? (
           <Button
@@ -571,12 +533,7 @@ export const EarnNft: React.FC = () => {
           </Button>
         )}
       </Box>
-      <TipsPanel gridRow="1 / 3" gridColumn="2 / 3" useSharedContent />
-      <StylePreview
-        isDisabledCopy={state === SubscriptionState.Inactive}
-        rewardType={rewardType}
-      />
-      <div />
+      <TipsPanel gridRow="1 / 2" gridColumn="2 / 3" useSharedContent />
     </Container>
   )
 }

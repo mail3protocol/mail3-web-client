@@ -39,4 +39,11 @@ export class HomeAPI {
     if (options?.type) formData.set('type', options.type)
     return this.axios.post<{ url: string }>(`/community/upload_image`, formData)
   }
+
+  uploadAvatar(image: File) {
+    const formData = new FormData()
+    formData.set('image', image)
+    formData.set('address', this.account)
+    return this.axios.post<{ url: string }>(`/image/upload`, formData)
+  }
 }

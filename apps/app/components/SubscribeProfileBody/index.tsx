@@ -45,6 +45,7 @@ import {
   copyText,
   isEthAddress,
   isPrimitiveEthAddress,
+  isVerifyOverflow,
   shareToTwitter,
   truncateMiddle,
 } from 'shared'
@@ -151,6 +152,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   const [isDid, setIsDid] = useState(false)
   const popoverRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
+  const descRef = useRef<HTMLDivElement>(null)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -340,6 +342,26 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     [data]
   )
 
+  const desc = useMemo(
+    () =>
+      settings?.description
+        ? settings?.description
+        : t('description_placeholder'),
+    [settings?.description]
+  )
+
+  const isShowMore = useMemo(
+    () =>
+      isVerifyOverflow({
+        str: desc,
+        fontSize: '12px',
+        height: '20',
+        width: `${descRef.current?.offsetWidth || 560}px`,
+        lineHeight: '20px',
+      }),
+    [desc, descRef.current]
+  )
+
   useDidMount(() => {
     setIsDid(true)
   })
@@ -430,7 +452,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
         </Box>
       </AspectRatio>
 
-      <PageContainer>
+      <PageContainer className="family-to-read">
         <Box
           p={{ base: '8px 20px 40px', md: '24px 30px 0' }}
           position="relative"
@@ -501,14 +523,19 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             ) : null}
           </Center>
 
-          {settings?.description ? (
-            <Box mt="16px" w={{ base: '100%', md: '560px' }}>
+          {desc ? (
+            <Box ref={descRef} mt="16px" w={{ base: '100%', md: '560px' }}>
               <Collapse startingHeight={20} in={isOpen}>
-                <Text fontWeight="400" fontSize="12px" lineHeight="20px">
-                  {settings?.description}
+                <Text
+                  fontWeight="400"
+                  fontSize="12px"
+                  lineHeight="20px"
+                  whiteSpace="pre-line"
+                >
+                  {desc}
                 </Text>
               </Collapse>
-              {settings?.description.length > 85 ? (
+              {isShowMore ? (
                 <Flex justifyContent={{ base: 'flex-end', md: 'flex-start' }}>
                   <RawButton
                     size="xs"
@@ -743,7 +770,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           bannerUrl={bgImage}
           qrUrl={`${APP_URL}/${address}`}
           mailAddress={mailAddress}
-          desc={settings?.description}
+          desc={desc}
           ref={cardRef}
           nickname={nickname}
         />

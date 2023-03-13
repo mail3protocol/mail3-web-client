@@ -8,6 +8,8 @@ export interface UserSettingResponse {
   description: string
   items_link: string
   mmb_state: string
+  avatar: string
+  nickname: string
 }
 
 export interface UserSettingRequest {
@@ -15,4 +17,5 @@ export interface UserSettingRequest {
   description: string
   items_link: string
   mmb_state: string
+  avatar: string
 }

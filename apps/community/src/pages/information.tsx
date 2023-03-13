@@ -4,16 +4,15 @@ import {
   Button,
   ButtonProps,
   Center,
+  CenterProps,
   Flex,
   FormControl,
-  FormLabel,
   Grid,
   Heading,
   HStack,
   Icon,
   Input,
   Link,
-  Switch,
   Tab,
   TabList,
   TabPanel,
@@ -23,7 +22,6 @@ import {
   Textarea,
   Tooltip,
   useStyleConfig,
-  VStack,
 } from '@chakra-ui/react'
 import { Avatar, SubscribeCard } from 'ui'
 import {
@@ -43,8 +41,10 @@ import { useQuery } from 'react-query'
 import { Trans, useTranslation } from 'react-i18next'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
-import { truncateAddress } from 'shared'
+import { isPrimitiveEthAddress, truncateAddress } from 'shared'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
+import { useUpdateAtom } from 'jotai/utils'
+import { avatarsAtom, DEFAULT_AVATAR_SRC } from 'ui/src/Avatar'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/DownloadIcon.svg'
 import BannerPng from '../assets/banner.png'
@@ -61,6 +61,8 @@ import { useHomeAPI } from '../hooks/useHomeAPI'
 import { useToast } from '../hooks/useToast'
 import { UserSettingResponse } from '../api/modals/UserInfoResponse'
 import { UploadImageType } from '../api/HomeAPI'
+
+const DESCRIPTION_MAX_LENGTH = 1000
 
 export const DownloadButton: React.FC<
   ButtonProps & { href?: string; download?: string }
@@ -86,12 +88,6 @@ const Title = styled(Box)`
   padding: 16px 0 8px;
 `
 
-const SwitchWrap = styled(Switch)`
-  .chakra-switch__track[data-checked] {
-    background: #4e51f4;
-  }
-`
-
 const verifyImageSize = (imgFile: File, width: number, height: number) =>
   new Promise((resolve) => {
     const img: HTMLImageElement = document.createElement('img')
@@ -108,6 +104,57 @@ const verifyImageSize = (imgFile: File, width: number, height: number) =>
     img.src = URL.createObjectURL(imgFile)
   })
 
+const ButtonGroup: React.FC<
+  CenterProps & {
+    hasRemove: boolean
+    isUploading: boolean
+    removeButtonColor?: string
+    onUpload: (files: FileList) => Promise<void>
+    onRemove: () => void
+  }
+> = ({
+  hasRemove,
+  isUploading,
+  onUpload,
+  onRemove,
+  removeButtonColor = '#fff',
+  ...props
+}) => {
+  const { t } = useTranslation(['user_information', 'common'])
+  return (
+    <Center {...props}>
+      <FileUpload accept=".jpg, .jpeg, .gif, .png, .bmp" onChange={onUpload}>
+        <Button
+          leftIcon={<AddIcon />}
+          variant="upload"
+          colorScheme="primaryButton"
+          loadingText="Uploading"
+          isLoading={isUploading}
+        >
+          {t('upload.button')}
+        </Button>
+      </FileUpload>
+
+      {hasRemove ? (
+        <Button
+          variant="ghost"
+          ml="5px"
+          color={removeButtonColor}
+          fontSize="12px"
+          fontWeight="600"
+          lineHeight="14px"
+          height="28px"
+          _active={{ bg: 'transparent' }}
+          _hover={{ bg: 'transparent' }}
+          onClick={onRemove}
+        >
+          {t('upload.remove')}
+        </Button>
+      ) : null}
+    </Center>
+  )
+}
+
 export const Information: React.FC = () => {
   useDocumentTitle('Information')
   const { t } = useTranslation(['user_information', 'common'])
@@ -121,12 +168,16 @@ export const Information: React.FC = () => {
 
   const [bannerUrl, setBannerUrl] = useState(BannerPng)
   const [bannerUrlOnline, setBannerUrlOnline] = useState(BannerPng)
+  const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [itemsLink, setItemsLink] = useState('')
   const [mmbState, setMmbState] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
   const [pubDisable, setPubDisable] = useState(true)
   const [isPublishing, setIsPublishing] = useState(false)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState(DEFAULT_AVATAR_SRC)
+  const setAvatars = useUpdateAtom(avatarsAtom)
 
   const remoteSettingRef = useRef<UserSettingResponse | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -134,7 +185,7 @@ export const Information: React.FC = () => {
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const { downloadScreenshot } = useScreenshot()
 
-  const { data: userInfoData } = useQuery(
+  const { data: userInfoData, refetch } = useQuery(
     [QueryKey.GetUserInfo],
     async () => api.getUserInfo().then((r) => r.data),
     {
@@ -165,6 +216,8 @@ export const Information: React.FC = () => {
         setDescription(d.description)
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
+        setName(d.nickname)
+        setAvatarUrl(d.avatar)
       },
     }
   )
@@ -172,10 +225,9 @@ export const Information: React.FC = () => {
   const trackClickInformationQRcodeDownload = useTrackClick(
     TrackEvent.CommunityClickInformationQRcodeDownload
   )
-
+  const alias = userInfo?.address.split('@')[0] || ''
   const { onCopy, isCopied } = useCopyWithStatus()
-  const subscribePageUrl = `${APP_URL}/${userInfo?.address.split('@')[0] || ''}`
-
+  const subscribePageUrl = `${APP_URL}/${alias}`
   const hasBanner = bannerUrl !== BannerPng
 
   const requestBody = useMemo<UserSettingResponse>(
@@ -184,8 +236,10 @@ export const Information: React.FC = () => {
       items_link: itemsLink,
       mmb_state: mmbState ? 'enabled' : 'disabled',
       description,
+      nickname: name,
+      avatar: avatarUrl,
     }),
-    [hasBanner, bannerUrl, itemsLink, mmbState, description]
+    [hasBanner, bannerUrl, itemsLink, mmbState, description, name, avatarUrl]
   )
 
   useEffect(() => {
@@ -202,12 +256,39 @@ export const Information: React.FC = () => {
     }
   }, [requestBody, remoteSettingRef?.current])
 
+  useEffect(() => {
+    if (name) {
+      return
+    }
+    let defaultName = userInfo?.name || userInfoData?.name
+    if (defaultName) {
+      return
+    }
+    if (isPrimitiveEthAddress(alias)) {
+      defaultName = truncateAddress(alias || '', '_')
+    } else {
+      defaultName = alias.includes('.') ? alias.split('.')[0] : alias
+    }
+    setName(defaultName)
+  }, [userInfo, userInfoData, name])
+
   const onSubmit = async () => {
     try {
+      if (!/^[0-9a-zA-Z_]{1,16}$/.test(name)) {
+        toast('Invalid publication name', {
+          status: 'warning',
+        })
+        return
+      }
       setIsPublishing(true)
       await api.updateUserSetting(requestBody)
       remoteSettingRef.current = requestBody
       setBannerUrlOnline(bannerUrl)
+      setAvatars((prev) => ({
+        ...prev,
+        [alias]: avatarUrl,
+      }))
+      refetch()
       toast('Publish Successfully', {
         status: 'success',
         alertProps: { colorScheme: 'green' },
@@ -223,7 +304,46 @@ export const Information: React.FC = () => {
     setIsPublishing(false)
   }
 
-  const onUploadHandle = async (files: FileList) => {
+  const onUploadAvatarHandle = async (files: FileList) => {
+    const MAX_FILE_SIZE = 2
+
+    if (files.length) {
+      setIsUploadingAvatar(true)
+      try {
+        const file = files[0]
+        const fsMb = file.size / (1024 * 1024)
+        if (fsMb > MAX_FILE_SIZE) {
+          throw new Error('avatar_exceed')
+        }
+        const { data } = await homeApi.uploadAvatar(file)
+        setAvatarUrl(data.url)
+      } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+          toast(error.message, {
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
+        } else {
+          toast(
+            <Trans
+              t={t}
+              i18nKey={error.message}
+              components={{
+                span: <Box as="span" color="#FF6B00" />,
+              }}
+            />,
+            {
+              status: 'error',
+              alertProps: { colorScheme: 'red' },
+            }
+          )
+        }
+      }
+      setIsUploadingAvatar(false)
+    }
+  }
+
+  const onUploadBannerHandle = async (files: FileList) => {
     const MAX_FILE_SIZE = 5
 
     if (files.length) {
@@ -305,14 +425,13 @@ export const Information: React.FC = () => {
             isLoading={isPublishing}
             isDisabled={pubDisable}
           >
-            {t('publish')}
+            {t('save')}
           </Button>
         </Flex>
         <Tabs w="full" variant="normal" mt="38px">
           <TabList>
             <Tab>{t('tabs.Profile')}</Tab>
             <Tab>{t('tabs.Items')}</Tab>
-            <Tab>{t('tabs.Basic_info')}</Tab>
           </TabList>
 
           <TabPanels>
@@ -356,6 +475,33 @@ export const Information: React.FC = () => {
                 </Box>
               </FormControl>
 
+              <FormControl>
+                <Title>
+                  <Trans
+                    t={t}
+                    i18nKey="address_field"
+                    components={{ sup: <sup /> }}
+                  />
+                </Title>
+                <Input
+                  placeholder={t('address_placeholder')}
+                  name="mail_address"
+                  isDisabled
+                  value={userInfo?.address || userInfoData?.address}
+                />
+              </FormControl>
+
+              <FormControl>
+                <Title>{t('name_field')}</Title>
+                <Input
+                  maxLength={16}
+                  placeholder={t('name_placeholder')}
+                  name="name"
+                  value={name}
+                  onChange={({ target: { value } }) => setName(value)}
+                />
+              </FormControl>
+
               <Title>{t('avatar')}</Title>
               <HStack spacing="24px">
                 <Center
@@ -372,7 +518,8 @@ export const Information: React.FC = () => {
                     boxShadow="0px 0px 8px rgba(0, 0, 0, 0.16)"
                   >
                     <Avatar
-                      address={userInfo?.address.split('@')[0] || ''}
+                      address=""
+                      src={avatarUrl}
                       w="80px"
                       h="80px"
                       borderRadius="50%"
@@ -380,32 +527,51 @@ export const Information: React.FC = () => {
                   </Center>
                 </Center>
                 <Box>
-                  <Box fontWeight="500" fontSize="14px" lineHeight="20px">
-                    {t('avatar_p')}
-                  </Box>
                   <Box
-                    mt="16px"
-                    fontWeight="400"
+                    fontWeight="500"
                     fontSize="12px"
                     lineHeight="16px"
+                    color="secondaryTitleColor"
+                    w="280px"
                   >
-                    <Trans
-                      t={t}
-                      i18nKey="avatar_setting"
-                      components={{
-                        a: (
-                          <Link
-                            color="primary.900"
-                            href={APP_URL}
-                            target="_blank"
-                          />
-                        ),
-                        span: <Box as="span" color="#FF6B00" />,
-                      }}
-                    />
+                    {t('avatar_format')}
                   </Box>
+
+                  <ButtonGroup
+                    mt="16px"
+                    justifyContent="flex-start"
+                    removeButtonColor="secondaryTextColor"
+                    onUpload={onUploadAvatarHandle}
+                    isUploading={isUploadingAvatar}
+                    hasRemove={!!avatarUrl && avatarUrl !== DEFAULT_AVATAR_SRC}
+                    onRemove={() => setAvatarUrl(DEFAULT_AVATAR_SRC)}
+                  />
                 </Box>
               </HStack>
+
+              <FormControl>
+                <Title>{t('description')}</Title>
+                <Textarea
+                  h="188px"
+                  variant="black"
+                  placeholder={t('description_placeholder')}
+                  value={description}
+                  onChange={({ target: { value } }) => setDescription(value)}
+                  maxLength={DESCRIPTION_MAX_LENGTH}
+                />
+                <Box
+                  whiteSpace="nowrap"
+                  fontSize="12px"
+                  color="#92929D"
+                  position="absolute"
+                  bottom="8px"
+                  right="16px"
+                  zIndex={99}
+                >
+                  {description.length} / {DESCRIPTION_MAX_LENGTH}
+                </Box>
+              </FormControl>
+
               <Title>{t('banner_image')}</Title>
               <Center
                 w="610px"
@@ -446,39 +612,15 @@ export const Information: React.FC = () => {
                       }}
                     />
                   </Text>
-                  <Center mt="5px">
-                    <FileUpload
-                      accept=".jpg, .jpeg, .gif, .png, .bmp"
-                      onChange={onUploadHandle}
-                    >
-                      <Button
-                        leftIcon={<AddIcon />}
-                        variant="upload"
-                        colorScheme="primaryButton"
-                        loadingText="Uploading"
-                        isLoading={isUploading}
-                      >
-                        {t('upload.button')}
-                      </Button>
-                    </FileUpload>
-
-                    {hasBanner ? (
-                      <Button
-                        variant="ghost"
-                        ml="5px"
-                        color="#fff"
-                        fontSize="12px"
-                        fontWeight="600"
-                        lineHeight="14px"
-                        height="28px"
-                        _active={{ bg: 'transparent' }}
-                        _hover={{ bg: 'transparent' }}
-                        onClick={() => setBannerUrl(BannerPng)}
-                      >
-                        {t('upload.remove')}
-                      </Button>
-                    ) : null}
-                  </Center>
+                  <ButtonGroup
+                    mt="5px"
+                    isUploading={isUploading}
+                    hasRemove={hasBanner}
+                    onUpload={onUploadBannerHandle}
+                    onRemove={() => {
+                      setBannerUrl(BannerPng)
+                    }}
+                  />
                 </Center>
               </Center>
               <Text mt="8px" fontWeight="400" fontSize="14px" lineHeight="20px">
@@ -514,14 +656,8 @@ export const Information: React.FC = () => {
                               `${account}@${MAIL_SERVER_URL}`
                             }
                             bannerUrl={bannerUrlOnline}
-                            desc={description}
-                            nickname={truncateAddress(
-                              userInfo?.name ||
-                                userInfoData?.name ||
-                                userInfo?.address.split('@')[0] ||
-                                '',
-                              '_'
-                            )}
+                            desc={description || t('description_placeholder')}
+                            nickname={name}
                             qrUrl={subscribePageUrl}
                           />
                         </Box>
@@ -631,55 +767,6 @@ export const Information: React.FC = () => {
                 />
               </Text>
             </TabPanel>
-            <TabPanel>
-              <Flex w="full" h="full" direction="column">
-                <VStack as="form" spacing="24px" mt="32px" w="400px">
-                  <FormControl>
-                    <FormLabel>{t('name_field')}</FormLabel>
-                    <Input
-                      placeholder={t('name_placeholder')}
-                      name="name"
-                      isDisabled
-                      value={truncateAddress(
-                        userInfo?.name ||
-                          userInfoData?.name ||
-                          userInfo?.address.split('@')[0] ||
-                          '',
-                        '_'
-                      )}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>
-                      <Trans
-                        t={t}
-                        i18nKey="address_field"
-                        components={{ sup: <sup /> }}
-                      />
-                    </FormLabel>
-                    <Input
-                      placeholder={t('address_placeholder')}
-                      name="mail_address"
-                      isDisabled
-                      value={userInfo?.address || userInfoData?.address}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>{t('description')}</FormLabel>
-                    <Textarea
-                      variant="black"
-                      resize="none"
-                      placeholder={t('description_placeholder')}
-                      value={description}
-                      onChange={({ target: { value } }) =>
-                        setDescription(value)
-                      }
-                      maxLength={100}
-                    />
-                  </FormControl>
-                </VStack>
-              </Flex>
-            </TabPanel>
           </TabPanels>
         </Tabs>
       </Flex>
@@ -688,15 +775,9 @@ export const Information: React.FC = () => {
         // isDev
         mailAddress={userInfo?.address || `${account}@${MAIL_SERVER_URL}`}
         bannerUrl={bannerUrlOnline}
-        desc={description}
+        desc={description || t('description_placeholder')}
         ref={cardRef}
-        nickname={truncateAddress(
-          userInfo?.name ||
-            userInfoData?.name ||
-            userInfo?.address.split('@')[0] ||
-            '',
-          '_'
-        )}
+        nickname={name}
         qrUrl={subscribePageUrl}
       />
     </Container>

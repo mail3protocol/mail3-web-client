@@ -1,8 +1,34 @@
 import { describe, it, assert } from 'vitest'
-import { truncateMailAddress } from 'shared'
+import {
+  isSubBitDomain,
+  isSupportShortBitAddr,
+  truncateMailAddress,
+} from 'shared'
 import { isHttpUriNoBlankSpaceReg, isHttpUriReg } from './string'
 
 describe('Utils String', () => {
+  describe('Function isSupportShortBitAddr', () => {
+    it('should test isSupportShortBitAddr, return true', () => {
+      const case1 = 'abc.abc.bit'
+      const case2 = 'abc.crypto.bit'
+      const case3 = 'abc.eth.bit'
+      const case4 = 'crypto.bit'
+      assert.isTrue(isSupportShortBitAddr(case1))
+      assert.isFalse(isSupportShortBitAddr(case2))
+      assert.isFalse(isSupportShortBitAddr(case3))
+      assert.isFalse(isSupportShortBitAddr(case4))
+    })
+  })
+
+  describe('Function isSubBitDomain', () => {
+    it('should test isSubBitDomain, return true', () => {
+      const case1 = 'abc.abc.bit'
+      const case2 = 'abc.bit'
+      assert.isTrue(isSubBitDomain(case1))
+      assert.isFalse(isSubBitDomain(case2))
+    })
+  })
+
   describe('Function truncateMiddle0xMail', () => {
     it('should test normal ens', () => {
       const ensCase = 'mail3.ens@mail3.me'

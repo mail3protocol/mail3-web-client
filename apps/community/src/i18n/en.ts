@@ -64,8 +64,9 @@ export default {
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
     copy_successfully: 'Copy successfully',
-    copy_message_link: 'Copy message link',
-    send_time_limit: 'You can send 1 message a day. Please try it later.',
+    copy_message_link: 'Copy post link',
+    send_time_limit:
+      'Only 10 posts can be made in 24 hours, please come back and try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
@@ -81,11 +82,9 @@ export default {
       logo_name: 'Subscription',
     },
     sidebar: {
-      message: 'Message',
-      subscribe: 'Subscribe',
       home: 'Home',
-      send_records: 'History',
-      earn_nft: 'Earn NFT',
+      published: 'Published',
+      nft_reward: 'NFT Reward',
       premium: 'Premium',
     },
     tips_panel: {
@@ -152,7 +151,7 @@ export default {
     subject_limit: '{{count}} / {{limit}}',
     editor_placeholder: 'Start writing here...',
     preview: 'Preview',
-    send: 'Send',
+    send: 'Publish',
     sending: 'Sending...',
     edit: 'Edit',
     send_succeed: 'Message Sent',
@@ -185,23 +184,24 @@ export default {
     general: 'General',
     did_not_enable_premium: "You don't have Premium enabled",
     what_is_the_premium: `<h4>What is Premium？</h4>
-        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [subscribe]-[Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
+        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
   },
   dashboard: {
-    message: 'Message',
+    message: 'Posts',
     subscribers: 'Subscribers',
     new_subscribers: 'New Subscribers',
     statistics_time: 'Statistics time: Yesterday 00:00 - 24:00',
-    send_message: 'Send Message',
-    send_records: 'History',
-    send_records_tooltip: 'Show 10 sent messages recently',
-    view_all_send_records: 'All history',
+    send_message: 'New Post',
+    send_records: 'Published',
+    send_records_tooltip: 'Show 10 recent posts',
+    view_all_send_records: 'All published posts',
     download_failed: 'Download failed, reason: {{message}}',
     download_no_data: 'No data, unable to download.',
     switch_from_mirror: 'Switch from Mirror',
     mirror: {
-      sub_title: 'Please confirm that you want to import posts from mirror.xyz.',
-      desc: 'After importing, the posts will appear in the history and on your subscription page, and your subscribers will not receive push notifications.',
+      sub_title:
+        'Please confirm that you want to import posts from mirror.xyz.',
+      desc: 'After importing, the posts will appear in the published and on your subscription page, and your subscribers will not receive push notifications.',
       import: 'Import',
       importing: 'Importing...',
       toast: 'Please refresh the page later to check.',
@@ -261,12 +261,8 @@ export default {
                <ol>
                  <li>Create a Campaign/Quest on the supported platform;</li>
                  <li>Follow the guide to complete the configuration below;</li>
-                 <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
-             </li>
-             <li>
-              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
              </li>
            </ul>
            <h3>How to get the Credential ID?</h3>
@@ -308,12 +304,8 @@ export default {
                <ol>
                  <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
                  <li>Follow the guide to complete the configuration below;</li>
-                 <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
-             </li>
-             <li>
-              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
              </li>
            </ul>
     `,
@@ -350,8 +342,8 @@ export default {
     follow_twitter: 'Follow Twitter',
   },
   user_information: {
-    name_field: 'Name',
-    name_placeholder: 'Mail3.eth',
+    name_field: 'Publication name',
+    name_placeholder: 'Publication name',
     address_field: 'Mail<sup>3</sup> Address',
     address_placeholder: 'robert@mail.com',
     profile_page_field: 'Profile Page',
@@ -384,17 +376,21 @@ export default {
     appear:
       'This will appear on the <span>Items</span> section of your Subscription Page.',
     appear_text: `
-    Please go to <a>Cluscer3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
+    Please go to <a>Cluster3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
     display_Mail_Me_Button: 'Display Mail Me Button on the Subscription Page',
-    publish: 'Publish',
+    save: 'Save',
     description: 'Description',
-    description_placeholder: 'Description',
+    description_placeholder:
+      'Hey, welcome to my Web3 Subscription and check out my creative content.',
     // language=html
     help_qr_code: `<h3>Profile QR Code</h3>
-        <p>Download profilepage card or QR code for promotion and sharing.</p>
+        <p>Download profile page card or QR code for promotion and sharing.</p>
  `,
     pixels: 'Images must be at least <span>2440X400</span> pixels',
     exceed: 'Images should not exceed <span>5M</span>',
+    avatar_format:
+      'Image format only: BMP, JPEG, JPG, GIF, PNG, Should not exceed 2MB.',
+    avatar_exceed: 'Images should not exceed <span>2M</span>',
   },
   ipfs: {
     ipfs_link: 'IPFS LINK',
@@ -418,8 +414,10 @@ export default {
       'Need to open wallet. If already connected, please try again. ',
   },
   send_message: {
-    title: 'History',
-    new_message: 'New Message',
+    title: 'Published',
+    new_message: 'New Post',
+    send_rule:
+      'Only 10 posts can be published in 24 hours, only the first 3 posts will push desktop notifications to your subscribers.',
     switch_from_mirror: 'Switch from mirror',
   },
   premium: {
@@ -433,14 +431,14 @@ export default {
         </ul>
         <h3>How does <strong>Premium</strong> work?</h3>
         <ul>
-          <li>To open your sub-domain sale business in <superdid>SuperDID</superdid>, you must first hold your own <bit>.bit</bit> domain name.</li>
+          <li>To open your sub-domain sale business in <daodid>DAODID</daodid>, you must first hold your own <bit>.bit</bit> domain name.</li>
           <li>Normally, the content you publish is public and free. However, with Premium enabled, you can choose to publish premium content according to your needs.</li>
           <li>Your visitors can become Premium members by purchasing and holding your sub-domain. Premium members have the right to access all of your Premium content.</li>
         </ul>
         <h3>How can I receive my <strong>earnings</strong>?</h3>
         <ul>
             <li>Mail3 or Subscribe (Mail3) will not participate in the share of proceeds.</li>
-            <li>Premium's sub-domain sales business is supported by <superdid>SuperDID</superdid>. Information regarding your sales revenue, how to withdraw it, and specific rules can be found on the <superdid>SuperDID</superdid> website.</li>
+            <li>Premium's sub-domain sales business is supported by <daodid>DAODID</daodid>. Information regarding your sales revenue, how to withdraw it, and specific rules can be found on the <daodid>DAODID</daodid> website.</li>
         </ul>
     `,
     contact_us:
@@ -450,7 +448,7 @@ export default {
     status: 'Status',
     set_up_sales_strategy: 'Set up your sub-domain sales strategy',
     set_up_sales_strategy_tips:
-      'This service is provided by SuperDID.\nYou need to navigate to SuperDID in order to adjust the settings.',
+      'This service is provided by DaoDID.\nYou need to navigate to DaoDID in order to adjust the settings.',
     waiting_enable_subdomain:
       'Please Verify that the domain name is open for sub-domain services',
     verifying_enable_subdomain:
@@ -459,16 +457,18 @@ export default {
       'This domain name does not have sub-domain service. Please either change the domain name or confirm that sub-domain service is not needed.',
     enabled_subdomain:
       'This domain name is now available for sub-domain services.',
-    waiting_enable_subdomain_price: 'Please verify that the prices for sub-domains have been set.',
+    waiting_enable_subdomain_price:
+      'Please verify that the prices for sub-domains have been set.',
     verifying_enable_subdomain_price:
       'Verifying that sub-domain prices are set…',
     failed_enable_subdomain_price:
       'The sub-domain price has not been set yet. Please click the button below to go to Settings and try again. <retry> Click here </retry> to retry.',
-    enabled_subdomain_price: 'Sub-domain price setting has already been completed.',
+    enabled_subdomain_price:
+      'Sub-domain price setting has already been completed.',
     enable: 'Enable',
     disable: 'Disable',
     is_not_dot_bit_address: 'This is not a .bit domain',
-    is_not_owner: "Sorry, you are not the owner of this domain",
+    is_not_owner: 'Sorry, you are not the owner of this domain',
     enable_confirm_dialog: {
       title:
         'Please carefully review the following \ninformation before enabling.',
