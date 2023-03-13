@@ -432,7 +432,7 @@ export const SettingAddress: React.FC = () => {
     const grouped = aliases.subBit.reduce(
       (acc: Record<string, { full: Alias; short: Alias }>, curr: Alias) => {
         const key = curr.address.split('@')[0]
-        const unitKey = key.replace(/.bit$/, '')
+        const unitKey = key.replace(/\.bit$/, '')
         const group = acc[unitKey] || { full: null, short: null }
         if (curr.address.includes('.bit@')) {
           group.full = curr
@@ -450,6 +450,7 @@ export const SettingAddress: React.FC = () => {
         group.short ? [group.short, group.full] : [group.full]
       )
       .flat()
+      .filter((item) => !!item)
 
     return result
   }, [aliases.subBit])
