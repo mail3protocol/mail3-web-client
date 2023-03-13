@@ -113,7 +113,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   )
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!/^[0-9a-zA-Z_]{1,16}$/.test(data.nickname)) {
+    if (!/^.{1,16}$/u.test(data.nickname)) {
       toast('Invalid nickname', {
         status: 'warning',
       })
