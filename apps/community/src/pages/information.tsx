@@ -185,6 +185,8 @@ export const Information: React.FC = () => {
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const { downloadScreenshot } = useScreenshot()
 
+  const alias = userInfo?.address.split('@')[0] || ''
+
   const { data: userInfoData, refetch } = useQuery(
     [QueryKey.GetUserInfo],
     async () => api.getUserInfo().then((r) => r.data),
@@ -216,8 +218,20 @@ export const Information: React.FC = () => {
         setDescription(d.description)
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
-        setName(d.nickname)
         setAvatarUrl(d.avatar)
+
+        if (d.nickname) {
+          setName(d.nickname)
+          return
+        }
+
+        let defaultName = ''
+        if (isPrimitiveEthAddress(alias)) {
+          defaultName = truncateAddress(alias || '', '_')
+        } else {
+          defaultName = alias.includes('.') ? alias.split('.')[0] : alias
+        }
+        setName(defaultName)
       },
     }
   )
@@ -225,7 +239,7 @@ export const Information: React.FC = () => {
   const trackClickInformationQRcodeDownload = useTrackClick(
     TrackEvent.CommunityClickInformationQRcodeDownload
   )
-  const alias = userInfo?.address.split('@')[0] || ''
+
   const { onCopy, isCopied } = useCopyWithStatus()
   const subscribePageUrl = `${APP_URL}/${alias}`
   const hasBanner = bannerUrl !== BannerPng
@@ -255,22 +269,6 @@ export const Information: React.FC = () => {
       setPubDisable(true)
     }
   }, [requestBody, remoteSettingRef?.current])
-
-  useEffect(() => {
-    if (name) {
-      return
-    }
-    let defaultName = userInfo?.name || userInfoData?.name
-    if (defaultName) {
-      return
-    }
-    if (isPrimitiveEthAddress(alias)) {
-      defaultName = truncateAddress(alias || '', '_')
-    } else {
-      defaultName = alias.includes('.') ? alias.split('.')[0] : alias
-    }
-    setName(defaultName)
-  }, [userInfo, userInfoData, name])
 
   const onSubmit = async () => {
     try {
