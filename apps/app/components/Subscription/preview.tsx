@@ -475,6 +475,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
               {ipfsInfo ? (
                 <Box mb="24px">
                   <IpfsInfoTable
+                    title={t('ipfs')}
                     ethAddress={ipfsInfo?.owner_identifier}
                     ipfs={ipfsInfo?.url}
                     contentDigest={ipfsInfo?.content_digest}

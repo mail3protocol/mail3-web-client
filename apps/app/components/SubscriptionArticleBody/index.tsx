@@ -281,6 +281,7 @@ export const SubscriptionArticleBody: React.FC<
               />
               {ipfsInfo ? (
                 <IpfsInfoTable
+                  title={t('ipfs')}
                   ethAddress={ipfsInfo?.owner_identifier}
                   ipfs={ipfsInfo?.url}
                   contentDigest={ipfsInfo?.content_digest}

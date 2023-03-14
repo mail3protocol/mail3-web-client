@@ -796,6 +796,7 @@ export const PreviewComponent: React.FC = () => {
           ) : null}
           {isShowIpfsTable ? (
             <IpfsInfoTable
+              title={i18Preview('ipfs')}
               ethAddress={messageOnChainIdentifierData?.owner_identifier}
               ipfs={messageOnChainIdentifierData?.url}
               contentDigest={messageOnChainIdentifierData?.content_digest}
