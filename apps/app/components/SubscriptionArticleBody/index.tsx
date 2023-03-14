@@ -280,12 +280,14 @@ export const SubscriptionArticleBody: React.FC<
                 shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
               />
               {ipfsInfo ? (
-                <IpfsInfoTable
-                  title={t('ipfs')}
-                  ethAddress={ipfsInfo?.owner_identifier}
-                  ipfs={ipfsInfo?.url}
-                  contentDigest={ipfsInfo?.content_digest}
-                />
+                <Box mt="8px">
+                  <IpfsInfoTable
+                    title={t('ipfs')}
+                    ethAddress={ipfsInfo?.owner_identifier}
+                    ipfs={ipfsInfo?.url}
+                    contentDigest={ipfsInfo?.content_digest}
+                  />
+                </Box>
               ) : null}
             </Box>
           ) : null}

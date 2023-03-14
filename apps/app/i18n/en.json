@@ -346,7 +346,7 @@
             "bot": "For your safety, we blocked all links, attachments, and replies.",
             "user": "For your safety, we blocked all links, attachments, and replies."
         },
-        "ipfs": "This mail has been permanently stored by IPFS"
+        "ipfs": "This mail has been permanently stored on IPFS"
     },
     "subscribe": {
         "steps": {
@@ -405,6 +405,6 @@
         "buy-ok":"You are now a Premium Member of \n <b>{{name}}</b>",
         "sub-domain":"Enter and find the sub-domain you like",
         "free-now": "Free Now",
-        "ipfs":"This post has been permanently stored by IPFS"
+        "ipfs":"This post has been permanently stored on IPFS"
     }
 }

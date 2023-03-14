@@ -42,7 +42,7 @@ const getLowestPrice = (sAccount: string) =>
     data: {
       sAccount: string
       fLowestPrice: number
-      vSubAccountList: Array<{
+      vSubAccountPriceList: Array<{
         iPrefixLenStart: number
         iPrefixLenEnd: number
         fPrice: number
@@ -78,7 +78,7 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
     async () => {
       try {
         const { data } = await getLowestPrice(bitAccount)
-        const list = data.data.vSubAccountList
+        const list = data.data.vSubAccountPriceList
         if (!list.length) return 0
         const minPrice = list.reduce(
           (min: number, current: { fPrice: number }) =>
