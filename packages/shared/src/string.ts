@@ -199,3 +199,6 @@ export function isVerifyOverflow({
   document.body.removeChild(div)
   return isOverflow
 }
+
+export const isInvalidNickname = (nickname: string): boolean =>
+  /[,!;/><:\\]/.test(nickname)

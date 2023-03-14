@@ -41,7 +41,11 @@ import { useQuery } from 'react-query'
 import { Trans, useTranslation } from 'react-i18next'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
-import { isPrimitiveEthAddress, truncateAddress } from 'shared'
+import {
+  isInvalidNickname,
+  isPrimitiveEthAddress,
+  truncateAddress,
+} from 'shared'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { avatarsAtom, DEFAULT_AVATAR_SRC } from 'ui/src/Avatar'
@@ -274,7 +278,7 @@ export const Information: React.FC = () => {
 
   const onSubmit = async () => {
     try {
-      if (!/^.{1,16}$/u.test(name)) {
+      if (isInvalidNickname(name)) {
         toast('Invalid publication name', {
           status: 'warning',
         })
