@@ -42,8 +42,14 @@ const getLowestPrice = (sAccount: string) =>
     data: {
       sAccount: string
       fLowestPrice: number
+      vSubAccountList: Array<{
+        iPrefixLenStart: number
+        iPrefixLenEnd: number
+        fPrice: number
+        bFree: boolean
+      }>
     }
-  }>(`https://daodid.id/api//public/lowprice?sAccount=${sAccount}`)
+  }>(`https://daodid.id/api/public/priceconfig?sAccount=${sAccount}`)
 
 interface BuyPremiumProps {
   uuid: string
@@ -72,7 +78,14 @@ export const BuyPremium: React.FC<BuyPremiumProps> = ({
     async () => {
       try {
         const { data } = await getLowestPrice(bitAccount)
-        return data.data.fLowestPrice
+        const list = data.data.vSubAccountList
+        if (!list.length) return 0
+        const minPrice = list.reduce(
+          (min: number, current: { fPrice: number }) =>
+            current.fPrice < min ? current.fPrice : min,
+          list[0].fPrice
+        )
+        return minPrice
       } catch (error) {
         return 0
       }
