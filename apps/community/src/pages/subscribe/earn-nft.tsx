@@ -79,7 +79,7 @@ export const EarnNft: React.FC = () => {
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const [campaignUrl, setCampaignUrl] = useState('')
   const [rewardType, setRewardType] = useState(RewardType.AIR)
-  const [platform, setPlatform] = useState(SubscriptionPlatform.Galaxy)
+  const [platform, setPlatform] = useState(SubscriptionPlatform.Quest3)
   const [credentialId, setCredentialId] = useState('')
   const [accessToken, setAccessToken] = useState('')
   const [state, setState] = useState(SubscriptionState.Inactive)
