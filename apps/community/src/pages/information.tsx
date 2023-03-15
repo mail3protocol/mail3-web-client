@@ -51,7 +51,7 @@ import { ReactComponent as DownloadSvg } from '../assets/DownloadIcon.svg'
 import BannerPng from '../assets/banner.png'
 import { QueryKey } from '../api/QueryKey'
 import { useAPI } from '../hooks/useAPI'
-import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
+import { useSetUserInfo } from '../hooks/useUserInfo'
 import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
 import { APP_URL } from '../constants/env/url'
 import { MAIL_SERVER_URL } from '../constants/env/mailServer'
@@ -163,7 +163,6 @@ export const Information: React.FC = () => {
   const account = useAccount()
   const api = useAPI()
   const homeApi = useHomeAPI()
-  const userInfo = useUserInfo()
   const setUserInfo = useSetUserInfo()
   const toast = useToast()
 
@@ -187,7 +186,7 @@ export const Information: React.FC = () => {
   const { downloadScreenshot } = useScreenshot()
 
   const {
-    data: userInfoData,
+    data: userInfo,
     isLoading,
     refetch,
   } = useQuery(
@@ -252,7 +251,7 @@ export const Information: React.FC = () => {
     if (name) {
       return
     }
-    let defaultName = userInfo?.nickname || userInfoData?.nickname
+    let defaultName = userInfo?.nickname
     if (defaultName) {
       return
     }
@@ -262,7 +261,7 @@ export const Information: React.FC = () => {
       defaultName = alias.includes('.') ? alias.split('.')[0] : alias
     }
     setName(defaultName)
-  }, [userInfo, userInfoData, name])
+  }, [userInfo, name])
 
   const onSubmit = async () => {
     try {
