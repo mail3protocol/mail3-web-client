@@ -1,8 +1,3 @@
-export interface UserInfoResponse {
-  name: string
-  address: string
-}
-
 export interface UserSettingResponse {
   banner_url: string
   description: string
@@ -10,6 +5,7 @@ export interface UserSettingResponse {
   mmb_state: string
   avatar: string
   nickname: string
+  manager_default_alias: string
 }
 
 export interface UserSettingRequest {
@@ -18,4 +14,5 @@ export interface UserSettingRequest {
   items_link: string
   mmb_state: string
   avatar: string
+  nickname: string
 }

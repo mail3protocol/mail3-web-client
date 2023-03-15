@@ -1,15 +1,39 @@
-import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useAccount } from 'hooks'
+import { atom, useAtom } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
+import { useQuery } from 'react-query'
+import { UserSettingResponse } from '../api/modals/UserInfoResponse'
+import { QueryKey } from '../api/QueryKey'
+import { useAPI } from './useAPI'
 
-const USER_INFO_KEY = 'user_info'
+interface UserInfo extends UserSettingResponse {}
 
-export interface UserInfo {
-  name: string
-  address: string
-  next_refresh_time?: string
-}
-
-const userInfoAtom = atomWithStorage<UserInfo | null>(USER_INFO_KEY, null)
-
-export const useUserInfo = () => useAtomValue(userInfoAtom)
+const userInfoAtom = atom<UserInfo | null>(null)
 
 export const useSetUserInfo = () => useUpdateAtom(userInfoAtom)
+
+export const useUserInfo = () => {
+  const [info, setInfo] = useAtom(userInfoAtom)
+  const account = useAccount()
+  const api = useAPI()
+
+  useQuery(
+    [QueryKey.GetUserSetting, account],
+    async () => {
+      const res = await api.getUserSetting()
+      return res.data
+    },
+    {
+      enabled: !info,
+      refetchIntervalInBackground: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess(d) {
+        setInfo(d)
+      },
+    }
+  )
+
+  return info
+}

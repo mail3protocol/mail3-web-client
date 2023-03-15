@@ -795,11 +795,14 @@ export const PreviewComponent: React.FC = () => {
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
           {isShowIpfsTable ? (
-            <IpfsInfoTable
-              ethAddress={messageOnChainIdentifierData?.owner_identifier}
-              ipfs={messageOnChainIdentifierData?.url}
-              contentDigest={messageOnChainIdentifierData?.content_digest}
-            />
+            <Box mt="8px">
+              <IpfsInfoTable
+                title={i18Preview('ipfs')}
+                ethAddress={messageOnChainIdentifierData?.owner_identifier}
+                ipfs={messageOnChainIdentifierData?.url}
+                contentDigest={messageOnChainIdentifierData?.content_digest}
+              />
+            </Box>
           ) : null}
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (

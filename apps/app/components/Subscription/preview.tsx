@@ -473,8 +473,9 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
                 shadowStyle={`main { min-height: 400px; } img[style="max-width: 100%;"] { height: auto }`}
               />
               {ipfsInfo ? (
-                <Box mb="24px">
+                <Box mt="8px">
                   <IpfsInfoTable
+                    title={t('ipfs')}
                     ethAddress={ipfsInfo?.owner_identifier}
                     ipfs={ipfsInfo?.url}
                     contentDigest={ipfsInfo?.content_digest}
