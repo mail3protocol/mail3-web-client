@@ -5,7 +5,7 @@ export interface UserSettingResponse {
   mmb_state: string
   avatar: string
   nickname: string
-  address: string
+  manager_default_alias: string
 }
 
 export interface UserSettingRequest {

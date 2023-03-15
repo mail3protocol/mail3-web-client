@@ -218,7 +218,7 @@ export const Information: React.FC = () => {
   const trackClickInformationQRcodeDownload = useTrackClick(
     TrackEvent.CommunityClickInformationQRcodeDownload
   )
-  const alias = userInfo?.address.split('@')[0] || ''
+  const alias = userInfo?.manager_default_alias.split('@')[0] || ''
   const subscribePageUrl = `${APP_URL}/${alias}`
   const hasBanner = bannerUrl !== BannerPng
 
@@ -589,7 +589,7 @@ export const Information: React.FC = () => {
                           <SubscribeCard
                             isPic
                             mailAddress={
-                              userInfo?.address ||
+                              userInfo?.manager_default_alias ||
                               `${account}@${MAIL_SERVER_URL}`
                             }
                             bannerUrl={bannerUrlOnline}
@@ -710,7 +710,9 @@ export const Information: React.FC = () => {
       <TipsPanel useSharedContent />
       <SubscribeCard
         // isDev
-        mailAddress={userInfo?.address || `${account}@${MAIL_SERVER_URL}`}
+        mailAddress={
+          userInfo?.manager_default_alias || `${account}@${MAIL_SERVER_URL}`
+        }
         bannerUrl={bannerUrlOnline}
         desc={description || t('description_placeholder')}
         ref={cardRef}

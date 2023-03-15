@@ -13,7 +13,7 @@ import {
   Icon,
   Spinner,
 } from '@chakra-ui/react'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
 import { useQuery } from 'react-query'
@@ -27,7 +27,7 @@ import { useAPI } from '../hooks/useAPI'
 import { QueryKey } from '../api/QueryKey'
 import { useDownloadSubscribers } from '../hooks/useDownloadSubscribers'
 import { useToast } from '../hooks/useToast'
-import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
+import { useUserInfo } from '../hooks/useUserInfo'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { formatUserName } from '../utils/string'
 import { useOpenNewMessagePage } from '../hooks/useOpenNewMessagePage'
@@ -133,14 +133,7 @@ export const Dashboard: React.FC = () => {
     },
   ]
   const userInfo = useUserInfo()
-  const setUserInfo = useSetUserInfo()
-  useEffect(() => {
-    api.getUserSetting().then(({ data }) =>
-      setUserInfo({
-        ...data,
-      })
-    )
-  }, [])
+
   const {
     switchMirrorOnClick,
     isOpenIpfsModal,
@@ -209,12 +202,12 @@ export const Dashboard: React.FC = () => {
           <Avatar
             w="48px"
             h="48px"
-            address={userInfo?.address || ''}
+            address={userInfo?.manager_default_alias || ''}
             borderRadius="50%"
           />
           <Text mt="4px" fontWeight="bold">
             {userInfo?.nickname ||
-              formatUserName(userInfo?.address.split('@')[0])}
+              formatUserName(userInfo?.manager_default_alias.split('@')[0])}
           </Text>
         </Center>
         {baseInfos.map((info) => (

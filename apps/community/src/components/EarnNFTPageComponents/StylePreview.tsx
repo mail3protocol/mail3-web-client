@@ -34,12 +34,15 @@ export const StylePreview: React.FC<StylePreviewProps> = ({
   const userInfo = useUserInfo()
 
   const address = useMemo(() => {
-    if (userInfo?.address && verifyEmail(userInfo.address)) {
-      const [addr] = userInfo.address.split('@')
+    if (
+      userInfo?.manager_default_alias &&
+      verifyEmail(userInfo.manager_default_alias)
+    ) {
+      const [addr] = userInfo.manager_default_alias.split('@')
       return addr
     }
-    return userInfo?.address || ''
-  }, [userInfo?.address])
+    return userInfo?.manager_default_alias || ''
+  }, [userInfo?.manager_default_alias])
 
   const code = useMemo(
     () =>

@@ -136,7 +136,7 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
     listItem: ButtonProps
   }
 
-  if (!userInfo?.address) return null
+  if (!userInfo?.manager_default_alias) return null
 
   return (
     <Popover arrowShadowColor="none" arrowSize={16}>
@@ -146,14 +146,14 @@ export const ConnectedWalletButton: React.FC<ConnectedWalletButtonProps> = ({
             <Box>
               <Avatar
                 borderRadius="50%"
-                address={userInfo?.address}
+                address={userInfo?.manager_default_alias}
                 {...avatarProps}
               />
             </Box>
           </PopoverAnchor>
           <Text {...textProps}>
             {userInfo?.nickname ||
-              formatUserName(userInfo.address.split('@')[0])}
+              formatUserName(userInfo.manager_default_alias.split('@')[0])}
           </Text>
         </Button>
       </PopoverTrigger>
