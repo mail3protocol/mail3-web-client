@@ -1,14 +1,10 @@
-import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { UserSettingResponse } from '../api/modals/UserInfoResponse'
 
-const USER_INFO_KEY = 'user_info'
+interface UserInfo extends UserSettingResponse {}
 
-export interface UserInfo {
-  name: string
-  address: string
-  next_refresh_time?: string
-}
-
-const userInfoAtom = atomWithStorage<UserInfo | null>(USER_INFO_KEY, null)
+const userInfoAtom = atom<UserInfo | null>(null)
 
 export const useUserInfo = () => useAtomValue(userInfoAtom)
 

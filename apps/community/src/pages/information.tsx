@@ -20,7 +20,6 @@ import {
   Tabs,
   Text,
   Textarea,
-  Tooltip,
   useStyleConfig,
 } from '@chakra-ui/react'
 import { Avatar, SubscribeCard } from 'ui'
@@ -29,24 +28,22 @@ import {
   TrackEvent,
   TrackKey,
   useAccount,
-  useCopyWithStatus,
   useScreenshot,
   useTrackClick,
 } from 'hooks'
-import dayjs from 'dayjs'
 import axios from 'axios'
 import QrCode from 'qrcode.react'
 import styled from '@emotion/styled'
 import { useQuery } from 'react-query'
 import { Trans, useTranslation } from 'react-i18next'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { ReactComponent as CopySvg } from 'assets/svg/copy.svg'
+
 import {
   isInvalidNickname,
   isPrimitiveEthAddress,
   truncateAddress,
 } from 'shared'
-import { AddIcon, CheckIcon } from '@chakra-ui/icons'
+import { AddIcon } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { avatarsAtom, DEFAULT_AVATAR_SRC } from 'ui/src/Avatar'
 import { Container } from '../components/Container'
@@ -63,7 +60,7 @@ import { TipsPanel } from '../components/TipsPanel'
 import { FileUpload } from '../components/FileUpload'
 import { useHomeAPI } from '../hooks/useHomeAPI'
 import { useToast } from '../hooks/useToast'
-import { UserSettingResponse } from '../api/modals/UserInfoResponse'
+import { UserSettingRequest } from '../api/modals/UserInfoResponse'
 import { UploadImageType } from '../api/HomeAPI'
 
 const DESCRIPTION_MAX_LENGTH = 1000
@@ -183,27 +180,18 @@ export const Information: React.FC = () => {
   const [avatarUrl, setAvatarUrl] = useState(DEFAULT_AVATAR_SRC)
   const setAvatars = useUpdateAtom(avatarsAtom)
 
-  const remoteSettingRef = useRef<UserSettingResponse | null>(null)
+  const remoteSettingRef = useRef<UserSettingRequest | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const { downloadScreenshot } = useScreenshot()
 
-  const { data: userInfoData, refetch } = useQuery(
-    [QueryKey.GetUserInfo],
-    async () => api.getUserInfo().then((r) => r.data),
-    {
-      onSuccess(d) {
-        setUserInfo({
-          ...d,
-          next_refresh_time: dayjs().add(1, 'day').format(),
-        })
-      },
-    }
-  )
-
-  const { isLoading } = useQuery(
-    ['userSetting', account],
+  const {
+    data: userInfoData,
+    isLoading,
+    refetch,
+  } = useQuery(
+    [QueryKey.GetUserSetting, account],
     async () => {
       const res = await api.getUserSetting()
       return res.data
@@ -214,6 +202,7 @@ export const Information: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onSuccess(d) {
+        setUserInfo(d)
         remoteSettingRef.current = d
         setBannerUrl(d.banner_url || BannerPng)
         setBannerUrlOnline(d.banner_url || BannerPng)
@@ -230,11 +219,10 @@ export const Information: React.FC = () => {
     TrackEvent.CommunityClickInformationQRcodeDownload
   )
   const alias = userInfo?.address.split('@')[0] || ''
-  const { onCopy, isCopied } = useCopyWithStatus()
   const subscribePageUrl = `${APP_URL}/${alias}`
   const hasBanner = bannerUrl !== BannerPng
 
-  const requestBody = useMemo<UserSettingResponse>(
+  const requestBody = useMemo<UserSettingRequest>(
     () => ({
       banner_url: hasBanner ? bannerUrl : '',
       items_link: itemsLink,
@@ -264,7 +252,7 @@ export const Information: React.FC = () => {
     if (name) {
       return
     }
-    let defaultName = userInfo?.name || userInfoData?.name
+    let defaultName = userInfo?.nickname || userInfoData?.nickname
     if (defaultName) {
       return
     }
@@ -440,61 +428,6 @@ export const Information: React.FC = () => {
 
           <TabPanels>
             <TabPanel p="32px 0">
-              <FormControl w="400px">
-                <Title>{t('subscribe_link')}</Title>
-                <Box position="relative">
-                  <Input
-                    name="profile_page_url"
-                    isDisabled
-                    value={subscribePageUrl}
-                    paddingInlineEnd="40px"
-                  />
-                  <Tooltip
-                    label={t(isCopied ? 'copied' : 'copy', {
-                      ns: 'common',
-                    })}
-                    placement="top"
-                    hasArrow
-                  >
-                    <Button
-                      variant="unstyled"
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      h="full"
-                      position="absolute"
-                      top="0"
-                      right="0"
-                      w="40px"
-                      onClick={() => onCopy(subscribePageUrl)}
-                      style={{ cursor: isCopied ? 'default' : undefined }}
-                    >
-                      {isCopied ? (
-                        <CheckIcon w="16px" h="16px" />
-                      ) : (
-                        <Icon as={CopySvg} w="20px" h="20px" />
-                      )}
-                    </Button>
-                  </Tooltip>
-                </Box>
-              </FormControl>
-
-              <FormControl>
-                <Title>
-                  <Trans
-                    t={t}
-                    i18nKey="address_field"
-                    components={{ sup: <sup /> }}
-                  />
-                </Title>
-                <Input
-                  placeholder={t('address_placeholder')}
-                  name="mail_address"
-                  isDisabled
-                  value={userInfo?.address || userInfoData?.address}
-                />
-              </FormControl>
-
               <FormControl>
                 <Title>{t('name_field')}</Title>
                 <Input

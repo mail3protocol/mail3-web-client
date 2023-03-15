@@ -4,7 +4,6 @@ import { CheckMessageQuotaResponse, GetAliasResponse } from 'models'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
-  UserInfoResponse,
   UserSettingRequest,
   UserSettingResponse,
 } from './modals/UserInfoResponse'
@@ -69,18 +68,18 @@ export class API {
     return this.axios.get(`/community/users/${address}`)
   }
 
-  getUserInfo() {
-    return this.axios.get<UserInfoResponse>(`/community/user_info`)
-  }
-
   updateUserSetting(body: UserSettingRequest) {
     return this.axios.put<void>(`/community/user_setting`, body)
   }
 
-  getUserSetting() {
+  getUserSettingAddr() {
     return this.axios.get<UserSettingResponse>(
       `/public/community/user_setting/${this.account}`
     )
+  }
+
+  getUserSetting() {
+    return this.axios.get<UserSettingResponse>(`/community/user_setting`)
   }
 
   getMessageList(queryParams: PagingRequest) {

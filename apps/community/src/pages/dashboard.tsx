@@ -135,19 +135,12 @@ export const Dashboard: React.FC = () => {
   const userInfo = useUserInfo()
   const setUserInfo = useSetUserInfo()
   useEffect(() => {
-    if (
-      !userInfo ||
-      !userInfo.next_refresh_time ||
-      dayjs(userInfo.next_refresh_time).isBefore(dayjs())
-    ) {
-      api.getUserInfo().then(({ data }) =>
-        setUserInfo({
-          ...data,
-          next_refresh_time: dayjs().add(1, 'day').format(),
-        })
-      )
-    }
-  }, [userInfo?.next_refresh_time])
+    api.getUserSetting().then(({ data }) =>
+      setUserInfo({
+        ...data,
+      })
+    )
+  }, [])
   const {
     switchMirrorOnClick,
     isOpenIpfsModal,
@@ -220,7 +213,8 @@ export const Dashboard: React.FC = () => {
             borderRadius="50%"
           />
           <Text mt="4px" fontWeight="bold">
-            {userInfo?.name || formatUserName(userInfo?.address.split('@')[0])}
+            {userInfo?.nickname ||
+              formatUserName(userInfo?.address.split('@')[0])}
           </Text>
         </Center>
         {baseInfos.map((info) => (
