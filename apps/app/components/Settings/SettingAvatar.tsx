@@ -156,13 +156,9 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
     }
     if (userProps?.defaultAddress) {
       const address = userProps.defaultAddress.split('@')[0]
-      let defaultNickname = 'nickname'
+      let defaultNickname = address
       if (isPrimitiveEthAddress(address)) {
         defaultNickname = truncateMiddle(address, 6, 4, '_')
-      } else {
-        defaultNickname = address.includes('.')
-          ? address.split('.')[0]
-          : address
       }
       setValue('nickname', defaultNickname)
     }
