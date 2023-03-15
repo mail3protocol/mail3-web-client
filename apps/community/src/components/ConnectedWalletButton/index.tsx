@@ -25,7 +25,7 @@ import {
 } from 'hooks'
 import { Avatar, AvatarProps } from 'ui'
 import { useTranslation } from 'react-i18next'
-import { ReactComponent as CoAuthosSvg } from 'assets/svg/co-authors.svg'
+import { ReactComponent as SubSvg } from 'assets/svg/subscription.svg'
 import { ReactComponent as InformationSvg } from 'assets/svg/information.svg'
 import { ReactComponent as DisconnectSvg } from 'assets/svg/disconnect.svg'
 import { ReactComponent as ChangeWalletSvg } from 'assets/svg/change_wallet.svg'
@@ -97,7 +97,7 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
           }}
           {...props}
         >
-          <Icon w="20px" h="20px" as={CoAuthosSvg} mr="8px" />
+          <Icon w="20px" h="20px" as={SubSvg} mr="8px" />
           {t('connect_wallet_button.subscription')}
         </Button>
         <Button
