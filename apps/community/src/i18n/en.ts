@@ -211,7 +211,7 @@ export default {
     },
   },
   earn_nft: {
-    title: 'Subscribe To Earn',
+    title: 'NFT Reward',
     to_earn: 'To Earn',
     nft: 'NFT',
     air: 'No Rewards',
@@ -418,7 +418,7 @@ export default {
     new_message: 'New Post',
     send_rule:
       'Only 10 posts can be published in 24 hours, only the first 3 posts will push desktop notifications to your subscribers.',
-    switch_from_mirror: 'Switch from mirror',
+    switch_from_mirror: 'Switch from Mirror',
   },
   premium: {
     title: 'Premium',

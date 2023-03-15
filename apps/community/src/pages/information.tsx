@@ -184,7 +184,6 @@ export const Information: React.FC = () => {
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const { downloadScreenshot } = useScreenshot()
-
   const {
     data: userInfo,
     isLoading,
@@ -208,8 +207,19 @@ export const Information: React.FC = () => {
         setDescription(d.description)
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
-        setName(d.nickname)
         setAvatarUrl(d.avatar)
+
+        if (d.nickname) {
+          setName(d.nickname)
+          return
+        }
+
+        const defaultAlias = d.manager_default_alias.split('@')[0] || ''
+        let defaultName = defaultAlias
+        if (isPrimitiveEthAddress(defaultAlias)) {
+          defaultName = truncateAddress(defaultAlias || '', '_')
+        }
+        setName(defaultName)
       },
     }
   )
@@ -246,22 +256,6 @@ export const Information: React.FC = () => {
       setPubDisable(true)
     }
   }, [requestBody, remoteSettingRef?.current])
-
-  useEffect(() => {
-    if (name) {
-      return
-    }
-    let defaultName = userInfo?.nickname
-    if (defaultName) {
-      return
-    }
-    if (isPrimitiveEthAddress(alias)) {
-      defaultName = truncateAddress(alias || '', '_')
-    } else {
-      defaultName = alias.includes('.') ? alias.split('.')[0] : alias
-    }
-    setName(defaultName)
-  }, [userInfo, name])
 
   const onSubmit = async () => {
     try {

@@ -71,7 +71,7 @@ interface Quest3State {
 }
 
 export const EarnNft: React.FC = () => {
-  useDocumentTitle('Subscribe To Earn NFT')
+  useDocumentTitle('NFT Reward')
   const { t } = useTranslation(['earn_nft', 'common'])
   const api = useAPI()
   const toast = useToast()
