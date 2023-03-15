@@ -33,6 +33,7 @@ import { useOpenConnectWalletDialog } from '../../hooks/useConnectWalletDialog'
 import { RoutePath } from '../../route/path'
 import { useUserInfo } from '../../hooks/useUserInfo'
 import { formatUserName } from '../../utils/string'
+import { APP_URL } from '../../constants/env/url'
 
 export interface ConnectedWalletButtonProps extends ButtonProps {}
 
@@ -40,6 +41,7 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const context = usePopoverContext()
+  const userInfo = useUserInfo()
   const { t } = useTranslation('components')
   const logout = useLogout()
   const onOpenConnectWalletDialog = useOpenConnectWalletDialog()
@@ -47,6 +49,10 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
   const trackClickCommunityPersonalCenterItem = useTrackClick(
     TrackEvent.CommunityClickCommunityPersonalcenter
   )
+
+  const subPageUrl = `${APP_URL}/${
+    userInfo?.manager_default_alias.split('@')[0] || ''
+  }`
 
   return (
     <VStack
@@ -71,19 +77,20 @@ export const ConnectedWalletButtonMenu: React.FC<ButtonProps> = ({
         {t('connect_wallet_button.information')}
       </Button>
       <Button
-        as={Link}
-        to={RoutePath.CoAuthors}
+        as="a"
+        href={subPageUrl}
+        target="_blank"
         variant="unstyled"
         onClick={() => {
           trackClickCommunityPersonalCenterItem({
             [TrackKey.CommunityClickCommunityPersonalcenterItem]:
-              CommunityClickCommunityPersonalcenterItem.Information,
+              CommunityClickCommunityPersonalcenterItem.SubscriptionPage,
           })
         }}
         {...props}
       >
         <Icon w="20px" h="20px" as={CoAuthosSvg} mr="8px" />
-        {t('connect_wallet_button.co_authors')}
+        {t('connect_wallet_button.subscription')}
       </Button>
       <Button
         variant="unstyled"

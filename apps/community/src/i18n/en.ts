@@ -84,6 +84,7 @@ export default {
     sidebar: {
       home: 'Home',
       published: 'Published',
+      editors: 'Editors',
       nft_reward: 'NFT Reward',
       premium: 'Premium',
     },
@@ -120,7 +121,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
-      co_authors: 'Members',
+      subscription: 'Subscription page',
       information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',

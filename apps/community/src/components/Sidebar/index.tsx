@@ -1,11 +1,13 @@
 import { Flex, Icon } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+
 import { useLayoutStatus } from '../../hooks/useLayoutStatus'
 import { HEADER_HEIGHT } from '../Header'
 import { SidebarMenus, SidebarMenusProps } from '../SidebarMenus/SidebarMenus'
 import { RoutePath } from '../../route/path'
 import { ReactComponent as HomeSvg } from '../../assets/SidebarMenuIcons/home.svg'
 import { ReactComponent as MessageSvg } from '../../assets/SidebarMenuIcons/message.svg'
+import { ReactComponent as EditorSvg } from '../../assets/SidebarMenuIcons/editors.svg'
 import { ReactComponent as SubscribeSvg } from '../../assets/SidebarMenuIcons/subscribe.svg'
 import { ReactComponent as DiamondsSvg } from '../../assets/SidebarMenuIcons/diamonds.svg'
 import { useIsAdmin } from '../../hooks/useAdmin'
@@ -36,6 +38,16 @@ export const Sidebar: React.FC = () => {
       ),
       key: 'published',
       to: RoutePath.Published,
+    },
+    {
+      label: (
+        <>
+          <Icon as={EditorSvg} w="16px" h="16px" mr="4px" />
+          {t('sidebar.editors')}
+        </>
+      ),
+      key: 'editors',
+      to: RoutePath.CoAuthors,
     },
     {
       label: (
