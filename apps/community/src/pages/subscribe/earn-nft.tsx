@@ -294,12 +294,13 @@ export const EarnNft: React.FC = () => {
   }, [credentialId])
 
   useEffect(() => {
+    if (rewardType === RewardType.NFT) return
     setAccessTokenErrorMessage(() => {
       if (accessToken === '') return ''
       if (!isValidAccessToken(accessToken)) return t('illegal_error_message')
       return ''
     })
-  }, [accessToken])
+  }, [accessToken, rewardType])
 
   const isDisabledSubmit = useMemo(() => {
     if (platform === SubscriptionPlatform.Galaxy)
