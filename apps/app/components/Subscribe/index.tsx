@@ -12,6 +12,7 @@ import {
   VStack,
   HStack,
   Flex,
+  CloseButton,
 } from '@chakra-ui/react'
 import { Step, Steps, useSteps } from 'chakra-ui-steps'
 import {
@@ -45,11 +46,13 @@ import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 import { IS_MOBILE } from '../../constants/utils'
 import confettiAni from './confetti'
 import { rewardTypeAtom } from '../../csr_pages/subscribe'
+import { isSimpleSubscribeModelAtom } from '../SubscribeButtonInApp'
 
 export interface SubscribeProps {
   rewardType?: RewardType
   isDialog?: boolean
   uuid?: string
+  onCloseModal?: () => void
 }
 
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
@@ -172,19 +175,27 @@ const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
 const AlreadySubscribed: React.FC<{
   state: 'active' | 'resubscribed'
   isDialog?: boolean
-}> = ({ state, isDialog }) => {
+  onCloseModal?: () => void
+}> = ({ state, isDialog, onCloseModal }) => {
   const [t] = useTranslation('subscribe')
   const rewardType = useAtomValue(rewardTypeAtom)
   const trackContinue = useTrackContinue()
   const trackContinueAir = useTrackContinueAir()
+  const [isSimpleModel, setIsSimpleModel] = useAtom(isSimpleSubscribeModelAtom)
+
+  useEffect(() => {
+    setIsSimpleModel(true)
+  }, [])
 
   return (
-    <Center h="calc(100vh - 180px)">
+    <Center h={isSimpleModel ? 'auto' : 'calc(100vh - 180px)'}>
       <Center
+        position="relative"
         padding="32px"
         flexDirection="column"
         borderRadius="24px"
         boxShadow="0px 0px 8px rgba(78, 81, 244, 0.2)"
+        backgroundColor="white"
       >
         <Center
           mb="24px"
@@ -213,38 +224,52 @@ const AlreadySubscribed: React.FC<{
 
         <Image src={HappyPng} />
 
-        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
-          <Button
-            background="#4E51F4"
-            _hover={{
-              bg: '#4E51E0',
-            }}
-            mt="24px"
-            w={['138px', '168px', '168px']}
-            h={['40px']}
-            fontSize={['14px']}
-            onClick={() => {
-              const repeat = IS_MOBILE()
-                ? SubscribeAction.MobileRepeat
-                : SubscribeAction.Repeat
-              const already = IS_MOBILE()
-                ? SubscribeAction.Mobile
-                : SubscribeAction.Already
-              const status = state === 'resubscribed' ? repeat : already
-              if (rewardType === RewardType.AIR) {
-                trackContinueAir({
-                  [TrackKey.SubscribeBtnAirStatus]: status,
-                })
-              } else {
-                trackContinue({
-                  [TrackKey.SubscribeBtnStatus]: status,
-                })
-              }
-            }}
-          >
-            {t('visit-button')}
-          </Button>
-        </Link>
+        <Button
+          as={isDialog ? 'button' : 'a'}
+          {...{
+            to: RoutePath.Inbox,
+            target: !isDialog ? '_self' : '_blank',
+          }}
+          background="#4E51F4"
+          _hover={{
+            bg: '#4E51E0',
+          }}
+          mt="24px"
+          w={['138px', '168px', '168px']}
+          h={['40px']}
+          fontSize={['14px']}
+          onClick={() => {
+            const repeat = IS_MOBILE()
+              ? SubscribeAction.MobileRepeat
+              : SubscribeAction.Repeat
+            const already = IS_MOBILE()
+              ? SubscribeAction.Mobile
+              : SubscribeAction.Already
+            const status = state === 'resubscribed' ? repeat : already
+            if (rewardType === RewardType.AIR) {
+              trackContinueAir({
+                [TrackKey.SubscribeBtnAirStatus]: status,
+              })
+            } else {
+              trackContinue({
+                [TrackKey.SubscribeBtnStatus]: status,
+              })
+            }
+
+            if (isDialog) onCloseModal?.()
+          }}
+        >
+          {t(isDialog ? 'awesome' : 'visit-button')}
+        </Button>
+
+        <CloseButton
+          position="absolute"
+          right="10px"
+          top="10px"
+          onClick={() => {
+            if (isDialog) onCloseModal?.()
+          }}
+        />
       </Center>
     </Center>
   )
@@ -506,6 +531,10 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
     return null
   }
 
+  const isContinue =
+    (isWaitPermission && isBrowserSupport && permission === 'default') ||
+    isRequesting
+
   return (
     <Center h="calc(100vh - 180px)" textAlign="center">
       <Center
@@ -532,8 +561,7 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
           </NewHeading>
         </Center>
 
-        {(isWaitPermission && isBrowserSupport && permission === 'default') ||
-        isRequesting ? (
+        {isContinue ? (
           <>
             <Text
               fontWeight="600"
@@ -621,7 +649,11 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   )
 }
 
-export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
+export const Subscribe: React.FC<SubscribeProps> = ({
+  uuid,
+  isDialog,
+  onCloseModal,
+}) => {
   const [t] = useTranslation('subscribe')
   useAuth(true)
   const isAuth = useIsAuthenticated()
@@ -740,7 +772,11 @@ export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
     subscribeResult?.state === 'resubscribed'
   ) {
     return (
-      <AlreadySubscribed state={subscribeResult?.state} isDialog={isDialog} />
+      <AlreadySubscribed
+        state={subscribeResult?.state}
+        isDialog={isDialog}
+        onCloseModal={onCloseModal}
+      />
     )
   }
 
