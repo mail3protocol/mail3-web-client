@@ -483,7 +483,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             </Text>
           </Flex>
           <Center
-            flexDirection={{ base: 'row', md: 'column' }}
+            flexDirection={{ base: 'row', md: 'row-reverse' }}
             position="absolute"
             top={{ base: 'auto', md: '64px' }}
             right={{ base: 'auto', md: '54px' }}
@@ -496,11 +496,12 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
               uuid={uuid}
               rewardType={settings?.reward_type}
               isAuth={isAuth}
+              ml={{ base: 0, md: '6px' }}
+              fontSize="0"
             />
 
             {isPremiumMember ? (
               <Center
-                mt={{ base: 0, md: '18px' }}
                 ml={{ base: '16px', md: 0 }}
                 w={{ base: '142px', md: '158px' }}
                 h={{ base: '22px', md: '34px' }}
