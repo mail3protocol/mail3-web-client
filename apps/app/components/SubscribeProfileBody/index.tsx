@@ -524,7 +524,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
           </Center>
 
           {desc ? (
-            <Box ref={descRef} mt="16px" w={{ base: '100%', md: '560px' }}>
+            <Box ref={descRef} mt="16px" w="100%">
               <Collapse startingHeight={20} in={isOpen}>
                 <Text
                   fontWeight="400"
@@ -547,6 +547,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       }
                     }}
                     variant="link"
+                    color="#4E51F4"
                   >
                     Show {isOpen ? 'Less' : 'More'}
                   </RawButton>
