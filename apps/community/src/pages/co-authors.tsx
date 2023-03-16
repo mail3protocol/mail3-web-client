@@ -205,6 +205,7 @@ export const BindButton: React.FC<{
             ErrorCode.COMMUNITY_COLLABORATORS_ADDRESS_INVALID
         )
           toast(t('bind_bound'), {
+            duration: 5000,
             status: 'error',
             alertProps: { colorScheme: 'red' },
           })
@@ -214,6 +215,7 @@ export const BindButton: React.FC<{
           error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
         )
           toast(t('bind_not_legitimate'), {
+            duration: 5000,
             status: 'error',
             alertProps: { colorScheme: 'red' },
           })

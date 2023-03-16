@@ -508,7 +508,8 @@ export default {
     bind_title: 'Invite members',
     bind_limit: 'You can invite up to 3 members',
     bind_placeholder: 'Please enter wallet address',
-    bind_bound: 'This wallet address has been invited',
+    bind_bound:
+      'This wallet address has been registered as an editor, please choose another address',
     bind_not_legitimate: 'Please check the wallet address',
     bind_successfully: 'Invite successfully',
     help_text: `<h3>What is Members?</h3>
