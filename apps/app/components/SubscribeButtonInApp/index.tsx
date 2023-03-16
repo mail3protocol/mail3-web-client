@@ -214,7 +214,6 @@ export const SubscribeButtonInApp: React.FC<
         {isSimpleModel ? (
           <ModalContent
             maxW={{ base: '100%', md: '500px' }}
-            h="50vh"
             overflow="hidden"
             overflowY="scroll"
             backgroundColor="transparent"

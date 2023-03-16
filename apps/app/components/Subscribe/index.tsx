@@ -22,7 +22,7 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -187,6 +187,49 @@ const AlreadySubscribed: React.FC<{
     setIsSimpleModel(true)
   }, [])
 
+  const CustomButton = useCallback(
+    () => (
+      <Button
+        as={isDialog ? 'button' : 'a'}
+        {...{
+          to: RoutePath.Inbox,
+          target: !isDialog ? '_self' : '_blank',
+        }}
+        background="#4E51F4"
+        _hover={{
+          bg: '#4E51E0',
+        }}
+        mt="24px"
+        w={['138px', '168px', '168px']}
+        h={['40px']}
+        fontSize={['14px']}
+        onClick={() => {
+          const repeat = IS_MOBILE()
+            ? SubscribeAction.MobileRepeat
+            : SubscribeAction.Repeat
+          const already = IS_MOBILE()
+            ? SubscribeAction.Mobile
+            : SubscribeAction.Already
+          const status = state === 'resubscribed' ? repeat : already
+          if (rewardType === RewardType.AIR) {
+            trackContinueAir({
+              [TrackKey.SubscribeBtnAirStatus]: status,
+            })
+          } else {
+            trackContinue({
+              [TrackKey.SubscribeBtnStatus]: status,
+            })
+          }
+
+          if (isDialog) onCloseModal?.()
+        }}
+      >
+        {t(isDialog ? 'awesome' : 'visit-button')}
+      </Button>
+    ),
+    [isDialog]
+  )
+
   return (
     <Center h={isSimpleModel ? 'auto' : 'calc(100vh - 180px)'}>
       <Center
@@ -224,52 +267,24 @@ const AlreadySubscribed: React.FC<{
 
         <Image src={HappyPng} />
 
-        <Button
-          as={isDialog ? 'button' : 'a'}
-          {...{
-            to: RoutePath.Inbox,
-            target: !isDialog ? '_self' : '_blank',
-          }}
-          background="#4E51F4"
-          _hover={{
-            bg: '#4E51E0',
-          }}
-          mt="24px"
-          w={['138px', '168px', '168px']}
-          h={['40px']}
-          fontSize={['14px']}
-          onClick={() => {
-            const repeat = IS_MOBILE()
-              ? SubscribeAction.MobileRepeat
-              : SubscribeAction.Repeat
-            const already = IS_MOBILE()
-              ? SubscribeAction.Mobile
-              : SubscribeAction.Already
-            const status = state === 'resubscribed' ? repeat : already
-            if (rewardType === RewardType.AIR) {
-              trackContinueAir({
-                [TrackKey.SubscribeBtnAirStatus]: status,
-              })
-            } else {
-              trackContinue({
-                [TrackKey.SubscribeBtnStatus]: status,
-              })
-            }
+        {isDialog ? (
+          <CustomButton />
+        ) : (
+          <Link to={RoutePath.Inbox} target="_self">
+            <CustomButton />
+          </Link>
+        )}
 
-            if (isDialog) onCloseModal?.()
-          }}
-        >
-          {t(isDialog ? 'awesome' : 'visit-button')}
-        </Button>
-
-        <CloseButton
-          position="absolute"
-          right="10px"
-          top="10px"
-          onClick={() => {
-            if (isDialog) onCloseModal?.()
-          }}
-        />
+        {isSimpleModel ? (
+          <CloseButton
+            position="absolute"
+            right="10px"
+            top="10px"
+            onClick={() => {
+              if (isDialog) onCloseModal?.()
+            }}
+          />
+        ) : null}
       </Center>
     </Center>
   )
@@ -512,7 +527,10 @@ const Subscribing: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   )
 }
 
-const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
+const SubscribingAir: React.FC<{
+  isDialog?: boolean
+  onCloseModal?: () => void
+}> = ({ isDialog, onCloseModal }) => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
   const {
@@ -526,17 +544,54 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const trackOK = useTrackAirOk()
   const trackContinueAir = useTrackContinueAir()
   const [isDeclined, setIsDeclined] = useState(false)
-
-  if (isBrowserSupportChecking) {
-    return null
-  }
+  const [isSimpleModel, setIsSimpleModel] = useAtom(isSimpleSubscribeModelAtom)
 
   const isContinue =
     (isWaitPermission && isBrowserSupport && permission === 'default') ||
     isRequesting
 
+  useEffect(() => {
+    if (!isContinue && isDialog) {
+      setIsSimpleModel(true)
+    }
+  }, [isContinue, isDialog])
+
+  const CustomButton = useCallback(
+    () => (
+      <Button
+        w="168px"
+        background="#4E51F4"
+        _hover={{
+          bg: '#4E51E0',
+        }}
+        onClick={() => {
+          const status = IS_MOBILE()
+            ? SubscribeAction.Mobile
+            : SubscribeAction.Already
+
+          trackContinueAir({
+            [TrackKey.SubscribeBtnAirStatus]: isDeclined
+              ? SubscribeAction.Denial
+              : status,
+          })
+          if (isDialog) onCloseModal?.()
+        }}
+      >
+        {t(isDialog ? 'awesome' : 'visit-button')}
+      </Button>
+    ),
+    [isDialog]
+  )
+
+  if (isBrowserSupportChecking) {
+    return null
+  }
+
   return (
-    <Center h="calc(100vh - 180px)" textAlign="center">
+    <Center
+      h={isSimpleModel ? 'auto' : 'calc(100vh - 180px)'}
+      textAlign="center"
+    >
       <Center
         padding="32px"
         flexDirection="column"
@@ -544,6 +599,8 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
         border="2px solid #F2F2F2"
         boxShadow="0px 0px 8px rgba(78, 81, 244, 0.2)"
         borderRadius="24px"
+        backgroundColor="white"
+        position="relative"
       >
         <Center
           mb="24px"
@@ -616,32 +673,25 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
             <Image src={HappyPng} m="20px 0" />
 
             <Center mt="16px">
-              <Link
-                to={RoutePath.Inbox}
-                target={!isDialog ? '_self' : '_blank'}
-              >
-                <Button
-                  w="168px"
-                  background="#4E51F4"
-                  _hover={{
-                    bg: '#4E51E0',
-                  }}
-                  onClick={() => {
-                    const status = IS_MOBILE()
-                      ? SubscribeAction.Mobile
-                      : SubscribeAction.Already
-
-                    trackContinueAir({
-                      [TrackKey.SubscribeBtnAirStatus]: isDeclined
-                        ? SubscribeAction.Denial
-                        : status,
-                    })
-                  }}
-                >
-                  {t('visit-button')}
-                </Button>
-              </Link>
+              {isDialog ? (
+                <CustomButton />
+              ) : (
+                <Link to={RoutePath.Inbox} target="_self">
+                  <CustomButton />
+                </Link>
+              )}
             </Center>
+
+            {isSimpleModel ? (
+              <CloseButton
+                position="absolute"
+                right="10px"
+                top="10px"
+                onClick={() => {
+                  if (isDialog) onCloseModal?.()
+                }}
+              />
+            ) : null}
           </>
         )}
       </Center>
@@ -788,7 +838,7 @@ export const Subscribe: React.FC<SubscribeProps> = ({
   // TODO: or already subscribed
   if (subscribeResult && !error) {
     if (rewardType === RewardType.AIR)
-      return <SubscribingAir isDialog={isDialog} />
+      return <SubscribingAir isDialog={isDialog} onCloseModal={onCloseModal} />
     return <Subscribing isDialog={isDialog} />
   }
 
