@@ -184,17 +184,12 @@ const AlreadySubscribed: React.FC<{
   const [isSimpleModel, setIsSimpleModel] = useAtom(isSimpleSubscribeModelAtom)
 
   useEffect(() => {
-    setIsSimpleModel(true)
-  }, [])
+    if (isDialog) setIsSimpleModel(true)
+  }, [isDialog])
 
   const CustomButton = useCallback(
     () => (
       <Button
-        as={isDialog ? 'button' : 'a'}
-        {...{
-          to: RoutePath.Inbox,
-          target: !isDialog ? '_self' : '_blank',
-        }}
         background="#4E51F4"
         _hover={{
           bg: '#4E51E0',
