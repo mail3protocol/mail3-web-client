@@ -31,14 +31,14 @@ export const UD_CLIENT_ID =
 
 export const PREMIUM_DOCS_URL =
   import.meta.env.NEXT_PUBLIC_PREMIUM_DOCS_URL ||
-  'https://spark-rainbow-63a.notion.site/DaoDID-help-documentation-2f2def85d5ef4584b1ad40d2b4ab43b0'
+  'https://discord.com/invite/equB6RTCHR'
 
 export const DAODID_URL =
   import.meta.env.NEXT_PUBLIC_DAODID_URL || 'https://daodid.id'
 
 export const CONTACT_URL =
   import.meta.env.NEXT_PUBLIC_CONTACT_URL ||
-  'https://spark-rainbow-63a.notion.site/DaoDID-help-documentation-2f2def85d5ef4584b1ad40d2b4ab43b0'
+  'https://discord.com/invite/equB6RTCHR'
 
 export const DOT_BIT_URL =
   import.meta.env.NEXT_PUBLIC_DOT_BIT_URL || 'https://www.did.id'
