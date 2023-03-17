@@ -49,6 +49,7 @@ import { useToast } from '../hooks/useToast'
 import { CloseButton } from '../components/ConfirmDialog'
 import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
 import { ErrorCode } from '../api/ErrorCode'
+import { useHelperComponent } from '../hooks/useHelperCom'
 
 export const UnbindLink: React.FC<{
   refetch?: () => void
@@ -304,6 +305,7 @@ export const CoAuthors: React.FC = () => {
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()
   const onUpdateTipsPanel = useUpdateTipsPanel()
+  const helperCom = useHelperComponent()
   const userProps = useAtomValue(userPropertiesAtom) ?? {}
 
   const { data, isLoading, refetch } = useQuery(
@@ -319,14 +321,7 @@ export const CoAuthors: React.FC = () => {
 
   useEffect(() => {
     onUpdateTipsPanel(
-      <Trans
-        i18nKey="help_text"
-        t={t}
-        components={{
-          h3: <Heading as="h3" fontSize="16px" mt="32px" mb="12px" />,
-          p: <Text fontSize="14px" fontWeight="400" color="#737373;" />,
-        }}
-      />
+      <Trans i18nKey="help_text" t={t} components={helperCom} />
     )
   }, [])
 

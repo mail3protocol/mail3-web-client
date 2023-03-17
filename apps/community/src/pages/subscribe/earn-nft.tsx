@@ -13,13 +13,10 @@ import {
   HStack,
   Input,
   Link,
-  ListItem,
-  OrderedList,
   Radio,
   RadioGroup,
   Spinner,
   Text,
-  UnorderedList,
   VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -41,6 +38,7 @@ import { GALXE_URL, QUEST3_URL } from '../../constants/env/url'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ErrorCode } from '../../api/ErrorCode'
 import { StatusLamp } from '../../components/StatusLamp'
+import { useHelperComponent } from '../../hooks/useHelperCom'
 
 function isValidGalxeCampaignUrl(value: string) {
   return /https:\/\/galxe.com\/[a-zA-Z0-9_]+\/campaign\/[a-zA-Z0-9]+$/.test(
@@ -90,6 +88,7 @@ export const EarnNft: React.FC = () => {
   const platformStateMap = useRef(
     new Map<SubscriptionPlatform, GalaxState | Quest3State>()
   )
+  const helperCom = useHelperComponent()
   const { isLoading, refetch } = useQuery(
     [QueryKey.GetSubscription],
     async () => api.getSubscription().then((r) => r.data),
@@ -255,19 +254,7 @@ export const EarnNft: React.FC = () => {
       [SubscriptionPlatform.Quest3]: 'help_quest3',
     }[platform]
     if (!key) return
-    onUpdateTipsPanel(
-      <Trans
-        i18nKey={key}
-        t={t}
-        components={{
-          h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
-          ul: <UnorderedList />,
-          ol: <OrderedList />,
-          li: <ListItem fontSize="14px" fontWeight="400" />,
-          p: <Text fontSize="14px" fontWeight="400" />,
-        }}
-      />
-    )
+    onUpdateTipsPanel(<Trans i18nKey={key} t={t} components={helperCom} />)
   }, [platform])
 
   useEffect(() => {

@@ -62,6 +62,7 @@ import { useHomeAPI } from '../hooks/useHomeAPI'
 import { useToast } from '../hooks/useToast'
 import { UserSettingRequest } from '../api/modals/UserInfoResponse'
 import { UploadImageType } from '../api/HomeAPI'
+import { useHelperComponent } from '../hooks/useHelperCom'
 
 const DESCRIPTION_MAX_LENGTH = 1000
 
@@ -182,6 +183,7 @@ export const Information: React.FC = () => {
   const remoteSettingRef = useRef<UserSettingRequest | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
+  const helperCom = useHelperComponent()
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const { downloadScreenshot } = useScreenshot()
   const {
@@ -376,14 +378,7 @@ export const Information: React.FC = () => {
 
   useEffect(() => {
     onUpdateTipsPanel(
-      <Trans
-        i18nKey="help_qr_code"
-        t={t}
-        components={{
-          h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
-          p: <Text fontSize="14px" fontWeight="400" color="#737373;" />,
-        }}
-      />
+      <Trans i18nKey="help_qr_code" t={t} components={helperCom} />
     )
   }, [])
 

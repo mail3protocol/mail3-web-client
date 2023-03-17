@@ -255,7 +255,7 @@ export default {
     help_galxe: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>Subscribe to earn</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -298,7 +298,7 @@ export default {
     help_quest3: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>Subscribe to earn</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
