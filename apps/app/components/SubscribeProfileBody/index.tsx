@@ -147,7 +147,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   const toast = useToast()
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const { downloadScreenshot } = useScreenshot()
+  const { downloadScreenshot } = useScreenshot(true)
 
   const [isDid, setIsDid] = useState(false)
   const popoverRef = useRef<HTMLElement>(null)
@@ -196,9 +196,9 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
         if (!cardRef?.current) return
         try {
           downloadScreenshot(cardRef.current, 'share.png', {
-            width: 335,
-            height: 535,
-            scale: 2,
+            width: 1005,
+            height: cardRef.current.offsetHeight,
+            scale: 1,
           })
         } catch (error) {
           toast('Download screenshot Error!')

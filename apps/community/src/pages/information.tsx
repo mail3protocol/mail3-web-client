@@ -183,7 +183,7 @@ export const Information: React.FC = () => {
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const onUpdateTipsPanel = useUpdateTipsPanel()
-  const { downloadScreenshot } = useScreenshot()
+  const { downloadScreenshot } = useScreenshot(true)
   const {
     data: userInfo,
     isLoading,
@@ -574,9 +574,9 @@ export const Information: React.FC = () => {
                     flexDirection="column"
                   >
                     <Flex justify="center" mb="16px" h="180px">
-                      <Box w="112px" h="180px">
+                      <Box w="130px" h="180px">
                         <Box
-                          transform={`scale(${112 / 335})`}
+                          transform={`scale(${130 / 1005})`}
                           transformOrigin="0 0"
                         >
                           <SubscribeCard
@@ -601,9 +601,9 @@ export const Information: React.FC = () => {
                           cardRef.current,
                           `profile_card_${account}.png`,
                           {
-                            width: 335,
-                            height: 535,
-                            scale: Math.max(2, window.devicePixelRatio),
+                            width: 1005,
+                            height: cardRef.current.offsetHeight,
+                            scale: 1,
                           }
                         )
                         trackClickInformationQRcodeDownload({
