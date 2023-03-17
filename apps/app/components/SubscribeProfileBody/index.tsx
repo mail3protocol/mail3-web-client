@@ -147,7 +147,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   const toast = useToast()
   const api = useAPI()
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const { downloadScreenshot } = useScreenshot(true)
+  const { downloadScreenshot } = useScreenshot()
 
   const [isDid, setIsDid] = useState(false)
   const popoverRef = useRef<HTMLElement>(null)

@@ -183,7 +183,7 @@ export const Information: React.FC = () => {
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
   const onUpdateTipsPanel = useUpdateTipsPanel()
-  const { downloadScreenshot } = useScreenshot(true)
+  const { downloadScreenshot } = useScreenshot()
   const {
     data: userInfo,
     isLoading,

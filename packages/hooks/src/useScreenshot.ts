@@ -1,7 +1,7 @@
 import html2canvas, { Options } from 'html2canvas'
 import { useState } from 'react'
 
-export const useScreenshot = (useFixHack = false) => {
+export const useScreenshot = (useFixHack = true) => {
   const [image, setImage] = useState('')
 
   const takeScreenshot = async (
