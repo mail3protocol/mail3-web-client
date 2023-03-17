@@ -491,33 +491,33 @@ export default {
   },
   co_authors: {
     confirm: 'Confirm',
-    title: 'Members',
+    title: 'Editors',
     tabs: {
-      management: 'Members Management',
+      management: 'Editors Management',
     },
     management_text:
-      'Inviting authorized members, they can: connect to this backend, set up Subscription and publish posts.',
+      'Inviting authorized editors, they can: connect to this backend, set up Subscription and publish posts.',
     wallet_address: 'Wallet Address',
     state: 'State',
     operate: 'Operate',
-    empty: 'No members have been invited yet',
+    empty: 'No editor have been invited yet',
     cancel: 'Cancel',
     bind: 'Invite',
     unbind: 'Remove',
     bound: 'Bound',
-    bind_title: 'Invite members',
-    bind_limit: 'You can invite up to 3 members',
+    bind_title: 'Invite editors',
+    bind_limit: 'You can invite up to 3 editors',
     bind_placeholder: 'Please enter wallet address',
     bind_bound:
       'This wallet address has been registered as an editor, please choose another address',
     bind_not_legitimate: 'Please check the wallet address',
     bind_successfully: 'Invite successfully',
-    help_text: `<h3>What is Members?</h3>
-    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as members, and the members can directly connect to the Subscription Backend and publish posts.</p>
+    help_text: `<h3>What is Editors?</h3>
+    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as editors, and the editors can directly connect to the Subscription Backend and publish posts.</p>
     `,
     unbind_limit:
-      'You have already invited 3 members, if you want to continue to add, please remove the old member first.',
-    unbind_input_title: 'Remove this member',
+      'You have already invited 3 editors, if you want to continue to add, please remove the old editor first.',
+    unbind_input_title: 'Remove this editor',
     unbind_input_text:
       'You are about to remove the above wallet address, after removing this address will not be able to connect to this backend for any operation.',
     unbind_successfully: 'Remove successfully',
