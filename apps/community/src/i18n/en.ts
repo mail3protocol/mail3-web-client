@@ -185,7 +185,7 @@ export default {
     general: 'General',
     did_not_enable_premium: "You don't have Premium enabled",
     what_is_the_premium: `<h4>What is Premium？</h4>
-        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [Premium] or visit <a>Mail3 Discord server</a>, turn to premium-support channel for more help if you have any questions.</p>`,
+        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [Premium] or visit <a>Mail3 Discord server</a>, turn to <i>premium-support</i> channel for more help if you have any questions.</p>`,
   },
   dashboard: {
     message: 'Posts',
@@ -443,7 +443,7 @@ export default {
         </ul>
     `,
     contact_us:
-      'If you have any questions, please read the help file on the right or visit <contact> Mail3 Discord server </contact>, turn to premium-support channel for more help',
+      'If you have any questions, please read the help file on the right or visit <contact> Mail3 Discord server </contact>, turn to <i>premium-support</i> channel for more help',
     domain_field: 'Your <bit>.bit</bit> domain',
     confirm: 'Confirm',
     status: 'Status',
