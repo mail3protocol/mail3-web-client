@@ -369,7 +369,7 @@ export default {
       button: 'Upload',
       remove: 'Remove',
       prompt:
-        'For the best results on all devices, <br> use an image that’s at least <span>2440 x 400 px</span> and <span>5MB</span> or less.',
+        'Image format only: BMP, JPEG, JPG, GIF, PNG <br> Should not exceed <span>5MB</span>',
       appear:
         'This image will appear across the top of your subscription page. ',
     },

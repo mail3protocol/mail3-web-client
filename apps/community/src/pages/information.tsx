@@ -90,7 +90,7 @@ const Title = styled(Box)`
   padding: 16px 0 8px;
 `
 
-const verifyImageSize = (imgFile: File, width: number, height: number) =>
+export const verifyImageSize = (imgFile: File, width: number, height: number) =>
   new Promise((resolve) => {
     const img: HTMLImageElement = document.createElement('img')
     img.onload = () => {
@@ -338,10 +338,6 @@ export const Information: React.FC = () => {
       setIsUploading(true)
       try {
         const file = files[0]
-        const isErrorSize = await verifyImageSize(file, 2440, 400)
-        if (!isErrorSize) {
-          throw new Error('pixels')
-        }
         const fsMb = file.size / (1024 * 1024)
         if (fsMb > MAX_FILE_SIZE) {
           throw new Error('exceed')
