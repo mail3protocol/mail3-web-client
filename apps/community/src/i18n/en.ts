@@ -84,6 +84,7 @@ export default {
     sidebar: {
       home: 'Home',
       published: 'Published',
+      editors: 'Editors',
       nft_reward: 'NFT Reward',
       premium: 'Premium',
     },
@@ -120,7 +121,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
-      co_authors: 'Members',
+      subscription: 'Subscription page',
       information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
@@ -184,7 +185,7 @@ export default {
     general: 'General',
     did_not_enable_premium: "You don't have Premium enabled",
     what_is_the_premium: `<h4>What is Premium？</h4>
-        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
+        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [Premium] or visit <a>Mail3 Discord server</a>, turn to <i>premium-support</i> channel for more help if you have any questions.</p>`,
   },
   dashboard: {
     message: 'Posts',
@@ -254,7 +255,7 @@ export default {
     help_galxe: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>Subscribe to earn</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -297,7 +298,7 @@ export default {
     help_quest3: `<h3>What is Subscribe To Earn?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>Subscribe to earn</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -442,7 +443,7 @@ export default {
         </ul>
     `,
     contact_us:
-      'If you have any questions, please read the help file on the right or <contact> view this more detailed document </contact>',
+      'If you have any questions, please read the help file on the right or visit <contact> Mail3 Discord server </contact>, turn to <i>premium-support</i> channel for more help',
     domain_field: 'Your <bit>.bit</bit> domain',
     confirm: 'Confirm',
     status: 'Status',
@@ -490,32 +491,33 @@ export default {
   },
   co_authors: {
     confirm: 'Confirm',
-    title: 'Members',
+    title: 'Editors',
     tabs: {
-      management: 'Members Management',
+      management: 'Editors Management',
     },
     management_text:
-      'Inviting authorized members, they can: connect to this backend, set up Subscription and publish posts.',
+      'Inviting authorized editors, they can: connect to this backend, set up Subscription and publish posts.',
     wallet_address: 'Wallet Address',
     state: 'State',
     operate: 'Operate',
-    empty: 'No members have been invited yet',
+    empty: 'No editor have been invited yet',
     cancel: 'Cancel',
     bind: 'Invite',
     unbind: 'Remove',
     bound: 'Bound',
-    bind_title: 'Invite members',
-    bind_limit: 'You can invite up to 3 members',
+    bind_title: 'Invite editors',
+    bind_limit: 'You can invite up to 3 editors',
     bind_placeholder: 'Please enter wallet address',
-    bind_bound: 'This wallet address has been invited',
+    bind_bound:
+      'This wallet address has been registered as an editor, please choose another address',
     bind_not_legitimate: 'Please check the wallet address',
     bind_successfully: 'Invite successfully',
-    help_text: `<h3>What is Members?</h3>
-    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as members, and the members can directly connect to the Subscription Backend and publish posts.</p>
+    help_text: `<h3>What is Editors?</h3>
+    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as editors, and the editors can directly connect to the Subscription Backend and publish posts.</p>
     `,
     unbind_limit:
-      'You have already invited 3 members, if you want to continue to add, please remove the old member first.',
-    unbind_input_title: 'Remove this member',
+      'You have already invited 3 editors, if you want to continue to add, please remove the old editor first.',
+    unbind_input_title: 'Remove this editor',
     unbind_input_text:
       'You are about to remove the above wallet address, after removing this address will not be able to connect to this backend for any operation.',
     unbind_successfully: 'Remove successfully',

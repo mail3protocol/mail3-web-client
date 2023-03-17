@@ -80,6 +80,8 @@ export const SendRecords: React.FC = () => {
     isCheckAdminStatusLoading,
   } = useSwitchMirror()
 
+  const isEmpty = !listQuery.data?.pages[0].messages
+
   return (
     <Container
       as={Grid}
@@ -170,7 +172,8 @@ export const SendRecords: React.FC = () => {
           {listQuery.isFetchingNextPage ? loadingEl : null}
           {!listQuery.isLoading &&
           !listQuery.isFetchingNextPage &&
-          !listQuery.hasNextPage ? (
+          !listQuery.hasNextPage &&
+          !isEmpty ? (
             <Flex
               align="center"
               color="secondaryTitleColor"
@@ -179,6 +182,17 @@ export const SendRecords: React.FC = () => {
               fontSize="16px"
             >
               {t('all_loaded', { ns: 'common' })}
+            </Flex>
+          ) : null}
+          {!listQuery.isFetchingNextPage && !listQuery.isLoading && isEmpty ? (
+            <Flex
+              align="center"
+              color="secondaryTitleColor"
+              h="48px"
+              fontWeight="500"
+              fontSize="16px"
+            >
+              {t('no_data', { ns: 'common' })}
             </Flex>
           ) : null}
         </VStack>

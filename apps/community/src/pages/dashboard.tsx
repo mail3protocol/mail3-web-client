@@ -33,6 +33,7 @@ import { formatUserName } from '../utils/string'
 import { useOpenNewMessagePage } from '../hooks/useOpenNewMessagePage'
 import { ReactComponent as OutlineAddIconSvg } from '../assets/OutlineAddIcon.svg'
 import { useSwitchMirror } from '../hooks/useSwitchMirror'
+import { APP_URL } from '../constants/env/url'
 
 interface BaseInfo {
   key: string
@@ -198,13 +199,24 @@ export const Dashboard: React.FC = () => {
         gridTemplateRows="1fr"
         h="full"
       >
-        <Center flexDirection="column">
+        <Center
+          flexDirection="column"
+          as="a"
+          href={`${APP_URL}/${
+            userInfo?.manager_default_alias.split('@')[0] || ''
+          }`}
+          target="_blank"
+          _hover={{
+            textDecoration: 'underline',
+          }}
+        >
           <Avatar
             w="48px"
             h="48px"
             address={userInfo?.manager_default_alias || ''}
             borderRadius="50%"
           />
+
           <Text mt="4px" fontWeight="bold">
             {userInfo?.nickname ||
               formatUserName(userInfo?.manager_default_alias.split('@')[0])}

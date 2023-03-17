@@ -1,14 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import { envStorage, isPrimitiveEthAddress } from 'shared'
+import { isPrimitiveEthAddress } from 'shared'
 
+import { defaultAvatar } from 'ui'
 import { SERVER_URL, HOME_URL } from '../../../constants/env'
 // Solve problems left over by history
 const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
-
-const currentDefaultAvatar = envStorage.getCurrentAvatar()
 
 const getMail3Avatar = (ethAddress: string) =>
   axios.get<{ avatar: string }>(`${SERVER_URL}/avatar/${ethAddress}`)
@@ -48,7 +47,7 @@ function handleSendFile(
 }
 
 async function address(req: NextApiRequest, res: NextApiResponse) {
-  const defaultAvatarUrl = `${HOME_URL}/avatar/${currentDefaultAvatar}.png`
+  const defaultAvatarUrl = `${HOME_URL}/avatar/${defaultAvatar}.png`
 
   const userAddress = (req.query.address ?? '') as string
   if (isPrimitiveEthAddress(userAddress)) {

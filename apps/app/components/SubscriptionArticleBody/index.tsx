@@ -225,7 +225,7 @@ export const SubscriptionArticleBody: React.FC<
                 mt="4px"
                 lineHeight="18px"
               >
-                {SubFormatDate(detail.created_at, 'YYYY / MMM D / h:mm a')}
+                {SubFormatDate(detail.created_at, 'MMM D / h:mm A / YYYY')}
               </Box>
               <Spacer />
               <ShareButtonGroup

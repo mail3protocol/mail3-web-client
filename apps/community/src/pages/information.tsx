@@ -62,6 +62,7 @@ import { useHomeAPI } from '../hooks/useHomeAPI'
 import { useToast } from '../hooks/useToast'
 import { UserSettingRequest } from '../api/modals/UserInfoResponse'
 import { UploadImageType } from '../api/HomeAPI'
+import { useHelperComponent } from '../hooks/useHelperCom'
 
 const DESCRIPTION_MAX_LENGTH = 1000
 
@@ -182,6 +183,7 @@ export const Information: React.FC = () => {
   const remoteSettingRef = useRef<UserSettingRequest | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const qrcodeRef = useRef<HTMLDivElement>(null)
+  const helperCom = useHelperComponent()
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const { downloadScreenshot } = useScreenshot()
   const {
@@ -269,10 +271,11 @@ export const Information: React.FC = () => {
       await api.updateUserSetting(requestBody)
       remoteSettingRef.current = requestBody
       setBannerUrlOnline(bannerUrl)
-      setAvatars((prev) => ({
-        ...prev,
-        [alias]: avatarUrl,
-      }))
+      setAvatars((prev) => {
+        const newPrev = { ...prev }
+        delete newPrev[alias]
+        return newPrev
+      })
       refetch()
       toast('Publish Successfully', {
         status: 'success',
@@ -375,14 +378,7 @@ export const Information: React.FC = () => {
 
   useEffect(() => {
     onUpdateTipsPanel(
-      <Trans
-        i18nKey="help_qr_code"
-        t={t}
-        components={{
-          h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
-          p: <Text fontSize="14px" fontWeight="400" color="#737373;" />,
-        }}
-      />
+      <Trans i18nKey="help_qr_code" t={t} components={helperCom} />
     )
   }, [])
 
@@ -574,9 +570,9 @@ export const Information: React.FC = () => {
                     flexDirection="column"
                   >
                     <Flex justify="center" mb="16px" h="180px">
-                      <Box w="112px" h="180px">
+                      <Box w="130px" h="180px">
                         <Box
-                          transform={`scale(${112 / 335})`}
+                          transform={`scale(${130 / 1005})`}
                           transformOrigin="0 0"
                         >
                           <SubscribeCard
@@ -601,9 +597,9 @@ export const Information: React.FC = () => {
                           cardRef.current,
                           `profile_card_${account}.png`,
                           {
-                            width: 335,
-                            height: 535,
-                            scale: Math.max(2, window.devicePixelRatio),
+                            width: 1005,
+                            height: cardRef.current.offsetHeight,
+                            scale: 1,
                           }
                         )
                         trackClickInformationQRcodeDownload({

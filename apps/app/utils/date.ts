@@ -1,7 +1,9 @@
 import dayjs from 'dayjs'
 import isToday from 'dayjs/plugin/isToday'
 import isYesterday from 'dayjs/plugin/isYesterday'
+import utc from 'dayjs/plugin/utc'
 
+dayjs.extend(utc)
 dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 
@@ -24,5 +26,5 @@ export const formatDateString = (date: string | number | Date) => {
 
 export const SubFormatDate = (
   date: string | number | Date,
-  formatString: string = 'MMM D  h:mm a'
-) => dayjs(Number(date) * 1000).format(formatString)
+  formatString: string = 'MMM D  h:mm A'
+) => dayjs.unix(Number(date)).local().format(formatString)

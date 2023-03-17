@@ -1,4 +1,4 @@
-import { DefaultAvatarType, envStorage } from 'shared'
+import { envStorage } from 'shared'
 
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'
 export const TWITTER_URL =
@@ -71,9 +71,4 @@ export const SUBSCRIBE_BUTTON_BACKEND_URL =
   'https://subscribe.mail3.me'
 
 export const HOME_URL = process.env.NEXT_PUBLIC_HOME_URL || 'https://mail3.me'
-
-export const AVATAR_TYPE =
-  process.env.NEXT_PUBLIC_AVATAR_TYPE || DefaultAvatarType.Normal
-
-envStorage.setCurrentAvatar(AVATAR_TYPE as DefaultAvatarType)
 envStorage.setServerUrl(SERVER_URL)

@@ -49,6 +49,7 @@ import { useToast } from '../hooks/useToast'
 import { CloseButton } from '../components/ConfirmDialog'
 import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
 import { ErrorCode } from '../api/ErrorCode'
+import { useHelperComponent } from '../hooks/useHelperCom'
 
 export const UnbindLink: React.FC<{
   refetch?: () => void
@@ -205,6 +206,7 @@ export const BindButton: React.FC<{
             ErrorCode.COMMUNITY_COLLABORATORS_ADDRESS_INVALID
         )
           toast(t('bind_bound'), {
+            duration: 5000,
             status: 'error',
             alertProps: { colorScheme: 'red' },
           })
@@ -214,6 +216,7 @@ export const BindButton: React.FC<{
           error?.response?.data.reason === ErrorCode.ADDRESS_INVALID
         )
           toast(t('bind_not_legitimate'), {
+            duration: 5000,
             status: 'error',
             alertProps: { colorScheme: 'red' },
           })
@@ -297,11 +300,12 @@ export const BindButton: React.FC<{
 }
 
 export const CoAuthors: React.FC = () => {
-  useDocumentTitle('Members')
+  useDocumentTitle('Editors')
   const { t } = useTranslation(['co_authors', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()
   const onUpdateTipsPanel = useUpdateTipsPanel()
+  const helperCom = useHelperComponent()
   const userProps = useAtomValue(userPropertiesAtom) ?? {}
 
   const { data, isLoading, refetch } = useQuery(
@@ -317,14 +321,7 @@ export const CoAuthors: React.FC = () => {
 
   useEffect(() => {
     onUpdateTipsPanel(
-      <Trans
-        i18nKey="help_text"
-        t={t}
-        components={{
-          h3: <Heading as="h3" fontSize="16px" mt="32px" mb="12px" />,
-          p: <Text fontSize="14px" fontWeight="400" color="#737373;" />,
-        }}
-      />
+      <Trans i18nKey="help_text" t={t} components={helperCom} />
     )
   }, [])
 

@@ -13,14 +13,12 @@ import {
   getMail3Avatar,
   getPrimitiveAddress,
   isPrimitiveEthAddress,
-  DefaultAvatarType,
-  envStorage,
   getSupportedAddress,
 } from 'shared'
 import { useEffect } from 'react'
-import PngAvatarChristmas from 'assets/png/default_avatar_christmas.png'
-import PngAvatar from 'assets/png/default_avatar.png'
+import PngAvatar from 'assets/png/default-avatar.png'
 import { RawAvatar } from './rawAvatar'
+import { unifyImage } from '../utils'
 
 export interface AvatarProps extends RawAvatarProps {
   address: string
@@ -41,15 +39,7 @@ const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
 export const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
-const getImageSrc = (img: string | { src: string }) =>
-  typeof img === 'string' ? img : img.src
-
-const defaultAvatarMap = {
-  [DefaultAvatarType.Normal]: getImageSrc(PngAvatar),
-  [DefaultAvatarType.Christmas]: getImageSrc(PngAvatarChristmas),
-}
-
-export const defaultAvatar = defaultAvatarMap[envStorage.getCurrentAvatar()]
+export const defaultAvatar = unifyImage(PngAvatar)
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
