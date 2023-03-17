@@ -269,10 +269,11 @@ export const Information: React.FC = () => {
       await api.updateUserSetting(requestBody)
       remoteSettingRef.current = requestBody
       setBannerUrlOnline(bannerUrl)
-      setAvatars((prev) => ({
-        ...prev,
-        [alias]: avatarUrl,
-      }))
+      setAvatars((prev) => {
+        const newPrev = { ...prev }
+        delete newPrev[alias]
+        return newPrev
+      })
       refetch()
       toast('Publish Successfully', {
         status: 'success',

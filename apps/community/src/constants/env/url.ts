@@ -1,4 +1,4 @@
-import { DefaultAvatarType, envStorage } from 'shared'
+import { envStorage } from 'shared'
 
 export const DISCORD_URL =
   import.meta.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/equB6RTCHR'
@@ -55,8 +55,3 @@ export const APPLY_FOR_REGISTER_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSe3w4gEloIgbxR5VxVUZ121lZERg-IqvyY0SUutIlA6f7oOmA/viewform'
 
 envStorage.setServerUrl(SERVER_URL)
-
-export const AVATAR_TYPE =
-  import.meta.env.NEXT_PUBLIC_AVATAR_TYPE || DefaultAvatarType.Normal
-
-envStorage.setCurrentAvatar(AVATAR_TYPE as DefaultAvatarType)
