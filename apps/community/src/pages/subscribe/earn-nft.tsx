@@ -52,7 +52,7 @@ function isValidGalxeCampaignUrl(value: string) {
 }
 
 function isValidQuest3CampaignUrl(value: string) {
-  return /https:\/\/app.quest(3\.xyz|n\.com)\/quest\/[a-zA-Z0-9]+$/.test(value)
+  return /https:\/\/app.questn\.com\/quest\/[a-zA-Z0-9]+$/.test(value)
 }
 
 function isValidAccessToken(value: string) {
