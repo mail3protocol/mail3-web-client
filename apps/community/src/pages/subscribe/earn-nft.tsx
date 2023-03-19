@@ -52,7 +52,7 @@ function isValidGalxeCampaignUrl(value: string) {
 }
 
 function isValidQuest3CampaignUrl(value: string) {
-  return /https:\/\/app.quest3.xyz\/quest\/[a-zA-Z0-9]+$/.test(value)
+  return /https:\/\/app.questn\.com\/quest\/[a-zA-Z0-9]+$/.test(value)
 }
 
 function isValidAccessToken(value: string) {
@@ -278,7 +278,7 @@ export const EarnNft: React.FC = () => {
 
   useEffect(() => {
     setCampaignUrlErrorMessage(() => {
-      if (campaignUrl === '') return ''
+      if (campaignUrl === '' || state === SubscriptionState.Active) return ''
       if (
         (platform === SubscriptionPlatform.Quest3 &&
           !isValidQuest3CampaignUrl(campaignUrl)) ||
