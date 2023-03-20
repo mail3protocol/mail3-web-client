@@ -259,7 +259,7 @@ export const EarnNft: React.FC = () => {
 
   useEffect(() => {
     setCampaignUrlErrorMessage(() => {
-      if (campaignUrl === '' || state === SubscriptionState.Active) return ''
+      if (campaignUrl === '' || rewardType === RewardType.NFT) return ''
       if (
         (platform === SubscriptionPlatform.Quest3 &&
           !isValidQuest3CampaignUrl(campaignUrl)) ||
