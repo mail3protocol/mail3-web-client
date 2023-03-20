@@ -71,13 +71,14 @@ export function useRemember() {
         throwGetNonceError: true,
       })
       if (
-        [ErrorCode.USER_NOT_FOUND, ErrorCode.ADDRESS_NOT_FOUND].includes(
+        [ErrorCode.USER_NOT_FOUND].includes(
           (error as any)?.response?.data?.reason
         )
       ) {
         throw error
       }
       switch (code) {
+        case SignupResponseCode.NotRegistered:
         case SignupResponseCode.Registered: {
           const signedData = await onSign(nonce!)
           if (signedData) {
@@ -128,7 +129,6 @@ export function useRemember() {
         [
           ErrorCode.USER_NOT_FOUND,
           ErrorCode.COMMUNITY_ADDRESS_NOT_IN_WHITELIST,
-          ErrorCode.ADDRESS_NOT_FOUND,
         ].includes(err?.response?.data?.reason)
       ) {
         onOpenRegisterDialog({ reason: err?.response?.data?.reason })

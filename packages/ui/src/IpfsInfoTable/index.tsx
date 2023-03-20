@@ -20,7 +20,8 @@ export const IpfsInfoTable: React.FC<{
   ipfs?: string
   ethAddress?: string
   contentDigest?: string
-}> = ({ ipfs, ethAddress, contentDigest }) => {
+  title?: string
+}> = ({ ipfs, ethAddress, contentDigest, title }) => {
   const [t] = useTranslation('ipfs')
   function pendingBackupText(str?: string) {
     return !str ? t('pending') : str
@@ -66,8 +67,12 @@ export const IpfsInfoTable: React.FC<{
           background-color: rgb(245, 245, 255);
           border-right: 1px solid #e7e7e7;
         }
-        div:nth-last-child(1),
-        div:nth-last-child(2) {
+        div:nth-last-child(1) {
+          border-right: none;
+          background-color: rgb(250, 250, 255);
+        }
+        div:nth-last-child(2),
+        div:nth-last-child(3) {
           border-bottom: none;
         }
         a {
@@ -123,6 +128,11 @@ export const IpfsInfoTable: React.FC<{
       </Box>
       <Box>{t('content_digest')}</Box>
       <Box>{pendingBackupText(contentDigest)}</Box>
+      {title ? (
+        <Box w="100%" gridColumn="1 / 3" gridRow="1 / 2">
+          {title}
+        </Box>
+      ) : null}
     </Grid>
   )
 }

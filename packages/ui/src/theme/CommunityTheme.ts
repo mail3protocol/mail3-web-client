@@ -7,7 +7,7 @@ import {
 import { theme as DefaultTheme } from './index'
 
 const font =
-  "'Montserrat', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
+  '-apple-system, system-ui, SF Pro, PingFang SC, Helvetica, Roboto, Open Sans, Arial, sans-serif'
 
 const $popperArrowBgVar = cssVar('popper-arrow-bg')
 

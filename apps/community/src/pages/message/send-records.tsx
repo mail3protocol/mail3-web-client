@@ -8,12 +8,14 @@ import {
   VStack,
   Spinner,
   Icon,
+  Tooltip,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useInfiniteQuery } from 'react-query'
 import { Fragment } from 'react'
 import dayjs from 'dayjs'
 import { IpfsModal } from 'ui'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Container } from '../../components/Container'
 import {
   NewMessageLinkButton,
@@ -78,6 +80,8 @@ export const SendRecords: React.FC = () => {
     isCheckAdminStatusLoading,
   } = useSwitchMirror()
 
+  const isEmpty = !listQuery.data?.pages[0].messages
+
   return (
     <Container
       as={Grid}
@@ -102,6 +106,22 @@ export const SendRecords: React.FC = () => {
         <Flex direction="column" p="16px" {...cardStyleProps}>
           <Heading as="h3" fontSize="16px">
             {t('new_message')}
+            <Tooltip
+              label={t('send_rule')}
+              hasArrow
+              placement="bottom"
+              maxW="390px"
+              w="390px"
+              fontSize="12px"
+            >
+              <InfoOutlineIcon
+                color="primaryTextColor"
+                w="14px"
+                h="14px"
+                mb="2px"
+                ml="5px"
+              />
+            </Tooltip>
           </Heading>
           <NewMessageLinkButton isLoading={listQuery.isLoading} />
         </Flex>
@@ -152,7 +172,8 @@ export const SendRecords: React.FC = () => {
           {listQuery.isFetchingNextPage ? loadingEl : null}
           {!listQuery.isLoading &&
           !listQuery.isFetchingNextPage &&
-          !listQuery.hasNextPage ? (
+          !listQuery.hasNextPage &&
+          !isEmpty ? (
             <Flex
               align="center"
               color="secondaryTitleColor"
@@ -161,6 +182,17 @@ export const SendRecords: React.FC = () => {
               fontSize="16px"
             >
               {t('all_loaded', { ns: 'common' })}
+            </Flex>
+          ) : null}
+          {!listQuery.isFetchingNextPage && !listQuery.isLoading && isEmpty ? (
+            <Flex
+              align="center"
+              color="secondaryTitleColor"
+              h="48px"
+              fontWeight="500"
+              fontSize="16px"
+            >
+              {t('no_data', { ns: 'common' })}
             </Flex>
           ) : null}
         </VStack>

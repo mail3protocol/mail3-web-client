@@ -5,10 +5,10 @@ import QrCode from 'qrcode.react'
 import { Avatar } from 'ui'
 import classNames from 'classnames'
 
-import _PngBg from './assets/bg.png'
+import _PngLogo from './assets/logo.png'
 import { unifyImage } from '../utils'
 
-const PngBg = unifyImage(_PngBg)
+const PngLogo = unifyImage(_PngLogo)
 
 interface SubscribeProps {
   mailAddress: string
@@ -22,11 +22,15 @@ interface SubscribeProps {
 }
 
 const Container = styled(Box)`
-  height: 535px;
-  width: 335px;
+  height: auto;
+  width: 1005px;
   top: -9999px;
   left: -9999px;
   position: absolute;
+  padding: 171px 80px 80px;
+  background-color: #fff;
+  color: #000;
+  overflow: hidden;
 
   &.is-picture {
     top: 0;
@@ -41,12 +45,6 @@ const Container = styled(Box)`
     right: 100px;
     z-index: 9999;
     position: fixed;
-  }
-
-  .qrCode {
-    right: 25px;
-    bottom: 17px;
-    position: absolute;
   }
 `
 
@@ -63,69 +61,69 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
       qrUrl,
     },
     ref
-  ) => {
-    const address = mailAddress.substring(0, mailAddress.indexOf('@'))
-
-    return (
-      <Container
-        ref={ref}
-        className={classNames({
-          'is-picture': isPic,
-          'is-dev': isDev,
-        })}
-        color="#fff"
-        p="74px 24px"
-        overflow="hidden"
-        rounded="24px"
-      >
+  ) => (
+    <Container
+      ref={ref}
+      className={classNames({
+        'is-picture': isPic,
+        'is-dev': isDev,
+      })}
+    >
+      <Center w="100%" h="360px" position="absolute" top="0" left="0">
         <Image
-          w="100%"
-          h="100%"
-          src={PngBg}
-          position="absolute"
-          zIndex="-1"
-          top="0"
-          left="0"
+          src={bannerUrl}
+          w="auto"
+          h="360px"
+          crossOrigin="anonymous"
+          maxW="none"
         />
-        <Center w="100%" h="100px" position="absolute" top="0" left="0">
-          <Image
-            src={bannerUrl}
-            w="auto"
-            h="100px"
-            crossOrigin="anonymous"
-            maxW="none"
-          />
-        </Center>
-        <Avatar
-          address={address}
-          w="60px"
-          h="60px"
-          borderRadius="50%"
-          onChangeAvatarCallback={onChangeAvatarCallback}
-          position="relative"
-          zIndex="2"
-        />
-        <Text fontWeight="700" fontSize="20px" lineHeight="28px" mb="4px">
-          {nickname}
-        </Text>
+      </Center>
+      <Avatar
+        address={mailAddress}
+        w="272px"
+        h="272px"
+        borderRadius="50%"
+        onChangeAvatarCallback={onChangeAvatarCallback}
+        position="relative"
+        zIndex="2"
+      />
+      <Text fontWeight="700" fontSize="100px" lineHeight="120px" mt="16px">
+        {nickname}
+      </Text>
 
-        <Text fontWeight="300" fontSize="12px" lineHeight="20px">
-          {mailAddress}
-        </Text>
+      <Text
+        fontWeight="400"
+        fontSize="40px"
+        lineHeight="60px"
+        color="#999"
+        mt="16px"
+      >
+        {mailAddress}
+      </Text>
 
-        <Box fontWeight="600" fontSize="14px" lineHeight="20px" mt="16px">
+      {desc ? (
+        <Text
+          className="shifted-text"
+          minH="350px"
+          mt="40px"
+          fontWeight="400"
+          fontSize="40px"
+          lineHeight="56px"
+          whiteSpace="pre-line"
+          letterSpacing="0.3px"
+          h={isPic ? '350px' : 'auto'}
+          overflow="hidden"
+        >
           {desc}
-        </Box>
+        </Text>
+      ) : null}
 
-        <Box className="qrCode">
-          <QrCode
-            value={qrUrl}
-            size={66}
-            bgColor="transparent"
-            fgColor="#ffffff"
-          />
+      <Center justifyContent="space-between" mt="40px">
+        <Image src={PngLogo} w="406px" h="210px" />
+        <Box w="210px" h="210px">
+          <QrCode value={qrUrl} size={210} />
         </Box>
-      </Container>
-    )
-  }
+      </Center>
+    </Container>
+  )
 )

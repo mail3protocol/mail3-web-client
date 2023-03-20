@@ -84,7 +84,7 @@ export const SetupSharePage = () => {
   const trackCopy = useTrackClick(TrackEvent.ClickGuideCopy)
   const trackTwitter = useTrackClick(TrackEvent.ClickGuideTwitter)
   const trackDownload = useTrackClick(TrackEvent.ClickGuideDownloadCard)
-  const { downloadScreenshot } = useScreenshot()
+  const { downloadScreenshot } = useScreenshot(false)
   const account = useAccount()
 
   const userProps = useAtomValue(userPropertiesAtom)

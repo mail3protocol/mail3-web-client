@@ -15,3 +15,7 @@ a {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
+
+.family-to-read {
+  font-family: -apple-system, system-ui, SF Pro, PingFang SC, Helvetica, Roboto, Open Sans, Arial, sans-serif;
+}

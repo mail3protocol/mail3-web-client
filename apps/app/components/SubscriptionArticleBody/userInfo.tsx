@@ -99,6 +99,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           color="rgba(0, 0, 0, 0.7)"
           mt="32px"
           w="100%"
+          whiteSpace="pre-line"
         >
           {desc}
         </Text>

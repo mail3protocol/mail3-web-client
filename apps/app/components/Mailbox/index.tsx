@@ -16,7 +16,7 @@ import {
   MailboxMessageItemResponse,
   MailboxMessageDetailResponse,
 } from '../../api'
-import { formatDateString, removeMailSuffix } from '../../utils'
+import { formatDateString } from '../../utils'
 import { Mailboxes } from '../../api/mailboxes'
 
 export enum AvatarBadgeType {
@@ -164,7 +164,7 @@ const Item: React.FC<BoxItemProps> = ({
     <Flex w="48px" position="relative">
       <Avatar
         cursor="pointer"
-        address={removeMailSuffix(from.address)}
+        address={from.address}
         w="48px"
         h="48px"
         showBorder
@@ -189,7 +189,7 @@ const Item: React.FC<BoxItemProps> = ({
         <Box transform={receiverList.length > 1 ? 'translateX(-20%)' : ''}>
           <Avatar
             cursor="pointer"
-            address={removeMailSuffix(receiverList[0].address)}
+            address={receiverList[0].address}
             w="48px"
             h="48px"
             showBorder
@@ -207,7 +207,7 @@ const Item: React.FC<BoxItemProps> = ({
           <Box transform="translateX(-80%)">
             <Avatar
               cursor="pointer"
-              address={removeMailSuffix(receiverList[1].address)}
+              address={receiverList[1].address}
               w="48px"
               h="48px"
               showBorder

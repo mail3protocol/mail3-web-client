@@ -10,18 +10,15 @@ import {
 import { atom, useAtom } from 'jotai'
 import { useQuery } from 'react-query'
 import {
-  isEthAddress,
-  isSupportedAddress,
   getMail3Avatar,
   getPrimitiveAddress,
   isPrimitiveEthAddress,
-  DefaultAvatarType,
-  envStorage,
+  getSupportedAddress,
 } from 'shared'
 import { useEffect } from 'react'
-import PngAvatarChristmas from 'assets/png/default_avatar_christmas.png'
-import PngAvatar from 'assets/png/default_avatar.png'
+import PngAvatar from 'assets/png/default-avatar.png'
 import { RawAvatar } from './rawAvatar'
+import { unifyImage } from '../utils'
 
 export interface AvatarProps extends RawAvatarProps {
   address: string
@@ -42,15 +39,7 @@ const EMPTY_PLACE_HOLDER_SRC = 'empty_place_holder_image'
 export const DEFAULT_AVATAR_SRC =
   'https://mail-public.s3.amazonaws.com/users/default_avatar.png'
 
-const getImageSrc = (img: string | { src: string }) =>
-  typeof img === 'string' ? img : img.src
-
-const defaultAvatarMap = {
-  [DefaultAvatarType.Normal]: getImageSrc(PngAvatar),
-  [DefaultAvatarType.Christmas]: getImageSrc(PngAvatarChristmas),
-}
-
-export const defaultAvatar = defaultAvatarMap[envStorage.getCurrentAvatar()]
+export const defaultAvatar = unifyImage(PngAvatar)
 
 export const Avatar: React.FC<AvatarProps> = ({
   address,
@@ -62,22 +51,24 @@ export const Avatar: React.FC<AvatarProps> = ({
   onChangeAvatarCallback,
   ...props
 }) => {
+  const addr = getSupportedAddress(address)
   const [avatars, setAvatars] = useAtom(avatarsAtom)
-  const avatar = avatars?.[address]
+  const avatar = avatars?.[addr]
   const width = props?.w
   const { isLoading } = useQuery(
-    ['avatar', address],
+    ['avatar', addr],
     async () => {
-      if (isPrimitiveEthAddress(address)) {
-        const { data } = await getMail3Avatar(address)
+      if (isPrimitiveEthAddress(addr)) {
+        const { data } = await getMail3Avatar(addr)
         return data
       }
-      const { data: info } = await getPrimitiveAddress(address)
+      const { data: info } = await getPrimitiveAddress(addr)
       const { data } = await getMail3Avatar(info.eth_address)
       return data
     },
     {
-      enabled: avatar == null && isEthAddress(address) && !src,
+      retry: 0,
+      enabled: avatar == null && !!addr && !src,
       refetchIntervalInBackground: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
@@ -85,7 +76,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       onSuccess(d) {
         setAvatars((prev) => ({
           ...prev,
-          [address]:
+          [addr]:
             d.avatar && d.avatar !== DEFAULT_AVATAR_SRC
               ? d.avatar
               : EMPTY_PLACE_HOLDER_SRC,
@@ -94,7 +85,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       onError() {
         setAvatars((prev) => ({
           ...prev,
-          [address]: EMPTY_PLACE_HOLDER_SRC,
+          [addr]: EMPTY_PLACE_HOLDER_SRC,
         }))
       },
     }
@@ -104,7 +95,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     if (src) {
       setAvatars((prev) => ({
         ...prev,
-        [address]: src === DEFAULT_AVATAR_SRC ? defaultAvatar : src,
+        [addr]: src === DEFAULT_AVATAR_SRC ? defaultAvatar : src,
       }))
     }
   }, [src])
@@ -114,7 +105,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   }, [avatar])
 
   if (avatar === EMPTY_PLACE_HOLDER_SRC) {
-    return isSupportedAddress(address) ? (
+    return addr ? (
       <WrapItem
         w={width}
         h={width}
@@ -147,7 +138,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     )
   }
 
-  return isLoading || !address ? (
+  return isLoading ? (
     <SkeletonCircle
       borderRadius={isSquare ? '4px' : '50%'}
       w={props.w}

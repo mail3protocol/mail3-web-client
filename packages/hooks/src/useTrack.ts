@@ -251,6 +251,7 @@ export enum CommunityQRcodeStyle {
 
 export enum CommunityClickCommunityPersonalcenterItem {
   Information = 'Information',
+  SubscriptionPage = 'SubscriptionPage',
   ChangeWallet = 'ChangeWallet',
   Disconnect = 'Disconnect',
 }

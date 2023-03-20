@@ -38,11 +38,8 @@ export enum DefaultAvatarType {
 class EnvironmentVariableStorage {
   private serverUrl: string
 
-  private currentAvatar: DefaultAvatarType
-
   constructor() {
     this.serverUrl = 'https://api.mail3.me/api/v1'
-    this.currentAvatar = DefaultAvatarType.Christmas
   }
 
   public setServerUrl(url: string) {
@@ -51,14 +48,6 @@ class EnvironmentVariableStorage {
 
   public getServerUrl() {
     return this.serverUrl
-  }
-
-  public setCurrentAvatar(type: DefaultAvatarType) {
-    this.currentAvatar = type
-  }
-
-  public getCurrentAvatar() {
-    return this.currentAvatar
   }
 }
 

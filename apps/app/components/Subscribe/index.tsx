@@ -12,6 +12,7 @@ import {
   VStack,
   HStack,
   Flex,
+  CloseButton,
 } from '@chakra-ui/react'
 import { Step, Steps, useSteps } from 'chakra-ui-steps'
 import {
@@ -21,7 +22,7 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -45,11 +46,13 @@ import { ConnectWalletApiContextProvider } from '../ConnectWallet'
 import { IS_MOBILE } from '../../constants/utils'
 import confettiAni from './confetti'
 import { rewardTypeAtom } from '../../csr_pages/subscribe'
+import { isSimpleSubscribeModelAtom } from '../SubscribeButtonInApp'
 
 export interface SubscribeProps {
   rewardType?: RewardType
   isDialog?: boolean
   uuid?: string
+  onCloseModal?: () => void
 }
 
 const useTrackContinue = () => useTrackClick(TrackEvent.ClickSubscribeVisit)
@@ -172,19 +175,65 @@ const StepsWrap: React.FC<{ initialStep: number }> = ({ initialStep }) => {
 const AlreadySubscribed: React.FC<{
   state: 'active' | 'resubscribed'
   isDialog?: boolean
-}> = ({ state, isDialog }) => {
+  onCloseModal?: () => void
+}> = ({ state, isDialog, onCloseModal }) => {
   const [t] = useTranslation('subscribe')
   const rewardType = useAtomValue(rewardTypeAtom)
   const trackContinue = useTrackContinue()
   const trackContinueAir = useTrackContinueAir()
+  const [isSimpleModel, setIsSimpleModel] = useAtom(isSimpleSubscribeModelAtom)
+
+  useEffect(() => {
+    if (isDialog) setIsSimpleModel(true)
+  }, [isDialog])
+
+  const CustomButton = useCallback(
+    () => (
+      <Button
+        background="#4E51F4"
+        _hover={{
+          bg: '#4E51E0',
+        }}
+        mt="24px"
+        w={['138px', '168px', '168px']}
+        h={['40px']}
+        fontSize={['14px']}
+        onClick={() => {
+          const repeat = IS_MOBILE()
+            ? SubscribeAction.MobileRepeat
+            : SubscribeAction.Repeat
+          const already = IS_MOBILE()
+            ? SubscribeAction.Mobile
+            : SubscribeAction.Already
+          const status = state === 'resubscribed' ? repeat : already
+          if (rewardType === RewardType.AIR) {
+            trackContinueAir({
+              [TrackKey.SubscribeBtnAirStatus]: status,
+            })
+          } else {
+            trackContinue({
+              [TrackKey.SubscribeBtnStatus]: status,
+            })
+          }
+
+          if (isDialog) onCloseModal?.()
+        }}
+      >
+        {t(isDialog ? 'awesome' : 'visit-button')}
+      </Button>
+    ),
+    [isDialog]
+  )
 
   return (
-    <Center h="calc(100vh - 180px)">
+    <Center h={isSimpleModel ? 'auto' : 'calc(100vh - 180px)'}>
       <Center
+        position="relative"
         padding="32px"
         flexDirection="column"
         borderRadius="24px"
         boxShadow="0px 0px 8px rgba(78, 81, 244, 0.2)"
+        backgroundColor="white"
       >
         <Center
           mb="24px"
@@ -213,38 +262,24 @@ const AlreadySubscribed: React.FC<{
 
         <Image src={HappyPng} />
 
-        <Link to={RoutePath.Inbox} target={!isDialog ? '_self' : '_blank'}>
-          <Button
-            background="#4E51F4"
-            _hover={{
-              bg: '#4E51E0',
-            }}
-            mt="24px"
-            w={['138px', '168px', '168px']}
-            h={['40px']}
-            fontSize={['14px']}
+        {isDialog ? (
+          <CustomButton />
+        ) : (
+          <Link to={RoutePath.Inbox} target="_self">
+            <CustomButton />
+          </Link>
+        )}
+
+        {isSimpleModel ? (
+          <CloseButton
+            position="absolute"
+            right="10px"
+            top="10px"
             onClick={() => {
-              const repeat = IS_MOBILE()
-                ? SubscribeAction.MobileRepeat
-                : SubscribeAction.Repeat
-              const already = IS_MOBILE()
-                ? SubscribeAction.Mobile
-                : SubscribeAction.Already
-              const status = state === 'resubscribed' ? repeat : already
-              if (rewardType === RewardType.AIR) {
-                trackContinueAir({
-                  [TrackKey.SubscribeBtnAirStatus]: status,
-                })
-              } else {
-                trackContinue({
-                  [TrackKey.SubscribeBtnStatus]: status,
-                })
-              }
+              if (isDialog) onCloseModal?.()
             }}
-          >
-            {t('visit-button')}
-          </Button>
-        </Link>
+          />
+        ) : null}
       </Center>
     </Center>
   )
@@ -487,7 +522,10 @@ const Subscribing: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   )
 }
 
-const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
+const SubscribingAir: React.FC<{
+  isDialog?: boolean
+  onCloseModal?: () => void
+}> = ({ isDialog, onCloseModal }) => {
   const [t] = useTranslation('subscribe')
   const [isWaitPermission, setIsWaitPermission] = useAtom(atomWaitPermission)
   const {
@@ -501,13 +539,54 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   const trackOK = useTrackAirOk()
   const trackContinueAir = useTrackContinueAir()
   const [isDeclined, setIsDeclined] = useState(false)
+  const [isSimpleModel, setIsSimpleModel] = useAtom(isSimpleSubscribeModelAtom)
+
+  const isContinue =
+    (isWaitPermission && isBrowserSupport && permission === 'default') ||
+    isRequesting
+
+  useEffect(() => {
+    if (!isContinue && isDialog) {
+      setIsSimpleModel(true)
+    }
+  }, [isContinue, isDialog])
+
+  const CustomButton = useCallback(
+    () => (
+      <Button
+        w="168px"
+        background="#4E51F4"
+        _hover={{
+          bg: '#4E51E0',
+        }}
+        onClick={() => {
+          const status = IS_MOBILE()
+            ? SubscribeAction.Mobile
+            : SubscribeAction.Already
+
+          trackContinueAir({
+            [TrackKey.SubscribeBtnAirStatus]: isDeclined
+              ? SubscribeAction.Denial
+              : status,
+          })
+          if (isDialog) onCloseModal?.()
+        }}
+      >
+        {t(isDialog ? 'awesome' : 'visit-button')}
+      </Button>
+    ),
+    [isDialog]
+  )
 
   if (isBrowserSupportChecking) {
     return null
   }
 
   return (
-    <Center h="calc(100vh - 180px)" textAlign="center">
+    <Center
+      h={isSimpleModel ? 'auto' : 'calc(100vh - 180px)'}
+      textAlign="center"
+    >
       <Center
         padding="32px"
         flexDirection="column"
@@ -515,6 +594,8 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
         border="2px solid #F2F2F2"
         boxShadow="0px 0px 8px rgba(78, 81, 244, 0.2)"
         borderRadius="24px"
+        backgroundColor="white"
+        position="relative"
       >
         <Center
           mb="24px"
@@ -532,8 +613,7 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
           </NewHeading>
         </Center>
 
-        {(isWaitPermission && isBrowserSupport && permission === 'default') ||
-        isRequesting ? (
+        {isContinue ? (
           <>
             <Text
               fontWeight="600"
@@ -588,32 +668,25 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
             <Image src={HappyPng} m="20px 0" />
 
             <Center mt="16px">
-              <Link
-                to={RoutePath.Inbox}
-                target={!isDialog ? '_self' : '_blank'}
-              >
-                <Button
-                  w="168px"
-                  background="#4E51F4"
-                  _hover={{
-                    bg: '#4E51E0',
-                  }}
-                  onClick={() => {
-                    const status = IS_MOBILE()
-                      ? SubscribeAction.Mobile
-                      : SubscribeAction.Already
-
-                    trackContinueAir({
-                      [TrackKey.SubscribeBtnAirStatus]: isDeclined
-                        ? SubscribeAction.Denial
-                        : status,
-                    })
-                  }}
-                >
-                  {t('visit-button')}
-                </Button>
-              </Link>
+              {isDialog ? (
+                <CustomButton />
+              ) : (
+                <Link to={RoutePath.Inbox} target="_self">
+                  <CustomButton />
+                </Link>
+              )}
             </Center>
+
+            {isSimpleModel ? (
+              <CloseButton
+                position="absolute"
+                right="10px"
+                top="10px"
+                onClick={() => {
+                  if (isDialog) onCloseModal?.()
+                }}
+              />
+            ) : null}
           </>
         )}
       </Center>
@@ -621,7 +694,11 @@ const SubscribingAir: React.FC<{ isDialog?: boolean }> = ({ isDialog }) => {
   )
 }
 
-export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
+export const Subscribe: React.FC<SubscribeProps> = ({
+  uuid,
+  isDialog,
+  onCloseModal,
+}) => {
   const [t] = useTranslation('subscribe')
   useAuth(true)
   const isAuth = useIsAuthenticated()
@@ -740,7 +817,11 @@ export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
     subscribeResult?.state === 'resubscribed'
   ) {
     return (
-      <AlreadySubscribed state={subscribeResult?.state} isDialog={isDialog} />
+      <AlreadySubscribed
+        state={subscribeResult?.state}
+        isDialog={isDialog}
+        onCloseModal={onCloseModal}
+      />
     )
   }
 
@@ -752,7 +833,7 @@ export const Subscribe: React.FC<SubscribeProps> = ({ uuid, isDialog }) => {
   // TODO: or already subscribed
   if (subscribeResult && !error) {
     if (rewardType === RewardType.AIR)
-      return <SubscribingAir isDialog={isDialog} />
+      return <SubscribingAir isDialog={isDialog} onCloseModal={onCloseModal} />
     return <Subscribing isDialog={isDialog} />
   }
 

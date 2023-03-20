@@ -33,7 +33,7 @@ export const routes: ExpandedRouterProps[] = [
     element: <NewMessage />,
   },
   {
-    path: RoutePath.SendRecords,
+    path: RoutePath.Published,
     key: 'send-records',
     element: <SendRecords />,
   },

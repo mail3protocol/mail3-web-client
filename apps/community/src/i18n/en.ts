@@ -64,8 +64,9 @@ export default {
     unknown_error: 'Unknown error',
     copy_succeed: 'Copy Succeed!',
     copy_successfully: 'Copy successfully',
-    copy_message_link: 'Copy message link',
-    send_time_limit: 'You can send 1 message a day. Please try it later.',
+    copy_message_link: 'Copy post link',
+    send_time_limit:
+      'Only 10 posts can be made in 24 hours, please come back and try again later.',
     upload_failed: 'Upload failed, reason: {{message}}',
     upload_succeed: 'Upload Succeed!',
     copied: 'Copied',
@@ -81,11 +82,10 @@ export default {
       logo_name: 'Subscription',
     },
     sidebar: {
-      message: 'Message',
-      subscribe: 'Subscribe',
       home: 'Home',
-      send_records: 'History',
-      earn_nft: 'Earn NFT',
+      published: 'Published',
+      editors: 'Editors',
+      nft_reward: 'NFT Reward',
       premium: 'Premium',
     },
     tips_panel: {
@@ -121,7 +121,7 @@ export default {
       remember: 'Check',
     },
     connect_wallet_button: {
-      co_authors: 'Members',
+      subscription: 'Subscription page',
       information: 'Account',
       change_wallet: 'Change Wallet',
       disconnect: 'Disconnect',
@@ -152,7 +152,7 @@ export default {
     subject_limit: '{{count}} / {{limit}}',
     editor_placeholder: 'Start writing here...',
     preview: 'Preview',
-    send: 'Send',
+    send: 'Publish',
     sending: 'Sending...',
     edit: 'Edit',
     send_succeed: 'Message Sent',
@@ -185,23 +185,24 @@ export default {
     general: 'General',
     did_not_enable_premium: "You don't have Premium enabled",
     what_is_the_premium: `<h4>What is Premium？</h4>
-        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [subscribe]-[Premium] or <a>view this more detailed document</a> if you have any questions.</p>`,
+        <p>You can get yourself creative revenue by enabling the Premium. You can find more details through [Premium] or visit <a>Mail3 Discord server</a>, turn to <i>premium-support</i> channel for more help if you have any questions.</p>`,
   },
   dashboard: {
-    message: 'Message',
+    message: 'Posts',
     subscribers: 'Subscribers',
     new_subscribers: 'New Subscribers',
     statistics_time: 'Statistics time: Yesterday 00:00 - 24:00',
-    send_message: 'Send Message',
-    send_records: 'History',
-    send_records_tooltip: 'Show 10 sent messages recently',
-    view_all_send_records: 'All history',
+    send_message: 'New Post',
+    send_records: 'Published',
+    send_records_tooltip: 'Show 10 recent posts',
+    view_all_send_records: 'All published posts',
     download_failed: 'Download failed, reason: {{message}}',
     download_no_data: 'No data, unable to download.',
     switch_from_mirror: 'Switch from Mirror',
     mirror: {
-      sub_title: 'Please confirm that you want to import posts from mirror.xyz.',
-      desc: 'After importing, the posts will appear in the history and on your subscription page, and your subscribers will not receive push notifications.',
+      sub_title:
+        'Please confirm that you want to import posts from mirror.xyz.',
+      desc: 'After importing, the posts will appear in the published and on your subscription page, and your subscribers will not receive push notifications.',
       import: 'Import',
       importing: 'Importing...',
       toast: 'Please refresh the page later to check.',
@@ -211,7 +212,7 @@ export default {
     },
   },
   earn_nft: {
-    title: 'Subscribe To Earn',
+    title: 'NFT Reward',
     to_earn: 'To Earn',
     nft: 'NFT',
     air: 'No Rewards',
@@ -251,22 +252,18 @@ export default {
     illegal_error_message:
       'The value you filled in is not legal, please check and modify.',
     // language=html
-    help_galxe: `<h3>What is Subscribe To Earn?</h3>
+    help_galxe: `<h3>What is NFT Reward?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>NFT Reward</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
                <ol>
                  <li>Create a Campaign/Quest on the supported platform;</li>
                  <li>Follow the guide to complete the configuration below;</li>
-                 <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
-             </li>
-             <li>
-              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
              </li>
            </ul>
            <h3>How to get the Credential ID?</h3>
@@ -298,22 +295,18 @@ export default {
            </ul>
     `,
     // language=html
-    help_quest3: `<h3>What is Subscribe To Earn?</h3>
+    help_quest3: `<h3>What is NFT Reward?</h3>
            <ul>
              <li>
-               Subscribe to earn can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>NFT Reward</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
                <ol>
                  <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
                  <li>Follow the guide to complete the configuration below;</li>
-                 <li>Get the code to integrate into your website or product.</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
-             </li>
-             <li>
-              If you don not need to offer any subscription rewards, select subscribe to earn [No Rewards], click [Enable], skip steps 1 and 2, and get the code directly to integrate into your website or product.
              </li>
            </ul>
     `,
@@ -326,7 +319,7 @@ export default {
     disable_confirm: {
       title: 'Please confirm this operation!',
       description:
-        'Please make sure you have adjusted the "Subscribe To Earn" dialog on your website or product integration before deactivating "Subscribe To Earn" to avoid situations where users cannot receive rewards after subscription.',
+        'Please make sure you have adjusted the "NFT Reward" dialog on your website or product integration before deactivating "NFT Reward" to avoid situations where users cannot receive rewards after subscription.',
       confirm: 'Confirm',
     },
     status_field: 'Status: ',
@@ -350,8 +343,8 @@ export default {
     follow_twitter: 'Follow Twitter',
   },
   user_information: {
-    name_field: 'Name',
-    name_placeholder: 'Mail3.eth',
+    name_field: 'Publication name',
+    name_placeholder: 'Publication name',
     address_field: 'Mail<sup>3</sup> Address',
     address_placeholder: 'robert@mail.com',
     profile_page_field: 'Profile Page',
@@ -376,7 +369,7 @@ export default {
       button: 'Upload',
       remove: 'Remove',
       prompt:
-        'For the best results on all devices, <br> use an image that’s at least <span>2440 x 400 px</span> and <span>5MB</span> or less.',
+        'Image format only: BMP, JPEG, JPG, GIF, PNG <br> Should not exceed <span>5MB</span>',
       appear:
         'This image will appear across the top of your subscription page. ',
     },
@@ -384,17 +377,21 @@ export default {
     appear:
       'This will appear on the <span>Items</span> section of your Subscription Page.',
     appear_text: `
-    Please go to <a>Cluscer3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
+    Please go to <a>Cluster3</a> search your project name, enter your project profile page,<br> <b>copy the Url (Like: https://rank.cluster3.net/community/1373)</b> of the page and fill it in here, we will automatically show you the poap you have released, please make sure the url is yours.`,
     display_Mail_Me_Button: 'Display Mail Me Button on the Subscription Page',
-    publish: 'Publish',
+    save: 'Save',
     description: 'Description',
-    description_placeholder: 'Description',
+    description_placeholder:
+      'Hey, welcome to my Web3 Subscription and check out my creative content.',
     // language=html
     help_qr_code: `<h3>Profile QR Code</h3>
-        <p>Download profilepage card or QR code for promotion and sharing.</p>
+        <p>Download profile page card or QR code for promotion and sharing.</p>
  `,
     pixels: 'Images must be at least <span>2440X400</span> pixels',
     exceed: 'Images should not exceed <span>5M</span>',
+    avatar_format:
+      'Image format only: BMP, JPEG, JPG, GIF, PNG, Should not exceed 2MB.',
+    avatar_exceed: 'Images should not exceed <span>2M</span>',
   },
   ipfs: {
     ipfs_link: 'IPFS LINK',
@@ -418,9 +415,11 @@ export default {
       'Need to open wallet. If already connected, please try again. ',
   },
   send_message: {
-    title: 'History',
-    new_message: 'New Message',
-    switch_from_mirror: 'Switch from mirror',
+    title: 'Published',
+    new_message: 'New Post',
+    send_rule:
+      'Only 10 posts can be published in 24 hours, only the first 3 posts will push desktop notifications to your subscribers.',
+    switch_from_mirror: 'Switch from Mirror',
   },
   premium: {
     title: 'Premium',
@@ -433,24 +432,24 @@ export default {
         </ul>
         <h3>How does <strong>Premium</strong> work?</h3>
         <ul>
-          <li>To open your sub-domain sale business in <superdid>SuperDID</superdid>, you must first hold your own <bit>.bit</bit> domain name.</li>
+          <li>To open your sub-domain sale business in <daodid>DAODID</daodid>, you must first hold your own <bit>.bit</bit> domain name.</li>
           <li>Normally, the content you publish is public and free. However, with Premium enabled, you can choose to publish premium content according to your needs.</li>
           <li>Your visitors can become Premium members by purchasing and holding your sub-domain. Premium members have the right to access all of your Premium content.</li>
         </ul>
         <h3>How can I receive my <strong>earnings</strong>?</h3>
         <ul>
             <li>Mail3 or Subscribe (Mail3) will not participate in the share of proceeds.</li>
-            <li>Premium's sub-domain sales business is supported by <superdid>SuperDID</superdid>. Information regarding your sales revenue, how to withdraw it, and specific rules can be found on the <superdid>SuperDID</superdid> website.</li>
+            <li>Premium's sub-domain sales business is supported by <daodid>DAODID</daodid>. Information regarding your sales revenue, how to withdraw it, and specific rules can be found on the <daodid>DAODID</daodid> website.</li>
         </ul>
     `,
     contact_us:
-      'If you have any questions, please read the help file on the right or <contact> view this more detailed document </contact>',
+      'If you have any questions, please read the help file on the right or visit <contact> Mail3 Discord server </contact>, turn to <i>premium-support</i> channel for more help',
     domain_field: 'Your <bit>.bit</bit> domain',
     confirm: 'Confirm',
     status: 'Status',
     set_up_sales_strategy: 'Set up your sub-domain sales strategy',
     set_up_sales_strategy_tips:
-      'This service is provided by SuperDID.\nYou need to navigate to SuperDID in order to adjust the settings.',
+      'This service is provided by DaoDID.\nYou need to navigate to DaoDID in order to adjust the settings.',
     waiting_enable_subdomain:
       'Please Verify that the domain name is open for sub-domain services',
     verifying_enable_subdomain:
@@ -459,16 +458,18 @@ export default {
       'This domain name does not have sub-domain service. Please either change the domain name or confirm that sub-domain service is not needed.',
     enabled_subdomain:
       'This domain name is now available for sub-domain services.',
-    waiting_enable_subdomain_price: 'Please verify that the prices for sub-domains have been set.',
+    waiting_enable_subdomain_price:
+      'Please verify that the prices for sub-domains have been set.',
     verifying_enable_subdomain_price:
       'Verifying that sub-domain prices are set…',
     failed_enable_subdomain_price:
       'The sub-domain price has not been set yet. Please click the button below to go to Settings and try again. <retry> Click here </retry> to retry.',
-    enabled_subdomain_price: 'Sub-domain price setting has already been completed.',
+    enabled_subdomain_price:
+      'Sub-domain price setting has already been completed.',
     enable: 'Enable',
     disable: 'Disable',
     is_not_dot_bit_address: 'This is not a .bit domain',
-    is_not_owner: "Sorry, you are not the owner of this domain",
+    is_not_owner: 'Sorry, you are not the owner of this domain',
     enable_confirm_dialog: {
       title:
         'Please carefully review the following \ninformation before enabling.',
@@ -490,32 +491,33 @@ export default {
   },
   co_authors: {
     confirm: 'Confirm',
-    title: 'Members',
+    title: 'Editors',
     tabs: {
-      management: 'Members Management',
+      management: 'Editors Management',
     },
     management_text:
-      'Inviting authorized members, they can: connect to this backend, set up Subscription and publish posts.',
+      'Inviting authorized editors, they can: connect to this backend, set up Subscription and publish posts.',
     wallet_address: 'Wallet Address',
     state: 'State',
     operate: 'Operate',
-    empty: 'No members have been invited yet',
+    empty: 'No editor have been invited yet',
     cancel: 'Cancel',
     bind: 'Invite',
     unbind: 'Remove',
     bound: 'Bound',
-    bind_title: 'Invite members',
-    bind_limit: 'You can invite up to 3 members',
+    bind_title: 'Invite editors',
+    bind_limit: 'You can invite up to 3 editors',
     bind_placeholder: 'Please enter wallet address',
-    bind_bound: 'This wallet address has been invited',
+    bind_bound:
+      'This wallet address has been registered as an editor, please choose another address',
     bind_not_legitimate: 'Please check the wallet address',
     bind_successfully: 'Invite successfully',
-    help_text: `<h3>What is Members?</h3>
-    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as members, and the members can directly connect to the Subscription Backend and publish posts.</p>
+    help_text: `<h3>What is Editors?</h3>
+    <p>In order to make it more convenient for more people to manage subscription accounts, each subscription account can be added by the administrator to invite 3 wallet addresses as editors, and the editors can directly connect to the Subscription Backend and publish posts.</p>
     `,
     unbind_limit:
-      'You have already invited 3 members, if you want to continue to add, please remove the old member first.',
-    unbind_input_title: 'Remove this member',
+      'You have already invited 3 editors, if you want to continue to add, please remove the old editor first.',
+    unbind_input_title: 'Remove this editor',
     unbind_input_text:
       'You are about to remove the above wallet address, after removing this address will not be able to connect to this backend for any operation.',
     unbind_successfully: 'Remove successfully',

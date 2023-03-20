@@ -637,7 +637,7 @@ export const PreviewComponent: React.FC = () => {
                 <Avatar
                   w={{ base: '32px', md: '48px' }}
                   h={{ base: '32px', md: '48px' }}
-                  address={removeMailSuffix(address)}
+                  address={address}
                   borderRadius="50%"
                 />
               </Box>
@@ -664,7 +664,7 @@ export const PreviewComponent: React.FC = () => {
                 <Avatar
                   w="48px"
                   h="48px"
-                  address={removeMailSuffix(detail.from.address)}
+                  address={detail.from.address}
                   borderRadius="50%"
                   {...(isMail3Address(detail.from.address)
                     ? {
@@ -795,11 +795,14 @@ export const PreviewComponent: React.FC = () => {
             <Attachment data={detail.attachments} messageId={id} />
           ) : null}
           {isShowIpfsTable ? (
-            <IpfsInfoTable
-              ethAddress={messageOnChainIdentifierData?.owner_identifier}
-              ipfs={messageOnChainIdentifierData?.url}
-              contentDigest={messageOnChainIdentifierData?.content_digest}
-            />
+            <Box mt="8px">
+              <IpfsInfoTable
+                title={i18Preview('ipfs')}
+                ethAddress={messageOnChainIdentifierData?.owner_identifier}
+                ipfs={messageOnChainIdentifierData?.url}
+                contentDigest={messageOnChainIdentifierData?.content_digest}
+              />
+            </Box>
           ) : null}
         </Box>
         {isDriftBottleAddress && driftBottleFrom ? (

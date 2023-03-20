@@ -8,11 +8,8 @@ import {
   Heading,
   Icon,
   Link,
-  ListItem,
-  OrderedList,
   Text,
   Tooltip,
-  UnorderedList,
   VStack,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -43,6 +40,7 @@ import {
   SUPER_DID_URL,
 } from '../../constants/env/url'
 import { useToast } from '../../hooks/useToast'
+import { useHelperComponent } from '../../hooks/useHelperCom'
 
 export const Premium: React.FC = () => {
   const { t } = useTranslation(['premium', 'common'])
@@ -57,6 +55,7 @@ export const Premium: React.FC = () => {
   const [verifyDomainErrorMessage, setVerifyDomainErrorMessage] = useState('')
   const toast = useToast()
   const confirm = useDialog()
+  const helperCom = useHelperComponent()
   const { data, isLoading, refetch } = useQuery(
     [QueryKey.GetUserPremiumSettings],
     async () => api.getUserPremiumSettings().then((res) => res.data),
@@ -85,14 +84,10 @@ export const Premium: React.FC = () => {
   const verifyDotBitDomainState = useVerifyPremiumDotBitDomainState()
 
   const transComponents = {
-    h3: <Heading as="h3" fontSize="18px" mt="32px" mb="12px" />,
-    ul: <UnorderedList />,
-    ol: <OrderedList />,
-    li: <ListItem fontSize="14px" fontWeight="500" />,
-    p: <Text fontSize="14px" fontWeight="500" />,
+    ...helperCom,
     contact: <Link href={CONTACT_URL} target="_blank" color="primary.900" />,
     bit: <Link href={DOT_BIT_URL} target="_blank" color="primary.900" />,
-    superdid: <Link href={SUPER_DID_URL} target="_blank" color="primary.900" />,
+    daodid: <Link href={SUPER_DID_URL} target="_blank" color="primary.900" />,
     detail: (
       <Link href={SELL_HELP_DOCUMENT_URL} target="_blank" color="primary" />
     ),

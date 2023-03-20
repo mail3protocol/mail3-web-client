@@ -3,6 +3,7 @@ type MailAddress = `${string}@${string}`
 export enum AliasMailType {
   Ens = 'ens_mail',
   Bit = 'dot_bit_mail',
+  SubBit = 'dot_bit_sub_domain_email',
   Eth = 'eth_mail',
   Zilliqa = 'zilliqa_mail',
   UD = 'unstoppable_mail',

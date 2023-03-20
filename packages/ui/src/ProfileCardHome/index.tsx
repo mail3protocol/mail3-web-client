@@ -188,6 +188,7 @@ export const ProfileCardHome = forwardRef<HTMLDivElement, ProfileCardProps>(
                   onChangeAvatarCallback={onChangeAvatarCallback}
                 />
                 <Center
+                  whiteSpace="nowrap"
                   position="absolute"
                   bottom="-15px"
                   fontWeight="700"

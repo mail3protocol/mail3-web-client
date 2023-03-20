@@ -127,7 +127,7 @@ export const SubscriptionArticleBody: React.FC<
   ) : null
 
   return (
-    <PageContainer>
+    <PageContainer className="family-to-read">
       <Flex direction={{ base: 'column-reverse', md: 'row-reverse' }}>
         {isMobile ? EchoBody : null}
         <UserInfo
@@ -226,7 +226,7 @@ export const SubscriptionArticleBody: React.FC<
                 mt="4px"
                 lineHeight="18px"
               >
-                {SubFormatDate(detail.created_at, 'YYYY / MMM D / h:mm a')}
+                {SubFormatDate(detail.created_at, 'MMM D / h:mm A / YYYY')}
               </Box>
               <Spacer />
               <ShareButtonGroup
@@ -281,11 +281,14 @@ export const SubscriptionArticleBody: React.FC<
                 shadowStyle={`main { min-height: 200px; } img[style="max-width: 100%;"] { height: auto }`}
               />
               {ipfsInfo ? (
-                <IpfsInfoTable
-                  ethAddress={ipfsInfo?.owner_identifier}
-                  ipfs={ipfsInfo?.url}
-                  contentDigest={ipfsInfo?.content_digest}
-                />
+                <Box mt="8px">
+                  <IpfsInfoTable
+                    title={t('ipfs')}
+                    ethAddress={ipfsInfo?.owner_identifier}
+                    ipfs={ipfsInfo?.url}
+                    contentDigest={ipfsInfo?.content_digest}
+                  />
+                </Box>
               ) : null}
             </Box>
           ) : null}

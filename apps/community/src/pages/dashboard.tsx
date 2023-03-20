@@ -13,7 +13,7 @@ import {
   Icon,
   Spinner,
 } from '@chakra-ui/react'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router-dom'
 import { useQuery } from 'react-query'
@@ -27,12 +27,13 @@ import { useAPI } from '../hooks/useAPI'
 import { QueryKey } from '../api/QueryKey'
 import { useDownloadSubscribers } from '../hooks/useDownloadSubscribers'
 import { useToast } from '../hooks/useToast'
-import { useSetUserInfo, useUserInfo } from '../hooks/useUserInfo'
+import { useUserInfo } from '../hooks/useUserInfo'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { formatUserName } from '../utils/string'
 import { useOpenNewMessagePage } from '../hooks/useOpenNewMessagePage'
 import { ReactComponent as OutlineAddIconSvg } from '../assets/OutlineAddIcon.svg'
 import { useSwitchMirror } from '../hooks/useSwitchMirror'
+import { APP_URL } from '../constants/env/url'
 
 interface BaseInfo {
   key: string
@@ -85,7 +86,7 @@ export const DownloadButton = () => {
 }
 
 export const Dashboard: React.FC = () => {
-  const { t } = useTranslation(['dashboard', 'common'])
+  const { t } = useTranslation(['dashboard', 'common', 'send_message'])
   const api = useAPI()
   const { data: statisticsData } = useQuery(
     [QueryKey.GetStatistics],
@@ -133,21 +134,7 @@ export const Dashboard: React.FC = () => {
     },
   ]
   const userInfo = useUserInfo()
-  const setUserInfo = useSetUserInfo()
-  useEffect(() => {
-    if (
-      !userInfo ||
-      !userInfo.next_refresh_time ||
-      dayjs(userInfo.next_refresh_time).isBefore(dayjs())
-    ) {
-      api.getUserInfo().then(({ data }) =>
-        setUserInfo({
-          ...data,
-          next_refresh_time: dayjs().add(1, 'day').format(),
-        })
-      )
-    }
-  }, [userInfo?.next_refresh_time])
+
   const {
     switchMirrorOnClick,
     isOpenIpfsModal,
@@ -212,15 +199,27 @@ export const Dashboard: React.FC = () => {
         gridTemplateRows="1fr"
         h="full"
       >
-        <Center flexDirection="column">
+        <Center
+          flexDirection="column"
+          as="a"
+          href={`${APP_URL}/${
+            userInfo?.manager_default_alias.split('@')[0] || ''
+          }`}
+          target="_blank"
+          _hover={{
+            textDecoration: 'underline',
+          }}
+        >
           <Avatar
             w="48px"
             h="48px"
-            address={userInfo?.address.split('@')[0] || ''}
+            address={userInfo?.manager_default_alias || ''}
             borderRadius="50%"
           />
+
           <Text mt="4px" fontWeight="bold">
-            {formatUserName(userInfo?.name)}
+            {userInfo?.nickname ||
+              formatUserName(userInfo?.manager_default_alias.split('@')[0])}
           </Text>
         </Center>
         {baseInfos.map((info) => (
@@ -273,6 +272,22 @@ export const Dashboard: React.FC = () => {
           >
             <Heading as="h3" fontSize="16px">
               {t('send_message')}
+              <Tooltip
+                label={t('send_rule', { ns: 'send_message' })}
+                hasArrow
+                placement="bottom"
+                maxW="390px"
+                w="390px"
+                fontSize="12px"
+              >
+                <InfoOutlineIcon
+                  color="primaryTextColor"
+                  w="14px"
+                  h="14px"
+                  mb="2px"
+                  ml="5px"
+                />
+              </Tooltip>
             </Heading>
             {openNewMessagePage.isLoading ? (
               <Spinner w="24px" h="24px" mx="18px" />
@@ -317,7 +332,7 @@ export const Dashboard: React.FC = () => {
           </Heading>
           <Link
             as={RouterLink}
-            to={RoutePath.SendRecords}
+            to={RoutePath.Published}
             color="primary.900"
             fontSize="12px"
             textDecoration="underline"

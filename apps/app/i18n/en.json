@@ -24,6 +24,7 @@
             "connect-wallet": "Connect Wallet",
             "phantom": "Phantom",
             "ud": "Unstoppable Domains",
+            "wallet-address":"Wallet Address",
             "blocto": "Blocto",
             "connecting": "Connecting",
             "coming-soon": "Coming soon",
@@ -222,6 +223,8 @@
         },
         "settings": {
             "title": "Settings",
+            "full": "Switch to Full Name",
+            "short": "Switch to Short Name",
             "tabs": {
                 "more": "More",
                 "address": "Mail3 Address",
@@ -252,7 +255,8 @@
             "not-found-p1": "Oops!!<br><br/>Cannot associate to your domain name",
             "not-found-p2": "please try clicking on the option above ：",
             "not-found-p3": "Refresh",
-            "not-found-p4": "Register new domain name"
+            "not-found-p4": "Register new domain name",
+            "not-found-p4-premium": "Become a Premium Member of a author"
         },
         "signature": {
             "desc": "Your signature will be automatically inserted when you write a new email.",
@@ -341,7 +345,8 @@
         "spam_content": {
             "bot": "For your safety, we blocked all links, attachments, and replies.",
             "user": "For your safety, we blocked all links, attachments, and replies."
-        }
+        },
+        "ipfs": "This mail has been permanently stored on IPFS"
     },
     "subscribe": {
         "steps": {
@@ -357,6 +362,7 @@
         "ok": "OK",
         "visit": "Visit mail³ to receive our latest news",
         "visit-button": "Visit mail³",
+        "awesome": "Awesome!",
         "already": "You have subscribed",
         "thank-you": "Thank you for subscribing",
         "nft": "You have earned an NFT!",
@@ -377,7 +383,8 @@
         "copy": "Copy Subscription Page URL",
         "twitter": "Share on Twitter",
         "404": "This page could not be found.",
-        "premium-member": "Premium member"
+        "premium-member": "Premium Member",
+        "description_placeholder": "Hey, welcome to my Web3 Subscription and check out my creative content."
     },
     "subscription-article": {
         "continue": "Continue",
@@ -398,6 +405,7 @@
         "wallet":"Finalize your purchase using your connected wallet.",
         "buy-ok":"You are now a Premium Member of \n <b>{{name}}</b>",
         "sub-domain":"Enter and find the sub-domain you like",
-        "free-now": "Free Now"
+        "free-now": "Start at Free",
+        "ipfs":"This post has been permanently stored on IPFS"
     }
 }

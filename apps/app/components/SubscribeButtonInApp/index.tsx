@@ -19,7 +19,7 @@ import { useQuery } from 'react-query'
 import { Button } from 'ui'
 import { ReactComponent as SubWhiteSvg } from 'assets/subscribe-page/subscribe-white.svg'
 import { ReactComponent as SubSvg } from 'assets/subscribe-page/subscribe.svg'
-import { atom, useAtom } from 'jotai'
+import { atom, useAtom, useAtomValue } from 'jotai'
 import { Query } from '../../api/query'
 import { useAPI } from '../../hooks/useAPI'
 import { SimpleSubscribePage } from '../../csr_pages/subscribe'
@@ -97,6 +97,7 @@ const SubscribeButtonView: React.FC<{
 }
 
 export const subscribeButtonIsFollowAtom = atom(false)
+export const isSimpleSubscribeModelAtom = atom(false)
 
 export const SubscribeButtonInApp: React.FC<
   {
@@ -113,6 +114,7 @@ export const SubscribeButtonInApp: React.FC<
   const account = useAccount()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
+  const isSimpleModel = useAtomValue(isSimpleSubscribeModelAtom)
   const [isLoading, setIsLoading] = useState(false)
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -209,23 +211,52 @@ export const SubscribeButtonInApp: React.FC<
         isCentered
       >
         <ModalOverlay />
-        <ModalContent
-          maxW={{ base: '100%', md: '800px' }}
-          h="85vh"
-          overflow="hidden"
-          overflowY="scroll"
-          css={{
-            '&::-webkit-scrollbar': {
-              width: '0 !important',
-              height: '0 !important',
-            },
-          }}
-        >
-          <ModalCloseButton />
-          <ModalBody>
-            <SimpleSubscribePage isDialog uuid={uuid} rewardType={rewardType} />
-          </ModalBody>
-        </ModalContent>
+        {isSimpleModel ? (
+          <ModalContent
+            maxW={{ base: '100%', md: '500px' }}
+            overflow="hidden"
+            overflowY="scroll"
+            backgroundColor="transparent"
+            boxShadow="none"
+            css={{
+              '&::-webkit-scrollbar': {
+                width: '0 !important',
+                height: '0 !important',
+              },
+            }}
+          >
+            <ModalBody>
+              <SimpleSubscribePage
+                isDialog
+                uuid={uuid}
+                rewardType={rewardType}
+                onCloseModal={onClose}
+              />
+            </ModalBody>
+          </ModalContent>
+        ) : (
+          <ModalContent
+            maxW={{ base: '100%', md: '800px' }}
+            h="85vh"
+            overflow="hidden"
+            overflowY="scroll"
+            css={{
+              '&::-webkit-scrollbar': {
+                width: '0 !important',
+                height: '0 !important',
+              },
+            }}
+          >
+            <ModalCloseButton />
+            <ModalBody>
+              <SimpleSubscribePage
+                isDialog
+                uuid={uuid}
+                rewardType={rewardType}
+              />
+            </ModalBody>
+          </ModalContent>
+        )}
       </Modal>
     </>
   )

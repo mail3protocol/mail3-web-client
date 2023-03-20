@@ -35,16 +35,19 @@ export const SidebarMenuItem: React.FC<MenuItem> = ({
       rounded="8px"
       w="full"
       px="12px"
-      py="4px"
+      h="40px"
       textAlign="left"
       lineHeight="23px"
       fontSize="14px"
       fontWeight="600"
       transition="200ms"
       align="center"
-      {...((currentPathname || to) === pathname ? { bg: 'primary.100' } : {})}
+      {...((currentPathname || to) === pathname
+        ? { bg: 'containerBackground', color: 'primary.900' }
+        : {})}
       _hover={{
-        textDecoration: isActive ? undefined : 'underline',
+        bg: 'containerBackground',
+        color: isActive ? 'primary.900' : 'primaryTextColor',
       }}
       onClick={onClick}
     >
@@ -54,9 +57,15 @@ export const SidebarMenuItem: React.FC<MenuItem> = ({
 }
 
 export const SidebarMenus: React.FC<SidebarMenusProps> = ({ menus }) => (
-  <VStack as="ul" spacing="32px" w="full">
+  <VStack as="ul" spacing="10px" w="full">
     {menus.map((menu) => (
-      <Box as="li" w="inherit" listStyleType="none" key={menu.key}>
+      <Box
+        as="li"
+        w="inherit"
+        listStyleType="none"
+        key={menu.key}
+        color="secondaryTitleColor"
+      >
         {'children' in menu ? (
           <Box w="inherit">
             <Heading

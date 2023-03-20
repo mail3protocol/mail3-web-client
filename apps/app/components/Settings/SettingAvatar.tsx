@@ -17,7 +17,11 @@ import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import { useToast } from 'hooks'
 import { useNavigate } from 'react-router-dom'
 import { useAtom } from 'jotai'
-import { isEthAddress, isPrimitiveEthAddress, truncateMiddle } from 'shared'
+import {
+  isInvalidNickname,
+  isPrimitiveEthAddress,
+  truncateMiddle,
+} from 'shared'
 import { useQuery } from 'react-query'
 import { avatarsAtom, DEFAULT_AVATAR_SRC, defaultAvatar } from 'ui/src/Avatar'
 import axios from 'axios'
@@ -113,7 +117,7 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
   )
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!/^[0-9a-zA-Z_]{1,16}$/.test(data.nickname)) {
+    if (isInvalidNickname(data.nickname)) {
       toast('Invalid nickname', {
         status: 'warning',
       })
@@ -152,13 +156,9 @@ export const SettingAvatar: React.FC<SettingAvatarProps> = ({ isSetup }) => {
     }
     if (userProps?.defaultAddress) {
       const address = userProps.defaultAddress.split('@')[0]
-      let defaultNickname = 'nickname'
+      let defaultNickname = address
       if (isPrimitiveEthAddress(address)) {
         defaultNickname = truncateMiddle(address, 6, 4, '_')
-      } else if (isEthAddress(address)) {
-        defaultNickname = address.includes('.')
-          ? address.split('.')[0]
-          : address
       }
       setValue('nickname', defaultNickname)
     }

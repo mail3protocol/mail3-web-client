@@ -225,7 +225,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
   const api = useAPI()
   const toast = useToast()
-  const { downloadScreenshot } = useScreenshot()
+  const { downloadScreenshot } = useScreenshot(false)
 
   const [isDid, setIsDid] = useState(false)
   const popoverRef = useRef<HTMLElement>(null)
