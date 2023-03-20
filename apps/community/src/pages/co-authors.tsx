@@ -205,11 +205,16 @@ export const BindButton: React.FC<{
           error?.response?.data.reason ===
             ErrorCode.COMMUNITY_COLLABORATORS_ADDRESS_INVALID
         )
-          toast(t('bind_bound'), {
-            duration: 5000,
-            status: 'error',
-            alertProps: { colorScheme: 'red' },
-          })
+          toast(
+            error?.response?.data.message.indexOf('has registered') > -1
+              ? t('bind_bound')
+              : error?.response?.data.message,
+            {
+              duration: 5000,
+              status: 'error',
+              alertProps: { colorScheme: 'red' },
+            }
+          )
 
         if (
           error?.response?.status === 400 &&
