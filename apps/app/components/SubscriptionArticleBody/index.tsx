@@ -84,6 +84,7 @@ export const SubscriptionArticleBody: React.FC<
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const realContent = detail.content || detailCSR?.content
+  const isNeedLoading = !realContent && isLoading
 
   useEffect(() => {
     if (realContent) {
@@ -267,7 +268,7 @@ export const SubscriptionArticleBody: React.FC<
             />
           ) : null}
 
-          {isLoading ? (
+          {isNeedLoading ? (
             <Center minH="400px">
               <Spinner />
             </Center>
