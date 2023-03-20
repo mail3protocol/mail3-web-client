@@ -252,10 +252,10 @@ export default {
     illegal_error_message:
       'The value you filled in is not legal, please check and modify.',
     // language=html
-    help_galxe: `<h3>What is Subscribe To Earn?</h3>
+    help_galxe: `<h3>What is NFT Reward?</h3>
            <ul>
              <li>
-              <strong>Subscribe to earn</strong> can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>NFT Reward</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -295,10 +295,10 @@ export default {
            </ul>
     `,
     // language=html
-    help_quest3: `<h3>What is Subscribe To Earn?</h3>
+    help_quest3: `<h3>What is NFT Reward?</h3>
            <ul>
              <li>
-              <strong>Subscribe to earn</strong> can help you create an automated campaign to motivate users to subscribe to your project.
+              <strong>NFT Reward</strong> can help you create an automated campaign to motivate users to subscribe to your project.
              </li>
              <li>
                <p>Only a few simple steps are needed:</p>
@@ -319,7 +319,7 @@ export default {
     disable_confirm: {
       title: 'Please confirm this operation!',
       description:
-        'Please make sure you have adjusted the "Subscribe To Earn" dialog on your website or product integration before deactivating "Subscribe To Earn" to avoid situations where users cannot receive rewards after subscription.',
+        'Please make sure you have adjusted the "NFT Reward" dialog on your website or product integration before deactivating "NFT Reward" to avoid situations where users cannot receive rewards after subscription.',
       confirm: 'Confirm',
     },
     status_field: 'Status: ',
