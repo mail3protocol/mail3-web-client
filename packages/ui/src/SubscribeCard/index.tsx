@@ -87,7 +87,13 @@ export const SubscribeCard = forwardRef<HTMLDivElement, SubscribeProps>(
         position="relative"
         zIndex="2"
       />
-      <Text fontWeight="700" fontSize="100px" lineHeight="120px" mt="16px">
+      <Text
+        fontWeight="700"
+        fontSize="100px"
+        lineHeight="120px"
+        mt="16px"
+        noOfLines={isPic ? 1 : 3}
+      >
         {nickname}
       </Text>
 
