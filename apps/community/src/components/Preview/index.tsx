@@ -159,6 +159,10 @@ body {
     src: url(${fontSource}/fonts/Poppins/Poppins-ThinItalic.ttf) format('truetype');
     font-weight: 100;
 }
+
+p:empty::after {
+  content: "\\00A0";
+}
 `
 
 export const Preview: React.FC<FlexProps & { html: string }> = ({
