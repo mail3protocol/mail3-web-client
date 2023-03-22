@@ -75,6 +75,7 @@ import {
   ENS_DOMAIN,
   MAIL_SERVER_URL,
   UD_DOMAIN,
+  BNB_DOMAIN,
 } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { RouterLink } from '../RouterLink'
@@ -85,6 +86,7 @@ export enum AliasType {
   BIT = 'BIT',
   SUB_BIT = 'SUB_BIT',
   UD = 'UD',
+  BNB = 'BNB',
 }
 
 enum TabItemType {
@@ -97,6 +99,7 @@ enum TabItemType {
 enum MoreItemType {
   Default = 1,
   Ud = 2,
+  Bnb = 3,
 }
 
 const tabsConfig: Record<
@@ -294,6 +297,7 @@ export const SettingAddress: React.FC = () => {
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
   const trackClickRegisterBIT = useTrackClick(TrackEvent.ClickRegisterBIT)
   const trackClickRegisterUD = useTrackClick(TrackEvent.ClickRegisterUD)
+  const trackClickRegisterBNB = useTrackClick(TrackEvent.ClickRegisterBNB)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
   const [activeAccount, setActiveAccount] = useState(account)
@@ -354,6 +358,9 @@ export const SettingAddress: React.FC = () => {
       if (type === AliasType.UD) {
         await api.updateAliasUDList()
       }
+      if (type === AliasType.BNB) {
+        await api.updateAliasBnbList()
+      }
       await refetch()
     } catch (e: any) {
       if (e?.response?.data?.message?.includes('deadline')) {
@@ -403,9 +410,12 @@ export const SettingAddress: React.FC = () => {
         bit: Alias[]
         subBit: Alias[]
         ud: Alias[]
+        bnb: Alias[]
       }>(
         (o, item) => {
           const [addr] = item.address.split('@')
+          if (item.email_type === AliasMailType.Bnb)
+            return { ...o, bnb: [...o.bnb, item] }
           if (item.email_type === AliasMailType.SubBit)
             return { ...o, subBit: [...o.subBit, item] }
           if (isBitDomain(addr)) return { ...o, bit: [...o.bit, item] }
@@ -423,6 +433,7 @@ export const SettingAddress: React.FC = () => {
           bit: [],
           subBit: [],
           ud: [],
+          bnb: [],
         }
       ),
     [aliasDate]
@@ -518,6 +529,15 @@ export const SettingAddress: React.FC = () => {
   }
 
   const MoreItemTypes = [
+    {
+      type: MoreItemType.Bnb,
+      onClick: () => {
+        setTabIndex(3)
+        setActiveMoreItem(MoreItemType.Bnb)
+      },
+      label: t2('connect.bnb'),
+      Icon: UdSvg,
+    },
     {
       type: MoreItemType.Ud,
       onClick: () => {
@@ -837,6 +857,24 @@ export const SettingAddress: React.FC = () => {
                               i18nKey: 'address.register-ud',
                               onClick: () => trackClickRegisterUD(),
                               href: UD_DOMAIN,
+                            }}
+                          />
+                        )
+                      } else if (activeMoreItem === MoreItemType.Bnb) {
+                        Content = (
+                          <SwitchPanel
+                            isLoading={isLoading}
+                            list={aliases.bnb}
+                            emptyNode={<NotFound />}
+                            activeAccount={activeAccount}
+                            onRefresh={async () =>
+                              onRefreshDomains(AliasType.BNB)
+                            }
+                            onChange={onDefaultAccountChange(false)}
+                            register={{
+                              i18nKey: 'address.register-bnb',
+                              onClick: () => trackClickRegisterBNB(),
+                              href: BNB_DOMAIN,
                             }}
                           />
                         )
