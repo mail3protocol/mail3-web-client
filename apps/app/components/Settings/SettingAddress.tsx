@@ -25,6 +25,7 @@ import {
   Portal,
   Icon as RawIcon,
   Tooltip,
+  Image,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
@@ -68,6 +69,7 @@ import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circl
 import { ReactComponent as CircleSvg } from '../../assets/settings/tick-circle.svg'
 import { ReactComponent as SwitchSvg } from '../../assets/settings/switch.svg'
 import { ReactComponent as ArrawDowmSvg } from '../../assets/settings/arrow-down.svg'
+import PngBnb from '../../assets/settings/bnb.png'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import {
@@ -536,7 +538,7 @@ export const SettingAddress: React.FC = () => {
         setActiveMoreItem(MoreItemType.Bnb)
       },
       label: t2('connect.bnb'),
-      Icon: UdSvg,
+      Icon: PngBnb,
     },
     {
       type: MoreItemType.Ud,
@@ -733,7 +735,19 @@ export const SettingAddress: React.FC = () => {
                                     size="sm"
                                     fontWeight={500}
                                     leftIcon={
-                                      <RawIcon w="20px" h="20px" as={IconSrc} />
+                                      typeof IconSrc === 'string' ? (
+                                        <Image
+                                          src={IconSrc}
+                                          w="20px"
+                                          h="20px"
+                                        />
+                                      ) : (
+                                        <RawIcon
+                                          w="20px"
+                                          h="20px"
+                                          as={IconSrc}
+                                        />
+                                      )
                                     }
                                     onClick={onClick}
                                   >
