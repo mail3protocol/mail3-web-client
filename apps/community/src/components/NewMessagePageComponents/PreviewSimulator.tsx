@@ -1,66 +1,56 @@
-import { Box, Divider, Flex, Heading, Icon } from '@chakra-ui/react'
-import { Avatar } from 'ui'
-import React, { useMemo } from 'react'
-import { useAccount } from 'hooks'
-import dayjs from 'dayjs'
-import { ReactComponent as UnsubscribableSvg } from 'assets/svg/unsubscribe.svg'
-import { useTranslation } from 'react-i18next'
+import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+
+import React from 'react'
 import { Preview } from '../Preview'
-import { useUserInfo } from '../../hooks/useUserInfo'
-import { formatUserName } from '../../utils/string'
+import { SubFormatDate } from '../../utils/date'
 
 export interface PreviewSimulatorProps {
   html: string
   subject: string
+  abstract?: string
 }
 
 export const PreviewSimulator: React.FC<PreviewSimulatorProps> = ({
   html,
   subject,
-}) => {
-  const address = useAccount()
-  const userInfo = useUserInfo()
-  const nowTime = useMemo(() => dayjs().format('MMM D h:mm a'), [])
-  const { t } = useTranslation('new_message')
-
-  return (
-    <Flex flex={1} direction="column" px="50px">
-      <Flex align="center">
-        <Avatar w="32px" h="32px" address={address} borderRadius="50%" />
-        <Box fontSize="14px" lineHeight="26px" fontWeight="600" ml="6px">
-          {formatUserName(userInfo?.nickname)}
-        </Box>
-        <Flex
-          align="center"
-          ml="auto"
-          fontSize="12px"
-          lineHeight="20px"
-          fontWeight="400"
-        >
-          <Icon as={UnsubscribableSvg} w="20px" h="20px" mr="5px" />
-          <Box>{t('unsubscribe')}</Box>
-        </Flex>
-      </Flex>
+  abstract,
+}) => (
+  <Flex flex={1} direction="column">
+    <Heading lineHeight="1.3" fontSize="32px" fontWeight="700">
+      {subject}
+    </Heading>
+    <Flex mt="13px" align="center">
       <Box
+        fontWeight={500}
+        fontSize="14px"
         color="previewDatetimeColor"
-        lineHeight="26px"
-        fontSize="12px"
-        fontWeight="500"
+        mt="4px"
+        lineHeight="18px"
+        h="32px"
       >
-        {nowTime}
+        {SubFormatDate(Date.now() / 1000, 'MMM D / h:mm A / YYYY')}
       </Box>
-      <Divider as="hr" mt="20px" />
-      <Heading
-        lineHeight="32px"
-        fontSize="28px"
-        fontWeight="700"
-        mt="20px"
-        mb="12px"
-        textAlign="center"
-      >
-        {subject}
-      </Heading>
-      <Preview html={html} />
     </Flex>
-  )
-}
+    {abstract ? (
+      <Box
+        mt="13px"
+        background="abstractBackground"
+        borderRadius="12px"
+        p="15px"
+        overflow="hidden"
+      >
+        <Text
+          fontWeight="500"
+          fontSize="16px"
+          lineHeight="24px"
+          color="abstractColor"
+        >
+          {abstract}
+        </Text>
+      </Box>
+    ) : null}
+    <Box pt="30px">
+      <Preview html={html} />
+    </Box>
+  </Flex>
+)

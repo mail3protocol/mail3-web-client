@@ -64,6 +64,8 @@ export const CommunityTheme = extendTheme(DefaultTheme, {
       100: '#FFF8EB',
       500: '#FFA800',
     },
+    abstractBackground: '#EBEBEB',
+    abstractColor: '#333333',
     containerBackground: '#F2F2F2',
     lineColor: '#F2F2F2',
     cardBackground: '#FFF',
