@@ -23,7 +23,7 @@ export const PreviewSimulator: React.FC<PreviewSimulatorProps> = ({
       <Box
         fontWeight={500}
         fontSize="14px"
-        color="#6F6F6F"
+        color="previewDatetimeColor"
         mt="4px"
         lineHeight="18px"
         h="32px"
@@ -34,16 +34,16 @@ export const PreviewSimulator: React.FC<PreviewSimulatorProps> = ({
     {abstract ? (
       <Box
         mt="13px"
-        background="#EBEBEB"
+        background="abstractBackground"
         borderRadius="12px"
         p="15px"
         overflow="hidden"
       >
         <Text
-          fontWeight={{ base: '400', md: '500' }}
-          fontSize={{ base: '12px', md: '16px' }}
-          lineHeight={{ base: '18px', md: '24px' }}
-          color="#333333"
+          fontWeight="500"
+          fontSize="16px"
+          lineHeight="24px"
+          color="abstractColor"
         >
           {abstract}
         </Text>
