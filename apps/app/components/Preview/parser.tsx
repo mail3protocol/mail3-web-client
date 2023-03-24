@@ -59,6 +59,9 @@ const shadowRootStyle = `
     border-style: none;
   }
 
+  p:empty::after {
+    content: "\\00A0";
+  }
 `
 
 export const RenderHTML: React.FC<htmlParserProps> = ({

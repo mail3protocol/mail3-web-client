@@ -54,6 +54,7 @@ export const Menus: React.FC<
   )
   return (
     <HStack
+      zIndex={1}
       position="sticky"
       top="60px"
       bgColor="cardBackground"
