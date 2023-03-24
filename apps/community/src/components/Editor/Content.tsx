@@ -6,7 +6,7 @@ import { forwardRef } from 'react'
 // language=css
 const style = (selectionBgColor: string) => `
 * {
-  font-size: 14px;
+  font-size: 16px;
 }
 p {
   word-break: break-word;
