@@ -512,7 +512,7 @@ export class API {
   }
 
   public async postUserEligibility(uuid: string) {
-    return this.axios.post<void>(`/community/user_eligibility`, {
+    return this.axios.post<void>(`/public/community/user_eligibility`, {
       check_type: 'message_share',
       messageUUID: uuid,
     })
