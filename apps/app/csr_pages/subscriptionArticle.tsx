@@ -25,9 +25,10 @@ const NavArea = styled(Box)`
   z-index: 9;
 `
 
-const Navbar: React.FC<{ shareUrl: string; subject: string }> = ({
+const Navbar: React.FC<{ shareUrl: string; subject: string; uuid: string }> = ({
   shareUrl,
   subject,
+  uuid,
 }) => (
   <Flex
     h={`${NAVBAR_HEIGHT}px`}
@@ -47,6 +48,7 @@ const Navbar: React.FC<{ shareUrl: string; subject: string }> = ({
         shareUrl={shareUrl}
         text={subject}
         iconW="16px"
+        uuid={uuid}
       />
     </Box>
   </Flex>
@@ -114,7 +116,7 @@ export const SubscriptionArticle: React.FC<SubscriptionArticleProps> = (
     <>
       <NavArea style={{ top, position }}>
         <Box w="full">
-          <Navbar shareUrl={shareUrl} subject={detail.subject} />
+          <Navbar shareUrl={shareUrl} subject={detail.subject} uuid={uuid} />
           <NotificationBar uuid={uuid} />
         </Box>
       </NavArea>

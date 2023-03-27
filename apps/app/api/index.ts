@@ -511,6 +511,13 @@ export class API {
     return this.axios.get(`/community/users/${address}`)
   }
 
+  public async postUserEligibility(uuid: string) {
+    return this.axios.post<void>(`/community/user_eligibility`, {
+      check_type: 'message_share',
+      messageUUID: uuid,
+    })
+  }
+
   public async getPrimitiveAddress(domain: string) {
     return this.axios.get(`/addresses/${domain}`)
   }

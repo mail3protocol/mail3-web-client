@@ -234,6 +234,7 @@ export const SubscriptionArticleBody: React.FC<
                 shareUrl={shareUrl}
                 text={detail.subject}
                 iconW="22px"
+                uuid={uuid}
               />
             </Flex>
           ) : null}
@@ -298,6 +299,7 @@ export const SubscriptionArticleBody: React.FC<
               shareUrl={shareUrl}
               text={detail.subject}
               iconW="28px"
+              uuid={uuid}
             />
           </Center>
           {!isMobile ? EchoBody : null}
