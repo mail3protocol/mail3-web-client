@@ -364,7 +364,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             shareUrl={`${APP_URL}/p/${id}`}
             text={detail.subject}
             iconW="22px"
-            uuid={id}
+            articleId={id}
           />
         </Flex>
         <Box fontWeight={500} fontSize="12px" color="#6F6F6F" mt="4px">
@@ -499,7 +499,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           shareUrl={`${APP_URL}/p/${id}`}
           text={detail.subject}
           iconW="22px"
-          uuid={id}
+          articleId={id}
         />
       </Center>
     </Wrap>
