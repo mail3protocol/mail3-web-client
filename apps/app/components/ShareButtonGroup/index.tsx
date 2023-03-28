@@ -49,7 +49,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
     try {
       api.postUserEligibility(uuid)
     } catch (error) {
-      console.error(error)
+      //
     }
   }, [uuid])
 
