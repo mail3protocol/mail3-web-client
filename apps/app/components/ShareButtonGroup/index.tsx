@@ -46,11 +46,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   const api = useAPI()
 
   const reportUserEligibility = useCallback(() => {
-    try {
-      api.postUserEligibility(uuid)
-    } catch (error) {
-      //
-    }
+    api.postUserEligibility(uuid).catch(() => {})
   }, [uuid])
 
   const buttonConfig: Record<
