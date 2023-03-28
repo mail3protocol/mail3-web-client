@@ -30,7 +30,7 @@ interface ShareButtonGroupProps {
   iconW: BoxProps['w']
   shareUrl: string
   text: string
-  uuid: string
+  articleId: string
 }
 
 export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
@@ -38,7 +38,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   iconW,
   shareUrl,
   text,
-  uuid,
+  articleId,
 }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   const shareText = text.slice(0, 100)
@@ -46,8 +46,8 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   const api = useAPI()
 
   const reportUserEligibility = useCallback(() => {
-    api.postUserEligibility(uuid).catch(() => {})
-  }, [uuid])
+    api.postUserEligibility(articleId).catch(() => {})
+  }, [articleId])
 
   const buttonConfig: Record<
     ButtonType,
