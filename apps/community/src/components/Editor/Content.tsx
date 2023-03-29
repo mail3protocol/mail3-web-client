@@ -33,6 +33,12 @@ div:focus-visible {
   color: #fff;
   background: ${selectionBgColor};
 }
+
+img {
+  display: block;
+  margin: 0 auto;
+}
+
 `
 
 export const Content = forwardRef<HTMLDivElement, FlexProps>(
