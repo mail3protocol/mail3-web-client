@@ -97,7 +97,10 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
 
   const canShare = () => {
     try {
-      return navigator?.canShare()
+      return navigator?.canShare({
+        text: shareText,
+        url: shareUrl,
+      })
     } catch (error) {
       return false
     }
