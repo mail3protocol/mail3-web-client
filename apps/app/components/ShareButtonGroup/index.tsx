@@ -41,6 +41,10 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   const [t] = useTranslation(['subscription-article', 'common'])
   const shareText = text.slice(0, 100)
   const toast = useToast()
+  const shareData = {
+    text: shareText,
+    url: shareUrl,
+  }
 
   const buttonConfig: Record<
     ButtonType,
@@ -54,10 +58,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       Icon: SvgTelegram,
       label: t('telegram'),
       onClick: () => {
-        shareToTelegram({
-          text: shareText,
-          url: shareUrl,
-        })
+        shareToTelegram(shareData)
       },
     },
     [ButtonType.Copy]: {
@@ -73,9 +74,8 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       label: t('twitter'),
       onClick: () => {
         shareToTwitter({
-          text: shareText,
+          ...shareData,
           via: 'mail3dao',
-          url: shareUrl,
         })
       },
     },
@@ -84,10 +84,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       label: t('system-share'),
       onClick: () => {
         try {
-          navigator.share({
-            text: shareText,
-            url: shareUrl,
-          })
+          navigator.share(shareData)
         } catch (error) {
           //
         }
@@ -97,10 +94,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
 
   const canShare = () => {
     try {
-      return navigator?.canShare({
-        text: shareText,
-        url: shareUrl,
-      })
+      return navigator?.canShare(shareData)
     } catch (error) {
       return false
     }
