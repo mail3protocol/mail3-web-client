@@ -13,6 +13,7 @@ import {
 import SvgCopy from 'assets/subscription/copy.svg'
 import SvgTelegram from 'assets/subscription/telegram.svg'
 import SvgTwitter from 'assets/subscription/twitter.svg'
+import SvgSystemShare from 'assets/subscription/system-share.svg'
 import { useTranslation } from 'react-i18next'
 import { useToast } from 'hooks'
 import { copyText, shareToTelegram, shareToTwitter } from 'shared'
@@ -21,6 +22,7 @@ enum ButtonType {
   Copy,
   Telegram,
   Twitter,
+  SystemShare,
 }
 
 interface ShareButtonGroupProps {
@@ -77,9 +79,36 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
         })
       },
     },
+    [ButtonType.SystemShare]: {
+      Icon: SvgSystemShare,
+      label: t('system-share'),
+      onClick: () => {
+        try {
+          navigator.share({
+            text: shareText,
+            url: shareUrl,
+          })
+        } catch (error) {
+          //
+        }
+      },
+    },
   }
 
-  const buttonList = [ButtonType.Twitter, ButtonType.Telegram, ButtonType.Copy]
+  const canShare = () => {
+    try {
+      return navigator?.canShare()
+    } catch (error) {
+      return false
+    }
+  }
+
+  const buttonList = [
+    ButtonType.Twitter,
+    ButtonType.Telegram,
+    ButtonType.Copy,
+    ...(canShare() ? [ButtonType.SystemShare] : []),
+  ]
 
   return (
     <HStack spacing={spacing}>
