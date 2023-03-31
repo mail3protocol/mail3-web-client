@@ -17,6 +17,8 @@ import SvgSystemShare from 'assets/subscription/system-share.svg'
 import { useTranslation } from 'react-i18next'
 import { useToast } from 'hooks'
 import { copyText, shareToTelegram, shareToTwitter } from 'shared'
+import { useCallback } from 'react'
+import { useAPI } from '../../hooks/useAPI'
 
 enum ButtonType {
   Copy,
@@ -30,6 +32,7 @@ interface ShareButtonGroupProps {
   iconW: BoxProps['w']
   shareUrl: string
   text: string
+  articleId: string
 }
 
 export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
@@ -37,14 +40,21 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   iconW,
   shareUrl,
   text,
+  articleId,
 }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   const shareText = text.slice(0, 100)
   const toast = useToast()
+  const api = useAPI()
+
   const shareData = {
     text: shareText,
     url: shareUrl,
   }
+
+  const reportUserEligibility = useCallback(() => {
+    api.postUserEligibility(articleId).catch(() => {})
+  }, [articleId])
 
   const buttonConfig: Record<
     ButtonType,
@@ -58,6 +68,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       Icon: SvgTelegram,
       label: t('telegram'),
       onClick: () => {
+        reportUserEligibility()
         shareToTelegram(shareData)
       },
     },
@@ -65,6 +76,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       Icon: SvgCopy,
       label: t('copy'),
       onClick: async () => {
+        reportUserEligibility()
         await copyText(shareUrl)
         toast(t('navbar.copied', { ns: 'common' }))
       },
@@ -73,6 +85,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       Icon: SvgTwitter,
       label: t('twitter'),
       onClick: () => {
+        reportUserEligibility()
         shareToTwitter({
           ...shareData,
           via: 'mail3dao',
