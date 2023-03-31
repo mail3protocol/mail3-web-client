@@ -15,7 +15,7 @@ export const SubjectInput: React.FC<SubjectInputProps> = ({
 }) => {
   const { t } = useTranslation('new_message')
   return (
-    <Flex>
+    <Flex alignItems="center">
       <Input
         variant="unstyled"
         type="text"

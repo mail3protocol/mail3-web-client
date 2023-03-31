@@ -43,8 +43,19 @@ function getAbstract({ abstract, html }: { abstract?: string; html?: string }) {
   if (!html) return ''
   const parser = new DOMParser()
   const dom = parser.parseFromString(html, 'text/html')
-  const text = dom.body.innerText || ''
-  return `${text.slice(0, ABSTRACT_LENGTH)}${
+  const pStrList: string[] = []
+  let strLen = 0
+  Array.from(dom.querySelectorAll('p')).some((e) => {
+    const str = e.innerText
+    strLen += str.length
+    pStrList.push(str)
+    if (strLen >= ABSTRACT_LENGTH) {
+      return true
+    }
+    return false
+  })
+  const text = pStrList.join(' ')
+  return `${text.slice(0, ABSTRACT_LENGTH).trim()}${
     text.length > ABSTRACT_LENGTH ? '...' : ''
   }`
 }
@@ -79,14 +90,10 @@ export const SendButton: React.FC<SendButtonProps> = ({
     setIsLoading(true)
     try {
       const html = getHTML()
-      const data = await api.sendMessage(
-        subject,
-        html,
-        getAbstract({ html, abstract }),
-        {
-          messageType,
-        }
-      )
+      const autoAbstract = getAbstract({ html, abstract })
+      const data = await api.sendMessage(subject, html, autoAbstract, {
+        messageType,
+      })
       setArticleId(data.data.uuid)
       setIsSent(true)
       onSend?.()
