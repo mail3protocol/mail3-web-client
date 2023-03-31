@@ -21,6 +21,7 @@ body {
     -webkit-tap-highlight-color: transparent;
     word-break: break-word;
     white-space: pre-line;
+    font-size: 18px;
 }
 
 @font-face {

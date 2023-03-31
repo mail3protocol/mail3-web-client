@@ -22,7 +22,7 @@ export const SubjectInput: React.FC<SubjectInputProps> = ({
         placeholder={t('subject')}
         fontWeight="bold"
         flex={1}
-        fontSize="16px"
+        fontSize="32px"
         maxLength={limit}
         rounded="0"
         {...props}
