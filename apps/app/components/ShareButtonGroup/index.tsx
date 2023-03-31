@@ -17,7 +17,7 @@ import SvgSystemShare from 'assets/subscription/system-share.svg'
 import { useTranslation } from 'react-i18next'
 import { useToast } from 'hooks'
 import { copyText, shareToTelegram, shareToTwitter } from 'shared'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useAPI } from '../../hooks/useAPI'
 
 enum ButtonType {
@@ -46,6 +46,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   const shareText = text.slice(0, 100)
   const toast = useToast()
   const api = useAPI()
+  const [isOpen, setIsOpen] = useState(true)
 
   const shareData = {
     text: shareText,
@@ -96,6 +97,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       Icon: SvgSystemShare,
       label: t('system-share'),
       onClick: () => {
+        setIsOpen(false)
         try {
           navigator.share(shareData)
         } catch (error) {
@@ -132,6 +134,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
             trigger="hover"
             placement="top-start"
             size="md"
+            onClose={() => !isOpen && setIsOpen(true)}
           >
             <PopoverTrigger>
               <Box
@@ -144,16 +147,18 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
                 <Image src={Icon} w={iconW} h={iconW} alt={label} />
               </Box>
             </PopoverTrigger>
-            <PopoverContent width="auto">
-              <PopoverArrow />
-              <PopoverBody
-                whiteSpace="nowrap"
-                fontSize="14px"
-                justifyContent="center"
-              >
-                {label}
-              </PopoverBody>
-            </PopoverContent>
+            {isOpen ? (
+              <PopoverContent width="auto">
+                <PopoverArrow />
+                <PopoverBody
+                  whiteSpace="nowrap"
+                  fontSize="14px"
+                  justifyContent="center"
+                >
+                  {label}
+                </PopoverBody>
+              </PopoverContent>
+            ) : null}
           </Popover>
         )
       })}
