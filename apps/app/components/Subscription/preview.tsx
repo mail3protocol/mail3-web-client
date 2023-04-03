@@ -398,7 +398,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       <Box className="scroll-main-wrap">
         <Text
           fontWeight={700}
-          fontSize={{ base: '16px', md: '28px' }}
+          fontSize={{ base: '28px', md: '32px' }}
           textAlign="center"
           pt={{ base: '15px', md: '20px' }}
         >

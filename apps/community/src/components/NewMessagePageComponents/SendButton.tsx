@@ -37,6 +37,29 @@ export interface SendButtonProps extends ButtonProps {
   messageType: MessageType
 }
 
+const ABSTRACT_LENGTH = 153
+function getAbstract({ abstract, html }: { abstract?: string; html?: string }) {
+  if (abstract) return abstract
+  if (!html) return ''
+  const parser = new DOMParser()
+  const dom = parser.parseFromString(html, 'text/html')
+  const paragraphs: string[] = []
+  let strLen = 0
+  Array.from(dom.querySelectorAll('p')).some((e) => {
+    const str = e.innerText
+    strLen += str.length
+    paragraphs.push(str)
+    if (strLen >= ABSTRACT_LENGTH) {
+      return true
+    }
+    return false
+  })
+  const text = paragraphs.join(' ')
+  return `${text.slice(0, ABSTRACT_LENGTH).trim()}${
+    text.length > ABSTRACT_LENGTH ? '...' : ''
+  }`
+}
+
 export const SendButton: React.FC<SendButtonProps> = ({
   subject,
   onSend,
@@ -66,7 +89,9 @@ export const SendButton: React.FC<SendButtonProps> = ({
     trackClickCommunitySendConfirm()
     setIsLoading(true)
     try {
-      const data = await api.sendMessage(subject, getHTML(), abstract, {
+      const html = getHTML()
+      const autoAbstract = getAbstract({ html, abstract })
+      const data = await api.sendMessage(subject, html, autoAbstract, {
         messageType,
       })
       setArticleId(data.data.uuid)

@@ -13,16 +13,18 @@ import {
 import SvgCopy from 'assets/subscription/copy.svg'
 import SvgTelegram from 'assets/subscription/telegram.svg'
 import SvgTwitter from 'assets/subscription/twitter.svg'
+import SvgSystemShare from 'assets/subscription/system-share.svg'
 import { useTranslation } from 'react-i18next'
 import { useToast } from 'hooks'
 import { copyText, shareToTelegram, shareToTwitter } from 'shared'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useAPI } from '../../hooks/useAPI'
 
 enum ButtonType {
   Copy,
   Telegram,
   Twitter,
+  SystemShare,
 }
 
 interface ShareButtonGroupProps {
@@ -44,6 +46,12 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   const shareText = text.slice(0, 100)
   const toast = useToast()
   const api = useAPI()
+  const [isOpen, setIsOpen] = useState(true)
+
+  const shareData = {
+    text: shareText,
+    url: shareUrl,
+  }
 
   const reportUserEligibility = useCallback(() => {
     api.postUserEligibility(articleId).catch(() => {})
@@ -62,10 +70,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       label: t('telegram'),
       onClick: () => {
         reportUserEligibility()
-        shareToTelegram({
-          text: shareText,
-          url: shareUrl,
-        })
+        shareToTelegram(shareData)
       },
     },
     [ButtonType.Copy]: {
@@ -83,15 +88,39 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
       onClick: () => {
         reportUserEligibility()
         shareToTwitter({
-          text: shareText,
+          ...shareData,
           via: 'mail3dao',
-          url: shareUrl,
         })
+      },
+    },
+    [ButtonType.SystemShare]: {
+      Icon: SvgSystemShare,
+      label: t('system-share'),
+      onClick: () => {
+        setIsOpen(false)
+        try {
+          navigator.share(shareData)
+        } catch (error) {
+          //
+        }
       },
     },
   }
 
-  const buttonList = [ButtonType.Twitter, ButtonType.Telegram, ButtonType.Copy]
+  const canShare = () => {
+    try {
+      return navigator?.canShare(shareData)
+    } catch (error) {
+      return false
+    }
+  }
+
+  const buttonList = [
+    ButtonType.Twitter,
+    ButtonType.Telegram,
+    ButtonType.Copy,
+    ...(canShare() ? [ButtonType.SystemShare] : []),
+  ]
 
   return (
     <HStack spacing={spacing}>
@@ -105,6 +134,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
             trigger="hover"
             placement="top-start"
             size="md"
+            onClose={() => !isOpen && setIsOpen(true)}
           >
             <PopoverTrigger>
               <Box
@@ -117,16 +147,18 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
                 <Image src={Icon} w={iconW} h={iconW} alt={label} />
               </Box>
             </PopoverTrigger>
-            <PopoverContent width="auto">
-              <PopoverArrow />
-              <PopoverBody
-                whiteSpace="nowrap"
-                fontSize="14px"
-                justifyContent="center"
-              >
-                {label}
-              </PopoverBody>
-            </PopoverContent>
+            {isOpen ? (
+              <PopoverContent width="auto">
+                <PopoverArrow />
+                <PopoverBody
+                  whiteSpace="nowrap"
+                  fontSize="14px"
+                  justifyContent="center"
+                >
+                  {label}
+                </PopoverBody>
+              </PopoverContent>
+            ) : null}
           </Popover>
         )
       })}

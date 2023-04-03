@@ -221,7 +221,7 @@ export default {
     distribution_platform: 'Distribution Platform',
     platforms: {
       galaxy: 'Galxe',
-      quest3: 'Quest3',
+      quest3: 'QuestN',
     },
     campaign_link_field: 'Campaign Link',
     campaign_link_placeholder: 'Campaign Link',
@@ -230,7 +230,7 @@ export default {
     go_to_galaxy_description:
       'Go to <a>Galxe</a> to create a marketing campaign and get the campaign link.',
     go_to_quest3_description:
-      'Go to <a>Quest3</a> to create a quest and get the quest link.',
+      'Go to <a>QuestN</a> to create a quest and get the quest link.',
     credential_id: 'Credential ID',
     credential_id_placeholder: 'Credential ID',
     access_token: 'Access Token',
@@ -303,7 +303,7 @@ export default {
              <li>
                <p>Only a few simple steps are needed:</p>
                <ol>
-                 <li>Create your rewards on a supported platform (Galxe or Quest3);</li>
+                 <li>Create your rewards on a supported platform (Galxe or QuestN);</li>
                  <li>Follow the guide to complete the configuration below;</li>
                  <li>Please make sure that the Credential ID you fill in corresponds to the Campaign Link.</li>
                </ol>
