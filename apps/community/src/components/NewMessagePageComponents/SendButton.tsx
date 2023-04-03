@@ -43,18 +43,18 @@ function getAbstract({ abstract, html }: { abstract?: string; html?: string }) {
   if (!html) return ''
   const parser = new DOMParser()
   const dom = parser.parseFromString(html, 'text/html')
-  const pStrList: string[] = []
+  const paragraphs: string[] = []
   let strLen = 0
   Array.from(dom.querySelectorAll('p')).some((e) => {
     const str = e.innerText
     strLen += str.length
-    pStrList.push(str)
+    paragraphs.push(str)
     if (strLen >= ABSTRACT_LENGTH) {
       return true
     }
     return false
   })
-  const text = pStrList.join(' ')
+  const text = paragraphs.join(' ')
   return `${text.slice(0, ABSTRACT_LENGTH).trim()}${
     text.length > ABSTRACT_LENGTH ? '...' : ''
   }`
