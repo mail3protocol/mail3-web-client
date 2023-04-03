@@ -35,6 +35,10 @@ const shadowRootStyle = `
     display: block;
   }
 
+  * {
+    font-size: 18px;
+  }
+
   main {
     display: block;
     overflow: hidden;
@@ -53,10 +57,16 @@ const shadowRootStyle = `
   img, video {
     max-width: 100%;
     height: auto;
+    display: block;
+    margin: 0 auto;
   }
 
   img {
     border-style: none;
+  }
+
+  p {
+    line-height: 1.5;
   }
 
   p:empty::after {

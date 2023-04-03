@@ -16,7 +16,7 @@ export const GALXE_URL =
   import.meta.env.NEXT_PUBLIC_GALXE_URL || 'https://galxe.com'
 
 export const QUEST3_URL =
-  import.meta.env.NEXT_PUBLIC_QUEST3_URL || 'https://quest3.xyz'
+  import.meta.env.NEXT_PUBLIC_QUEST3_URL || 'https://questn.com/'
 
 export const APP_URL =
   import.meta.env.NEXT_PUBLIC_APP_URL || 'https://app.mail3.me'

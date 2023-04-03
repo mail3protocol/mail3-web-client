@@ -6,11 +6,12 @@ import { forwardRef } from 'react'
 // language=css
 const style = (selectionBgColor: string) => `
 * {
-  font-size: 16px;
+  font-size: 18px;
 }
 p {
   word-break: break-word;
   white-space: pre-line;
+  line-height: 1.5;
 }
 .content-container {
   display: flex;
@@ -33,6 +34,12 @@ div:focus-visible {
   color: #fff;
   background: ${selectionBgColor};
 }
+
+img {
+  display: block;
+  margin: 0 auto;
+}
+
 `
 
 export const Content = forwardRef<HTMLDivElement, FlexProps>(

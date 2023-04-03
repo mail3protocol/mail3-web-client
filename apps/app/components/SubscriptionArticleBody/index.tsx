@@ -148,7 +148,7 @@ export const SubscriptionArticleBody: React.FC<
         >
           <Text
             fontWeight="700"
-            fontSize={{ base: '24px', md: '32px' }}
+            fontSize={{ base: '28px', md: '32px' }}
             lineHeight="1.3"
           >
             {detail?.subject}

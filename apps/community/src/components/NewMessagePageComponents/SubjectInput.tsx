@@ -15,14 +15,14 @@ export const SubjectInput: React.FC<SubjectInputProps> = ({
 }) => {
   const { t } = useTranslation('new_message')
   return (
-    <Flex>
+    <Flex alignItems="center">
       <Input
         variant="unstyled"
         type="text"
         placeholder={t('subject')}
         fontWeight="bold"
         flex={1}
-        fontSize="16px"
+        fontSize="32px"
         maxLength={limit}
         rounded="0"
         {...props}
