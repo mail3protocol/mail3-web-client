@@ -304,10 +304,16 @@ export const SettingAddress: React.FC = () => {
 
   const [activeAccount, setActiveAccount] = useState(account)
   const [activeMoreItem, setActiveMoreItem] = useState(MoreItemType.Default)
-
+  const [tabIndex, setTabIndex] = useState(TabItemType.More)
   const MoreItemTypeMap: { [key in AliasMailType]?: MoreItemType } = {
     [AliasMailType.Bnb]: MoreItemType.Bnb,
     [AliasMailType.UD]: MoreItemType.Ud,
+  }
+
+  const indexMap: { [key in AliasMailType]?: number } = {
+    [AliasMailType.Ens]: 0,
+    [AliasMailType.Bit]: 1,
+    [AliasMailType.SubBit]: 2,
   }
 
   const {
@@ -325,12 +331,15 @@ export const SettingAddress: React.FC = () => {
       async onSuccess(d) {
         const defaultAlias: Alias =
           d.aliases.find((alias) => alias.is_default) || d.aliases[0]
+        const tabType = defaultAlias.email_type as AliasMailType
 
         setActiveAccount(defaultAlias.uuid)
-        setActiveMoreItem(
-          MoreItemTypeMap[defaultAlias.email_type as AliasMailType] ||
-            MoreItemType.Default
+        setTabIndex(
+          typeof indexMap[tabType] === 'number'
+            ? (indexMap[tabType] as number)
+            : TabItemType.More
         )
+        setActiveMoreItem(MoreItemTypeMap[tabType] || MoreItemType.Default)
 
         const userInfo = await api.getUserInfo()
         const { aliases } = d
@@ -519,21 +528,6 @@ export const SettingAddress: React.FC = () => {
     TabItemType.More,
   ]
 
-  const defaultTabIndex = useMemo(() => {
-    if (!userProps?.aliases) return 0
-    const defaultAlias = (userProps.aliases as Alias[]).find(
-      (alias) => alias.is_default
-    )
-    const indexMap: { [key in AliasMailType]?: number } = {
-      [AliasMailType.Ens]: 0,
-      [AliasMailType.Bit]: 1,
-      [AliasMailType.SubBit]: 2,
-    }
-    const currentIndex = indexMap[defaultAlias?.email_type as AliasMailType]
-    return currentIndex === undefined ? 3 : currentIndex
-  }, [userProps])
-
-  const [tabIndex, setTabIndex] = React.useState(defaultTabIndex)
   const handleTabsChange = (index: number) => {
     if (index !== 3) {
       setTabIndex(index)
@@ -661,7 +655,7 @@ export const SettingAddress: React.FC = () => {
       <Box w={{ base: '100%', md: 'auto' }} mt="15px">
         <Tabs
           position="relative"
-          defaultIndex={defaultTabIndex}
+          defaultIndex={tabIndex}
           index={tabIndex}
           onChange={handleTabsChange}
         >
