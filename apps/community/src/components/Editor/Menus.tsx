@@ -1,4 +1,10 @@
-import { Button, ButtonProps, HStack, StackProps } from '@chakra-ui/react'
+import {
+  Button,
+  ButtonProps,
+  Divider,
+  HStack,
+  StackProps,
+} from '@chakra-ui/react'
 import {
   BoldIcon,
   ItalicIcon,
@@ -43,6 +49,7 @@ export const Menus: React.FC<
     toggleOrderedList,
     toggleBulletList,
     toggleStrike,
+    toggleHeading,
     focus,
   } = useCommands()
   const onToggleFunction = useCallback(
@@ -54,6 +61,7 @@ export const Menus: React.FC<
   )
   return (
     <HStack
+      zIndex={1}
       position="sticky"
       top="60px"
       bgColor="cardBackground"
@@ -73,13 +81,37 @@ export const Menus: React.FC<
       <MenuButton onClick={onToggleFunction(toggleUnderline)}>
         <UnderlineIcon />
       </MenuButton>
-      <LinkButton />
+      <Divider orientation="vertical" height="40%" borderColor="#d3d2d2" />
+      <MenuButton
+        onClick={onToggleFunction(() => {
+          toggleHeading({ level: 1 })
+        })}
+      >
+        H1
+      </MenuButton>
+      <MenuButton
+        onClick={onToggleFunction(() => {
+          toggleHeading({ level: 2 })
+        })}
+      >
+        H2
+      </MenuButton>
+      <MenuButton
+        onClick={onToggleFunction(() => {
+          toggleHeading({ level: 3 })
+        })}
+      >
+        H3
+      </MenuButton>
+      <Divider orientation="vertical" height="40%" borderColor="#d3d2d2" />
       <MenuButton onClick={onToggleFunction(toggleOrderedList)}>
         <OrderListIcon />
       </MenuButton>
       <MenuButton onClick={onToggleFunction(toggleBulletList)}>
         <UnOrderListIcon />
       </MenuButton>
+      <Divider orientation="vertical" height="40%" borderColor="#d3d2d2" />
+      <LinkButton />
       <ImageButton {...imageButtonProps} />
     </HStack>
   )

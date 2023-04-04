@@ -57,7 +57,7 @@ export const StateProvider: React.FC<StateProviderProps> = ({
         },
       }),
       new CustomizedImageExtension({
-        enableResizing: true,
+        enableResizing: false,
         uploadHandler: (files) => uploadHandlerFromHomeApi(files, homeApi),
       }),
     ],

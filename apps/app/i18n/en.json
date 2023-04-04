@@ -393,6 +393,7 @@
         "telegram": "Share on Telegram",
         "copy": "Copy",
         "twitter": "Share on Twitter",
+        "system-share": "Share",
         "premium-only": "Premium-only",
         "cover-access": "This content is only available to paid subscribers.",
         "cover-buy-text": "Subscribe to gain exclusive access to <b>{{name}}'s</b> premium content.",

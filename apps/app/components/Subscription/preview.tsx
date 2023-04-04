@@ -364,6 +364,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
             shareUrl={`${APP_URL}/p/${id}`}
             text={detail.subject}
             iconW="22px"
+            articleId={id}
           />
         </Flex>
         <Box fontWeight={500} fontSize="12px" color="#6F6F6F" mt="4px">
@@ -397,7 +398,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
       <Box className="scroll-main-wrap">
         <Text
           fontWeight={700}
-          fontSize={{ base: '16px', md: '28px' }}
+          fontSize={{ base: '28px', md: '32px' }}
           textAlign="center"
           pt={{ base: '15px', md: '20px' }}
         >
@@ -498,6 +499,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
           shareUrl={`${APP_URL}/p/${id}`}
           text={detail.subject}
           iconW="22px"
+          articleId={id}
         />
       </Center>
     </Wrap>

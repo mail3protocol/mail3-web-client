@@ -142,7 +142,7 @@ export const NewMessage = () => {
   }
 
   return (
-    <Container as={Flex} flexDirection="column">
+    <Container as={Flex} flexDirection="column" maxW="798px">
       <StateProvider
         placeholder={t('editor_placeholder')}
         as={Flex}
@@ -200,8 +200,7 @@ export const NewMessage = () => {
           bg="cardBackground"
           shadow="card"
           rounded="card"
-          px="24px"
-          py="32px"
+          p="32px"
           mt="20px"
           flex={1}
           flexDirection="column"
@@ -210,6 +209,7 @@ export const NewMessage = () => {
             <PreviewSimulator
               subject={subjectText}
               html={currentPreviewContent}
+              abstract={abstract}
             />
           ) : null}
           <Box

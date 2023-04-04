@@ -148,7 +148,7 @@ export const SubscriptionArticleBody: React.FC<
         >
           <Text
             fontWeight="700"
-            fontSize={{ base: '24px', md: '32px' }}
+            fontSize={{ base: '28px', md: '32px' }}
             lineHeight="1.3"
           >
             {detail?.subject}
@@ -234,6 +234,7 @@ export const SubscriptionArticleBody: React.FC<
                 shareUrl={shareUrl}
                 text={detail.subject}
                 iconW="22px"
+                articleId={articleId}
               />
             </Flex>
           ) : null}
@@ -298,6 +299,7 @@ export const SubscriptionArticleBody: React.FC<
               shareUrl={shareUrl}
               text={detail.subject}
               iconW="28px"
+              articleId={articleId}
             />
           </Center>
           {!isMobile ? EchoBody : null}

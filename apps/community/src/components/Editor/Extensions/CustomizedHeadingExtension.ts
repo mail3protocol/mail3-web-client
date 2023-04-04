@@ -7,9 +7,9 @@ import {
 import { HeadingExtension } from 'remirror/extensions'
 
 const levelStyles: { [key in string]: string } = {
-  1: 'font-size: 32px',
-  2: 'font-size: 28px',
-  3: 'font-size: 24px',
+  1: 'font-size: 26px',
+  2: 'font-size: 24px',
+  3: 'font-size: 22px',
   4: 'font-size: 18px',
   5: 'font-size: 16px',
   6: 'font-size: 14px',
@@ -27,7 +27,7 @@ export class CustomizedHeadingExtension extends HeadingExtension {
       ...override,
       attrs: {
         ...extra.defaults(),
-        style: { default: 'font-size: 32px' },
+        style: { default: 'font-size: 26px' },
         level: {
           default: this.options.defaultLevel,
         },
