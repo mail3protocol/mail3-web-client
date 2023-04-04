@@ -331,15 +331,15 @@ export const SettingAddress: React.FC = () => {
       async onSuccess(d) {
         const defaultAlias: Alias =
           d.aliases.find((alias) => alias.is_default) || d.aliases[0]
-        const tabType = defaultAlias.email_type as AliasMailType
+        const itemType = defaultAlias.email_type as AliasMailType
 
         setActiveAccount(defaultAlias.uuid)
         setTabIndex(
-          typeof indexMap[tabType] === 'number'
-            ? (indexMap[tabType] as number)
+          typeof indexMap[itemType] === 'number'
+            ? (indexMap[itemType] as number)
             : TabItemType.More
         )
-        setActiveMoreItem(MoreItemTypeMap[tabType] || MoreItemType.Default)
+        setActiveMoreItem(MoreItemTypeMap[itemType] || MoreItemType.Default)
 
         const userInfo = await api.getUserInfo()
         const { aliases } = d
