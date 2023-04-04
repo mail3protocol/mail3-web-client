@@ -9,6 +9,7 @@ import { Information } from '../pages/information'
 import { Premium } from '../pages/subscribe/premium'
 import { NotFoundPage } from '../pages/_404'
 import { CoAuthors } from '../pages/co-authors'
+import { ChatGPT } from '../pages/chatgpt'
 
 interface ExpandedRouterProps extends RouteProps {
   key: string
@@ -56,6 +57,12 @@ export const routes: ExpandedRouterProps[] = [
     path: RoutePath.CoAuthors,
     key: 'members',
     element: <CoAuthors />,
+  },
+
+  {
+    path: RoutePath.ChatGPT,
+    key: 'chatgpt',
+    element: <ChatGPT />,
   },
   {
     path: '*',

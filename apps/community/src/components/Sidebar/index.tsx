@@ -73,6 +73,16 @@ export const Sidebar: React.FC = () => {
           },
         ]
       : []),
+    {
+      label: (
+        <>
+          <Icon as={SubscribeSvg} w="16px" h="16px" mr="4px" />
+          {t('sidebar.chatgpt')}
+        </>
+      ),
+      to: RoutePath.ChatGPT,
+      key: 'chatgpt_bot',
+    },
   ]
 
   return (
