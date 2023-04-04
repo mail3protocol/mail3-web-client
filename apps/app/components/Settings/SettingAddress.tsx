@@ -305,6 +305,11 @@ export const SettingAddress: React.FC = () => {
   const [activeAccount, setActiveAccount] = useState(account)
   const [activeMoreItem, setActiveMoreItem] = useState(MoreItemType.Default)
 
+  const MoreItemTypeMap: { [key in AliasMailType]?: MoreItemType } = {
+    [AliasMailType.Bnb]: MoreItemType.Bnb,
+    [AliasMailType.UD]: MoreItemType.Ud,
+  }
+
   const {
     data: aliasDate,
     isLoading,
@@ -320,7 +325,13 @@ export const SettingAddress: React.FC = () => {
       async onSuccess(d) {
         const defaultAlias: Alias =
           d.aliases.find((alias) => alias.is_default) || d.aliases[0]
+
         setActiveAccount(defaultAlias.uuid)
+        setActiveMoreItem(
+          MoreItemTypeMap[defaultAlias.email_type as AliasMailType] ||
+            MoreItemType.Default
+        )
+
         const userInfo = await api.getUserInfo()
         const { aliases } = d
         const defaultAddress = defaultAlias.address
@@ -517,7 +528,6 @@ export const SettingAddress: React.FC = () => {
       [AliasMailType.Ens]: 0,
       [AliasMailType.Bit]: 1,
       [AliasMailType.SubBit]: 2,
-      [AliasMailType.UD]: 3,
     }
     const currentIndex = indexMap[defaultAlias?.email_type as AliasMailType]
     return currentIndex === undefined ? 3 : currentIndex
