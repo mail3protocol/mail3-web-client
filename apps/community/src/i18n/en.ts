@@ -529,8 +529,11 @@ export default {
       translation: 'AI Translation',
     },
     translation: {
-      reach_text:
-        'Once your subscribers reach a certain number, we will unlock more language translation features for you. Your posts will be automatically translated into more languages for readers. Build your borderless community ；).',
+      reach_text: `<ul>
+      <li><text>Once your subscribers reach a certain number, we will unlock more language translation features for you. </text></li>
+      <li><text>Your posts will be automatically translated into more languages for readers. </text></li>
+      <li><text>Build your borderless community.</text></li>.
+      </ul>`,
       'english_unlocked ': 'English unlocked ',
       unlock: 'languages unlocked',
       subscribers: 'Subscribers',

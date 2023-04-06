@@ -1,15 +1,18 @@
 import {
+  Box,
   BoxProps,
   Checkbox,
   Flex,
   Grid,
   Heading,
+  ListItem,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Text,
+  UnorderedList,
   useStyleConfig,
 } from '@chakra-ui/react'
 
@@ -106,7 +109,22 @@ export const ChatGPT: React.FC = () => {
 
           <TabPanels>
             <TabPanel p="32px 0">
-              <Text fontWeight={500}>{t('translation.reach_text')}</Text>
+              <Box
+                p="5px 8px"
+                background="containerBackground"
+                borderRadius="8px"
+                fontWeight={300}
+              >
+                <Trans
+                  i18nKey="translation.reach_text"
+                  t={t}
+                  components={{
+                    ul: <UnorderedList />,
+                    li: <ListItem fontSize="8px" lineHeight="0" />,
+                    text: <Text fontSize="12px" lineHeight="18px" />,
+                  }}
+                />
+              </Box>
               {data.map((item) => {
                 const { id, name } = item
                 const isChecked = map[id]
