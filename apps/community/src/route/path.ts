@@ -7,5 +7,5 @@ export enum RoutePath {
   Information = '/information',
   Premium = '/subscribe/premium',
   CoAuthors = '/members',
-  ChatGPT = 'chatgpt-bot',
+  ChatGPT = '/chatgpt',
 }

@@ -1,5 +1,6 @@
 import {
   BoxProps,
+  Checkbox,
   Flex,
   Grid,
   Heading,
@@ -13,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 
 import { Trans, useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -32,6 +33,56 @@ export const ChatGPT: React.FC = () => {
       <Trans i18nKey="translation.helper_text" t={t} components={helperCom} />
     )
   }, [])
+
+  const maxLanguegeCount = 2
+
+  const data = [
+    {
+      id: 1,
+      name: '1',
+      disableForever: true,
+    },
+    {
+      id: 2,
+      name: '1',
+    },
+    {
+      id: 3,
+      name: '1',
+    },
+
+    {
+      id: 4,
+      name: '1',
+    },
+  ]
+
+  const [map, setMap] = useState<{
+    [key: string]: boolean
+  }>({
+    1: true,
+  })
+
+  const [islock, setIsLock] = useState(false)
+  const [isPartlock, setIsPartLock] = useState(false)
+
+  const onChange = (isChecked: boolean, id: number) => {
+    const newCheckMap: { [key: string]: boolean } = { ...map, [id]: !isChecked }
+
+    const isLimitExhausted =
+      Object.keys(newCheckMap).reduce(
+        (count: number, key: string) =>
+          count + (newCheckMap[key] === true ? 1 : 0),
+        0
+      ) >= maxLanguegeCount
+
+    if (isLimitExhausted) {
+      setIsPartLock(true)
+    } else {
+      setIsPartLock(false)
+    }
+    setMap(newCheckMap)
+  }
 
   return (
     <Container as={Grid} gridTemplateColumns="3fr 1fr" gap="20px">
@@ -56,6 +107,20 @@ export const ChatGPT: React.FC = () => {
           <TabPanels>
             <TabPanel p="32px 0">
               <Text fontWeight={500}>{t('translation.reach_text')}</Text>
+              {data.map((item) => {
+                const { id, name } = item
+                const isChecked = map[id]
+                return (
+                  <Checkbox
+                    key={id}
+                    isDisabled={islock || (!isChecked && isPartlock)}
+                    isChecked={isChecked!}
+                    onChange={() => onChange(isChecked, id)}
+                  >
+                    {name}
+                  </Checkbox>
+                )
+              })}
             </TabPanel>
           </TabPanels>
         </Tabs>
