@@ -7,6 +7,7 @@ export enum AliasMailType {
   Eth = 'eth_mail',
   Zilliqa = 'zilliqa_mail',
   UD = 'unstoppable_mail',
+  Bnb = 'spaceid_mail',
 }
 
 export interface Alias {

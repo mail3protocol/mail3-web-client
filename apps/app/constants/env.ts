@@ -105,6 +105,10 @@ export const BIT_DOMAIN =
 export const UD_DOMAIN =
   process.env.NEXT_PUBLIC_UD_DOMAIN || 'https://unstoppabledomains.com/'
 
+export const BNB_DOMAIN =
+  process.env.NEXT_PUBLIC_BNB_DOMAIN ||
+  'https://app.space.id/?inviter=mail3dao.bnb'
+
 envStorage.setServerUrl(SERVER_URL)
 
 export const SERVER_PV_AUTH_TOKEN =
