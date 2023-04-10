@@ -31,7 +31,7 @@ import styled from '@emotion/styled'
 import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'react-i18next'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Button } from 'ui'
 import {
   useAccount,
@@ -302,6 +302,7 @@ export const SettingAddress: React.FC = () => {
   const trackClickRegisterBNB = useTrackClick(TrackEvent.ClickRegisterBNB)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
+  const isFirstFetching = useRef(true)
   const [activeAccount, setActiveAccount] = useState(account)
   const [activeMoreItem, setActiveMoreItem] = useState(MoreItemType.Default)
   const [tabIndex, setTabIndex] = useState(TabItemType.More)
@@ -334,12 +335,15 @@ export const SettingAddress: React.FC = () => {
         const itemType = defaultAlias.email_type as AliasMailType
 
         setActiveAccount(defaultAlias.uuid)
-        setTabIndex(
-          typeof indexMap[itemType] === 'number'
-            ? (indexMap[itemType] as number)
-            : TabItemType.More
-        )
-        setActiveMoreItem(MoreItemTypeMap[itemType] || MoreItemType.Default)
+        if (isFirstFetching.current) {
+          setTabIndex(
+            typeof indexMap[itemType] === 'number'
+              ? (indexMap[itemType] as number)
+              : TabItemType.More
+          )
+          setActiveMoreItem(MoreItemTypeMap[itemType] || MoreItemType.Default)
+          isFirstFetching.current = false
+        }
 
         const userInfo = await api.getUserInfo()
         const { aliases } = d
