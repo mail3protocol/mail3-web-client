@@ -541,7 +541,7 @@ export default {
       primary: 'Your primary writing language',
       primary_text:
         'Please let us know your primary language so we can identify readers and provide them with the original language version if needed.',
-      'more-language': 'Add more language versions for your posts',
+      more_language: 'Add more language versions for your posts',
       provided: 'Provided by the ChatGPT API',
       submit: 'Configure',
       helper_text: `<h3>What is <strong>AI Translation</strong>?</h3>
@@ -555,6 +555,8 @@ export default {
         <li>This service is completely free. We provide English translation by default. If you need more languages, simply increase the number of subscribers to unlock more configurable languages.</li>
       </ul>
   `,
+      language_quotas: 'Language quotas you can configure: ',
+      update: 'Update',
     },
   },
 }

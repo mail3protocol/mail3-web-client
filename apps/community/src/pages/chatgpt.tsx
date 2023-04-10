@@ -1,30 +1,33 @@
 import {
   Box,
   BoxProps,
+  Button,
+  Center,
   Checkbox,
   Circle,
   Flex,
   Grid,
   Heading,
   Icon,
-  ListItem,
   Popover,
   PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Select,
+  SimpleGrid,
+  Spacer,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Text,
-  UnorderedList,
   useStyleConfig,
 } from '@chakra-ui/react'
 
 import { Trans, useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -32,6 +35,107 @@ import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
 import { useHelperComponent } from '../hooks/useHelperCom'
 import { ReactComponent as UnlockSvg } from '../assets/ChatGPT/unlock.svg'
 import { ReactComponent as LockSvg } from '../assets/ChatGPT/lock.svg'
+
+const PRIMARY_LIST = [
+  {
+    label: 'English',
+    id: 0,
+  },
+  {
+    label: '中文(简)',
+    id: 1,
+  },
+  {
+    label: '日本语',
+    id: 2,
+  },
+  {
+    label: '한국인',
+    id: 3,
+  },
+  {
+    label: 'Français',
+    id: 4,
+  },
+]
+
+const TRANSLATE_LIST = [
+  {
+    label: 'English',
+    id: 0,
+  },
+  {
+    label: '中文',
+    id: 1,
+  },
+  {
+    label: '日本語',
+    id: 2,
+  },
+  {
+    label: '한국어',
+    id: 3,
+  },
+  {
+    label: 'français',
+    id: 4,
+  },
+  {
+    label: 'العربية',
+    id: 5,
+  },
+  {
+    label: 'español',
+    id: 6,
+  },
+  {
+    label: 'português',
+    id: 7,
+  },
+  {
+    label: 'Deutsch',
+    id: 8,
+  },
+  {
+    label: 'русский',
+    id: 9,
+  },
+  {
+    label: 'Bahasa Indonesia',
+    id: 10,
+  },
+  {
+    label: 'हिन्दी',
+    id: 11,
+  },
+]
+
+const lockProgressConfig = [
+  {
+    subscribers: 0,
+    unlockNum: 0,
+  },
+  {
+    subscribers: 10,
+    unlockNum: 1,
+  },
+  {
+    subscribers: 100,
+    unlockNum: 2,
+  },
+  {
+    subscribers: 500,
+    unlockNum: 3,
+  },
+  {
+    subscribers: 1000,
+    unlockNum: 5,
+  },
+  {
+    subscribers: 10000,
+    unlockNum: 10,
+  },
+]
 
 export const ChatGPT: React.FC = () => {
   useDocumentTitle('ChatGPT Bot')
@@ -46,96 +150,51 @@ export const ChatGPT: React.FC = () => {
     )
   }, [])
 
-  const maxLanguegeCount = 2
-
-  const data = [
-    {
-      id: 1,
-      name: '1',
-      disableForever: true,
-    },
-    {
-      id: 2,
-      name: '1',
-    },
-    {
-      id: 3,
-      name: '1',
-    },
-
-    {
-      id: 4,
-      name: '1',
-    },
-  ]
-
-  const currentCount = 100
-  const lockProgressConfig = [
-    {
-      subscribers: 0,
-      unlockNum: 0,
-    },
-    {
-      subscribers: 10,
-      unlockNum: 1,
-    },
-    {
-      subscribers: 100,
-      unlockNum: 2,
-    },
-    {
-      subscribers: 500,
-      unlockNum: 3,
-    },
-    {
-      subscribers: 1000,
-      unlockNum: 5,
-    },
-    {
-      subscribers: 10000,
-      unlockNum: 10,
-    },
-  ]
-
-  const [map, setMap] = useState<{
+  const [checkMap, setCheckMap] = useState<{
     [key: string]: boolean
-  }>({
-    1: true,
-  })
-
-  const [islock, setIsLock] = useState(false)
+  }>({})
   const [isPartlock, setIsPartLock] = useState(false)
+  const [maxSubscribers] = useState(99999)
+
+  const curProgressData = useMemo(
+    () =>
+      lockProgressConfig.reduce(
+        (acc, cur) => {
+          if (cur.subscribers <= maxSubscribers) {
+            return cur
+          }
+          return acc
+        },
+        {
+          subscribers: 0,
+          unlockNum: 0,
+        }
+      ),
+    [maxSubscribers]
+  )
+
+  const maxQuotas = curProgressData.unlockNum
 
   const onChange = (isChecked: boolean, id: number) => {
-    const newCheckMap: { [key: string]: boolean } = { ...map, [id]: !isChecked }
+    const newCheckMap: { [key: string]: boolean } = {
+      ...checkMap,
+      [id]: !isChecked,
+    }
 
     const isLimitExhausted =
       Object.keys(newCheckMap).reduce(
         (count: number, key: string) =>
           count + (newCheckMap[key] === true ? 1 : 0),
         0
-      ) >= maxLanguegeCount
+      ) >= maxQuotas
 
     if (isLimitExhausted) {
       setIsPartLock(true)
     } else {
       setIsPartLock(false)
     }
-    setMap(newCheckMap)
+    setCheckMap(newCheckMap)
   }
-
-  const curProgressData = lockProgressConfig.reduce(
-    (acc, cur) => {
-      if (cur.subscribers <= currentCount) {
-        return cur
-      }
-      return acc
-    },
-    {
-      subscribers: 0,
-      unlockNum: 0,
-    }
-  )
 
   return (
     <Container as={Grid} gridTemplateColumns="3fr 1fr" gap="20px">
@@ -171,7 +230,7 @@ export const ChatGPT: React.FC = () => {
                     : `${t('translation.unlock')}${curProgressData.unlockNum}`}
                 </Text>
                 <Text mt="4px">
-                  {`${t('translation.subscribers')}: ${currentCount}`}
+                  {`${t('translation.subscribers')}: ${maxSubscribers}`}
                 </Text>
               </Box>
               <Box
@@ -184,7 +243,7 @@ export const ChatGPT: React.FC = () => {
                 <Flex ml="-77px">
                   {lockProgressConfig.map((item, index) => {
                     const { subscribers, unlockNum } = item
-                    const isActive = currentCount >= subscribers
+                    const isActive = maxSubscribers >= subscribers
                     const isFirst = index === 0
                     return (
                       <Flex
@@ -259,20 +318,105 @@ export const ChatGPT: React.FC = () => {
                 </Flex>
               </Box>
 
-              {data.map((item) => {
-                const { id, name } = item
-                const isChecked = map[id]
-                return (
-                  <Checkbox
-                    key={id}
-                    isDisabled={islock || (!isChecked && isPartlock)}
-                    isChecked={isChecked!}
-                    onChange={() => onChange(isChecked, id)}
+              <Box mt="32px">
+                <Text fontWeight="400" fontSize="14px" lineHeight="20px">
+                  <Box display="inline" color="importantColor">
+                    *
+                  </Box>
+                  {t('translation.primary')}
+                </Text>
+                <Text
+                  fontWeight="400"
+                  fontSize="12px"
+                  lineHeight="16px"
+                  color="secondaryTitleColor"
+                >
+                  {t('translation.primary_text')}
+                </Text>
+
+                <Box w="124px" mt="16px">
+                  <Select
+                    placeholder="Choose"
+                    onChange={({ target: { value } }) => {
+                      console.log(value)
+                    }}
                   >
-                    {name}
-                  </Checkbox>
-                )
-              })}
+                    {PRIMARY_LIST.map((item) => {
+                      const { label, id } = item
+                      return (
+                        <option key={id} value={id}>
+                          {label}
+                        </option>
+                      )
+                    })}
+                  </Select>
+                </Box>
+              </Box>
+
+              <Box
+                mt="32px"
+                w="700px"
+                p="8px 0"
+                rounded="16px"
+                border="1px solid"
+                borderColor="previewBorder"
+              >
+                <Center
+                  p="0 16px 8px"
+                  borderBottom="1px solid"
+                  borderColor="previewBorder"
+                >
+                  <Box fontWeight="510" fontSize="14px" lineHeight="20px">
+                    {t('translation.more_language')}
+                  </Box>
+                  <Spacer />
+                  <Box
+                    fontWeight="400"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    color="importantColor"
+                  >
+                    {`${t('translation.language_quotas')}${maxQuotas}`}
+                  </Box>
+                </Center>
+
+                <SimpleGrid
+                  p="40px 20px 30px"
+                  spacing="20px"
+                  minChildWidth="80px"
+                >
+                  {TRANSLATE_LIST.map((item, index) => {
+                    const { id, label } = item
+                    const isChecked = checkMap[id]
+                    const isFirstItem = !index
+                    const isLock = !maxQuotas
+
+                    return (
+                      <Checkbox
+                        key={id}
+                        isDisabled={
+                          isLock || isFirstItem || (!isChecked && isPartlock)
+                        }
+                        isChecked={isFirstItem || isChecked!}
+                        onChange={() => onChange(isChecked, id)}
+                      >
+                        {label}
+                      </Checkbox>
+                    )
+                  })}
+                </SimpleGrid>
+              </Box>
+
+              <Button
+                mt="32px"
+                variant="solid-rounded"
+                colorScheme="primaryButton"
+                type="submit"
+                // isLoading={isUpdating}
+                // isDisabled={isDisabledSubmit}
+              >
+                {t('update')}
+              </Button>
             </TabPanel>
           </TabPanels>
         </Tabs>
