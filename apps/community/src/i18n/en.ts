@@ -534,8 +534,9 @@ export default {
       <li><text>Your posts will be automatically translated into more languages for readers. </text></li>
       <li><text>Build your borderless community.</text></li>.
       </ul>`,
-      'english_unlocked ': 'English unlocked ',
-      unlock: 'languages unlocked',
+      english_unlocked: 'English unlocked ',
+      unlock: 'Language quotas unlocked: ',
+      unlock_quotas: 'Unlock quotas: ',
       subscribers: 'Subscribers',
       primary: 'Your primary writing language',
       primary_text:
