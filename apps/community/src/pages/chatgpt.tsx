@@ -154,6 +154,7 @@ export const ChatGPT: React.FC = () => {
     [key: string]: boolean
   }>({})
   const [isPartlock, setIsPartLock] = useState(false)
+  const [primary, setPrimary] = useState('')
   const [maxSubscribers] = useState(99999)
 
   const curProgressData = useMemo(
@@ -194,6 +195,11 @@ export const ChatGPT: React.FC = () => {
       setIsPartLock(false)
     }
     setCheckMap(newCheckMap)
+  }
+
+  const onSubmit = () => {
+    console.log(primary)
+    console.log(checkMap)
   }
 
   return (
@@ -337,8 +343,9 @@ export const ChatGPT: React.FC = () => {
                 <Box w="124px" mt="16px">
                   <Select
                     placeholder="Choose"
+                    value={primary}
                     onChange={({ target: { value } }) => {
-                      console.log(value)
+                      setPrimary(value)
                     }}
                   >
                     {PRIMARY_LIST.map((item) => {
@@ -413,9 +420,10 @@ export const ChatGPT: React.FC = () => {
                 colorScheme="primaryButton"
                 type="submit"
                 // isLoading={isUpdating}
-                // isDisabled={isDisabledSubmit}
+                onClick={onSubmit}
+                isDisabled={!primary}
               >
-                {t('update')}
+                {t('translation.update')}
               </Button>
             </TabPanel>
           </TabPanels>
