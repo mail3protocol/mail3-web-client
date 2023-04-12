@@ -1,5 +1,4 @@
 import {
-  AvatarProps as RawAvatarProps,
   SkeletonCircle,
   SkeletonProps,
   LayoutProps,
@@ -17,10 +16,10 @@ import {
 } from 'shared'
 import { useEffect } from 'react'
 import PngAvatar from 'assets/png/default-avatar.png'
-import { RawAvatar } from './rawAvatar'
+import { RawAvatar, RowAvatarProps } from './rawAvatar'
 import { unifyImage } from '../utils'
 
-export interface AvatarProps extends RawAvatarProps {
+export interface AvatarProps extends RowAvatarProps {
   address: string
   src?: string
   skeletonProps?: SkeletonProps

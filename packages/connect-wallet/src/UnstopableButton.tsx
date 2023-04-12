@@ -204,7 +204,7 @@ const UnstopableDialog: React.FC<UnstopableDialogProps> = ({
         <ModalFooter>
           {isWrongAddress ? null : (
             <Button
-              isFullWidth
+              w="full"
               variant="primary"
               bg="brand.500"
               mb="16px"

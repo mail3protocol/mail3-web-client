@@ -1,4 +1,4 @@
-import { StepsStyleConfig } from 'chakra-ui-steps'
+import { StepsTheme as StepsStyleConfig } from 'chakra-ui-steps'
 
 const StepsTheme = {
   ...StepsStyleConfig,

@@ -1,7 +1,6 @@
 export { Button } from './Button'
 export { theme } from './theme'
 export { CommunityTheme } from './theme/CommunityTheme'
-export { LinkButton } from './LinkButton'
 export { Avatar, defaultAvatar } from './Avatar'
 export type { AvatarProps } from './Avatar'
 export { ProfileCard } from './ProfileCard'

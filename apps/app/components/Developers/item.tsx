@@ -10,17 +10,19 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import React, { ReactNode, useMemo } from 'react'
+import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
 import { GithubIcon, InterestIcon, MirrorIcon, RightArrowIcon } from 'ui'
 import { ReactComponent as SubscribeIcon } from '../../assets/developers/subscribe.svg'
 
-export const Item: React.FC<{
-  title: string
-  descriptionBgColor: string
-  description: string
-  image: string
-  links: ReactNode
-}> = ({ title, descriptionBgColor, description, image, links, children }) => (
+export const Item: React.FC<
+  PropsWithChildren<{
+    title: string
+    descriptionBgColor: string
+    description: string
+    image: string
+    links: ReactNode
+  }>
+> = ({ title, descriptionBgColor, description, image, links, children }) => (
   <Grid
     templateColumns={{ base: 'full', lg: '418px 1fr' }}
     templateRows={{ base: 'min(228px, 1fr) 1fr', lg: 'full' }}

@@ -62,10 +62,9 @@ import { UserSettingResponse } from '../../api'
 import { MAIL_SERVER_URL } from '../../constants'
 import { SubscribeButtonInApp } from '../SubscribeButtonInApp'
 import { Query } from '../../api/query'
+import { useRootURL } from '../../hooks/useRootURL'
 
 const CONTAINER_MAX_WIDTH = 1280
-
-const homeUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL
 
 enum ButtonType {
   Copy,
@@ -156,7 +155,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const shareUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
+  const rootURL = useRootURL()
+  const shareURL = `${rootURL}/${address}`
 
   const buttonConfig: Record<
     ButtonType,
@@ -182,14 +182,14 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   const actionMap = useMemo(
     () => ({
       [ButtonType.Copy]: async () => {
-        await copyText(shareUrl)
+        await copyText(shareURL)
         toast(t('navbar.copied', { ns: 'common' }))
         popoverRef?.current?.blur()
       },
       [ButtonType.Twitter]: () => {
         shareToTwitter({
           text: 'Hey, visit my Subscription Page to view my latest content @mail3dao',
-          url: shareUrl,
+          url: shareURL,
         })
       },
       [ButtonType.Card]: async () => {

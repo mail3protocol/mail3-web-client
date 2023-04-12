@@ -60,7 +60,7 @@ export const AuthModal: React.FC<{
           <VStack spacing="20px">
             <Text>{t('auth.desc')}</Text>
             <Button
-              isFullWidth
+              w="full"
               colorScheme="gray"
               color="black"
               cursor="text"
@@ -81,7 +81,7 @@ export const AuthModal: React.FC<{
               isLoading={isLoading}
               loadingText={t('auth.check-wallet')}
               onClick={onRemember}
-              isFullWidth
+              w="full"
             >
               {t('auth.remember')}
             </Button>

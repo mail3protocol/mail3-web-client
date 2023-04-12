@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { ReactNode, useCallback } from 'react'
 import {
   useToast as useChakraToast,
   UseToastOptions,
@@ -20,7 +20,7 @@ const isMobile = () =>
 export const useToast = () => {
   const toast = useChakraToast()
   return useCallback(
-    (message: React.ReactNode, options?: ToastOptions) => {
+    (message: ReactNode, options?: ToastOptions) => {
       toast.closeAll()
       const IS_MOBILE = isMobile()
       const {
@@ -44,7 +44,7 @@ export const useToast = () => {
           >
             <AlertIcon color="black" />
             <Text fontSize="16px" {...textProps}>
-              {message}
+              {message as any}
             </Text>
           </Alert>
         ),

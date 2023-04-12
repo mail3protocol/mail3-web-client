@@ -1,28 +1,31 @@
 import { Icon, Input } from '@chakra-ui/react'
 import { useCommands } from '@remirror/react'
-import { useCallback, useRef } from 'react'
+import { ChangeEventHandler, useCallback, useRef } from 'react'
 import { ReactComponent as ImageSvg } from 'assets/svg/editor/image.svg'
 import { ButtonBase } from './Base'
 
 export const ImageButton: React.FC = () => {
   const { insertImage } = useCommands()
   const inputFileRef = useRef<HTMLInputElement>(null)
-  const onUploadImage = useCallback(async (e) => {
-    const target = e.target as HTMLInputElement
-    if (!target.files?.[0]) return
-    const file = target.files[0]
-    target.value = ''
-    const blob = await file
-      .arrayBuffer()
-      .then(
-        (arrayBuffer) =>
-          new Blob([new Uint8Array(arrayBuffer)], { type: file.type })
-      )
-    insertImage({
-      src: URL.createObjectURL(blob),
-    })
-    focus()
-  }, [])
+  const onUploadImage = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    async (e) => {
+      const target = e.target as HTMLInputElement
+      if (!target.files?.[0]) return
+      const file = target.files[0]
+      target.value = ''
+      const blob = await file
+        .arrayBuffer()
+        .then(
+          (arrayBuffer) =>
+            new Blob([new Uint8Array(arrayBuffer)], { type: file.type })
+        )
+      insertImage({
+        src: URL.createObjectURL(blob),
+      })
+      focus()
+    },
+    []
+  )
   return (
     <>
       <Input
