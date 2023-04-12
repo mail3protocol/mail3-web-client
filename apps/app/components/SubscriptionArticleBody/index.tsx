@@ -36,6 +36,7 @@ import { ShareButtonGroup } from '../ShareButtonGroup'
 import { BuyPremium, isBuyingAtom } from './buyPremium'
 import { Query } from '../../api/query'
 import { subscribeButtonIsFollowAtom } from '../SubscribeButtonInApp'
+import { LanguageSelect } from './languageSelect'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -146,7 +147,9 @@ export const SubscriptionArticleBody: React.FC<
           p={{ base: '32px 20px', md: '48px 32px' }}
           w={{ base: 'full', md: '71.33%' }}
         >
+          <LanguageSelect />
           <Text
+            mt="24px"
             fontWeight="700"
             fontSize={{ base: '28px', md: '32px' }}
             lineHeight="1.3"

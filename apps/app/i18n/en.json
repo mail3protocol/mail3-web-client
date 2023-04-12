@@ -407,6 +407,7 @@
         "buy-ok":"You are now a Premium Member of \n <b>{{name}}</b>",
         "sub-domain":"Enter and find the sub-domain you like",
         "free-now": "Start at Free",
-        "ipfs":"This post has been permanently stored on IPFS"
+        "ipfs":"The original version of this post has been permanently stored by IPFS",
+        "current-language": "Current language: "
     }
 }
