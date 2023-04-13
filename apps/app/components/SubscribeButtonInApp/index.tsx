@@ -81,6 +81,7 @@ const SubscribeButtonView: React.FC<{
     >
       {!isMobile ? 'Subscribe' : null}
       <Center
+        as="span"
         bg="#4E52F5"
         transform="skew(-10deg)"
         position="absolute"
@@ -90,7 +91,9 @@ const SubscribeButtonView: React.FC<{
         h="100%"
         fontSize={{ base: '12px', md: '14px' }}
       >
-        <Box transform="skew(10deg)">Earn NFT</Box>
+        <Box as="span" transform="skew(10deg)">
+          Earn NFT
+        </Box>
       </Center>
     </Button>
   )

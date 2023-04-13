@@ -1,5 +1,5 @@
 import { Box, Grid, Icon, Link } from '@chakra-ui/react'
-import React, { useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TrackEvent, useTrackClick } from 'hooks'
 
@@ -20,7 +20,7 @@ export const IpfsInfoTable: React.FC<{
   ipfs?: string
   ethAddress?: string
   contentDigest?: string
-  title?: string
+  title?: ReactNode
 }> = ({ ipfs, ethAddress, contentDigest, title }) => {
   const [t] = useTranslation('ipfs')
   function pendingBackupText(str?: string) {

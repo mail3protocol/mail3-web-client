@@ -3,7 +3,6 @@ import {
   Center,
   Flex,
   Icon,
-  Link,
   Spacer,
   Spinner,
   Text,
@@ -178,8 +177,8 @@ export const SubscriptionArticleBody: React.FC<
 
           {isMobile ? (
             <Flex mt="24px">
-              <Link
-                display="flex"
+              <Flex
+                as="a"
                 href={`${APP_URL}/${address}`}
                 target="_blank"
                 alignItems="center"
@@ -202,7 +201,7 @@ export const SubscriptionArticleBody: React.FC<
                     {truncateMailAddress(mailAddress)}
                   </Box>
                 </Box>
-              </Link>
+              </Flex>
               <Spacer />
               <Flex
                 fontWeight={500}

@@ -12,7 +12,7 @@ import {
   Box,
 } from '@chakra-ui/react'
 import { useActive, useCommands, useCurrentSelection } from '@remirror/react'
-import { useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { ReactComponent as LinkSvg } from 'assets/svg/editor/link.svg'
 import { Button } from 'ui'
 import { useTranslation } from 'react-i18next'
@@ -51,7 +51,7 @@ export const LinkButton: React.FC = () => {
     () => LinkVerifyRules.find((rule) => rule.match(linkValue))?.error,
     [linkValue]
   )
-  const errorTextMap: { [key in LinkErrorType]?: string } = {
+  const errorTextMap: { [key in LinkErrorType]?: ReactNode } = {
     [LinkErrorType.Invalid]: t('invalid_url'),
     [LinkErrorType.NotHttps]: t('only_supported_https'),
   }

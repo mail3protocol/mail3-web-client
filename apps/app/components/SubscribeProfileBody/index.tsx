@@ -350,28 +350,28 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     [settings?.description]
   )
 
-  const isShowMore = useMemo(
-    () =>
-      isVerifyOverflow({
-        str: desc,
-        fontSize: '12px',
-        height: '20',
-        width: `${descRef.current?.offsetWidth || 560}px`,
-        lineHeight: '20px',
-      }),
-    [desc, descRef.current]
-  )
-
   useDidMount(() => {
     setIsDid(true)
   })
+
+  const isShowMore = useMemo(
+    () =>
+      isDid
+        ? isVerifyOverflow({
+            str: desc,
+            fontSize: '12px',
+            height: '20',
+            width: `${descRef.current?.offsetWidth || 560}px`,
+            lineHeight: '20px',
+          })
+        : false,
+    [desc, descRef.current]
+  )
 
   const buttonList = useMemo(() => {
     if (isMobile) return [ButtonType.Twitter, ButtonType.Copy]
     return [ButtonType.Twitter, ButtonType.Copy, ButtonType.Card]
   }, [isMobile])
-
-  if (!isDid) return null
 
   return (
     <>
@@ -466,12 +466,14 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
               borderRadius="50%"
               overflow="hidden"
             >
-              <Avatar
-                src={userInfo.avatar}
-                address={priAddress}
-                w="100%"
-                h="100%"
-              />
+              {isDid ? (
+                <Avatar
+                  src={userInfo.avatar}
+                  address={priAddress}
+                  w="100%"
+                  h="100%"
+                />
+              ) : null}
             </Box>
             <Text
               fontWeight="700"

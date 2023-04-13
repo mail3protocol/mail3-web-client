@@ -14,7 +14,6 @@ import { SubscribeProfileDataProps } from '../components/SubscribeProfileBody'
 import { SubscribeProfile } from '../csr_pages/subscribeProfile'
 import { App } from '../csr_pages/app'
 import { API } from '../api'
-import { SafeHydrate } from '../components/SafeHydrate'
 import { getLogger, LoggerLevel } from '../logger'
 
 export const getStaticProps = async ({
@@ -188,13 +187,11 @@ export default function SubscribeProfilePage(props: Props) {
         />
         <link rel="apple-touch-icon" href="/icons/icon-144x144.png" />
       </Head>
-      <SafeHydrate>
-        <App>
-          <StaticRouter location="/:id">
-            <SubscribeProfile {...data} />
-          </StaticRouter>
-        </App>
-      </SafeHydrate>
+      <App>
+        <StaticRouter location="/:id">
+          <SubscribeProfile {...data} />
+        </StaticRouter>
+      </App>
     </>
   )
 }
