@@ -150,65 +150,63 @@ export const LanguageSelect = () => {
               {value} <Icon as={ArrowSvg} w="12px" h="12px" ml="10px" />
             </Center>
           </PopoverTrigger>
-          <Portal>
-            <PopoverContent>
-              <PopoverBody p="0">
-                <Box p="20px 24px 0">
-                  <Text
-                    fontWeight="400"
-                    fontSize="12px"
-                    lineHeight="16px"
-                    color="#737373"
-                  >
-                    {t('current-language')}
-                    <Box as="span" fontSize="14px" color="black">
-                      {value}
-                    </Box>
-                  </Text>
-                  <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
-                  <SimpleGrid
-                    columns={2}
-                    {...getRootProps()}
-                    spacingX="8px"
-                    spacingY="5px"
-                  >
-                    {TRANSLATE_LIST.map((item) => {
-                      const { id, label, isDisabled } = item
-                      return (
-                        <CustomRadio
-                          isDisabled={isDisabled}
-                          key={id}
-                          label={label}
-                          {...getRadioProps({ value: label })}
-                        />
-                      )
-                    })}
-                  </SimpleGrid>
-                  <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
-                  <CustomRadio
-                    key="Original language"
-                    label="Original language"
-                    {...getRadioProps({ value: 'Original language' })}
-                  />
-                </Box>
-                <Center
-                  mt="16px"
-                  p="10px 0"
+          <PopoverContent>
+            <PopoverBody p="0">
+              <Box p="20px 24px 0">
+                <Text
+                  fontWeight="400"
                   fontSize="12px"
-                  lineHeight="14px"
-                  bgColor="#F2F2F2"
+                  lineHeight="16px"
+                  color="#737373"
                 >
-                  <Text fontWeight="300" mr="10px">
-                    Provided by the
-                  </Text>
-                  <ChatIconBlackSvg />
-                  <Text ml="2px" fontWeight="700">
-                    ChatGPT API
-                  </Text>
-                </Center>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
+                  {t('current-language')}
+                  <Box as="span" fontSize="14px" color="black">
+                    {value}
+                  </Box>
+                </Text>
+                <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
+                <SimpleGrid
+                  columns={2}
+                  {...getRootProps()}
+                  spacingX="8px"
+                  spacingY="5px"
+                >
+                  {TRANSLATE_LIST.map((item) => {
+                    const { id, label, isDisabled } = item
+                    return (
+                      <CustomRadio
+                        isDisabled={isDisabled}
+                        key={id}
+                        label={label}
+                        {...getRadioProps({ value: label })}
+                      />
+                    )
+                  })}
+                </SimpleGrid>
+                <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
+                <CustomRadio
+                  key="Original language"
+                  label="Original language"
+                  {...getRadioProps({ value: 'Original language' })}
+                />
+              </Box>
+              <Center
+                mt="16px"
+                p="10px 0"
+                fontSize="12px"
+                lineHeight="14px"
+                bgColor="#F2F2F2"
+              >
+                <Text fontWeight="300" mr="10px">
+                  Provided by the
+                </Text>
+                <ChatIconBlackSvg />
+                <Text ml="2px" fontWeight="700">
+                  ChatGPT API
+                </Text>
+              </Center>
+            </PopoverBody>
+          </PopoverContent>
         </Popover>
       </Flex>
     </Box>

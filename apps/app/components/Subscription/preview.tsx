@@ -42,6 +42,7 @@ import { RoutePath } from '../../route/path'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { ShareButtonGroup } from '../ShareButtonGroup'
 import { BuyPremium } from '../SubscriptionArticleBody/buyPremium'
+import { LanguageSelect } from '../SubscriptionArticleBody/languageSelect'
 
 const Container = styled(Box)`
   width: 64.43%;
@@ -396,6 +397,7 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         </Box>
       </Center>
       <Box className="scroll-main-wrap">
+        <LanguageSelect />
         <Text
           fontWeight={700}
           fontSize={{ base: '28px', md: '32px' }}
