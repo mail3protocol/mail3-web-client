@@ -430,6 +430,10 @@ export class API {
     return this.axios.put(`/account/unstoppable_aliases`)
   }
 
+  public async updateAliasBnbList() {
+    return this.axios.put(`/account/spaceid_aliases`)
+  }
+
   public updateMessageEncryptionKey(messageEncryptionKey: string) {
     return this.axios.put('/account/settings/message_encryption_keys', {
       message_encryption_key: messageEncryptionKey,

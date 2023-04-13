@@ -25,12 +25,13 @@ import {
   Portal,
   Icon as RawIcon,
   Tooltip,
+  Image,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTranslation, Trans } from 'react-i18next'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Button } from 'ui'
 import {
   useAccount,
@@ -68,6 +69,7 @@ import { ReactComponent as CircleCurSvg } from '../../assets/settings/tick-circl
 import { ReactComponent as CircleSvg } from '../../assets/settings/tick-circle.svg'
 import { ReactComponent as SwitchSvg } from '../../assets/settings/switch.svg'
 import { ReactComponent as ArrawDowmSvg } from '../../assets/settings/arrow-down.svg'
+import PngBnb from '../../assets/settings/bnb.png'
 import { RoutePath } from '../../route/path'
 import { Mascot } from './Mascot'
 import {
@@ -75,6 +77,7 @@ import {
   ENS_DOMAIN,
   MAIL_SERVER_URL,
   UD_DOMAIN,
+  BNB_DOMAIN,
 } from '../../constants'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { RouterLink } from '../RouterLink'
@@ -85,6 +88,7 @@ export enum AliasType {
   BIT = 'BIT',
   SUB_BIT = 'SUB_BIT',
   UD = 'UD',
+  BNB = 'BNB',
 }
 
 enum TabItemType {
@@ -97,6 +101,7 @@ enum TabItemType {
 enum MoreItemType {
   Default = 1,
   Ud = 2,
+  Bnb = 3,
 }
 
 const tabsConfig: Record<
@@ -294,10 +299,23 @@ export const SettingAddress: React.FC = () => {
   const trackClickRegisterENS = useTrackClick(TrackEvent.ClickRegisterENS)
   const trackClickRegisterBIT = useTrackClick(TrackEvent.ClickRegisterBIT)
   const trackClickRegisterUD = useTrackClick(TrackEvent.ClickRegisterUD)
+  const trackClickRegisterBNB = useTrackClick(TrackEvent.ClickRegisterBNB)
   const trackNext = useTrackClick(TrackEvent.ClickAddressNext)
 
+  const isFirstFetching = useRef(true)
   const [activeAccount, setActiveAccount] = useState(account)
   const [activeMoreItem, setActiveMoreItem] = useState(MoreItemType.Default)
+  const [tabIndex, setTabIndex] = useState(TabItemType.More)
+  const MoreItemTypeMap: { [key in AliasMailType]?: MoreItemType } = {
+    [AliasMailType.Bnb]: MoreItemType.Bnb,
+    [AliasMailType.UD]: MoreItemType.Ud,
+  }
+
+  const indexMap: { [key in AliasMailType]?: number } = {
+    [AliasMailType.Ens]: 0,
+    [AliasMailType.Bit]: 1,
+    [AliasMailType.SubBit]: 2,
+  }
 
   const {
     data: aliasDate,
@@ -314,7 +332,19 @@ export const SettingAddress: React.FC = () => {
       async onSuccess(d) {
         const defaultAlias: Alias =
           d.aliases.find((alias) => alias.is_default) || d.aliases[0]
+        const itemType = defaultAlias.email_type as AliasMailType
+
         setActiveAccount(defaultAlias.uuid)
+        if (isFirstFetching.current) {
+          setTabIndex(
+            typeof indexMap[itemType] === 'number'
+              ? (indexMap[itemType] as number)
+              : TabItemType.More
+          )
+          setActiveMoreItem(MoreItemTypeMap[itemType] || MoreItemType.Default)
+          isFirstFetching.current = false
+        }
+
         const userInfo = await api.getUserInfo()
         const { aliases } = d
         const defaultAddress = defaultAlias.address
@@ -353,6 +383,9 @@ export const SettingAddress: React.FC = () => {
       }
       if (type === AliasType.UD) {
         await api.updateAliasUDList()
+      }
+      if (type === AliasType.BNB) {
+        await api.updateAliasBnbList()
       }
       await refetch()
     } catch (e: any) {
@@ -403,9 +436,12 @@ export const SettingAddress: React.FC = () => {
         bit: Alias[]
         subBit: Alias[]
         ud: Alias[]
+        bnb: Alias[]
       }>(
         (o, item) => {
           const [addr] = item.address.split('@')
+          if (item.email_type === AliasMailType.Bnb)
+            return { ...o, bnb: [...o.bnb, item] }
           if (item.email_type === AliasMailType.SubBit)
             return { ...o, subBit: [...o.subBit, item] }
           if (isBitDomain(addr)) return { ...o, bit: [...o.bit, item] }
@@ -423,6 +459,7 @@ export const SettingAddress: React.FC = () => {
           bit: [],
           subBit: [],
           ud: [],
+          bnb: [],
         }
       ),
     [aliasDate]
@@ -495,22 +532,6 @@ export const SettingAddress: React.FC = () => {
     TabItemType.More,
   ]
 
-  const defaultTabIndex = useMemo(() => {
-    if (!userProps?.aliases) return 0
-    const defaultAlias = (userProps.aliases as Alias[]).find(
-      (alias) => alias.is_default
-    )
-    const indexMap: { [key in AliasMailType]?: number } = {
-      [AliasMailType.Ens]: 0,
-      [AliasMailType.Bit]: 1,
-      [AliasMailType.SubBit]: 2,
-      [AliasMailType.UD]: 3,
-    }
-    const currentIndex = indexMap[defaultAlias?.email_type as AliasMailType]
-    return currentIndex === undefined ? 3 : currentIndex
-  }, [userProps])
-
-  const [tabIndex, setTabIndex] = React.useState(defaultTabIndex)
   const handleTabsChange = (index: number) => {
     if (index !== 3) {
       setTabIndex(index)
@@ -518,6 +539,15 @@ export const SettingAddress: React.FC = () => {
   }
 
   const MoreItemTypes = [
+    {
+      type: MoreItemType.Bnb,
+      onClick: () => {
+        setTabIndex(3)
+        setActiveMoreItem(MoreItemType.Bnb)
+      },
+      label: t2('connect.bnb'),
+      Icon: PngBnb,
+    },
     {
       type: MoreItemType.Ud,
       onClick: () => {
@@ -629,7 +659,7 @@ export const SettingAddress: React.FC = () => {
       <Box w={{ base: '100%', md: 'auto' }} mt="15px">
         <Tabs
           position="relative"
-          defaultIndex={defaultTabIndex}
+          defaultIndex={tabIndex}
           index={tabIndex}
           onChange={handleTabsChange}
         >
@@ -713,7 +743,19 @@ export const SettingAddress: React.FC = () => {
                                     size="sm"
                                     fontWeight={500}
                                     leftIcon={
-                                      <RawIcon w="20px" h="20px" as={IconSrc} />
+                                      typeof IconSrc === 'string' ? (
+                                        <Image
+                                          src={IconSrc}
+                                          w="20px"
+                                          h="20px"
+                                        />
+                                      ) : (
+                                        <RawIcon
+                                          w="20px"
+                                          h="20px"
+                                          as={IconSrc}
+                                        />
+                                      )
                                     }
                                     onClick={onClick}
                                   >
@@ -837,6 +879,24 @@ export const SettingAddress: React.FC = () => {
                               i18nKey: 'address.register-ud',
                               onClick: () => trackClickRegisterUD(),
                               href: UD_DOMAIN,
+                            }}
+                          />
+                        )
+                      } else if (activeMoreItem === MoreItemType.Bnb) {
+                        Content = (
+                          <SwitchPanel
+                            isLoading={isLoading}
+                            list={aliases.bnb}
+                            emptyNode={<NotFound />}
+                            activeAccount={activeAccount}
+                            onRefresh={async () =>
+                              onRefreshDomains(AliasType.BNB)
+                            }
+                            onChange={onDefaultAccountChange(false)}
+                            register={{
+                              i18nKey: 'address.register-bnb',
+                              onClick: () => trackClickRegisterBNB(),
+                              href: BNB_DOMAIN,
                             }}
                           />
                         )
