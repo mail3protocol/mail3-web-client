@@ -8,8 +8,10 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Portal,
   RadioProps,
   SimpleGrid,
+  Spacer,
   Text,
   useRadio,
   useRadioGroup,
@@ -17,6 +19,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as ChatSvg } from '../../assets/subscription/chat-icon.svg'
 import { ReactComponent as ArrowSvg } from '../../assets/subscription/arrow.svg'
+import { ReactComponent as CheckSvg } from '../../assets/subscription/check.svg'
 import { ReactComponent as ChatIconBlackSvg } from '../../assets/subscription/chat-icon-black.svg'
 
 const TRANSLATE_LIST = [
@@ -43,6 +46,7 @@ const TRANSLATE_LIST = [
   {
     label: 'العربية',
     id: 5,
+    isDisabled: true,
   },
   {
     label: 'español',
@@ -62,6 +66,7 @@ const TRANSLATE_LIST = [
   },
   {
     label: 'Bahasa Indonesia',
+    isDisabled: true,
     id: 10,
   },
   {
@@ -72,28 +77,32 @@ const TRANSLATE_LIST = [
 
 function CustomRadio(props: { label: string } & RadioProps) {
   const { label, ...radioProps } = props
+  const { isDisabled } = radioProps
   const { state, getInputProps, getCheckboxProps, htmlProps, getLabelProps } =
     useRadio(radioProps)
 
   return (
-    <chakra.label {...htmlProps} cursor="pointer">
+    <chakra.label {...htmlProps} cursor={isDisabled ? 'auto' : 'pointer'}>
       <input {...getInputProps({})} hidden />
       <Flex
         {...getCheckboxProps()}
-        bg={state.isChecked ? 'green.200' : 'transparent'}
+        bg={state.isChecked ? '#F2F2F2' : 'transparent'}
         rounded="4px"
         p="8px"
         h="100%"
         alignItems="center"
       >
-        <Text
+        <Center
           {...getLabelProps()}
           fontWeight="400"
           fontSize="14px"
           lineHeight="14px"
+          w="full"
         >
-          {label}
-        </Text>
+          <Text color={isDisabled ? '#A6A6A6' : 'black'}>{label}</Text>
+          <Spacer />
+          {state.isChecked ? <Icon as={CheckSvg} w="14px" h="14px" /> : null}
+        </Center>
       </Flex>
     </chakra.label>
   )
@@ -126,7 +135,7 @@ export const LanguageSelect = () => {
           <Icon as={ChatSvg} w="16px" h="16px" mr="2px" /> ChatGPT
         </Center>
 
-        <Popover>
+        <Popover isLazy matchWidth={false}>
           <PopoverTrigger>
             <Center
               borderRadius="0px 0px 14px 0px"
@@ -136,68 +145,70 @@ export const LanguageSelect = () => {
               bgColor="#F2F2F2"
               p="8px"
               as="button"
+              minW="120px"
             >
-              English <Icon as={ArrowSvg} w="12px" h="12px" ml="10px" />
+              {value} <Icon as={ArrowSvg} w="12px" h="12px" ml="10px" />
             </Center>
           </PopoverTrigger>
-          <PopoverContent w="284px">
-            {/* <PopoverArrow /> */}
-            {/* <PopoverCloseButton /> */}
-            <PopoverBody p="0">
-              <Box p="20px 24px 0">
-                <Text
-                  fontWeight="400"
+          <Portal>
+            <PopoverContent>
+              <PopoverBody p="0">
+                <Box p="20px 24px 0">
+                  <Text
+                    fontWeight="400"
+                    fontSize="12px"
+                    lineHeight="16px"
+                    color="#737373"
+                  >
+                    {t('current-language')}
+                    <Box as="span" fontSize="14px" color="black">
+                      {value}
+                    </Box>
+                  </Text>
+                  <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
+                  <SimpleGrid
+                    columns={2}
+                    {...getRootProps()}
+                    spacingX="8px"
+                    spacingY="5px"
+                  >
+                    {TRANSLATE_LIST.map((item) => {
+                      const { id, label, isDisabled } = item
+                      return (
+                        <CustomRadio
+                          isDisabled={isDisabled}
+                          key={id}
+                          label={label}
+                          {...getRadioProps({ value: label })}
+                        />
+                      )
+                    })}
+                  </SimpleGrid>
+                  <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
+                  <CustomRadio
+                    key="Original language"
+                    label="Original language"
+                    {...getRadioProps({ value: 'Original language' })}
+                  />
+                </Box>
+                <Center
+                  mt="16px"
+                  p="10px 0"
                   fontSize="12px"
-                  lineHeight="16px"
-                  color="#737373"
+                  lineHeight="14px"
+                  bgColor="#F2F2F2"
                 >
-                  {t('current-language')}
-                  <Box as="span" fontSize="14px" color="black" ml="4px">
-                    {value}
-                  </Box>
-                </Text>
-                <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
-                <SimpleGrid
-                  columns={2}
-                  {...getRootProps()}
-                  spacingX="8px"
-                  spacingY="5px"
-                >
-                  {TRANSLATE_LIST.map((item) => {
-                    const { id, label } = item
-                    return (
-                      <CustomRadio
-                        key={id}
-                        label={label}
-                        {...getRadioProps({ value: label })}
-                      />
-                    )
-                  })}
-                </SimpleGrid>
-                <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
-                <CustomRadio
-                  key="Original language"
-                  label="Original language"
-                  {...getRadioProps({ value: 'Original language' })}
-                />
-              </Box>
-              <Center
-                mt="16px"
-                p="10px 0"
-                fontSize="12px"
-                lineHeight="14px"
-                bgColor="#F2F2F2"
-              >
-                <Text fontWeight="300" mr="10px">
-                  Provided by the
-                </Text>
-                <ChatIconBlackSvg />
-                <Text ml="2px" fontWeight="700">
-                  ChatGPT API
-                </Text>
-              </Center>
-            </PopoverBody>
-          </PopoverContent>
+                  <Text fontWeight="300" mr="10px">
+                    Provided by the
+                  </Text>
+                  <ChatIconBlackSvg />
+                  <Text ml="2px" fontWeight="700">
+                    ChatGPT API
+                  </Text>
+                </Center>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
         </Popover>
       </Flex>
     </Box>
