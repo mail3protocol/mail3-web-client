@@ -49,6 +49,7 @@ import { ReactComponent as SvgShare } from 'assets/profile/share.svg'
 import { ReactComponent as SvgTwitter } from 'assets/profile/twitter.svg'
 import axios from 'axios'
 import { ClusterInfoResp } from 'models'
+import { useRootURL } from 'app/hooks/useRootURL'
 import { ReactComponent as SvgRank } from '../../assets/svg/rank.svg'
 import { ReactComponent as SvgCollect } from '../../assets/svg/collect.svg'
 import PngCluster3 from '../../assets/png/cluster3.png'
@@ -181,11 +182,6 @@ interface ProfileComponentProps {
   priAddress: string
 }
 
-let homeUrl = ''
-if (typeof window !== 'undefined') {
-  homeUrl = `${window?.location?.origin}`
-}
-
 enum TabItemType {
   Collection = 0,
   Updates = 1,
@@ -286,7 +282,8 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
 
   const tabItemTypes = [TabItemType.Collection, TabItemType.Updates]
 
-  const profileUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
+  const rootURL = useRootURL()
+  const profileUrl = `${rootURL}/${address}`
 
   const hashTag = useMemo(() => {
     if (isZilpayAddress(address)) return 'Zilliqa'
@@ -660,7 +657,7 @@ export const ProfileComponent: React.FC<ProfileComponentProps> = ({
       <ProfileCardHome
         ref={cardRef}
         mailAddress={mailAddress}
-        homeUrl={homeUrl}
+        homeUrl={rootURL}
         nickname={nickname}
         // isDev
       >

@@ -10,7 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui'
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
@@ -30,11 +30,11 @@ import { RoutePath } from '../../route/path'
 import { useAPI, useHomeAPI } from '../../hooks/useAPI'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 
-type FileUploadProps = {
+type FileUploadProps = PropsWithChildren<{
   register: UseFormRegisterReturn
   accept?: string
   multiple?: boolean
-}
+}>
 
 interface SettingAvatarProps {
   isSetup?: boolean

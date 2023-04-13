@@ -5,7 +5,9 @@ export const isImToken = () =>
   navigator.userAgent.toLowerCase().includes('imtoken')
 
 export const isCoinbaseWallet = () => {
-  const ethereum = window?.ethereum as
+  if (typeof window === 'undefined') return false
+  const w = window as any
+  const ethereum = w.ethereum as
     | {
         isCoinbaseWallet?: boolean
         isCoinbaseBrowser?: boolean

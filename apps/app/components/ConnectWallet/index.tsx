@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, PropsWithChildren } from 'react'
 import {
   coinbase,
   coinbaseStore,
@@ -25,7 +25,9 @@ import {
 } from '../../hooks/useLogin'
 import { UD_CLIENT_ID, UD_REDIRECT_URI } from '../../constants'
 
-export const ConnectWalletApiContextProvider: React.FC = ({ children }) => {
+export const ConnectWalletApiContextProvider: React.FC<PropsWithChildren> = ({
+  children,
+}) => {
   const isAuth = useIsAuthenticated()
   const { onRemember, isLoading: isRemembering } = useRemember()
   const openAuthModal = useOpenAuthModal()

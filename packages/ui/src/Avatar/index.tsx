@@ -1,5 +1,4 @@
 import {
-  AvatarProps as RawAvatarProps,
   SkeletonCircle,
   SkeletonProps,
   LayoutProps,
@@ -8,19 +7,19 @@ import {
   ImageProps,
 } from '@chakra-ui/react'
 import { atom, useAtom } from 'jotai'
-import { useQuery } from 'react-query'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import {
   getMail3Avatar,
   getPrimitiveAddress,
   isPrimitiveEthAddress,
   getSupportedAddress,
 } from 'shared'
-import { useEffect } from 'react'
+import React, { PropsWithChildren, useEffect } from 'react'
 import PngAvatar from 'assets/png/default-avatar.png'
-import { RawAvatar } from './rawAvatar'
+import { RawAvatar, RowAvatarProps } from './rawAvatar'
 import { unifyImage } from '../utils'
 
-export interface AvatarProps extends RawAvatarProps {
+export interface AvatarProps extends RowAvatarProps {
   address: string
   src?: string
   skeletonProps?: SkeletonProps
@@ -159,3 +158,9 @@ export const Avatar: React.FC<AvatarProps> = ({
     />
   )
 }
+
+const queryClient = new QueryClient()
+
+export const AvatarQueryClientProvider: React.FC<PropsWithChildren> = ({
+  children,
+}) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

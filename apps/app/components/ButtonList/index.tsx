@@ -18,7 +18,7 @@ export const ButtonListItem: React.FC<ButtonListItemProps> = ({
 }) => {
   const item = (
     <Button
-      isFullWidth
+      w="full"
       bg="transparent"
       justifyContent="flex-start"
       height="40px"

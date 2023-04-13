@@ -63,7 +63,7 @@ export const ExperienceUserGuideContent: React.FC = () => {
         <Button
           as={Link}
           variant="outline"
-          isFullWidth
+          w="full"
           leftIcon={<Icon as={BitSvg} w="24px" h="24px" />}
           justifyContent="flex-start"
           px="8px"
@@ -84,7 +84,7 @@ export const ExperienceUserGuideContent: React.FC = () => {
         <Button
           as={Link}
           variant="outline"
-          isFullWidth
+          w="full"
           leftIcon={<Icon as={EnsSvg} w="24px" h="24px" />}
           justifyContent="flex-start"
           px="8px"

@@ -210,10 +210,10 @@ export const ConfirmDialog: React.FC = () => {
       <ModalOverlay />
       <ModalContent borderRadius="24px" {...modalContentProps}>
         {showCloseButton ? (
-          <ModalCloseButton {...modalCloseButtonProps} />
+          <ModalCloseButton {...(modalCloseButtonProps as any)} />
         ) : null}
         <ModalBody mt="35px" {...modalBodyProps}>
-          {content ?? (
+          {(content as any) ?? (
             <Alert
               status={type === 'text' ? undefined : type}
               variant="subtle"
@@ -227,7 +227,7 @@ export const ConfirmDialog: React.FC = () => {
                 <AlertIcon boxSize="20px" mr={0} mb="10px" color="black" />
               ) : null}
               <AlertTitle mb="16px" mx={0} fontSize="18px" fontWeight="600">
-                {title}
+                {title as any}
               </AlertTitle>
               <AlertDescription
                 maxWidth="sm"
@@ -235,14 +235,14 @@ export const ConfirmDialog: React.FC = () => {
                 color="black"
                 whiteSpace="pre-wrap"
               >
-                {description}
+                {description as any}
               </AlertDescription>
             </Alert>
           )}
         </ModalBody>
 
         <ModalFooter {...modalFooterProps}>
-          {footer ?? (
+          {(footer as any) ?? (
             <Stack
               spacing={2}
               w="full"
@@ -250,7 +250,7 @@ export const ConfirmDialog: React.FC = () => {
             >
               {okText && onConfirm !== noop ? (
                 <Button
-                  isFullWidth
+                  w="full"
                   variant="primary"
                   bg="brand.500"
                   mb="16px"
@@ -264,14 +264,14 @@ export const ConfirmDialog: React.FC = () => {
                   fontWeight="normal"
                   {...okButtonProps}
                 >
-                  {okText}
+                  {okText as any}
                 </Button>
               ) : null}
 
               {onCancel !== noop && cancelText ? (
                 <Button
                   variant="outline"
-                  isFullWidth
+                  w="full"
                   color="black"
                   mb="16px"
                   onClick={onCancel}
@@ -280,7 +280,7 @@ export const ConfirmDialog: React.FC = () => {
                   borderColor="black"
                   isLoading={isCancelLoading}
                 >
-                  {cancelText}
+                  {cancelText as any}
                 </Button>
               ) : null}
             </Stack>

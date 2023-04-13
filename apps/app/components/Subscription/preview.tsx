@@ -18,7 +18,7 @@ import {
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { Subscription } from 'models'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
 import { useTranslation } from 'react-i18next'
@@ -121,7 +121,7 @@ const Container = styled(Box)`
 export const SubPreviewIdAtom = atom<string>('')
 export const SubPreviewIsOpenAtom = atom<boolean>(false)
 
-const Wrap: React.FC<{ isSingleMode: boolean }> = ({
+const Wrap: React.FC<{ isSingleMode: boolean } & PropsWithChildren> = ({
   children,
   isSingleMode,
 }) => {

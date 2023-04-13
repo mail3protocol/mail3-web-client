@@ -163,7 +163,7 @@ const baseStyle: SystemStyleObject = {
   flexShrink: 0,
 }
 
-interface AvatarProps
+export interface RowAvatarProps
   extends Omit<HTMLChakraProps<'span'>, 'onError'>,
     AvatarOptions,
     ThemingProps<'Avatar'> {
@@ -246,7 +246,7 @@ const AvatarImage: React.FC<AvatarImageProps> = (props) => {
  * Avatar component that renders an user avatar with
  * support for fallback avatar and name-only avatars
  */
-export const RawAvatar = forwardRef<AvatarProps, 'span'>((props, ref) => {
+export const RawAvatar = forwardRef<RowAvatarProps, 'span'>((props, ref) => {
   const styles = useMultiStyleConfig('Avatar', props)
 
   const {
@@ -311,7 +311,7 @@ if (__DEV__) {
 
 interface AvatarImageProps
   extends ImageProps,
-    Pick<AvatarProps, 'getInitials' | 'borderRadius' | 'icon' | 'name'> {
+    Pick<RowAvatarProps, 'getInitials' | 'borderRadius' | 'icon' | 'name'> {
   iconLabel?: string
 }
 

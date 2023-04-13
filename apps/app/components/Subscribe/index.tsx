@@ -22,7 +22,12 @@ import {
   useAccount,
   useTrackClick,
 } from 'hooks'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -285,7 +290,7 @@ const AlreadySubscribed: React.FC<{
   )
 }
 
-const Desc: React.FC = ({ children }) => (
+const Desc: React.FC<PropsWithChildren> = ({ children }) => (
   <Box
     textAlign="center"
     padding="8px"

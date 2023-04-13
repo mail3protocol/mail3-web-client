@@ -137,7 +137,7 @@ const PlaceholderButton: React.FC<ConnectButtonProps & { index: number }> = ({
   return (
     <WrapItem w="calc(50% - 50px)" position="relative">
       <ConnectButton
-        isFullWidth
+        w="full"
         text={text}
         icon={icon}
         size="sm"

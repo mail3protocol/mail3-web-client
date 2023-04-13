@@ -297,7 +297,7 @@ export const useWalletChange = () => {
   const logout = useLogout()
   const onDeleteFCMToken = useDeleteFCMToken()
   const handleAccountChanged = useCallback(
-    ([acc]) => {
+    ([acc]: string[]) => {
       const [account] = store.getState().accounts ?? []
 
       if (acc === undefined) {
