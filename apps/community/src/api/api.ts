@@ -190,4 +190,27 @@ export class API {
       `/community/check_message_quota`
     )
   }
+
+  public async getLanguageCode() {
+    return this.axios.get<Array<{ language: string; code: string }>>(
+      `/public/community/language_codes`
+    )
+  }
+
+  public async getTranslationSetting() {
+    return this.axios.get<{
+      primary_language_code: string
+      language_code: string[]
+    }>(`/public/community/translation_setting_info`)
+  }
+
+  public async updateTranslationSetting(
+    primaryLanguageCode: string,
+    languageCodes: string
+  ) {
+    return this.axios.put<void>(`/community/translation_setting`, {
+      language_codes: languageCodes,
+      primary_language_code: primaryLanguageCode,
+    })
+  }
 }

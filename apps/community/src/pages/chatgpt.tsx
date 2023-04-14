@@ -35,6 +35,7 @@ import { useUpdateTipsPanel } from '../hooks/useUpdateTipsPanel'
 import { useHelperComponent } from '../hooks/useHelperCom'
 import { ReactComponent as UnlockSvg } from '../assets/ChatGPT/unlock.svg'
 import { ReactComponent as LockSvg } from '../assets/ChatGPT/lock.svg'
+import { useAPI } from '../hooks/useAPI'
 
 const PRIMARY_LIST = [
   {
@@ -143,8 +144,12 @@ export const ChatGPT: React.FC = () => {
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const helperCom = useHelperComponent()
+  const api = useAPI()
 
   useEffect(() => {
+    api.getLanguageCode()
+    api.getTranslationSetting()
+
     onUpdateTipsPanel(
       <Trans i18nKey="translation.helper_text" t={t} components={helperCom} />
     )
