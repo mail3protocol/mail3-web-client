@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
-import { CheckMessageQuotaResponse, GetAliasResponse } from 'models'
+import { ChatGPT, CheckMessageQuotaResponse, GetAliasResponse } from 'models'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -22,7 +22,6 @@ import {
   UserPremiumSettingState,
 } from './modals/UserPremiumSetting'
 import { CommunityCollaboratorsResp } from './modals/co-authors'
-import { Language, LanguageList } from './modals/chatGPT'
 
 export class API {
   private readonly axios: AxiosInstance
@@ -193,15 +192,13 @@ export class API {
   }
 
   public async getLanguageCode() {
-    return this.axios.get<{
-      languages: LanguageList
-    }>(`/public/community/language_codes`)
+    return this.axios.get<ChatGPT.Languages>(`/public/community/language_codes`)
   }
 
   public async getTranslationSetting() {
     return this.axios.get<{
-      primary_language: Language
-      languages: LanguageList
+      primary_language: ChatGPT.Language
+      languages: ChatGPT.LanguageList
       language_quota: number
       subscribers_count: number
     }>(`/community/translation_setting`)

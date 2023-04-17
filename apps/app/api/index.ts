@@ -8,7 +8,7 @@ import { GetMessageContent } from 'models/src/getMessageContent'
 import { noop } from 'hooks'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
 import { MessageOnChainIdentifierResponse } from 'models/src/MessageOnChainIdentifier'
-import { HomeCommunity, Subscription, GetAliasResponse } from 'models'
+import { HomeCommunity, Subscription, GetAliasResponse, ChatGPT } from 'models'
 import { SERVER_PV_AUTH_TOKEN, SERVER_URL } from '../constants/env'
 import { Mailboxes } from './mailboxes'
 
@@ -556,5 +556,15 @@ export class API {
       uuid,
       auth_token: SERVER_PV_AUTH_TOKEN,
     })
+  }
+
+  public async getLanguageCode() {
+    return this.axios.get<ChatGPT.Languages>(`/public/community/language_codes`)
+  }
+
+  public async getTranslationStates(articleId: string) {
+    return this.axios.get<{ language_codes: Array<ChatGPT.LanguageState> }>(
+      `/subscription/messages/translation_states/${articleId}`
+    )
   }
 }

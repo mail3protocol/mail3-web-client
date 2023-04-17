@@ -11,68 +11,20 @@ import {
   RadioProps,
   SimpleGrid,
   Spacer,
+  Spinner,
   Text,
   useRadio,
   useRadioGroup,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'react-query'
+import { useState } from 'react'
 import { ReactComponent as ChatSvg } from '../../assets/subscription/chat-icon.svg'
 import { ReactComponent as ArrowSvg } from '../../assets/subscription/arrow.svg'
 import { ReactComponent as CheckSvg } from '../../assets/subscription/check.svg'
 import { ReactComponent as ChatIconBlackSvg } from '../../assets/subscription/chat-icon-black.svg'
-
-const TRANSLATE_LIST = [
-  {
-    label: 'English',
-    id: 0,
-  },
-  {
-    label: '中文',
-    id: 1,
-  },
-  {
-    label: '日本語',
-    id: 2,
-  },
-  {
-    label: '한국어',
-    id: 3,
-  },
-  {
-    label: 'français',
-    id: 4,
-  },
-  {
-    label: 'العربية',
-    id: 5,
-    isDisabled: true,
-  },
-  {
-    label: 'español',
-    id: 6,
-  },
-  {
-    label: 'português',
-    id: 7,
-  },
-  {
-    label: 'Deutsch',
-    id: 8,
-  },
-  {
-    label: 'русский',
-    id: 9,
-  },
-  {
-    label: 'Bahasa Indonesia',
-    isDisabled: true,
-    id: 10,
-  },
-  {
-    label: 'हिन्दी',
-    id: 11,
-  },
-]
+import { Query } from '../../api/query'
+import { useAPI } from '../../hooks/useAPI'
 
 function CustomRadio(props: { label: string } & RadioProps) {
   const { label, ...radioProps } = props
@@ -107,10 +59,52 @@ function CustomRadio(props: { label: string } & RadioProps) {
   )
 }
 
-export const LanguageSelect = () => {
-  const [t] = useTranslation(['subscription-article', 'common'])
+interface LanguageSelectProps {
+  articleId: string
+}
 
-  const handleChange = (value) => {
+export const LanguageSelect: React.FC<LanguageSelectProps> = ({
+  articleId,
+}) => {
+  const [t] = useTranslation(['subscription-article', 'common'])
+  const api = useAPI()
+
+  const [checkMap, setCheckMap] = useState<{
+    [key: string]: boolean
+  }>({})
+
+  const { data } = useQuery(
+    [Query.GetLanguageCode],
+    async () => {
+      const [languages, languagesState] = await Promise.all([
+        api.getLanguageCode().then((r) => r.data.languages),
+        api.getTranslationStates(articleId).then((r) => r.data.language_codes),
+      ])
+
+      return {
+        languages,
+        languagesState,
+      }
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      onSuccess({ languagesState }) {
+        const newCheckMap = languagesState.reduce((acc, item) => {
+          if (item.state === 'done')
+            return {
+              ...acc,
+              [item.language_code]: true,
+            }
+          return acc
+        }, {})
+        setCheckMap(newCheckMap)
+      },
+    }
+  )
+
+  const handleChange = (value: string) => {
     console.log(value)
   }
 
@@ -146,7 +140,13 @@ export const LanguageSelect = () => {
               as="button"
               minW="120px"
             >
-              {value} <Icon as={ArrowSvg} w="12px" h="12px" ml="10px" />
+              {data?.languages ? (
+                <Box>
+                  {value} <Icon as={ArrowSvg} w="12px" h="12px" ml="10px" />
+                </Box>
+              ) : (
+                <Spinner w="12px" h="12px" />
+              )}
             </Center>
           </PopoverTrigger>
           <PopoverContent>
@@ -164,24 +164,27 @@ export const LanguageSelect = () => {
                   </Box>
                 </Text>
                 <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
-                <SimpleGrid
-                  columns={2}
-                  {...getRootProps()}
-                  spacingX="8px"
-                  spacingY="5px"
-                >
-                  {TRANSLATE_LIST.map((item) => {
-                    const { id, label, isDisabled } = item
-                    return (
-                      <CustomRadio
-                        isDisabled={isDisabled}
-                        key={id}
-                        label={label}
-                        {...getRadioProps({ value: label })}
-                      />
-                    )
-                  })}
-                </SimpleGrid>
+                {data?.languages ? (
+                  <SimpleGrid
+                    columns={2}
+                    {...getRootProps()}
+                    spacingX="8px"
+                    spacingY="5px"
+                  >
+                    {data.languages.map((item) => {
+                      const { language_code: code, language } = item
+                      const isDisabled = !checkMap[code]
+                      return (
+                        <CustomRadio
+                          isDisabled={isDisabled}
+                          key={code}
+                          label={language}
+                          {...getRadioProps({ value: language })}
+                        />
+                      )
+                    })}
+                  </SimpleGrid>
+                ) : null}
                 <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
                 <CustomRadio
                   key="Original language"

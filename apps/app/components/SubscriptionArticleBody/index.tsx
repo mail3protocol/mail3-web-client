@@ -88,6 +88,8 @@ export const SubscriptionArticleBody: React.FC<
   const isNeedLoading = !realContent && isLoading
 
   useEffect(() => {
+    api.getTranslationStates(articleId)
+
     if (realContent) {
       // report pv
       api.postStatsEvents({ uuid: articleId }).catch(Boolean)
@@ -147,7 +149,7 @@ export const SubscriptionArticleBody: React.FC<
           p={{ base: '32px 20px', md: '48px 32px' }}
           w={{ base: 'full', md: '71.33%' }}
         >
-          <LanguageSelect />
+          <LanguageSelect articleId={articleId} />
           <Text
             mt="24px"
             fontWeight="700"
