@@ -17,6 +17,7 @@ import {
   Select,
   SimpleGrid,
   Spacer,
+  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -28,6 +29,8 @@ import {
 
 import { Trans, useTranslation } from 'react-i18next'
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery } from 'react-query'
+import axios from 'axios'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -36,80 +39,9 @@ import { useHelperComponent } from '../hooks/useHelperCom'
 import { ReactComponent as UnlockSvg } from '../assets/ChatGPT/unlock.svg'
 import { ReactComponent as LockSvg } from '../assets/ChatGPT/lock.svg'
 import { useAPI } from '../hooks/useAPI'
-
-const PRIMARY_LIST = [
-  {
-    label: 'English',
-    id: 0,
-  },
-  {
-    label: '中文(简)',
-    id: 1,
-  },
-  {
-    label: '日本语',
-    id: 2,
-  },
-  {
-    label: '한국인',
-    id: 3,
-  },
-  {
-    label: 'Français',
-    id: 4,
-  },
-]
-
-const TRANSLATE_LIST = [
-  {
-    label: 'English',
-    id: 0,
-  },
-  {
-    label: '中文',
-    id: 1,
-  },
-  {
-    label: '日本語',
-    id: 2,
-  },
-  {
-    label: '한국어',
-    id: 3,
-  },
-  {
-    label: 'français',
-    id: 4,
-  },
-  {
-    label: 'العربية',
-    id: 5,
-  },
-  {
-    label: 'español',
-    id: 6,
-  },
-  {
-    label: 'português',
-    id: 7,
-  },
-  {
-    label: 'Deutsch',
-    id: 8,
-  },
-  {
-    label: 'русский',
-    id: 9,
-  },
-  {
-    label: 'Bahasa Indonesia',
-    id: 10,
-  },
-  {
-    label: 'हिन्दी',
-    id: 11,
-  },
-]
+import { QueryKey } from '../api/QueryKey'
+import { useToast } from '../hooks/useToast'
+import { ErrorCode } from '../api/ErrorCode'
 
 const lockProgressConfig = [
   {
@@ -145,23 +77,53 @@ export const ChatGPT: React.FC = () => {
   const onUpdateTipsPanel = useUpdateTipsPanel()
   const helperCom = useHelperComponent()
   const api = useAPI()
-
-  useEffect(() => {
-    api.getLanguageCode()
-    api.getTranslationSetting()
-
-    onUpdateTipsPanel(
-      <Trans i18nKey="translation.helper_text" t={t} components={helperCom} />
-    )
-  }, [])
+  const toast = useToast()
 
   const [checkMap, setCheckMap] = useState<{
     [key: string]: boolean
   }>({})
   const [isPartlock, setIsPartLock] = useState(false)
   const [primary, setPrimary] = useState('')
-  const [maxSubscribers] = useState(99999)
+  const [isUpdating, setIsUpdating] = useState(false)
 
+  const { data: langCodes } = useQuery(
+    [QueryKey.GetLangCodes],
+    async () => {
+      const { data } = await api.getLanguageCode()
+      return data.languages
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchInterval: false,
+      cacheTime: 0,
+    }
+  )
+
+  const { data: settingInfo } = useQuery(
+    [QueryKey.GetTranslationSetting],
+    async () => {
+      const { data } = await api.getTranslationSetting()
+      return data
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchInterval: false,
+      cacheTime: 0,
+      onSuccess(d) {
+        setPrimary(d.primary_language.language_code)
+      },
+    }
+  )
+
+  useEffect(() => {
+    onUpdateTipsPanel(
+      <Trans i18nKey="translation.helper_text" t={t} components={helperCom} />
+    )
+  }, [])
+
+  const maxSubscribers = 99 || settingInfo?.subscribers_count || 0
   const curProgressData = useMemo(
     () =>
       lockProgressConfig.reduce(
@@ -181,7 +143,7 @@ export const ChatGPT: React.FC = () => {
 
   const maxQuotas = curProgressData.unlockNum
 
-  const onChange = (isChecked: boolean, id: number) => {
+  const onChange = (isChecked: boolean, id: string) => {
     const newCheckMap: { [key: string]: boolean } = {
       ...checkMap,
       [id]: !isChecked,
@@ -202,9 +164,39 @@ export const ChatGPT: React.FC = () => {
     setCheckMap(newCheckMap)
   }
 
-  const onSubmit = () => {
-    console.log(primary)
-    console.log(checkMap)
+  const onSubmit = async () => {
+    setIsUpdating(true)
+    try {
+      const languageCodes = Object.keys(checkMap).filter((key) => checkMap[key])
+      await api.updateTranslationSetting(primary, languageCodes)
+      toast(t('translation.update_successful'), {
+        status: 'success',
+        alertProps: { colorScheme: 'green' },
+      })
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          error?.response?.status === 400 &&
+          error?.response?.data.reason ===
+            ErrorCode.TRANSLATION_LANGUAGE_QUOTA_EXCEEDED
+        ) {
+          toast(error?.response?.data.message, {
+            duration: 5000,
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
+          return
+        }
+        if (error?.response?.status === 400) {
+          toast(t('translation.update_failed'), {
+            duration: 5000,
+            status: 'error',
+            alertProps: { colorScheme: 'red' },
+          })
+        }
+      }
+    }
+    setIsUpdating(false)
   }
 
   return (
@@ -346,22 +338,24 @@ export const ChatGPT: React.FC = () => {
                 </Text>
 
                 <Box w="124px" mt="16px">
-                  <Select
-                    placeholder="Choose"
-                    value={primary}
-                    onChange={({ target: { value } }) => {
-                      setPrimary(value)
-                    }}
-                  >
-                    {PRIMARY_LIST.map((item) => {
-                      const { label, id } = item
-                      return (
-                        <option key={id} value={id}>
-                          {label}
-                        </option>
-                      )
-                    })}
-                  </Select>
+                  {langCodes ? (
+                    <Select
+                      placeholder="Choose"
+                      value={primary}
+                      onChange={({ target: { value } }) => {
+                        setPrimary(value)
+                      }}
+                    >
+                      {langCodes.map((item) => {
+                        const { language, language_code: code } = item
+                        return (
+                          <option key={code} value={code}>
+                            {language}
+                          </option>
+                        )
+                      })}
+                    </Select>
+                  ) : null}
                 </Box>
               </Box>
 
@@ -392,31 +386,37 @@ export const ChatGPT: React.FC = () => {
                   </Box>
                 </Center>
 
-                <SimpleGrid
-                  p="40px 20px 30px"
-                  spacing="20px"
-                  minChildWidth="80px"
-                >
-                  {TRANSLATE_LIST.map((item, index) => {
-                    const { id, label } = item
-                    const isChecked = checkMap[id]
-                    const isFirstItem = !index
-                    const isLock = !maxQuotas
+                {langCodes ? (
+                  <SimpleGrid
+                    p="40px 20px 30px"
+                    spacing="20px"
+                    minChildWidth="80px"
+                  >
+                    {langCodes.map((item, index) => {
+                      const { language_code: code, language } = item
+                      const isChecked = checkMap[code]
+                      const isFirstItem = index === 0
+                      const isLock = !maxQuotas
 
-                    return (
-                      <Checkbox
-                        key={id}
-                        isDisabled={
-                          isLock || isFirstItem || (!isChecked && isPartlock)
-                        }
-                        isChecked={isFirstItem || isChecked!}
-                        onChange={() => onChange(isChecked, id)}
-                      >
-                        {label}
-                      </Checkbox>
-                    )
-                  })}
-                </SimpleGrid>
+                      return (
+                        <Checkbox
+                          key={code}
+                          isDisabled={
+                            isLock || isFirstItem || (!isChecked && isPartlock)
+                          }
+                          isChecked={isFirstItem || isChecked!}
+                          onChange={() => onChange(isChecked, code)}
+                        >
+                          {language}
+                        </Checkbox>
+                      )
+                    })}
+                  </SimpleGrid>
+                ) : (
+                  <Center p="40px 20px 30px">
+                    <Spinner />
+                  </Center>
+                )}
               </Box>
 
               <Button
@@ -424,7 +424,7 @@ export const ChatGPT: React.FC = () => {
                 variant="solid-rounded"
                 colorScheme="primaryButton"
                 type="submit"
-                // isLoading={isUpdating}
+                isLoading={isUpdating}
                 onClick={onSubmit}
                 isDisabled={!primary}
               >

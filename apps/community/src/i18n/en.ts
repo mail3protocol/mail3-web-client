@@ -557,6 +557,8 @@ export default {
   `,
       language_quotas: 'Language quotas you can configure: ',
       update: 'Update',
+      update_successful: 'Update successful!',
+      update_failed: 'Update failed, please try again later.',
     },
   },
 }

@@ -22,6 +22,7 @@ import {
   UserPremiumSettingState,
 } from './modals/UserPremiumSetting'
 import { CommunityCollaboratorsResp } from './modals/co-authors'
+import { Language, LanguageList } from './modals/chatGPT'
 
 export class API {
   private readonly axios: AxiosInstance
@@ -192,21 +193,23 @@ export class API {
   }
 
   public async getLanguageCode() {
-    return this.axios.get<Array<{ language: string; code: string }>>(
-      `/public/community/language_codes`
-    )
+    return this.axios.get<{
+      languages: LanguageList
+    }>(`/public/community/language_codes`)
   }
 
   public async getTranslationSetting() {
     return this.axios.get<{
-      primary_language_code: string
-      language_code: string[]
-    }>(`/public/community/translation_setting_info`)
+      primary_language: Language
+      languages: LanguageList
+      language_quota: number
+      subscribers_count: number
+    }>(`/community/translation_setting`)
   }
 
   public async updateTranslationSetting(
     primaryLanguageCode: string,
-    languageCodes: string
+    languageCodes: Array<string>
   ) {
     return this.axios.put<void>(`/community/translation_setting`, {
       language_codes: languageCodes,
