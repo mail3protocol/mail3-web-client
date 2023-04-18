@@ -483,9 +483,10 @@ export class API {
     )
   }
 
-  public async SubscriptionMessageDetail(uuid: string) {
+  public async SubscriptionMessageDetail(uuid: string, lang?: string) {
+    const query = lang ? `?language_code=${lang}` : ''
     return this.axios.get<Subscription.MessageDetailResp>(
-      `/subscription/messages/${uuid}`
+      `/subscription/messages/${uuid}${query}`
     )
   }
 

@@ -10,7 +10,7 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   isEthAddress,
@@ -20,9 +20,10 @@ import {
 } from 'shared'
 import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
-import { Subscription } from 'models'
+import { ChatGPT, Subscription } from 'models'
 import { useQuery } from 'react-query'
 import { useAtom, useAtomValue } from 'jotai'
+import { useRouter } from 'next/router'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -64,13 +65,18 @@ export const SubscriptionArticleBody: React.FC<
   const isAuth = useIsAuthenticated()
   const isBuying = useAtomValue(isBuyingAtom)
   const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
-
+  const router = useRouter()
+  const lang = router.query?.lang as string
+  const [currentLang, setCurrentLang] = useState('')
   const isPremium = detail.message_type === Subscription.MessageType.Premium
 
   const { isLoading, data: detailCSR } = useQuery(
-    [Query.SubscriptionDetail, isAuth],
+    [Query.SubscriptionDetail, isAuth, currentLang],
     async () => {
-      const { data } = await api.SubscriptionMessageDetail(articleId)
+      const { data } = await api.SubscriptionMessageDetail(
+        articleId,
+        currentLang !== ChatGPT.OriginalLanguage ? currentLang : ''
+      )
       return data
     },
     {
@@ -84,12 +90,10 @@ export const SubscriptionArticleBody: React.FC<
   const address = detailCSR?.writer_name || detail.writer_name
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
-  const realContent = detail.content || detailCSR?.content
+  const realContent = detailCSR?.content || detail.content
   const isNeedLoading = !realContent && isLoading
 
   useEffect(() => {
-    api.getTranslationStates(articleId)
-
     if (realContent) {
       // report pv
       api.postStatsEvents({ uuid: articleId }).catch(Boolean)
@@ -102,6 +106,10 @@ export const SubscriptionArticleBody: React.FC<
       }
     }
   }, [realContent])
+
+  useEffect(() => {
+    if (lang) setCurrentLang(lang)
+  }, [lang])
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {
@@ -149,7 +157,11 @@ export const SubscriptionArticleBody: React.FC<
           p={{ base: '32px 20px', md: '48px 32px' }}
           w={{ base: 'full', md: '71.33%' }}
         >
-          <LanguageSelect articleId={articleId} />
+          <LanguageSelect
+            articleId={articleId}
+            currentLang={currentLang}
+            setCurrentLang={setCurrentLang}
+          />
           <Text
             mt="24px"
             fontWeight="700"

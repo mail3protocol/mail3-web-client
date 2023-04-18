@@ -18,7 +18,8 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { ChatGPT } from 'models'
 import { ReactComponent as ChatSvg } from '../../assets/subscription/chat-icon.svg'
 import { ReactComponent as ArrowSvg } from '../../assets/subscription/arrow.svg'
 import { ReactComponent as CheckSvg } from '../../assets/subscription/check.svg'
@@ -61,13 +62,18 @@ function CustomRadio(props: { label: string } & RadioProps) {
 
 interface LanguageSelectProps {
   articleId: string
+  currentLang: string
+  setCurrentLang: Dispatch<SetStateAction<string>>
 }
 
 export const LanguageSelect: React.FC<LanguageSelectProps> = ({
   articleId,
+  currentLang,
+  setCurrentLang,
 }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   const api = useAPI()
+  const lang = currentLang || ChatGPT.OriginalLanguage
 
   const [checkMap, setCheckMap] = useState<{
     [key: string]: boolean
@@ -105,13 +111,43 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
   )
 
   const handleChange = (value: string) => {
-    console.log(value)
+    const url = new URL(window.location.href)
+    // eslint-disable-next-line compat/compat
+    const params = new URLSearchParams(url.search)
+    if (params.has('lang')) {
+      params.set('lang', value)
+    } else {
+      params.append('lang', value)
+    }
+    url.search = params.toString()
+    window.location.href = url.toString()
   }
 
-  const { value, getRadioProps, getRootProps } = useRadioGroup({
-    defaultValue: 'English',
+  const { value, getRadioProps, getRootProps, setValue } = useRadioGroup({
+    defaultValue: lang,
     onChange: handleChange,
   })
+
+  useEffect(() => {
+    if (data?.languagesState) {
+      setValue(lang)
+      if (currentLang) return
+      // Detect system language
+      const systemLang = data.languagesState.find(
+        (item) =>
+          item.state === 'done' &&
+          navigator.language.indexOf(item.language_code) > -1
+      )?.language_code
+      if (systemLang) setCurrentLang(systemLang)
+    }
+  }, [data?.languagesState, lang, currentLang])
+
+  const currentLabel = useMemo(
+    () =>
+      data?.languages.find((item) => item.language_code === value)?.language ||
+      ChatGPT.OriginalLanguage,
+    [value]
+  )
 
   return (
     <Box>
@@ -142,7 +178,8 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
             >
               {data?.languages ? (
                 <Box>
-                  {value} <Icon as={ArrowSvg} w="12px" h="12px" ml="10px" />
+                  {currentLabel}{' '}
+                  <Icon as={ArrowSvg} w="12px" h="12px" ml="10px" />
                 </Box>
               ) : (
                 <Spinner w="12px" h="12px" />
@@ -160,7 +197,7 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
                 >
                   {t('current-language')}
                   <Box as="span" fontSize="14px" color="black">
-                    {value}
+                    {currentLabel}
                   </Box>
                 </Text>
                 <Box m="12px 0" borderBottom="1px solid #F2F2F2" />
@@ -179,7 +216,7 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
                           isDisabled={isDisabled}
                           key={code}
                           label={language}
-                          {...getRadioProps({ value: language })}
+                          {...getRadioProps({ value: code })}
                         />
                       )
                     })}
@@ -189,7 +226,7 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
                 <CustomRadio
                   key="Original language"
                   label="Original language"
-                  {...getRadioProps({ value: 'Original language' })}
+                  {...getRadioProps({ value: ChatGPT.OriginalLanguage })}
                 />
               </Box>
               <Center
