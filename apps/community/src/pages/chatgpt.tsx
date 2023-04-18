@@ -113,6 +113,15 @@ export const ChatGPT: React.FC = () => {
       cacheTime: 0,
       onSuccess(d) {
         setPrimary(d.primary_language.language_code)
+        setCheckMap(
+          d.languages.reduce(
+            (acc, item) => ({
+              ...acc,
+              [item.language_code]: true,
+            }),
+            {}
+          )
+        )
       },
     }
   )
@@ -168,7 +177,7 @@ export const ChatGPT: React.FC = () => {
     setIsUpdating(true)
     try {
       const languageCodes = Object.keys(checkMap).filter((key) => checkMap[key])
-      await api.updateTranslationSetting(primary, languageCodes)
+      await api.updateTranslationSetting(primary, [...languageCodes, 'en'])
       toast(t('translation.update_successful'), {
         status: 'success',
         alertProps: { colorScheme: 'green' },
