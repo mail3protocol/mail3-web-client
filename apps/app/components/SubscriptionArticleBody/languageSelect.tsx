@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
 import { ChatGPT } from 'models'
 import { ReactComponent as ChatSvg } from '../../assets/subscription/chat-icon.svg'
 import { ReactComponent as ArrowSvg } from '../../assets/subscription/arrow.svg'
@@ -64,29 +64,26 @@ interface LanguageSelectProps {
   articleId: string
   currentLang: string
   setCurrentLang: Dispatch<SetStateAction<string>>
+  isSSR: boolean
 }
 
 export const LanguageSelect: React.FC<LanguageSelectProps> = ({
   articleId,
   currentLang,
   setCurrentLang,
+  isSSR,
 }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   const api = useAPI()
   const lang = currentLang || ChatGPT.OriginalLanguage
 
-  const [checkMap, setCheckMap] = useState<{
-    [key: string]: boolean
-  }>({})
-
   const { data } = useQuery(
-    [Query.GetLanguageCode],
+    [Query.GetLanguageCode, articleId],
     async () => {
       const [languages, languagesState] = await Promise.all([
         api.getLanguageCode().then((r) => r.data.languages),
         api.getTranslationStates(articleId).then((r) => r.data.language_codes),
       ])
-
       return {
         languages,
         languagesState,
@@ -96,21 +93,29 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      onSuccess({ languagesState }) {
-        const newCheckMap = languagesState.reduce((acc, item) => {
-          if (item.state === 'done')
-            return {
-              ...acc,
-              [item.language_code]: true,
-            }
-          return acc
-        }, {})
-        setCheckMap(newCheckMap)
-      },
     }
   )
 
+  const checkMap: {
+    [key: string]: boolean
+  } = useMemo(
+    () =>
+      data?.languagesState.reduce((acc, item) => {
+        if (item.state === 'done')
+          return {
+            ...acc,
+            [item.language_code]: true,
+          }
+        return acc
+      }, {}) || {},
+    [data?.languagesState]
+  )
+
   const handleChange = (value: string) => {
+    if (!isSSR) {
+      setCurrentLang(value)
+      return
+    }
     const url = new URL(window.location.href)
     // eslint-disable-next-line compat/compat
     const params = new URLSearchParams(url.search)

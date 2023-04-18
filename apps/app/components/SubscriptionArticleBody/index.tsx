@@ -156,6 +156,7 @@ export const SubscriptionArticleBody: React.FC<
             articleId={articleId}
             currentLang={currentLang}
             setCurrentLang={setCurrentLang}
+            isSSR
           />
           <Text
             mt="24px"

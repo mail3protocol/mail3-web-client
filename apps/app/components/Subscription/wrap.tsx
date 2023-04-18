@@ -5,7 +5,7 @@ import { FC } from 'react'
 import { ReactComponent as Empty } from '../../assets/subscription/all-empty.svg'
 import { Loading } from '../Loading'
 import { SubLeftList } from './leftList'
-import { SubPreview } from './preview'
+import { SubPreview, SubPreviewIdAtom } from './preview'
 
 const Container = styled(Box)`
   background-color: #ffffff;
@@ -32,6 +32,7 @@ export const SubWrapIsloadingAtom = atom(true)
 export const SubWrap: FC = () => {
   const isEmpty = useAtomValue(SubWrapEmptyAtom)
   const isLoading = useAtomValue(SubWrapIsloadingAtom)
+  const id = useAtomValue(SubPreviewIdAtom)
 
   return (
     <Container className="family-to-read">
@@ -52,7 +53,7 @@ export const SubWrap: FC = () => {
 
       <Flex h="100%" display={isEmpty ? 'none' : 'flex'}>
         <SubLeftList />
-        <SubPreview isSingleMode={false} />
+        <SubPreview key={id} isSingleMode={false} />
       </Flex>
     </Container>
   )
