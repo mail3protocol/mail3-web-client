@@ -23,7 +23,6 @@ import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
 import { ChatGPT, Subscription } from 'models'
 import { useQuery } from 'react-query'
 import { useAtom, useAtomValue } from 'jotai'
-import { useRouter } from 'next/router'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -65,9 +64,9 @@ export const SubscriptionArticleBody: React.FC<
   const isAuth = useIsAuthenticated()
   const isBuying = useAtomValue(isBuyingAtom)
   const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
-  const router = useRouter()
-  const lang = router.query?.lang as string
-  const [currentLang, setCurrentLang] = useState('')
+  // eslint-disable-next-line compat/compat
+  const lang = new URLSearchParams(window.location.search).get('lang') || ''
+  const [currentLang, setCurrentLang] = useState(lang)
   const isPremium = detail.message_type === Subscription.MessageType.Premium
 
   const { isLoading, data: detailCSR } = useQuery(
@@ -106,10 +105,6 @@ export const SubscriptionArticleBody: React.FC<
       }
     }
   }, [realContent])
-
-  useEffect(() => {
-    if (lang) setCurrentLang(lang)
-  }, [lang])
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {
