@@ -146,7 +146,7 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
     () =>
       data?.languages.find((item) => item.language_code === value)?.language ||
       ChatGPT.OriginalLanguage,
-    [value]
+    [value, data?.languages]
   )
 
   return (
