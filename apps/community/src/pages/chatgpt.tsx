@@ -177,7 +177,10 @@ export const ChatGPT: React.FC = () => {
     setIsUpdating(true)
     try {
       const languageCodes = Object.keys(checkMap).filter((key) => checkMap[key])
-      await api.updateTranslationSetting(primary, [...languageCodes, 'en'])
+      await api.updateTranslationSetting(
+        primary,
+        languageCodes.includes('en') ? languageCodes : [...languageCodes, 'en']
+      )
       toast(t('translation.update_successful'), {
         status: 'success',
         alertProps: { colorScheme: 'green' },
