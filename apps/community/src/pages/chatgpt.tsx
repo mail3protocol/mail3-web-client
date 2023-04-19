@@ -352,7 +352,7 @@ export const ChatGPT: React.FC = () => {
                 <Box w="124px" mt="16px">
                   {langCodes ? (
                     <Select
-                      placeholder="Choose"
+                      placeholder={!primary ? 'Choose' : ''}
                       value={primary}
                       onChange={({ target: { value } }) => {
                         setPrimary(value)
