@@ -31,6 +31,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import axios from 'axios'
+import { ReactComponent as ChatIconBlackSvg } from 'assets/translate/chat-icon-black.svg'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -221,7 +222,27 @@ export const ChatGPT: React.FC = () => {
         w="full"
         h="full"
         p="32px"
+        position="relative"
       >
+        <Center
+          p="6px 16px"
+          fontSize="12px"
+          lineHeight="14px"
+          bgColor="previewBorder"
+          position="absolute"
+          borderBottomLeftRadius="16px"
+          borderTopRightRadius="16px"
+          right="0"
+          top="0"
+        >
+          <Text fontWeight="300" mr="10px">
+            Provided by the
+          </Text>
+          <ChatIconBlackSvg />
+          <Text ml="2px" fontWeight="700">
+            ChatGPT
+          </Text>
+        </Center>
         <Flex justifyContent="space-between" w="full">
           <Heading fontSize="18px" lineHeight="20px">
             {t('title')}
