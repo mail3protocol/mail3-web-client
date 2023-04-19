@@ -91,6 +91,8 @@ export const SubscriptionArticleBody: React.FC<
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const realContent = detailCSR?.content || detail.content
   const isNeedLoading = !realContent && isLoading
+  const subject = detailCSR?.subject || detail.subject
+  const summary = detailCSR?.summary || detail.summary
 
   useEffect(() => {
     if (realContent) {
@@ -164,7 +166,7 @@ export const SubscriptionArticleBody: React.FC<
             fontSize={{ base: '28px', md: '32px' }}
             lineHeight="1.3"
           >
-            {detail?.subject}
+            {subject}
           </Text>
 
           {isPremium ? (
@@ -245,14 +247,14 @@ export const SubscriptionArticleBody: React.FC<
               <ShareButtonGroup
                 spacing="5px"
                 shareUrl={shareUrl}
-                text={detail.subject}
+                text={subject}
                 iconW="22px"
                 articleId={articleId}
               />
             </Flex>
           ) : null}
 
-          {detail?.summary ? (
+          {summary ? (
             <Box
               mt="13px"
               background="#EBEBEB"
@@ -266,7 +268,7 @@ export const SubscriptionArticleBody: React.FC<
                 lineHeight={{ base: '18px', md: '24px' }}
                 color="#333333"
               >
-                {detail?.summary}
+                {summary}
               </Text>
             </Box>
           ) : null}
@@ -310,7 +312,7 @@ export const SubscriptionArticleBody: React.FC<
             <ShareButtonGroup
               spacing="50px"
               shareUrl={shareUrl}
-              text={detail.subject}
+              text={subject}
               iconW="28px"
               articleId={articleId}
             />
