@@ -81,8 +81,9 @@ export const ChatGPT: React.FC = () => {
 
   const [checkMap, setCheckMap] = useState<{
     [key: string]: boolean
-  }>({})
-  const [isPartlock, setIsPartLock] = useState(false)
+  }>({
+    en: true,
+  })
   const [primary, setPrimary] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
 
@@ -157,21 +158,17 @@ export const ChatGPT: React.FC = () => {
       ...checkMap,
       [id]: !isChecked,
     }
-
-    const isLimitExhausted =
-      Object.keys(newCheckMap).reduce(
-        (count: number, key: string) =>
-          count + (newCheckMap[key] === true ? 1 : 0),
-        0
-      ) >= maxQuotas
-
-    if (isLimitExhausted) {
-      setIsPartLock(true)
-    } else {
-      setIsPartLock(false)
-    }
     setCheckMap(newCheckMap)
   }
+
+  const isExhausted = useMemo(
+    () =>
+      Object.keys(checkMap).reduce((count: number, key: string) => {
+        if (key === 'en') return count
+        return count + (checkMap[key] === true ? 1 : 0)
+      }, 0) >= maxQuotas,
+    [checkMap, maxQuotas]
+  )
 
   const onSubmit = async () => {
     setIsUpdating(true)
@@ -414,9 +411,9 @@ export const ChatGPT: React.FC = () => {
                         <Checkbox
                           key={code}
                           isDisabled={
-                            isLock || isFirstItem || (!isChecked && isPartlock)
+                            isLock || isFirstItem || (!isChecked && isExhausted)
                           }
-                          isChecked={isFirstItem || isChecked!}
+                          isChecked={isChecked!}
                           onChange={() => onChange(isChecked, code)}
                         >
                           {language}
