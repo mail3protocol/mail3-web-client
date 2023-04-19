@@ -70,6 +70,8 @@ const lockProgressConfig = [
   },
 ]
 
+const DEFAULT_LANGUAGE_SUPPORT = 'en'
+
 export const ChatGPT: React.FC = () => {
   useDocumentTitle('ChatGPT Bot')
   const { t } = useTranslation(['chatgpt', 'common'])
@@ -82,7 +84,7 @@ export const ChatGPT: React.FC = () => {
   const [checkMap, setCheckMap] = useState<{
     [key: string]: boolean
   }>({
-    en: true,
+    [DEFAULT_LANGUAGE_SUPPORT]: true,
   })
   const [primary, setPrimary] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
@@ -164,7 +166,7 @@ export const ChatGPT: React.FC = () => {
   const isExhausted = useMemo(
     () =>
       Object.keys(checkMap).reduce((count: number, key: string) => {
-        if (key === 'en') return count
+        if (key === DEFAULT_LANGUAGE_SUPPORT) return count
         return count + (checkMap[key] === true ? 1 : 0)
       }, 0) >= maxQuotas,
     [checkMap, maxQuotas]
@@ -176,7 +178,9 @@ export const ChatGPT: React.FC = () => {
       const languageCodes = Object.keys(checkMap).filter((key) => checkMap[key])
       await api.updateTranslationSetting(
         primary,
-        languageCodes.includes('en') ? languageCodes : [...languageCodes, 'en']
+        languageCodes.includes(DEFAULT_LANGUAGE_SUPPORT)
+          ? languageCodes
+          : [...languageCodes, DEFAULT_LANGUAGE_SUPPORT]
       )
       toast(t('translation.update_successful'), {
         status: 'success',
@@ -401,17 +405,18 @@ export const ChatGPT: React.FC = () => {
                     spacing="20px"
                     minChildWidth="80px"
                   >
-                    {langCodes.map((item, index) => {
+                    {langCodes.map((item) => {
                       const { language_code: code, language } = item
                       const isChecked = checkMap[code]
-                      const isFirstItem = index === 0
                       const isLock = !maxQuotas
 
                       return (
                         <Checkbox
                           key={code}
                           isDisabled={
-                            isLock || isFirstItem || (!isChecked && isExhausted)
+                            isLock ||
+                            code === DEFAULT_LANGUAGE_SUPPORT ||
+                            (!isChecked && isExhausted)
                           }
                           isChecked={isChecked!}
                           onChange={() => onChange(isChecked, code)}
