@@ -183,7 +183,6 @@ export const ChatGPT: React.FC = () => {
         alertProps: { colorScheme: 'green' },
       })
     } catch (error) {
-      setIsUpdating(false)
       if (axios.isAxiosError(error)) {
         if (
           error?.response?.status === 400 &&
@@ -206,6 +205,7 @@ export const ChatGPT: React.FC = () => {
         }
       }
     }
+    setIsUpdating(false)
   }
 
   return (
