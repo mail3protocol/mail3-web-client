@@ -195,6 +195,7 @@ export enum SubscribeAction {
 }
 
 export enum GlobalDimensions {
+  OwnBnbAddress = 'own_bnb_address',
   OwnEnsAddress = 'own_ens_address',
   OwnBitAddress = 'own_bit_address',
   OwnUDAddress = 'own_ud_address',
