@@ -67,7 +67,7 @@ const lockProgressConfig = [
   },
   {
     subscribers: 10000,
-    unlockNum: 10,
+    unlockNum: 11,
   },
 ]
 

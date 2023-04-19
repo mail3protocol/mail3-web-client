@@ -151,7 +151,7 @@ export const SubscriptionArticleBody: React.FC<
         />
         <Box
           minH="500px"
-          p={{ base: '32px 20px', md: '48px 32px' }}
+          p={{ base: '0 20px 32px', md: '0 32px 48px' }}
           w={{ base: 'full', md: '71.33%' }}
         >
           <LanguageSelect
