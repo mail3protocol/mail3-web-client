@@ -162,7 +162,7 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
           fontSize="14px"
           lineHeight="16px"
           borderRadius="0px 0px 0px 14px"
-          bgColor="black"
+          bgColor="#FFA800"
           color="white"
           p="8px"
         >
