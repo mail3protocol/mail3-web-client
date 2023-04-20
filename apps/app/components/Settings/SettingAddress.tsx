@@ -121,7 +121,7 @@ const tabsConfig: Record<
   },
   [TabItemType.SubBit]: {
     Icon: SubBitSvg,
-    name: 'Premium Name',
+    name: 'My Sub-domain',
   },
   [TabItemType.More]: {
     Icon: MoreSvg,
