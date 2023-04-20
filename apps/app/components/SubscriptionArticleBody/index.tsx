@@ -37,6 +37,7 @@ import { BuyPremium, isBuyingAtom } from './buyPremium'
 import { Query } from '../../api/query'
 import { subscribeButtonIsFollowAtom } from '../SubscribeButtonInApp'
 import { LanguageSelect } from './languageSelect'
+import { NotificationBarIsOpenAtom } from '../NotificationBar'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -63,6 +64,7 @@ export const SubscriptionArticleBody: React.FC<
   const isMobile = useBreakpointValue({ base: true, md: false })
   const isAuth = useIsAuthenticated()
   const isBuying = useAtomValue(isBuyingAtom)
+  const isOpenNotificationBar = useAtomValue(NotificationBarIsOpenAtom)
   const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
   // eslint-disable-next-line compat/compat
   const lang = new URLSearchParams(window.location.search).get('lang') || ''
@@ -151,7 +153,10 @@ export const SubscriptionArticleBody: React.FC<
         />
         <Box
           minH="500px"
-          p={{ base: '0 20px 32px', md: '0 32px 48px' }}
+          p={{
+            base: '0 20px 32px',
+            md: isOpenNotificationBar ? '40px 32px 48px' : '0 32px 48px',
+          }}
           w={{ base: 'full', md: '71.33%' }}
         >
           <LanguageSelect
