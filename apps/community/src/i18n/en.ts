@@ -557,8 +557,10 @@ export default {
   `,
       language_quotas: 'Language quotas you can configure: ',
       update: 'Update',
+      enable: 'Enable',
       update_successful: 'Update successful!',
       update_failed: 'Update failed, please try again later.',
+      dialog_title: 'Enable AI Translation',
     },
   },
 }

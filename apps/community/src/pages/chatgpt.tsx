@@ -25,13 +25,18 @@ import {
   Tabs,
   Text,
   useStyleConfig,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  useDisclosure,
 } from '@chakra-ui/react'
-
 import { Trans, useTranslation } from 'react-i18next'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import { ReactComponent as ChatIconBlackSvg } from 'assets/translate/chat-icon-black.svg'
+import { CloseButton } from '../components/ConfirmDialog'
 import { Container } from '../components/Container'
 import { TipsPanel } from '../components/TipsPanel'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -81,6 +86,7 @@ export const ChatGPT: React.FC = () => {
   const helperCom = useHelperComponent()
   const api = useAPI()
   const toast = useToast()
+  const [isOpen, setIsOpen] = useState(false)
 
   const [checkMap, setCheckMap] = useState<{
     [key: string]: boolean
@@ -117,6 +123,7 @@ export const ChatGPT: React.FC = () => {
       cacheTime: 0,
       onSuccess(d) {
         setPrimary(d.primary_language.language_code)
+        if (!d.primary_language.language_code) setIsOpen(true)
         setCheckMap(
           d.languages.reduce(
             (acc, item) => ({
@@ -212,6 +219,128 @@ export const ChatGPT: React.FC = () => {
     }
     setIsUpdating(false)
   }
+
+  const PrimaryCom = useCallback(
+    () => (
+      <Box mt="32px">
+        <Text fontWeight="400" fontSize="14px" lineHeight="20px">
+          <Box display="inline" color="importantColor">
+            *
+          </Box>
+          {t('translation.primary')}
+        </Text>
+        <Text
+          fontWeight="400"
+          fontSize="12px"
+          lineHeight="16px"
+          color="secondaryTitleColor"
+        >
+          {t('translation.primary_text')}
+        </Text>
+
+        <Box w="124px" mt="16px">
+          {langCodes ? (
+            <Select
+              placeholder={!primary ? 'Choose' : ''}
+              value={primary}
+              onChange={({ target: { value } }) => {
+                setPrimary(value)
+              }}
+            >
+              {langCodes.map((item) => {
+                const { language, language_code: code } = item
+                return (
+                  <option key={code} value={code}>
+                    {language}
+                  </option>
+                )
+              })}
+            </Select>
+          ) : null}
+        </Box>
+      </Box>
+    ),
+    [langCodes, primary]
+  )
+
+  const MoreLangCom = useCallback(
+    ({ isDialog }: { isDialog?: boolean }) => (
+      <Box
+        mt="32px"
+        w={isDialog ? '625px' : '700px'}
+        p="8px 0"
+        rounded="16px"
+        border="1px solid"
+        borderColor="previewBorder"
+      >
+        <Center
+          p="0 16px 8px"
+          borderBottom="1px solid"
+          borderColor="previewBorder"
+        >
+          <Box fontWeight="510" fontSize="14px" lineHeight="20px">
+            {t('translation.more_language')}
+          </Box>
+          <Spacer />
+          <Box
+            fontWeight="400"
+            fontSize="12px"
+            lineHeight="16px"
+            color="importantColor"
+          >
+            {`${t('translation.language_quotas')}${maxQuotas}`}
+          </Box>
+        </Center>
+
+        {langCodes ? (
+          <SimpleGrid p="40px 20px 30px" spacing="20px" minChildWidth="80px">
+            {langCodes.map((item) => {
+              const { language_code: code, language } = item
+              const isChecked = checkMap[code]
+              const isLock = !maxQuotas
+
+              return (
+                <Checkbox
+                  key={code}
+                  isDisabled={
+                    isLock ||
+                    code === DEFAULT_LANGUAGE_SUPPORT ||
+                    (!isChecked && isExhausted)
+                  }
+                  isChecked={isChecked!}
+                  onChange={() => onChange(isChecked, code)}
+                >
+                  {language}
+                </Checkbox>
+              )
+            })}
+          </SimpleGrid>
+        ) : (
+          <Center p="40px 20px 30px">
+            <Spinner />
+          </Center>
+        )}
+      </Box>
+    ),
+    [langCodes, checkMap, maxQuotas, isExhausted, onChange]
+  )
+
+  const UpdateButtonCom = useCallback(
+    ({ isDialog }: { isDialog?: boolean }) => (
+      <Button
+        mt="32px"
+        variant="solid-rounded"
+        colorScheme="primaryButton"
+        type="submit"
+        isLoading={isUpdating}
+        onClick={onSubmit}
+        isDisabled={!primary}
+      >
+        {isDialog ? t('translation.enable') : t('translation.update')}
+      </Button>
+    ),
+    [isUpdating, onSubmit, primary]
+  )
 
   return (
     <Container as={Grid} gridTemplateColumns="3fr 1fr" gap="20px">
@@ -355,120 +484,37 @@ export const ChatGPT: React.FC = () => {
                 </Flex>
               </Box>
 
-              <Box mt="32px">
-                <Text fontWeight="400" fontSize="14px" lineHeight="20px">
-                  <Box display="inline" color="importantColor">
-                    *
-                  </Box>
-                  {t('translation.primary')}
-                </Text>
-                <Text
-                  fontWeight="400"
-                  fontSize="12px"
-                  lineHeight="16px"
-                  color="secondaryTitleColor"
-                >
-                  {t('translation.primary_text')}
-                </Text>
-
-                <Box w="124px" mt="16px">
-                  {langCodes ? (
-                    <Select
-                      placeholder={!primary ? 'Choose' : ''}
-                      value={primary}
-                      onChange={({ target: { value } }) => {
-                        setPrimary(value)
-                      }}
-                    >
-                      {langCodes.map((item) => {
-                        const { language, language_code: code } = item
-                        return (
-                          <option key={code} value={code}>
-                            {language}
-                          </option>
-                        )
-                      })}
-                    </Select>
-                  ) : null}
-                </Box>
-              </Box>
-
-              <Box
-                mt="32px"
-                w="700px"
-                p="8px 0"
-                rounded="16px"
-                border="1px solid"
-                borderColor="previewBorder"
-              >
-                <Center
-                  p="0 16px 8px"
-                  borderBottom="1px solid"
-                  borderColor="previewBorder"
-                >
-                  <Box fontWeight="510" fontSize="14px" lineHeight="20px">
-                    {t('translation.more_language')}
-                  </Box>
-                  <Spacer />
-                  <Box
-                    fontWeight="400"
-                    fontSize="12px"
-                    lineHeight="16px"
-                    color="importantColor"
-                  >
-                    {`${t('translation.language_quotas')}${maxQuotas}`}
-                  </Box>
-                </Center>
-
-                {langCodes ? (
-                  <SimpleGrid
-                    p="40px 20px 30px"
-                    spacing="20px"
-                    minChildWidth="80px"
-                  >
-                    {langCodes.map((item) => {
-                      const { language_code: code, language } = item
-                      const isChecked = checkMap[code]
-                      const isLock = !maxQuotas
-
-                      return (
-                        <Checkbox
-                          key={code}
-                          isDisabled={
-                            isLock ||
-                            code === DEFAULT_LANGUAGE_SUPPORT ||
-                            (!isChecked && isExhausted)
-                          }
-                          isChecked={isChecked!}
-                          onChange={() => onChange(isChecked, code)}
-                        >
-                          {language}
-                        </Checkbox>
-                      )
-                    })}
-                  </SimpleGrid>
-                ) : (
-                  <Center p="40px 20px 30px">
-                    <Spinner />
-                  </Center>
-                )}
-              </Box>
-
-              <Button
-                mt="32px"
-                variant="solid-rounded"
-                colorScheme="primaryButton"
-                type="submit"
-                isLoading={isUpdating}
-                onClick={onSubmit}
-                isDisabled={!primary}
-              >
-                {t('translation.update')}
-              </Button>
+              <PrimaryCom />
+              <MoreLangCom />
+              <UpdateButtonCom />
             </TabPanel>
           </TabPanels>
         </Tabs>
       </Flex>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <ModalOverlay />
+        <ModalContent mt="25vh" maxW="674px">
+          <CloseButton
+            top="16px"
+            onClick={() => {
+              setIsOpen(false)
+            }}
+          />
+          <ModalBody p="48px 24px 32px">
+            <Text
+              fontWeight="700"
+              fontSize="18px"
+              lineHeight="22px"
+              align="center"
+            >
+              {t('translation.dialog_title')}
+            </Text>
+            <PrimaryCom />
+            <MoreLangCom isDialog />
+            <UpdateButtonCom isDialog />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <TipsPanel useSharedContent />
     </Container>
   )
