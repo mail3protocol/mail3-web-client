@@ -14,6 +14,7 @@ export namespace ChatGPT {
     language: string
     language_code: string
     state: 'pending' | 'done' | 'failed' | 'translating'
+    primary_language_code: string
   }
 
   export const OriginalLanguage = 'Original language'

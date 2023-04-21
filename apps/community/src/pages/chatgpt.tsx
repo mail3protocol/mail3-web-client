@@ -29,7 +29,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalBody,
-  useDisclosure,
 } from '@chakra-ui/react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useMemo, useState } from 'react'

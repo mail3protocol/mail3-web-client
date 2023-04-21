@@ -105,8 +105,9 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
           return {
             ...acc,
             [item.language_code]: true,
+            [item.primary_language_code]: true,
           }
-        return acc
+        return { ...acc, [item.primary_language_code]: true }
       }, {}) || {},
     [data?.languagesState]
   )
