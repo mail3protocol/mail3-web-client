@@ -198,6 +198,7 @@ export enum GlobalDimensions {
   OwnBnbAddress = 'own_bnb_address',
   OwnEnsAddress = 'own_ens_address',
   OwnBitAddress = 'own_bit_address',
+  OwnBitSubDomain = 'own_bit_sub_domain',
   OwnUDAddress = 'own_ud_address',
   ConnectedWalletName = 'connected_wallet_name',
   WalletAddress = 'wallet_address',
