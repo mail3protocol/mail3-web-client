@@ -266,7 +266,7 @@ export const Dashboard: React.FC = () => {
             justify={isShowMirror ? 'space-between' : 'center'}
             color="primary.900"
             flexDirection={isShowMirror ? 'row' : 'column-reverse'}
-            pl="40px"
+            pl={isShowMirror ? '40px' : '0'}
             to={RoutePath.NewMessage}
             target="_blank"
             onClick={openNewMessagePage.onClick}
