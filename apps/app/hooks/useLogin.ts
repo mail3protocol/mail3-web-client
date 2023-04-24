@@ -189,6 +189,7 @@ export const useSetGlobalTrack = () => {
           aliases.aliases.find((a) => a.is_default)?.address ||
           `${account}@${MAIL_SERVER_URL}`
         let isOwnBitAddress = false
+        let isOwnBitSubDomain = false
         let isOwnEnsAddress = false
         let isOwnUDAddress = false
         let isOwnBnbAddress = false
@@ -207,9 +208,13 @@ export const useSetGlobalTrack = () => {
           if (alias.email_type === AliasMailType.Bnb) {
             isOwnBnbAddress = true
           }
+          if (alias.email_type === AliasMailType.SubBit) {
+            isOwnBitSubDomain = true
+          }
         }
         const config = {
           defaultAddress,
+          [GlobalDimensions.OwnBitSubDomain]: isOwnBitSubDomain,
           [GlobalDimensions.OwnBnbAddress]: isOwnBnbAddress,
           [GlobalDimensions.OwnEnsAddress]: isOwnEnsAddress,
           [GlobalDimensions.OwnBitAddress]: isOwnBitAddress,
