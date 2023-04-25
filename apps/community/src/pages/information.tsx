@@ -495,7 +495,7 @@ export const Information: React.FC = () => {
 
               <Title>{t('banner_image')}</Title>
               <Center
-                w="610px"
+                w="548px"
                 h="100px"
                 justifyContent="center"
                 bgImage={isLoading ? '' : bannerUrl}
