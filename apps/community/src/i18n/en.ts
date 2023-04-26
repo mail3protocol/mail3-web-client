@@ -561,6 +561,8 @@ export default {
       update_successful: 'Update successful!',
       update_failed: 'Update failed, please try again later.',
       dialog_title: 'Enable AI Translation',
+      update_quotas_exceeded:
+        'Update configuration failed. Please increase subscribers to restore quotas.',
     },
   },
 }

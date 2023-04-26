@@ -194,20 +194,17 @@ export const ChatGPT: React.FC = () => {
         alertProps: { colorScheme: 'green' },
       })
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (axios.isAxiosError(error) && error?.response?.status === 400) {
         if (
-          error?.response?.status === 400 &&
           error?.response?.data.reason ===
-            ErrorCode.TRANSLATION_LANGUAGE_QUOTA_EXCEEDED
+          ErrorCode.TRANSLATION_LANGUAGE_QUOTA_EXCEEDED
         ) {
-          toast(error?.response?.data.message, {
+          toast(t('translation.update_quotas_exceeded'), {
             duration: 5000,
             status: 'error',
             alertProps: { colorScheme: 'red' },
           })
-          return
-        }
-        if (error?.response?.status === 400) {
+        } else {
           toast(t('translation.update_failed'), {
             duration: 5000,
             status: 'error',
