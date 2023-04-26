@@ -243,11 +243,11 @@ export const LanguageSelect: React.FC<LanguageSelectProps> = ({
                 bgColor="#F2F2F2"
               >
                 <Text fontWeight="300" mr="10px">
-                  Provided by the
+                  {t('provided')}
                 </Text>
                 <ChatIconBlackSvg />
                 <Text ml="2px" fontWeight="700">
-                  ChatGPT API
+                  {t('chatGPT-api')}
                 </Text>
               </Center>
             </PopoverBody>

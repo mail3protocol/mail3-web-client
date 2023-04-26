@@ -410,6 +410,8 @@
         "sub-domain":"Enter and find the sub-domain you like",
         "free-now": "Start at Free",
         "ipfs":"The original version of this post has been permanently stored by IPFS",
-        "current-language": "Current language: "
+        "current-language": "Current language: ",
+        "provided": "Provided by the",
+        "chatGPT-api": "ChatGPT API"
     }
 }

@@ -563,6 +563,8 @@ export default {
       dialog_title: 'Enable AI Translation',
       update_quotas_exceeded:
         'Update configuration failed. Please increase subscribers to restore quotas.',
+      provided_the: 'Provided by the',
+      chatGPT: 'ChatGPT',
     },
   },
 }

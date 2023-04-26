@@ -361,11 +361,11 @@ export const ChatGPT: React.FC = () => {
           top="0"
         >
           <Text fontWeight="300" mr="10px">
-            Provided by the
+            {t('translation.provided_the')}
           </Text>
           <ChatIconBlackSvg />
           <Text ml="2px" fontWeight="700">
-            ChatGPT
+            {t('translation.chatGPT')}
           </Text>
         </Center>
         <Flex justifyContent="space-between" w="full">
