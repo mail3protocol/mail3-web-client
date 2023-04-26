@@ -26,15 +26,14 @@ import {
   Link,
   useBreakpointValue,
   AspectRatio,
-  Icon,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Avatar, SubscribeCard } from 'ui'
-import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
-import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
-import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
+import SvgCopy from 'assets/subscribe-page/copy.svg'
+import SvgTwitter from 'assets/subscription/twitter.svg'
+import SvgDownload from 'assets/subscribe-page/download.svg'
 import { ReactComponent as SvgPremium } from 'assets/subscribe-page/star.svg'
 import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
@@ -166,7 +165,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     }
   > = {
     [ButtonType.Card]: {
-      Icon: SvgShare,
+      Icon: SvgDownload,
       label: t('share'),
     },
     [ButtonType.Copy]: {
@@ -470,23 +469,24 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
       <PageContainer className="family-to-read">
         <Box
-          p={{ base: '8px 20px 40px', md: '24px 30px 0' }}
+          p={{ base: '8px 20px 34px', md: '24px 30px 0' }}
           position="relative"
         >
           {desc ? (
-            <Box ref={descRef} mt="16px" w="100%">
-              <Collapse startingHeight={20} in={isOpen}>
+            <Box ref={descRef} w="100%">
+              <Collapse startingHeight={isMobile ? 40 : 20} in={isOpen}>
                 <Text
                   fontWeight="400"
-                  fontSize="12px"
+                  fontSize={{ base: '12px', md: '14px' }}
                   lineHeight="20px"
                   whiteSpace="pre-line"
+                  color="#737373"
                 >
                   {desc}
                 </Text>
               </Collapse>
               {isShowMore ? (
-                <Flex justifyContent={{ base: 'flex-end', md: 'flex-start' }}>
+                <Flex justifyContent="flex-start" mt="8px">
                   <RawButton
                     size="xs"
                     onClick={() => {
@@ -497,7 +497,11 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       }
                     }}
                     variant="link"
-                    color="#4E51F4"
+                    color="black"
+                    fontWeight="400"
+                    fontSize="12px"
+                    lineHeight="20px"
+                    textDecoration="underline"
                   >
                     Show {isOpen ? 'Less' : 'More'}
                   </RawButton>
@@ -506,22 +510,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             </Box>
           ) : null}
 
-          <Box
-            maxW={{ base: '100%', xl: CONTAINER_MAX_WIDTH }}
-            w="100%"
-            h="100%"
-            position="relative"
-          >
-            <Box
-              top={{ base: '15px', md: 'auto' }}
-              bottom={{ base: 'auto', md: '10px' }}
-              right={{ base: '20px', md: '50px' }}
-              position="absolute"
-              bgColor="rgba(0, 0, 0, 0.4)"
-              backdropFilter="blur(5px)"
-              borderRadius="100px"
-              p={{ base: '0', md: '0 5px' }}
-            >
+          {!isMobile ? (
+            <Center justifyContent="flex-end" mt="20px">
               <HStack spacing="15px">
                 {buttonList.map((type: ButtonType) => {
                   const { Icon: IconSvg, label } = buttonConfig[type]
@@ -542,8 +532,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                           role="option"
                           aria-label={label}
                         >
-                          <Icon
-                            as={IconSvg}
+                          <Image
+                            src={IconSvg}
                             w={{ base: '16px', md: '24px' }}
                             h={{ base: '16px', md: '24px' }}
                           />
@@ -563,10 +553,14 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                   )
                 })}
               </HStack>
-            </Box>
-          </Box>
+            </Center>
+          ) : null}
         </Box>
-        <Tabs position="relative" mt="30px" p={{ base: '0px', md: '0px 30px' }}>
+        <Tabs
+          position="relative"
+          mt={{ base: '0', md: '30px' }}
+          p={{ base: '0px', md: '0px 30px' }}
+        >
           <TabList
             className="tablist"
             w={{ base: '100%', md: 'auto' }}
