@@ -35,6 +35,7 @@ export const SendRecords: React.FC = () => {
   const { t } = useTranslation(['send_message', 'common'])
   const cardStyleProps = useStyleConfig('Card') as BoxProps
   const api = useAPI()
+  const isShowMirror = false
 
   const listQuery = useInfiniteQuery(
     [QueryKey.GetMessageList],
@@ -102,7 +103,11 @@ export const SendRecords: React.FC = () => {
           }}
         />
       ) : null}
-      <Grid w="full" gridTemplateColumns="3fr 1fr" gap="20px">
+      <Grid
+        w="full"
+        gridTemplateColumns={isShowMirror ? '3fr 1fr' : ''}
+        gap="20px"
+      >
         <Flex direction="column" p="16px" {...cardStyleProps}>
           <Heading as="h3" fontSize="16px">
             {t('new_message')}
@@ -125,25 +130,27 @@ export const SendRecords: React.FC = () => {
           </Heading>
           <NewMessageLinkButton isLoading={listQuery.isLoading} />
         </Flex>
-        <Flex
-          direction="column"
-          p="16px"
-          color="primaryTitleColor"
-          cursor="pointer"
-          onClick={switchMirrorOnClick}
-          {...cardStyleProps}
-        >
-          <Heading as="h3" fontSize="16px">
-            {t('switch_from_mirror')}
-          </Heading>
-          <PureStyledNewMessageButton>
-            {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
-              <Spinner w="24px" h="24px" mx="18px" />
-            ) : (
-              <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
-            )}
-          </PureStyledNewMessageButton>
-        </Flex>
+        {isShowMirror ? (
+          <Flex
+            direction="column"
+            p="16px"
+            color="primaryTitleColor"
+            cursor="pointer"
+            onClick={switchMirrorOnClick}
+            {...cardStyleProps}
+          >
+            <Heading as="h3" fontSize="16px">
+              {t('switch_from_mirror')}
+            </Heading>
+            <PureStyledNewMessageButton>
+              {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
+                <Spinner w="24px" h="24px" mx="18px" />
+              ) : (
+                <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
+              )}
+            </PureStyledNewMessageButton>
+          </Flex>
+        ) : null}
       </Grid>
       <Box {...cardStyleProps} p="32px">
         <Heading as="h2" fontSize="18px" fontWeight="700">

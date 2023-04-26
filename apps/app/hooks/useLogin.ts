@@ -24,6 +24,7 @@ import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 import { isBitDomain, isEnsDomain, isUdDomain } from 'shared'
 import type { UserInfo as UDUserInfo } from '@uauth/js'
+import { AliasMailType } from 'models'
 import { useAPI } from './useAPI'
 import { RoutePath } from '../route/path'
 import { API } from '../api'
@@ -188,8 +189,10 @@ export const useSetGlobalTrack = () => {
           aliases.aliases.find((a) => a.is_default)?.address ||
           `${account}@${MAIL_SERVER_URL}`
         let isOwnBitAddress = false
+        let isOwnBitSubDomain = false
         let isOwnEnsAddress = false
         let isOwnUDAddress = false
+        let isOwnBnbAddress = false
         for (let i = 0; i < aliases.aliases.length; i++) {
           const alias = aliases.aliases[i]
           const addr = removeMailSuffix(alias.address)
@@ -202,9 +205,17 @@ export const useSetGlobalTrack = () => {
           if (isUdDomain(addr)) {
             isOwnUDAddress = true
           }
+          if (alias.email_type === AliasMailType.Bnb) {
+            isOwnBnbAddress = true
+          }
+          if (alias.email_type === AliasMailType.SubBit) {
+            isOwnBitSubDomain = true
+          }
         }
         const config = {
           defaultAddress,
+          [GlobalDimensions.OwnBitSubDomain]: isOwnBitSubDomain,
+          [GlobalDimensions.OwnBnbAddress]: isOwnBnbAddress,
           [GlobalDimensions.OwnEnsAddress]: isOwnEnsAddress,
           [GlobalDimensions.OwnBitAddress]: isOwnBitAddress,
           [GlobalDimensions.OwnUDAddress]: isOwnUDAddress,

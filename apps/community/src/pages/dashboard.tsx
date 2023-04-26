@@ -97,6 +97,7 @@ export const Dashboard: React.FC = () => {
     async () => api.getMessageList({ count: 10 }).then((r) => r.data)
   )
   const openNewMessagePage = useOpenNewMessagePage()
+  const isShowMirror = false
 
   const baseInfos: BaseInfo[] = [
     {
@@ -262,15 +263,21 @@ export const Dashboard: React.FC = () => {
           <Flex
             as={RouterLink}
             align="center"
-            justify="space-between"
+            justify={isShowMirror ? 'space-between' : 'center'}
             color="primary.900"
-            pl="40px"
+            flexDirection={isShowMirror ? 'row' : 'column-reverse'}
+            pl={isShowMirror ? '40px' : '0'}
             to={RoutePath.NewMessage}
             target="_blank"
             onClick={openNewMessagePage.onClick}
             className="button"
           >
-            <Heading as="h3" fontSize="16px">
+            <Heading
+              as="h3"
+              fontSize="16px"
+              mt={isShowMirror ? '0' : '12px'}
+              pl={isShowMirror ? '0' : '12px'}
+            >
               {t('send_message')}
               <Tooltip
                 label={t('send_rule', { ns: 'send_message' })}
@@ -296,25 +303,27 @@ export const Dashboard: React.FC = () => {
             )}
           </Flex>
         </Box>
-        <Box bg="cardBackground" shadow="card" rounded="card">
-          <Flex
-            as="button"
-            pl="40px"
-            align="center"
-            justify="space-between"
-            className="button"
-            onClick={switchMirrorOnClick}
-          >
-            <Heading as="h3" fontSize="16px" whiteSpace="nowrap">
-              {t('switch_from_mirror')}
-            </Heading>
-            {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
-              <Spinner w="24px" h="24px" mx="18px" />
-            ) : (
-              <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
-            )}
-          </Flex>
-        </Box>
+        {isShowMirror ? (
+          <Box bg="cardBackground" shadow="card" rounded="card">
+            <Flex
+              as="button"
+              pl="40px"
+              align="center"
+              justify="space-between"
+              className="button"
+              onClick={switchMirrorOnClick}
+            >
+              <Heading as="h3" fontSize="16px" whiteSpace="nowrap">
+                {t('switch_from_mirror')}
+              </Heading>
+              {isLoadingIsUploadedIpfsKeyState || isCheckAdminStatusLoading ? (
+                <Spinner w="24px" h="24px" mx="18px" />
+              ) : (
+                <Icon as={DownloadSvg} w="24px" h="24px" mx="18px" />
+              )}
+            </Flex>
+          </Box>
+        ) : null}
       </Grid>
       <Box
         bg="cardBackground"
