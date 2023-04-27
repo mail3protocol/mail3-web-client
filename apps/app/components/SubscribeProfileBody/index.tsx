@@ -13,7 +13,6 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  SimpleGrid,
   Wrap,
   WrapItem,
   Popover,
@@ -620,11 +619,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             </HStack>
           </TabList>
 
-          <Flex
-            justifyContent="center"
-            p={{ base: '12px', md: '20px 0px' }}
-            minH="200px"
-          >
+          <Flex justifyContent="center" minH="200px">
             <TabPanels>
               <TabPanel p="0">
                 {!communityList.length ? (
@@ -660,30 +655,25 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       </Center>
                     }
                   >
-                    <SimpleGrid
-                      columns={{ base: 1, md: 4 }}
-                      spacing={{ base: '0', md: '20px' }}
-                    >
-                      {communityList.map((item) => {
-                        const {
-                          uuid: id,
-                          subject,
-                          summary,
-                          created_at: date,
-                          message_type: type,
-                        } = item
-                        return (
-                          <CommunityCard
-                            type={type}
-                            key={id}
-                            uuid={id}
-                            title={subject}
-                            content={summary}
-                            date={date}
-                          />
-                        )
-                      })}
-                    </SimpleGrid>
+                    {communityList.map((item) => {
+                      const {
+                        uuid: id,
+                        subject,
+                        summary,
+                        created_at: date,
+                        message_type: type,
+                      } = item
+                      return (
+                        <CommunityCard
+                          type={type}
+                          key={id}
+                          uuid={id}
+                          title={subject}
+                          content={summary}
+                          date={date}
+                        />
+                      )
+                    })}
                   </InfiniteScroll>
                 )}
               </TabPanel>
