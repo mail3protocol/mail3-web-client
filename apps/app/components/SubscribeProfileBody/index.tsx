@@ -607,7 +607,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                     <HStack>
                       <Box
                         whiteSpace="nowrap"
-                        fontSize={{ base: '14px', md: '18px' }}
+                        fontSize="20px"
                         marginInlineStart="0px !important"
                       >
                         {name}

@@ -27,7 +27,11 @@ export const CommunityCard: React.FC<{
   const time = formatDayjs.format(dateStringFormat)
 
   return (
-    <LinkBox as="article" borderBottom="1px solid #D9D9D9" p="24px 0">
+    <LinkBox
+      as="article"
+      borderBottom="1px solid #D9D9D9"
+      p={{ base: '13px 20px', md: '24px 0' }}
+    >
       <LinkOverlay href={`${location.origin}/p/${uuid}`} target="_blank">
         <Flex
           fontWeight="400"
@@ -55,28 +59,35 @@ export const CommunityCard: React.FC<{
         </Flex>
 
         <Flex mt="16px">
-          <Box w="calc(100% - 368px)">
+          <Box w={{ base: '244px', md: 'calc(100% - 368px)' }}>
             <Text
               noOfLines={2}
               fontWeight="700"
-              fontSize="24px"
-              lineHeight="32px"
+              fontSize={{ base: '16px', md: '24px' }}
+              lineHeight={{ base: '20px', md: '32px' }}
             >
               {title}
             </Text>
             <Text
-              noOfLines={3}
+              noOfLines={{ base: 2, md: 3 }}
               fontWeight="400"
-              fontSize="16px"
-              lineHeight="24px"
-              mt="16px"
+              fontSize={{ base: '12px', md: '16px' }}
+              lineHeight={{ base: '20px', md: '24px' }}
+              mt={{ base: '8px', md: '16px' }}
             >
               {content}
             </Text>
           </Box>
           <Spacer />
-          <Center pr="24px">
-            <Box w="272px" h="152px" bgColor="#ccc" />
+          <Center
+            pr={{ base: '0', md: '24px' }}
+            alignItems={{ base: 'flex-start', md: 'center' }}
+          >
+            <Box
+              w={{ base: '60px', md: '272px' }}
+              h={{ base: '60px', md: '152px' }}
+              bgColor="#ccc"
+            />
           </Center>
         </Flex>
       </LinkOverlay>
