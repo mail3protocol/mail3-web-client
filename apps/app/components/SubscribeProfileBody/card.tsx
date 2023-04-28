@@ -5,7 +5,6 @@ import {
   Icon,
   LinkBox,
   LinkOverlay,
-  Spacer,
   Text,
 } from '@chakra-ui/react'
 import dayjs from 'dayjs'
@@ -25,6 +24,7 @@ export const CommunityCard: React.FC<{
   const [t] = useTranslation(['subscribe-profile', 'common'])
   const formatDayjs = dayjs(Number(date) * 1000)
   const time = formatDayjs.format(dateStringFormat)
+  const isHasImage = false
 
   return (
     <LinkBox
@@ -59,7 +59,7 @@ export const CommunityCard: React.FC<{
         </Flex>
 
         <Flex mt="16px">
-          <Box w={{ base: '244px', md: 'calc(100% - 368px)' }}>
+          <Box w={{ base: '244px', md: '100%' }}>
             <Text
               noOfLines={2}
               fontWeight="700"
@@ -69,7 +69,7 @@ export const CommunityCard: React.FC<{
               {title}
             </Text>
             <Text
-              noOfLines={{ base: 2, md: 3 }}
+              noOfLines={2}
               fontWeight="400"
               fontSize={{ base: '12px', md: '16px' }}
               lineHeight={{ base: '20px', md: '24px' }}
@@ -78,17 +78,18 @@ export const CommunityCard: React.FC<{
               {content}
             </Text>
           </Box>
-          <Spacer />
-          <Center
-            pr={{ base: '0', md: '24px' }}
-            alignItems={{ base: 'flex-start', md: 'center' }}
-          >
-            <Box
-              w={{ base: '60px', md: '272px' }}
-              h={{ base: '60px', md: '152px' }}
-              bgColor="#ccc"
-            />
-          </Center>
+          {isHasImage ? (
+            <Center
+              pr={{ base: '0', md: '24px' }}
+              alignItems={{ base: 'flex-start', md: 'center' }}
+            >
+              <Box
+                w={{ base: '60px', md: '272px' }}
+                h={{ base: '60px', md: '152px' }}
+                bgColor="#ccc"
+              />
+            </Center>
+          ) : null}
         </Flex>
       </LinkOverlay>
     </LinkBox>

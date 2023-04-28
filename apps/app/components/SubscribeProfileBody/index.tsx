@@ -655,29 +655,31 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       </Center>
                     }
                   >
-                    {communityList.map((item) => {
-                      const {
-                        uuid: id,
-                        subject,
-                        summary,
-                        created_at: date,
-                        message_type: type,
-                      } = item
-                      return (
-                        <CommunityCard
-                          type={type}
-                          key={id}
-                          uuid={id}
-                          title={subject}
-                          content={summary}
-                          date={date}
-                        />
-                      )
-                    })}
+                    <Box p={{ base: 0, md: '0 24px' }}>
+                      {communityList.map((item) => {
+                        const {
+                          uuid: id,
+                          subject,
+                          summary,
+                          created_at: date,
+                          message_type: type,
+                        } = item
+                        return (
+                          <CommunityCard
+                            type={type}
+                            key={id}
+                            uuid={id}
+                            title={subject}
+                            content={summary}
+                            date={date}
+                          />
+                        )
+                      })}
+                    </Box>
                   </InfiniteScroll>
                 )}
               </TabPanel>
-              <TabPanel p="0">
+              <TabPanel p="24px">
                 <Center pb="17px">
                   <Text fontWeight="500" fontSize="12px" lineHeight="24px">
                     {items?.poapList?.length} items
@@ -690,7 +692,10 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                     </Link>
                   </Flex>
                 </Center>
-                <Wrap spacing={{ base: '15px', md: '28px' }}>
+                <Wrap
+                  spacing={{ base: '15px', md: '28px' }}
+                  justifyContent="center"
+                >
                   {items?.poapList.map((item) => {
                     const { name, img, poapPlatform } = item
                     return (
