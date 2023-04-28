@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { atom, useAtom, useAtomValue } from 'jotai'
-import { Subscription } from 'models'
+import { ChatGPT, Subscription } from 'models'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { TrackEvent, useDialog, useToast, useTrackClick } from 'hooks'
@@ -42,6 +42,7 @@ import { RoutePath } from '../../route/path'
 import { userPropertiesAtom } from '../../hooks/useLogin'
 import { ShareButtonGroup } from '../ShareButtonGroup'
 import { BuyPremium } from '../SubscriptionArticleBody/buyPremium'
+import { LanguageSelect } from '../SubscriptionArticleBody/languageSelect'
 
 const Container = styled(Box)`
   width: 64.43%;
@@ -268,14 +269,19 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
   if (_id) {
     id = _id
   }
+  const [currentLang, setCurrentLang] = useState('')
+
   const {
     data: detail,
     isLoading,
     refetch,
   } = useQuery<Subscription.MessageDetailResp>(
-    ['subscriptionDetail', id],
+    ['subscriptionDetail', id, currentLang],
     async () => {
-      const messageDetail = await api.SubscriptionMessageDetail(id)
+      const messageDetail = await api.SubscriptionMessageDetail(
+        id,
+        currentLang !== ChatGPT.OriginalLanguage ? currentLang : ''
+      )
       return messageDetail.data
     },
     {
@@ -396,6 +402,12 @@ export const SubPreview: React.FC<{ isSingleMode: boolean }> = ({
         </Box>
       </Center>
       <Box className="scroll-main-wrap">
+        <LanguageSelect
+          articleId={id}
+          currentLang={currentLang}
+          setCurrentLang={setCurrentLang}
+          isSSR={false}
+        />
         <Text
           fontWeight={700}
           fontSize={{ base: '28px', md: '32px' }}

@@ -14,4 +14,5 @@ export enum Query {
   SubscriptionDetail = 'subscription article detai',
   GetUserInfo = 'get_user_info',
   GetCheckPremiumMember = 'check_premium_member',
+  GetLanguageCode = 'getLanguageCode',
 }

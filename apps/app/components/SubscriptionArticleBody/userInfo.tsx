@@ -54,19 +54,24 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         p={{ base: '10px 25px', md: '48px 32px' }}
         flexDirection="column"
         justifyContent="flex-start"
+        alignItems={{ base: 'center', md: 'flex-start' }}
         position={{ md: 'sticky' }}
         top={{ md: `${NAVBAR_HEIGHT}px` }}
       >
         <AvatarArea w="100%">
           <LinkOverlay href={`/${address}`} target="_blank">
-            <Center flexDirection="column" justifyContent="flex-start">
+            <Center
+              flexDirection="column"
+              justifyContent="flex-start"
+              alignItems={{ base: 'center', md: 'flex-start' }}
+            >
               <Avatar
                 src={avatar}
                 address={priAddress}
                 borderRadius="50%"
                 name={nickname}
-                w={{ base: '80px', md: '100px' }}
-                h={{ base: '80px', md: '100px' }}
+                w={{ base: '80px', md: '98px' }}
+                h={{ base: '80px', md: '98px' }}
               />
               <Text
                 className="nickname"
@@ -87,7 +92,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           lineHeight="16px"
           mt="14px"
           w="100%"
-          textAlign="center"
+          textAlign={{ base: 'center', md: 'left' }}
         >
           {mailAddress}
         </Text>

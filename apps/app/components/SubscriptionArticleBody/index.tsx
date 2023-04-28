@@ -10,7 +10,7 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   isEthAddress,
@@ -20,9 +20,10 @@ import {
 } from 'shared'
 import { Avatar, EchoIframe, IpfsInfoTable } from 'ui'
 import { ReactComponent as SvgDiamond } from 'assets/subscribe-page/diamond.svg'
-import { Subscription } from 'models'
+import { ChatGPT, Subscription } from 'models'
 import { useQuery } from 'react-query'
 import { useAtom, useAtomValue } from 'jotai'
+import { useRouter } from 'next/router'
 import { APP_URL, MAIL_SERVER_URL } from '../../constants/env'
 import { useAPI } from '../../hooks/useAPI'
 import { UserInfo } from './userInfo'
@@ -36,6 +37,8 @@ import { ShareButtonGroup } from '../ShareButtonGroup'
 import { BuyPremium, isBuyingAtom } from './buyPremium'
 import { Query } from '../../api/query'
 import { subscribeButtonIsFollowAtom } from '../SubscribeButtonInApp'
+import { LanguageSelect } from './languageSelect'
+import { NotificationBarIsOpenAtom } from '../NotificationBar'
 
 const CONTAINER_MAX_WIDTH = 1064
 
@@ -62,14 +65,20 @@ export const SubscriptionArticleBody: React.FC<
   const isMobile = useBreakpointValue({ base: true, md: false })
   const isAuth = useIsAuthenticated()
   const isBuying = useAtomValue(isBuyingAtom)
+  const isOpenNotificationBar = useAtomValue(NotificationBarIsOpenAtom)
   const [isFollow, setIsFollow] = useAtom(subscribeButtonIsFollowAtom)
-
+  const router = useRouter()
+  const lang = router.query.lang as string | undefined
+  const [currentLang, setCurrentLang] = useState('')
   const isPremium = detail.message_type === Subscription.MessageType.Premium
 
   const { isLoading, data: detailCSR } = useQuery(
-    [Query.SubscriptionDetail, isAuth],
+    [Query.SubscriptionDetail, isAuth, currentLang],
     async () => {
-      const { data } = await api.SubscriptionMessageDetail(articleId)
+      const { data } = await api.SubscriptionMessageDetail(
+        articleId,
+        currentLang !== ChatGPT.OriginalLanguage ? currentLang : ''
+      )
       return data
     },
     {
@@ -83,8 +92,10 @@ export const SubscriptionArticleBody: React.FC<
   const address = detailCSR?.writer_name || detail.writer_name
   const isNeedPay = isPremium && !detailCSR?.content && !isLoading
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
-  const realContent = detail.content || detailCSR?.content
+  const realContent = detailCSR?.content || detail.content
   const isNeedLoading = !realContent && isLoading
+  const subject = detailCSR?.subject || detail.subject
+  const summary = detailCSR?.summary || detail.summary
 
   useEffect(() => {
     if (realContent) {
@@ -99,6 +110,12 @@ export const SubscriptionArticleBody: React.FC<
       }
     }
   }, [realContent])
+
+  useEffect(() => {
+    if (lang) {
+      setCurrentLang(lang)
+    }
+  }, [lang])
 
   const nickname = useMemo(() => {
     if (userInfo?.nickname) {
@@ -143,15 +160,25 @@ export const SubscriptionArticleBody: React.FC<
         />
         <Box
           minH="500px"
-          p={{ base: '32px 20px', md: '48px 32px' }}
+          p={{
+            base: '0 20px 32px',
+            md: isOpenNotificationBar ? '40px 32px 48px' : '0 32px 48px',
+          }}
           w={{ base: 'full', md: '71.33%' }}
         >
+          <LanguageSelect
+            articleId={articleId}
+            currentLang={currentLang}
+            setCurrentLang={setCurrentLang}
+            isSSR
+          />
           <Text
+            mt="24px"
             fontWeight="700"
             fontSize={{ base: '28px', md: '32px' }}
             lineHeight="1.3"
           >
-            {detail?.subject}
+            {subject}
           </Text>
 
           {isPremium ? (
@@ -232,14 +259,14 @@ export const SubscriptionArticleBody: React.FC<
               <ShareButtonGroup
                 spacing="5px"
                 shareUrl={shareUrl}
-                text={detail.subject}
+                text={subject}
                 iconW="22px"
                 articleId={articleId}
               />
             </Flex>
           ) : null}
 
-          {detail?.summary ? (
+          {summary ? (
             <Box
               mt="13px"
               background="#EBEBEB"
@@ -253,7 +280,7 @@ export const SubscriptionArticleBody: React.FC<
                 lineHeight={{ base: '18px', md: '24px' }}
                 color="#333333"
               >
-                {detail?.summary}
+                {summary}
               </Text>
             </Box>
           ) : null}
@@ -297,7 +324,7 @@ export const SubscriptionArticleBody: React.FC<
             <ShareButtonGroup
               spacing="50px"
               shareUrl={shareUrl}
-              text={detail.subject}
+              text={subject}
               iconW="28px"
               articleId={articleId}
             />

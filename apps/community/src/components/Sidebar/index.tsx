@@ -10,6 +10,7 @@ import { ReactComponent as MessageSvg } from '../../assets/SidebarMenuIcons/mess
 import { ReactComponent as EditorSvg } from '../../assets/SidebarMenuIcons/editors.svg'
 import { ReactComponent as SubscribeSvg } from '../../assets/SidebarMenuIcons/subscribe.svg'
 import { ReactComponent as DiamondsSvg } from '../../assets/SidebarMenuIcons/diamonds.svg'
+import { ReactComponent as TranslateSvg } from '../../assets/SidebarMenuIcons/translate.svg'
 import { useIsAdmin } from '../../hooks/useAdmin'
 
 export const SIDEBAR_WIDTH = 196
@@ -73,6 +74,16 @@ export const Sidebar: React.FC = () => {
           },
         ]
       : []),
+    {
+      label: (
+        <>
+          <Icon as={TranslateSvg} w="16px" h="16px" mr="4px" />
+          {t('sidebar.chatgpt')}
+        </>
+      ),
+      to: RoutePath.ChatGPT,
+      key: 'chatgpt',
+    },
   ]
 
   return (
