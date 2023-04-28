@@ -30,7 +30,7 @@ export const CommunityCard: React.FC<{
     <LinkBox
       as="article"
       borderBottom="1px solid #D9D9D9"
-      p={{ base: '13px 20px', md: '24px 0' }}
+      p={{ base: '13px 0 16px', md: '24px 0' }}
     >
       <LinkOverlay href={`${location.origin}/p/${uuid}`} target="_blank">
         <Flex
@@ -59,7 +59,7 @@ export const CommunityCard: React.FC<{
         </Flex>
 
         <Flex mt="16px">
-          <Box w={{ base: '244px', md: '100%' }}>
+          <Box w="100%">
             <Text
               noOfLines={2}
               fontWeight="700"

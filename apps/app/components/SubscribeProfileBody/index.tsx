@@ -63,8 +63,6 @@ import { Query } from '../../api/query'
 
 const CONTAINER_MAX_WIDTH = 1096
 
-const homeUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL
-
 enum ButtonType {
   Copy,
   Card,
@@ -99,7 +97,8 @@ export interface SubscribeProfileDataProps {
 }
 
 interface SubscribeProfileBodyProps extends SubscribeProfileDataProps {
-  // mailAddress: string
+  shareUrl: string
+  shareText: string
 }
 
 const PageContainer = styled(Box)`
@@ -137,6 +136,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   userInfo,
   userSettings,
   address,
+  shareUrl,
+  shareText,
 }) => {
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const [t] = useTranslation(['subscribe-profile', 'common'])
@@ -153,8 +154,6 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   const descRef = useRef<HTMLDivElement>(null)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const shareUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
 
   const buttonConfig: Record<
     ButtonType,
@@ -186,7 +185,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
       },
       [ButtonType.Twitter]: () => {
         shareToTwitter({
-          text: 'Hey, visit my Subscription Page to view my latest content @mail3dao',
+          text: shareText,
           url: shareUrl,
         })
       },
@@ -352,9 +351,9 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     () =>
       isVerifyOverflow({
         str: desc,
-        fontSize: '12px',
+        fontSize: '14px',
         height: '20',
-        width: `${descRef.current?.offsetWidth || 560}px`,
+        width: `${descRef.current?.offsetWidth || 1036}px`,
         lineHeight: '20px',
       }),
     [desc, descRef.current]
@@ -655,7 +654,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       </Center>
                     }
                   >
-                    <Box p={{ base: 0, md: '0 24px' }}>
+                    <Box p={{ base: '0 20px', md: '0 24px' }}>
                       {communityList.map((item) => {
                         const {
                           uuid: id,
