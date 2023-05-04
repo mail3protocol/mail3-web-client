@@ -535,13 +535,13 @@ export default {
       <li><text>Build your borderless community.</text></li>.
       </ul>`,
       english_unlocked: 'English unlocked ',
-      unlock: 'Language quotas unlocked: ',
+      unlock: 'Unlock more tranlation options with more subscribers',
       unlock_quotas: 'Unlock quotas: ',
       subscribers: 'Subscribers',
       primary: 'Your primary writing language',
       primary_text:
         'Please let us know your primary language so we can identify readers and provide them with the original language version if needed.',
-      more_language: 'Add more language versions for your posts',
+      more_language: 'Translation languages',
       provided: 'Provided by the ChatGPT API',
       submit: 'Configure',
       helper_text: `<h3>What is <strong>AI Translation</strong>?</h3>

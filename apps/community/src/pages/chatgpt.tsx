@@ -218,22 +218,13 @@ export const ChatGPT: React.FC = () => {
 
   const PrimaryCom = useCallback(
     () => (
-      <Box mt="32px">
+      <Box>
         <Text fontWeight="400" fontSize="14px" lineHeight="20px">
           <Box display="inline" color="importantColor">
             *
           </Box>
           {t('translation.primary')}
         </Text>
-        <Text
-          fontWeight="400"
-          fontSize="12px"
-          lineHeight="16px"
-          color="secondaryTitleColor"
-        >
-          {t('translation.primary_text')}
-        </Text>
-
         <Box w="124px" mt="16px">
           {langCodes ? (
             <Select
@@ -380,19 +371,19 @@ export const ChatGPT: React.FC = () => {
 
           <TabPanels>
             <TabPanel p="32px 0">
+              <PrimaryCom />
               <Box
                 fontWeight="400"
                 fontSize="12px"
                 lineHeight="14px"
                 color="secondaryTitleColor"
+                mt="36px"
               >
-                <Text>
-                  {curProgressData.subscribers === 0
-                    ? t('translation.english_unlocked')
-                    : `${t('translation.unlock')}${curProgressData.unlockNum}`}
-                </Text>
+                <Text>{t('translation.unlock')}</Text>
                 <Text mt="4px">
-                  {`${t('translation.subscribers')}: ${maxSubscribers}`}
+                  {`${t('translation.subscribers')}: ${
+                    curProgressData.unlockNum
+                  }`}
                 </Text>
               </Box>
               <Box
@@ -479,8 +470,6 @@ export const ChatGPT: React.FC = () => {
                   })}
                 </Flex>
               </Box>
-
-              <PrimaryCom />
               <MoreLangCom />
               <UpdateButtonCom />
             </TabPanel>
@@ -502,6 +491,7 @@ export const ChatGPT: React.FC = () => {
               fontSize="18px"
               lineHeight="22px"
               align="center"
+              mb="32px"
             >
               {t('translation.dialog_title')}
             </Text>
