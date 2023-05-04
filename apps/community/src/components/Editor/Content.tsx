@@ -44,6 +44,13 @@ pre {
   white-space: pre-wrap;
 }
 
+code {
+  display: block;
+  background: #EBEBEB;
+  padding: 18px;
+  font-size: 14px;
+}
+
 `
 
 export const Content = forwardRef<HTMLDivElement, FlexProps>(
