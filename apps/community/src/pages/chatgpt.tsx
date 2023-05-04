@@ -71,7 +71,7 @@ const lockProgressConfig = [
   },
   {
     subscribers: 10000,
-    unlockNum: 11,
+    unlockNum: 12,
   },
 ]
 
@@ -143,24 +143,9 @@ export const ChatGPT: React.FC = () => {
   }, [])
 
   const maxSubscribers = settingInfo?.subscribers_count || 0
-  const curProgressData = useMemo(
-    () =>
-      lockProgressConfig.reduce(
-        (acc, cur) => {
-          if (cur.subscribers <= maxSubscribers) {
-            return cur
-          }
-          return acc
-        },
-        {
-          subscribers: 0,
-          unlockNum: 0,
-        }
-      ),
-    [maxSubscribers]
-  )
-
-  const maxQuotas = curProgressData.unlockNum
+  const maxQuotas = settingInfo?.language_quota
+    ? settingInfo.language_quota - 1
+    : 0
 
   const onChange = (isChecked: boolean, id: string) => {
     const newCheckMap: { [key: string]: boolean } = {
@@ -381,9 +366,7 @@ export const ChatGPT: React.FC = () => {
               >
                 <Text>{t('translation.unlock')}</Text>
                 <Text mt="4px">
-                  {`${t('translation.subscribers')}: ${
-                    curProgressData.unlockNum
-                  }`}
+                  {`${t('translation.subscribers')}: ${maxSubscribers}`}
                 </Text>
               </Box>
               <Box
