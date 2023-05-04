@@ -40,6 +40,10 @@ img {
   margin: 0 auto;
 }
 
+pre {
+  white-space: pre-wrap;
+}
+
 `
 
 export const Content = forwardRef<HTMLDivElement, FlexProps>(
