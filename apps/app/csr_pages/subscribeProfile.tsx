@@ -54,9 +54,11 @@ export const SubscribeProfile: React.FC<SubscribeProfileDataProps> = (
 
   return (
     <>
-      <PageContainer>
-        <Navbar shareUrl={shareUrl} shareText={shareText} />
-      </PageContainer>
+      <Box borderBottom="1px solid #E7E7E7">
+        <PageContainer>
+          <Navbar shareUrl={shareUrl} shareText={shareText} />
+        </PageContainer>
+      </Box>
       <SubscribeProfileBody
         uuid={uuid}
         address={address}
