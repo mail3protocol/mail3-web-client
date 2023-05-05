@@ -535,7 +535,7 @@ export default {
       <li><text>Build your borderless community.</text></li>.
       </ul>`,
       english_unlocked: 'English unlocked ',
-      unlock: 'Unlock more tranlation options with more subscribers',
+      unlock: 'Unlock more translation options with more subscribers',
       unlock_quotas: 'Unlock quotas: ',
       subscribers: 'Subscribers',
       primary: 'Your primary writing language',
