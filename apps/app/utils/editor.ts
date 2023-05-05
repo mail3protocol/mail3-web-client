@@ -185,7 +185,7 @@ export function generateMessageEditorUrl({
       to: [messageInfo.from.address, ...(to || [])].join(','),
       cc: cc?.join(','),
       bcc: bcc?.join(','),
-      subject: subject || replySubject,
+      subject: encodeURIComponent(subject || replySubject),
       action,
       id: messageInfo.id,
     })
@@ -201,7 +201,7 @@ export function generateMessageEditorUrl({
       to: to?.join(','),
       cc: cc?.join(','),
       bcc: bcc?.join(','),
-      subject: subject || forwardSubject,
+      subject: encodeURIComponent(subject || forwardSubject),
       action,
       id: messageInfo.id,
     })
@@ -212,7 +212,7 @@ export function generateMessageEditorUrl({
     to: to?.join(','),
     cc: cc?.join(','),
     bcc: bcc?.join(','),
-    subject,
+    subject: encodeURIComponent(subject!),
     action,
   })
   return generatePath(`${RoutePath.NewMessage}?${queryParameters}`)
