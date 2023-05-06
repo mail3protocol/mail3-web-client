@@ -20,7 +20,7 @@ import { copyText, shareToTelegram, shareToTwitter } from 'shared'
 import { useCallback, useState } from 'react'
 import { useAPI } from '../../hooks/useAPI'
 
-enum ButtonType {
+export enum ShareButtonType {
   Copy,
   Telegram,
   Twitter,
@@ -32,7 +32,8 @@ interface ShareButtonGroupProps {
   iconW: BoxProps['w']
   shareUrl: string
   text: string
-  articleId: string
+  articleId?: string
+  buttonListProps?: Array<ShareButtonType>
 }
 
 export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
@@ -41,6 +42,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   shareUrl,
   text,
   articleId,
+  buttonListProps,
 }) => {
   const [t] = useTranslation(['subscription-article', 'common'])
   const shareText = text.slice(0, 100)
@@ -54,18 +56,18 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
   }
 
   const reportUserEligibility = useCallback(() => {
-    api.postUserEligibility(articleId).catch(() => {})
+    if (articleId) api.postUserEligibility(articleId).catch(() => {})
   }, [articleId])
 
   const buttonConfig: Record<
-    ButtonType,
+    ShareButtonType,
     {
       Icon: string
       label: string
       onClick: () => void
     }
   > = {
-    [ButtonType.Telegram]: {
+    [ShareButtonType.Telegram]: {
       Icon: SvgTelegram,
       label: t('telegram'),
       onClick: () => {
@@ -73,7 +75,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
         shareToTelegram(shareData)
       },
     },
-    [ButtonType.Copy]: {
+    [ShareButtonType.Copy]: {
       Icon: SvgCopy,
       label: t('copy'),
       onClick: async () => {
@@ -82,7 +84,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
         toast(t('navbar.copied', { ns: 'common' }))
       },
     },
-    [ButtonType.Twitter]: {
+    [ShareButtonType.Twitter]: {
       Icon: SvgTwitter,
       label: t('twitter'),
       onClick: () => {
@@ -93,7 +95,7 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
         })
       },
     },
-    [ButtonType.SystemShare]: {
+    [ShareButtonType.SystemShare]: {
       Icon: SvgSystemShare,
       label: t('system-share'),
       onClick: () => {
@@ -115,11 +117,11 @@ export const ShareButtonGroup: React.FC<ShareButtonGroupProps> = ({
     }
   }
 
-  const buttonList = [
-    ButtonType.Twitter,
-    ButtonType.Telegram,
-    ButtonType.Copy,
-    ...(canShare() ? [ButtonType.SystemShare] : []),
+  const buttonList = buttonListProps || [
+    ShareButtonType.Twitter,
+    ShareButtonType.Telegram,
+    ShareButtonType.Copy,
+    ...(canShare() ? [ShareButtonType.SystemShare] : []),
   ]
 
   return (

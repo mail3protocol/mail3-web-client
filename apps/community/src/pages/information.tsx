@@ -48,7 +48,6 @@ import { useUpdateAtom } from 'jotai/utils'
 import { avatarsAtom, DEFAULT_AVATAR_SRC } from 'ui/src/Avatar'
 import { Container } from '../components/Container'
 import { ReactComponent as DownloadSvg } from '../assets/DownloadIcon.svg'
-import BannerPng from '../assets/banner.png'
 import { QueryKey } from '../api/QueryKey'
 import { useAPI } from '../hooks/useAPI'
 import { useSetUserInfo } from '../hooks/useUserInfo'
@@ -167,8 +166,8 @@ export const Information: React.FC = () => {
   const setUserInfo = useSetUserInfo()
   const toast = useToast()
 
-  const [bannerUrl, setBannerUrl] = useState(BannerPng)
-  const [bannerUrlOnline, setBannerUrlOnline] = useState(BannerPng)
+  const [bannerUrl, setBannerUrl] = useState('')
+  const [bannerUrlOnline, setBannerUrlOnline] = useState('')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [itemsLink, setItemsLink] = useState('')
@@ -204,8 +203,8 @@ export const Information: React.FC = () => {
       onSuccess(d) {
         setUserInfo(d)
         remoteSettingRef.current = d
-        setBannerUrl(d.banner_url || BannerPng)
-        setBannerUrlOnline(d.banner_url || BannerPng)
+        setBannerUrl(d.banner_url || '')
+        setBannerUrlOnline(d.banner_url || '')
         setDescription(d.description)
         setItemsLink(d.items_link)
         setMmbState(d.mmb_state === 'enabled')
@@ -231,7 +230,7 @@ export const Information: React.FC = () => {
   )
   const alias = userInfo?.manager_default_alias.split('@')[0] || ''
   const subscribePageUrl = `${APP_URL}/${alias}`
-  const hasBanner = bannerUrl !== BannerPng
+  const hasBanner = bannerUrl !== ''
 
   const requestBody = useMemo<UserSettingRequest>(
     () => ({
@@ -496,7 +495,7 @@ export const Information: React.FC = () => {
 
               <Title>{t('banner_image')}</Title>
               <Center
-                w="610px"
+                w="548px"
                 h="100px"
                 justifyContent="center"
                 bgImage={isLoading ? '' : bannerUrl}
@@ -512,7 +511,7 @@ export const Information: React.FC = () => {
                   flexDirection="column"
                   bg="rgba(0, 0, 0, 0.2)"
                   backdropFilter="blur(10px)"
-                  opacity="0"
+                  opacity={hasBanner ? 0 : 1}
                   transition="opacity .3s ease"
                   _hover={{
                     opacity: '1',
@@ -540,7 +539,7 @@ export const Information: React.FC = () => {
                     hasRemove={hasBanner}
                     onUpload={onUploadBannerHandle}
                     onRemove={() => {
-                      setBannerUrl(BannerPng)
+                      setBannerUrl('')
                     }}
                   />
                 </Center>
