@@ -45,10 +45,14 @@ pre {
 }
 
 code {
-  display: block;
   background: #EBEBEB;
-  padding: 18px;
   font-size: 14px;
+  padding: 5px;
+}
+
+pre code {
+  display: block;
+  padding: 18px;
 }
 
 `
