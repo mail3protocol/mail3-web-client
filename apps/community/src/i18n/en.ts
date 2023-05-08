@@ -87,6 +87,7 @@ export default {
       editors: 'Editors',
       nft_reward: 'NFT Reward',
       premium: 'Premium',
+      chatgpt: 'ChatGPT Bot',
     },
     tips_panel: {
       title: 'Help',
@@ -521,5 +522,49 @@ export default {
     unbind_input_text:
       'You are about to remove the above wallet address, after removing this address will not be able to connect to this backend for any operation.',
     unbind_successfully: 'Remove successfully',
+  },
+  chatgpt: {
+    title: 'ChatGPT Bot',
+    tabs: {
+      translation: 'AI Translation',
+    },
+    translation: {
+      reach_text: `<ul>
+      <li><text>Once your subscribers reach a certain number, we will unlock more language translation features for you. </text></li>
+      <li><text>Your posts will be automatically translated into more languages for readers. </text></li>
+      <li><text>Build your borderless community.</text></li>.
+      </ul>`,
+      english_unlocked: 'English unlocked ',
+      unlock: 'Unlock more translation options with more subscribers',
+      unlock_quotas: 'Unlock quotas: ',
+      subscribers: 'Subscribers',
+      primary: 'Your primary writing language',
+      primary_text:
+        'Please let us know your primary language so we can identify readers and provide them with the original language version if needed.',
+      more_language: 'Translation languages',
+      provided: 'Provided by the ChatGPT API',
+      submit: 'Configure',
+      helper_text: `<h3>What is <strong>AI Translation</strong>?</h3>
+      <ul>
+        <li>AI Translation is an efficient content translation service provided for creators. By utilizing the ChatGPT API, it enables multi-language translation of content and provides translation results that are close to professional translation standards.</li>
+        <li>With this service enabled, your readers will be able to easily read your posts without the need for translation tools.</li>
+        <li>Using this service can effectively expand your user base and establish a borderless community.</li>
+      </ul>
+      <h3>How does <strong>AI Translation</strong> work?</h3>
+      <ul>
+        <li>This service is completely free. We provide English translation by default. If you need more languages, simply increase the number of subscribers to unlock more configurable languages.</li>
+      </ul>
+  `,
+      language_quotas: 'Language quotas you can configure: ',
+      update: 'Update',
+      enable: 'Enable',
+      update_successful: 'Update successful!',
+      update_failed: 'Update failed, please try again later.',
+      dialog_title: 'Enable AI Translation',
+      update_quotas_exceeded:
+        'Update configuration failed. Please increase subscribers to restore quotas.',
+      provided_the: 'Provided by the',
+      chatGPT: 'ChatGPT',
+    },
   },
 }

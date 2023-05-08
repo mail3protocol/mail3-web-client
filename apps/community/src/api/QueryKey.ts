@@ -11,4 +11,6 @@ export enum QueryKey {
   GetMessageEncryptionKeyState = 'GetMessageEncryptionKeyState',
   GetAlias = 'GetAlias',
   CheckMessageQuote = 'CheckMessageQuote',
+  GetLangCodes = 'GetLangCodes',
+  GetTranslationSetting = 'GetTranslationSetting',
 }

@@ -386,7 +386,8 @@
         "twitter": "Share on Twitter",
         "404": "This page could not be found.",
         "premium-member": "Premium Member",
-        "description_placeholder": "Hey, welcome to my Web3 Subscription and check out my creative content."
+        "description_placeholder": "Hey, welcome to my Web3 Subscription and check out my creative content.",
+        "premium-only": "Premium-only"
     },
     "subscription-article": {
         "continue": "Continue",
@@ -409,6 +410,9 @@
         "buy-ok":"You are now a Premium Member of \n <b>{{name}}</b>",
         "sub-domain":"Enter and find the sub-domain you like",
         "free-now": "Start at Free",
-        "ipfs":"This post has been permanently stored on IPFS"
+        "ipfs":"The original version of this post has been permanently stored by IPFS",
+        "current-language": "Current language: ",
+        "provided": "Provided by the",
+        "chatGPT-api": "ChatGPT API"
     }
 }

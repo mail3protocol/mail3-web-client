@@ -13,7 +13,6 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  SimpleGrid,
   Wrap,
   WrapItem,
   Popover,
@@ -26,16 +25,15 @@ import {
   Link,
   useBreakpointValue,
   AspectRatio,
-  Icon,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Avatar, SubscribeCard } from 'ui'
-import { ReactComponent as SvgCopy } from 'assets/subscribe-page/copy-white.svg'
-import { ReactComponent as SvgShare } from 'assets/subscribe-page/share-white.svg'
-import { ReactComponent as SvgTwitter } from 'assets/subscribe-page/twitter-white.svg'
-import { ReactComponent as SvgPremium } from 'assets/subscribe-page/premium.svg'
+import SvgCopy from 'assets/subscription/copy.svg'
+import SvgTwitter from 'assets/subscription/twitter.svg'
+import SvgDownload from 'assets/subscribe-page/download.svg'
+import { ReactComponent as SvgPremium } from 'assets/subscribe-page/star.svg'
 import { useDidMount, useScreenshot, useToast } from 'hooks'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
@@ -50,7 +48,7 @@ import {
   truncateMiddle,
 } from 'shared'
 import { APP_URL } from '../../constants/env'
-import PngDefaultBanner from '../../assets/subscribeProfile/bg.png'
+
 import PngEmpty from '../../assets/subscribeProfile/empty.png'
 import PngCluster3 from '../../assets/subscribeProfile/cluster3.png'
 
@@ -63,9 +61,7 @@ import { MAIL_SERVER_URL } from '../../constants'
 import { SubscribeButtonInApp } from '../SubscribeButtonInApp'
 import { Query } from '../../api/query'
 
-const CONTAINER_MAX_WIDTH = 1280
-
-const homeUrl = typeof window !== 'undefined' ? window.location.origin : APP_URL
+const CONTAINER_MAX_WIDTH = 1096
 
 enum ButtonType {
   Copy,
@@ -101,7 +97,8 @@ export interface SubscribeProfileDataProps {
 }
 
 interface SubscribeProfileBodyProps extends SubscribeProfileDataProps {
-  // mailAddress: string
+  shareUrl: string
+  shareText: string
 }
 
 const PageContainer = styled(Box)`
@@ -139,6 +136,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   userInfo,
   userSettings,
   address,
+  shareUrl,
+  shareText,
 }) => {
   const mailAddress = `${address}@${MAIL_SERVER_URL}`
   const [t] = useTranslation(['subscribe-profile', 'common'])
@@ -156,8 +155,6 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const shareUrl: string = useMemo(() => `${homeUrl}/${address}`, [address])
-
   const buttonConfig: Record<
     ButtonType,
     {
@@ -166,7 +163,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     }
   > = {
     [ButtonType.Card]: {
-      Icon: SvgShare,
+      Icon: SvgDownload,
       label: t('share'),
     },
     [ButtonType.Copy]: {
@@ -188,7 +185,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
       },
       [ButtonType.Twitter]: () => {
         shareToTwitter({
-          text: 'Hey, visit my Subscription Page to view my latest content @mail3dao',
+          text: shareText,
           url: shareUrl,
         })
       },
@@ -329,7 +326,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
   }, [items])
 
   const bgImage = useMemo(
-    () => (isLoading ? '' : settings?.banner_url || PngDefaultBanner),
+    () => (isLoading ? '' : settings?.banner_url),
     [settings, isLoading]
   )
 
@@ -354,9 +351,9 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
     () =>
       isVerifyOverflow({
         str: desc,
-        fontSize: '12px',
+        fontSize: '14px',
         height: '20',
-        width: `${descRef.current?.offsetWidth || 560}px`,
+        width: `${descRef.current?.offsetWidth || 1036}px`,
         lineHeight: '20px',
       }),
     [desc, descRef.current]
@@ -375,37 +372,144 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
 
   return (
     <>
-      <AspectRatio
+      <Box
+        position="relative"
         minH={{ base: '100px', xl: '200px' }}
-        minW={{ base: '100%', xl: CONTAINER_MAX_WIDTH }}
-        ratio={1920 / 300}
+        w={{ base: '100%', xl: CONTAINER_MAX_WIDTH }}
+        margin="0 auto"
+        overflow="hidden"
       >
-        <Box
-          w="full"
-          h="full"
-          bgImage={bgImage}
-          bgRepeat="no-repeat"
-          bgSize={{ base: 'auto 100%', md: '100%' }}
-          bgPosition="center"
-          position="relative"
-          overflow="hidden"
+        <AspectRatio
+          ratio={CONTAINER_MAX_WIDTH / 200}
+          minH={{ base: '100px', xl: '200px' }}
         >
           <Box
-            maxW={{ base: '100%', xl: CONTAINER_MAX_WIDTH }}
-            w="100%"
-            h="100%"
+            w="full"
+            h="full"
+            bgImage={bgImage}
+            bgRepeat="no-repeat"
+            bgSize={{ base: 'auto 100%', md: '100%' }}
+            bgPosition="center"
             position="relative"
+            overflow="hidden"
+          />
+        </AspectRatio>
+
+        <Center
+          position="absolute"
+          w="full"
+          h="full"
+          zIndex={2}
+          bottom={{ base: 0, md: '-30px' }}
+          left="0"
+          p={{ base: '20px', md: '24px' }}
+        >
+          <Box
+            flexGrow={0}
+            flexShrink={0}
+            w={{ base: '60px', md: '116px' }}
+            h={{ base: '60px', md: '116px' }}
+            border="1px solid #E7E7E7"
+            bgColor="#fff"
+            borderRadius="50%"
+            overflow="hidden"
           >
-            <Box
-              top={{ base: '15px', md: 'auto' }}
-              bottom={{ base: 'auto', md: '10px' }}
-              right={{ base: '20px', md: '50px' }}
-              position="absolute"
-              bgColor="rgba(0, 0, 0, 0.4)"
-              backdropFilter="blur(5px)"
-              borderRadius="100px"
-              p={{ base: '0', md: '0 5px' }}
+            <Avatar
+              src={userInfo.avatar}
+              address={priAddress}
+              w="100%"
+              h="100%"
+            />
+          </Box>
+          <Box ml="16px">
+            <Text
+              fontWeight="700"
+              fontSize={{ base: '12px', md: '24px' }}
+              lineHeight={{ base: '12px', md: '24px' }}
+              noOfLines={1}
             >
+              {nickname}
+            </Text>
+            {isPremiumMember ? (
+              <Center
+                mt="8px"
+                w={{ base: '24px', md: '140px' }}
+                h="24px"
+                background="#FFA800"
+                borderRadius="100px"
+              >
+                <SvgPremium />
+                <Box
+                  ml="4px"
+                  fontStyle="italic"
+                  fontWeight="500"
+                  fontSize="12px"
+                  lineHeight="16px"
+                  color="#fff"
+                  display={{ base: 'none', md: 'block' }}
+                >
+                  {t('premium-member')}
+                </Box>
+              </Center>
+            ) : null}
+          </Box>
+
+          <Spacer />
+          <SubscribeButtonInApp
+            uuid={uuid}
+            rewardType={settings?.reward_type}
+            isAuth={isAuth}
+            ml={{ base: 0, md: '6px' }}
+            fontSize="0"
+          />
+        </Center>
+      </Box>
+
+      <PageContainer className="family-to-read">
+        <Box
+          p={{ base: '8px 20px 34px', md: '24px 30px 0' }}
+          position="relative"
+        >
+          {desc ? (
+            <Box ref={descRef} w="100%">
+              <Collapse startingHeight={isMobile ? 40 : 20} in={isOpen}>
+                <Text
+                  fontWeight="400"
+                  fontSize={{ base: '12px', md: '14px' }}
+                  lineHeight="20px"
+                  whiteSpace="pre-line"
+                  color="#737373"
+                >
+                  {desc}
+                </Text>
+              </Collapse>
+              {isShowMore ? (
+                <Flex justifyContent="flex-start" mt="8px">
+                  <RawButton
+                    size="xs"
+                    onClick={() => {
+                      if (isOpen) {
+                        onClose()
+                      } else {
+                        onOpen()
+                      }
+                    }}
+                    variant="link"
+                    color="black"
+                    fontWeight="400"
+                    fontSize="12px"
+                    lineHeight="20px"
+                    textDecoration="underline"
+                  >
+                    Show {isOpen ? 'Less' : 'More'}
+                  </RawButton>
+                </Flex>
+              ) : null}
+            </Box>
+          ) : null}
+
+          {!isMobile ? (
+            <Center justifyContent="flex-end" mt="20px">
               <HStack spacing="15px">
                 {buttonList.map((type: ButtonType) => {
                   const { Icon: IconSvg, label } = buttonConfig[type]
@@ -426,8 +530,8 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                           role="option"
                           aria-label={label}
                         >
-                          <Icon
-                            as={IconSvg}
+                          <Image
+                            src={IconSvg}
                             w={{ base: '16px', md: '24px' }}
                             h={{ base: '16px', md: '24px' }}
                           />
@@ -447,117 +551,14 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                   )
                 })}
               </HStack>
-            </Box>
-          </Box>
-        </Box>
-      </AspectRatio>
-
-      <PageContainer className="family-to-read">
-        <Box
-          p={{ base: '8px 20px 40px', md: '24px 30px 0' }}
-          position="relative"
-        >
-          <Flex alignItems="center">
-            <Box
-              w={{ base: '60px', md: '80px' }}
-              h={{ base: '60px', md: '80px' }}
-              border="1px solid #E7E7E7"
-              bgColor="#fff"
-              borderRadius="50%"
-              overflow="hidden"
-            >
-              <Avatar
-                src={userInfo.avatar}
-                address={priAddress}
-                w="100%"
-                h="100%"
-              />
-            </Box>
-            <Text
-              fontWeight="700"
-              fontSize={{ base: '14px', md: '18px' }}
-              lineHeight="20px"
-              ml={{ base: '8px', md: '16px' }}
-            >
-              {nickname}
-            </Text>
-          </Flex>
-          <Center
-            flexDirection={{ base: 'row', md: 'row-reverse' }}
-            position="absolute"
-            top={{ base: 'auto', md: '64px' }}
-            right={{ base: 'auto', md: '54px' }}
-            left={{ base: '20px', md: 'auto' }}
-            bottom={{ base: '0px', md: 'auto' }}
-            transform={{ base: 'none', md: 'translateY(-50%)' }}
-            alignItems={{ base: 'center', md: 'flex-end' }}
-          >
-            <SubscribeButtonInApp
-              uuid={uuid}
-              rewardType={settings?.reward_type}
-              isAuth={isAuth}
-              ml={{ base: 0, md: '6px' }}
-              fontSize="0"
-            />
-
-            {isPremiumMember ? (
-              <Center
-                ml={{ base: '16px', md: 0 }}
-                w={{ base: '142px', md: '158px' }}
-                h={{ base: '22px', md: '34px' }}
-                background="#FFFFFF"
-                border="1px solid #FFA800"
-                borderRadius="30px"
-              >
-                <SvgPremium />
-                <Box
-                  ml="2px"
-                  fontStyle="italic"
-                  fontWeight="500"
-                  fontSize="12px"
-                  lineHeight="18px"
-                  color="#FFA800"
-                >
-                  {t('premium-member')}
-                </Box>
-              </Center>
-            ) : null}
-          </Center>
-
-          {desc ? (
-            <Box ref={descRef} mt="16px" w="100%">
-              <Collapse startingHeight={20} in={isOpen}>
-                <Text
-                  fontWeight="400"
-                  fontSize="12px"
-                  lineHeight="20px"
-                  whiteSpace="pre-line"
-                >
-                  {desc}
-                </Text>
-              </Collapse>
-              {isShowMore ? (
-                <Flex justifyContent={{ base: 'flex-end', md: 'flex-start' }}>
-                  <RawButton
-                    size="xs"
-                    onClick={() => {
-                      if (isOpen) {
-                        onClose()
-                      } else {
-                        onOpen()
-                      }
-                    }}
-                    variant="link"
-                    color="#4E51F4"
-                  >
-                    Show {isOpen ? 'Less' : 'More'}
-                  </RawButton>
-                </Flex>
-              ) : null}
-            </Box>
+            </Center>
           ) : null}
         </Box>
-        <Tabs position="relative" mt="30px" p={{ base: '0px', md: '0px 30px' }}>
+        <Tabs
+          position="relative"
+          mt={{ base: '0', md: '30px' }}
+          p={{ base: '0px', md: '0px 30px' }}
+        >
           <TabList
             className="tablist"
             w={{ base: '100%', md: 'auto' }}
@@ -605,7 +606,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                     <HStack>
                       <Box
                         whiteSpace="nowrap"
-                        fontSize={{ base: '14px', md: '18px' }}
+                        fontSize="20px"
                         marginInlineStart="0px !important"
                       >
                         {name}
@@ -617,11 +618,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
             </HStack>
           </TabList>
 
-          <Flex
-            justifyContent="center"
-            p={{ base: '12px', md: '20px 0px' }}
-            minH="200px"
-          >
+          <Flex justifyContent="center" minH="200px">
             <TabPanels>
               <TabPanel p="0">
                 {!communityList.length ? (
@@ -657,10 +654,7 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                       </Center>
                     }
                   >
-                    <SimpleGrid
-                      columns={{ base: 1, md: 4 }}
-                      spacing={{ base: '0', md: '20px' }}
-                    >
+                    <Box p={{ base: '0 20px', md: '0 24px' }}>
                       {communityList.map((item) => {
                         const {
                           uuid: id,
@@ -680,11 +674,11 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                           />
                         )
                       })}
-                    </SimpleGrid>
+                    </Box>
                   </InfiniteScroll>
                 )}
               </TabPanel>
-              <TabPanel p="0">
+              <TabPanel p="24px">
                 <Center pb="17px">
                   <Text fontWeight="500" fontSize="12px" lineHeight="24px">
                     {items?.poapList?.length} items
@@ -697,7 +691,10 @@ export const SubscribeProfileBody: React.FC<SubscribeProfileBodyProps> = ({
                     </Link>
                   </Flex>
                 </Center>
-                <Wrap spacing={{ base: '15px', md: '28px' }}>
+                <Wrap
+                  spacing={{ base: '15px', md: '28px' }}
+                  justifyContent="center"
+                >
                   {items?.poapList.map((item) => {
                     const { name, img, poapPlatform } = item
                     return (

@@ -17,7 +17,7 @@ import { Query } from '../../api/query'
 import { useAPI } from '../../hooks/useAPI'
 import { useIsAuthenticated } from '../../hooks/useLogin'
 
-const NotificationBarIsOpenAtom = atom(false)
+export const NotificationBarIsOpenAtom = atom(false)
 
 export const NotificationBar: React.FC<{ uuid: string }> = ({ uuid }) => {
   const [t] = useTranslation('subscription-article')

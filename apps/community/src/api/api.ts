@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { GetMessageEncryptionKeyResponse } from 'models/src/messageEncryptionKey'
-import { CheckMessageQuotaResponse, GetAliasResponse } from 'models'
+import { ChatGPT, CheckMessageQuotaResponse, GetAliasResponse } from 'models'
 import { ConnectionResponse } from './modals/ConnectionResponse'
 import { SERVER_URL } from '../constants/env/url'
 import {
@@ -189,5 +189,28 @@ export class API {
     return this.axios.get<CheckMessageQuotaResponse>(
       `/community/check_message_quota`
     )
+  }
+
+  public async getLanguageCode() {
+    return this.axios.get<ChatGPT.Languages>(`/public/community/language_codes`)
+  }
+
+  public async getTranslationSetting() {
+    return this.axios.get<{
+      primary_language: ChatGPT.Language
+      languages: ChatGPT.LanguageList
+      language_quota: number
+      subscribers_count: number
+    }>(`/community/translation_setting`)
+  }
+
+  public async updateTranslationSetting(
+    primaryLanguageCode: string,
+    languageCodes: Array<string>
+  ) {
+    return this.axios.put<void>(`/community/translation_setting`, {
+      language_codes: languageCodes,
+      primary_language_code: primaryLanguageCode,
+    })
   }
 }
