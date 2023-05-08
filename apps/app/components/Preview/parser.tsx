@@ -72,6 +72,22 @@ const shadowRootStyle = `
   p:empty::after {
     content: "\\00A0";
   }
+
+
+  pre {
+    white-space: pre-wrap;
+  }
+
+  code {
+    background: #EBEBEB;
+    font-size: 14px;
+    padding: 5px;
+  }
+
+  pre code {
+    display: block;
+    padding: 18px;
+  }
 `
 
 export const RenderHTML: React.FC<htmlParserProps> = ({
