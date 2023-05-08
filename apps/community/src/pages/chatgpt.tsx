@@ -178,6 +178,7 @@ export const ChatGPT: React.FC = () => {
         status: 'success',
         alertProps: { colorScheme: 'green' },
       })
+      setIsOpen(false)
     } catch (error) {
       if (axios.isAxiosError(error) && error?.response?.status === 400) {
         if (
