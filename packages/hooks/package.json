@@ -9,6 +9,7 @@
     "license": "MIT",
     "dependencies": {
         "@coinbase/wallet-sdk": "^3.5.0",
+        "@joyid/evm": "^0.2.4",
         "@walletconnect/ethereum-provider": "^1.7.7",
         "@walletconnect/jsonrpc-http-connection": "^1.0.0",
         "@walletconnect/jsonrpc-provider": "^1.0.3",

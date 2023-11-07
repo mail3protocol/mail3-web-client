@@ -8,6 +8,8 @@ import {
   zilpay,
 } from './connectors'
 
+const { signMessage } = require('@joyid/evm')
+
 export const buildSignMessage = (nonce: number, desc: string) => `${desc}
 
 Nonce: ${nonce}`
@@ -74,6 +76,8 @@ export const useSignup = (signatureDesc: string, serverURL: string) => {
         const signData = await zilpay.signMessage(message)
         signature = signData.signature
         pubkey = signData.publicKey
+      } else if (lastConectorName === ConnectorName.JoyID) {
+        signature = await signMessage(message)
       } else {
         if (provider == null) {
           throw new Error('Please connect a wallet')
