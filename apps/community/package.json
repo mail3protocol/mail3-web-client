@@ -63,8 +63,8 @@
     "tsconfig": "*",
     "typescript": "4.7.4",
     "vite": "^3.1.0",
+    "vite-plugin-commonjs": "^0.10.0",
     "vite-plugin-radar": "^0.4.2",
-    "vite-plugin-require": "^1.1.11",
     "vite-plugin-svgr": "^2.2.0"
   }
 }

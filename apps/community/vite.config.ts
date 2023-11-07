@@ -7,7 +7,7 @@ import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfil
 import { visualizer } from 'rollup-plugin-visualizer'
 import radar from 'vite-plugin-radar'
 import inject from '@rollup/plugin-inject'
-import vitePluginRequire from 'vite-plugin-require'
+import commonjs from 'vite-plugin-commonjs'
 
 // https://vitejs.dev/config/
 export default defineConfig((c) => {
@@ -51,7 +51,7 @@ export default defineConfig((c) => {
           // ...svgr options (https://react-svgr.com/docs/options/)
         },
       }),
-      vitePluginRequire(),
+      commonjs(),
       ...(process.env.REPORT ? [visualizer()] : []),
     ],
     esbuild: {
