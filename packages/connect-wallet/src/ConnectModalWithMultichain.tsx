@@ -44,6 +44,7 @@ import SolIconPath from 'assets/chain-icons/sol.png'
 import TronIconPath from 'assets/chain-icons/tron.png'
 import OtherIconPath from 'assets/chain-icons/other.png'
 import { isMobile as shareIsMobile } from 'shared/src/env'
+import { JoyIDButton } from './JoyIDButton'
 import { PlaceholderButton } from './PlaceholderButton'
 import { generateIcon } from './ConnectButton'
 import { ZilPayButton } from './ZilPayButton'
@@ -207,6 +208,7 @@ export const ConnectWalletSelector: React.FC<{
 
   return (
     <>
+      <JoyIDButton />
       <Tabs
         variant="unstyled"
         index={tabIndex}

@@ -1,4 +1,5 @@
 import { AppProps } from 'next/app'
+// import { initConfig } from '@joyid/evm'
 import Script from 'next/script'
 import { GOOGLE_ANALYTICS_ID } from '../constants'
 import '../styles/globals.css'
@@ -6,6 +7,14 @@ import '@fontsource/poppins/700.css'
 import '@fontsource/poppins/600.css'
 import '@fontsource/poppins/500.css'
 import '@fontsource/poppins/300.css'
+
+const { initConfig } = require('@joyid/evm')
+
+initConfig({
+  name: 'Mail3',
+  logo: 'https://mail3.me/icons/icon-192x192.png',
+  joyidAppURL: 'https://app.joy.id',
+})
 
 function App({ Component, pageProps }: AppProps) {
   return (

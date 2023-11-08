@@ -15,6 +15,8 @@ import { coinbase, coinbaseHooks } from './Coinbase'
 import { useLoginAccount } from '../useLoginInfo'
 import { zilpay } from './zilpay'
 
+const { getConnectedAddress } = require('@joyid/evm')
+
 export const SupportedConnectors = getSelectedConnector(
   [metaMask, metaMaskhooks],
   [walletConnect, walletConnectHooks],
@@ -31,6 +33,7 @@ export enum ConnectorName {
   Zilpay = 'Zilpay',
   Coinbase = 'Coinbase',
   UD = 'UD',
+  JoyID = 'JoyID',
 
   // 👇 Not supported
   Phantom = 'Phantom',
@@ -69,6 +72,10 @@ export const useConnectedAccount = () => {
   if (lastConectorName) {
     if (lastConectorName === ConnectorName.Zilpay && zilpay.isConnected()) {
       return zilpay.getBech32Address()
+    }
+    if (lastConectorName === ConnectorName.JoyID) {
+      const ethAddress = getConnectedAddress()
+      return ethAddress
     }
     if (account && Array.isArray(account)) {
       return account[0]

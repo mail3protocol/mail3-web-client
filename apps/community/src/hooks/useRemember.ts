@@ -2,8 +2,10 @@ import { atom, useAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import {
   buildSignMessage,
+  ConnectorName,
   SignupResponseCode,
   useAccount,
+  useLastConectorName,
   useProvider,
   useSignup,
   useToast,
@@ -19,6 +21,8 @@ import { API } from '../api/api'
 import { SubscriptionState } from '../api/modals/SubscriptionResponse'
 import { ErrorCode } from '../api/ErrorCode'
 import { useSetAdmin, getAdminStatus } from './useAdmin'
+
+const { signMessage } = require('@joyid/evm')
 
 export const rememberLoadingAtom = atom(false)
 
@@ -37,6 +41,7 @@ export function useRemember() {
   const setTrackGlobal = useSetGlobalTrack()
   const setIsConnectingUD = useUpdateAtom(isConnectingUDAtom)
   const setIsAdmin = useSetAdmin()
+  const lastConectorName = useLastConectorName()
 
   const onSignZilpay = async (nonce: number) => {
     if (!zilpay.isConnected) {
@@ -50,6 +55,14 @@ export function useRemember() {
   const onSign = async (nonce: number) => {
     if (account.startsWith('zil')) {
       return onSignZilpay(nonce)
+    }
+    if (lastConectorName === ConnectorName.JoyID) {
+      const message = buildSignMessage(nonce, signatureDesc)
+      const signature = await signMessage(message)
+      return {
+        message,
+        signature,
+      }
     }
     if (provider == null) {
       toast(t('auth.errors.wallet-not-connected'))

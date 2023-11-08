@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import {
   buildSignMessage,
+  ConnectorName,
   SignupResponseCode,
   TrackEvent,
   TrackKey,
   useAccount,
+  useLastConectorName,
   useProvider,
   useSignup,
   useToast,
@@ -24,6 +26,8 @@ import {
 } from './useLogin'
 import { RoutePath } from '../route/path'
 import { isCoinbaseWallet } from '../utils'
+
+const { signMessage } = require('@joyid/evm')
 
 export class NoOnWhiteListError extends Error {}
 
@@ -46,6 +50,7 @@ export function useRemember() {
   const closeAuthModal = useCloseAuthModal()
   const router = useLocation()
   const navi = useNavigate()
+  const lastConnector = useLastConectorName()
   const onSignZilpay = async (nonce: number) => {
     if (!zilpay.isConnected) {
       toast(t('auth.errors.wallet-not-connected'))
@@ -59,11 +64,18 @@ export function useRemember() {
     if (account.startsWith('zil')) {
       return onSignZilpay(nonce)
     }
+    const message = buildSignMessage(nonce, signatureDesc)
+    if (lastConnector === ConnectorName.JoyID) {
+      const signature = await signMessage(message)
+      return {
+        message,
+        signature,
+      }
+    }
     if (provider == null) {
       toast(t('auth.errors.wallet-not-connected'))
       return null
     }
-    const message = buildSignMessage(nonce, signatureDesc)
     const signature = await provider.getSigner().signMessage(message)
 
     return {
