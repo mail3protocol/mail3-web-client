@@ -109,7 +109,7 @@ export default {
       },
       chain_descriptions: {
         eth: 'EVM compatible chain: Ethereum, Polygon, BSC',
-        zilliqa: '',
+        zilliqa: 'ZilPay browser Extension for zilliqa blockchain',
         flow: 'Coming soon',
         sol: 'Coming soon',
         tron: 'Coming soon',

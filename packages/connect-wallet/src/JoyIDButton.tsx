@@ -24,7 +24,12 @@ export const JoyIDButton: React.FC = () => {
   }
   return (
     <Flex w="full" flexDirection="column" alignItems="center">
-      <Button onClick={onClick} w="350px" mb="16px" isLoading={isLoading}>
+      <Button
+        onClick={onClick}
+        w={['250px', '250px', '350px']}
+        mb="16px"
+        isLoading={isLoading}
+      >
         <JoyIDIcon />
       </Button>
       <Text color="#6F6F6F" fontSize="12px" mb="16px">
