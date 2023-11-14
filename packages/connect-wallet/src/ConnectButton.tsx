@@ -62,7 +62,9 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
         {...props}
         onClick={isConnected ? undefined : onClick}
       >
-        {icon}
+        <Flex w="100%" alignItems="center" {...flexProps}>
+          {icon}
+        </Flex>
       </MobileButton>
     )
   }
