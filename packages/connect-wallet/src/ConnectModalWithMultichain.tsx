@@ -7,7 +7,6 @@ import {
   Tabs,
   TabList,
   Tab,
-  VStack,
   Box,
   Text,
   Image,
@@ -17,6 +16,8 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  HStack,
+  VStack,
 } from '@chakra-ui/react'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { useAtom } from 'jotai'
@@ -108,7 +109,7 @@ export const ConnectWalletSelector: React.FC<{
       },
       {
         name: 'Zilliqa',
-        description: '',
+        description: 'ZilPay browser Extension for zilliqa blockchain',
         icon: ZilliqaIconPath,
         walletButtons: [<ZilPayButton onClose={onClose} key="zilpay" />],
       },
@@ -193,10 +194,10 @@ export const ConnectWalletSelector: React.FC<{
     Math.abs(offset) * velocity
 
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const maximumLengthOfWalletButtons = useMemo(
-    () => Math.max(...chains.map((chain) => chain.walletButtons.length)),
-    [chains]
-  )
+  // const maximumLengthOfWalletButtons = useMemo(
+  //   () => Math.max(...chains.map((chain) => chain.walletButtons.length)),
+  //   [chains]
+  // )
 
   const currentWalletButtonsLength = currentChain?.walletButtons?.length || 3
 
@@ -205,6 +206,8 @@ export const ConnectWalletSelector: React.FC<{
       setTabIndex(1)
     }
   })
+
+  const StackComponent = isMobile ? HStack : VStack
 
   return (
     <>
@@ -278,24 +281,21 @@ export const ConnectWalletSelector: React.FC<{
         <Box
           overflowX="hidden"
           overflowY="hidden"
-          minH="223px"
           position="relative"
           mb="24px"
           transition="200ms"
           style={{
-            height: `${
-              (isMobile
-                ? maximumLengthOfWalletButtons
-                : currentWalletButtonsLength) * 54
-            }px`,
+            height: `${(isMobile ? 1 : currentWalletButtonsLength) * 54}px`,
           }}
         >
           <AnimatePresence initial={false} custom={direction}>
-            <VStack
+            <StackComponent
               key={tabIndex}
               as={motion.div}
+              overflow="auto"
               spacing="16px"
               align="center"
+              justifyContent="center"
               w="full"
               h="full"
               drag="x"
@@ -324,7 +324,7 @@ export const ConnectWalletSelector: React.FC<{
               }}
             >
               {currentChain?.walletButtons}
-            </VStack>
+            </StackComponent>
           </AnimatePresence>
         </Box>
       </Box>
