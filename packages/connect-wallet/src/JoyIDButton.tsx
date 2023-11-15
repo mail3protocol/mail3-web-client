@@ -14,7 +14,10 @@ export const JoyIDButton: React.FC = () => {
     try {
       setIsLoading(true)
       await connect()
-      setLastConnector(ConnectorName.JoyID)
+      setLastConnector(undefined)
+      setTimeout(() => {
+        setLastConnector(ConnectorName.JoyID)
+      }, 1)
     } catch (error) {
       //
       //
