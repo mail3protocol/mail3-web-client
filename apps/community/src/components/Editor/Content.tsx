@@ -40,6 +40,21 @@ img {
   margin: 0 auto;
 }
 
+pre {
+  white-space: pre-wrap;
+}
+
+code {
+  background: #EBEBEB;
+  font-size: 14px;
+  padding: 5px;
+}
+
+pre code {
+  display: block;
+  padding: 18px;
+}
+
 `
 
 export const Content = forwardRef<HTMLDivElement, FlexProps>(
