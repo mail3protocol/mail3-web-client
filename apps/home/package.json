@@ -10,7 +10,7 @@
         "test": "echo \"Test not installed\""
     },
     "engines": {
-        "node": "18",
+        "node": "20",
         "yarn": "1.22"
     },
     "dependencies": {

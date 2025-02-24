@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { Alert, AlertIcon, Text } from '@chakra-ui/react'
 import { SafeHydrate } from '../components/SafeHydrate'
 import { App } from '../csr_pages/app'
 import { Routers } from '../route'
@@ -62,6 +63,16 @@ export default function Index() {
       </Head>
       <SafeHydrate>
         <App>
+          <Alert status="warning" textAlign="center" justifyContent="center">
+            <AlertIcon />
+            <Text>
+              <b>
+                Mail3 Shutdown Notice:Mail3 will stop maintenance in March
+                31!&nbsp;
+              </b>
+              Please back up your important data immediately to avoid any loss.
+            </Text>
+          </Alert>
           <Routers />
         </App>
       </SafeHydrate>
