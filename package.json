@@ -22,7 +22,7 @@
         "apps/*"
     ],
     "engines": {
-        "node": "18",
+        "node": "20",
         "yarn": "1.22"
     },
     "devDependencies": {
